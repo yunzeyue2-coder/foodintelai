@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>工厂标准化手册 · 沧林食品工作站</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-icon.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0e9e2;
+  --card:#faf8f5;
+  --text:#1a1a1a;
+  --muted:#7a7269;
+  --light:#b5aaa0;
+  --accent:#C0392B;
+  --accent-light:#E8652D;
+  --green:#07C160;
+  --border:#ddd4ca;
+  --tag-bg:#e8dfd5;
+  --radius:14px;
+  --shadow:0 2px 12px rgba(0,0,0,.04);
+}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100dvh;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.nav{position:sticky;top:0;z-index:50;background:rgba(240,233,226,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 16px}
+.nav-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:52px}
+.nav-brand{font-size:15px;font-weight:700;color:var(--accent);text-decoration:none}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:6px 12px;font-size:12px;color:var(--muted);text-decoration:none;border-radius:6px;transition:.2s}
+.nav-links a:hover{background:var(--tag-bg);color:var(--text)}
+.nav-links a.active{background:var(--accent);color:#fff}
+
+.hero{
+  padding:40px 20px 28px;
+  text-align:center;
+  background:linear-gradient(180deg,#fff 0%,var(--bg) 100%);
+}
+.hero-badge{display:inline-block;background:var(--accent);color:#fff;font-size:10px;padding:3px 10px;border-radius:4px;letter-spacing:1.5px;margin-bottom:14px}
+.hero h1{font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1.2;margin-bottom:8px}
+.hero h1 span{color:var(--accent)}
+.hero-sub{font-size:13px;color:var(--muted);max-width:480px;margin:0 auto 16px;line-height:1.7}
+.hero-cta{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#fff;padding:11px 28px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:.2s}
+.hero-cta:hover{background:#06AD56;transform:translateY(-1px)}
+
+.main{max-width:720px;margin:0 auto;padding:0 16px 40px}
+
+/* ===== 板块 ===== */
+.section-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin:24px 0 12px;
+  padding-bottom:8px;
+  border-bottom:1.5px solid var(--border);
+}
+.section-header h2{font-size:16px;font-weight:700}
+.section-header .count{font-size:11px;color:var(--muted)}
+
+.article-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.article-card{
+  background:var(--card);
+  border-radius:10px;
+  padding:14px 16px;
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition:.2s;
+  border:1px solid transparent;
+}
+.article-card:hover{border-color:var(--border);transform:translateY(-1px)}
+.article-card .a-title{font-size:14px;font-weight:600;margin-bottom:2px}
+.article-card .a-summary{font-size:12px;color:var(--muted);line-height:1.6}
+.article-card .a-tags{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.article-card .a-tags span{font-size:9px;padding:2px 7px;border-radius:3px;font-weight:600}
+.tag-free{background:#f0f6ec;color:#7B9A45}
+.tag-paid{background:#fef6f2;color:var(--accent-light)}
+.tag-tool{background:#e8f0fe;color:#3a7bd5}
+.tag-member{background:#fef2f2;color:#C0392B}
+
+/* ===== 微信区块 ===== */
+.wechat-box{
+  background:var(--card);
+  border-radius:16px;
+  padding:28px 20px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  margin:20px 0;
+}
+.wechat-box h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.wechat-box .sub{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+.wechat-box .qrcode{width:140px;height:140px;margin:0 auto 12px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#faf8f6}
+.wechat-box .qrcode img{width:100%;height:100%;border-radius:10px;object-fit:cover}
+.wechat-box .wxid{font-size:13px;color:#666;margin-bottom:4px}
+.wechat-box .wxid strong{color:var(--green)}
+.wechat-box .tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:12px 0}
+.wechat-box .tags span{font-size:11px;padding:4px 12px;background:var(--tag-bg);border-radius:20px;color:#666}
+
+/* ===== 弹窗 ===== */
+.modal-overlay{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.5);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.show{display:flex}
+.modal-box{
+  background:var(--card);
+  border-radius:18px;
+  padding:28px 24px;
+  max-width:520px;
+  width:100%;
+  max-height:70vh;
+  overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+.modal-box .close-btn{float:right;background:none;border:none;font-size:22px;color:var(--light);cursor:pointer;line-height:1}
+.modal-box h3{font-size:17px;font-weight:700;margin-bottom:12px}
+.modal-box p{font-size:13px;line-height:1.8;color:#444;white-space:pre-line}
+.modal-box .modal-cta{display:block;text-align:center;margin-top:16px;padding:10px 20px;background:var(--green);color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none}
+
+/* ===== 底部 ===== */
+.footer{text-align:center;padding:32px 20px;font-size:11px;color:#bbb;line-height:1.8;border-top:1px solid var(--border);margin-top:10px;max-width:720px;margin-left:auto;margin-right:auto}
+.footer .brand{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:4px}
+.footer a{color:#bbb;text-decoration:none}
+.footer a:hover{color:var(--accent)}
+
+@media(max-width:480px){
+  .hero{padding:32px 16px 20px}
+  .hero h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">沧林食品</a>
+    <div class="nav-links">
+      <a href="/">首页</a>
+      <a href="#" class="active">工厂手册</a>
+      <a href="/#wechat">微信</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">会员专属 · 工业化方案</div>
+  <h1>工厂标准化<span>手册</span></h1>
+  <p class="hero-sub">
+    工业级SOP · 设备选型 · 品控体系 · 供应链管理<br>
+    从作坊到工厂，每一步都有标准
+  </p>
+  <a class="hero-cta" href="javascript:void(0)" onclick="scrollToWechat()">📱 加微信咨询工厂方案</a>
+</div>
+
+<div class="main">
+
+  <div class="section-header"><h2>🏭 工业化SOP</h2><span class="count">标准化流程</span></div>
+  <div class="article-grid">
+    <div class="article-card" onclick="openModal('三大工序组','拆包解冻→清洗修整→腌制→焯水→卤制→出锅→摊凉→包装。每一步有标准才有好产品。\\n\\n沧林亲自设计的工业化SOP三大工序组：\\n\\n第一组：前处理（通用）\\n拆包→解冻→清洗→修整→腌制\\n这一步80%的问题出在解冻不彻底。\\n\\n第二组：卤制核心（参数联动）\\n腌制→焯水→卤制→出锅→除渣→摊凉→斩块→风干\\n每个参数的改变都会联动影响其他环节。\\n\\n第三组：后处理（通用）\\n称量→包装→入库\\n摊凉速度最容易被忽略——凉太慢细菌滋生，凉太快表面干裂。\\n\\n工业化SOP的价值：同样的配方，同样的原料，不同的人做出来味道一样。\\n\\n——\\n📌 想拿到完整的SOP模板？加微信 canglin1985')">
+      <div class="a-title">三大工序组：前处理→卤制→后处理</div>
+      <div class="a-summary">标准化SOP让不同的人做出同样的味道。核心是参数联动——改了温度，时间要调；改了时间，料包比例要调。</div>
+      <div class="a-tags"><span class="tag-free">免费</span></div>
+    </div>
+    <div class="article-card" onclick="openModal('从摆摊到开店，设备升级路线图','设备选型跟着产量走：\\n\\n日销50只以下：家用40cm卤锅+电磁炉，够用但效率低。\\n日销50-150只：商用60cm夹层锅+电磁灶，必须上不然来不及。\\n日销150只以上：100L蒸汽夹层锅+工业真空机+冷柜。\\n\\n最尴尬的是50-100只这个区间——家用不够用，商用嫌贵。\\n解决方案：租用中央厨房时段，按小时付费，跳过买设备阶段。\\n\\n——\\n📌 需要帮你算设备投入产出比？加微信 canglin1985')">
+      <div class="a-title">设备选型与产量匹配</div>
+      <div class="a-summary">日销50以下家用够，100以上必须上商用。中间那档最尴尬——租中央厨房时段最划算。</div>
+      <div class="a-tags"><span class="tag-free">免费</span></div>
+    </div>
+    <div class="article-card" onclick="scrollToWechat()">
+      <div class="a-title">酱卤牛肉工业化方案（3条线）</div>
+      <div class="a-summary">出品率52-100%的可调方案，涵盖夹层锅/蒸汽锅/滚动式卤锅三套设备配置。</div>
+      <div class="a-tags"><span class="tag-member">会员 ¥999</span></div>
+    </div>
+    <div class="article-card" onclick="scrollToWechat()">
+      <div class="a-title">沟帮子熏鸡工业线方案</div>
+      <div class="a-summary">百年糖熏工艺的工业化改造，真空灭菌+商超渠道标准。</div>
+      <div class="a-tags"><span class="tag-member">会员 ¥999</span></div>
+    </div>
+    <div class="article-card" onclick="scrollToWechat()">
+      <div class="a-title">解冻工艺标准：冷藏慢解参数</div>
+      <div class="a-summary">80%的翻车出在解冻。每10kg鸡肉需要12-15小时，中心温度达到0°C以上才能下锅。</div>
+      <div class="a-tags"><span class="tag-free">免费</span></div>
+    </div>
+  </div>
+
+  <div class="section-header"><h2>📊 成本核算模型</h2><span class="count">算清每一分钱</span></div>
+  <div class="article-grid">
+    <div class="article-card" onclick="openModal('一只烧鸡的成本拆解','以一只800g的道口烧鸡为例：\\n\\n原料成本：约11元（鸡胚8元+香料1.5元+油0.8元+糖色0.2元+调料0.5元）\\n人工分摊：约2.4元（按日产300只，2人）\\n香料耗材：0.6元\\n包装：1元\\n水电燃气：0.4元\\n损耗：1.6元\\n\\n合计成本：约17元/只\\n\\n售价逻辑：\\n摆摊35-38元（毛利53%）\\n门店42-48元（毛利60%）\\n电商55-68元（含快递）\\n\\n一只能赚多少钱？摆摊卖38元，净赚约8-10元。\\n\\n——\\n📌 想拿完整成本核算表？加微信 canglin1985')">
+      <div class="a-title">一只烧鸡的成本拆解</div>
+      <div class="a-summary">原料55%、人工12%、香料3%、包装5%、水电2%、损耗8%、毛利15%。定价是成本的2-3倍。</div>
+      <div class="a-tags"><span class="tag-free">免费</span></div>
+    </div>
+    <div class="article-card" onclick="openModal('产品完整度模型：50-70-80-100','一个产品从想法到落地，完整度是逐步填满的。\\n\\n沧林19年经验总结的产品完整度模型：\\n\\n第一阶段（50-70%）：沧林讲透\\n核心配方、关键工艺、行业经验。决定了"能不能做"。\\n\\n第二阶段（补至80%）：网络抓取比对\\n竞品参数、行业标准、原料行情。验证A方案是不是最优。\\n\\n第三阶段（最后20%）：市场数据预测\\n价格行情、消费趋势、区域口味差异。决定了"能不能卖出去"。\\n\\n很多食品人死在第一步就以为做完了——能做出来≠能卖出去。\\n\\n——\\n📌 想用这个模型评估你的产品？加微信 canglin1985')">
+      <div class="a-title">产品完整度模型：50-70-80-100</div>
+      <div class="a-summary">能做出来 ≠ 能卖出去。好产品不是一次做出来的，完整度是逐步填满的。</div>
+      <div class="a-tags"><span class="tag-free">免费</span></div>
+    </div>
+    <div class="article-card" onclick="scrollToWechat()">
+      <div class="a-title">工厂成本核算报价表</div>
+      <div class="a-summary">出品率计算、原料成本联动、折旧分摊、毛利预估，一套表格搞定。</div>
+      <div class="a-tags"><span class="tag-member">会员 ¥499</span></div>
+    </div>
+  </div>
+
+  <div class="section-header"><h2>📈 行业趋势与对标</h2><span class="count">看方向</span></div>
+  <div class="article-grid">
+    <div class="article-card" onclick="openModal('工业化vs手工：为什么同配方不同味','很多人问：为什么同样的配方，工厂做出来就是不如小作坊香？\\n\\n答案不是"手工有灵魂"——是设备逻辑不同。\\n\\n小作坊：一锅出200斤，明火加热，自然对流。老汤表层有5-10cm厚的卤油层，形成天然"密封"，风味挥发少。\\n\\n工厂：夹层锅/蒸汽锅，强制搅拌，热交换效率更高。但搅拌破坏了油脂分层，风味物质损失更大。\\n\\n解决方案：\\n1. 卤油后加——卤好后再加5%的卤油回填\\n2. 降温浸泡——高温卤制+低温真空浸泡，风味回吸\\n3. 不强制搅拌——自然对流更接近手工\\n\\n——\\n📌 想要工厂级工艺参数表？加微信 canglin1985')">
+      <div class="a-title">工业化vs手工：为什么同配方不同味</div>
+      <div class="a-summary">不是手工有灵魂，是设备逻辑不同。工厂搅拌破坏了油脂分层。解决方案：卤油后加。</div>
+      <div class="a-tags"><span class="tag-free">免费</span></div>
+    </div>
+    <div class="article-card" onclick="openModal('2026卤味赛道5个趋势','1. 鲜卤现捞：消费者要"看得见的现做"，明档操作+当日现卤是标配。\\n\\n2. 辣卤零食化：小包装、即食、撕开就吃。绝味的店中店模式验证了这条路。\\n\\n3. 卤+粉/饭复合店：一碗卤肉饭+一份卤味拼盘=客单价拉到45元。\\n\\n4. 健康低钠卤：减盐30%的卤味开始出现在超市货架上。钠含量标注将成为硬性要求。\\n\\n5. 预制菜卤味包：家庭场景的"10分钟卤一锅"调理包，天猫增速超过200%。\\n\\n你的产品卡里，有多少张能跟上这些趋势？')">
+      <div class="a-title">2026卤味赛道5个趋势</div>
+      <div class="a-summary">鲜卤现捞、辣卤零食化、卤+粉/饭复合店、健康低钠卤、预制菜卤味包。</div>
+      <div class="a-tags"><span class="tag-free">免费</span></div>
+    </div>
+  </div>
+
+  <div class="section-header"><h2>📱 线上运营·B端打法</h2><span class="count">工厂怎么做线上</span></div>
+  <div class="article-grid">
+    <div class="article-card" onclick="openModal('从卖产品到卖知识：食品人的商业模式跃迁','2026年5月，沧林完成了一个关键认知突破——不卖鸭肉条，卖19年攒的酱卤工艺系统。\\n\\n传统食品人路径：研发→采购→生产→品控→直播→投流→发货→售后。每一个环节都是重资产，利润被各个环节吃掉。\\n\\n新路径：输出行业内容→封装成H5工具/模板/方案→数字产品交付。写一次卖一万次，边际成本趋零。\\n\\n沧林的三大数字产品已验证：\\n1. 酱卤产品成本核算报价表——做完直接用了，好使\\n2. SOP标准工艺模板——一天九迭代，从V1到V9\\n3. 配方付费系统——工艺免费看，配方付费才解锁\\n\\n行业现状：一家头部企业的2013年卤制操作规范文件至今仍是行业标准模板，食品行业的数字化程度极低。这意味着先做的人有巨大先发优势。')">
+      <div class="a-title">从卖产品到卖知识：食品人的商业模式跃迁</div>
+      <div class="a-summary">实体产品全链条重资产，数字产品写一次卖一万次。19年经验封装成工具，边际成本趋零。</div>
+      <div class="a-tags"><span class="tag-free">免费</span></div>
+    </div>
+    <div class="article-card" onclick="scrollToWechat()">
+      <div class="a-title">食品工厂B端推广方案</div>
+      <div class="a-summary">知乎/公众号/行业媒体的内容矩阵搭建，精准触达食品企业客户。</div>
+      <div class="a-tags"><span class="tag-paid">付费</span></div>
+    </div>
+  </div>
+
+  <!-- ===== 微信区块 ===== -->
+  <div class="wechat-box" id="wechatSection">
+    <h3>📱 加微信 · 咨询工厂方案</h3>
+    <p class="sub">扫码添加沧林本人微信<br>咨询工厂标准化方案 · 会员 ¥999/年起</p>
+    <div class="qrcode">
+      <img src="wechat_qr.jpg" alt="沧林微信">
+    </div>
+    <div class="wxid">微信号：<strong>canglin1985</strong></div>
+    <div class="tags">
+      <span>🏭 工业化SOP</span>
+      <span>📊 成本核算表</span>
+      <span>🛠️ 设备选型方案</span>
+      <span>📈 趋势分析</span>
+    </div>
+    <div class="hint">加好友备注"工厂"快速通过</div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="brand">沧林食品工作站</div>
+  <div><a href="https://foodintelai.com">foodintelai.com</a> · 微信 canglin1985</div>
+</div>
+
+<!-- ===== 弹窗 ===== -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="close-btn" onclick="closeModal()">✕</button>
+    <h3 id="modalTitle"></h3>
+    <p id="modalBody"></p>
+    <a class="modal-cta" href="javascript:void(0)" onclick="scrollToWechat()">📱 加微信拿完整方案</a>
+  </div>
+</div>
+
+<script>
+function openModal(title, body){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').textContent = body;
+  document.getElementById('modalOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function scrollToWechat(){
+  document.getElementById('wechatSection').scrollIntoView({behavior:'smooth',block:'center'});
+}
+</script>
+
+</body>
+</html>
