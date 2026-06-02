@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>沧林 · 食品工业知识库 | 20年酱卤实战决策系统</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#f6f4f0;
+  --card:#fff;
+  --text:#1a1a1a;
+  --muted:#888;
+  --light:#bbb;
+  --accent:#C0392B;
+  --accent-light:#E8652D;
+  --green:#07C160;
+  --border:#e8e2db;
+  --tag-bg:#f0ece6;
+  --radius:12px;
+  --shadow:0 2px 12px rgba(0,0,0,.05);
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100dvh;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ===== 导航 ===== */
+.nav{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(246,244,240,.92);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 16px;
+}
+.nav-inner{
+  max-width:720px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:52px;
+}
+.nav-brand{font-size:15px;font-weight:700;color:var(--accent)}
+.nav-links{display:flex;gap:4px}
+.nav-links a{
+  padding:6px 12px;
+  font-size:12px;
+  color:var(--muted);
+  text-decoration:none;
+  border-radius:6px;
+  transition:.2s;
+}
+.nav-links a:hover{background:var(--tag-bg);color:var(--text)}
+
+/* ===== 英雄区 ===== */
+.hero{
+  padding:48px 20px 36px;
+  text-align:center;
+  background:linear-gradient(180deg,#fff 0%,var(--bg) 100%);
+}
+.hero-badge{
+  display:inline-block;
+  background:var(--accent);
+  color:#fff;
+  font-size:10px;
+  padding:3px 10px;
+  border-radius:4px;
+  letter-spacing:1.5px;
+  margin-bottom:16px;
+}
+.hero h1{
+  font-size:30px;
+  font-weight:800;
+  letter-spacing:-0.5px;
+  line-height:1.2;
+  margin-bottom:10px;
+}
+.hero h1 span{color:var(--accent)}
+.hero-sub{
+  font-size:14px;
+  color:var(--muted);
+  max-width:480px;
+  margin:0 auto 20px;
+  line-height:1.7;
+}
+.hero-stats{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom:24px;
+}
+.hero-stat{
+  background:var(--card);
+  padding:10px 18px;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  min-width:80px;
+}
+.hero-stat .num{
+  font-size:20px;
+  font-weight:800;
+  color:var(--accent-light);
+}
+.hero-stat .lb{font-size:10px;color:var(--muted);margin-top:1px}
+.hero-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--green);
+  color:#fff;
+  padding:13px 32px;
+  border-radius:8px;
+  font-size:15px;
+  font-weight:600;
+  text-decoration:none;
+  transition:.2s;
+}
+.hero-cta:hover{background:#06AD56;transform:translateY(-1px)}
+.hero-cta-sub{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  margin-top:10px;
+}
+
+/* ===== 密码锁 ===== */
+.lock-wrap{
+  max-width:720px;
+  margin:0 auto;
+  padding:0 16px;
+}
+.lock-card{
+  background:var(--card);
+  border-radius:16px;
+  padding:32px 24px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.lock-icon{font-size:40px;margin-bottom:8px}
+.lock-card h2{font-size:17px;font-weight:700;margin-bottom:4px}
+.lock-card p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.lock-input{display:flex;gap:8px;max-width:300px;margin:0 auto}
+.lock-input input{
+  flex:1;
+  padding:10px 14px;
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  font-size:14px;
+  outline:none;
+  transition:.2s;
+}
+.lock-input input:focus{border-color:var(--accent)}
+.lock-input button{
+  padding:10px 20px;
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.lock-input button:hover{background:#9a2b20}
+.lock-error{font-size:12px;color:var(--accent);margin-top:8px;display:none}
+
+/* ===== 主内容 ===== */
+.main{
+  max-width:720px;
+  margin:0 auto;
+  padding:0 16px 40px;
+  display:none;
+}
+.main.show{display:block}
+
+/* ===== 区块标题 ===== */
+.section-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin:24px 0 12px;
+  padding-bottom:8px;
+  border-bottom:1.5px solid var(--border);
+}
+.section-header h2{font-size:16px;font-weight:700}
+.section-header .more{font-size:11px;color:var(--muted)}
+
+/* ===== 场景入口 ===== */
+.scene-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:8px;
+}
+.scene-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:16px;
+  text-decoration:none;
+  color:var(--text);
+  box-shadow:var(--shadow);
+  transition:.2s;
+  position:relative;
+}
+.scene-card:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.scene-card .icon{font-size:28px;margin-bottom:6px}
+.scene-card .name{font-size:14px;font-weight:600;margin-bottom:2px}
+.scene-card .desc{font-size:11px;color:var(--muted);line-height:1.5}
+.scene-card .count{
+  position:absolute;
+  top:12px;
+  right:12px;
+  font-size:9px;
+  background:var(--tag-bg);
+  padding:2px 7px;
+  border-radius:10px;
+  color:var(--muted);
+}
+
+/* ===== 产品卡列表 ===== */
+.card-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.card-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  background:var(--card);
+  border-radius:10px;
+  text-decoration:none;
+  color:var(--text);
+  box-shadow:var(--shadow);
+  transition:.2s;
+}
+.card-item:hover{transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,.08)}
+.card-item .emoji{font-size:22px;width:30px;text-align:center}
+.card-item .info{flex:1;min-width:0}
+.card-item .name{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+.card-item .desc{font-size:11px;color:var(--muted);margin-top:1px}
+.tag{
+  font-size:9px;
+  padding:2px 7px;
+  border-radius:3px;
+  font-weight:600;
+  white-space:nowrap;
+}
+.tag-free{background:#f0f6ec;color:#7B9A45}
+.tag-paid{background:#fef6f2;color:var(--accent-light)}
+.card-item .arrow{color:#ddd;font-size:14px}
+
+/* ===== 钩子区 ===== */
+.hook-box{
+  background:linear-gradient(135deg,#fff 0%,#fef9f5 100%);
+  border-radius:16px;
+  padding:24px 20px;
+  margin:20px 0;
+  border:1px solid #f5ede5;
+}
+.hook-box h3{font-size:15px;font-weight:700;margin-bottom:12px}
+.hook-item{
+  display:flex;
+  gap:10px;
+  margin-bottom:10px;
+  align-items:flex-start;
+}
+.hook-item:last-child{margin-bottom:0}
+.hook-num{
+  width:22px;
+  height:22px;
+  background:var(--accent);
+  color:#fff;
+  border-radius:50%;
+  font-size:11px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.hook-text{font-size:12.5px;line-height:1.6;color:#555}
+.hook-text strong{color:var(--text)}
+
+/* ===== 场景专区切换 ===== */
+.zone-tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:10px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.zone-tab{
+  padding:7px 14px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:600;
+  background:var(--tag-bg);
+  color:var(--muted);
+  cursor:pointer;
+  border:none;
+  transition:.2s;
+  white-space:nowrap;
+}
+.zone-tab.active{background:var(--accent);color:#fff}
+.zone-tab:hover:not(.active){background:#e4ddd4}
+.zone-content{display:none}
+.zone-content.active{display:block}
+
+/* ===== 微信区块 ===== */
+.wechat-box{
+  background:var(--card);
+  border-radius:16px;
+  padding:28px 20px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  margin:20px 0;
+}
+.wechat-box h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.wechat-box .sub{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+.wechat-box .qrcode{
+  width:140px;
+  height:140px;
+  margin:0 auto 12px;
+  border-radius:12px;
+  border:2px dashed var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  color:#ccc;
+  background:#faf8f6;
+}
+.wechat-box .qrcode img{width:100%;height:100%;border-radius:10px;object-fit:cover}
+.wechat-box .wxid{font-size:13px;color:#666;margin-bottom:4px}
+.wechat-box .wxid strong{color:var(--green)}
+.wechat-box .tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  justify-content:center;
+  margin:12px 0;
+}
+.wechat-box .tags span{
+  font-size:11px;
+  padding:4px 12px;
+  background:var(--tag-bg);
+  border-radius:20px;
+  color:#666;
+}
+.wechat-box .hint{font-size:10px;color:#ccc;margin-top:8px}
+
+/* ===== 会员体系 ===== */
+.price-box{
+  background:var(--card);
+  border-radius:16px;
+  padding:24px 20px;
+  box-shadow:var(--shadow);
+  margin:20px 0;
+}
+.price-box h3{font-size:15px;font-weight:700;margin-bottom:14px;text-align:center}
+.price-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 0;
+  border-bottom:1px solid #f2eee8;
+  font-size:13px;
+}
+.price-row:last-child{border-bottom:none}
+.price-row .label{color:#555}
+.price-row .label .tag-tier{
+  display:inline-block;
+  font-size:9px;
+  padding:1px 6px;
+  border-radius:3px;
+  margin-left:6px;
+  font-weight:600;
+}
+.tag-tier.green{background:#f0f6ec;color:#7B9A45}
+.tag-tier.orange{background:#fef6f2;color:var(--accent-light)}
+.price-row .price{font-weight:700;color:var(--accent-light)}
+.price-row .price.free{color:var(--green)}
+.price-note{
+  font-size:10px;
+  color:#bbb;
+  text-align:center;
+  margin-top:12px;
+}
+
+/* ===== 知识体系展示 ===== */
+.knowledge-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:16px 0;
+}
+.know-item{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:16px;
+  box-shadow:var(--shadow);
+}
+.know-item .icon{font-size:22px;margin-bottom:6px}
+.know-item .title{font-size:13px;font-weight:600;margin-bottom:2px}
+.know-item .desc{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* ===== 底部 ===== */
+.footer{
+  text-align:center;
+  padding:32px 20px;
+  font-size:10px;
+  color:#ccc;
+  line-height:1.8;
+  border-top:1px solid var(--border);
+  margin-top:10px;
+}
+.footer .brand{font-size:12px;color:var(--accent);font-weight:600;margin-bottom:4px}
+.footer a{color:#bbb;text-decoration:none}
+.footer a:hover{color:var(--accent)}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;
+  bottom:80px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,.85);
+  color:#fff;
+  padding:10px 22px;
+  border-radius:8px;
+  font-size:13px;
+  z-index:99;
+  display:none;
+  white-space:nowrap;
+  pointer-events:none;
+}
+.toast.show{display:block;animation:toastAnim 2.5s}
+@keyframes toastAnim{
+  0%{opacity:0;transform:translateX(-50%) translateY(10px)}
+  12%{opacity:1;transform:translateX(-50%) translateY(0)}
+  82%{opacity:1}
+  100%{opacity:0;transform:translateX(-50%) translateY(-10px)}
+}
+
+@media(max-width:480px){
+  .hero{padding:36px 16px 28px}
+  .hero h1{font-size:26px}
+  .hero-stats{gap:10px}
+  .hero-stat{padding:8px 14px;min-width:70px}
+  .hero-stat .num{font-size:17px}
+  .scene-grid{grid-template-columns:1fr}
+  .knowledge-grid{grid-template-columns:1fr}
+  .lock-card{padding:24px 16px}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">沧林食品</div>
+    <div class="nav-links">
+      <a href="#products">产品卡</a>
+      <a href="#wechat">微信</a>
+      <a href="#price">会员</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">20年酱卤实战经验</div>
+  <h1>食品工业 <span>知识库</span><br>+ 商业决策系统</h1>
+  <p class="hero-sub">
+    596张产品卡 · 236份工艺配方 · 从摆摊到工业化<br>
+    帮你做对每一个产品决策
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">596</div><div class="lb">产品卡</div></div>
+    <div class="hero-stat"><div class="num">236</div><div class="lb">工艺配方</div></div>
+    <div class="hero-stat"><div class="num">7</div><div class="lb">免费试看</div></div>
+  </div>
+  <a class="hero-cta" href="javascript:void(0)" onclick="scrollToWechat()">📱 加微信领免费资料</a>
+  <span class="hero-cta-sub">免费领《酱卤新手避坑指南》+ 3张隐藏产品卡</span>
+</div>
+
+<div class="lock-wrap">
+  <div class="lock-card" id="lockPage">
+    <div class="lock-icon">🔐</div>
+    <h2>产品卡库 · 付费解锁</h2>
+    <p>免费试看7张产品卡 · 完整版仅对付费会员开放</p>
+    <div class="lock-input">
+      <input type="password" id="pwdInput" placeholder="输入解锁密码" onkeydown="if(event.key==='Enter')unlock()">
+      <button onclick="unlock()">解锁</button>
+    </div>
+    <div class="lock-error" id="lockError">密码错误，请重试</div>
+  </div>
+</div>
+
+<div class="main" id="mainContent">
+
+  <!-- ===== 知识体系 ===== -->
+  <div class="section-header"><h2>🧠 知识体系</h2><span class="more">四大板块 · 覆盖全链路</span></div>
+  <div class="knowledge-grid">
+    <div class="know-item">
+      <div class="icon">📋</div>
+      <div class="title">产品卡库</div>
+      <div class="desc">596张产品卡 · 覆盖卤味/小吃/饮品/甜品<br>每张含定位·原料·工艺·成本·定价·设备</div>
+    </div>
+    <div class="know-item">
+      <div class="icon">🔬</div>
+      <div class="title">工艺配方库</div>
+      <div class="desc">236份工艺配方 · 含酱卤/预制菜/调味料<br>工业级参数 · 精确到克的配方</div>
+    </div>
+    <div class="know-item">
+      <div class="icon">🏭</div>
+      <div class="title">工厂运营</div>
+      <div class="desc">布局规划 · 工艺流程 · KPI体系 · 成本数据<br>从0到1建厂的实战指南</div>
+    </div>
+    <div class="know-item">
+      <div class="icon">📊</div>
+      <div class="title">决策工具</div>
+      <div class="desc">定价模型 · 成本核算 · 品类机会研判<br>摆摊/开店/工厂 三种路径对比</div>
+    </div>
+  </div>
+
+  <!-- ===== 场景入口 ===== -->
+  <div class="section-header"><h2>🎯 你在哪条线？</h2><span class="more">按场景找产品</span></div>
+  <div class="scene-grid">
+    <a class="scene-card" href="#products" onclick="switchZone(0)">
+      <div class="count">摆摊专区</div>
+      <div class="icon">🛵</div>
+      <div class="name">摆摊 · 市集</div>
+      <div class="desc">低投入起步 · 单品爆款 · 快速回本</div>
+    </a>
+    <a class="scene-card" href="#products" onclick="switchZone(1)">
+      <div class="count">开店专区</div>
+      <div class="icon">🏪</div>
+      <div class="name">门店 · 熟食档</div>
+      <div class="desc">产品矩阵 · 高毛利搭配 · 复购模型</div>
+    </a>
+    <a class="scene-card" href="#products" onclick="switchZone(2)">
+      <div class="count">工厂专区</div>
+      <div class="icon">🏭</div>
+      <div class="name">工厂 · 标准化</div>
+      <div class="desc">工业级SOP · 设备选型 · 品控体系</div>
+    </a>
+    <a class="scene-card" href="#products" onclick="switchZone(3)">
+      <div class="count">趋势专区</div>
+      <div class="icon">📈</div>
+      <div class="name">趋势 · 爆品</div>
+      <div class="desc">市场热点 · 品类机会 · 竞品分析</div>
+    </a>
+  </div>
+
+  <!-- ===== 免费产品卡 ===== -->
+  <div class="section-header" id="products"><h2>🆓 免费试看</h2><span class="more">7张 · 钩子卡</span></div>
+  <div class="card-list" id="freeCards"></div>
+
+  <!-- ===== 付费专区 ===== -->
+  <div class="section-header"><h2>🔒 付费产品卡</h2><span class="more">会员专享 · 完整版</span></div>
+  <div class="zone-tabs" id="zoneTabs"></div>
+  
+  <div id="zone0" class="zone-content"></div>
+  <div id="zone1" class="zone-content"></div>
+  <div id="zone2" class="zone-content"></div>
+  <div id="zone3" class="zone-content"></div>
+
+  <!-- ===== 钩子区 ===== -->
+  <div class="hook-box">
+    <h3>🎯 免费拿不到的7样东西</h3>
+    <div class="hook-item">
+      <div class="hook-num">1</div>
+      <div class="hook-text"><strong>完整配方的精准克数</strong> — 免费卡只给框架，付费版给到每一味香料的精确投放量</div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-num">2</div>
+      <div class="hook-text"><strong>工业级工艺参数</strong> — 煮制时间、温度曲线、盐度控制标准，一条一条写清楚</div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-num">3</div>
+      <div class="hook-text"><strong>成本核算模型</strong> — 每斤料、每只鸡、每锅汤的精确成本，帮你算清毛利和净利</div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-num">4</div>
+      <div class="hook-text"><strong>设备选型方案</strong> — 摆摊/开店/工厂三种预算方案，直接拿走</div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-num">5</div>
+      <div class="hook-text"><strong>替代方案库</strong> — 买不到某味香料用什么替？没有某台设备怎么绕？实战解法</div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-num">6</div>
+      <div class="hook-text"><strong>老兵避坑笔记</strong> — "当年这一步我废了300斤料"——沧林亲踩的坑，你直接跳过</div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-num">7</div>
+      <div class="hook-text"><strong>会员专属交流</strong> — 有问题直接问沧林本人，不是AI，是做了20年卤味的真人</div>
+    </div>
+  </div>
+
+  <!-- ===== 微信区块 ===== -->
+  <div class="wechat-box" id="wechatSection">
+    <h3>📱 加微信 · 领免费资料</h3>
+    <p class="sub">扫码添加沧林本人微信<br>免费领取《酱卤新手避坑指南》+ 3张隐藏产品卡</p>
+    <div class="qrcode" id="qrPlaceholder">
+      微信二维码
+    </div>
+    <div class="wxid">微信号：<strong>canglin1985</strong></div>
+    <div class="tags">
+      <span>🛡️ 新手避坑</span>
+      <span>📊 成本模型</span>
+      <span>💡 选品建议</span>
+      <span>🤝 同行交流</span>
+    </div>
+    <div class="hint">加好友备注"产品卡"快速通过</div>
+  </div>
+
+  <!-- ===== 会员体系 ===== -->
+  <div class="price-box" id="price">
+    <h3>💰 会员体系</h3>
+    <div class="price-row">
+      <span class="label">免费试看 <span class="tag-tier green">入门钩子</span></span>
+      <span class="price free">¥0</span>
+    </div>
+    <div style="font-size:11px;color:#999;padding:0 0 10px;border-bottom:1px solid #f2eee8">7张产品卡 · 完整结构预览</div>
+    <div class="price-row" style="margin-top:8px">
+      <span class="label">单品付费 <span class="tag-tier orange">按需购买</span></span>
+      <span class="price">¥39-299</span>
+    </div>
+    <div style="font-size:11px;color:#999;padding:0 0 10px;border-bottom:1px solid #f2eee8">解锁单张完整配方+SOP</div>
+    <div class="price-row" style="margin-top:8px">
+      <span class="label">年度会员 <span class="tag-tier orange" style="background:#fef6f2;color:#E8652D">最划算</span></span>
+      <span class="price">¥999/年</span>
+    </div>
+    <div style="font-size:11px;color:#999;padding:0 0 10px;border-bottom:1px solid #f2eee8">全部产品卡 + 更新 + 交流群</div>
+    <div class="price-row" style="margin-top:8px">
+      <span class="label">企业会员 <span class="tag-tier orange">工厂级</span></span>
+      <span class="price">¥9,999/年</span>
+    </div>
+    <div style="font-size:11px;color:#999;padding:0 0 10px">定制配方 + 工艺优化 + 1对1咨询</div>
+    <div class="price-note">所有付费均通过微信交易 · 详询沧林本人 canglin1985</div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="brand">沧林食品工作站</div>
+  看见水面之下的力量 · 慢慢走的不一定走得慢<br>
+  <a href="https://foodintelai.com">foodintelai.com</a> · 微信 canglin1985
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PASSWORD = 'foodintelai2026';
+
+const FREE_CARDS = [
+  {e:"🏮",n:"道口烧鸡",d:"400年老汤 · 先炸后卤",f:"daokou-shaoji.html"},
+  {e:"🍃",n:"茶香鸡",d:"白卤水遇上茶香 · 清新不腻",f:"cha-xiang-ji.html"},
+  {e:"🏺",n:"叫花鸡（郑州版）",d:"荷叶黄泥 · 敲开吃 · 郑州老味道",f:"叫花鸡_郑州版_产品卡.html"},
+  {e:"🐓",n:"开封桶子鸡",d:"白卤脆韧 · 108刀文吃",f:"桶子鸡_产品卡.html"},
+  {e:"🌶️",n:"椒麻鸡",d:"卤香入骨 · 14种散料 · 麻辣劲爽",f:"椒麻鸡_产品卡.html"},
+  {e:"🫘",n:"麻油鸡",d:"油卤风干 · 手撕越嚼越香",f:"麻油鸡_产品卡.html"},
+  {e:"🔥",n:"沟帮子熏鸡",d:"中国四大名鸡 · 百年糖熏工艺",f:"沟帮子熏鸡_商业产品卡.html"},
+];
+
+const ZONES = [
+  {
+    name:"🛵 摆摊爆品",
+    cards:[
+      {e:"🥩",n:"酱卤牛肉",d:"五香+酱香双口味 · 单日300斤产能",f:"酱卤牛肉_产品卡.html"},
+      {e:"🐥",n:"手撕烧鸟",d:"日式炭火 · 备长炭 · 摆摊神器",f:"#"},
+      {e:"🥟",n:"灌汤包",d:"皮冻配方 · 爆汁工艺 · 1.5元/个成本",f:"#"},
+    ]
+  },
+  {
+    name:"🏪 门店盈利",
+    cards:[
+      {e:"🫕",n:"麻辣烫锅底",d:"牛油+骨汤双底 · 月盈利模型",f:"#"},
+      {e:"🍜",n:"烩面底汤V11",d:"40%羊料油 · 0.79元/碗",f:"#"},
+      {e:"🌶️",n:"傣味舂鸡脚",d:"云南风味 · 门店引流爆品",f:"#"},
+    ]
+  },
+  {
+    name:"🏭 工业标准",
+    cards:[
+      {e:"🥩",n:"酱卤牛肉(工业版)",d:"出品率52-100% · 3条线工艺",f:"酱卤牛肉_产品卡.html"},
+      {e:"🔥",n:"沟帮子熏鸡(工业)",d:"百年糖熏 · 真空灭菌 · 商超线",f:"沟帮子熏鸡_商业产品卡.html"},
+    ]
+  },
+  {
+    name:"📈 趋势新品",
+    cards:[
+      {e:"🥭",n:"杨枝甘露",d:"甜品饮品线 · 7元成本卖22",f:"#"},
+      {e:"🥥",n:"生椰拿铁",d:"咖啡饮品线 · 标准化出品",f:"#"},
+      {e:"🫘",n:"麻油鸡(趋势版)",d:"油卤风干 · 手撕装盒 · 电商爆品",f:"麻油鸡_产品卡.html"},
+    ]
+  }
+];
+
+// 渲染免费卡
+const freeEl = document.getElementById('freeCards');
+FREE_CARDS.forEach(c => {
+  freeEl.innerHTML += `<a class="card-item" href="${c.f}">
+    <div class="emoji">${c.e}</div>
+    <div class="info">
+      <div class="name">${c.n} <span class="tag tag-free">免费</span></div>
+      <div class="desc">${c.d}</div>
+    </div>
+    <div class="arrow">›</div>
+  </a>`;
+});
+
+// 渲染专区和tab
+const tabsEl = document.getElementById('zoneTabs');
+ZONES.forEach((z,i) => {
+  tabsEl.innerHTML += `<button class="zone-tab ${i===0?'active':''}" onclick="switchZone(${i})">${z.name}</button>`;
+  const zoneEl = document.getElementById(`zone${i}`);
+  zoneEl.classList.toggle('active', i===0);
+  z.cards.forEach(c => {
+    zoneEl.innerHTML += `<a class="card-item" href="${c.f}">
+      <div class="emoji">${c.e}</div>
+      <div class="info">
+        <div class="name">${c.n} <span class="tag tag-paid">付费</span></div>
+        <div class="desc">${c.d}</div>
+      </div>
+      <div class="arrow">›</div>
+    </a>`;
+  });
+});
+
+function switchZone(i){
+  document.querySelectorAll('.zone-tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));
+  document.querySelectorAll('.zone-content').forEach((z,idx)=>z.classList.toggle('active',idx===i));
+}
+
+// 密码解锁
+function unlock(){
+  const pwd = document.getElementById('pwdInput').value;
+  if(pwd === PASSWORD){
+    document.getElementById('lockPage').style.display = 'none';
+    document.getElementById('mainContent').classList.add('show');
+    document.getElementById('lockError').style.display = 'none';
+    document.cookie = 'unlocked=1; max-age='+(7*86400)+'; path=/';
+  } else {
+    document.getElementById('lockError').style.display = 'block';
+    document.getElementById('pwdInput').focus();
+    document.getElementById('pwdInput').select();
+  }
+}
+
+if(document.cookie.indexOf('unlocked=1') > -1){
+  document.getElementById('lockPage').style.display = 'none';
+  document.getElementById('mainContent').classList.add('show');
+}
+
+function scrollToWechat(){
+  document.getElementById('wechatSection').scrollIntoView({behavior:'smooth',block:'center'});
+  const t = document.getElementById('toast');
+  t.textContent = '📱 微信号已复制：canglin1985';
+  t.classList.add('show');
+  if(navigator.clipboard) navigator.clipboard.writeText('canglin1985');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+</script>
+
+</body>
+</html>
