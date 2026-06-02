@@ -221,36 +221,121 @@ body{
 .section-header h2{font-size:16px;font-weight:700}
 .section-header .more{font-size:11px;color:var(--muted)}
 
-/* ===== 场景入口 ===== */
+/* ===== 场景入口（三层结构） ===== */
 .scene-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-bottom:8px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:16px;
 }
 .scene-card{
   background:var(--card);
   border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:.2s;
+}
+.scene-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.scene-card-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
   padding:16px;
+  cursor:pointer;
+  transition:.2s;
   text-decoration:none;
   color:var(--text);
-  box-shadow:var(--shadow);
-  transition:.2s;
   position:relative;
 }
-.scene-card:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.08)}
-.scene-card .icon{font-size:28px;margin-bottom:6px}
-.scene-card .name{font-size:14px;font-weight:600;margin-bottom:2px}
-.scene-card .desc{font-size:11px;color:var(--muted);line-height:1.5}
-.scene-card .count{
-  position:absolute;
-  top:12px;
-  right:12px;
+.scene-card-header:hover{background:#f8f4ef}
+.scene-card-header .icon{width:38px;height:38px;flex-shrink:0}
+.scene-card-header .info{flex:1}
+.scene-card-header .info .name{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.scene-card-header .info .desc{font-size:11px;color:var(--muted);margin-top:1px}
+.scene-card-header .price-tag{
+  font-size:11px;
+  font-weight:700;
+  padding:3px 10px;
+  border-radius:4px;
+  white-space:nowrap;
+}
+.price-green{background:#f0f6ec;color:#7B9A45}
+.price-orange{background:#fef6f2;color:#E8652D}
+.price-red{background:#fef2f2;color:#C0392B}
+.scene-card-header .arrow{
+  font-size:16px;color:var(--light);transition:.2s;margin-left:4px;
+}
+.scene-card.open .scene-card-header .arrow{transform:rotate(90deg)}
+.scene-card-body{
+  display:none;
+  padding:0 16px 16px;
+  border-top:1px solid var(--border);
+}
+.scene-card.open .scene-card-body{display:block}
+.scene-body-section{margin-top:14px}
+.scene-body-section h4{
+  font-size:12px;
+  font-weight:700;
+  color:var(--accent);
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.scene-body-section h4 .badge{
   font-size:9px;
-  background:var(--tag-bg);
-  padding:2px 7px;
-  border-radius:10px;
-  color:var(--muted);
+  font-weight:600;
+  padding:1px 6px;
+  border-radius:3px;
+}
+.scene-feature-list{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.scene-feature-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  padding:6px 10px;
+  background:var(--bg);
+  border-radius:6px;
+  text-decoration:none;
+  color:var(--text);
+  transition:.2s;
+}
+.scene-feature-item:hover{background:var(--tag-bg)}
+.scene-feature-item .dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dot-green{background:#7B9A45}
+.dot-orange{background:#E8652D}
+.dot-accent{background:#C0392B}
+.scene-feature-item .tag-sm{
+  font-size:9px;
+  padding:1px 5px;
+  border-radius:2px;
+  font-weight:600;
+  margin-left:auto;
+  flex-shrink:0;
+}
+.scene-body-cta{
+  display:block;
+  text-align:center;
+  margin-top:12px;
+  padding:8px 14px;
+  background:var(--green);
+  color:#fff;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:600;
+  text-decoration:none;
+  transition:.2s;
+}
+.scene-body-cta:hover{background:#06AD56}
+@media(max-width:480px){
+  .scene-card-header{padding:14px}
+  .scene-card-header .info .name{font-size:14px}
+  .scene-card-body{padding:0 14px 14px}
 }
 
 /* ===== 产品卡列表 ===== */
@@ -762,92 +847,153 @@ body{
   </div>
   <div id="knowTabContent"></div>
 
-  <!-- ===== 场景入口 ===== -->
-  <div class="section-header"><h2>🎯 你在哪条线？</h2><span class="more">按场景找产品</span></div>
+  <!-- ===== 场景入口（三层结构） ===== -->
+  <div class="section-header"><h2>🎯 你在哪条线？</h2><span class="more">按场景找方案</span></div>
   <div class="scene-grid">
-    <a class="scene-card" href="#products" onclick="switchZone(0)">
-      <div class="count">摆摊专区</div>
-      <div class="icon">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <rect x="2" y="18" width="32" height="8" rx="2" fill="#C0392B"/>
-          <rect x="2" y="13" width="32" height="6" rx="2" fill="#8B4513"/>
-          <rect x="4" y="15" width="28" height="4" rx="1" fill="#D2B48C"/>
-          <rect x="4" y="9" width="6" height="4" rx="1" fill="#FFF3E0"/>
-          <rect x="12" y="9" width="6" height="4" rx="1" fill="#FFF3E0"/>
-          <rect x="20" y="9" width="6" height="4" rx="1" fill="#FFF3E0"/>
-          <circle cx="9" cy="27" r="2.5" fill="#333" stroke="#666" stroke-width=".5"/>
-          <circle cx="27" cy="27" r="2.5" fill="#333" stroke="#666" stroke-width=".5"/>
-          <line x1="30" y1="13" x2="30" y2="6" stroke="#333" stroke-width="1"/>
-          <rect x="30" y="5" width="5" height="3" fill="#C0392B"/>
-          <rect x="2" y="12" width="32" height="1.5" rx=".5" fill="#C0392B"/>
-          <line x1="6" y1="13" x2="6" y2="16" stroke="#fff" stroke-width=".5"/>
-          <line x1="10" y1="13" x2="10" y2="16" stroke="#fff" stroke-width=".5"/>
-          <line x1="14" y1="13" x2="14" y2="16" stroke="#fff" stroke-width=".5"/>
-          <line x1="18" y1="13" x2="18" y2="16" stroke="#fff" stroke-width=".5"/>
-          <line x1="22" y1="13" x2="22" y2="16" stroke="#fff" stroke-width=".5"/>
-          <line x1="26" y1="13" x2="26" y2="16" stroke="#fff" stroke-width=".5"/>
-          <line x1="30" y1="13" x2="30" y2="16" stroke="#fff" stroke-width=".5"/>
-        </svg>
+
+    <!-- 🛵 摆摊专区 -->
+    <div class="scene-card">
+      <div class="scene-card-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="icon">
+          <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+            <rect x="2" y="19" width="34" height="9" rx="2" fill="#C0392B"/>
+            <rect x="2" y="14" width="34" height="6" rx="2" fill="#8B4513"/>
+            <rect x="4" y="16" width="30" height="4" rx="1" fill="#D2B48C"/>
+            <rect x="5" y="10" width="6" height="4" rx="1" fill="#FFF3E0"/>
+            <rect x="14" y="10" width="6" height="4" rx="1" fill="#FFF3E0"/>
+            <rect x="23" y="10" width="6" height="4" rx="1" fill="#FFF3E0"/>
+            <circle cx="10" cy="29" r="2.5" fill="#333" stroke="#666" stroke-width=".5"/>
+            <circle cx="28" cy="29" r="2.5" fill="#333" stroke="#666" stroke-width=".5"/>
+            <line x1="31" y1="14" x2="31" y2="7" stroke="#333" stroke-width="1"/>
+            <rect x="31" y="6" width="5" height="3" fill="#C0392B"/>
+            <rect x="2" y="13" width="34" height="1.5" rx=".5" fill="#C0392B"/>
+          </svg>
+        </div>
+        <div class="info">
+          <div class="name">🛵 摆摊 · 小吃车 <span class="price-tag price-green">单品 ¥39-99</span></div>
+          <div class="desc">试水起步 · 低投入 · 单品打天下</div>
+        </div>
+        <span class="arrow">›</span>
       </div>
-      <div class="name">摆摊 · 小吃车</div>
-      <div class="desc">日式屋台风格 · 低投入起步</div>
-    </a>
-    <a class="scene-card" href="#products" onclick="switchZone(1)">
-      <div class="count">开店专区</div>
-      <div class="icon">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <rect x="4" y="14" width="28" height="16" rx="1" fill="#C0392B"/>
-          <polygon points="4,14 18,5 32,14" fill="#A93226"/>
-          <rect x="16" y="22" width="8" height="8" rx="1" fill="#F5DEB3" stroke="#C0392B" stroke-width=".5"/>
-          <rect x="6" y="16" width="8" height="6" rx="1" fill="#87CEEB" opacity=".6"/>
-          <rect x="22" y="16" width="8" height="6" rx="1" fill="#87CEEB" opacity=".6"/>
-          <rect x="4" y="14" width="28" height="1.5" fill="#8B0000"/>
-          <rect x="12" y="8" width="12" height="3" rx="1" fill="#FFD700"/>
-          <text x="15" y="10.5" font-size="3" fill="#333" font-weight="bold">招牌</text>
-        </svg>
+      <div class="scene-card-body">
+        <div class="scene-body-section">
+          <h4>📦 推荐产品卡</h4>
+          <div class="scene-feature-list">
+            <a class="scene-feature-item" href="酱卤牛肉_产品卡.html"><span class="dot dot-green"></span>酱卤牛肉 · 五香+酱香双口味 <span class="tag-sm tag-free">免费</span></a>
+            <a class="scene-feature-item" href="#"><span class="dot dot-green"></span>手撕烧鸟 · 日式炭火 <span class="tag-sm tag-free">免费</span></a>
+            <a class="scene-feature-item" href="#"><span class="dot dot-green"></span>灌汤包 · 皮冻配方 <span class="tag-sm tag-free">免费</span></a>
+          </div>
+        </div>
+        <div class="scene-body-section">
+          <h4>🎬 线上配套 <span class="badge" style="background:#f0e6ff;color:#8B5CF6;font-size:9px">免费看</span></h4>
+          <div class="scene-feature-list">
+            <a class="scene-feature-item" href="shop_manual.html" onclick="event.preventDefault();scrollToWechat()"><span class="dot dot-orange"></span>摆摊抖音怎么拍 · 2000预算跑通引流 <span class="tag-sm tag-free">免费</span></a>
+            <a class="scene-feature-item" href="shop_manual.html" onclick="event.preventDefault();scrollToWechat()"><span class="dot dot-orange"></span>小红书种草 · 让周边3公里搜到你 <span class="tag-sm tag-free">免费</span></a>
+          </div>
+        </div>
+        <div class="scene-body-section">
+          <h4>📖 完整手册</h4>
+          <a class="scene-feature-item" href="shop_manual.html"><span class="dot dot-accent"></span>摆摊实操手册（含线上打法） <span class="tag-sm tag-free">免费</span></a>
+        </div>
+        <a class="scene-body-cta" href="javascript:void(0)" onclick="scrollToWechat()">📱 加微信领免费资料包</a>
       </div>
-      <div class="name">门店 · 熟食档</div>
-      <div class="desc">产品矩阵 · 高毛利搭配 · 复购模型</div>
-    </a>
-    <a class="scene-card" href="#products" onclick="switchZone(2)">
-      <div class="count">工厂专区</div>
-      <div class="icon">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <rect x="4" y="16" width="28" height="14" rx="1" fill="#7F8C8D"/>
-          <rect x="4" y="16" width="28" height="2" fill="#5D6D7E"/>
-          <rect x="8" y="20" width="6" height="5" rx="1" fill="#BDC3C7"/>
-          <rect x="16" y="20" width="6" height="5" rx="1" fill="#BDC3C7"/>
-          <rect x="24" y="20" width="6" height="5" rx="1" fill="#BDC3C7"/>
-          <rect x="10" y="10" width="3" height="6" fill="#5D6D7E"/>
-          <rect x="8" y="8" width="7" height="3" fill="#5D6D7E"/>
-          <rect x="20" y="12" width="3" height="4" fill="#5D6D7E"/>
-          <circle cx="21" cy="11" r="1.5" fill="#E74C3C"/>
-          <line x1="4" y1="30" x2="4" y2="32" stroke="#555" stroke-width="1"/>
-          <line x1="32" y1="30" x2="32" y2="32" stroke="#555" stroke-width="1"/>
-          <rect x="12" y="26" width="4" height="4" rx=".5" fill="#566573"/>
-        </svg>
+    </div>
+
+    <!-- 🏪 开店专区 -->
+    <div class="scene-card open">
+      <div class="scene-card-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="icon">
+          <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+            <rect x="4" y="15" width="30" height="17" rx="1" fill="#C0392B"/>
+            <polygon points="4,15 19,5 34,15" fill="#A93226"/>
+            <rect x="17" y="24" width="9" height="8" rx="1" fill="#F5DEB3" stroke="#C0392B" stroke-width=".5"/>
+            <rect x="7" y="17" width="9" height="6" rx="1" fill="#87CEEB" opacity=".6"/>
+            <rect x="24" y="17" width="9" height="6" rx="1" fill="#87CEEB" opacity=".6"/>
+            <rect x="4" y="15" width="30" height="1.5" fill="#8B0000"/>
+            <rect x="13" y="9" width="12" height="3" rx="1" fill="#FFD700"/>
+            <text x="16" y="11.5" font-size="3" fill="#333" font-weight="bold">招牌</text>
+          </svg>
+        </div>
+        <div class="info">
+          <div class="name">🏪 门店 · 熟食档 <span class="price-tag price-orange">套餐 ¥199-499</span></div>
+          <div class="desc">产品矩阵 · 线上线下结合 · 高毛利搭配</div>
+        </div>
+        <span class="arrow">›</span>
       </div>
-      <div class="name">工厂 · 标准化</div>
-      <div class="desc">工业级SOP · 设备选型 · 品控体系</div>
-    </a>
-    <a class="scene-card" href="#products" onclick="switchZone(3)">
-      <div class="count">趋势专区</div>
-      <div class="icon">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-          <rect x="4" y="28" width="28" height="2" rx="1" fill="#BDC3C7"/>
-          <rect x="4" y="28" width="2" height="-16" rx="0" fill="#BDC3C7"/>
-          <polyline points="6,24 12,20 18,22 24,14 30,10" stroke="#C0392B" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="30" cy="10" r="2" fill="#C0392B"/>
-          <polygon points="30,6 30,14 35,10" fill="#C0392B"/>
-          <circle cx="6" cy="24" r="1.5" fill="#C0392B" opacity=".5"/>
-          <circle cx="12" cy="20" r="1.5" fill="#C0392B" opacity=".5"/>
-          <circle cx="18" cy="22" r="1.5" fill="#C0392B" opacity=".5"/>
-          <circle cx="24" cy="14" r="1.5" fill="#C0392B" opacity=".5"/>
-        </svg>
+      <div class="scene-card-body">
+        <div class="scene-body-section">
+          <h4>📦 推荐套餐包</h4>
+          <div class="scene-feature-list">
+            <a class="scene-feature-item" href="#"><span class="dot dot-orange"></span>卤味店开业套餐（5款产品+菜单搭配） <span class="tag-sm" style="background:#fef6f2;color:#E8652D">¥299</span></a>
+            <a class="scene-feature-item" href="#"><span class="dot dot-orange"></span>烧鸟专门店套餐（3大系列+毛利模型） <span class="tag-sm" style="background:#fef6f2;color:#E8652D">¥399</span></a>
+            <a class="scene-feature-item" href="#"><span class="dot dot-orange"></span>甜品饮品套餐（爆品+复购模型） <span class="tag-sm" style="background:#fef6f2;color:#E8652D">¥249</span></a>
+          </div>
+        </div>
+        <div class="scene-body-section">
+          <h4>📱 线上运营配套 <span class="badge" style="background:#f0e6ff;color:#8B5CF6;font-size:9px">含在套餐内</span></h4>
+          <div class="scene-feature-list">
+            <a class="scene-feature-item" href="shop_manual.html"><span class="dot dot-orange"></span>美团团购套餐设计 · 引流品+利润品配比 <span class="tag-sm tag-free">免费</span></a>
+            <a class="scene-feature-item" href="shop_manual.html"><span class="dot dot-orange"></span>抖音同城号 · 从视频到到店完整链路 <span class="tag-sm tag-free">免费</span></a>
+            <a class="scene-feature-item" href="shop_manual.html"><span class="dot dot-orange"></span>私域沉淀 · 从团购到微信群运营 <span class="tag-sm tag-free">免费</span></a>
+          </div>
+        </div>
+        <div class="scene-body-section">
+          <h4>📖 完整手册</h4>
+          <a class="scene-feature-item" href="shop_manual.html"><span class="dot dot-accent"></span>开店实战手册（11个板块 · 线上+线下） <span class="tag-sm tag-free">免费</span></a>
+        </div>
+        <a class="scene-body-cta" href="javascript:void(0)" onclick="scrollToWechat()">📱 加微信咨询套餐方案</a>
       </div>
-      <div class="name">趋势 · 爆品</div>
-      <div class="desc">市场热点 · 品类机会 · 竞品分析</div>
-    </a>
+    </div>
+
+    <!-- 🏭 工厂专区 -->
+    <div class="scene-card">
+      <div class="scene-card-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="icon">
+          <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+            <rect x="4" y="17" width="30" height="15" rx="1" fill="#7F8C8D"/>
+            <rect x="4" y="17" width="30" height="2" fill="#5D6D7E"/>
+            <rect x="9" y="21" width="6" height="5" rx="1" fill="#BDC3C7"/>
+            <rect x="18" y="21" width="6" height="5" rx="1" fill="#BDC3C7"/>
+            <rect x="27" y="21" width="6" height="5" rx="1" fill="#BDC3C7"/>
+            <rect x="11" y="11" width="3" height="6" fill="#5D6D7E"/>
+            <rect x="9" y="9" width="7" height="3" fill="#5D6D7E"/>
+            <rect x="22" y="13" width="3" height="4" fill="#5D6D7E"/>
+            <circle cx="23" cy="12" r="1.5" fill="#E74C3C"/>
+            <line x1="4" y1="32" x2="4" y2="34" stroke="#555" stroke-width="1"/>
+            <line x1="34" y1="32" x2="34" y2="34" stroke="#555" stroke-width="1"/>
+            <rect x="14" y="27" width="4" height="5" rx=".5" fill="#566573"/>
+          </svg>
+        </div>
+        <div class="info">
+          <div class="name">🏭 工厂 · 标准化 <span class="price-tag price-red">整套 ¥999-4999</span></div>
+          <div class="desc">工业级SOP · 设备选型 · 品控 · 供应链</div>
+        </div>
+        <span class="arrow">›</span>
+      </div>
+      <div class="scene-card-body">
+        <div class="scene-body-section">
+          <h4>📦 标准化方案</h4>
+          <div class="scene-feature-list">
+            <a class="scene-feature-item" href="#"><span class="dot dot-accent"></span>酱卤牛肉工业化方案（出品率52-100%·3条线） <span class="tag-sm" style="background:#fef2f2;color:#C0392B">¥999</span></a>
+            <a class="scene-feature-item" href="#"><span class="dot dot-accent"></span>沟帮子熏鸡工业线（百年糖熏·真空灭菌） <span class="tag-sm" style="background:#fef2f2;color:#C0392B">¥999</span></a>
+            <a class="scene-feature-item" href="#products" onclick="switchZone(2)"><span class="dot dot-accent"></span>全部工业方案 <span class="tag-sm" style="background:#fef2f2;color:#C0392B">查看</span></a>
+          </div>
+        </div>
+        <div class="scene-body-section">
+          <h4>📋 配套工具</h4>
+          <div class="scene-feature-list">
+            <a class="scene-feature-item" href="javascript:void(0)" onclick="scrollToWechat()"><span class="dot" style="background:#5D6D7E"></span>成本核算模型 · 出品率优化表 <span class="tag-sm tag-free">免费</span></a>
+            <a class="scene-feature-item" href="javascript:void(0)" onclick="scrollToWechat()"><span class="dot" style="background:#5D6D7E"></span>SOP标准化模板 · 从V1到V9迭代 <span class="tag-sm tag-free">免费</span></a>
+          </div>
+        </div>
+        <div class="scene-body-section">
+          <h4>📖 完整手册</h4>
+          <a class="scene-feature-item" href="javascript:void(0)" onclick="scrollToWechat()"><span class="dot dot-accent"></span>工厂标准化手册（会员专属） <span class="tag-sm" style="background:#fef2f2;color:#C0392B">会员</span></a>
+        </div>
+        <a class="scene-body-cta" href="javascript:void(0)" onclick="scrollToWechat()">📱 加微信咨询工厂方案</a>
+      </div>
+    </div>
+
   </div>
 
   <!-- ===== 免费产品卡 ===== -->
