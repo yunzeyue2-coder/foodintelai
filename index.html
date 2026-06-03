@@ -867,7 +867,10 @@ body{
     <div class="lock-icon">🔒</div>
     <h2>🔒 产品卡库 · 付费内容</h2>
     <p>完整版1049张产品卡 · 已付费用户请输入密码解锁</p>
-    <div class="lock-input">
+    
+    <!-- 方式1：输入密码 -->
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px">方式一：已有密码直接输入</div>
       <div style="display:flex;flex-direction:column;gap:10px;max-width:300px;margin:0 auto">
         <input type="password" id="pwdInput" placeholder="输入解锁密码" style="border:1.5px solid var(--border);border-radius:10px;background:#fff;padding:12px 14px;font-size:15px;outline:none;min-height:44px" onkeydown="if(event.key==='Enter')unlock()" inputmode="text">
         <div style="display:flex;gap:8px">
@@ -876,6 +879,30 @@ body{
         </div>
       </div>
     </div>
+    
+    <!-- 分隔线 -->
+    <div style="display:flex;align-items:center;gap:12px;margin:16px 0;max-width:300px;margin-left:auto;margin-right:auto">
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+      <span style="font-size:11px;color:var(--light);white-space:nowrap">或</span>
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+    </div>
+    
+    <!-- 方式2：扫码关注公众号解锁 -->
+    <div>
+      <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:10px">方式二：扫码关注公众号获取验证码</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+        <div style="width:90px;height:90px;border-radius:8px;overflow:hidden;border:1.5px solid var(--border);background:#faf8f5;display:flex;align-items:center;justify-content:center;font-size:10px;color:#ccc">
+          <img src="gongzhonghao_qr.jpg" alt="公众号二维码" style="width:100%;height:100%;object-fit:cover">
+        </div>
+        <div style="font-size:10px;color:var(--muted)">关注公众号 → 回复"解锁"获取验证码</div>
+        <div style="display:flex;gap:6px;max-width:300px;width:100%">
+          <input type="text" id="codeInput" placeholder="输入验证码" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;outline:none;background:#fff;min-height:40px" onkeydown="if(event.key==='Enter')unlockByCode()">
+          <button onclick="unlockByCode()" style="padding:10px 16px;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">验证</button>
+        </div>
+        <div class="lock-error" id="codeError" style="display:none;font-size:11px">验证码错误，请重新输入</div>
+      </div>
+    </div>
+    
     <div class="lock-error" id="lockError">密码错误，请重试</div>
   </div>
 </div>
@@ -1364,6 +1391,21 @@ function unlock(){
     document.getElementById('lockError').style.display = 'block';
     document.getElementById('pwdInput').focus();
     document.getElementById('pwdInput').select();
+  }
+}
+
+// 验证码解锁
+function unlockByCode(){
+  const code = document.getElementById('codeInput').value.trim();
+  if(code === 'food168'){
+    document.getElementById('lockPage').style.display = 'none';
+    document.getElementById('mainContent').classList.add('show');
+    document.getElementById('codeError').style.display = 'none';
+    document.cookie = 'unlocked=1; max-age='+(7*86400)+'; path=/';
+  } else {
+    document.getElementById('codeError').style.display = 'block';
+    document.getElementById('codeInput').focus();
+    document.getElementById('codeInput').select();
   }
 }
 
