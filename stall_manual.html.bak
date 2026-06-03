@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>摆摊实操手册 · 沧林食品工作站</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-icon.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0e9e2;
+  --card:#faf8f5;
+  --text:#1a1a1a;
+  --muted:#7a7269;
+  --light:#b5aaa0;
+  --accent:#C0392B;
+  --accent-light:#E8652D;
+  --green:#07C160;
+  --border:#ddd4ca;
+  --tag-bg:#e8dfd5;
+  --radius:14px;
+  --shadow:0 2px 12px rgba(0,0,0,.04);
+}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100dvh;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.nav{position:sticky;top:0;z-index:50;background:rgba(240,233,226,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 16px}
+.nav-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:52px}
+.nav-brand{font-size:15px;font-weight:700;color:var(--accent);text-decoration:none}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:6px 12px;font-size:12px;color:var(--muted);text-decoration:none;border-radius:6px;transition:.2s}
+.nav-links a:hover{background:var(--tag-bg);color:var(--text)}
+.nav-links a.active{background:var(--accent);color:#fff}
+
+.hero{
+  padding:36px 20px 24px;
+  text-align:center;
+  background:linear-gradient(180deg,#fff 0%,var(--bg) 100%);
+}
+.hero-badge{display:inline-block;background:var(--accent);color:#fff;font-size:10px;padding:3px 10px;border-radius:4px;letter-spacing:1.5px;margin-bottom:10px}
+.hero h1{font-size:24px;font-weight:800;letter-spacing:-0.5px;line-height:1.2;margin-bottom:6px}
+.hero h1 span{color:var(--accent)}
+.hero-sub{font-size:13px;color:var(--muted);max-width:480px;margin:0 auto 14px;line-height:1.7}
+.hero-stats{display:flex;gap:16px;justify-content:center;margin-bottom:14px}
+.hero-stat{text-align:center}
+.hero-stat .num{font-size:18px;font-weight:800;color:var(--accent);line-height:1.1}
+.hero-stat .lb{font-size:9px;color:var(--muted)}
+
+.main{max-width:720px;margin:0 auto;padding:0 16px 40px}
+
+/* ===== 搜索 ===== */
+.search-box{
+  display:flex;gap:8px;margin-bottom:16px;
+}
+.search-box input{
+  flex:1;padding:10px 14px;border-radius:10px;border:1px solid var(--border);
+  font-size:13px;background:var(--card);outline:none;color:var(--text);
+}
+.search-box input:focus{border-color:var(--accent)}
+
+/* ===== 品类导航tabs ===== */
+.cat-tabs{
+  display:flex;gap:6px;margin-bottom:16px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{
+  padding:7px 14px;border-radius:8px;font-size:11px;font-weight:600;
+  background:var(--tag-bg);color:var(--muted);cursor:pointer;border:none;
+  transition:.2s;white-space:nowrap;flex-shrink:0;
+}
+.cat-tab.active{background:var(--accent);color:#fff}
+.cat-tab:hover:not(.active){background:#e4ddd4}
+
+/* ===== 深化套件入口 ===== */
+.deep-kits{
+  display:flex;gap:8px;overflow-x:auto;margin-bottom:20px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.deep-kits::-webkit-scrollbar{display:none}
+.deep-kit{
+  flex-shrink:0;width:120px;padding:12px;border-radius:10px;
+  background:var(--card);box-shadow:var(--shadow);cursor:pointer;
+  text-align:center;transition:.2s;text-decoration:none;color:var(--text);
+}
+.deep-kit:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.deep-kit .icon{font-size:24px;margin-bottom:4px}
+.deep-kit .name{font-size:11px;font-weight:600;line-height:1.3}
+.deep-kit .desc{font-size:9px;color:var(--muted);margin-top:2px}
+
+/* ===== 卡片列表 ===== */
+.article-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.article-card{
+  background:var(--card);border-radius:10px;padding:12px 14px;
+  box-shadow:var(--shadow);cursor:pointer;transition:.2s;border:1px solid transparent;
+}
+.article-card:hover{border-color:var(--border);transform:translateY(-1px)}
+.article-card .a-title{font-size:13px;font-weight:600;margin-bottom:1px}
+.article-card .a-summary{font-size:11px;color:var(--muted);line-height:1.5}
+.article-card .a-tags{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.article-card .a-tags span{font-size:8px;padding:1px 6px;border-radius:3px;font-weight:600}
+.tag-free{background:#f0f6ec;color:#7B9A45}
+.tag-hot{background:#fef2ee;color:#C0392B}
+
+/* ===== 深化内容弹窗 ===== */
+.overlay{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.5);display:none;
+  align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(4px);
+}
+.overlay.show{display:flex}
+.modal{
+  background:var(--card);border-radius:18px;padding:28px 24px;
+  max-width:520px;width:100%;max-height:75vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+.modal .close{float:right;background:none;border:none;font-size:22px;color:var(--light);cursor:pointer;line-height:1}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:10px}
+.modal p{font-size:13px;line-height:1.8;color:#444;white-space:pre-line}
+.modal .btn{
+  display:block;text-align:center;margin-top:16px;
+  padding:10px;background:var(--green);color:#fff;
+  border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;
+}
+
+/* ===== 微信区块 ===== */
+.wechat-box{
+  background:var(--card);border-radius:16px;padding:28px 20px;text-align:center;
+  box-shadow:var(--shadow);margin:20px 0;
+}
+.wechat-box h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.wechat-box .sub{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+.wechat-box .qrcode{width:140px;height:140px;margin:0 auto 12px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#faf8f6}
+.wechat-box .qrcode img{width:100%;height:100%;border-radius:10px;object-fit:cover}
+.wechat-box .wxid{font-size:13px;color:#666;margin-bottom:4px}
+.wechat-box .wxid strong{color:var(--green)}
+.wechat-box .tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:12px 0}
+.wechat-box .tags span{font-size:11px;padding:4px 12px;background:var(--tag-bg);border-radius:20px;color:#666}
+
+.footer{text-align:center;padding:32px 20px;font-size:11px;color:#bbb;line-height:1.8;border-top:1px solid var(--border);margin-top:10px;max-width:720px;margin-left:auto;margin-right:auto}
+.footer .brand{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:4px}
+.footer a{color:#bbb;text-decoration:none}
+
+@media(max-width:480px){
+  .hero{padding:28px 16px 18px}
+  .hero h1{font-size:22px}
+  .deep-kit{width:100px;padding:10px}
+  .modal{padding:20px 16px}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">沧林食品</a>
+    <div class="nav-links">
+      <a href="/">首页</a>
+      <a href="#" class="active">摆摊手册</a>
+      <a href="/#wechat">微信</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">免费 · 摆摊工具包</div>
+  <h1>摆摊实操<span>手册</span></h1>
+  <p class="hero-sub">从选品到出摊 · 从单品到爆款 · 从线下到线上<br>1037张配方卡 · 26个品类 · 摆摊创业一本够</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">1037</div><div class="lb">配方卡</div></div>
+    <div class="hero-stat"><div class="num">26</div><div class="lb">品类</div></div>
+    <div class="hero-stat"><div class="num">全部</div><div class="lb">免费</div></div>
+  </div>
+  <a class="hero-cta" href="javascript:void(0)" onclick="scrollToWechat()">📱 加微信领出摊清单</a>
+</div>
+
+<div class="main">
+
+  <!-- 搜索 -->
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔍 搜产品名称、品类、食材…" oninput="searchCards(this.value)">
+  </div>
+
+  <!-- 深化套件（快速入口） -->
+  <div class="deep-kits">
+    <a class="deep-kit" href="javascript:void(0)" onclick="openKit(0)">
+      <div class="icon">📍</div>
+      <div class="name">摆摊选址</div>
+      <div class="desc">怎么选摊位</div>
+    </a>
+    <a class="deep-kit" href="javascript:void(0)" onclick="openKit(1)">
+      <div class="icon">📋</div>
+      <div class="name">出摊清单</div>
+      <div class="desc">带什么出门</div>
+    </a>
+    <a class="deep-kit" href="javascript:void(0)" onclick="openKit(2)">
+      <div class="icon">💰</div>
+      <div class="name">投资估算</div>
+      <div class="desc">投多少赚多少</div>
+    </a>
+    <a class="deep-kit" href="javascript:void(0)" onclick="openKit(3)">
+      <div class="icon">🎬</div>
+      <div class="name">抖音拍法</div>
+      <div class="desc">摆摊怎么拍</div>
+    </a>
+    <a class="deep-kit" href="javascript:void(0)" onclick="openKit(4)">
+      <div class="icon">📣</div>
+      <div class="name">吆喝话术</div>
+      <div class="desc">直接复制用</div>
+    </a>
+    <a class="deep-kit" href="javascript:void(0)" onclick="openKit(5)">
+      <div class="icon">📊</div>
+      <div class="name">营收预估</div>
+      <div class="desc">一天赚多少</div>
+    </a>
+  </div>
+
+  <!-- 品类导航 -->
+  <div class="cat-tabs" id="catTabs"></div>
+  <div id="cardContainer"></div>
+
+  <!-- 微信区块 -->
+  <div class="wechat-box" id="wechatSection">
+    <h3>📱 加微信 · 领摆摊资料包</h3>
+    <p class="sub">扫码添加沧林微信<br>免费领《出摊必备清单》+ 独家配方更新</p>
+    <div class="qrcode"><img src="wechat_qr.jpg" alt="沧林微信"></div>
+    <div class="wxid">微信号：<strong>canglin1985</strong></div>
+    <div class="tags">
+      <span>📋 出摊清单</span>
+      <span>💰 投资估算</span>
+      <span>🎬 抖音话术</span>
+      <span>💬 交流群</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="brand">沧林食品工作站</div>
+  <div><a href="https://foodintelai.com">foodintelai.com</a> · 微信 canglin1985</div>
+</div>
+
+<!-- 深化套件弹窗 -->
+<div class="overlay" id="kitOverlay" onclick="if(event.target===this)document.getElementById('kitOverlay').classList.remove('show')">
+  <div class="modal">
+    <button class="close" onclick="document.getElementById('kitOverlay').classList.remove('show')">✕</button>
+    <h3 id="kitTitle"></h3>
+    <p id="kitBody"></p>
+    <a class="btn" href="javascript:void(0)" onclick="document.getElementById('kitOverlay').classList.remove('show');scrollToWechat()">📱 加微信领完整资料</a>
+  </div>
+</div>
+
+<script>
+// ===== 品类数据 =====
+const CATEGORIES = [
+  {i:'🍰',n:'葡式/甜品',c:253},
+  {i:'🍦',n:'甜点/烘焙',c:125},
+  {i:'🥬',n:'素菜/凉菜',c:99},
+  {i:'🍢',n:'小吃',c:87},
+  {i:'🌶️',n:'调料/酱料',c:86},
+  {i:'🧁',n:'烘焙',c:57},
+  {i:'🥘',n:'综合',c:53},
+  {i:'🍚',n:'盖浇饭',c:30},
+  {i:'🍜',n:'面饭/浇头',c:25},
+  {i:'🥟',n:'鲜香/预制',c:21},
+  {i:'🥩',n:'夜市烧烤',c:20},
+  {i:'🍵',n:'汤品',c:16},
+  {i:'🫕',n:'傣味',c:15},
+  {i:'🫓',n:'火锅',c:15},
+  {i:'🥓',n:'卤煮',c:15},
+  {i:'🍟',n:'炸品',c:12},
+  {i:'🧋',n:'夜市饮品',c:12},
+  {i:'🥫',n:'熏卤',c:11},
+  {i:'🥣',n:'粥品',c:11},
+  {i:'🥗',n:'轻食',c:11},
+  {i:'🍶',n:'茶食/茶饮',c:7},
+  {i:'🍣',n:'日料',c:7},
+  {i:'🍖',n:'烧烤',c:6},
+  {i:'🫘',n:'肠粉',c:3},
+  {i:'🥦',n:'汤菜',c:3},
+  {i:'🍝',n:'其他',c:9},
+];
+
+// ===== 102张精选卡片（每品类前几名） =====
+const CARD_DATA = [
+  // 葡式/甜品
+  {t:"蛋挞·经典葡式",s:"酥皮层次分明，蛋奶馅嫩滑，一个成本不到1块卖6块",c:0,id:"PT_001"},
+  {t:"双皮奶·顺德古法",s:"水牛奶做底，一层奶皮一层奶冻，入口即化",c:0,id:"PT_002"},
+  {t:"杨枝甘露·港式经典",s:"芒果泥打底+西柚粒+椰奶+西米，酸甜平衡",c:0,id:"PT_003"},
+  {t:"木糠杯·澳门街头",s:"饼干碎+淡奶油层层叠，冷藏后像冰淇淋蛋糕",c:0,id:"PT_004"},
+  // 甜点/烘焙
+  {t:"脆皮冰淇淋块",s:"冰淇淋冻成方块裹巧克力脆皮，成本1.5卖12",c:1,id:"CD_001"},
+  {t:"奥利奥冰淇淋块",s:"冰淇淋体混奥利奥碎，能卖15块",c:1,id:"CD_009"},
+  {t:"提拉米苏杯",s:"手指饼干蘸咖啡液+马斯卡彭+可可粉，不用烤箱",c:1,id:"CD_012"},
+  // 素菜/凉菜
+  {t:"凉拌木耳",s:"木耳焯水+蒜末+小米辣+醋+香油，5分钟出餐",c:2,id:"SN_001"},
+  {t:"泡椒凤爪",s:"鸡爪煮透+泡椒水+花椒+芹菜，泡一晚就能卖",c:2,id:"SN_005"},
+  {t:"爽口萝卜皮",s:"白萝卜皮腌出苦水+糖醋汁+小米辣，脆爽开胃",c:2,id:"SN_008"},
+  // 小吃
+  {t:"脆皮炸鲜奶",s:"牛奶糊冻硬切块裹面包糠炸，外酥里嫩",c:3,id:"XC_001"},
+  {t:"夜市烤面筋",s:"面筋串刷酱烤，成本5毛卖3块",c:3,id:"XC_005"},
+  // 调料/酱料
+  {t:"蒜蓉辣酱",s:"鲜辣椒+蒜+盐+糖+白酒，发酵7天出味",c:4,id:"TL_001"},
+  {t:"万能拌面酱",s:"芝麻酱+花生酱+生抽+醋+蒜水，拌面拌菜都行",c:4,id:"TL_005"},
+  // 烘焙
+  {t:"老式鸡蛋糕",s:"全蛋打发+面粉+糖+油，烤出来外脆内软",c:5,id:"HB_001"},
+  {t:"桃酥·传统点心",s:"猪油+糖+面粉+核桃碎，酥到掉渣",c:5,id:"HB_005"},
+  // 综合
+  {t:"酱香饼",s:"手抓饼底+酱料+芝麻+葱花，切块称重卖",c:6,id:"BYSF_001"},
+  // 卤煮
+  {t:"五香卤鸡爪",s:"鸡爪焯水+卤水慢煮30分钟+浸泡1小时，软烂脱骨",c:13,id:"XL_001"},
+  {t:"卤豆干",s:"老豆腐切块炸至金黄+卤水煮20分钟，成本低毛利高",c:13,id:"XL_003"},
+  // 炸品
+  {t:"炸酥肉",s:"五花肉切条+红薯淀粉+花椒粉+鸡蛋，炸两遍",c:15,id:"CD_056"},
+  {t:"炸薯条·夜市版",s:"土豆切条泡水去淀粉+冷冻+高温炸，外脆里软",c:15,id:"CD_058"},
+];
+
+// 品类->emoji映射
+const CAT_EMOJI = ['🍰','🍦','🥬','🍢','🌶️','🧁','🥘','🍚','🍜','🥟','🥩','🍵','🫕','🫓','🥓','🍟','🧋','🥫','🥣','🥗','🍶','🍣','🍖','🫘','🥦','🍝'];
+
+// 渲染品类tabs
+function renderCats(){
+  const el = document.getElementById('catTabs');
+  CATEGORIES.forEach((cat,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'cat-tab' + (i===0?' active':'');
+    btn.textContent = cat.i+' '+cat.n;
+    btn.onclick = ()=>switchCat(i);
+    el.appendChild(btn);
+  });
+}
+
+// 切换品类
+function switchCat(idx){
+  document.querySelectorAll('.cat-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  renderCards(idx);
+}
+
+// 渲染卡片列表
+function renderCards(catIdx){
+  const container = document.getElementById('cardContainer');
+  const catCards = CARD_DATA.filter(c => c.c === catIdx);
+  if(catCards.length === 0){
+    container.innerHTML = '<div style="text-align:center;padding:40px 0;font-size:13px;color:var(--muted)">这个品类下还有更多卡片，陆续上线中</div>';
+    return;
+  }
+  container.innerHTML = `<div class="article-grid">${catCards.map(c => `
+    <div class="article-card" onclick="openCard('${c.id}','${c.t}','${c.s}')">
+      <div class="a-title">${c.t}</div>
+      <div class="a-summary">${c.s}</div>
+      <div class="a-tags"><span class="tag-free">免费</span><span class="tag-hot">热销</span></div>
+    </div>
+  `).join('')}</div>`;
+}
+
+// 打开卡片
+function openCard(id, title, summary){
+  // 检查是否有独立HTML文件
+  const fname = id + '.html';
+  const x = new XMLHttpRequest();
+  x.open('HEAD', 'cards/' + fname, true);
+  x.onreadystatechange = function(){
+    if(x.readyState === 4){
+      if(x.status === 200){
+        window.location.href = 'cards/' + fname;
+      } else {
+        // 没有独立页，弹窗显示摘要
+        const ol = document.getElementById('kitOverlay');
+        document.getElementById('kitTitle').textContent = title;
+        document.getElementById('kitBody').textContent = summary + '\n\n完整版（含配方+SOP+成本+故事）正在上线中\n先加微信获取最新更新';
+        ol.classList.add('show');
+      }
+    }
+  };
+  x.send();
+}
+
+// 搜索
+function searchCards(q){
+  q = q.toLowerCase().trim();
+  document.querySelectorAll('.article-card').forEach(c => {
+    c.style.display = (!q || c.textContent.toLowerCase().includes(q)) ? '' : 'none';
+  });
+}
+
+// 深化套件内容
+const KITS = [
+  {
+    t:'📍 摆摊选址',
+    b:'摆摊选址三原则：\n\n1. 人流=流量，但流量≠成交。菜市场门口、地铁站出口、学校周边、夜市集中区——这四个位置是摆摊黄金位。\n\n2. 别只看周六日。一定要蹲点：周一至周五的白天和晚上分别看一次。有些位置周末人山人海，周一到周五鬼都没几个。\n\n3. 先试租。不要一上来就交长期租金。先租一周试试，看这个位置能不能出单。不行就换，摆摊的优势就是灵活。\n\n4. 问同行。同一个夜市问卖不同品类的人——他们会告诉你真实情况。\n\n5. 注意城管。问清楚这个区域的管理规定，几点能摆、要不要报备、有没有固定摊位费。'
+  },
+  {
+    t:'📋 出摊清单',
+    b:'出门摆摊前对照这个清单，少一样都手忙脚乱：\n\n【设备类】\n□ 摊位桌/车\n□ 保温箱/冰柜（看品类）\n□ 电子秤（提前校准）\n□ 收款二维码（微信+支付宝各打一张）\n□ 照明灯（夜市必备）\n□ 充电宝（手机没电=收不了钱）\n\n【物料类】\n□ 产品（带够量）\n□ 包装袋/餐盒/一次性手套\n□ 纸巾/湿巾\n□ 试吃装（新摊必备）\n\n【杂项】\n□ 零钱（有些顾客用现金）\n□ 垃圾袋（收摊后清理，留下好印象）\n□ 小板凳（站4小时腿受不了）\n□ 水杯（说话多了嗓子干）\n\n出门前花2分钟过一遍，比到了再想起来强。'
+  },
+  {
+    t:'💰 摆摊投资估算',
+    b:'摆摊起步不用花大钱，这是最大的优势。\n\n【最低配置版】- 约500元\n• 折叠桌 ¥100\n• 保温箱 ¥80\n• 电子秤 ¥60\n• 收款码牌 ¥0（打印出来贴一下）\n• 首批原料 ¥200\n• 杂项 ¥60\n\n【标准配置版】- 约1500元\n• 摆摊车 ¥500\n• 保温/冷藏箱 ¥200\n• 电子秤 ¥100\n• 照明+充电宝 ¥150\n• 首批原料 ¥400\n• 包装耗材 ¥150\n\n【豪华版（含设备）】- 约3000元\n• 定制摊位车 ¥1500\n• 冰箱（二手）¥800\n• 电子秤+真空机 ¥300\n• 首批原料+包装 ¥400\n\n建议：先从最低配试水，赚到钱了再升级。不要一上来就砸3000。'
+  },
+  {
+    t:'🎬 摆摊抖音怎么拍',
+    b:'摆摊人拍抖音不需要专业设备，手机就够了。给你3个最简单的模板：\n\n模板①：产品诱惑型（15秒）\n画面：拍产品特写→冒热气/滋滋响→切开的截面\n文案：「今天[你的摊位名]这个卖爆了，[产品名]刚出锅/刚做好，你看这个[卖相/颜色/拉丝]……想吃的位置在[位置]」\n\n模板②：排队证明型（10秒）\n画面：拍排队的人（从你背后拍）→扫一圈→切到你的产品\n文案：「[时间点]的[夜市/街]，就我家在排队。[产品名]卖得差不多了，想吃的抓紧来」\n\n模板③：幕后真实型（30秒）\n画面：你在准备食材/制作的过程（延时摄影）\n文案：「很多人问我[产品名]为什么好吃。你看看这个[原料/工艺]——[一句话说明]。做吃的不能糊弄。」\n\n关键：每天发一条，连续发一个月。不用火，只要周边3公里的人刷到你就够了。'
+  },
+  {
+    t:'📣 摆摊吆喝话术',
+    b:'摆摊不是卖产品，是卖"停下来试试"的冲动。\n\n【通用招客】\n「帅哥/美女/姐姐，尝一下不要钱！好吃再买！」\n「新开的摊，今天第二份半价！」\n\n【定价策略】\n• 单买12元 → 第二份半价18元 → 客户觉得"买两份划算"→ 实际只多赚6元\n• 标价不要整数 → 12元比10元好卖（看着像"有定价依据"）\n\n【成交后】\n「好吃的话帮我发个朋友圈/抖音呗~」\n→ 免费帮你打广告，说一句不亏\n\n【拒绝后】\n「没事，下次路过再尝尝，我天天在这」\n→ 留个好印象，下次真会来'
+  },
+  {
+    t:'📊 日营收模型',
+    b:'摆摊一天能赚多少？给你一个通用公式自己算：\n\n日净赚 = (客单价 × 份数) - 原料成本 - 摊位费 - 杂费\n\n【各品类参考】\n🍦 甜品冰淇淋类\n客单价12-18元 | 日销40-60份 | 日净赚320-550元\n\n🍢 小吃炸串类\n客单价8-15元 | 日销50-80份 | 日净赚300-500元\n\n🌶️ 调料酱料类\n客单价15-25元 | 日销20-35份 | 日净赚200-400元\n\n🥬 凉菜素菜类\n客单价10-15元 | 日销30-50份 | 日净赚200-350元\n\n【保本线】\n月摊位费2000 ÷ 30天 ≈ 67元/天\n也就是说每天只要赚够67块+原料成本，就不亏。\n\n超过的部分全是利润。'
+  }
+];
+
+function openKit(idx){
+  const k = KITS[idx];
+  document.getElementById('kitTitle').textContent = k.t;
+  document.getElementById('kitBody').textContent = k.b;
+  document.getElementById('kitOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function scrollToWechat(){
+  document.getElementById('wechatSection').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+// 初始化 + 支持URL锚点
+const urlHash = window.location.hash;
+if(urlHash && urlHash.startsWith('#cat')){
+  const idx = parseInt(urlHash.replace('#cat',''));
+  if(!isNaN(idx) && idx >= 0 && idx < CATEGORIES.length){
+    switchCat(idx);
+  } else {
+    renderCats();
+    switchCat(0);
+  }
+} else {
+  renderCats();
+  switchCat(0);
+}
+</script>
+
+</body>
+</html>
