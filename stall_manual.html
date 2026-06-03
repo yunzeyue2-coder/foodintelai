@@ -107,6 +107,19 @@ body{
 .article-card .a-tags span{font-size:8px;padding:1px 6px;border-radius:3px;font-weight:600}
 .tag-free{background:#f0f6ec;color:#7B9A45}
 .tag-hot{background:#fef2ee;color:#C0392B}
+.score-badge{display:inline-block;font-size:9px;color:#C0392B;font-weight:600;margin-top:2px}
+.score-box{background:#fff8f5;border:1px solid #f5e0d0;border-radius:12px;padding:20px;margin:14px 0;max-width:400px}
+.score-header{font-size:14px;color:#C0392B;margin-bottom:12px}
+.score-bars{display:flex;flex-direction:column;gap:8px}
+.score-row{display:flex;align-items:center;gap:8px;font-size:11px}
+.score-label{width:65px;flex-shrink:0;color:#7a7269}
+.score-track{flex:1;height:6px;background:#f0e9e2;border-radius:3px;overflow:hidden}
+.score-fill{height:100%;border-radius:3px;transition:width .4s}
+.score-val{width:28px;text-align:right;font-weight:600;color:#3a322a;font-size:10px}
+.score-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.score-tags span{font-size:10px;padding:2px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.score-scenes{margin-top:6px;font-size:10px;color:#7a7269}
+.score-na{text-align:center;padding:20px;color:#999;font-size:12px}
 
 /* ===== 深化内容弹窗 ===== */
 .overlay{
@@ -252,12 +265,69 @@ body{
   <div class="modal">
     <button class="close" onclick="document.getElementById('kitOverlay').classList.remove('show')">✕</button>
     <h3 id="kitTitle"></h3>
+    <div id="cardScore"></div>
     <p id="kitBody"></p>
     <a class="btn" href="javascript:void(0)" onclick="document.getElementById('kitOverlay').classList.remove('show');scrollToWechat()">📱 加微信领完整资料</a>
   </div>
 </div>
 
 <script>
+// ===== 评分数据 =====
+let SCORES = {};
+(async function loadScores(){
+  try{
+    const r = await fetch('scores.json');
+    SCORES = await r.json();
+  }catch(e){}
+})();
+
+// 渲染星级
+function renderStars(score, max=10){
+  const s = Math.round(score/max*5);
+  return '★'.repeat(s) + '☆'.repeat(Math.max(0,5-s));
+}
+
+// 获取卡评分摘要
+function getScoreBadge(id){
+  const d = SCORES[id];
+  if(!d || !d.s) return '';
+  const avg = (d.s.reduce((a,b)=>a+b,0)/d.s.length).toFixed(1);
+  return `<span class="score-badge">${renderStars(avg)} ${avg}</span>`;
+}
+
+// 获取评分详情HTML
+function getScoreDetail(id){
+  const d = SCORES[id];
+  if(!d || !d.s) return '<div class="score-na">评分数据加载中</div>';
+  const labels = ['市场热度','复购潜力','操作难度','利润空间','成本优势'];
+  const colors = ['#E8652D','#07C160','#8B5CF6','#F59E0B','#3B82F6'];
+  const avg = (d.s.reduce((a,b)=>a+b,0)/d.s.length).toFixed(1);
+  const marginMap = {A:'高毛利 🟢',B:'中毛利 🟡',C:'低毛利 🔴'};
+  const costMap = {low:'低成本 ✅',mid:'中成本',high:'高成本 ⚠️'};
+  const riskMap = {low:'低风险 🟢',mid:'中风险 🟡',high:'高风险 🔴'};
+  let html = `<div class="score-box">`;
+  html += `<div class="score-header">${renderStars(avg)} <strong>综合 ${avg}</strong></div>`;
+  html += `<div class="score-bars">`;
+  d.s.forEach((v,i)=>{
+    const pct = v/10*100;
+    const inv = i===2 ? '(低=易)' : '';
+    html += `<div class="score-row">
+      <span class="score-label">${labels[i]} ${inv}</span>
+      <div class="score-track"><div class="score-fill" style="width:${pct}%;background:${colors[i]}"></div></div>
+      <span class="score-val">${v}/10</span>
+    </div>`;
+  });
+  html += `</div>`;
+  html += `<div class="score-tags">
+    <span>${marginMap[d.m]||''}</span>
+    <span>${costMap[d.c]||''}</span>
+    <span>${riskMap[d.r]||''}</span>
+  </div>`;
+  if(d.b && d.b.length) html += `<div class="score-scenes">适合：${d.b.map(x=>{const m={stall:'🛵摆摊',small_shop:'🏪门店',workshop:'🏭工坊'};return m[x]||x}).join(' · ')}</div>`;
+  html += `</div>`;
+  return html;
+}
+
 // ===== 品类数据 =====
 const CATEGORIES = [
   {i:'🍰',n:'葡式/甜品',c:253},
@@ -355,7 +425,7 @@ function renderCards(catIdx){
     <div class="article-card" onclick="openCard('${c.id}','${c.t}','${c.s}')">
       <div class="a-title">${c.t}</div>
       <div class="a-summary">${c.s}</div>
-      <div class="a-tags"><span class="tag-free">免费</span><span class="tag-hot">热销</span></div>
+      <div class="a-tags"><span class="tag-free">免费</span><span class="tag-hot">热销</span>${getScoreBadge(c.id) ? `<span style="font-size:8px;padding:1px 6px;border-radius:3px;background:#fef6f2;color:#E8652D">${getScoreBadge(c.id)}</span>` : ''}</div>
     </div>
   `).join('')}</div>`;
 }
@@ -371,10 +441,12 @@ function openCard(id, title, summary){
       if(x.status === 200){
         window.location.href = 'cards/' + fname;
       } else {
-        // 没有独立页，弹窗显示摘要
+        // 没有独立页，弹窗显示摘要+评分
         const ol = document.getElementById('kitOverlay');
         document.getElementById('kitTitle').textContent = title;
         document.getElementById('kitBody').textContent = summary + '\n\n完整版（含配方+SOP+成本+故事）正在上线中\n先加微信获取最新更新';
+        // 显示评分
+        document.getElementById('cardScore').innerHTML = getScoreDetail(id);
         ol.classList.add('show');
       }
     }
