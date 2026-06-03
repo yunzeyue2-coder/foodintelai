@@ -1137,11 +1137,25 @@ body{
   <!-- ===== 经营测算工具 ===== -->
   <div class="calc-box" id="calculator">
     <h3>📊 经营测算工具</h3>
-    <p class="sub">选品类→选场景→自动出回本报告</p>
-    <div class="calc-placeholder" style="padding:24px 16px;text-align:center;background:var(--card);border-radius:12px;box-shadow:var(--shadow);margin:12px 0">
-      <div style="font-size:36px;margin-bottom:8px">📋</div>
-      <div style="font-size:13px;color:var(--muted)">测算工具开发中 · 联系沧林获取内测资格</div>
-      <div style="font-size:11px;color:#999;margin-top:6px">输入启动资金 → 自动匹配品类 → 算回本周期</div>
+    <p class="sub">选品类→选场景→自动出回本报告 · 数据基于1049张产品卡</p>
+    <div class="calc-ui" style="background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin:12px 0">
+      <!-- 第一步：选品类 -->
+      <div style="margin-bottom:14px">
+        <label style="font-size:12px;font-weight:600;color:var(--text);display:block;margin-bottom:6px">① 选品类</label>
+        <select id="calcCategory" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);color:var(--text);appearance:auto" onchange="onCalcCatChange()">
+          <option value="">— 选择品类 —</option>
+        </select>
+      </div>
+      <!-- 第二步：选场景 -->
+      <div style="margin-bottom:14px">
+        <label style="font-size:12px;font-weight:600;color:var(--text);display:block;margin-bottom:6px">② 选场景</label>
+        <div style="display:flex;gap:8px">
+          <button id="calcSceneStall" class="calc-scene-btn" onclick="onCalcScene('stall')" style="flex:1;padding:10px;border:1.5px solid var(--border);border-radius:8px;background:#faf8f5;cursor:pointer;font-size:13px;text-align:center">🛵 摆摊版</button>
+          <button id="calcSceneStore" class="calc-scene-btn" onclick="onCalcScene('store')" style="flex:1;padding:10px;border:1.5px solid var(--border);border-radius:8px;background:#faf8f5;cursor:pointer;font-size:13px;text-align:center">🏪 开店版</button>
+        </div>
+      </div>
+      <!-- 报告区 -->
+      <div id="calcReport" style="display:none"></div>
     </div>
   </div>
 <!-- ===== 会员体系 ===== -->
@@ -1652,6 +1666,96 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 
+
+
+// ===== 经营测算工具 =====
+const CALC_INDEX_URL = '测算数据/index.json';
+const CALC_DATA_DIR = '测算数据/';
+let calcIndex = null;
+let selectedCat = '';
+let selectedScene = '';
+
+// 加载品类列表
+async function loadCalcIndex(){
+  try{
+    const r = await fetch(CALC_INDEX_URL);
+    calcIndex = await r.json();
+    const sel = document.getElementById('calcCategory');
+    if(!sel) return;
+    for(const [name, info] of Object.entries(calcIndex)){
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = info.emoji + ' ' + name + ' (' + info.card_count + '张)';
+      sel.appendChild(opt);
+    }
+  }catch(e){ console.log('测算工具加载失败', e); }
+}
+
+function onCalcCatChange(){
+  const sel = document.getElementById('calcCategory');
+  selectedCat = sel.value;
+  if(selectedCat && selectedScene) loadCalcReport();
+}
+
+function onCalcScene(scene){
+  selectedScene = scene;
+  document.querySelectorAll('.calc-scene-btn').forEach(b => {
+    b.style.borderColor = 'var(--border)';
+    b.style.background = '#faf8f5';
+  });
+  const btn = document.getElementById(scene === 'stall' ? 'calcSceneStall' : 'calcSceneStore');
+  if(btn) { btn.style.borderColor = 'var(--accent)'; btn.style.background = '#fef2f2'; }
+  if(selectedCat && selectedScene) loadCalcReport();
+}
+
+async function loadCalcReport(){
+  const info = calcIndex[selectedCat];
+  if(!info) return;
+  const file = selectedScene === 'stall' ? info.stall_file : info.store_file;
+  let data;
+  try{
+    const r = await fetch(CALC_DATA_DIR + file);
+    data = await r.json();
+  }catch(e){
+    document.getElementById('calcReport').innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px">⚠️ 该品类暂无' + (selectedScene==='stall'?'摆摊':'开店') + '版数据</div>';
+    return;
+  }
+  
+  const sceneLabel = selectedScene === 'stall' ? '🛵 摆摊' : '🏪 开店';
+  const emoji = data.emoji || info.emoji || '';
+  
+  let html = '<div style="border-top:1px solid var(--border);padding-top:14px;margin-top:8px">';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">';
+  html += '<div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted)">成本/份</div><div style="font-size:15px;font-weight:700;color:var(--text);margin-top:2px">¥' + data.cost.min + '-' + data.cost.max + '</div></div>';
+  html += '<div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted)">售价/份</div><div style="font-size:15px;font-weight:700;color:var(--accent);margin-top:2px">¥' + data.price.min + '-' + data.price.max + '</div></div>';
+  html += '<div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted)">毛利率</div><div style="font-size:15px;font-weight:700;color:var(--green);margin-top:2px">' + data.margin.min + '-' + data.margin.max + '%</div></div>';
+  html += '<div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted)">日利润</div><div style="font-size:15px;font-weight:700;color:var(--text);margin-top:2px">¥' + data.daily.profit.min + '-' + data.daily.profit.max + '</div></div>';
+  html += '</div>';
+  
+  html += '<div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.8">';
+  html += '<span style="font-weight:600">日销</span> ' + data.daily.sales.min + '-' + data.daily.sales.max + '份 · ';
+  html += '<span style="font-weight:600">日营收</span> ¥' + data.daily.revenue.min + '-' + data.daily.revenue.max + ' · ';
+  html += '<span style="font-weight:600">月利润</span> ¥' + data.monthly.profit.min + '-' + data.monthly.profit.max;
+  html += '</div>';
+  
+  // 建议
+  if(data.suggestions && data.suggestions.length){
+    html += '<div style="font-size:11px;background:#fef6f2;border-radius:8px;padding:10px;color:var(--muted);line-height:1.7">';
+    html += '<div style="font-size:10px;font-weight:600;color:var(--accent-light);margin-bottom:4px">💡 建议</div>';
+    data.suggestions.forEach(s => { html += '· ' + s + '<br>'; });
+    html += '</div>';
+  }
+  
+  html += '</div>';
+  
+  document.getElementById('calcReport').innerHTML = html;
+  document.getElementById('calcReport').style.display = 'block';
+}
+
+// 页面加载后初始化
+document.addEventListener('DOMContentLoaded', function(){
+  if(document.getElementById('calcCategory')) loadCalcIndex();
+});
 </script>
 
 </body>
