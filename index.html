@@ -1518,8 +1518,19 @@ function renderKnowTab(idx){
   const tab = KNOWLEDGE_LIB[idx];
   let html = '<div class="knowledge-grid">';
   tab.articles.forEach((a,i) => {
+    // 根据文章标题自动匹配emoji
+    let icon = '📄';
+    const t = a.t;
+    if(t.includes('香料')||t.includes('八角')||t.includes('花椒')||t.includes('白芷')) icon = '🌿';
+    else if(t.includes('盐度')||t.includes('温度')||t.includes('卤水')) icon = '🔥';
+    else if(t.includes('成本')||t.includes('定价')||t.includes('利润')) icon = '💰';
+    else if(t.includes('设备')||t.includes('工具')) icon = '🔧';
+    else if(t.includes('趋势')||t.includes('赛道')) icon = '📈';
+    else if(t.includes('抖音')||t.includes('小红书')||t.includes('团购')||t.includes('运营')) icon = '📱';
+    else if(t.includes('老汤')||t.includes('工序')) icon = '🏗️';
+    else if(t.includes('摆摊')||t.includes('开店')||t.includes('工厂')||t.includes('投资')) icon = '📊';
     html += `<div class="know-card" onclick="openKnowModal(${idx},${i})">
-      <div class="k-icon">${a.t[0]}</div>
+      <div class="k-icon">${icon}</div>
       <div class="k-title">${a.t}</div>
       <div class="k-summary">${a.s}</div>
     </div>`;
@@ -1826,6 +1837,12 @@ async function loadCalcReport(){
   const emoji = data.emoji || info.emoji || '';
   
   let html = '<div style="border-top:1px solid var(--border);padding-top:14px;margin-top:8px">';
+  // 品类概览
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+  html += '<span style="font-size:15px;font-weight:700">' + info.emoji + ' ' + selectedCat + '</span>';
+  html += '<span style="font-size:11px;color:var(--muted)">' + info.card_count + '张产品卡</span>';
+  html += '</div>';
+  // 四指标卡片
   html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">';
   html += '<div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted)">成本/份</div><div style="font-size:15px;font-weight:700;color:var(--text);margin-top:2px">¥' + data.cost.min + '-' + data.cost.max + '</div></div>';
   html += '<div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted)">售价/份</div><div style="font-size:15px;font-weight:700;color:var(--accent);margin-top:2px">¥' + data.price.min + '-' + data.price.max + '</div></div>';
@@ -1846,6 +1863,27 @@ async function loadCalcReport(){
     data.suggestions.forEach(s => { html += '· ' + s + '<br>'; });
     html += '</div>';
   }
+  
+  // 该品类下的产品卡列表
+  html += '<div style="margin-top:14px;border-top:1px solid var(--border);padding-top:10px">';
+  html += '<div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px">📋 该品类产品卡（点卡片看详情）</div>';
+  // 匹配品类名到STALL_CATS
+  const catIcon = info.emoji || '📄';
+  const stallEntry = Object.entries(STALL_CATS).find(([e,o]) => o.n.includes(selectedCat) || selectedCat.includes(o.n));
+  const catIdx = stallEntry ? stallEntry[1].idx : 0;
+  html += '<div style="display:flex;margin-bottom:6px">';
+  html += '<a href="stall_manual.html#cat' + catIdx + '" style="flex:1;text-align:center;padding:8px;background:var(--accent);color:#fff;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600">查看全部 ' + info.card_count + ' 张 →</a>';
+  html += '</div>';
+  
+  // 如果有单品级推荐，展示top picks（后续虾哥数据完善后可以补充）
+  if(data.top_picks && data.top_picks.length){
+    html += '<div class="scene-feature-list" style="margin-top:8px">';
+    data.top_picks.forEach(p => {
+      html += '<a class="scene-feature-item" href="' + (p.file || 'stall_manual.html') + '"><span class="dot dot-orange"></span>' + p.name + ' <span class="tag-sm tag-free">查看</span></a>';
+    });
+    html += '</div>';
+  }
+  html += '</div>';
   
   html += '</div>';
   
