@@ -318,6 +318,33 @@ body{
   margin-left:auto;
   flex-shrink:0;
 }
+
+/* ===== 摆摊品类网格 ===== */
+.stall-cats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+.stall-cat-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 10px;
+  background:var(--bg);
+  border-radius:8px;
+  text-decoration:none;
+  color:var(--text);
+  font-size:11px;
+  transition:.2s;
+}
+.stall-cat-item:hover{background:var(--tag-bg)}
+.stall-cat-item .cat-icon{font-size:14px}
+.stall-cat-item .cat-name{flex:1}
+.stall-cat-item .cat-count{
+  font-size:9px;
+  color:var(--light);
+  font-weight:600;
+}
 .scene-body-cta{
   display:block;
   text-align:center;
@@ -899,12 +926,8 @@ body{
       </div>
       <div class="scene-card-body">
         <div class="scene-body-section">
-          <h4>📦 推荐产品卡</h4>
-          <div class="scene-feature-list">
-            <a class="scene-feature-item" href="酱卤牛肉_产品卡.html"><span class="dot dot-green"></span>酱卤牛肉 · 五香+酱香双口味 <span class="tag-sm tag-free">免费</span></a>
-            <a class="scene-feature-item" href="#"><span class="dot dot-green"></span>手撕烧鸟 · 日式炭火 <span class="tag-sm tag-free">免费</span></a>
-            <a class="scene-feature-item" href="#"><span class="dot dot-green"></span>灌汤包 · 皮冻配方 <span class="tag-sm tag-free">免费</span></a>
-          </div>
+          <h4>📦 全部品类 · 1037张配方卡 <span class="badge" style="background:#f0f6ec;color:#5a8f3c;font-size:9px">免费看</span></h4>
+          <div class="stall-cats" id="stallCats"></div>
         </div>
         <div class="scene-body-section">
           <h4>🎬 线上配套 <span class="badge" style="background:#f0e6ff;color:#8B5CF6;font-size:9px">免费看</span></h4>
@@ -1430,8 +1453,52 @@ function openKnowModal(catIdx, artIdx){
   document.body.style.overflow = 'hidden';
 }
 
+// ===== 摆摊品类数据（自动渲染） =====
+const STALL_CATS = {
+  '🍦':{n:'甜点/烘焙',c:125},
+  '🍰':{n:'葡式/甜品',c:253},
+  '🥬':{n:'素菜/凉菜',c:99},
+  '🍢':{n:'小吃',c:87},
+  '🌶️':{n:'调料/酱料',c:86},
+  '🧁':{n:'烘焙',c:57},
+  '🥘':{n:'综合',c:53},
+  '🍚':{n:'盖浇饭',c:30},
+  '🍜':{n:'面饭/浇头',c:25},
+  '🥟':{n:'鲜香/预制',c:21},
+  '🥩':{n:'夜市烧烤',c:20},
+  '🍵':{n:'汤品',c:16},
+  '🫕':{n:'傣味',c:15},
+  '🫓':{n:'火锅',c:15},
+  '🥓':{n:'卤煮',c:15},
+  '🍟':{n:'炸品',c:12},
+  '🧋':{n:'夜市饮品',c:12},
+  '🥫':{n:'熏卤',c:11},
+  '🥣':{n:'粥品',c:11},
+  '🥗':{n:'轻食',c:11},
+  '🍶':{n:'茶食/茶饮',c:7},
+  '🍣':{n:'日料',c:7},
+  '🍖':{n:'烧烤',c:6},
+  '🫘':{n:'肠粉',c:3},
+  '🥦':{n:'汤菜',c:3},
+  '🍝':{n:'其他',c:9},
+};
+function renderStallCats(){
+  const el = document.getElementById('stallCats');
+  if(!el) return;
+  let html = '';
+  for(const [icon, info] of Object.entries(STALL_CATS)){
+    html += `<a class="stall-cat-item" href="stall_manual.html">
+      <span class="cat-icon">${icon}</span>
+      <span class="cat-name">${info.n}</span>
+      <span class="cat-count">${info.c}</span>
+    </a>`;
+  }
+  el.innerHTML = html;
+}
+
 // 初始渲染
 renderKnowTab(0);
+renderStallCats();
 
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('show');
