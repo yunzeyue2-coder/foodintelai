@@ -2609,7 +2609,7 @@ function askAI(){
 }
 
 // ===== AI浮动聊天 =====
-const API_URL = 'https://foodintelai-ai-dykogmozfo.cn-hangzhou.fcapp.run';
+const API_URLS = ['https://foodintelai-ai-dykogmozfo.cn-hangzhou.fcapp.run', 'http://localhost:8766'];
 let chatHistory = [];
 
 function toggleChat(){
@@ -2618,6 +2618,43 @@ function toggleChat(){
   if(box.classList.contains('show')){
     document.getElementById('chatInput').focus();
   }
+}
+
+async function sendChat(){
+  const input = document.getElementById('chatInput');
+  const q = input.value.trim();
+  if(!q) return;
+  input.value = '';
+  
+  const msgs = document.getElementById('chatMsgs');
+  const welcome = msgs.querySelector('.chat-welcome');
+  if(welcome) welcome.remove();
+  
+  msgs.innerHTML += `<div class="chat-msg user">${q}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  
+  msgs.innerHTML += `<div class="chat-msg bot" id="chatLoading">⏳ 思考中...</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  
+  let answer = '';
+  for(const url of API_URLS){
+    try{
+      const r = await fetch(url, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({question:q}),
+        signal: AbortSignal.timeout(6000)
+      });
+      if(!r.ok) continue;
+      const d = await r.json();
+      answer = d.answer || '';
+      if(answer) break;
+    }catch(e){ continue; }
+  }
+  
+  document.getElementById('chatLoading').remove();
+  msgs.innerHTML += `<div class="chat-msg bot">${answer || '⚠️ 暂时无法回答，请稍后再试'}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
 async function sendChat(){
