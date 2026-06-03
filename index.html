@@ -1053,7 +1053,7 @@ body{
 
   <!-- ===== 免费产品卡 ===== -->
   <div class="section-header" style="cursor:pointer" onclick="toggleFreeCards()"><h2>🆓 免费试看</h2><span class="more" id="freeCardToggle">点击展开 ▼</span></div>
-  <div class="fold-section" id="freeCardWrap" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease"><div class="card-list" id="freeCards"></div></div>
+  <div class="fold-section" id="freeCardWrap" style="display:none"><div class="card-list" id="freeCards"></div></div>
 
   <!-- ===== 付费专区 ===== -->
   <div class="section-header"><h2>🔒 付费产品卡</h2><span class="more">会员专享 · 完整版</span></div>
@@ -1065,6 +1065,8 @@ body{
   <div id="zone3" class="zone-content"></div>
 
   <!-- ===== 钩子区 ===== -->
+  <div class="section-header" onclick="toggleHooks()" style="cursor:pointer"><h2>🎯 免费拿不到的7样东西</h2><span class="more" id="hookToggle">▼ 展开</span></div>
+  <div id="hookWrap" style="display:none">
   <div class="hook-box">
     <h3>🎯 免费拿不到的7样东西</h3>
     <div class="hook-item">
@@ -1096,8 +1098,8 @@ body{
       <div class="hook-text"><strong>会员专属交流</strong> — 有问题直接问沧林本人，不是AI，是做了20年卤味的真人</div>
     </div>
   </div>
+  </div>
 
-  
 </div>
 <!-- ===== AI 问答入口 ===== -->
   <div class="ai-entrance">
@@ -1152,31 +1154,23 @@ body{
   </div>
 
 <!-- ===== 微信区块 ===== -->
-  <div class="wechat-box" id="wechatSection">
-    <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:center">
-      <div style="flex:1;min-width:140px;max-width:220px">
-        <h3>📱 加微信 · 领免费资料</h3>
-        <p class="sub">扫码添加沧林本人微信<br>免费领取《酱卤新手避坑指南》+ 3张隐藏产品卡</p>
-        <div class="qrcode" style="width:120px;height:120px;margin:0 auto">
-          <img src="wechat_qr.jpg" alt="沧林微信">
+  <div class="wechat-box" id="wechatSection" style="text-align:center">
+    <div style="display:inline-flex;gap:40px;align-items:flex-start;flex-wrap:wrap;justify-content:center">
+      <div style="text-align:center">
+        <p style="font-size:13px;font-weight:600;color:#3a322a;margin-bottom:10px">📱 加微信 · 领免费资料</p>
+        <div class="qrcode" style="width:110px;height:110px;margin:0 auto;border-radius:10px;overflow:hidden">
+          <img src="wechat_qr.jpg" alt="沧林微信" style="width:100%;height:100%;object-fit:cover">
         </div>
-        <div class="wxid">微信号：<strong>canglin1985</strong></div>
-        <div class="tags" style="justify-content:center">
-          <span>🛡️ 新手避坑</span>
-          <span>📊 成本模型</span>
-          <span>💡 选品建议</span>
-          <span>🤝 同行交流</span>
-        </div>
+        <div class="wxid" style="margin-top:8px">微信号：<strong style="color:var(--accent)">canglin1985</strong></div>
+        <div style="font-size:10px;color:#999;margin-top:2px">备注"产品卡"快速通过</div>
       </div>
-      <div style="flex:1;min-width:140px;max-width:220px;padding-top:10px">
-        <h3>📢 关注公众号</h3>
-        <p class="sub">每周推送 · 酱卤干货 · 新品发布 · 行业动态</p>
-        <div class="qrcode" style="width:120px;height:120px;margin:14px auto 0">
-          <div style="width:100%;height:100%;border-radius:10px;background:#f5ede5;display:flex;align-items:center;justify-content:center;font-size:11px;color:#999">公众号二维码<br>（待上传）</div>
-        </div>
-        <div style="font-size:12px;color:#999;margin-top:8px;text-align:center">搜索「沧林食品工作站」</div>
+      <div style="text-align:center">
+        <p style="font-size:13px;font-weight:600;color:#3a322a;margin-bottom:10px">📢 关注公众号</p>
+        <div class="qrcode" style="width:110px;height:110px;margin:0 auto;border-radius:10px;overflow:hidden;background:#f5ede5;display:flex;align-items:center;justify-content:center;font-size:10px;color:#bbb">待开通</div>
+        <div style="font-size:11px;color:#999;margin-top:8px">搜索「沧林食品工作站」</div>
       </div>
     </div>
+    <div style="margin-top:16px;font-size:11px;color:#bbb">付费内容 · 咨询 · 合作 → 微信 canglin1985</div>
   </div>
 
 <div class="footer">
@@ -1308,13 +1302,19 @@ if(document.cookie.indexOf('unlocked=1') > -1){
 function toggleFree(){
   const zone = document.getElementById('freeZone');
   const toggle = document.getElementById('freeToggle');
-  if(zone.style.display === 'none'){
-    zone.style.display = 'block';
-    toggle.textContent = '▲ 收起';
-  } else {
-    zone.style.display = 'none';
-    toggle.textContent = '▼ 展开';
-  }
+  if(!zone||!toggle) return;
+  const vis = zone.style.display !== 'none';
+  zone.style.display = vis ? 'none' : 'block';
+  toggle.textContent = vis ? '▼ 展开' : '▲ 收起';
+}
+
+function toggleHooks(){
+  const w = document.getElementById('hookWrap');
+  const t = document.getElementById('hookToggle');
+  if(!w||!t) return;
+  const vis = w.style.display !== 'none';
+  w.style.display = vis ? 'none' : 'block';
+  t.textContent = vis ? '▼ 展开' : '▲ 收起';
 }
 
 function togglePwd(){
@@ -1588,9 +1588,9 @@ function toggleFreeCards(){
   const wrap = document.getElementById('freeCardWrap');
   const toggle = document.getElementById('freeCardToggle');
   if(!wrap||!toggle) return;
-  const isOpen = wrap.style.maxHeight !== '0px';
-  wrap.style.maxHeight = isOpen ? '0px' : wrap.scrollHeight + 'px';
-  toggle.textContent = isOpen ? '点击展开 ▼' : '收起 ▲';
+  const isOpen = wrap.style.display !== 'none';
+  wrap.style.display = isOpen ? 'none' : 'block';
+  toggle.textContent = isOpen ? '▼ 展开' : '▲ 收起';
 }
 
 // 免费知识库折叠切换
