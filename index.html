@@ -840,7 +840,7 @@ body{
     <div class="hero-stat"><div class="num">236</div><div class="lb">工艺配方</div></div>
     <div class="hero-stat"><div class="num">3</div><div class="lb">免费试看</div></div>
   </div>
-  <div style="margin-top:12px;font-size:12px;color:#999">免费浏览7张 → 付费解锁全部 · <a href="#wechatSection" style="color:#C0392B">联系沧林获取密码</a></div>
+  <div style="margin-top:12px;font-size:12px;color:#999">免费浏览3张 → 付费解锁全部 · <a href="#wechatSection" style="color:#C0392B">联系沧林获取密码</a></div>
 </div>
 
 <div class="lock-wrap">
@@ -1068,7 +1068,11 @@ body{
   <div class="section-header" onclick="toggleHooks()" style="cursor:pointer"><h2>🎯 免费拿不到的7样东西</h2><span class="more" id="hookToggle">▼ 展开</span></div>
   <div id="hookWrap" style="display:none">
   <div class="hook-box">
-    <h3>🎯 免费拿不到的7样东西</h3>
+    <div class="section-header" style="cursor:pointer;border:none;margin:0 0 8px" onclick="toggleHook()">
+      <h3 style="font-size:14px">🎯 免费拿不到的7样东西</h3>
+      <span id="hookToggle" style="font-size:11px;color:#999">点击展开 ▼</span>
+    </div>
+    <div class="fold-section" id="hookFoldSection" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease">
     <div class="hook-item">
       <div class="hook-num">1</div>
       <div class="hook-text"><strong>完整配方的精准克数</strong> — 免费卡只给框架，付费版给到每一味香料的精确投放量</div>
@@ -1097,19 +1101,36 @@ body{
       <div class="hook-num">7</div>
       <div class="hook-text"><strong>会员专属交流</strong> — 有问题直接问沧林本人，不是AI，是做了20年卤味的真人</div>
     </div>
-  </div>
+    </div>
   </div>
 
+  
 </div>
-<!-- ===== AI 问答入口 ===== -->
-  <div class="ai-entrance">
-    <h3>🤖 AI 助手 · 问沧林知识库</h3>
-    <p>基于1049张产品卡 + 236份工艺配方回答，帮你快速决策</p>
-    <div class="ai-row">
-      <input type="text" id="aiQuestion" placeholder="例如：10万预算做卤味，从哪入手？" onkeydown="if(event.key==='Enter')askAI()">
-      <button onclick="askAI()">提问</button>
+<!-- ===== AI 咨询入口 ===== -->
+  <div class="ai-entrance" id="aiSection">
+    <h3>🤖 AI 咨询</h3>
+    <p>两条路，自己选</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin:12px auto;max-width:360px">
+      <a href="https://weixin.qq.com/cgi-bin/readtemplate?uin=canglin1985" target="_blank" style="flex:1;min-width:130px;padding:14px 12px;border-radius:12px;background:var(--card);box-shadow:var(--shadow);text-align:center;text-decoration:none;color:var(--text);border:1.5px solid var(--border);display:block">
+        <div style="font-size:26px;margin-bottom:4px">🧑‍🍳</div>
+        <div style="font-size:13px;font-weight:700">问沧林本人</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">20年实战微信直聊</div>
+        <div style="font-size:10px;color:var(--accent);margin-top:4px">canglin1985</div>
+      </a>
+      <div style="flex:1;min-width:130px;padding:14px 12px;border-radius:12px;background:var(--card);box-shadow:var(--shadow);text-align:center;cursor:pointer;border:1.5px solid var(--accent)" onclick="toggleAIInput()">
+        <div style="font-size:26px;margin-bottom:4px">🤖</div>
+        <div style="font-size:13px;font-weight:700">问AI助手</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">基于知识库回答</div>
+        <div style="font-size:10px;color:var(--green);margin-top:4px">点击提问</div>
+      </div>
     </div>
-    <div class="ai-answer" id="aiAnswer">💡 先在微信联系沧林开通AI接口，即可使用</div>
+    <div style="display:none" id="aiInputArea">
+      <div class="ai-row">
+        <input type="text" id="aiQuestion" placeholder="例如：10万预算做卤味，从哪入手？" onkeydown="if(event.key==='Enter')askAI()">
+        <button onclick="askAI()">提问</button>
+      </div>
+      <div class="ai-answer" id="aiAnswer">💡 先在微信联系沧林开通AI接口，即可使用</div>
+    </div>
   </div>
 
   
@@ -1154,23 +1175,22 @@ body{
   </div>
 
 <!-- ===== 微信区块 ===== -->
-  <div class="wechat-box" id="wechatSection" style="text-align:center">
-    <div style="display:inline-flex;gap:40px;align-items:flex-start;flex-wrap:wrap;justify-content:center">
-      <div style="text-align:center">
-        <p style="font-size:13px;font-weight:600;color:#3a322a;margin-bottom:10px">📱 加微信 · 领免费资料</p>
-        <div class="qrcode" style="width:110px;height:110px;margin:0 auto;border-radius:10px;overflow:hidden">
+  <div class="wechat-box" id="wechatSection" style="background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin:20px 0">
+    <h3 style="font-size:15px;font-weight:700;text-align:center;margin-bottom:14px">📱 联系沧林</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:320px;margin:0 auto">
+      <div style="text-align:center;padding:12px 8px;border-radius:10px;background:#faf8f5">
+        <div style="width:110px;height:110px;margin:0 auto 8px;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)">
           <img src="wechat_qr.jpg" alt="沧林微信" style="width:100%;height:100%;object-fit:cover">
         </div>
-        <div class="wxid" style="margin-top:8px">微信号：<strong style="color:var(--accent)">canglin1985</strong></div>
-        <div style="font-size:10px;color:#999;margin-top:2px">备注"产品卡"快速通过</div>
+        <div style="font-size:12px;font-weight:600">加微信</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">canglin1985</div>
       </div>
-      <div style="text-align:center">
-        <p style="font-size:13px;font-weight:600;color:#3a322a;margin-bottom:10px">📢 关注公众号</p>
-        <div class="qrcode" style="width:110px;height:110px;margin:0 auto;border-radius:10px;overflow:hidden;background:#f5ede5;display:flex;align-items:center;justify-content:center;font-size:10px;color:#bbb">待开通</div>
-        <div style="font-size:11px;color:#999;margin-top:8px">搜索「沧林食品工作站」</div>
+      <div style="text-align:center;padding:12px 8px;border-radius:10px;background:#faf8f5">
+        <div style="width:110px;height:110px;margin:0 auto 8px;border-radius:10px;background:#f5ede5;display:flex;align-items:center;justify-content:center;font-size:10px;color:#bbb;box-shadow:0 2px 8px rgba(0,0,0,.04)">公众号<br>待上传</div>
+        <div style="font-size:12px;font-weight:600">关注公众号</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">搜索「沧林食品工作站」</div>
       </div>
     </div>
-    <div style="margin-top:16px;font-size:11px;color:#bbb">付费内容 · 咨询 · 合作 → 微信 canglin1985</div>
   </div>
 
 <div class="footer">
@@ -1583,7 +1603,6 @@ function askAI(){
   r.innerHTML = '🔌 AI接口正在部署中。<br>请先在微信联系沧林开通：<strong>canglin1985</strong><br>你的问题是：' + q;
 }
 
-// 免费试看折叠切换
 function toggleFreeCards(){
   const wrap = document.getElementById('freeCardWrap');
   const toggle = document.getElementById('freeCardToggle');
@@ -1601,6 +1620,22 @@ function toggleFreeKB(){
   const isOpen = wrap.style.maxHeight !== '0px';
   wrap.style.maxHeight = isOpen ? '0px' : wrap.scrollHeight + 'px';
   toggle.textContent = isOpen ? '点击展开 ▼' : '收起 ▲';
+}
+
+// 钩子区折叠切换
+function toggleHook(){
+  const wrap = document.getElementById('hookFoldSection');
+  const toggle = document.getElementById('hookToggle');
+  if(!wrap||!toggle) return;
+  const isOpen = wrap.style.maxHeight !== '0px';
+  wrap.style.maxHeight = isOpen ? '0px' : wrap.scrollHeight + 'px';
+  toggle.textContent = isOpen ? '点击展开 ▼' : '收起 ▲';
+}
+
+// AI输入区切换
+function toggleAIInput(){
+  const area = document.getElementById('aiInputArea');
+  if(area) area.style.display = area.style.display === 'none' ? 'block' : 'none';
 }
 
 // AI助手点击展开提问区
