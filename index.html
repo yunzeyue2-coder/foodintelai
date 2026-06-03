@@ -838,7 +838,7 @@ body{
   <div class="hero-stats">
     <div class="hero-stat"><div class="num">1049</div><div class="lb">产品卡</div></div>
     <div class="hero-stat"><div class="num">236</div><div class="lb">工艺配方</div></div>
-    <div class="hero-stat"><div class="num">7</div><div class="lb">免费试看</div></div>
+    <div class="hero-stat"><div class="num">3</div><div class="lb">免费试看</div></div>
   </div>
   <div style="margin-top:12px;font-size:12px;color:#999">免费浏览7张 → 付费解锁全部 · <a href="#wechatSection" style="color:#C0392B">联系沧林获取密码</a></div>
 </div>
@@ -891,7 +891,8 @@ body{
   <!-- ===== 免费知识库（核心钩子） ===== -->
   <div class="section-header" onclick="toggleFree()" style="cursor:pointer">
     <h2>📚 免费知识库 <span id="freeToggle" style="font-size:11px;color:#999">▼ 展开</span></h2>
-    <span class="more">每日更新 · 从0到1学食品</span>
+
+<div class="fold-section" id="kbFoldSection" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease">    <span class="more">每日更新 · 从0到1学食品</span>
   </div>
   <div id="freeZone" style="display:none">
     <div class="knowledge-tabs" id="knowTabs">
@@ -1051,8 +1052,8 @@ body{
   </div>
 
   <!-- ===== 免费产品卡 ===== -->
-  <div class="section-header" id="products"><h2>🆓 免费试看</h2><span class="more">7张 · 钩子卡</span></div>
-  <div class="card-list" id="freeCards"></div>
+  <div class="section-header" style="cursor:pointer" onclick="toggleFreeCards()"><h2>🆓 免费试看</h2><span class="more" id="freeCardToggle">点击展开 ▼</span></div>
+  <div class="fold-section" id="freeCardWrap" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease"><div class="card-list" id="freeCards"></div></div>
 
   <!-- ===== 付费专区 ===== -->
   <div class="section-header"><h2>🔒 付费产品卡</h2><span class="more">会员专享 · 完整版</span></div>
@@ -1096,7 +1097,9 @@ body{
     </div>
   </div>
 
-  <!-- ===== AI 问答入口 ===== -->
+  
+</div>
+<!-- ===== AI 问答入口 ===== -->
   <div class="ai-entrance">
     <h3>🤖 AI 助手 · 问沧林知识库</h3>
     <p>基于1049张产品卡 + 236份工艺配方回答，帮你快速决策</p>
@@ -1111,14 +1114,25 @@ body{
     <div class="hint">加好友备注"产品卡"快速通过</div>
   </div>
 
-  <!-- ===== 会员体系 ===== -->
+  
+  <!-- ===== 经营测算工具 ===== -->
+  <div class="calc-box" id="calculator">
+    <h3>📊 经营测算工具</h3>
+    <p class="sub">选品类→选场景→自动出回本报告</p>
+    <div class="calc-placeholder" style="padding:24px 16px;text-align:center;background:var(--card);border-radius:12px;box-shadow:var(--shadow);margin:12px 0">
+      <div style="font-size:36px;margin-bottom:8px">📋</div>
+      <div style="font-size:13px;color:var(--muted)">测算工具开发中 · 联系沧林获取内测资格</div>
+      <div style="font-size:11px;color:#999;margin-top:6px">输入启动资金 → 自动匹配品类 → 算回本周期</div>
+    </div>
+  </div>
+<!-- ===== 会员体系 ===== -->
   <div class="price-box" id="price">
     <h3>💰 会员体系</h3>
     <div class="price-row">
       <span class="label">免费试看 <span class="tag-tier green">入门钩子</span></span>
       <span class="price free">¥0</span>
     </div>
-    <div style="font-size:11px;color:#999;padding:0 0 10px;border-bottom:1px solid #f2eee8">7张产品卡 · 完整结构预览</div>
+    <div style="font-size:11px;color:#999;padding:0 0 10px;border-bottom:1px solid #f2eee8">3张产品卡 · 完整结构预览</div>
     <div class="price-row" style="margin-top:8px">
       <span class="label">单品付费 <span class="tag-tier orange">按需购买</span></span>
       <span class="price">¥39-299</span>
@@ -1191,15 +1205,11 @@ const FREE_CARDS = [
   {e:"🏮",n:"道口烧鸡",d:"400年老汤 · 先炸后卤",f:"daokou-shaoji.html"},
   {e:"🍃",n:"茶香鸡",d:"白卤水遇上茶香 · 清新不腻",f:"cha-xiang-ji.html"},
   {e:"🏺",n:"叫花鸡（郑州版）",d:"荷叶黄泥 · 敲开吃 · 郑州老味道",f:"叫花鸡_郑州版_产品卡.html"},
-  {e:"🐓",n:"开封桶子鸡",d:"白卤脆韧 · 108刀文吃",f:"桶子鸡_产品卡.html"},
-  {e:"🌶️",n:"椒麻鸡",d:"卤香入骨 · 14种散料 · 麻辣劲爽",f:"椒麻鸡_产品卡.html"},
-  {e:"🫘",n:"麻油鸡",d:"油卤风干 · 手撕越嚼越香",f:"麻油鸡_产品卡.html"},
-  {e:"🔥",n:"沟帮子熏鸡",d:"中国四大名鸡 · 百年糖熏工艺",f:"沟帮子熏鸡_商业产品卡.html"},
 ];
 
 const ZONES = [
   {
-    name:"🍢 摆摊爆品",
+    name:"🔥 🍢 摆摊爆品",
     cards:[
       {e:"🥩",n:"酱卤牛肉",d:"五香+酱香双口味 · 单日300斤产能",f:"酱卤牛肉_产品卡.html"},
       {e:"🐥",n:"手撕烧鸟",d:"日式炭火 · 备长炭 · 摆摊神器",f:"stall_manual.html"},
@@ -1529,8 +1539,8 @@ const STALL_CATS = {
   '🥗':{n:'轻食',c:11,idx:19},
   '🍶':{n:'茶食/茶饮',c:7,idx:20},
   '🍣':{n:'日料',c:7,idx:21},
-  '🍖':{n:'烧烤',c:6,idx:22},
-  '🫘':{n:'肠粉',c:3,idx:23},
+  '🍖':{n:'烧烤(开发中)',c:0,idx:22},
+  '🫘':{n:'肠粉(开发中)',c:0,idx:23},
   '🥦':{n:'汤菜',c:3,idx:24},
   '🍝':{n:'其他',c:9,idx:25},
 };
@@ -1539,11 +1549,19 @@ function renderStallCats(){
   if(!el) return;
   let html = '';
   for(const [icon, info] of Object.entries(STALL_CATS)){
-    html += `<a class="stall-cat-item" href="stall_manual.html#cat${info.idx}">
-      <span class="cat-icon">${icon}</span>
-      <span class="cat-name">${info.n}</span>
-      <span class="cat-count">${info.c}</span>
-    </a>`;
+    if(info.c > 0){
+      html += `<a class="stall-cat-item" href="stall_manual.html#cat${info.idx}">
+        <span class="cat-icon">${icon}</span>
+        <span class="cat-name">${info.n}</span>
+        <span class="cat-count">${info.c}</span>
+      </a>`;
+    } else {
+      html += `<div class="stall-cat-item" style="opacity:0.5">
+        <span class="cat-icon">${icon}</span>
+        <span class="cat-name">${info.n}</span>
+        <span class="cat-count">开发中</span>
+      </div>`;
+    }
   }
   el.innerHTML = html;
 }
@@ -1564,6 +1582,47 @@ function askAI(){
   if(!q){r.textContent = '⚠️ 请输入问题';return;}
   r.innerHTML = '🔌 AI接口正在部署中。<br>请先在微信联系沧林开通：<strong>canglin1985</strong><br>你的问题是：' + q;
 }
+
+// 免费试看折叠切换
+function toggleFreeCards(){
+  const wrap = document.getElementById('freeCardWrap');
+  const toggle = document.getElementById('freeCardToggle');
+  if(!wrap||!toggle) return;
+  const isOpen = wrap.style.maxHeight !== '0px';
+  wrap.style.maxHeight = isOpen ? '0px' : wrap.scrollHeight + 'px';
+  toggle.textContent = isOpen ? '点击展开 ▼' : '收起 ▲';
+}
+
+// 免费知识库折叠切换
+function toggleFreeKB(){
+  const wrap = document.getElementById('kbFoldSection');
+  const toggle = document.getElementById('freeKBToggle');
+  if(!wrap||!toggle) return;
+  const isOpen = wrap.style.maxHeight !== '0px';
+  wrap.style.maxHeight = isOpen ? '0px' : wrap.scrollHeight + 'px';
+  toggle.textContent = isOpen ? '点击展开 ▼' : '收起 ▲';
+}
+
+// AI助手点击展开提问区
+function askAI(){
+  const area = document.getElementById('aiInputArea');
+  if(area) area.style.display = 'block';
+}
+
+// 知识库条目点击弹窗（补全）
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.know-item').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', function(){
+      const title = this.querySelector('.title')?.textContent || '知识条目';
+      const desc = this.querySelector('.desc')?.textContent || '';
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalBody').textContent = desc;
+      document.getElementById('modalOverlay').classList.add('show');
+    });
+  });
+});
+
 </script>
 
 </body>
