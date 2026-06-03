@@ -1418,6 +1418,39 @@ function switchZone(i){
   document.querySelectorAll('.zone-content').forEach((z,idx)=>z.classList.toggle('active',idx===i));
 }
 
+// 付费产品タブ滑动切换（手机端）
+let touchStartX = 0;
+let touchEndX = 0;
+document.addEventListener('touchstart', e => {
+  // 只在付费卡列表区域触发
+  const zoneContent = document.getElementById('zone0');
+  if(!zoneContent || !zoneContent.closest('#mainContent.show')) return;
+  const target = e.target;
+  // 不要干扰滚动和链接点击
+  if(target.closest('.card-item') || target.closest('.share-btn') || target.closest('.zone-tab')) return;
+  touchStartX = e.changedTouches[0].screenX;
+}, {passive: true});
+document.addEventListener('touchend', e => {
+  if(!touchStartX) return;
+  const activeTab = document.querySelector('.zone-tab.active');
+  if(!activeTab) return;
+  const tabs = document.querySelectorAll('.zone-tab');
+  const activeIdx = Array.from(tabs).indexOf(activeTab);
+  if(activeIdx === -1) return;
+  touchEndX = e.changedTouches[0].screenX;
+  const diff = touchStartX - touchEndX;
+  // 左滑超过50px → 下一个tab；右滑 → 上一个
+  if(Math.abs(diff) > 50){
+    if(diff > 0 && activeIdx < tabs.length - 1){
+      switchZone(activeIdx + 1);
+    } else if(diff < 0 && activeIdx > 0){
+      switchZone(activeIdx - 1);
+    }
+  }
+  touchStartX = 0;
+  touchEndX = 0;
+}, {passive: true});
+
 // 密码解锁
 function unlock(){
   const pwd = document.getElementById('pwdInput').value;
