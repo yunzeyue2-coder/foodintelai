@@ -1718,6 +1718,32 @@ const STALL_CATS = {
   '🥦':{n:'汤菜',c:3,idx:24},
   '🍝':{n:'其他',c:9,idx:25},
 };
+// 从cards-data.json加载真实卡片数据
+let CARDS_DATA = null;
+let CARDS_LOADED = false;
+async function loadCardsData(){
+  if(CARDS_LOADED) return;
+  try{
+    const r = await fetch('cards-data.json');
+    CARDS_DATA = await r.json();
+    CARDS_LOADED = true;
+    // 更新品类统计
+    let catCount = {};
+    for(const [uid, card] of Object.entries(CARDS_DATA)){
+      const cat = card.category || '其他';
+      catCount[cat] = (catCount[cat]||0) + 1;
+    }
+    // 更新STALL_CATS的count
+    for(const [icon, info] of Object.entries(STALL_CATS)){
+      if(catCount[info.n]) info.c = catCount[info.n];
+    }
+    renderStallCats();
+    updateHeroStats();
+  }catch(e){
+    console.log('卡片数据加载失败，使用本地数据', e);
+  }
+}
+
 function renderStallCats(){
   const el = document.getElementById('stallCats');
   if(!el) return;
@@ -1757,6 +1783,7 @@ function updateHeroStats(){
 renderKnowTab(0);
 renderStallCats();
 updateHeroStats();
+loadCardsData();
 
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('show');
