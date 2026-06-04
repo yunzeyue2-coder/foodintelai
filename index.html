@@ -500,6 +500,16 @@ body{
   color:#fff;
   box-shadow:0 2px 8px rgba(192,57,43,.25);
 }
+.zone-sep{
+  flex-shrink:0;
+  padding:6px 8px;
+  font-size:10px;
+  color:var(--light);
+  letter-spacing:2px;
+  white-space:nowrap;
+  display:flex;
+  align-items:center;
+}
 .zone-hot-cards{
   padding:0 14px;
   display:flex;
@@ -4715,6 +4725,23 @@ const ZONES = [
       {e:"🥭",n:"杨枝甘露",d:"经典芒果西柚 · 冷饮700ml",f:"cards/YL_010.html"},
     ]
   },
+  {name:"— — — 更 多 — — —",cards:[],is_sep:true},
+  {
+    name:"🥟 包子专区",
+    cards:[
+      {e:"🥟",n:"灌汤包",d:"江浙风味 · 皮冻爆汁 · 咬开先喝汤",f:"cards/BZ_001.html"},
+      {e:"🥟",n:"龙眼汤包",d:"龙眼形状 · 皮薄汤多",f:"cards/BZ_002.html"},
+      {e:"🥟",n:"馨香猪肉灌汤包",d:"葱香浓郁 · 经典猪肉馅",f:"cards/BZ_003.html"},
+      {e:"🥟",n:"开封猪肉灌汤包",d:"开封老味道 · 皮薄馅鲜",f:"cards/BZ_004.html"},
+      {e:"🥟",n:"草菇蔬菜汤包",d:"菌菇清香 · 素食精品",f:"cards/BZ_005.html"},
+      {e:"🥟",n:"长沙清香猪肉灌汤包",d:"湘式清香 · 鲜而不腻",f:"cards/BZ_007.html"},
+      {e:"🥟",n:"酱肉包子",d:"酱香浓郁 · 肥瘦相间",f:"cards/BZ_03.html"},
+      {e:"🥟",n:"咖喱牛肉包子",d:"咖喱辛香 · 牛肉扎实",f:"cards/BZ_04.html"},
+      {e:"🥟",n:"香菇青菜包子",d:"香菇提鲜 · 青菜清爽",f:"cards/BZ_05.html"},
+      {e:"🥟",n:"玫瑰豆沙包",d:"豆沙绵密 · 甜而不腻",f:"cards/BZ_06.html"},
+    ]
+  },
+  {name:"— — — 更 多 — — —",cards:[],is_sep:true},
   {
     name:"🏪 开店专区",
     cards:[]
@@ -4759,7 +4786,11 @@ function renderHotZone(){
   const hotTags = ['🔥', '📈', '💥', '⭐', '💎', '🚀'];
   
   ZONES.forEach((z,i) => {
-    tabsEl.innerHTML += `<button class="zone-hot-tab ${i===0?'active':''}" onclick="switchHot(${i})">${z.name}</button>`;
+    if(z.is_sep){
+      tabsEl.innerHTML += `<div class="zone-sep">${z.name}</div>`;
+    } else {
+      tabsEl.innerHTML += `<button class="zone-hot-tab ${i===0?'active':''}" onclick="switchHot(${i})">${z.name}</button>`;
+    }
   });
   
   renderHotContent(0, hotTags);
@@ -4781,10 +4812,25 @@ function renderHotZone(){
     const activeTab = document.querySelector('.zone-hot-tab.active');
     if(!activeTab) return;
     const tabs = document.querySelectorAll('.zone-hot-tab');
-    const idx = Array.from(tabs).indexOf(activeTab);
-    if(idx === -1) return;
-    if(dx > 0 && idx < tabs.length - 1) switchHot(idx + 1);
-    else if(dx < 0 && idx > 0) switchHot(idx - 1);
+    const ti = Array.from(tabs).indexOf(activeTab);
+    if(ti === -1) return;
+    // 找到ti对应的ZONES索引（跳过分隔）
+    let actualIdx;
+    let tabCount = 0;
+    for(let zi=0; zi<ZONES.length; zi++){
+      if(ZONES[zi].is_sep) continue;
+      if(tabCount === ti){ actualIdx = zi; break; }
+      tabCount++;
+    }
+    if(actualIdx === undefined) return;
+    // 滑动找下一个非分隔zone
+    let nextIdx = -1;
+    if(dx > 0){
+      for(let zi=actualIdx+1; zi<ZONES.length; zi++){ if(!ZONES[zi].is_sep){ nextIdx = zi; break; } }
+    } else {
+      for(let zi=actualIdx-1; zi>=0; zi--){ if(!ZONES[zi].is_sep){ nextIdx = zi; break; } }
+    }
+    if(nextIdx >= 0) switchHot(nextIdx);
   }, {passive: true});
 }
 
@@ -4792,6 +4838,7 @@ function renderHotContent(idx, hotTags){
   const z = ZONES[idx];
   const contentEl = document.getElementById('hotContent');
   if(!contentEl) return;
+  if(z.is_sep){ contentEl.innerHTML = ''; return; }
   
   let html = `<div class="zone-hot-sub">${z.desc || ''}</div><div class="zone-hot-cards">`;
   z.cards.forEach((c,i) => {
@@ -4811,7 +4858,10 @@ function renderHotContent(idx, hotTags){
   contentEl.innerHTML = html;
   
   // 更新tab高亮
-  document.querySelectorAll('.zone-hot-tab').forEach((t,ti) => t.classList.toggle('active', ti===idx));
+  document.querySelectorAll('.zone-hot-tab').forEach((t,ti) => {
+    const actualIdx = ZONES.findIndex((z,zi) => zi >= ti && !z.is_sep);
+    t.classList.toggle('active', actualIdx === idx);
+  });
 }
 
 function switchHot(i){
