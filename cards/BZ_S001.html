@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>灌汤包 · 门店版 · FoodIntel AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#2c2c2c;padding:24px 16px;line-height:1.7}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.meta{padding:20px 22px 14px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta .badge{display:inline-block;font-size:10px;font-weight:700;color:#C0392B;background:#fef2ee;padding:2px 10px;border-radius:4px;margin-bottom:6px}
+.meta .store-tag{display:inline-block;font-size:9px;font-weight:600;color:#5a8f3c;background:#f0f6ec;padding:2px 8px;border-radius:4px;margin-left:6px}
+.meta h1{font-size:20px;font-weight:700;color:#3a322a;line-height:1.3;margin-bottom:2px}
+.meta .sub{font-size:12px;color:#b5aaa0;margin-bottom:10px}
+.meta .tags{display:flex;gap:4px;flex-wrap:wrap}
+.meta .tags span{font-size:10px;padding:2px 10px;background:#f5ede5;border-radius:12px;color:#5a4f44}
+.level-banner{display:flex;gap:8px;padding:10px 22px;background:#fef9f2;border-bottom:1px solid #eee5d8;flex-wrap:wrap}
+.level-item{font-size:11px;padding:3px 10px;border-radius:6px;background:#f0e9e2;color:#5a4f44}
+.level-item.high{background:#C0392B;color:#fff}
+.level-item.green{background:#5a8f3c;color:#fff}
+.section{padding:14px 22px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:14px;font-weight:700;color:#3a322a;margin-bottom:10px;padding-bottom:4px;border-bottom:2px solid #f0ece6}
+.story{font-size:13px;line-height:2;color:#5a4f44}
+.story em{color:#C0392B;font-style:normal;font-weight:600}
+
+/* 门店版专属模块 */
+.store-box{padding:12px 14px;background:#f8f4ef;border-radius:10px;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:#3a322a}
+.row .v{font-weight:600}
+.row.tot{border-top:1px solid #ddd4ca;margin-top:4px;padding-top:8px;font-weight:700;color:#C0392B}
+.roi{display:flex;gap:6px;margin-top:8px}
+.roi-b{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.roi-b .d{font-size:15px;font-weight:700;margin:2px 0}
+.roi-b.c{background:#fdf2ee;color:#E8652D}
+.roi-b.n{background:#fef6ec;color:#D4A574}
+.roi-b.i{background:#f0f6ec;color:#5a8f3c}
+
+/* 月损益表 */
+.pl-table{padding:10px 0}
+.pl-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;color:#5a4f44}
+.pl-row .pl-l{color:#7a7269}
+.pl-row .pl-r{font-weight:600}
+.pl-row.in{color:#5a8f3c;font-weight:700}
+.pl-row.out{color:#C0392B;font-weight:600}
+.pl-row.tot{border-top:1px solid #ddd4ca;margin-top:4px;padding-top:8px;font-size:13px;font-weight:800;color:#3a322a}
+
+/* 坪效/翻台 */
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.metric-item{background:#f8f4ef;border-radius:8px;padding:10px;text-align:center}
+.metric-item .num{font-size:20px;font-weight:800;color:#3a322a;margin:2px 0}
+.metric-item .label{font-size:10px;color:#7a7269}
+
+.launch{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.launch span{padding:5px 10px;background:#f8f4ef;border-radius:6px;font-size:11px;color:#5a4f44}
+.scene-grid{display:flex;flex-wrap:wrap;gap:6px}
+.scene-item{padding:5px 12px;background:#f0f6ec;color:#4a7a3c;border-radius:6px;font-size:11px;font-weight:600}
+.benchmark{padding:10px 14px;background:#f8f4ef;border-radius:8px;margin-top:6px}
+.benchmark .bn{font-weight:600;color:#3a322a}
+.benchmark .bd{font-size:11px;color:#7a7269;margin-top:2px}
+.talk{background:#fef9f2;border-radius:8px;padding:10px 14px;margin-top:6px;font-size:12px;color:#5a4f44;line-height:1.8}
+.alert{background:#fef2ee;border-left:3px solid #C0392B;padding:8px 12px;font-size:10px;color:#C0392B;margin-top:6px;border-radius:0 4px 4px 0}
+.paywall{background:linear-gradient(135deg,#fdf2f2,#fef9ef);border:1.5px dashed #ddd4ca;border-radius:14px;padding:20px;margin:14px 22px;text-align:center}
+.paywall .price{font-size:26px;font-weight:800;color:#C0392B}
+.paywall .desc{font-size:11px;color:#7a7269;margin:4px 0 12px}
+.paywall .btn{display:inline-block;background:#C0392B;color:#fff;padding:8px 28px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s}
+.paywall .btn:hover{background:#a33025}
+.store-badge{display:inline-block;background:#5a8f3c;color:#fff;font-size:9px;font-weight:600;padding:1px 8px;border-radius:3px;margin-bottom:6px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div class="meta">
+  <div><span class="store-badge">🏪 门店版</span><span class="badge">BZ_S001 · 灌汤包</span></div>
+  <h1>灌汤包「门店专供」</h1>
+  <div class="sub">江浙风味 · 皮冻爆汁 · 早市+午市两段营收</div>
+  <div class="tags"><span>#月流水6万+</span><span>#2-3人店</span><span>#早餐刚需</span><span>#社区店</span></div>
+</div>
+
+<div class="level-banner">
+  <span class="level-item high">🔥 开店推荐</span>
+  <span class="level-item">月流水 6-8万</span>
+  <span class="level-item green">净利率 22-28%</span>
+</div>
+
+<div class="section">
+  <div class="s-title">📖 项目说</div>
+  <div class="story">
+    郑州有个夫妻店，40平，早上卖灌汤包到10:30，中午换蒸饺+小馄饨做到下午2点。月租8000，请了一个阿姨包包子，月流水干到6万5。<br><br>
+    <em>灌汤包真正的优势不是毛利高，是出餐快。</em>一笼8只，蒸8分钟，一早上能翻十几轮。比做面条效率高两倍，人工还省一半。<br><br>
+    开店的核心不是包子好不好吃，是坪效。灌汤包占一个蒸炉，早上全时段出餐，加一个煮锅中午就能换品类，设备利用率极高。
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💰 月损益表</div>
+  <div class="store-box">
+    <div class="pl-table">
+      <div class="pl-row in"><span class="pl-l">月营收（日均200笼×¥12）</span><span class="pl-r">¥72,000</span></div>
+      <div class="pl-row"><span class="pl-l">－食材成本（35%）</span><span class="pl-r">-¥25,200</span></div>
+      <div class="pl-row"><span class="pl-l">－人工（2人）</span><span class="pl-r">-¥10,000</span></div>
+      <div class="pl-row"><span class="pl-l">－房租</span><span class="pl-r">-¥8,000</span></div>
+      <div class="pl-row"><span class="pl-l">－水电杂费</span><span class="pl-r">-¥2,500</span></div>
+      <div class="pl-row out"><span class="pl-l">－包装/损耗/其他</span><span class="pl-r">-¥2,000</span></div>
+      <div class="pl-row tot"><span class="pl-l">月净利润</span><span class="pl-r">¥24,300</span></div>
+    </div>
+    <div class="row" style="font-size:11px;color:#7a7269;padding-top:6px;border-top:1px solid #eee5d8">
+      <span>净利率：33.7%</span><span>回本周期：8个月</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 经营指标</div>
+  <div class="metric-grid">
+    <div class="metric-item">
+      <div class="label">坪效</div>
+      <div class="num">¥1,800</div>
+      <div class="label">元/㎡/月</div>
+    </div>
+    <div class="metric-item">
+      <div class="label">翻台率</div>
+      <div class="num">12轮</div>
+      <div class="label">早餐时段</div>
+    </div>
+    <div class="metric-item">
+      <div class="label">客单价</div>
+      <div class="num">¥12</div>
+      <div class="label">一笼8只</div>
+    </div>
+    <div class="metric-item">
+      <div class="label">日均出餐</div>
+      <div class="num">200笼</div>
+      <div class="label">早市+午市</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🏠 选址要求</div>
+  <div class="store-box">
+    <div class="row"><span>首选位置</span><span class="v">社区门口 / 菜市场旁</span></div>
+    <div class="row"><span>最小面积</span><span class="v">30-40㎡（可坐4-6人）</span></div>
+    <div class="row"><span>租金上限</span><span class="v">¥10,000/月（二线以下¥6,000）</span></div>
+    <div class="row"><span>早市人流量</span><span class="v">≥500人/早高峰（7:00-9:00）</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">👥 人员配置</div>
+  <div class="store-box">
+    <div class="row"><span>老板（主力）</span><span class="v">和面+调馅+看店</span></div>
+    <div class="row"><span>阿姨 1人</span><span class="v">包包子+收桌（¥3,500/月）</span></div>
+    <div class="row"><span>阿姨 2人（高峰期）</span><span class="v">帮厨+洗碗（¥3,000/月）</span></div>
+  </div>
+  <div class="alert">
+    ⚠ 灌汤包不需要专业面点师，培训一周就能上手包。找不到人别慌，去早餐店挖一个熟练阿姨比招小白好使。
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🥟 产品搭配</div>
+  <div class="scene-grid">
+    <span class="scene-item">蒸饺</span>
+    <span class="scene-item">小馄饨</span>
+    <span class="scene-item">豆浆</span>
+    <span class="scene-item">胡辣汤</span>
+    <span class="scene-item">小米粥</span>
+    <span class="scene-item">卤蛋</span>
+  </div>
+  <div style="font-size:11px;color:#7a7269;margin-top:8px">
+    建议搭配：灌汤包（引流品）→ 其他早餐（利润品），客单价从¥12拉到¥18-22
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🎯 对标参考</div>
+  <div class="benchmark">
+    <div class="bn">🥟 无锡·王兴记</div>
+    <div class="bd">老字号模式：灌汤包+馄饨+小笼，客单价¥25-35，月流水15万+</div>
+  </div>
+  <div class="benchmark">
+    <div class="bn">🏪 社区夫妻店</div>
+    <div class="bd">40㎡，夫妻+1阿姨，日销200笼+蒸饺，月净利2万+</div>
+  </div>
+  <div class="benchmark">
+    <div class="bn">⚡ 早餐外卖档口</div>
+    <div class="bd">只做打包不做堂食，10㎡不到，月流水3-4万，净利1.5万</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💬 跟顾客怎么说</div>
+  <div class="talk">
+    <strong>「先喝汤再吃皮」</strong><br>
+    顾客：你们家包子和别家有什么区别？<br>
+    你：我们的灌汤包是皮冻和肉馅1:1.6配的，咬开先喝一勺汤再吃肉。你试一下，跟普通包子不一样。<br><br>
+    <strong>别说的：</strong>「我们的配方多好多好」「我们的肉多新鲜」——顾客听了没感觉。让他喝汤，嘴巴认得。
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">⚠ 避坑</div>
+  <div class="alert">
+    ① 皮冻不能提前24小时以上做好，放久了会出水，包的时候皮容易湿破<br>
+    ② 蒸笼不要叠超过8层，蒸汽上不去，中间的笼会夹生<br>
+    ③ 别为了省成本减少皮冻比例，顾客吃灌汤包就是要那个爆汁感<br>
+    ④ 早市生意靠复购，头三个月哪怕亏本也要保证每天同一个时间开门<br>
+    ⑤ 中午换品的时候要快，蒸笼撤了换煮锅，10分钟内完成切换
+  </div>
+</div>
+
+<div class="paywall">
+  <div style="font-size:13px;font-weight:600;color:#3a322a;margin-bottom:2px">📥 门店版完整方案</div>
+  <div class="desc">含：配方比例·操作流程·物料清单·促销日历</div>
+  <div class="price">¥99</div>
+  <div class="desc">投入 ¥6万回本周期+装修预算+设备清单</div>
+  <a class="btn" href="https://qm.qq.com/q/your-link" target="_blank">微信咨询</a>
+</div>
+
+</div>
+</body>
+</html>

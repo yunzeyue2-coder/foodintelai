@@ -70,7 +70,7 @@ body{
   height:52px;
 }
 .nav-brand{font-size:18px;font-weight:700;color:var(--accent)}
-.nav-links{display:flex;gap:4px}
+.nav-links{display:flex;gap:4px;align-items:center}
 .nav-links a{
   padding:6px 12px;
   font-size:12px;
@@ -80,6 +80,36 @@ body{
   transition:.2s;
 }
 .nav-links a:hover{background:var(--tag-bg);color:var(--text)}
+
+/* 场景切换 */
+.scene-toggle{
+  display:flex;
+  gap:0;
+  background:var(--tag-bg);
+  border-radius:8px;
+  padding:2px;
+  margin-right:4px;
+}
+.scene-btn{
+  padding:4px 10px;
+  font-size:11px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  background:transparent;
+  color:var(--muted);
+  font-weight:600;
+  transition:.2s;
+  white-space:nowrap;
+}
+.scene-btn.active{
+  background:var(--card);
+  color:var(--text);
+  box-shadow:0 1px 3px rgba(0,0,0,.08);
+}
+@media(max-width:380px){
+  .scene-btn{padding:4px 7px;font-size:10px}
+}
 
 @media(max-width:400px){
   .nav-links a{padding:6px 6px}
@@ -1028,6 +1058,10 @@ body{
       </div>
     </div>
     <div class="nav-links">
+      <div class="scene-toggle" id="sceneToggle">
+        <button class="scene-btn active" onclick="switchScene('stall')">🎪 摆摊</button>
+        <button class="scene-btn" onclick="switchScene('store')">🏪 开店</button>
+      </div>
       <a href="stall_manual.html" onclick="event.preventDefault();document.getElementById('freeZone').style.display='block';document.getElementById('freeToggle').textContent='▲ 收起';scrollToSection('freeZone')">免费库</a>
       <a href="#price">会员</a>
       <a href="#wechatSection" onclick="scrollToSection('wechatSection')">微信</a>
@@ -3793,7 +3827,7 @@ const FREE_CARDS = [
   {e:"🏺",n:"叫花鸡（郑州版）",d:"荷叶黄泥 · 敲开吃 · 郑州老味道",f:"叫花鸡_郑州版_产品卡.html"},
 ];
 
-const ZONES = [
+const STALL_ZONES = [
   {
     name:"🔥 🍢 摆摊爆品",
     cards:[
@@ -3820,7 +3854,46 @@ const ZONES = [
     name:"📈 趋势新品",
     cards:[]
   }
-];// 渲染免费卡
+];
+
+const STORE_ZONES = [
+  {
+    name:"🏪 开店专区",
+    cards:[
+      {e:"🥟",n:"灌汤包·门店版",d:"皮冻爆汁·早市午市两段营收·月净利2.4万",f:"cards/BZ_S001.html"},
+    ]
+  },
+  {
+    name:"🔥 热销品类",
+    cards:[]
+  },
+  {
+    name:"📊 经营模型",
+    cards:[]
+  }
+];
+
+let currentScene = 'stall'; // 'stall' | 'store'
+
+function switchScene(scene){
+  currentScene = scene;
+  document.querySelectorAll('.scene-btn').forEach(b => b.classList.remove('active'));
+  if(scene === 'stall'){
+    document.querySelector('.scene-btn:first-child').classList.add('active');
+    window.ZONES = STALL_ZONES;
+    document.getElementById('hotTabs').style.display = '';
+  } else {
+    document.querySelector('.scene-btn:last-child').classList.add('active');
+    window.ZONES = STORE_ZONES;
+  }
+  // 重新渲染
+  const savedIdx = window._currentHotIdx || 0;
+  renderHotZone();
+  switchHot(0);
+}
+
+const ZONES = STALL_ZONES;
+// 渲染免费卡
 const freeEl = document.getElementById('freeCards');
 FREE_CARDS.forEach(c => {
   const sid = 's'+Math.random().toString(36).slice(2,6);
