@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>门店运营卡 · M1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#eae6df;color:#2c2c2c;padding:24px 16px;line-height:1.7}
+.card{max-width:540px;margin:0 auto;background:#f8f7f4;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.06)}
+
+/* ===== M1 品牌色：深墨绿 ===== */
+:root{
+  --primary:#295F4E;
+  --primary-light:#e8efe8;
+  --primary-dark:#1c4237;
+  --accent:#d4893b;
+  --bg-meta:#edf2ec;
+  --bg-level:#e8ede6;
+  --border:#ced5cc;
+  --text:#3a3a3a;
+  --text-light:#8a8a8a;
+}
+
+.meta{padding:20px 22px 14px;background:var(--bg-meta);border-bottom:1px solid var(--border)}
+.meta .badge{display:inline-block;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 12px;border-radius:4px;margin-bottom:6px;letter-spacing:.3px}
+.meta h1{font-size:22px;font-weight:700;color:var(--primary-dark);line-height:1.3;margin-bottom:2px}
+.meta .sub{font-size:12px;color:var(--text-light);margin-bottom:8px}
+.meta .mode-tags{display:flex;gap:4px;flex-wrap:wrap}
+.meta .mode-tags span{font-size:10px;padding:3px 10px;background:#f0ede8;border-radius:12px;color:var(--text)}
+
+.level-banner{display:flex;gap:8px;padding:10px 22px;background:var(--bg-level);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.level-item{font-size:11px;padding:3px 12px;border-radius:6px;background:#e0e3dd;color:var(--text)}
+.level-item.high{background:var(--primary);color:#fff}
+.level-item.warn{background:var(--accent);color:#fff}
+
+.tagline{padding:16px 22px 12px;text-align:center;background:#f3f5f1;border-bottom:1px solid var(--border)}
+.tagline .qt{font-size:14px;font-weight:700;color:var(--primary-dark)}
+.tagline .qt em{color:var(--primary);font-style:normal}
+
+.section{padding:14px 22px;border-bottom:1px solid var(--border)}
+.s-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px;padding-bottom:4px;border-bottom:2px solid #e8e6e0}
+.story{font-size:13px;line-height:2;color:var(--text)}
+.story em{color:var(--primary);font-style:normal;font-weight:600}
+.story strong{color:var(--primary-dark)}
+
+.stage-grid{display:flex;flex-wrap:wrap;gap:6px}
+.stage-item{padding:6px 14px;border-radius:6px;font-size:11px;font-weight:600}
+.stage-item.on{background:var(--primary);color:#fff}
+.stage-item.off{background:#e8e6e0;color:var(--text-light)}
+
+.index-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.index-item{display:flex;justify-content:space-between;padding:7px 12px;background:#f0ede8;border-radius:6px;font-size:12px;color:var(--text)}
+.index-item .stars{font-size:10px;color:var(--accent)}
+.index-item .stars .off{color:#ddd5cc}
+
+.boss-dep{display:flex;gap:10px;margin-top:6px}
+.boss-dep .bd-box{flex:1;padding:10px 12px;background:#f0ede8;border-radius:8px;text-align:center}
+.boss-dep .bd-box .bd-label{font-size:10px;color:var(--text-light);margin-bottom:2px}
+.boss-dep .bd-box .bd-value{font-size:13px;font-weight:700;color:var(--primary)}
+.boss-dep .bd-box .bd-desc{font-size:10px;color:var(--text);margin-top:2px}
+
+.cost-box{padding:12px 14px;background:#f1f4ef;border-radius:10px;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;color:var(--text);border-bottom:1px dashed #e0e4dc}
+.row:last-child{border:none}
+.row .v{font-weight:600}
+.row.tot{border-top:2px solid var(--primary);margin-top:4px;padding-top:10px;font-weight:700;color:var(--primary);font-size:15px;border-bottom:none}
+.roi{display:flex;gap:6px;margin-top:8px}
+.roi-b{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.roi-b .d{font-size:15px;font-weight:700;margin:2px 0}
+.roi-b.c{background:#f5ede5;color:#b57c4a}
+.roi-b.n{background:#f0f4ef;color:var(--primary)}
+.roi-b.i{background:#f0f6ec;color:#5a8f3c}
+
+.org-box{padding:10px 14px;background:#f0f4ef;border-radius:8px;margin-top:6px}
+.org-box .org-title{font-size:12px;font-weight:700;color:var(--primary);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #dce4da}
+.org-box .org-row{font-size:11px;color:var(--text);padding:3px 0}
+
+.prod-str{padding:0}
+.prod-str .p-item{display:flex;gap:8px;padding:6px 0;font-size:12px;color:var(--text);border-bottom:1px dashed #e8e6e0}
+.prod-str .p-item:last-child{border:none}
+.prod-str .p-label{min-width:64px;font-weight:600;color:var(--primary)}
+
+.sop-step{padding:6px 0;font-size:12px;color:var(--text);display:flex;gap:8px;border-bottom:1px dashed #e8e6e0}
+.sop-step:last-child{border:none}
+.sop-step .num{font-weight:700;color:var(--primary);min-width:16px}
+.sop-goal{display:inline-block;margin-top:6px;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:2px 12px;border-radius:4px}
+
+.flow{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:6px}
+.flow span{padding:5px 10px;background:var(--primary-light);color:var(--primary);border-radius:4px;font-size:11px;font-weight:600}
+.flow .arrow{background:none;color:#c8ccc2;padding:0 2px;font-size:14px}
+
+.peak{padding:10px 14px;background:#f7f4ec;border-left:3px solid var(--accent);border-radius:0 6px 6px 0;margin-top:4px;font-size:12px;color:var(--text);line-height:2}
+
+.qc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.qc-item{padding:8px 6px;background:#f1f4ef;border-radius:6px;font-size:10px;color:var(--text);text-align:center;line-height:1.5}
+.qc-item .qc-label{font-weight:700;color:var(--primary);font-size:11px}
+
+.loss-item{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text);border-bottom:1px dashed #e8e6e0}
+.loss-item:last-child{border:none}
+.loss-item .loss-v{font-weight:600;color:var(--accent)}
+
+.train-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.train-item{padding:8px 6px;background:var(--primary-light);border-radius:6px;text-align:center;font-size:11px}
+.train-item .day{font-weight:700;color:var(--primary);font-size:12px}
+.train-item .desc{color:var(--text);font-size:10px;margin-top:2px}
+
+.scene-grid{display:flex;flex-wrap:wrap;gap:6px}
+.scene-item{padding:5px 12px;background:#f0f4ef;color:var(--primary);border-radius:6px;font-size:11px;font-weight:600}
+
+.review{padding:16px 22px;background:#f3f5f1;border-bottom:1px solid var(--border)}
+.review .r-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px}
+.review .r-body{font-size:12px;line-height:2;color:var(--text)}
+.review .r-body strong{color:var(--primary-dark)}
+.review .r-tag{display:inline-block;margin-top:8px;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 14px;border-radius:4px}
+
+.risk-item{display:flex;gap:8px;padding:5px 0;font-size:12px;color:var(--text)}
+.risk-stars{display:flex;gap:2px;margin-left:auto;flex-shrink:0;font-size:10px}
+.risk-stars .on{color:var(--accent)}
+.risk-stars .off{color:#ddd5cc}
+
+.paywall{background:linear-gradient(135deg,#f0f4ef,#fcf9f2);border:1.5px dashed var(--border);border-radius:14px;padding:22px;margin:14px 22px;text-align:center}
+.paywall .p-header{font-size:10px;color:var(--text-light);margin-bottom:2px;letter-spacing:1px}
+.paywall .price-row{display:flex;justify-content:center;gap:10px;margin:8px 0}
+.paywall .price-item{flex:1;padding:10px 8px;background:#fff;border-radius:8px;border:1px solid var(--border)}
+.paywall .price-item .p-price{font-size:20px;font-weight:800;color:var(--primary)}
+.paywall .price-item .p-price span{font-size:11px;font-weight:400;color:var(--text-light)}
+.paywall .price-item .p-label{font-size:10px;color:var(--text-light);margin-top:2px}
+.paywall .price-item.featured{border-color:var(--primary);background:var(--primary-light)}
+.paywall .tier{background:#f8f7f4;border-radius:8px;padding:12px;margin:8px 0;text-align:left}
+.paywall .tier .t-price{font-size:15px;font-weight:700;color:var(--primary-dark)}
+.paywall .tier .t-list{font-size:11px;color:var(--text);margin-top:4px}
+.paywall .tier .t-list li{list-style:none;padding:2px 0;border-bottom:1px dashed #ecece6}
+.paywall .tier .t-list li:last-child{border:none}
+.paywall .tier .t-list li:before{content:"▸ ";color:var(--primary)}
+.paywall .btn{display:block;background:var(--primary);color:#fff;padding:12px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s;margin-top:10px}
+.paywall .btn:hover{background:var(--primary-dark)}
+.paywall .foot{font-size:10px;color:var(--text-light);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- ██████ 元信息 ██████ -->
+  <div class="meta">
+    <div class="badge">MD_XXX_001 · 门店运营卡</div>
+    <h1>XXX门店运营版</h1>
+    <div class="sub">品类：____ / 面积：____ / 投资等级：★☆☆☆☆</div>
+    <div class="mode-tags">
+      <span>☐ 堂食</span>
+      <span>☐ 外卖</span>
+      <span>☐ 档口</span>
+      <span>☐ 外带</span>
+    </div>
+  </div>
+
+  <!-- ██████ 速览 ██████ -->
+  <div class="level-banner">
+    <span class="level-item high">★★★★★ 推荐</span>
+    <span class="level-item">____</span>
+    <span class="level-item">____</span>
+    <span class="level-item">____</span>
+  </div>
+
+  <!-- ██████ 一句话定位 ██████ -->
+  <div class="tagline">
+    <div class="qt">「一句话说明项目本质」<br><em>员工能复制 · 品控能稳定 · 老板不在能转</em></div>
+  </div>
+
+  <!-- ██████ 适合阶段 ██████ -->
+  <div class="section">
+    <div class="s-title">📌 适合阶段</div>
+    <div class="stage-grid">
+      <span class="stage-item on">筹备期</span>
+      <span class="stage-item on">新店0-3个月</span>
+      <span class="stage-item off">稳定运营期</span>
+      <span class="stage-item off">连锁扩张期</span>
+    </div>
+  </div>
+
+  <!-- ██████ 运营指数 ██████ -->
+  <div class="section">
+    <div class="s-title">📊 运营指数</div>
+    <div class="index-grid">
+      <div class="index-item"><span>标准化指数</span><span class="stars">★★★★★</span></div>
+      <div class="index-item"><span>复制指数</span><span class="stars">★★★★★</span></div>
+      <div class="index-item"><span>外卖指数</span><span class="stars">★★★★<span class="off">☆</span></span></div>
+      <div class="index-item"><span>管理难度</span><span class="stars">★★<span class="off">☆☆☆</span></span></div>
+      <div class="index-item"><span>利润指数</span><span class="stars">★★★★<span class="off">☆</span></span></div>
+    </div>
+    <div class="boss-dep">
+      <div class="bd-box">
+        <div class="bd-label">👑 老板依赖指数</div>
+        <div class="bd-value">★★☆☆☆</div>
+        <div class="bd-desc">员工可独立运行</div>
+      </div>
+      <div class="bd-box">
+        <div class="bd-label">📡 复制半径</div>
+        <div class="bd-value">★★★★☆</div>
+        <div class="bd-desc">适合2-5家店</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ██████ 门店盈利模型 ██████ -->
+  <div class="section">
+    <div class="s-title">💰 门店盈利模型</div>
+    <div class="cost-box">
+      <div class="row"><span>客单价</span><span class="v">¥__</span></div>
+      <div class="row"><span>日订单</span><span class="v">__单</span></div>
+      <div class="row"><span>日营业额</span><span class="v">¥__</span></div>
+      <div class="row"><span>月营业额</span><span class="v">¥__</span></div>
+      <div class="row"><span>毛利率</span><span class="v">__%</span></div>
+      <div class="row"><span>净利率</span><span class="v">__%</span></div>
+      <div class="row"><span>房租占比</span><span class="v">__%</span></div>
+      <div class="row"><span>人工占比</span><span class="v">__%</span></div>
+      <div class="row tot"><span>月净利</span><span class="v">≈¥__</span></div>
+    </div>
+    <div class="roi">
+      <div class="roi-b c"><div class="d">__-__月</div>保守</div>
+      <div class="roi-b n"><div class="d">__-__月</div>正常</div>
+      <div class="roi-b i"><div class="d">__-__月</div>理想</div>
+    </div>
+  </div>
+
+  <!-- ██████ 门店组织结构 ██████ -->
+  <div class="section">
+    <div class="s-title">👥 门店组织结构</div>
+    <div class="org-box">
+      <div class="org-title">2人版 · 夫妻店</div>
+      <div class="org-row">▸ ____</div>
+      <div class="org-row">▸ ____</div>
+    </div>
+    <div class="org-box">
+      <div class="org-title">3人版 · 标准店</div>
+      <div class="org-row">▸ ____</div>
+      <div class="org-row">▸ ____</div>
+      <div class="org-row">▸ ____</div>
+    </div>
+    <div class="org-box">
+      <div class="org-title">5人版 · 旺铺</div>
+      <div class="org-row">▸ ____</div>
+      <div class="org-row">▸ ____</div>
+      <div class="org-row">▸ ____</div>
+      <div class="org-row">▸ ____</div>
+      <div class="org-row">▸ ____</div>
+    </div>
+  </div>
+
+  <!-- ██████ 产品结构设计 ██████ -->
+  <div class="section">
+    <div class="s-title">📋 产品结构设计</div>
+    <div class="prod-str">
+      <div class="p-item"><span class="p-label">引流产品</span>____</div>
+      <div class="p-item"><span class="p-label">利润产品</span>____</div>
+      <div class="p-item"><span class="p-label">形象产品</span>____</div>
+      <div class="p-item"><span class="p-label">套餐产品</span>____</div>
+    </div>
+    <div class="story" style="margin-top:6px;font-size:11px;">推荐SKU数量：<strong>__-__个</strong></div>
+  </div>
+
+  <!-- ██████ 出餐SOP ██████ -->
+  <div class="section">
+    <div class="s-title">⚙️ 出餐SOP</div>
+    <div class="sop-step"><span class="num">①</span>____</div>
+    <div class="sop-step"><span class="num">②</span>____</div>
+    <div class="sop-step"><span class="num">③</span>____</div>
+    <div class="sop-step"><span class="num">④</span>____</div>
+    <div class="sop-step"><span class="num">⑤</span>____</div>
+    <div class="sop-step"><span class="num">⑥</span>____</div>
+    <div class="sop-goal">目标：单份出餐 ≤ __秒</div>
+  </div>
+
+  <!-- ██████ 后厨动线 ██████ -->
+  <div class="section">
+    <div class="s-title">🏗️ 后厨动线</div>
+    <div class="flow">
+      <span>__</span><span class="arrow">→</span>
+      <span>__</span><span class="arrow">→</span>
+      <span>__</span><span class="arrow">→</span>
+      <span>__</span><span class="arrow">→</span>
+      <span>__</span><span class="arrow">→</span>
+      <span>__</span><span class="arrow">→</span>
+      <span>__</span>
+    </div>
+    <div class="story" style="margin-top:6px;font-size:11px;">
+      动线原则：<em>避免交叉</em> · <em>生熟分离</em> · <em>一步到位不回头</em>
+    </div>
+  </div>
+
+  <!-- ██████ 高峰期预案 ██████ -->
+  <div class="section">
+    <div class="s-title">🔥 高峰期预案</div>
+    <div class="peak">
+      <strong>午高峰（__:00-__:00）：</strong>____<br>
+      <strong>晚高峰（__:00-__:00）：</strong>____<br>
+      <strong>节假日：</strong>____
+    </div>
+    <div class="story" style="margin-top:6px;font-size:11px;">
+      备货标准：<em>__%</em> ｜ 安全库存：<em>__%</em>
+    </div>
+  </div>
+
+  <!-- ██████ 品控体系 ██████ -->
+  <div class="section">
+    <div class="s-title">✅ 品控体系</div>
+    <div class="qc-grid">
+      <div class="qc-item"><div class="qc-label">🌡️ 温度</div>____</div>
+      <div class="qc-item"><div class="qc-label">⏱️ 时间</div>____</div>
+      <div class="qc-item"><div class="qc-label">⚖️ 重量</div>____</div>
+      <div class="qc-item"><div class="qc-label">🧂 盐度</div>____</div>
+      <div class="qc-item"><div class="qc-label">🎨 色泽</div>____</div>
+      <div class="qc-item"><div class="qc-label">👅 口感</div>____</div>
+    </div>
+    <div class="story" style="margin-top:6px;font-size:10px;color:var(--text-light);text-align:center">
+      巡检频率：每日自检 → 每周抽检 → 每月考核
+    </div>
+  </div>
+
+  <!-- ██████ 损耗控制 ██████ -->
+  <div class="section">
+    <div class="s-title">📉 损耗控制</div>
+    <div class="loss-item"><span>原料损耗</span><span class="loss-v">≤ __%</span></div>
+    <div class="loss-item"><span>包装损耗</span><span class="loss-v">≤ __%</span></div>
+    <div class="loss-item"><span>成品损耗（当日报废）</span><span class="loss-v">≤ __%</span></div>
+    <div class="loss-item" style="font-weight:700;color:var(--primary-dark)"><span>总损耗目标</span><span class="loss-v" style="color:var(--primary)">≤ __%</span></div>
+  </div>
+
+  <!-- ██████ 外卖运营 ██████ -->
+  <div class="section">
+    <div class="s-title">📱 外卖运营模型</div>
+    <div class="story">
+      <em>平台</em>：____<br>
+      <em>配送半径</em>：__-__公里<br>
+      <em>最佳配送时间</em>：__分钟内<br>
+      <em>包装方案</em>：____<br>
+      <em>差评风险点</em>：____
+    </div>
+  </div>
+
+  <!-- ██████ 员工培训 ██████ -->
+  <div class="section">
+    <div class="s-title">📚 员工培训体系</div>
+    <div class="train-grid">
+      <div class="train-item"><div class="day">Day 1</div><div class="desc">____</div></div>
+      <div class="train-item"><div class="day">Day 3</div><div class="desc">____</div></div>
+      <div class="train-item"><div class="day">Day 7</div><div class="desc">____</div></div>
+      <div class="train-item"><div class="day">Day 15</div><div class="desc">____</div></div>
+      <div class="train-item"><div class="day">Day 30</div><div class="desc">____</div></div>
+    </div>
+  </div>
+
+  <!-- ██████ 风险预警 ██████ -->
+  <div class="section">
+    <div class="s-title">⚠️ 风险预警</div>
+    <div class="risk-item"><span>人工风险（招人留人）</span><div class="risk-stars"><span class="on">●</span><span class="on">●</span><span class="on">●</span><span class="on">●</span><span class="off">●</span></div></div>
+    <div class="risk-item"><span>品控风险</span><div class="risk-stars"><span class="on">●</span><span class="on">●</span><span class="on">●</span><span class="off">●</span><span class="off">●</span></div></div>
+    <div class="risk-item"><span>外卖差评风险</span><div class="risk-stars"><span class="on">●</span><span class="on">●</span><span class="on">●</span><span class="off">●</span><span class="off">●</span></div></div>
+    <div class="risk-item"><span>食品安全风险</span><div class="risk-stars"><span class="on">●</span><span class="on">●</span><span class="off">●</span><span class="off">●</span><span class="off">●</span></div></div>
+    <div class="risk-item"><span>季节波动风险</span><div class="risk-stars"><span class="on">●</span><span class="on">●</span><span class="off">●</span><span class="off">●</span><span class="off">●</span></div></div>
+  </div>
+
+  <!-- ██████ 适合场景 ██████ -->
+  <div class="section">
+    <div class="s-title">📍 适合场景</div>
+    <div class="scene-grid">
+      <span class="scene-item">社区店</span>
+      <span class="scene-item">菜市场</span>
+      <span class="scene-item">商业街</span>
+      <span class="scene-item">学校周边</span>
+      <span class="scene-item">写字楼</span>
+      <span class="scene-item">交通枢纽</span>
+      <span class="scene-item">景区</span>
+    </div>
+  </div>
+
+  <!-- ██████ FoodIntelAI 点评 ██████ -->
+  <div class="review">
+    <div class="r-title">🎙️ FoodIntelAI 点评</div>
+    <div class="r-body">
+      <strong>适合谁：</strong>____<br>
+      <strong>不适合谁：</strong>____<br>
+      <strong>最大机会：</strong>____<br>
+      <strong>最大风险：</strong>____
+    </div>
+    <div class="r-tag">推荐等级：★★★★★</div>
+  </div>
+
+  <!-- ██████ 付费区 ██████ -->
+  <div class="paywall">
+    <div class="p-header">— 选择适合你的版本 —</div>
+    <div class="price-row">
+      <div class="price-item">
+        <div class="p-price">¥199</div>
+        <div class="p-label">标准配方</div>
+      </div>
+      <div class="price-item featured">
+        <div class="p-price">¥499</div>
+        <div class="p-label">⭐ 门店运营版</div>
+      </div>
+      <div class="price-item">
+        <div class="p-price">¥999</div>
+        <div class="p-label">完整门店系统</div>
+      </div>
+    </div>
+    <div class="tier">
+      <div class="t-price">¥199 · 标准配方</div>
+      <div class="t-list">
+        <li>标准配方 + 标准工艺</li>
+        <li>出餐流程</li>
+      </div>
+    </div>
+    <div class="tier" style="border:1.5px solid var(--primary);background:var(--primary-light)">
+      <div class="t-price">¥499 · 门店运营版</div>
+      <div class="t-list">
+        <li>以上全部</li>
+        <li>岗位SOP（2人/3人/5人）</li>
+        <li>品控检查表（每日/每周/每月）</li>
+        <li>员工培训表（Day 1-30）</li>
+        <li>损耗控制表</li>
+      </div>
+    </div>
+    <div class="tier">
+      <div class="t-price">¥999 · 完整门店系统</div>
+      <div class="t-list">
+        <li>以上全部</li>
+        <li>盈利模型+回本测算</li>
+        <li>选址建议+设备清单</li>
+        <li>菜单规划+外卖运营模型</li>
+        <li>管理制度+排班表模板</li>
+      </div>
+    </div>
+    <a class="btn" href="https://foodintelai.com">加微信 canglin1985 获取</a>
+    <div class="foot">摆摊卡老客升级享优惠价</div>
+  </div>
+
+</div>
+</body>
+</html>
