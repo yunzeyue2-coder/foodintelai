@@ -732,6 +732,5 @@ async function loadCalcReport(){
 document.addEventListener('DOMContentLoaded', function(){
   if(document.getElementById('calcCategory')) loadCalcIndex();
 });
-|function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
-|function scrollToBottom(){const el=document.querySelector('.hook-box')||document.querySelector('.calc-box')||document.getElementById('calculator');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
-|
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
+function scrollToBottom(){const el=document.querySelector('.hook-box')||document.querySelector('.calc-box')||document.getElementById('calculator');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
