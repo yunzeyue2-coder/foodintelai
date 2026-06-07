@@ -977,6 +977,7 @@ body{
 }
 
 </style>
+<script src="cards-data.js"></script>
 </head>
 <body>
 
@@ -1595,7 +1596,10 @@ body{
 </div>
 
 <!-- ===== 知识体系 ===== -->
-  <div class="section-header"><h2>🧠 知识体系</h2></div>
+  <div class="section-header" style="margin-top:24px"><h2>📂 全部产品卡 · 477款</h2><span class="more" style="font-size:10px">← 点击卡片查看</span></div>
+  <div id="hotContent"></div>
+
+  <div class="section-header" style="margin-top:28px"><h2>🧠 知识体系</h2></div>
   <div class="knowledge-grid">
     <a class="know-item" href="#" style="cursor:default;display:block;text-decoration:none;color:#bbb" onclick="return false">
       <div class="icon">📋</div>
@@ -4602,99 +4606,45 @@ FREE_CARDS.forEach(c => {
   </div>`;
 });
 
-// 渲染热榜
-function renderHotZone(){
-  const tabsEl = document.getElementById('hotTabs');
-  const contentEl = document.getElementById('hotContent');
-  if(!tabsEl || !contentEl) return;
+// 渲染所有产品卡（替换原来的热榜渲染）
+function renderAllCards() {
+  const container = document.getElementById('hotContent');
+  if (!container) return;
+  container.innerHTML = '';
   
-  tabsEl.innerHTML = '';
-  // 热度标签数组
   const hotTags = ['🔥', '📈', '💥', '⭐', '💎', '🚀'];
+  let tagIdx = 0;
   
-  ZONES.forEach((z,i) => {
-    if(z.is_sep){
-      tabsEl.innerHTML += `<div class="zone-sep">${z.name}</div>`;
-    } else {
-      tabsEl.innerHTML += `<button class="zone-hot-tab ${i===0?'active':''}" onclick="switchHot(${i})">${z.name}</button>`;
-    }
-  });
-  
-  renderHotContent(0, hotTags);
-  
-  // 滑动切换
-  let sx = 0, sy = 0;
-  contentEl.addEventListener('touchstart', e => {
-    sx = e.changedTouches[0].screenX;
-    sy = e.changedTouches[0].screenY;
-  }, {passive: true});
-  contentEl.addEventListener('touchend', e => {
-    if(!sx) return;
-    const ex = e.changedTouches[0].screenX;
-    const ey = e.changedTouches[0].screenY;
-    const dx = sx - ex, dy = sy - ey;
-    sx = 0; sy = 0;
-    if(Math.abs(dy) > Math.abs(dx) * 2) return;
-    if(Math.abs(dx) < 40) return;
-    const activeTab = document.querySelector('.zone-hot-tab.active');
-    if(!activeTab) return;
-    const tabs = document.querySelectorAll('.zone-hot-tab');
-    const ti = Array.from(tabs).indexOf(activeTab);
-    if(ti === -1) return;
-    // 找到ti对应的ZONES索引（跳过分隔）
-    let actualIdx;
-    let tabCount = 0;
-    for(let zi=0; zi<ZONES.length; zi++){
-      if(ZONES[zi].is_sep) continue;
-      if(tabCount === ti){ actualIdx = zi; break; }
-      tabCount++;
-    }
-    if(actualIdx === undefined) return;
-    // 滑动找下一个非分隔zone
-    let nextIdx = -1;
-    if(dx > 0){
-      for(let zi=actualIdx+1; zi<ZONES.length; zi++){ if(!ZONES[zi].is_sep){ nextIdx = zi; break; } }
-    } else {
-      for(let zi=actualIdx-1; zi>=0; zi--){ if(!ZONES[zi].is_sep){ nextIdx = zi; break; } }
-    }
-    if(nextIdx >= 0) switchHot(nextIdx);
-  }, {passive: true});
-}
-
-function renderHotContent(idx, hotTags){
-  const z = ZONES[idx];
-  const contentEl = document.getElementById('hotContent');
-  if(!contentEl) return;
-  if(z.is_sep){ contentEl.innerHTML = ''; return; }
-  
-  let html = `<div class="zone-hot-sub">${z.desc || ''}</div><div class="zone-hot-cards">`;
-  z.cards.forEach((c,i) => {
-    const rankClass = i===0?'top1':i===1?'top2':i===2?'top3':'';
-    const tagType = hotTags[idx % hotTags.length];
-    html += `<a class="zone-hot-card" href="${c.f}">
-      <div class="rank ${rankClass}">${i+1}</div>
-      <div class="h-emoji">${c.e}</div>
-      <div class="h-info">
-        <div class="h-name">${c.n} <span class="h-tag h-hot">${tagType}</span></div>
-        <div class="h-desc">${c.d}</div>
-      </div>
-      <div class="h-arrow">›</div>
-    </a>`;
-  });
-  html += '</div>';
-  contentEl.innerHTML = html;
-  
-  // 更新tab高亮
-  document.querySelectorAll('.zone-hot-tab').forEach((t,ti) => {
-    const actualIdx = ZONES.findIndex((z,zi) => zi >= ti && !z.is_sep);
-    t.classList.toggle('active', actualIdx === idx);
+  Object.keys(ALL_CARDS).forEach((catName) => {
+    const cards = ALL_CARDS[catName];
+    if (!cards || cards.length === 0) return;
+    const tagType = hotTags[tagIdx % hotTags.length];
+    tagIdx++;
+    
+    let html = '<div class="zone-hot-sub">' + catName + ' <span class="h-tag h-hot">' + tagType + '</span></div>';
+    html += '<div class="zone-hot-cards">';
+    
+    cards.forEach((c, i) => {
+      const rankClass = i===0 ? 'top1' : i===1 ? 'top2' : i===2 ? 'top3' : '';
+      html += '<a class="zone-hot-card" href="' + c.f + '" title="' + c.n + '">' +
+        '<div class="rank ' + rankClass + '">' + (i+1) + '</div>' +
+        '<div class="h-emoji">' + c.e + '</div>' +
+        '<div class="h-info">' +
+          '<div class="h-name">' + c.n + ' <span class="h-tag h-hot">' + tagType + '</span></div>' +
+          '<div class="h-desc">' + c.d + '</div>' +
+        '</div>' +
+        '<div class="h-arrow">›</div>' +
+      '</a>';
+    });
+    
+    html += '</div>';
+    container.innerHTML += html;
   });
 }
 
-function switchHot(i){
-  const hotTags = ['🔥', '📈', '💥', '⭐', '💎', '🚀'];
-  renderHotContent(i, hotTags);
-}
+document.addEventListener('DOMContentLoaded', function() {
+  renderAllCards();
+});
 
 function toggleFree(){
   const zone = document.getElementById('freeZone');
