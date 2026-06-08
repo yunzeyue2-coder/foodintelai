@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>决策引擎 · 食品创业 · foodintel AI</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0e9e2;
+  --card:#faf8f5;
+  --text:#1a1a1a;
+  --muted:#7a7269;
+  --light:#b5aaa0;
+  --accent:#C0392B;
+  --accent-light:#E8652D;
+  --green:#07C160;
+  --yellow:#f5a623;
+  --border:#ddd4ca;
+  --tag-bg:#e8dfd5;
+  --radius:14px;
+  --r:10px;
+}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(240,233,226,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 16px;
+}
+.nav-inner{
+  max-width:800px;margin:0 auto;
+  display:flex;align-items:center;
+  height:52px;gap:8px;
+}
+.nav-brand{font-size:18px;font-weight:700;color:var(--accent);text-decoration:none}
+.nav-back{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px;transition:.2s}
+.nav-back:hover{background:var(--tag-bg);color:var(--text)}
+.nav-spacer{flex:1}
+.main{max-width:800px;margin:0 auto;padding:20px 16px 60px}
+
+/* ===== ① 输入层 ===== */
+.input-section{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:24px 20px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  margin-bottom:16px;
+}
+.input-label{
+  font-size:13px;font-weight:700;margin-bottom:12px;
+}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.input-opt{
+  padding:12px 14px;
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  text-align:center;
+  cursor:pointer;
+  transition:.2s;
+  background:var(--card);
+  font-size:13px;
+}
+.input-opt:hover{border-color:var(--accent);background:#fef9f8}
+.input-opt.active{border-color:var(--accent);background:#fef2f2;font-weight:600}
+.input-opt .io-icon{font-size:18px;display:block;margin-bottom:3px}
+.input-opt .io-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* ===== ② 筛选层 ===== */
+.filter-section{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:16px 20px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  margin-bottom:16px;
+}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.filter-row:last-child{margin-bottom:0}
+.filter-label{font-size:11px;font-weight:600;color:var(--muted);width:60px;flex-shrink:0;padding-top:6px}
+.filter-tags{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.filter-tag{
+  padding:4px 10px;
+  font-size:11px;
+  border-radius:6px;
+  background:var(--bg);
+  color:var(--muted);
+  cursor:pointer;
+  transition:.2s;
+  border:1px solid transparent;
+}
+.filter-tag:hover{border-color:var(--border);color:var(--text)}
+.filter-tag.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ===== 结果统计 ===== */
+.result-bar{
+  font-size:12px;color:var(--muted);
+  padding:8px 0;
+  display:flex;justify-content:space-between;
+  align-items:center;
+}
+.result-bar .count{font-weight:700;color:var(--text)}
+
+/* ===== ③ 模型层 ===== */
+.model-grid{display:grid;grid-template-columns:1fr;gap:10px}
+
+.model-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:18px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  border-left:4px solid var(--border);
+  transition:.2s;
+}
+.model-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.model-card.risk-green{border-left-color:var(--green)}
+.model-card.risk-yellow{border-left-color:var(--yellow)}
+.model-card.risk-red{border-left-color:var(--accent)}
+
+.m-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:6px;gap:8px;
+}
+.m-name{
+  font-size:14px;font-weight:700;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.m-type{
+  font-size:10px;padding:2px 8px;border-radius:4px;
+}
+.m-type.stall{background:#fef6f2;color:#E8652D}
+.m-type.store{background:#fef2f2;color:#C0392B}
+.m-type.factory{background:#f0f6ec;color:#7B9A45}
+.m-risk{
+  font-size:10px;padding:2px 8px;border-radius:4px;
+  font-weight:600;flex-shrink:0;
+}
+.m-risk.green{background:#f0f6ec;color:var(--green)}
+.m-risk.yellow{background:#fef9e8;color:var(--yellow)}
+.m-risk.red{background:#fef2f2;color:var(--accent)}
+
+.m-logic{
+  font-size:11px;color:var(--muted);
+  margin-bottom:8px;line-height:1.6;
+}
+
+.m-meta{
+  display:flex;gap:6px;flex-wrap:wrap;
+}
+.m-meta-item{
+  font-size:10px;
+  padding:3px 8px;
+  border-radius:4px;
+  background:var(--bg);
+  color:var(--muted);
+}
+.m-meta-item strong{color:var(--text)}
+
+/* ===== ④ 聚类层 ===== */
+.cluster-section{margin-top:16px}
+.cluster-header{
+  font-size:13px;font-weight:700;
+  padding:10px 0;margin-top:16px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.cluster-header:first-child{margin-top:0}
+.cluster-header .ch-icon{font-size:16px}
+
+/* ===== ⑤ 推荐层 ===== */
+.reco-section{
+  background:linear-gradient(135deg,#fef2f2,#fff);
+  border-radius:var(--radius);
+  padding:20px;
+  margin-top:16px;
+  border:1px solid #fdd;
+}
+.reco-title{
+  font-size:14px;font-weight:700;margin-bottom:10px;
+}
+.reco-title .rt-icon{font-size:16px;margin-right:4px}
+.reco-list{display:grid;grid-template-columns:1fr;gap:8px}
+.reco-item{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;
+  background:var(--card);
+  border-radius:10px;
+  font-size:13px;
+}
+.reco-item .ri-icon{font-size:16px}
+.reco-item .ri-info{flex:1}
+.reco-item .ri-name{font-weight:600}
+.reco-item .ri-desc{font-size:10px;color:var(--muted)}
+.reco-item .ri-tag{
+  font-size:10px;padding:2px 8px;border-radius:4px;
+}
+.reco-item .ri-tag.green{background:#f0f6ec;color:var(--green)}
+
+/* ===== 风险层（红黄绿嵌入卡片） ===== */
+.m-risk-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+.m-risk-dot.green{background:var(--green)}
+.m-risk-dot.yellow{background:var(--yellow)}
+.m-risk-dot.red{background:var(--accent)}
+
+/* ===== 深度层 ===== */
+.depth-section{
+  margin-top:24px;
+  padding-top:20px;
+  border-top:1px solid var(--border);
+}
+.depth-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+.depth-card{
+  padding:16px;
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  text-decoration:none;
+  color:var(--text);
+  display:block;
+  transition:.2s;
+}
+.depth-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.depth-card .dc-icon{font-size:24px;margin-bottom:6px}
+.depth-card .dc-name{font-size:13px;font-weight:700}
+.depth-card .dc-desc{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* 占位模型（示例demo） */
+.demo-note{
+  font-size:11px;color:var(--light);
+  text-align:center;padding:40px 20px;
+}
+.demo-note strong{color:var(--text)}
+.demo-note .dn-icon{font-size:32px;display:block;margin-bottom:8px}
+
+@media(min-width:500px){
+  .input-grid{grid-template-columns:repeat(4,1fr)}
+  .model-grid{grid-template-columns:1fr 1fr}
+  .reco-list{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-back">← 返回首页</a>
+    <div class="nav-spacer"></div>
+    <span style="font-size:12px;color:var(--muted)">决策引擎 · β版</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- 🌟 01 输入层 -->
+  <div class="input-section" id="inputLayer">
+    <div class="input-label">👤 你属于哪种进入方式？</div>
+    <div class="input-grid" id="intentGrid">
+      <div class="input-opt" data-intent="cash" onclick="onIntent(this)">
+        <span class="io-icon">💰</span>
+        想赚钱
+        <div class="io-sub">现金流模型</div>
+      </div>
+      <div class="input-opt" data-intent="venture" onclick="onIntent(this)">
+        <span class="io-icon">🚀</span>
+        想创业
+        <div class="io-sub">长期模型</div>
+      </div>
+      <div class="input-opt" data-intent="side" onclick="onIntent(this)">
+        <span class="io-icon">🧘</span>
+        想做副业
+        <div class="io-sub">轻模型</div>
+      </div>
+      <div class="input-opt" data-intent="scale" onclick="onIntent(this)">
+        <span class="io-icon">🏭</span>
+        想做规模
+        <div class="io-sub">工厂模型</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🌟 02 筛选层 -->
+  <div class="filter-section" id="filterLayer">
+    <div class="filter-row">
+      <div class="filter-label">💰 投资</div>
+      <div class="filter-tags" data-dim="invest">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="0-1">1万以下</span>
+        <span class="filter-tag" data-v="1-5">1–5万</span>
+        <span class="filter-tag" data-v="5-20">5–20万</span>
+        <span class="filter-tag" data-v="20+">20万+</span>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">⚙️ 复杂度</div>
+      <div class="filter-tags" data-dim="level">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="stall">摆摊级</span>
+        <span class="filter-tag" data-v="store">门店级</span>
+        <span class="filter-tag" data-v="factory">工厂级</span>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">⏱ 回本周期</div>
+      <div class="filter-tags" data-dim="payback">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="7d">7天</span>
+        <span class="filter-tag" data-v="1m">1个月</span>
+        <span class="filter-tag" data-v="3m">3个月</span>
+        <span class="filter-tag" data-v="6m+">6个月+</span>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">⚠️ 风险</div>
+      <div class="filter-tags" data-dim="risk">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="low">低</span>
+        <span class="filter-tag" data-v="mid">中</span>
+        <span class="filter-tag" data-v="high">高</span>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">🔁 依赖</div>
+      <div class="filter-tags" data-dim="depend">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="traffic">流量型</span>
+        <span class="filter-tag" data-v="repurchase">复购型</span>
+        <span class="filter-tag" data-v="supply">供应链型</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 结果统计 -->
+  <div class="result-bar">
+    <span>匹配 <span class="count" id="resultCount">—</span> 个模型</span>
+    <span style="font-size:10px;color:var(--light)">选好筛选条件，系统自动推荐</span>
+  </div>
+
+  <!-- 🌟 05 风险层 + 03 模型层 + 04 聚类层 -->
+  <div id="modelArea"></div>
+
+  <!-- 🌟 06 推荐层 -->
+  <div class="reco-section" id="recoSection" style="display:none">
+    <div class="reco-title"><span class="rt-icon">🎯</span>系统推荐</div>
+    <div class="reco-list" id="recoList"></div>
+  </div>
+
+  <!-- 🌟 07 深度层 -->
+  <div class="depth-section">
+    <div class="depth-grid">
+      <a href="learn.html" class="depth-card">
+        <div class="dc-icon">📘</div>
+        <div class="dc-name">L1 认知系统</div>
+        <div class="dc-desc">理解行业怎么死、怎么不死</div>
+      </a>
+      <a href="#" class="depth-card" style="opacity:.4;pointer-events:none">
+        <div class="dc-icon">🏪</div>
+        <div class="dc-name">门店决策卡</div>
+        <div class="dc-desc">判断单店模型（即将上线）</div>
+      </a>
+      <a href="#" class="depth-card" style="opacity:.4;pointer-events:none">
+        <div class="dc-icon">🏭</div>
+        <div class="dc-name">工厂上线卡</div>
+        <div class="dc-desc">规模模型（即将上线）</div>
+      </a>
+      <a href="index.html#mainContent" class="depth-card">
+        <div class="dc-icon">📦</div>
+        <div class="dc-name">产品卡库</div>
+        <div class="dc-desc">328款摆摊产品卡</div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== 模型数据库（可无限扩展） =====
+const MODELS = [
+  // -- 摆摊级 --
+  {id:"s01",name:"摆摊炸鸡",type:"stall",level:"stall",invest:"1-5",payback:"1m",risk:"low",depend:"traffic",intent:"cash",
+   logic:"腌料+裹粉+炸制，日销80-120份，单品爆发",
+   income:"¥800-1200/日",maxRisk:"同质化竞争",fit:"新手/大学生/副业",tag:"低门槛现金流型"},
+  {id:"s02",name:"手打柠檬茶",type:"stall",level:"stall",invest:"0-1",payback:"7d",risk:"low",depend:"traffic",intent:"side",
+   logic:"鲜切+手捣+出杯，时产40杯，夏季爆品",
+   income:"¥500-800/日",maxRisk:"季节性明显",fit:"学生/周末摊主",tag:"低门槛现金流型"},
+  {id:"s03",name:"章鱼烧/丸子",type:"stall",level:"stall",invest:"0-1",payback:"7d",risk:"low",depend:"traffic",intent:"cash",
+   logic:"面糊+馅料+翻烤，一板12颗，3分钟出",
+   income:"¥400-700/日",maxRisk:"单份利润低",fit:"夜市新手",tag:"低门槛现金流型"},
+  {id:"s04",name:"烤肠热狗",type:"stall",level:"stall",invest:"0-1",payback:"7d",risk:"low",depend:"traffic",intent:"side",
+   logic:"烤肠+面包+酱料，3秒成交，复购率极高",
+   income:"¥300-600/日",maxRisk:"天花板低",fit:"学生/兼职",tag:"低门槛现金流型"},
+  // -- 门店级 --
+  {id:"m01",name:"卤味店（鲜卤现捞）",type:"store",level:"store",invest:"5-20",payback:"3m",risk:"mid",depend:"repurchase",intent:"venture",
+   logic:"老汤+卤制+明档现捞，靠复购和客单价支撑房租",
+   income:"¥3000-6000/日",maxRisk:"选址失败=全盘皆输",fit:"夫妻店/转行餐饮人",tag:"门店经营型"},
+  {id:"m02",name:"早餐店（包子粥）",type:"store",level:"store",invest:"5-20",payback:"3m",risk:"mid",depend:"repurchase",intent:"cash",
+   logic:"面点+粥品+小菜，早高峰翻台率决定生死",
+   income:"¥2000-4000/日",maxRisk:"3点起床，人力难招",fit:"能吃苦的家庭团队",tag:"门店经营型"},
+  {id:"m03",name:"麻辣烫/冒菜",type:"store",level:"store",invest:"5-20",payback:"3m",risk:"mid",depend:"repurchase",intent:"venture",
+   logic:"自选称重+汤底+小料台，复购率高但竞争激烈",
+   income:"¥2500-5000/日",maxRisk:"价格战打穿毛利",fit:"有餐饮经验者",tag:"门店经营型"},
+  {id:"m04",name:"咖啡店（社区店）",type:"store",level:"store",invest:"5-20",payback:"6m+",risk:"high",depend:"repurchase",intent:"venture",
+   logic:"咖啡+特调+简餐，靠社区粘性和私域复购",
+   income:"¥1500-3500/日",maxRisk:"90%咖啡店半年内倒闭",fit:"有资金有审美的创业者",tag:"门店经营型"},
+  // -- 工厂级 --
+  {id:"f01",name:"预制菜代工",type:"factory",level:"factory",invest:"20+",payback:"6m+",risk:"high",depend:"supply",intent:"scale",
+   logic:"中央厨房+冷链+渠道，核心是产能利用率和账期管理",
+   income:"月产能50万+",maxRisk:"先建厂后找订单=等死",fit:"有渠道资源的食品人",tag:"工厂规模型"},
+  {id:"f02",name:"酱料标准化生产",type:"factory",level:"factory",invest:"20+",payback:"6m+",risk:"mid",depend:"supply",intent:"scale",
+   logic:"配方+灌装+贴牌，B端餐饮渠道为核心",
+   income:"月产能30万+",maxRisk:"单品依赖大客户",fit:"有配方的研发型团队",tag:"工厂规模型"},
+  {id:"f03",name:"卤味中央厨房",type:"factory",level:"factory",invest:"5-20",payback:"6m+",risk:"mid",depend:"supply",intent:"venture",
+   logic":"卤制+真空包装+配送，服务周边餐饮+社区团购",
+   income:"月产能15万+",maxRisk:"配送半径限制规模",fit:"有门店经验的卤味老板",tag:"工厂规模型"},
+];
+
+// ===== 聚类 =====
+const CLUSTERS = {
+  "低门槛现金流型":["s01","s02","s03","s04"],
+  "门店经营型":["m01","m02","m03","m04"],
+  "工厂规模型":["f01","f02","f03"]
+};
+
+// ===== 输入层 =====
+function onIntent(el){
+  document.querySelectorAll('.input-opt').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+// ===== 筛选层 =====
+document.querySelectorAll('.filter-tag').forEach(tag=>{
+  tag.onclick=function(){
+    const parent = this.parentElement;
+    parent.querySelectorAll('.filter-tag').forEach(t=>t.classList.remove('active'));
+    this.classList.add('active');
+    render();
+  };
+});
+
+function getActiveFilters(){
+  const filters = {};
+  document.querySelectorAll('.filter-tags').forEach(group=>{
+    const dim = group.dataset.dim;
+    const active = group.querySelector('.filter-tag.active');
+    filters[dim] = active ? active.dataset.v : '*';
+  });
+  return filters;
+}
+
+function getActiveIntent(){
+  const active = document.querySelector('.input-opt.active');
+  return active ? active.dataset.intent : null;
+}
+
+// ===== 渲染引擎 =====
+function render(){
+  const intent = getActiveIntent();
+  const filters = getActiveFilters();
+
+  let filtered = MODELS.filter(m=>{
+    // 意图过滤
+    if(intent && m.intent !== intent) return false;
+    // 投资过滤
+    if(filters.invest !== '*' && m.invest !== filters.invest) return false;
+    // 复杂度
+    if(filters.level !== '*' && m.level !== filters.level) return false;
+    // 回本周期
+    if(filters.payback !== '*' && m.payback !== filters.payback) return false;
+    // 风险
+    if(filters.risk !== '*' && m.risk !== filters.risk) return false;
+    // 依赖
+    if(filters.depend !== '*' && m.depend !== filters.depend) return false;
+    return true;
+  });
+
+  document.getElementById('resultCount').textContent = filtered.length;
+
+  if(filtered.length === 0){
+    document.getElementById('modelArea').innerHTML = '<div class="demo-note"><span class="dn-icon">🔍</span>没有匹配的模型<br>试试调整筛选条件</div>';
+    document.getElementById('recoSection').style.display = 'none';
+    return;
+  }
+
+  // 聚类分组
+  let html = '';
+  let shown = new Set();
+  for(let [clusterName, ids] of Object.entries(CLUSTERS)){
+    let clusterModels = ids.map(id=>filtered.find(m=>m.id===id)).filter(Boolean);
+    if(clusterModels.length === 0) continue;
+    clusterModels.forEach(m=>shown.add(m.id));
+    let icon = clusterName.includes('现金流') ? '🧊' : clusterName.includes('门店') ? '🏪' : '🏭';
+    html += `<div class="cluster-header"><span class="ch-icon">${icon}</span>${clusterName}</div>`;
+    html += '<div class="model-grid">';
+    clusterModels.forEach(m=>{
+      html += renderCard(m);
+    });
+    html += '</div>';
+  }
+
+  // 未聚类模型
+  let unclustered = filtered.filter(m=>!shown.has(m.id));
+  if(unclustered.length > 0){
+    html += '<div class="cluster-header"><span class="ch-icon">📌</span>更多模型</div>';
+    html += '<div class="model-grid">';
+    unclustered.forEach(m=>{html += renderCard(m);});
+    html += '</div>';
+  }
+
+  document.getElementById('modelArea').innerHTML = html;
+
+  // 推荐层
+  renderReco(filtered, intent);
+}
+
+function renderCard(m){
+  const riskClass = m.risk === 'low' ? 'green' : m.risk === 'mid' ? 'yellow' : 'red';
+  const typeLabel = {stall:'摆摊',store:'门店',factory:'工厂'}[m.type]||m.type;
+  const typeClass = {stall:'stall',store:'store',factory:'factory'}[m.type]||'';
+  const riskLabel = {low:'低风险',mid:'中风险',high:'高风险'}[m.risk]||m.risk;
+
+  return `<div class="model-card risk-${riskClass}">
+    <div class="m-header">
+      <div class="m-name">
+        ${m.name}
+        <span class="m-type ${typeClass}">${typeLabel}</span>
+      </div>
+      <span class="m-risk ${riskClass}"><span class="m-risk-dot ${riskClass}"></span>${riskLabel}</span>
+    </div>
+    <div class="m-logic">${m.logic}</div>
+    <div class="m-meta">
+      <span class="m-meta-item">💰 ${m.invest}</span>
+      <span class="m-meta-item">⏱ ${paybackLabel(m.payback)}</span>
+      <span class="m-meta-item">💸 ${m.income}</span>
+      <span class="m-meta-item">⚠️ ${m.maxRisk}</span>
+      <span class="m-meta-item">👤 ${m.fit}</span>
+    </div>
+  </div>`;
+}
+
+function paybackLabel(v){
+  return {'7d':'7天回本','1m':'1个月回本','3m':'3个月回本','6m+':'6个月+回本'}[v]||v;
+}
+
+function renderReco(filtered, intent){
+  const reco = document.getElementById('recoSection');
+  const list = document.getElementById('recoList');
+  
+  // 按风险排序，低风险优先
+  let sorted = [...filtered].sort((a,b)=>{
+    const rank = {low:0,mid:1,high:2};
+    return rank[a.risk] - rank[b.risk];
+  });
+
+  let top3 = sorted.slice(0,3);
+  if(top3.length === 0){
+    reco.style.display = 'none';
+    return;
+  }
+
+  let html = '';
+  top3.forEach(m=>{
+    const tagClass = m.risk==='low'?'green':m.risk==='mid'?'yellow':'red';
+    const tagLabel = {low:'推荐',mid:'有条件',high:'谨慎'}[m.risk];
+    html += `<div class="reco-item">
+      <span class="ri-icon">${m.type==='stall'?'🛵':m.type==='store'?'🏪':'🏭'}</span>
+      <div class="ri-info">
+        <div class="ri-name">${m.name}</div>
+        <div class="ri-desc">${m.logic}</div>
+      </div>
+      <span class="ri-tag ${tagClass}">${tagLabel}</span>
+    </div>`;
+  });
+  list.innerHTML = html;
+  reco.style.display = 'block';
+}
+
+// ===== 初渲染 =====
+document.addEventListener('DOMContentLoaded',()=>{
+  // 默认选中"想赚钱"
+  document.querySelector('.input-opt[data-intent="cash"]').classList.add('active');
+  render();
+});
+</script>
+
+</body>
+</html>
