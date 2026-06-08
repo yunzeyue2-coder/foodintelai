@@ -451,7 +451,6 @@ function updateHeroStats(){
 renderKnowTab(0);
 renderStallCats();
 updateHeroStats();
-renderHotZone();
 loadCardsData();
 
 function closeModal(){
