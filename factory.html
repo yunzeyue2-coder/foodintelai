@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>工厂上线 · 食品工业 · foodintel AI</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0e9e2;
+  --card:#faf8f5;
+  --text:#1a1a1a;
+  --muted:#7a7269;
+  --light:#b5aaa0;
+  --accent:#C0392B;
+  --accent-light:#E8652D;
+  --green:#07C160;
+  --yellow:#f5a623;
+  --border:#ddd4ca;
+  --tag-bg:#e8dfd5;
+  --radius:14px;
+  --r:10px;
+}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(240,233,226,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 16px;
+}
+.nav-inner{
+  max-width:800px;margin:0 auto;
+  display:flex;align-items:center;
+  height:52px;gap:8px;
+}
+.nav-brand{font-size:18px;font-weight:700;color:var(--accent);text-decoration:none}
+.nav-back{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px;transition:.2s}
+.nav-back:hover{background:var(--tag-bg);color:var(--text)}
+.nav-spacer{flex:1}
+.nav-links{display:flex;gap:4px}
+.nav-links a{
+  padding:6px 12px;font-size:12px;color:var(--muted);
+  text-decoration:none;border-radius:6px;transition:.2s;
+}
+.nav-links a:hover{background:var(--tag-bg);color:var(--text)}
+.main{max-width:800px;margin:0 auto;padding:20px 16px 60px}
+
+/* ===== 页面标题 ===== */
+.page-header{
+  text-align:center;
+  padding:32px 0 20px;
+}
+.page-header h1{font-size:24px;font-weight:800}
+.page-header h1 .hl{color:var(--accent)}
+.page-header p{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* ===== ① 顶部决策入口（3选1） ===== */
+.intent-section{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  margin-bottom:16px;
+}
+.intent-label{
+  font-size:13px;font-weight:700;color:var(--muted);
+  margin-bottom:10px;
+}
+.intent-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+}
+.intent-card{
+  padding:14px;
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  cursor:pointer;
+  transition:.2s;
+  text-align:center;
+  background:var(--card);
+  user-select:none;
+}
+.intent-card:hover{border-color:var(--accent);background:#fef9f8}
+.intent-card.active{border-color:var(--accent);background:#fef2f2;font-weight:600}
+.intent-card .ic-icon{font-size:22px;display:block;margin-bottom:4px}
+.intent-card .ic-label{font-size:14px;font-weight:600}
+.intent-card .ic-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ===== ② 搜索+筛选 ===== */
+.filter-section{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:16px 20px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  margin-bottom:16px;
+}
+.search-row{
+  margin-bottom:12px;
+}
+.search-input{
+  width:100%;
+  padding:10px 14px;
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  font-size:13px;
+  background:var(--bg);
+  color:var(--text);
+  outline:none;
+  transition:.2s;
+}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(192,57,43,.08)}
+.search-input::placeholder{color:var(--light)}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.filter-row:last-child{margin-bottom:0}
+.filter-label{font-size:11px;font-weight:600;color:var(--muted);width:60px;flex-shrink:0;padding-top:6px}
+.filter-tags{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.filter-tag{
+  padding:4px 10px;font-size:11px;border-radius:6px;
+  background:var(--bg);color:var(--muted);cursor:pointer;
+  transition:.2s;border:1px solid transparent;
+}
+.filter-tag:hover{border-color:var(--border);color:var(--text)}
+.filter-tag.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.result-bar{
+  font-size:12px;color:var(--muted);
+  padding:8px 0;display:flex;justify-content:space-between;
+}
+
+/* ===== ③ 工艺产品卡流 ===== */
+.tech-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.tech-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:18px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  border-left:4px solid var(--border);
+  transition:.2s;
+}
+.tech-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.tech-card.maturity-mass{border-left-color:var(--green)}
+.tech-card.maturity-test{border-left-color:var(--yellow)}
+.tech-card.risk-low{border-left-color:var(--green)}
+.tech-card.risk-mid{border-left-color:var(--yellow)}
+.tech-card.risk-high{border-left-color:var(--accent)}
+
+.t-header{
+  display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px;
+}
+.t-name{font-size:15px;font-weight:700}
+.t-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+.t-tag{
+  font-size:9px;padding:2px 6px;border-radius:3px;
+  background:var(--tag-bg);color:var(--muted);font-weight:600;
+}
+.t-tag.type{background:#fef6f2;color:#E8652D}
+.t-tag.maturity{background:#f0f6ec;color:#7B9A45}
+.t-meta{
+  font-size:12px;color:var(--muted);
+  display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;
+  margin:8px 0;padding:8px 0;border-top:1px solid var(--tag-bg);border-bottom:1px solid var(--tag-bg);
+}
+.t-meta-item{display:flex;align-items:center;gap:4px}
+.t-meta-item .mi-icon{font-size:13px}
+.t-core{
+  font-size:12px;color:var(--text);
+  padding:6px 0;
+  line-height:1.6;
+}
+.t-risk{
+  font-size:11px;color:var(--accent);
+  margin:4px 0;
+}
+.t-actions{
+  display:flex;gap:6px;margin-top:8px;
+}
+.t-actions a{
+  flex:1;text-align:center;padding:8px;
+  font-size:12px;font-weight:600;border-radius:8px;
+  text-decoration:none;transition:.2s;
+}
+.t-actions .view{
+  background:var(--tag-bg);color:var(--text);
+}
+.t-actions .view:hover{background:#d5cbc0}
+.t-actions .buy{
+  background:var(--accent);color:#fff;
+}
+.t-actions .buy:hover{background:#a83228}
+
+/* ===== ④ 工厂上线服务入口 ===== */
+.service-section{
+  background:linear-gradient(135deg,#fef2f2,#fff);
+  border:1.5px solid var(--accent-light);
+  border-radius:var(--radius);
+  padding:20px;
+  margin:16px 0;
+  text-align:center;
+}
+.service-section .ss-icon{font-size:32px;margin-bottom:6px}
+.service-section h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.service-section p{font-size:12px;color:var(--muted);margin-bottom:10px}
+.service-section .ss-list{
+  display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px;
+}
+.service-section .ss-list span{
+  font-size:11px;background:var(--card);padding:4px 10px;border-radius:6px;
+}
+.service-btn{
+  display:inline-block;
+  background:var(--accent);color:#fff;
+  padding:10px 24px;border-radius:8px;
+  font-size:13px;font-weight:600;
+  text-decoration:none;transition:.2s;
+}
+.service-btn:hover{background:#a83228}
+
+/* ===== ⑤ 顾问咨询入口 ===== */
+.consult-section{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  margin:16px 0;
+}
+.consult-section .cs-icon{font-size:28px;margin-bottom:4px}
+.consult-section h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.consult-section p{font-size:12px;color:var(--muted);margin-bottom:10px}
+.consult-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.consult-item{
+  font-size:11px;padding:8px;background:var(--bg);
+  border-radius:6px;text-align:center;color:var(--muted);
+}
+.consult-btn{
+  display:block;text-align:center;
+  background:var(--accent);color:#fff;
+  padding:10px;border-radius:8px;
+  font-size:13px;font-weight:600;
+  text-decoration:none;transition:.2s;
+}
+.consult-btn:hover{background:#a83228}
+
+/* ===== ⑥ 成功案例 ===== */
+.case-section{
+  margin:16px 0;
+}
+.case-section h3{font-size:15px;font-weight:700;margin-bottom:10px}
+.case-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.case-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:14px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+}
+.case-card .cc-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.case-card .cc-meta{font-size:11px;color:var(--muted);margin-bottom:4px}
+.case-card .cc-change{font-size:12px}
+.case-card .cc-change .up{color:var(--green);font-weight:700}
+.case-card .cc-reason{font-size:11px;color:var(--muted);margin-top:4px;padding-top:4px;border-top:1px solid var(--tag-bg)}
+
+/* ===== ⑦ 新工艺更新流 ===== */
+.update-section{
+  margin:16px 0;
+}
+.update-section h3{font-size:15px;font-weight:700;margin-bottom:10px}
+.update-list{display:flex;flex-direction:column;gap:6px}
+.update-item{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card);padding:10px 14px;border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,.03);
+  text-decoration:none;color:var(--text);transition:.2s;
+}
+.update-item:hover{background:var(--tag-bg)}
+.update-item .ui-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.update-item .ui-text{font-size:12px;flex:1}
+
+/* ===== 空状态 ===== */
+.empty-state{
+  text-align:center;padding:32px 0;color:var(--muted);font-size:13px;
+}
+.empty-state .es-icon{font-size:36px;display:block;margin-bottom:8px}
+
+/* ===== 响应式 ===== */
+@media(min-width:500px){
+  .intent-grid{grid-template-columns:repeat(3,1fr)}
+  .tech-grid{grid-template-columns:1fr 1fr}
+  .consult-grid{grid-template-columns:repeat(4,1fr)}
+  .case-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-back">← 返回首页</a>
+    <div class="nav-spacer"></div>
+    <div class="nav-links">
+      <a href="decision-engine.html">门店决策</a>
+      <a href="learn.html">入门</a>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ===== 页面标题 ===== -->
+  <div class="page-header">
+    <h1><span class="hl">工厂</span>上线卡</h1>
+    <p>工业化工艺 → 选型 → 落地 → 量产</p>
+  </div>
+
+  <!-- ===== ① 顶部决策入口（3选1） ===== -->
+  <div class="intent-section" id="intentSection">
+    <div class="intent-label">你现在需要什么？</div>
+    <div class="intent-grid" id="intentGrid">
+      <div class="intent-card active" data-intent="buy" onclick="onIntent(this)">
+        <span class="ic-icon">🧪</span>
+        <div class="ic-label">买成熟工艺</div>
+        <div class="ic-sub">直接生产</div>
+      </div>
+      <div class="intent-card" data-intent="launch" onclick="onIntent(this)">
+        <span class="ic-icon">🏭</span>
+        <div class="ic-label">做产品上线</div>
+        <div class="ic-sub">从0到量产</div>
+      </div>
+      <div class="intent-card" data-intent="diagnose" onclick="onIntent(this)">
+        <span class="ic-icon">👨‍🏫</span>
+        <div class="ic-label">工厂咨询</div>
+        <div class="ic-sub">诊断优化</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ② 搜索+筛选 ===== -->
+  <div class="filter-section">
+    <div class="search-row">
+      <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜索产品、工艺、关键词..." oninput="onSearch(this.value)">
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">类型</div>
+      <div class="filter-tags" data-dim="type">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="卤味">卤味</span>
+        <span class="filter-tag" data-v="炸物">炸物</span>
+        <span class="filter-tag" data-v="预制菜">预制菜</span>
+        <span class="filter-tag" data-v="饮品">饮品</span>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">成熟度</div>
+      <div class="filter-tags" data-dim="maturity">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="量产">已量产</span>
+        <span class="filter-tag" data-v="验证">验证中</span>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">投资</div>
+      <div class="filter-tags" data-dim="invest">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="小">小</span>
+        <span class="filter-tag" data-v="中">中</span>
+        <span class="filter-tag" data-v="大">大</span>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">风险</div>
+      <div class="filter-tags" data-dim="risk">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="低">低</span>
+        <span class="filter-tag" data-v="中">中</span>
+        <span class="filter-tag" data-v="高">高</span>
+      </div>
+    </div>
+    <div class="result-bar">
+      <span>匹配 <span class="count" id="resultCount">—</span> 个工艺</span>
+    </div>
+  </div>
+
+  <!-- ===== ③ 工艺产品卡流 ===== -->
+  <div id="techArea"></div>
+
+  <!-- ===== ④ 工厂上线服务入口 ===== -->
+  <div class="service-section" id="serviceSection">
+    <div class="ss-icon">🏭</div>
+    <h3>想做自己的产品上线？</h3>
+    <p>我们帮你完成从产品设计到量产导入</p>
+    <div class="ss-list">
+      <span>✔ 产品设计</span>
+      <span>✔ 工艺打样</span>
+      <span>✔ 小试生产</span>
+      <span>✔ 量产导入</span>
+    </div>
+    <a href="#" class="service-btn" onclick="alert('顾问服务请联系微信：foodintel-ai')">立即咨询上线项目 →</a>
+  </div>
+
+  <!-- ===== ⑤ 顾问咨询入口 ===== -->
+  <div class="consult-section" id="consultSection">
+    <div class="cs-icon">👨‍🏫</div>
+    <h3>工厂遇到问题？</h3>
+    <p>常见工厂难题，我们帮你诊断</p>
+    <div class="consult-grid">
+      <div class="consult-item">成本降不下来</div>
+      <div class="consult-item">良品率不稳定</div>
+      <div class="consult-item">工艺无法量产</div>
+      <div class="consult-item">设备利用率低</div>
+    </div>
+    <a href="#" class="consult-btn" onclick="alert('顾问诊断请联系微信：foodintel-ai')">提交工厂问题诊断 →</a>
+  </div>
+
+  <!-- ===== ⑥ 成功案例 ===== -->
+  <div class="case-section" id="caseSection">
+    <h3>📈 成功案例</h3>
+    <div class="case-grid" id="caseGrid"></div>
+  </div>
+
+  <!-- ===== ⑦ 新工艺更新流 ===== -->
+  <div class="update-section" id="updateSection">
+    <h3>🔄 最新上线工艺</h3>
+    <div class="update-list" id="updateList"></div>
+  </div>
+
+</div>
+
+<script>
+// ===== 工艺数据库 =====
+const TECHS = [
+  {id:"t01",name:"酱卤鸡爪标准化工艺",type:"卤味",maturity:"量产",invest:"小",risk:"低",
+   cost:"3.2–4.8元/份",shelf:"90天",equip:"夹层锅 + 真空包装",
+   core:"高温卤制 + 二次入味 + 真空锁鲜",
+   riskDesc:"卤制时间控制 / 水分波动"},
+  {id:"t02",name:"预制红烧肉量产方案",type:"预制菜",maturity:"量产",invest:"中",risk:"中",
+   cost:"8–12元/份",shelf:"180天",equip:"炒锅 + 灭菌釜 + 真空包装",
+   core:"预煮定型 + 酱汁浓缩 + 高温灭菌",
+   riskDesc:"肥瘦比例波动 / 灭菌温度窗口窄"},
+  {id:"t03",name:"即食卤味真空包装升级",type:"卤味",maturity:"量产",invest:"小",risk:"低",
+   cost:"3–5元/份",shelf:"60天",equip:"夹层锅 + 真空包装 + 清洗线",
+   core:"二次卤制 + 真空封装 + 巴氏杀菌",
+   riskDesc:"包装漏气率 / 杀菌时间控制"},
+  {id:"t04",name:"韩式炸鸡腌料标准化",type:"炸物",maturity:"验证",invest:"小",risk:"低",
+   cost:"1.5–2.5元/份",shelf:"30天",equip:"真空滚揉机 + 速冻柜",
+   core:"腌料注射 + 滚揉入味 + IQF速冻",
+   riskDesc:"裹粉脱落 / 解冻工艺要求高"},
+  {id:"t05",name:"手打柠檬茶工业化方案",type:"饮品",maturity:"验证",invest:"中",risk:"中",
+   cost:"2–4元/杯",shelf:"15天",equip:"榨汁机 + UHT杀菌 + 灌装线",
+   core:"冷榨取汁 + UHT瞬时杀菌 + 冷链配送",
+   riskDesc:"果肉沉淀 / 风味衰减快"},
+  {id:"t06",name:"卤味中央厨房量产方案",type:"卤味",maturity:"量产",invest:"大",risk:"高",
+   cost:"5–8元/份",shelf:"120天",equip:"多功能卤锅 + 灭菌釜 + 全自动包装线",
+   core:"批量卤制 + 灭菌封装 + 冷链配送",
+   riskDesc:"产能爬坡期长 / 配送半径限制 / 资金占用大"},
+  {id:"t07",name:"速冻包子生产线方案",type:"预制菜",maturity:"量产",invest:"大",risk:"中",
+   cost:"1.5–3元/只",shelf:"180天",equip:"和面机 + 自动包馅机 + 速冻隧道 + 包装机",
+   core:"统一皮馅比 + 预蒸定型 + IQF速冻",
+   riskDesc:"皮馅比公差 / 速冻后开裂"},
+  {id:"t08",name:"酸辣粉料包标准化",type:"预制菜",maturity:"验证",invest:"小",risk:"低",
+   cost:"0.8–1.5元/包",shelf:"90天",equip:"炒料锅 + 灌装线 + 封口机",
+   core:"底料炒制 + 骨汤浓缩 + 粉包组装",
+   riskDesc:"辣度一致性 / 酱料分层"},
+];
+
+// ===== URL参数处理 =====
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const mode = params.get('mode');
+  if(mode === 'factory'){
+    document.querySelector('.intent-card[data-intent="launch"]')?.classList.add('active');
+    document.querySelector('.intent-card[data-intent="buy"]')?.classList.remove('active');
+  }
+})();
+
+// ===== 输入层 =====
+function onIntent(el){
+  document.querySelectorAll('.intent-card').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+// ===== 搜索 =====
+function onSearch(val){
+  render();
+}
+
+// ===== 筛选 =====
+document.querySelectorAll('.filter-tag').forEach(tag=>{
+  tag.onclick=function(){
+    const parent = this.parentElement;
+    parent.querySelectorAll('.filter-tag').forEach(t=>t.classList.remove('active'));
+    this.classList.add('active');
+    render();
+  };
+});
+
+function getActiveFilters(){
+  const filters = {};
+  document.querySelectorAll('.filter-tags').forEach(group=>{
+    const dim = group.dataset.dim;
+    const active = group.querySelector('.filter-tag.active');
+    filters[dim] = active ? active.dataset.v : '*';
+  });
+  return filters;
+}
+
+function getActiveIntent(){
+  const active = document.querySelector('.intent-card.active');
+  return active ? active.dataset.intent : null;
+}
+
+// ===== 渲染 =====
+function render(){
+  const intent = getActiveIntent();
+  const filters = getActiveFilters();
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+
+  let filtered = TECHS.filter(t=>{
+    // 意图过滤
+    if(intent === 'buy' && t.maturity !== '量产') return false;
+    if(intent === 'launch' && t.maturity !== '验证') return false;
+    // 类型
+    if(filters.type !== '*' && t.type !== filters.type) return false;
+    // 成熟度
+    if(filters.maturity !== '*' && t.maturity !== filters.maturity) return false;
+    // 投资
+    if(filters.invest !== '*' && t.invest !== filters.invest) return false;
+    // 风险
+    if(filters.risk !== '*' && t.risk !== filters.risk) return false;
+    // 搜索
+    if(query && !t.name.includes(query) && !t.type.includes(query)) return false;
+    return true;
+  });
+
+  document.getElementById('resultCount').textContent = filtered.length;
+
+  if(filtered.length === 0){
+    document.getElementById('techArea').innerHTML = '<div class="empty-state"><span class="es-icon">🔍</span>没有匹配的工艺<br>试试调整筛选条件</div>';
+    return;
+  }
+
+  let html = '<div class="tech-grid">';
+  filtered.forEach(t=>{
+    const maturityClass = t.maturity === '量产' ? 'maturity-mass' : 'maturity-test';
+    const riskClass = 'risk-' + t.risk;
+    html += `<div class="tech-card ${maturityClass} ${riskClass}">
+      <div class="t-header">
+        <div>
+          <div class="t-name">${t.name}</div>
+          <div class="t-tags">
+            <span class="t-tag type">${t.type}</span>
+            <span class="t-tag maturity">${t.maturity}</span>
+          </div>
+        </div>
+        <span class="t-tag" style="background:${t.risk==='低'?'#f0f6ec':t.risk==='中'?'#fef6f2':'#fef2f2'};color:${t.risk==='低'?'#7B9A45':t.risk==='中'?'#E8652D':'#C0392B'}">风险${t.risk}</span>
+      </div>
+      <div class="t-meta">
+        <span class="t-meta-item"><span class="mi-icon">💰</span>成本 ${t.cost}</span>
+        <span class="t-meta-item"><span class="mi-icon">📦</span>保质期 ${t.shelf}</span>
+        <span class="t-meta-item" style="grid-column:1/-1"><span class="mi-icon">⚙️</span>设备 ${t.equip}</span>
+      </div>
+      <div class="t-core">${t.core}</div>
+      <div class="t-risk">⚠️ ${t.riskDesc}</div>
+      <div class="t-actions">
+        <a href="#" class="view" onclick="alert('完整工艺文档即将上线，敬请期待');return false">查看完整工艺</a>
+        <a href="#" class="buy" onclick="alert('购买工艺请联系微信：foodintel-ai');return false">购买工艺</a>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  document.getElementById('techArea').innerHTML = html;
+
+  // 服务区、顾问区、案例区、更新区只在中部显示
+  document.getElementById('serviceSection').style.display = (filtered.length > 0) ? 'block' : 'none';
+}
+
+// ===== 案例 =====
+const CASES = [
+  {title:"某卤味工厂——酱卤系列",before:"毛利18%",after:"毛利32%",reason:"工艺+包装结构优化"},
+  {title:"某炸鸡供应链——韩式腌料",before:"损耗率22%",after:"损耗率9%",reason:"标准化投料+滚揉工艺升级"},
+  {title:"某饮品代工厂——柠檬茶线",before:"日产能800杯",after:"日产能5000杯",reason:"UHT杀菌+灌装线自动化"},
+];
+(function(){
+  let html = '';
+  CASES.forEach(c=>{
+    html += `<div class="case-card">
+      <div class="cc-title">${c.title}</div>
+      <div class="cc-meta">上线前：${c.before} → 调整后：<span class="up">${c.after}</span></div>
+      <div class="cc-reason">核心改动：${c.reason}</div>
+    </div>`;
+  });
+  document.getElementById('caseGrid').innerHTML = html;
+})();
+
+// ===== 新工艺更新 =====
+(function(){
+  const UPDATES = [
+    {text:"韩式炸鸡标准化工艺 - 已通过量产验证"},
+    {text:"预制菜红烧肉量产方案 - 新增双配方版本"},
+    {text:"即食卤味真空包装升级 - 保质期延长至90天"},
+    {text:"酸辣粉料包标准化 - 新增麻辣味型"},
+    {text:"速冻包子生产线方案 - 皮馅比精度±0.5g"},
+  ];
+  let html = '';
+  UPDATES.forEach(u=>{
+    html += `<a href="#" class="update-item" onclick="document.getElementById('searchInput').value='';return false">
+      <span class="ui-dot"></span>
+      <span class="ui-text">${u.text}</span>
+    </a>`;
+  });
+  document.getElementById('updateList').innerHTML = html;
+})();
+
+// ===== 初渲染 =====
+document.addEventListener('DOMContentLoaded',()=>{
+  render();
+});
+</script>
+
+</body>
+</html>
