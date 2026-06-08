@@ -1,5 +1,3 @@
-// APP START - 验证执行
-try { document.body.dataset.appLoaded = 'true'; } catch(e) {}
 const FREE_CARDS = [
   {e:"🏮",n:"道口烧鸡",d:"400年老汤 · 先炸后卤",f:"daokou-shaoji.html"},
   {e:"🍃",n:"茶香鸡",d:"白卤水遇上茶香 · 清新不腻",f:"cha-xiang-ji.html"},
@@ -453,6 +451,7 @@ function updateHeroStats(){
 renderKnowTab(0);
 renderStallCats();
 updateHeroStats();
+renderHotZone();
 loadCardsData();
 
 function closeModal(){
@@ -659,7 +658,16 @@ function onCalcScene(scene){
 }
 
 async function loadCalcReport(){
-  const info = calcIndex[selectedCat];
+  const info = calcIndex[selectedCat  },
+  {
+    name:"🥩 爆浆芝士猪排🔥",
+    cards:[
+      {e:"🐷",n:"原味爆浆芝士猪排",d:"猪里脊包芝士·一咬爆浆·出餐50s·毛利40%",f:"cards/原味爆浆芝士猪排.html"},
+      {e:"🧄",n:"蒜香爆浆芝士猪排",d:"蒜香渗透·芝士爆浆·蒜酥焦脆·复购率最高",f:"cards/蒜香爆浆芝士猪排.html"},
+      {e:"🇰🇷",n:"韩式甜辣酱爆浆猪排",d:"韩式甜辣刷酱·泡菜酸萝卜套餐·客单价¥22",f:"cards/韩式甜辣酱爆浆芝士猪排.html"},
+      {e:"🍯",n:"蜂蜜芥末爆浆猪排",d:"蜂蜜甜+芥末微冲·女生最爱·清新不腻",f:"cards/蜂蜜芥末爆浆芝士猪排.html"},
+    ]
+  }];
   if(!info) return;
   const file = selectedScene === 'stall' ? info.stall_file : info.store_file;
   let data;
