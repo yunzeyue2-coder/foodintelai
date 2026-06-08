@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>决策引擎 · 食品创业 · foodintel AI</title>
+<title>门店决策 · 开店模型 · foodintel AI</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -20,7 +20,6 @@
   --border:#ddd4ca;
   --tag-bg:#e8dfd5;
   --radius:14px;
-  --r:10px;
 }
 body{
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
@@ -45,36 +44,39 @@ body{
 .nav-back{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px;transition:.2s}
 .nav-back:hover{background:var(--tag-bg);color:var(--text)}
 .nav-spacer{flex:1}
+.nav-links{display:flex;gap:4px}
+.nav-links a{padding:6px 12px;font-size:12px;color:var(--muted);text-decoration:none;border-radius:6px;transition:.2s}
+.nav-links a:hover{background:var(--tag-bg);color:var(--text)}
 .main{max-width:800px;margin:0 auto;padding:20px 16px 60px}
 
-/* ===== ① 输入层 ===== */
-.input-section{
+/* ===== 页面标题 ===== */
+.page-header{text-align:center;padding:28px 0 16px}
+.page-header h1{font-size:24px;font-weight:800}
+.page-header h1 .hl{color:var(--accent)}
+.page-header p{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* ===== ① 预算入口 ===== */
+.budget-section{
   background:var(--card);
   border-radius:var(--radius);
-  padding:24px 20px;
+  padding:20px;
   box-shadow:0 2px 12px rgba(0,0,0,.04);
   margin-bottom:16px;
 }
-.input-label{
-  font-size:13px;font-weight:700;margin-bottom:12px;
-}
-.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.input-opt{
-  padding:12px 14px;
-  border:1.5px solid var(--border);
-  border-radius:10px;
-  text-align:center;
-  cursor:pointer;
-  transition:.2s;
-  background:var(--card);
+.budget-label{font-size:13px;font-weight:700;margin-bottom:10px}
+.budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.budget-opt{
+  padding:12px;border:1.5px solid var(--border);
+  border-radius:10px;text-align:center;cursor:pointer;
+  transition:.2s;background:var(--card);user-select:none;
   font-size:13px;
 }
-.input-opt:hover{border-color:var(--accent);background:#fef9f8}
-.input-opt.active{border-color:var(--accent);background:#fef2f2;font-weight:600}
-.input-opt .io-icon{font-size:18px;display:block;margin-bottom:3px}
-.input-opt .io-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.budget-opt:hover{border-color:var(--accent);background:#fef9f8}
+.budget-opt.active{border-color:var(--accent);background:#fef2f2;font-weight:600}
+.budget-opt .bo-icon{font-size:20px;display:block;margin-bottom:2px}
+.budget-opt .bo-sub{font-size:10px;color:var(--muted);margin-top:2px}
 
-/* ===== ② 筛选层 ===== */
+/* ===== ② 筛选 ===== */
 .filter-section{
   background:var(--card);
   border-radius:var(--radius);
@@ -82,41 +84,24 @@ body{
   box-shadow:0 2px 12px rgba(0,0,0,.04);
   margin-bottom:16px;
 }
-.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .filter-row:last-child{margin-bottom:0}
-.filter-label{font-size:11px;font-weight:600;color:var(--muted);width:60px;flex-shrink:0;padding-top:6px}
+.filter-label{font-size:11px;font-weight:600;color:var(--muted);width:56px;flex-shrink:0;padding-top:6px}
 .filter-tags{display:flex;gap:4px;flex-wrap:wrap;flex:1}
 .filter-tag{
-  padding:4px 10px;
-  font-size:11px;
-  border-radius:6px;
-  background:var(--bg);
-  color:var(--muted);
-  cursor:pointer;
-  transition:.2s;
-  border:1px solid transparent;
+  padding:4px 10px;font-size:11px;border-radius:6px;
+  background:var(--bg);color:var(--muted);cursor:pointer;
+  transition:.2s;border:1px solid transparent;
 }
 .filter-tag:hover{border-color:var(--border);color:var(--text)}
 .filter-tag.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.result-bar{font-size:12px;color:var(--muted);padding:8px 0;display:flex;justify-content:space-between}
 
-/* ===== 结果统计 ===== */
-.result-bar{
-  font-size:12px;color:var(--muted);
-  padding:8px 0;
-  display:flex;justify-content:space-between;
-  align-items:center;
-}
-.result-bar .count{font-weight:700;color:var(--text)}
-
-/* ===== ③ 模型层 ===== */
+/* ===== ③ 门店模型卡 ===== */
 .model-grid{display:grid;grid-template-columns:1fr;gap:10px}
-
 .model-card{
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:18px;
-  box-shadow:0 2px 12px rgba(0,0,0,.04);
-  border-left:4px solid var(--border);
+  background:var(--card);border-radius:var(--radius);padding:18px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);border-left:4px solid var(--border);
   transition:.2s;
 }
 .model-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08)}
@@ -124,127 +109,83 @@ body{
 .model-card.risk-yellow{border-left-color:var(--yellow)}
 .model-card.risk-red{border-left-color:var(--accent)}
 
-.m-header{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  margin-bottom:6px;gap:8px;
-}
-.m-name{
-  font-size:14px;font-weight:700;
-  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
-}
-.m-type{
-  font-size:10px;padding:2px 8px;border-radius:4px;
-}
-.m-type.stall{background:#fef6f2;color:#E8652D}
-.m-type.store{background:#fef2f2;color:#C0392B}
-.m-type.factory{background:#f0f6ec;color:#7B9A45}
-.m-risk{
-  font-size:10px;padding:2px 8px;border-radius:4px;
-  font-weight:600;flex-shrink:0;
-}
-.m-risk.green{background:#f0f6ec;color:var(--green)}
-.m-risk.yellow{background:#fef9e8;color:var(--yellow)}
-.m-risk.red{background:#fef2f2;color:var(--accent)}
+.m-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px}
+.m-name{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.m-tags{display:flex;gap:4px;margin-top:3px}
+.m-tag{font-size:9px;padding:2px 6px;border-radius:3px;background:var(--tag-bg);color:var(--muted);font-weight:600}
 
-.m-logic{
-  font-size:11px;color:var(--muted);
-  margin-bottom:8px;line-height:1.6;
+.m-stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;
+  margin:8px 0;padding:8px 0;
+  border-top:1px solid var(--tag-bg);border-bottom:1px solid var(--tag-bg);
+  font-size:12px;color:var(--muted);
 }
+.m-stat{display:flex;align-items:center;gap:4px}
+.m-stat strong{color:var(--text)}
 
-.m-meta{
-  display:flex;gap:6px;flex-wrap:wrap;
+.m-core{font-size:12px;color:var(--text);padding:6px 0;line-height:1.6}
+.m-risk-text{font-size:11px;color:var(--accent);margin:4px 0}
+.m-actions{display:flex;gap:6px;margin-top:8px}
+.m-actions a{
+  flex:1;text-align:center;padding:8px;
+  font-size:12px;font-weight:600;border-radius:8px;
+  text-decoration:none;transition:.2s;
 }
-.m-meta-item{
-  font-size:10px;
-  padding:3px 8px;
-  border-radius:4px;
-  background:var(--bg);
-  color:var(--muted);
-}
-.m-meta-item strong{color:var(--text)}
+.m-actions .detail{background:var(--tag-bg);color:var(--text)}
+.m-actions .detail:hover{background:#d5cbc0}
+.m-actions .buy{background:var(--accent);color:#fff}
+.m-actions .buy:hover{background:#a83228}
 
-/* ===== ④ 聚类层 ===== */
-.cluster-section{margin-top:16px}
-.cluster-header{
-  font-size:13px;font-weight:700;
-  padding:10px 0;margin-top:16px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:8px;
-}
-.cluster-header:first-child{margin-top:0}
-.cluster-header .ch-icon{font-size:16px}
-
-/* ===== ⑤ 推荐层 ===== */
-.reco-section{
+/* ===== ④ 选址测评 ===== */
+.location-section{
   background:linear-gradient(135deg,#fef2f2,#fff);
+  border:1.5px solid var(--accent-light);
   border-radius:var(--radius);
-  padding:20px;
-  margin-top:16px;
-  border:1px solid #fdd;
+  padding:20px;margin:16px 0;text-align:center;
 }
-.reco-title{
-  font-size:14px;font-weight:700;margin-bottom:10px;
-}
-.reco-title .rt-icon{font-size:16px;margin-right:4px}
-.reco-list{display:grid;grid-template-columns:1fr;gap:8px}
-.reco-item{
-  display:flex;align-items:center;gap:8px;
-  padding:10px 14px;
-  background:var(--card);
-  border-radius:10px;
-  font-size:13px;
-}
-.reco-item .ri-icon{font-size:16px}
-.reco-item .ri-info{flex:1}
-.reco-item .ri-name{font-weight:600}
-.reco-item .ri-desc{font-size:10px;color:var(--muted)}
-.reco-item .ri-tag{
-  font-size:10px;padding:2px 8px;border-radius:4px;
-}
-.reco-item .ri-tag.green{background:#f0f6ec;color:var(--green)}
+.location-section .ls-icon{font-size:32px;margin-bottom:6px}
+.location-section h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.location-section p{font-size:12px;color:var(--muted);margin-bottom:10px}
+.location-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.location-item{font-size:11px;padding:8px;background:var(--card);border-radius:6px}
 
-/* ===== 风险层（红黄绿嵌入卡片） ===== */
-.m-risk-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
-.m-risk-dot.green{background:var(--green)}
-.m-risk-dot.yellow{background:var(--yellow)}
-.m-risk-dot.red{background:var(--accent)}
+/* ===== ⑤ 开店死因 ===== */
+.death-section{
+  background:var(--card);border-radius:var(--radius);
+  padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.04);margin:16px 0;
+}
+.death-section h3{font-size:15px;font-weight:700;margin-bottom:10px}
+.death-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.death-card{
+  padding:12px;border-radius:10px;border:1px solid var(--border);
+}
+.death-card .dc-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.death-card .dc-text{font-size:11px;color:var(--muted);line-height:1.6}
 
-/* ===== 深度层 ===== */
-.depth-section{
-  margin-top:24px;
-  padding-top:20px;
-  border-top:1px solid var(--border);
+/* ===== ⑥ 案例对比 ===== */
+.case-section{margin:16px 0}
+.case-section h3{font-size:15px;font-weight:700;margin-bottom:10px}
+.case-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.case-card{
+  background:var(--card);border-radius:var(--radius);
+  padding:14px;box-shadow:0 2px 12px rgba(0,0,0,.04);
 }
-.depth-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;
-}
-.depth-card{
-  padding:16px;
-  background:var(--card);
-  border-radius:var(--radius);
-  box-shadow:0 2px 12px rgba(0,0,0,.04);
-  text-decoration:none;
-  color:var(--text);
-  display:block;
-  transition:.2s;
-}
-.depth-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08)}
-.depth-card .dc-icon{font-size:24px;margin-bottom:6px}
-.depth-card .dc-name{font-size:13px;font-weight:700}
-.depth-card .dc-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.case-card .cc-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.case-card .cc-meta{font-size:11px;color:var(--muted);margin-bottom:4px}
+.case-card .cc-result{font-size:12px}
+.case-card .cc-result .good{color:var(--green);font-weight:700}
+.case-card .cc-result .bad{color:var(--accent);font-weight:700}
+.case-card .cc-reason{font-size:11px;color:var(--muted);margin-top:4px;padding-top:4px;border-top:1px solid var(--tag-bg)}
 
-/* 占位模型（示例demo） */
-.demo-note{
-  font-size:11px;color:var(--light);
-  text-align:center;padding:40px 20px;
-}
-.demo-note strong{color:var(--text)}
-.demo-note .dn-icon{font-size:32px;display:block;margin-bottom:8px}
+/* ===== 空状态 ===== */
+.empty-state{text-align:center;padding:32px 0;color:var(--muted);font-size:13px}
+.empty-state .es-icon{font-size:36px;display:block;margin-bottom:8px}
 
 @media(min-width:500px){
-  .input-grid{grid-template-columns:repeat(4,1fr)}
+  .budget-grid{grid-template-columns:repeat(4,1fr)}
   .model-grid{grid-template-columns:1fr 1fr}
-  .reco-list{grid-template-columns:1fr 1fr}
+  .death-grid{grid-template-columns:1fr 1fr}
+  .case-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -254,191 +195,200 @@ body{
   <div class="nav-inner">
     <a href="index.html" class="nav-back">← 返回首页</a>
     <div class="nav-spacer"></div>
-    <span style="font-size:12px;color:var(--muted)">决策引擎 · β版</span>
+    <div class="nav-links">
+      <a href="factory.html">工厂上线</a>
+      <a href="learn.html">入门</a>
+    </div>
   </div>
 </div>
 
 <div class="main">
 
-  <!-- 🌟 01 输入层 -->
-  <div class="input-section" id="inputLayer">
-    <div class="input-label">👤 你属于哪种进入方式？</div>
-    <div class="input-grid" id="intentGrid">
-      <div class="input-opt" data-intent="cash" onclick="onIntent(this)">
-        <span class="io-icon">💰</span>
-        想赚钱
-        <div class="io-sub">现金流模型</div>
+  <div class="page-header">
+    <h1><span class="hl">门店</span>决策卡</h1>
+    <p>选品类 · 估投入 · 算回本 · 避死坑</p>
+  </div>
+
+  <!-- ===== ① 预算入口 ===== -->
+  <div class="budget-section">
+    <div class="budget-label">💰 你准备了多少开店资金？</div>
+    <div class="budget-grid" id="budgetGrid">
+      <div class="budget-opt active" data-budget="5" onclick="onBudget(this)">
+        <span class="bo-icon">💼</span>
+        5万以下
+        <div class="bo-sub">小店/档口</div>
       </div>
-      <div class="input-opt" data-intent="venture" onclick="onIntent(this)">
-        <span class="io-icon">🚀</span>
-        想创业
-        <div class="io-sub">长期模型</div>
+      <div class="budget-opt" data-budget="10" onclick="onBudget(this)">
+        <span class="bo-icon">🏪</span>
+        5–10万
+        <div class="bo-sub">标准门店</div>
       </div>
-      <div class="input-opt" data-intent="side" onclick="onIntent(this)">
-        <span class="io-icon">🧘</span>
-        想做副业
-        <div class="io-sub">轻模型</div>
+      <div class="budget-opt" data-budget="20" onclick="onBudget(this)">
+        <span class="bo-icon">🏬</span>
+        10–20万
+        <div class="bo-sub">品质门店</div>
       </div>
-      <div class="input-opt" data-intent="scale" onclick="onIntent(this)">
-        <span class="io-icon">🏭</span>
-        想做规模
-        <div class="io-sub">工厂模型</div>
+      <div class="budget-opt" data-budget="30" onclick="onBudget(this)">
+        <span class="bo-icon">🏗️</span>
+        20万+
+        <div class="bo-sub">旗舰/首店</div>
       </div>
     </div>
   </div>
 
-  <!-- 🌟 02 筛选层 -->
-  <div class="filter-section" id="filterLayer">
+  <!-- ===== ② 筛选 ===== -->
+  <div class="filter-section">
     <div class="filter-row">
-      <div class="filter-label">💰 投资</div>
-      <div class="filter-tags" data-dim="invest">
+      <div class="filter-label">品类</div>
+      <div class="filter-tags" data-dim="type">
         <span class="filter-tag active" data-v="*">全部</span>
-        <span class="filter-tag" data-v="0-1">1万以下</span>
-        <span class="filter-tag" data-v="1-5">1–5万</span>
-        <span class="filter-tag" data-v="5-20">5–20万</span>
-        <span class="filter-tag" data-v="20+">20万+</span>
+        <span class="filter-tag" data-v="卤味">卤味</span>
+        <span class="filter-tag" data-v="早餐">早餐</span>
+        <span class="filter-tag" data-v="快餐">快餐</span>
+        <span class="filter-tag" data-v="饮品">饮品</span>
+        <span class="filter-tag" data-v="小吃">小吃</span>
+        <span class="filter-tag" data-v="炸物">炸物</span>
       </div>
     </div>
     <div class="filter-row">
-      <div class="filter-label">⚙️ 复杂度</div>
-      <div class="filter-tags" data-dim="level">
-        <span class="filter-tag active" data-v="*">全部</span>
-        <span class="filter-tag" data-v="stall">摆摊级</span>
-        <span class="filter-tag" data-v="store">门店级</span>
-        <span class="filter-tag" data-v="factory">工厂级</span>
-      </div>
-    </div>
-    <div class="filter-row">
-      <div class="filter-label">⏱ 回本周期</div>
+      <div class="filter-label">回本</div>
       <div class="filter-tags" data-dim="payback">
         <span class="filter-tag active" data-v="*">全部</span>
-        <span class="filter-tag" data-v="7d">7天</span>
-        <span class="filter-tag" data-v="1m">1个月</span>
-        <span class="filter-tag" data-v="3m">3个月</span>
-        <span class="filter-tag" data-v="6m+">6个月+</span>
+        <span class="filter-tag" data-v="3m">3个月内</span>
+        <span class="filter-tag" data-v="6m">6个月内</span>
+        <span class="filter-tag" data-v="12m">1年内</span>
       </div>
     </div>
     <div class="filter-row">
-      <div class="filter-label">⚠️ 风险</div>
+      <div class="filter-label">风险</div>
       <div class="filter-tags" data-dim="risk">
         <span class="filter-tag active" data-v="*">全部</span>
-        <span class="filter-tag" data-v="low">低</span>
-        <span class="filter-tag" data-v="mid">中</span>
-        <span class="filter-tag" data-v="high">高</span>
+        <span class="filter-tag" data-v="低">低</span>
+        <span class="filter-tag" data-v="中">中</span>
+        <span class="filter-tag" data-v="高">高</span>
       </div>
     </div>
     <div class="filter-row">
-      <div class="filter-label">🔁 依赖</div>
-      <div class="filter-tags" data-dim="depend">
+      <div class="filter-label">模式</div>
+      <div class="filter-tags" data-dim="mode">
         <span class="filter-tag active" data-v="*">全部</span>
-        <span class="filter-tag" data-v="traffic">流量型</span>
-        <span class="filter-tag" data-v="repurchase">复购型</span>
-        <span class="filter-tag" data-v="supply">供应链型</span>
+        <span class="filter-tag" data-v="自营">自营</span>
+        <span class="filter-tag" data-v="夫妻">夫妻店</span>
+        <span class="filter-tag" data-v="品牌">品牌加盟</span>
       </div>
     </div>
+    <div class="result-bar">
+      <span>匹配 <span class="count" id="resultCount">—</span> 个门店模型</span>
+      <span style="font-size:10px;color:var(--light)">按风险从低到高排序</span>
+    </div>
   </div>
 
-  <!-- 结果统计 -->
-  <div class="result-bar">
-    <span>匹配 <span class="count" id="resultCount">—</span> 个模型</span>
-    <span style="font-size:10px;color:var(--light)">选好筛选条件，系统自动推荐</span>
-  </div>
-
-  <!-- 🌟 05 风险层 + 03 模型层 + 04 聚类层 -->
+  <!-- ===== ③ 门店模型卡 ===== -->
   <div id="modelArea"></div>
 
-  <!-- 🌟 06 推荐层 -->
-  <div class="reco-section" id="recoSection" style="display:none">
-    <div class="reco-title"><span class="rt-icon">🎯</span>系统推荐</div>
-    <div class="reco-list" id="recoList"></div>
+  <!-- ===== ④ 选址测评 ===== -->
+  <div class="location-section">
+    <div class="ls-icon">📍</div>
+    <h3>门店成败，选址占70%</h3>
+    <p>不同品类对选址的要求完全不同</p>
+    <div class="location-grid">
+      <div class="location-item">卤味 → 社区入口/菜市场旁</div>
+      <div class="location-item">早餐 → 学校/写字楼1km内</div>
+      <div class="location-item">快餐 → 外卖覆盖率优先</div>
+      <div class="location-item">饮品 → 商圈首层/街角位</div>
+    </div>
   </div>
 
-  <!-- 🌟 07 深度层 -->
-  <div class="depth-section">
-    <div class="depth-grid">
-      <a href="learn.html" class="depth-card">
-        <div class="dc-icon">📘</div>
-        <div class="dc-name">L1 认知系统</div>
-        <div class="dc-desc">理解行业怎么死、怎么不死</div>
-      </a>
-      <a href="#" class="depth-card" style="opacity:.4;pointer-events:none">
-        <div class="dc-icon">🏪</div>
-        <div class="dc-name">门店决策卡</div>
-        <div class="dc-desc">判断单店模型（即将上线）</div>
-      </a>
-      <a href="#" class="depth-card" style="opacity:.4;pointer-events:none">
-        <div class="dc-icon">🏭</div>
-        <div class="dc-name">工厂上线卡</div>
-        <div class="dc-desc">规模模型（即将上线）</div>
-      </a>
-      <a href="index.html#mainContent" class="depth-card">
-        <div class="dc-icon">📦</div>
-        <div class="dc-name">产品卡库</div>
-        <div class="dc-desc">328款摆摊产品卡</div>
-      </a>
-    </div>
+  <!-- ===== ⑤ 开店死因 ===== -->
+  <div class="death-section">
+    <h3>💀 各品类开店「真实死因」</h3>
+    <div class="death-grid" id="deathGrid"></div>
+  </div>
+
+  <!-- ===== ⑥ 案例对比 ===== -->
+  <div class="case-section">
+    <h3>📊 真实开店案例</h3>
+    <div class="case-grid" id="caseGrid"></div>
   </div>
 
 </div>
 
 <script>
-// ===== 模型数据库（可无限扩展） =====
+// ===== 门店模型数据库 =====
 const MODELS = [
-  // -- 摆摊级 --
-  {id:"s01",name:"摆摊炸鸡",type:"stall",level:"stall",invest:"1-5",payback:"1m",risk:"low",depend:"traffic",intent:"cash",
-   logic:"腌料+裹粉+炸制，日销80-120份，单品爆发",
-   income:"¥800-1200/日",maxRisk:"同质化竞争",fit:"新手/大学生/副业",tag:"低门槛现金流型"},
-  {id:"s02",name:"手打柠檬茶",type:"stall",level:"stall",invest:"0-1",payback:"7d",risk:"low",depend:"traffic",intent:"side",
-   logic:"鲜切+手捣+出杯，时产40杯，夏季爆品",
-   income:"¥500-800/日",maxRisk:"季节性明显",fit:"学生/周末摊主",tag:"低门槛现金流型"},
-  {id:"s03",name:"章鱼烧/丸子",type:"stall",level:"stall",invest:"0-1",payback:"7d",risk:"low",depend:"traffic",intent:"cash",
-   logic:"面糊+馅料+翻烤，一板12颗，3分钟出",
-   income:"¥400-700/日",maxRisk:"单份利润低",fit:"夜市新手",tag:"低门槛现金流型"},
-  {id:"s04",name:"烤肠热狗",type:"stall",level:"stall",invest:"0-1",payback:"7d",risk:"low",depend:"traffic",intent:"side",
-   logic:"烤肠+面包+酱料，3秒成交，复购率极高",
-   income:"¥300-600/日",maxRisk:"天花板低",fit:"学生/兼职",tag:"低门槛现金流型"},
-  // -- 门店级 --
-  {id:"m01",name:"卤味店（鲜卤现捞）",type:"store",level:"store",invest:"5-20",payback:"3m",risk:"mid",depend:"repurchase",intent:"venture",
-   logic:"老汤+卤制+明档现捞，靠复购和客单价支撑房租",
-   income:"¥3000-6000/日",maxRisk:"选址失败=全盘皆输",fit:"夫妻店/转行餐饮人",tag:"门店经营型"},
-  {id:"m02",name:"早餐店（包子粥）",type:"store",level:"store",invest:"5-20",payback:"3m",risk:"mid",depend:"repurchase",intent:"cash",
+  {id:"m01",name:"鲜卤现捞店",type:"卤味",payback:"3m",risk:"中",mode:"夫妻",
+   invest:"8-15万",income:"¥3000-6000/日",gross:"55-65%",
+   staff:"2人（夫妻档）",area:"15-30㎡",
+   logic:"老汤+卤制+明档现捞，靠复购和客单价撑房租",
+   death:"选址失败=全盘皆输。选错社区，客流不够养不活房租"},
+  {id:"m02",name:"包子早餐店",type:"早餐",payback:"3m",risk:"中",mode:"夫妻",
+   invest:"6-12万",income:"¥2000-4000/日",gross:"60-70%",
+   staff:"2-3人",area:"20-40㎡",
    logic:"面点+粥品+小菜，早高峰翻台率决定生死",
-   income:"¥2000-4000/日",maxRisk:"3点起床，人力难招",fit:"能吃苦的家庭团队",tag:"门店经营型"},
-  {id:"m03",name:"麻辣烫/冒菜",type:"store",level:"store",invest:"5-20",payback:"3m",risk:"mid",depend:"repurchase",intent:"venture",
+   death:"3点起床，人力难招。客流集中在早上6-9点，其余时段基本空转"},
+  {id:"m03",name:"麻辣烫/冒菜店",type:"快餐",payback:"3m",risk:"中",mode:"自营",
+   invest:"10-18万",income:"¥2500-5000/日",gross:"55-65%",
+   staff:"2-3人",area:"30-60㎡",
    logic:"自选称重+汤底+小料台，复购率高但竞争激烈",
-   income:"¥2500-5000/日",maxRisk:"价格战打穿毛利",fit:"有餐饮经验者",tag:"门店经营型"},
-  {id:"m04",name:"咖啡店（社区店）",type:"store",level:"store",invest:"5-20",payback:"6m+",risk:"high",depend:"repurchase",intent:"venture",
+   death:"价格战打穿毛利。隔壁开两家麻辣烫你就得降价"},
+  {id:"m04",name:"社区咖啡店",type:"饮品",payback:"12m",risk:"高",mode:"自营",
+   invest:"12-25万",income:"¥1500-3500/日",gross:"65-75%",
+   staff:"2-3人",area:"30-60㎡",
    logic:"咖啡+特调+简餐，靠社区粘性和私域复购",
-   income:"¥1500-3500/日",maxRisk:"90%咖啡店半年内倒闭",fit:"有资金有审美的创业者",tag:"门店经营型"},
-  // -- 工厂级 --
-  {id:"f01",name:"预制菜代工",type:"factory",level:"factory",invest:"20+",payback:"6m+",risk:"high",depend:"supply",intent:"scale",
-   logic:"中央厨房+冷链+渠道，核心是产能利用率和账期管理",
-   income:"月产能50万+",maxRisk:"先建厂后找订单=等死",fit:"有渠道资源的食品人",tag:"工厂规模型"},
-  {id:"f02",name:"酱料标准化生产",type:"factory",level:"factory",invest:"20+",payback:"6m+",risk:"mid",depend:"supply",intent:"scale",
-   logic:"配方+灌装+贴牌，B端餐饮渠道为核心",
-   income:"月产能30万+",maxRisk:"单品依赖大客户",fit:"有配方的研发型团队",tag:"工厂规模型"},
-  {id:"f03",name:"卤味中央厨房",type:"factory",level:"factory",invest:"5-20",payback:"6m+",risk:"mid",depend:"supply",intent:"venture",
-   logic":"卤制+真空包装+配送，服务周边餐饮+社区团购",
-   income:"月产能15万+",maxRisk:"配送半径限制规模",fit:"有门店经验的卤味老板",tag:"工厂规模型"},
+   death:"90%咖啡店半年内倒闭。溢价空间被瑞幸库迪打穿"},
+  {id:"m05",name:"卤味熟食档",type:"卤味",payback:"3m",risk:"低",mode:"夫妻",
+   invest:"4-8万",income:"¥1500-3000/日",gross:"60-70%",
+   staff:"1-2人",area:"5-15㎡",
+   logic:"前店后厂，现卤现卖，档口模式成本极低",
+   death:"夏天卤味保质期短，卖不完就是亏损"},
+  {id:"m06",name:"炸鸡汉堡店",type:"炸物",payback:"6m",risk:"中",mode:"品牌/自营",
+   invest:"10-20万",income:"¥2000-4500/日",gross:"55-65%",
+   staff:"2-3人",area:"20-40㎡",
+   logic:"腌料+裹粉+炸制，出餐快，外卖占比高",
+   death:"同质化严重，隔壁便宜1块你的单就跑了"},
+  {id:"m07",name:"手工小吃店",type:"小吃",payback:"6m",risk:"低",mode:"夫妻",
+   invest:"5-10万",income:"¥1200-2500/日",gross:"65-75%",
+   staff:"1-2人",area:"10-20㎡",
+   logic:"手工制作+现做现卖，靠差异化手艺活",
+   death:"手艺依赖个人，扩店难。师傅走了店就没了"},
+  {id:"m08",name:"炒饭店/盖饭",type:"快餐",payback:"3m",risk:"低",mode:"夫妻",
+   invest:"5-10万",income:"¥1500-3000/日",gross:"60-70%",
+   staff:"1-2人",area:"10-25㎡",
+   logic:"猛火快炒+外卖为主，翻台率高，房租占比低",
+   death:"外卖平台抽成25%，不搞活动没单，搞了没利润"},
+  {id:"m09",name:"奶茶店（加盟）",type:"饮品",payback:"12m",risk:"高",mode:"品牌",
+   invest:"15-30万",income:"¥2000-5000/日",gross:"60-70%",
+   staff:"3-4人",area:"20-40㎡",
+   logic:"品牌背书+标准化出品，但加盟费+设备占投入50%",
+   death:"品牌方割韭菜，90%加盟商不赚钱，原料必须从总部进"},
+  {id:"m10",name:"肠粉/早餐档",type:"早餐",payback:"3m",risk:"低",mode:"夫妻",
+   invest:"3-6万",income:"¥800-1800/日",gross:"65-75%",
+   staff:"1-2人",area:"5-15㎡",
+   logic:"米浆现蒸+酱汁，出餐快（30秒/份），档口模式",
+   death:"纯早餐命，下午没生意。必须找能顶午市的位置"},
+  {id:"m11",name:"烧烤/串串店",type:"小吃",payback:"6m",risk:"中",mode:"自营",
+   invest:"10-20万",income:"¥3000-6000/日",gross:"60-70%",
+   staff:"3-5人",area:"40-80㎡",
+   logic:"晚餐+宵夜时段，翻台2-3轮，酒水利润高",
+   death:"夏天生意好冬天惨，半年赚一年花的季节性陷阱"},
+  {id:"m12",name:"凉拌卤味外卖店",type:"卤味",payback:"3m",risk:"低",mode:"自营",
+   invest:"3-6万",income:"¥1000-2000/日",gross:"65-75%",
+   staff:"1人",area:"5-10㎡",
+   logic:"纯外卖+自提，成品凉拌，无明火，租金极低",
+   death:"平台抽成+配送费吃20%，包装成本占5%"},
 ];
 
-// ===== 聚类 =====
-const CLUSTERS = {
-  "低门槛现金流型":["s01","s02","s03","s04"],
-  "门店经营型":["m01","m02","m03","m04"],
-  "工厂规模型":["f01","f02","f03"]
-};
+// ===== 预算逻辑 =====
+let currentBudget = 5;
 
-console.log('🧠 决策引擎已加载，模型数:', MODELS.length);
-
-// ===== 输入层 =====
-function onIntent(el){
-  document.querySelectorAll('.input-opt').forEach(e=>e.classList.remove('active'));
+function onBudget(el){
+  document.querySelectorAll('.budget-opt').forEach(e=>e.classList.remove('active'));
   el.classList.add('active');
+  currentBudget = parseInt(el.dataset.budget);
   render();
 }
 
-// ===== 筛选层 =====
+// ===== 筛选 =====
 document.querySelectorAll('.filter-tag').forEach(tag=>{
   tag.onclick=function(){
     const parent = this.parentElement;
@@ -458,144 +408,119 @@ function getActiveFilters(){
   return filters;
 }
 
-function getActiveIntent(){
-  const active = document.querySelector('.input-opt.active');
-  return active ? active.dataset.intent : null;
-}
-
-// ===== 渲染引擎 =====
+// ===== 渲染 =====
 function render(){
-  const intent = getActiveIntent();
   const filters = getActiveFilters();
 
   let filtered = MODELS.filter(m=>{
-    // 意图过滤
-    if(intent && m.intent !== intent) return false;
-    // 投资过滤
-    if(filters.invest !== '*' && m.invest !== filters.invest) return false;
-    // 复杂度
-    if(filters.level !== '*' && m.level !== filters.level) return false;
-    // 回本周期
+    // 预算过滤（投资额匹配）
+    const investVal = parseInt(m.invest.split('-')[0]) || 0;
+    if(investVal > currentBudget && currentBudget < 30) return false;
+    if(currentBudget <= 5 && investVal > 8) return false;
+    
+    // 品类
+    if(filters.type !== '*' && m.type !== filters.type) return false;
+    // 回本
     if(filters.payback !== '*' && m.payback !== filters.payback) return false;
     // 风险
     if(filters.risk !== '*' && m.risk !== filters.risk) return false;
-    // 依赖
-    if(filters.depend !== '*' && m.depend !== filters.depend) return false;
+    // 模式
+    if(filters.mode !== '*' && !m.mode.includes(filters.mode)) return false;
     return true;
   });
+
+  // 按风险排序
+  const riskRank = {低:0,中:1,高:2};
+  filtered.sort((a,b)=>riskRank[a.risk]-riskRank[b.risk]);
 
   document.getElementById('resultCount').textContent = filtered.length;
 
   if(filtered.length === 0){
-    document.getElementById('modelArea').innerHTML = '<div class="demo-note"><span class="dn-icon">🔍</span>没有匹配的模型<br>试试调整筛选条件</div>';
-    document.getElementById('recoSection').style.display = 'none';
+    document.getElementById('modelArea').innerHTML = '<div class="empty-state"><span class="es-icon">🔍</span>没有匹配的门店模型<br>试试调整预算或筛选条件</div>';
     return;
   }
 
-  // 聚类分组
-  let html = '';
-  let shown = new Set();
-  for(let [clusterName, ids] of Object.entries(CLUSTERS)){
-    let clusterModels = ids.map(id=>filtered.find(m=>m.id===id)).filter(Boolean);
-    if(clusterModels.length === 0) continue;
-    clusterModels.forEach(m=>shown.add(m.id));
-    let icon = clusterName.includes('现金流') ? '🧊' : clusterName.includes('门店') ? '🏪' : '🏭';
-    html += `<div class="cluster-header"><span class="ch-icon">${icon}</span>${clusterName}</div>`;
-    html += '<div class="model-grid">';
-    clusterModels.forEach(m=>{
-      html += renderCard(m);
-    });
-    html += '</div>';
-  }
-
-  // 未聚类模型
-  let unclustered = filtered.filter(m=>!shown.has(m.id));
-  if(unclustered.length > 0){
-    html += '<div class="cluster-header"><span class="ch-icon">📌</span>更多模型</div>';
-    html += '<div class="model-grid">';
-    unclustered.forEach(m=>{html += renderCard(m);});
-    html += '</div>';
-  }
-
-  document.getElementById('modelArea').innerHTML = html;
-
-  // 推荐层
-  renderReco(filtered, intent);
-}
-
-function renderCard(m){
-  const riskClass = m.risk === 'low' ? 'green' : m.risk === 'mid' ? 'yellow' : 'red';
-  const typeLabel = {stall:'摆摊',store:'门店',factory:'工厂'}[m.type]||m.type;
-  const typeClass = {stall:'stall',store:'store',factory:'factory'}[m.type]||'';
-  const riskLabel = {low:'低风险',mid:'中风险',high:'高风险'}[m.risk]||m.risk;
-
-  return `<div class="model-card risk-${riskClass}">
-    <div class="m-header">
-      <div class="m-name">
-        ${m.name}
-        <span class="m-type ${typeClass}">${typeLabel}</span>
+  let html = '<div class="model-grid">';
+  filtered.forEach(m=>{
+    const riskClass = m.risk === '低' ? 'green' : m.risk === '中' ? 'yellow' : 'red';
+    const riskColor = {低:'#7B9A45',中:'#E8652D',高:'#C0392B'}[m.risk];
+    const riskBg = {低:'#f0f6ec',中:'#fef6f2',高:'#fef2f2'}[m.risk];
+    html += `<div class="model-card risk-${riskClass}">
+      <div class="m-header">
+        <div>
+          <div class="m-name">${m.name}</div>
+          <div class="m-tags">
+            <span class="m-tag" style="background:#fef6f2;color:#E8652D">${m.type}</span>
+            <span class="m-tag" style="background:${riskBg};color:${riskColor}">风险${m.risk}</span>
+            <span class="m-tag">${m.mode}</span>
+          </div>
+        </div>
       </div>
-      <span class="m-risk ${riskClass}"><span class="m-risk-dot ${riskClass}"></span>${riskLabel}</span>
-    </div>
-    <div class="m-logic">${m.logic}</div>
-    <div class="m-meta">
-      <span class="m-meta-item">💰 ${m.invest}</span>
-      <span class="m-meta-item">⏱ ${paybackLabel(m.payback)}</span>
-      <span class="m-meta-item">💸 ${m.income}</span>
-      <span class="m-meta-item">⚠️ ${m.maxRisk}</span>
-      <span class="m-meta-item">👤 ${m.fit}</span>
-    </div>
-  </div>`;
-}
-
-function paybackLabel(v){
-  return {'7d':'7天回本','1m':'1个月回本','3m':'3个月回本','6m+':'6个月+回本'}[v]||v;
-}
-
-function renderReco(filtered, intent){
-  const reco = document.getElementById('recoSection');
-  const list = document.getElementById('recoList');
-  
-  // 按风险排序，低风险优先
-  let sorted = [...filtered].sort((a,b)=>{
-    const rank = {low:0,mid:1,high:2};
-    return rank[a.risk] - rank[b.risk];
-  });
-
-  let top3 = sorted.slice(0,3);
-  if(top3.length === 0){
-    reco.style.display = 'none';
-    return;
-  }
-
-  let html = '';
-  top3.forEach(m=>{
-    const tagClass = m.risk==='low'?'green':m.risk==='mid'?'yellow':'red';
-    const tagLabel = {low:'推荐',mid:'有条件',high:'谨慎'}[m.risk];
-    html += `<div class="reco-item">
-      <span class="ri-icon">${m.type==='stall'?'🛵':m.type==='store'?'🏪':'🏭'}</span>
-      <div class="ri-info">
-        <div class="ri-name">${m.name}</div>
-        <div class="ri-desc">${m.logic}</div>
+      <div class="m-stats">
+        <span class="m-stat">💰 <strong>${m.invest}</strong></span>
+        <span class="m-stat">💸 <strong>${m.income}</strong></span>
+        <span class="m-stat">📈 <strong>${m.gross}</strong></span>
+        <span class="m-stat">👥 <strong>${m.staff}</strong></span>
+        <span class="m-stat" style="grid-column:1/-1">📍 <strong>${m.area}</strong></span>
       </div>
-      <span class="ri-tag ${tagClass}">${tagLabel}</span>
+      <div class="m-core">${m.logic}</div>
+      <div class="m-risk-text">⚠️ ${m.death}</div>
+      <div class="m-actions">
+        <a href="#" class="detail" onclick="alert('详细经营测算即将上线');return false">查看完整测算</a>
+        <a href="index.html#mainContent" class="buy">选产品配方 →</a>
+      </div>
     </div>`;
   });
-  list.innerHTML = html;
-  reco.style.display = 'block';
+  html += '</div>';
+  document.getElementById('modelArea').innerHTML = html;
 }
 
+// ===== 开店死因 =====
+(function(){
+  const DEATHS = [
+    {title:"卤味店死因",text:"选错社区 = 全盘皆输。卤味靠复购不是靠流量，门口过了500个居民没闻到味，你广告费白花。"},
+    {title:"早餐店死因",text:"3点起床不是最难的，最难的是早上6-9点爆单、9点后冷清到下午，一天只赚3小时的钱。"},
+    {title:"奶茶店死因",text:"90%加盟商不赚钱。品牌方赚的是加盟费+原料差价，你赚的是辛苦钱，隔壁降价你就没单。"},
+    {title:"麻辣烫死因",text:"隔壁开两家同品类你就得降价，毛利从65%打到45%。三个麻辣烫店围着一个小区打价格战是常态。"},
+    {title:"炸鸡店死因",text:"同质化严重，顾客只看价格。隔壁便宜1块你的单就跑了，最后大家一起没利润。"},
+    {title:"烧烤店死因",text:"半年赚一年花的季节性陷阱。夏天爆单冬天惨淡，房租是全年交的，但收入只有半年。"},
+  ];
+  let html = '';
+  DEATHS.forEach(d=>{
+    html += `<div class="death-card">
+      <div class="dc-title">${d.title}</div>
+      <div class="dc-text">${d.text}</div>
+    </div>`;
+  });
+  document.getElementById('deathGrid').innerHTML = html;
+})();
+
+// ===== 案例 =====
+(function(){
+  const CASES = [
+    {title:"某卤味档口、投入6万",before:"月亏3000",after:"月净赚1.8万",
+     reason:"从街边店换到菜市场入口，流客从200人/天变800人/天"},
+    {title:"某早餐加盟店、投入18万",before:"月亏5000",after:"关店止损",
+     reason:"选在写字楼背面，主客流完全看不到。加盟费6万打水漂",good:false},
+    {title:"某麻辣烫夫妻店、投入12万",before:"月净赚1.2万",after:"月净赚2.5万",
+     reason:"砍掉堂食改纯外卖+自提，房租从8000降到3000，毛利反升"},
+    {title:"某炸鸡外卖店、投入8万",before:"月亏2000",after:"月净赚1.5万",
+     reason:"从加盟转自营，配方自研，成本降30%，不再被总部抽原料差价"},
+  ];
+  let html = '';
+  CASES.forEach(c=>{
+    const isSuccess = c.good !== false;
+    html += `<div class="case-card">
+      <div class="cc-title">${c.title}</div>
+      <div class="cc-meta">调整前：${c.before} → 调整后：<span class="${isSuccess?'good':'bad'}">${c.after}</span></div>
+      <div class="cc-reason">核心变化：${c.reason}</div>
+    </div>`;
+  });
+  document.getElementById('caseGrid').innerHTML = html;
+})();
+
 // ===== 初渲染 =====
-document.addEventListener('DOMContentLoaded',()=>{
-  // URL参数处理
-  const params = new URLSearchParams(window.location.search);
-  const mode = params.get('mode');
-  let defaultIntent = 'cash';
-  if(mode === 'factory') defaultIntent = 'scale';
-  // 默认选中
-  document.querySelector(`.input-opt[data-intent="${defaultIntent}"]`).classList.add('active');
-  render();
-});
+document.addEventListener('DOMContentLoaded',render);
 </script>
 
 </body>
