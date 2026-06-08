@@ -1121,7 +1121,7 @@ body{
   </div>
 
   <!-- ===== 品类导航标签 ===== -->
-  <div style="display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 20px;padding:10px 0;border-bottom:1.5px solid var(--border)">
+  <div class="cat-tags" style="display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 20px;padding:10px 0;border-bottom:1.5px solid var(--border)">
     <span style="font-size:11px;font-weight:600;color:var(--muted);padding:4px 0;margin-right:4px">📂 品类</span>
     <a href="#hz" style="display:inline-block;padding:4px 12px;font-size:11px;background:var(--card);border-radius:6px;text-decoration:none;color:var(--text);box-shadow:var(--shadow);transition:.15s">🍗 韩式炸鸡</a>
     <a href="#jl" style="display:inline-block;padding:4px 12px;font-size:11px;background:var(--card);border-radius:6px;text-decoration:none;color:var(--text);box-shadow:var(--shadow);transition:.15s">🫙 多维酱料</a>
@@ -5935,6 +5935,67 @@ async function loadCalcReport(){
 // 页面加载后初始化
 document.addEventListener('DOMContentLoaded', function(){
   if(document.getElementById('calcCategory')) loadCalcIndex();
+
+  // ===== 品类标签联动 =====
+  // 品类标签href → 对应品类专区的section-header文本(用于查找)
+  const catAnchorMap = {
+    hz:'韩式炸鸡', jl:'酱料', yl:'手打柠檬茶', cd:'咖啡',
+    kr:'韩式烤肉', rb:'日式烧鸟', jp:'精品套餐', xc:'小吃炸物',
+    bz:'包子蒸点', zc:'早餐粥品', nt:'牛羊肉', lb:'凉拌卤味',
+    cs:'新式茶饮', yb:'饮品杯', tp:'冰品甜品', cf:'速食餐品',
+    nf:'年货礼盒', zs:'中式面食', xg:'烧腊卤水', sk:'烧烤串串',
+    hj:'馄饨水饺', lt:'汤面米线', tg:'传统糖水', hb:'卷饼煎饼',
+    dns:'豆腐豆花', lj:'傣舂', hbq:'汉堡轻食', gfjc:'盖饭简餐',
+    mlt:'麻辣烫冒菜', tx:'铁板小吃', rcg:'烤肠热狗', clb:'车轮饼',
+    hg:'烘焙糕点', lsf:'螺蛳粉酸辣粉'
+  };
+  const catTags = document.querySelector('.cat-tags');
+  if(catTags){
+    catTags.addEventListener('click', function(e){
+      const tag = e.target.closest('a[href^="#"]');
+      if(!tag) return;
+      e.preventDefault();
+      const href = tag.getAttribute('href').slice(1);
+      // 清除所有标签高亮
+      catTags.querySelectorAll('a').forEach(a => {
+        a.style.background = '';
+        a.style.color = '';
+      });
+      // 高亮当前标签
+      tag.style.background = '#C0392B';
+      tag.style.color = '#fff';
+
+      // 查找目标
+      let target = document.getElementById(href);
+      if(!target){
+        // 找预置隐藏锚点
+        target = document.querySelector(`div[id="${href}"]`);
+      }
+      if(!target && catAnchorMap[href]){
+        // 找section-header包含映射文本
+        const keyword = catAnchorMap[href];
+        const headers = document.querySelectorAll('.section-header');
+        for(const h of headers){
+          if(h.textContent.includes(keyword)){
+            target = h;
+            break;
+          }
+        }
+      }
+
+      if(target){
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+        target.style.transition = 'background .3s';
+        target.style.background = '#fef2f2';
+        target.style.borderRadius = '8px';
+        target.style.padding = '4px 8px';
+        setTimeout(() => { target.style.background = ''; target.style.padding = ''; }, 1200);
+      }else{
+        // 都不行就fallback到原生锚点跳转
+        window.location.hash = '#' + href;
+      }
+    });
+  }
 });
 |function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
 |function scrollToBottom(){const el=document.querySelector('.hook-box')||document.querySelector('.calc-box')||document.getElementById('calculator');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
