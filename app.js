@@ -1,3 +1,5 @@
+// APP START - 验证执行
+try { document.body.dataset.appLoaded = 'true'; } catch(e) {}
 const FREE_CARDS = [
   {e:"🏮",n:"道口烧鸡",d:"400年老汤 · 先炸后卤",f:"daokou-shaoji.html"},
   {e:"🍃",n:"茶香鸡",d:"白卤水遇上茶香 · 清新不腻",f:"cha-xiang-ji.html"},
