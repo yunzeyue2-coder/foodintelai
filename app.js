@@ -448,6 +448,10 @@ function updateHeroStats(){
 }
 
 // 初始渲染
+// 隐藏闪屏
+const splash = document.getElementById('splash');
+if (splash) splash.style.display = 'none';
+
 renderKnowTab(0);
 renderStallCats();
 updateHeroStats();
