@@ -208,10 +208,8 @@ const ALL_CARDS = {
     {e:"📄", n:"XC_011 麻辣炒螺蛳 · 沧林食品", d:"", f:"cards/XC_011.html"},
     {e:"📄", n:"长沙臭豆腐 · 沧林食品", d:"", f:"cards/XC_013.html"},
     {e:"📄", n:"无矾油条 · 沧林食品", d:"", f:"cards/XC_014.html"},
-    {e:"📄", n:"奥利奥双皮奶 · 沧林食品", d:"", f:"cards/XC_015.html"},
     {e:"📄", n:"黄豆糍粑 · 沧林食品", d:"", f:"cards/XC_016.html"},
     {e:"📄", n:"鸡蛋仔 · 沧林食品", d:"", f:"cards/XC_017.html"},
-    {e:"📄", n:"水果绵绵冰 · 沧林食品", d:"", f:"cards/XC_018.html"},
   ],
   "🍧 糖水系列": [
     {e:"（", n:"TS-001 冰糖水（玫瑰/茉莉白桃） · 糖水铺", d:"", f:"cards/TS_001.html"},
@@ -236,7 +234,8 @@ const ALL_CARDS = {
     {e:"📄", n:"TS-020 椰奶西米露 · 糖水铺", d:"", f:"cards/TS_020.html"},
     {e:"（", n:"TS-021 拉丝酸奶（原味/果味） · 糖水铺", d:"", f:"cards/TS_021.html"},
     {e:"📄", n:"TS-022 炭烧拉丝酸奶 · 糖水铺", d:"", f:"cards/TS_022.html"},
-  ],
+      {e:"📄", n:"水果绵绵冰 · 沧林食品", d:"", f:"cards/XC_018.html"},
+],
   "🍮 甜品系列": [
     {e:"📄", n:"TP-01 · 沧林食品", d:"", f:"cards/TP-01.html"},
     {e:"📄", n:"红糖糍粑冰粉 · 沧林食品", d:"", f:"cards/TP-02.html"},
@@ -246,7 +245,8 @@ const ALL_CARDS = {
     {e:"📄", n:"芒果双皮奶 · 沧林食品", d:"", f:"cards/TP-06.html"},
     {e:"📄", n:"椰奶西米露 · 沧林食品", d:"", f:"cards/TP-07.html"},
     {e:"📄", n:"TP-08 · 豆花布丁 · 沧林食品", d:"", f:"cards/TP-08.html"},
-  ],
+      {e:"📄", n:"奥利奥双皮奶 · 沧林食品", d:"", f:"cards/XC_015.html"},
+],
   "🍱 日式系列": [
     {e:"📄", n:"RB-002 · 沧林食品", d:"", f:"cards/RB_002.html"},
     {e:"📄", n:"RB-003 · 沧林食品", d:"", f:"cards/RB_003.html"},
