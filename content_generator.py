@@ -25,12 +25,17 @@ def extract_card_data(filepath):
     m = re.search(r'<span class="badge">([^<]+)</span>', html)
     data['badge'] = m.group(1) if m else ''
     
-    # 启动资金/日营收/毛利率/回本
+    # 启动资金/日营收/毛利率/回本（去掉前缀标签）
     levels = re.findall(r'<span class="level-item[^"]*">([^<]+)</span>', html)
-    data['invest'] = levels[0] if len(levels) > 0 else ''
-    data['income'] = levels[1] if len(levels) > 1 else ''
-    data['gross'] = levels[2] if len(levels) > 2 else ''
-    data['roi'] = levels[3] if len(levels) > 3 else ''
+    data['invest_raw'] = levels[0] if len(levels) > 0 else ''
+    data['income_raw'] = levels[1] if len(levels) > 1 else ''
+    data['gross_raw'] = levels[2] if len(levels) > 2 else ''
+    data['roi_raw'] = levels[3] if len(levels) > 3 else ''
+    # 去掉前缀（如"启动资金："只保留数值部分）
+    data['invest'] = re.sub(r'^[^：]*：', '', data['invest_raw'])
+    data['income'] = re.sub(r'^[^：]*：', '', data['income_raw'])
+    data['gross'] = data['gross_raw']  # 毛利率通常直接是数值
+    data['roi'] = re.sub(r'^[^：]*：', '', data['roi_raw'])
     
     # 产品说（第一个story块）
     stories = re.findall(r'<div class="story">(.*?)</div>', html, re.DOTALL)
