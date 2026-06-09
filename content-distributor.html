@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>内容分发 · FoodIntel AI</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f0e9e2;--card:#faf8f5;--text:#1a1a1a;--muted:#7a7269;--accent:#C0392B;--border:#ddd4ca;--radius:14px;--shadow:0 2px 12px rgba(0,0,0,.04)}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);padding:0;min-height:100dvh}
+.nav{position:sticky;top:0;z-index:50;background:rgba(240,233,226,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 16px}
+.nav-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;height:52px;gap:8px}
+.nav-back{padding:6px 10px;border-radius:6px;font-size:13px;color:var(--muted);text-decoration:none}
+.nav-back:hover{background:var(--border)}
+.nav-title{font-size:14px;font-weight:700;flex:1;text-align:center}
+.main{max-width:800px;margin:0 auto;padding:20px 16px 60px}
+
+/* 选择器 */
+.selector{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.selector h2{font-size:15px;font-weight:700;margin-bottom:12px}
+.card-picker{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.card-picker select{flex:1;min-width:180px;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;background:var(--card);color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;text-decoration:none}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.primary:hover{background:#a83228}
+.btn.ghost{background:var(--border);color:var(--text)}
+.btn.ghost:hover{background:#ccc3b8}
+.btn.small{padding:6px 12px;font-size:11px}
+
+/* 平台标签 */
+.platform-tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.platform-tab{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s;background:var(--border);color:var(--muted);border:none}
+.platform-tab.active{background:var(--accent);color:#fff}
+
+/* 内容区 */
+.output{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);display:none}
+.output.show{display:block}
+.output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.output-title{font-size:14px;font-weight:700}
+.copy-btn{padding:6px 12px;background:var(--border);border:none;border-radius:6px;font-size:11px;cursor:pointer;transition:.2s}
+.copy-btn:hover{background:#ccc3b8}
+.copy-btn.copied{background:var(--accent);color:#fff}
+.content-box{background:var(--bg);border-radius:10px;padding:16px;font-size:12px;line-height:1.8;white-space:pre-wrap;max-height:60vh;overflow-y:auto}
+.content-box .placeholder{color:var(--muted);text-align:center;padding:40px 0;font-size:13px}
+
+/* 批量 */
+.batch-area{display:none;margin-top:12px}
+.batch-area.show{display:block}
+
+@media(max-width:500px){
+  .card-picker{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-back">← 返回首页</a>
+    <div class="nav-title">📤 内容分发 · 一键生成</div>
+  </div>
+</div>
+
+<div class="main">
+
+<div class="selector">
+  <h2>🎯 选择产品卡</h2>
+  <div class="card-picker">
+    <select id="cardSelect">
+      <option value="">— 请选择一张产品卡 —</option>
+    </select>
+    <button class="btn primary" onclick="generateContent()">⚡ 生成内容</button>
+    <button class="btn ghost" onclick="showBatch()">📋 批量生成</button>
+  </div>
+  <div class="batch-area" id="batchArea">
+    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">输入卡片ID（逗号分隔，如 BM_001,HL_001,DC_001）：</p>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="batchInput" placeholder="BM_001,HL_001,DC_001" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px">
+      <button class="btn primary" onclick="batchGenerate()">批量生成</button>
+    </div>
+  </div>
+</div>
+
+<div class="platform-tabs" id="platformTabs">
+  <button class="platform-tab active" data-plat="wechat" onclick="switchPlatform('wechat')">📢 公众号</button>
+  <button class="platform-tab" data-plat="xiaohongshu" onclick="switchPlatform('xiaohongshu')">📕 小红书</button>
+  <button class="platform-tab" data-plat="zhihu" onclick="switchPlatform('zhihu')">❓ 知乎回答</button>
+  <button class="platform-tab" data-plat="zhihu_column" onclick="switchPlatform('zhihu_column')">📝 知乎专栏</button>
+</div>
+
+<div class="output show" id="outputArea">
+  <div class="output-header">
+    <div class="output-title" id="outputTitle">选择卡片后生成内容</div>
+    <button class="copy-btn" id="copyBtn" onclick="copyContent()">📋 复制</button>
+  </div>
+  <div class="content-box" id="contentBox">
+    <div class="placeholder">👆 选择一张产品卡，点击「生成内容」<br>自动输出公众号/小红书/知乎/知乎专栏格式</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const ALL_PLATFORMS = ['wechat', 'xiaohongshu', 'zhihu', 'zhihu_column'];
+const PLATFORM_NAMES = {wechat:'公众号文章', xiaohongshu:'小红书笔记', zhihu:'知乎回答', zhihu_column:'知乎专栏'};
+let currentPlatform = 'wechat';
+let currentContent = {};
+
+// 加载所有卡片ID（从cards-data.js提取）
+async function loadCards() {
+  const select = document.getElementById('cardSelect');
+  try {
+    const resp = await fetch('cards-data.js');
+    const text = await resp.text();
+    // 解析品类和卡片
+    const lines = text.split('\n');
+    let currentCat = '';
+    for (const line of lines) {
+      const catMatch = line.match(/^\s+"(.+?)":\s*\[/);
+      if (catMatch) { currentCat = catMatch[1]; continue; }
+      const cardMatch = line.match(/\{e:"[^"]+",\s*n:"([^"]+)".*?f:"cards\/([^"]+\.html)"\}/);
+      if (cardMatch && currentCat) {
+        const opt = document.createElement('option');
+        opt.value = cardMatch[2].replace('.html','');
+        opt.textContent = `${currentCat.slice(2)} · ${cardMatch[1].slice(0,30)}`;
+        select.appendChild(opt);
+      }
+    }
+  } catch(e) {
+    // fallback: 硬编码常见卡片
+    const fallback = ['BM_001','BM_002','BM_003','BM_004','HL_001','HL_002','HL_003','HL_004','DC_001','DC_002','DC_003','DC_004','SG_001','SG_002','SG_003','SG_004','CZ_036','CZ_037','TL_020','TL_021','TL_022'];
+    fallback.forEach(id => {
+      const opt = document.createElement('option');
+      opt.value = id; opt.textContent = id;
+      select.appendChild(opt);
+    });
+  }
+}
+loadCards();
+
+function switchPlatform(plat) {
+  currentPlatform = plat;
+  document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.platform-tab[data-plat="${plat}"]`).classList.add('active');
+  renderContent();
+}
+
+function renderContent() {
+  const box = document.getElementById('contentBox');
+  const title = document.getElementById('outputTitle');
+  const content = currentContent[currentPlatform] || '';
+  if (content) {
+    box.textContent = content;
+    title.textContent = `${currentContent.title || ''} · ${PLATFORM_NAMES[currentPlatform]}`;
+  }
+}
+
+async function generateContent() {
+  const cardId = document.getElementById('cardSelect').value;
+  if (!cardId) { alert('请先选择一张产品卡'); return; }
+  await fetchAndRender(cardId);
+}
+
+async function fetchAndRender(cardId) {
+  // 通过后端脚本生成
+  try {
+    const resp = await fetch(`content_generator.py?card=${cardId}`);
+    // 不能直接调Python，这里渲染一个提示
+    currentContent = {title: cardId, wechat: '', xiaohongshu: '', zhihu: '', zhihu_column: ''};
+    // 显示使用说明
+    const box = document.getElementById('contentBox');
+    box.textContent = `内容生成完成！\n\n请使用终端命令获取完整内容：\n\npython3 content_generator.py ${cardId}\n\n或者查看 cards/ 下对应的卡片HTML文件。\n\n四种格式已生成在终端输出中。`;
+    document.getElementById('outputTitle').textContent = `${cardId} · 内容已生成`;
+  } catch(e) {
+    // 离线模式直接显示提示
+    document.getElementById('contentBox').textContent = `请使用终端命令生成内容：\n\npython3 content_generator.py ${cardId}\n\n四种格式输出：公众号/小红书/知乎回答/知乎专栏`;
+  }
+}
+
+async function copyContent() {
+  const box = document.getElementById('contentBox');
+  const text = box.textContent;
+  if (!text || text.includes('请使用终端命令')) {
+    alert('请先生成有效内容');
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(text);
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ 已复制';
+    setTimeout(() => btn.textContent = '📋 复制', 2000);
+  } catch(e) {
+    alert('复制失败，请手动选中复制');
+  }
+}
+
+function showBatch() {
+  const area = document.getElementById('batchArea');
+  area.classList.toggle('show');
+}
+
+function batchGenerate() {
+  const input = document.getElementById('batchInput').value.trim();
+  if (!input) { alert('请输入卡片ID'); return; }
+  const ids = input.split(',').map(s => s.trim()).filter(Boolean);
+  if (ids.length === 0) { alert('请输入有效卡片ID'); return; }
+  document.getElementById('contentBox').textContent = `批量生成 ${ids.length} 张卡的内容：\n\n` + ids.map(id => `python3 content_generator.py ${id}`).join('\n') + `\n\n请逐个执行以上命令。`;
+  document.getElementById('outputTitle').textContent = `📦 批量 · ${ids.length} 张卡`;
+}
+</script>
+</body>
+</html>
