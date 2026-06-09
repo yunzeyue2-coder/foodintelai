@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>孜然炒面 · 沧林食品</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f0eb;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;display:flex;justify-content:center;padding:20px}
+.card{max-width:520px;width:100%;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+
+/* meta */
+.meta{padding:14px 16px 6px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.badge{display:inline-block;background:#C0392B;color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px}
+.tag{display:inline-block;background:#f5ede5;color:#8a7a6a;font-size:9px;padding:2px 8px;border-radius:4px}
+.card h1{font-size:22px;font-weight:800;color:#2a221a;padding:2px 16px 0;letter-spacing:.5px}
+.sub{font-size:11px;color:#8a7a6a;padding:0 16px 6px}
+
+/* level-banner */
+.level-banner{display:flex;gap:8px;padding:6px 16px 10px;flex-wrap:wrap}
+.level-banner .lb-item{background:#f5ede5;border-radius:20px;padding:3px 10px;font-size:10px;color:#5a4f44;display:flex;align-items:center;gap:3px}
+.level-banner .lb-item.hot{background:#C0392B;color:#fff}
+.level-banner .lb-item.green{background:#e8f0e4;color:#4a7a3c}
+
+/* ===== 决策仪表盘 ===== */
+.dashboard{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:12px 22px;background:#faf5ee;border-bottom:1px solid #eee5d8}
+.dash-card{background:#fff;border-radius:10px;padding:10px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.dash-card .d-label{font-size:9px;color:#b5aaa0;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px}
+.dash-card .d-val{font-size:18px;font-weight:800;color:#3a322a}
+.dash-card .d-val .unit{font-size:11px;font-weight:400;color:#7a7269}
+.dash-card .d-sub{font-size:9px;color:#7a7269;margin-top:1px}
+.dash-card.accent{background:#C0392B;color:#fff}
+.dash-card.accent .d-val{color:#fff}
+.dash-card.accent .d-sub{color:#f0c8c0}
+.dash-score{grid-column:1/-1;display:flex;gap:6px;justify-content:center;margin-top:2px}
+.dash-score .score-item{background:#f5ede5;border-radius:20px;padding:4px 12px;font-size:10px;color:#5a4f44;white-space:nowrap}
+.dash-score .score-item.high{background:#C0392B;color:#fff}
+.dash-score .score-item.ok{background:#f0f6ec;color:#4a7a3c}
+.dash-score .score-item.warn{background:#fef6ec;color:#D4A574}
+.dash-verdict{grid-column:1/-1;background:#fff;border:1px solid #eee5d8;border-radius:8px;padding:8px 12px;margin-top:2px;display:flex;align-items:center;gap:8px}
+.dash-verdict .v-icon{font-size:16px}
+.dash-verdict .v-text{font-size:11px;color:#5a4f44;line-height:1.5}
+.dash-verdict .v-text strong{color:#C0392B}
+
+/* section */
+.section{padding:14px 16px;border-bottom:1px solid #f0ebe6}
+.section:last-child{border-bottom:none}
+.s-title{font-size:13px;font-weight:700;color:#2a221a;margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.s-body{font-size:11px;color:#5a4f44;line-height:1.9}
+
+/* cost-box */
+.cost-box{background:#f8f4ef;border-radius:8px;padding:10px 12px;margin-top:6px;font-size:11px;color:#5a4f44;line-height:1.8}
+.cost-box .cb-item{display:flex;justify-content:space-between}
+.cost-box .cb-total{border-top:1px solid #ddd5cc;margin-top:4px;padding-top:4px;font-weight:700;color:#2a221a;display:flex;justify-content:space-between}
+.cost-box.hidden-cost{background:#fef2ee;border:1px solid #e8d0c8}
+.cost-box.hidden-cost .cb-total{color:#C0392B}
+
+/* roi */
+.roi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px}
+.roi-card{background:#f8f4ef;border-radius:8px;padding:8px;text-align:center}
+.roi-card .r-label{font-size:9px;color:#b5aaa0;margin-bottom:2px}
+.roi-card .r-val{font-size:16px;font-weight:800;color:#3a322a}
+.roi-card .r-sub{font-size:9px;color:#7a7269;margin-top:1px}
+.roi-card.opt{background:#e8f0e4}
+.roi-card.opt .r-val{color:#4a7a3c}
+
+/* detail-card grid */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.detail-card{background:#f8f4ef;border-radius:8px;padding:8px}
+.detail-card .dc-label{font-size:9px;font-weight:600;color:#C0392B;margin-bottom:4px}
+.detail-card .dc-body{font-size:10px;color:#5a4f44;line-height:1.7}
+.detail-card.full{grid-column:1/-1}
+
+/* table */
+.detail-card table{width:100%;border-collapse:collapse;font-size:11px;margin-top:4px}
+.detail-card table th{background:#C0392B;color:#fff;padding:4px 6px;text-align:left;font-weight:600}
+.detail-card table td{padding:3px 6px;border-bottom:1px solid #e5ddd5;color:#5a4f44}
+.detail-card table tr:nth-child(even) td{background:#fdfaf7}
+
+/* recipe-box */
+.recipe-box{background:#fff;border:1px solid #e5ddd5;border-radius:8px;padding:10px;margin-top:6px}
+.recipe-box .rb-item{display:flex;justify-content:space-between;padding:3px 0;font-size:11px;color:#5a4f44;border-bottom:1px dashed #f0ebe6}
+.recipe-box .rb-item:last-child{border-bottom:none}
+
+/* death-box */
+.death-box{background:#fef2ee;border:1px solid #d4a0a0;border-radius:10px;padding:12px 14px;margin-top:6px}
+.death-box .db-title{font-size:12px;font-weight:700;color:#C0392B;margin-bottom:6px}
+.death-box .db-body{font-size:11px;color:#8a4a3a;line-height:1.8}
+
+/* curve-box */
+.curve-box{background:#f8f4ef;border-radius:10px;padding:12px 14px;margin-top:6px}
+.curve-box .cb-line{display:flex;gap:8px;padding:4px 0;font-size:11px;color:#5a4f44;border-bottom:1px dashed #e0d8d0}
+.curve-box .cb-line:last-child{border-bottom:none}
+.curve-box .cb-label{font-weight:600;color:#C0392B;min-width:55px}
+
+/* tip-box */
+.tip-box{background:#fffbf0;border:1px solid #e8dcc8;border-radius:8px;padding:8px;margin-top:4px;font-size:10px;color:#7a6a4a;line-height:1.6}
+
+/* paywall */
+.paywall{background:linear-gradient(135deg,#2a221a,#4a3a2a);color:#f0e8e0;padding:14px 16px;text-align:center}
+.paywall .pw-title{font-size:14px;font-weight:800;margin-bottom:4px}
+.paywall .pw-body{font-size:10px;color:#c0b0a0;line-height:1.7;margin-bottom:8px}
+.paywall .pw-btn{display:inline-block;background:#C0392B;color:#fff;padding:8px 24px;border-radius:24px;font-size:12px;font-weight:600;text-decoration:none}
+.paywall .pw-btn:hover{background:#a03020}
+
+/* alert box */
+.alert{background:#fef6ec;border:1px solid #e8d8b8;border-radius:6px;padding:8px;font-size:10px;color:#7a6640;line-height:1.6;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- meta -->
+  <div class="meta">
+    <span class="badge">CF_002 · 炒面</span>
+    <span class="tag">#炒面</span>
+    <span class="tag">#孜然</span>
+  </div>
+  <h1>孜然炒面</h1>
+  <div class="sub">西北夜市灵魂 · 烟火气孜然香 · 一份不到¥3成本</div>
+
+  <!-- level-banner -->
+  <div class="level-banner">
+    <span class="lb-item hot">🔥 爆品推荐</span>
+    <span class="lb-item">摆摊指数 ★★★★☆</span>
+    <span class="lb-item">复购指数 ★★★★☆</span>
+    <span class="lb-item green">新手可做</span>
+  </div>
+
+  <!-- ===== 决策仪表盘 ===== -->
+  <div class="dashboard">
+    <div class="dash-card">
+      <div class="d-label">⏱ 小时产值</div>
+      <div class="d-val">72 <span class="unit">¥/h</span></div>
+      <div class="d-sub">单人·标准售价</div>
+    </div>
+    <div class="dash-card">
+      <div class="d-label">👤 日产值</div>
+      <div class="d-val">432 <span class="unit">¥/天</span></div>
+      <div class="d-sub">单人·6h出摊</div>
+    </div>
+    <div class="dash-card">
+      <div class="d-label">💰 毛利率</div>
+      <div class="d-val">63<span class="unit">%</span></div>
+      <div class="d-sub">综合成本口径</div>
+    </div>
+    <div class="dash-card">
+      <div class="d-label">⚙ 出餐时间</div>
+      <div class="d-val">8 <span class="unit">min</span></div>
+      <div class="d-sub">单份·煮→炒→装</div>
+    </div>
+
+    <!-- 四维评分 -->
+    <div class="dash-score">
+      <span class="score-item ok">启动难度 <strong>低</strong></span>
+      <span class="score-item high">回本速度 <strong>★★★★</strong></span>
+      <span class="score-item high">复购能力 <strong>★★★★</strong></span>
+      <span class="score-item ok">操作复杂度 <strong>中低</strong></span>
+    </div>
+
+    <!-- 一句话判定 -->
+    <div class="dash-verdict">
+      <div class="v-icon">🔥</div>
+      <div class="v-text"><strong>适合新手起步</strong> — 设备投资¥500以内，一份成本¥3售价¥10，全品类最低投资门槛。核心壁垒在孜然香气的层次感和面条筋道度。</div>
+    </div>
+  </div>
+
+  <!-- 1️⃣ 产品说 -->
+  <div class="section">
+    <div class="s-title">📖 产品说</div>
+    <div class="s-body">
+      孜然炒面是西北夜市摊的扛把子单品。面条大火爆炒后裹上孜然的焦香，配合猪肉丝的油润、洋葱青椒的脆爽，一口下去烟火气拉满。<br><br>
+      成本低到一份¥3，售价¥8-12，毛利率高达63%。一口锅一把铲就能开干，总设备投资不到¥500。<br><br>
+      本方案按日销60份（单人6h）设计备料量和出餐流程，目标日营收¥480-720。
+    </div>
+  </div>
+
+  <!-- 2️⃣ 利润模型 -->
+  <div class="section">
+    <div class="s-title">💰 利润模型</div>
+    <div class="s-body">
+      <div class="cost-box">
+        <div class="cb-item"><span>面条 180g</span><span>¥0.60</span></div>
+        <div class="cb-item"><span>猪肉丝 50g</span><span>¥1.00</span></div>
+        <div class="cb-item"><span>洋葱 30g</span><span>¥0.08</span></div>
+        <div class="cb-item"><span>青椒 30g</span><span>¥0.10</span></div>
+        <div class="cb-item"><span>胡萝卜 20g</span><span>¥0.07</span></div>
+        <div class="cb-item"><span>孜然粉 5g</span><span>¥0.15</span></div>
+        <div class="cb-item"><span>酱油+盐+味精+调和油</span><span>¥0.30</span></div>
+        <div class="cb-item"><span>打包盒+筷子+袋</span><span>¥0.40</span></div>
+        <div class="cb-item"><span>燃气</span><span>¥0.30</span></div>
+        <div class="cb-total"><span>单份直接成本</span><span>¥3.00</span></div>
+      </div>
+
+      <div class="cost-box hidden-cost" style="margin-top:6px">
+        <div class="cb-item"><span>损耗均摊（5%）</span><span>¥0.15</span></div>
+        <div class="cb-item"><span>摊位费分摊（¥500/月÷26天÷60份）</span><span>¥0.32</span></div>
+        <div class="cb-item"><span>设备折旧（¥500÷365天÷60份）</span><span>¥0.02</span></div>
+        <div class="cb-total"><span>实际综合成本</span><span>¥3.49</span></div>
+      </div>
+
+      <div class="roi-grid">
+        <div class="roi-card">
+          <div class="r-label">保守</div>
+          <div class="r-val">40份</div>
+          <div class="r-sub">日净赚¥260</div>
+        </div>
+        <div class="roi-card">
+          <div class="r-label">正常</div>
+          <div class="r-val">60份</div>
+          <div class="r-sub">日净赚¥390</div>
+        </div>
+        <div class="roi-card opt">
+          <div class="r-label">旺季</div>
+          <div class="r-val">90份</div>
+          <div class="r-sub">日净赚¥585</div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:#8a7a6a;margin-top:6px">* 以均价¥10/份计算，综合成本¥3.49/份</div>
+    </div>
+  </div>
+
+  <!-- 3️⃣ 产能模型 -->
+  <div class="section">
+    <div class="s-title">🏭 产能模型</div>
+    <div class="s-body">
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="dc-label">单锅峰值</div>
+          <div class="dc-body">一次炒1份（锅径30cm为佳），每锅炒制2分钟+备料1分钟。超过1份面条翻拌不均匀，火力不够。</div>
+        </div>
+        <div class="detail-card">
+          <div class="dc-label">单人1h上限</div>
+          <div class="dc-body">理论12份/h ↔ 实际7-8份/h（含收钱、补料、等水煮沸）。高峰时段提前备好煮好的面条可提升到10份/h。</div>
+        </div>
+        <div class="detail-card">
+          <div class="dc-label">双人模型</div>
+          <div class="dc-body">1人专职炒+1人煮面/打包/收钱。产能提升至14份/h，日产能轻松突破100份。</div>
+        </div>
+        <div class="detail-card">
+          <div class="dc-label">产能瓶颈</div>
+          <div class="dc-body">①煮面锅太小 ②没提前备好凉水面条 ③单锅只能炒一份 ④排队超3人顾客走人</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4️⃣ 味觉曲线 -->
+  <div class="section">
+    <div class="s-title">🌀 味觉曲线</div>
+    <div class="s-body">
+      <div class="curve-box">
+        <div class="cb-line">
+          <span class="cb-label">第一口</span>
+          <span>孜然焦香直冲鼻腔——大火炒出的孜然颗粒在锅中焦化，混合猪肉的油脂香，打开食欲阀门</span>
+        </div>
+        <div class="cb-line">
+          <span class="cb-label">中段</span>
+          <span>面条的筋道嚼劲释放淀粉甜 → 猪肉丝的肉汁鲜味 → 洋葱青椒的脆爽解腻 → 胡萝卜丝的自然甜感缓冲</span>
+        </div>
+        <div class="cb-line">
+          <span class="cb-label">最后一口</span>
+          <span>酱油的咸香+孜然的余味在口腔回旋，底味不辣不麻，是「很香想再来一口」的收尾</span>
+        </div>
+      </div>
+      <div class="tip-box">
+        复购关键在孜然的「层次感」——不是撒一把孜然粉了事，而是让孜然在高温下释放三种香：干香（入锅焦化）、油香（油脂融合）、后香（咽下去后舌根回香）。普通摊只做了一层，你做三层就是一个记忆点。
+      </div>
+    </div>
+  </div>
+
+  <!-- 5️⃣ 标准配方 -->
+  <div class="section">
+    <div class="s-title">🧪 配方标准化</div>
+    <div class="s-body">
+      <div class="detail-card full">
+        <table>
+          <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+          <tr><td>鲜面条（中粗）</td><td>180g</td><td>选碱水面或拉面，含水量25%±</td></tr>
+          <tr><td>猪肉丝</td><td>50g</td><td>前腿肉或里脊，顺纹切丝，用料酒+老抽+淀粉腌5分钟</td></tr>
+          <tr><td>洋葱</td><td>30g</td><td>紫皮洋葱，切细丝</td></tr>
+          <tr><td>青椒</td><td>30g</td><td>薄皮青椒，切丝</td></tr>
+          <tr><td>胡萝卜</td><td>20g</td><td>切丝，细一点出味快</td></tr>
+          <tr><td>孜然粉</td><td>5g</td><td>整粒孜然现磨>预磨粉，香味差3倍</td></tr>
+          <tr><td>生抽</td><td>10ml</td><td>提鲜咸底</td></tr>
+          <tr><td>老抽</td><td>3ml</td><td>上色，不可多否则发黑</td></tr>
+          <tr><td>盐</td><td>2g</td><td>根据酱油咸度调整</td></tr>
+          <tr><td>味精</td><td>1g</td><td>可选，提鲜</td></tr>
+          <tr><td>调和油</td><td>20ml</td><td>炒肉丝用，油多不粘锅</td></tr>
+          <tr><td>熟白芝麻</td><td>少许</td><td>装盘点缀，提升卖相</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6️⃣ 全流程SOP -->
+  <div class="section">
+    <div class="s-title">📋 全流程SOP</div>
+    <div class="s-body">
+      <div class="detail-card full" style="margin-top:4px">
+        <div class="dc-label">出摊前夜（备料30分钟）</div>
+        <div class="dc-body">
+          • 猪肉切丝，料酒+老抽+淀粉抓匀，冷藏备用（可提前切好60份量冷藏）<br>
+          • 洋葱/青椒/胡萝卜切丝，分装保鲜袋冷藏<br>
+          • 面条整袋冷藏（鲜面不可冷冻，否则发粘）
+        </div>
+      </div>
+      <div class="detail-card full" style="margin-top:4px">
+        <div class="dc-label">出摊前（装车10分钟）</div>
+        <div class="dc-body">
+          锅×2（1个煮面锅+1个炒锅）+ 炉头×2 + 漏勺/锅铲/长筷 + 油瓶+酱油瓶 + 碗碟+打包盒 + 食材盒 + 冰袋保鲜
+        </div>
+      </div>
+      <div class="detail-card full" style="margin-top:4px">
+        <div class="dc-label">开摊前30分钟</div>
+        <div class="dc-body">
+          ① 摆摊+灶具就位 ② 试火试油 ③ 煮一锅面（先试一批，确认面条筋道度） ④ 食材盒依次摆好 ⑤ 孜然粉提前称好用小碗装着
+        </div>
+      </div>
+      <div class="detail-card full" style="margin-top:4px">
+        <div class="dc-label">高峰期流水线</div>
+        <div class="dc-body">
+          <b>① 煮面（3min）：</b>大锅水烧开，下面条煮至8成熟（中心带白芯），捞出过凉水沥干，拌少许油防粘。<br>
+          <b>② 滑肉丝（30s）：</b>锅烧热下油，大火滑炒肉丝至变色出香，盛出备用。<br>
+          <b>③ 爆香（45s）：</b>同一锅加油，下洋葱丝+青椒丝+胡萝卜丝大火爆炒，边缘微焦出香。<br>
+          <b>④ 合炒（90s）：</b>加入沥干的煮面条，大火快速翻炒，让面条充分吸收锅中香气。<br>
+          <b>⑤ 调味（20s）：</b>撒孜然粉+淋酱油+盐+味精，快速颠锅翻匀，让每根面条裹上香料。<br>
+          <b>⑥ 装盒（20s）：</b>倒入打包盒，撒熟白芝麻，盖盖。<br>
+          ⏱ <b>总计约8分钟/份</b>
+        </div>
+      </div>
+      <div class="detail-card full" style="margin-top:4px">
+        <div class="dc-label">收摊（10分钟）</div>
+        <div class="dc-body">
+          剩余生面条冷藏明天可用；炒好的肉丝冷藏；锅具清洗+灶具关火收好；对账+￥收好
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7️⃣ 原料采购 -->
+  <div class="section">
+    <div class="s-title">🥦 原料拆解 & 采购</div>
+    <div class="s-body">
+      <div class="detail-card full">
+        <div class="dc-body">
+          【鲜面条】5kg/袋 · ¥15/5kg · 单份¥0.60 · 菜市场鲜面档，选碱水面中粗款<br>
+          【猪肉】前腿肉 ¥26/kg · 单份¥1.00（50g）· 菜市场肉摊当天买，不要冷冻肉<br>
+          【洋葱】¥4/kg · 单份¥0.08 · 黄葱紫葱均可，选紧实的<br>
+          【青椒】¥5/kg · 单份¥0.10 · 薄皮青椒炒出来更香<br>
+          【胡萝卜】¥3.5/kg · 单份¥0.07 · 选橙红色粗的，甜度高<br>
+          【孜然粉】¥60/kg · 单份¥0.15 · 淘宝搜「新疆孜然粒」买整粒回来现磨<br>
+          【调味料】生抽¥10/瓶+老抽¥8/瓶+盐¥2/袋+味精¥5/袋 · 单份¥0.30<br>
+          【打包盒】¥0.30/套（750ml圆盒+筷子+袋）· 淘宝/批发市场
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8️⃣ 设备投资 -->
+  <div class="section">
+    <div class="s-title">⚙️ 设备投资</div>
+    <div class="s-body">
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="dc-label">炒锅×1</div>
+          <div class="dc-body">¥30-50 · 30cm铁锅，厚底不粘款，夜市用铁锅导热快</div>
+        </div>
+        <div class="detail-card">
+          <div class="dc-label">煮面锅×1</div>
+          <div class="dc-body">¥40-60 · 24cm不锈钢锅，煮面条够用</div>
+        </div>
+        <div class="detail-card">
+          <div class="dc-label">炉头×2</div>
+          <div class="dc-body">¥200-300 · 卡式炉或小液化气灶，一个煮一个炒</div>
+        </div>
+        <div class="detail-card">
+          <div class="dc-label">工具杂件</div>
+          <div class="dc-body">¥80 · 漏勺+锅铲+长筷+油壶+调料罐+打包盒+保鲜盒</div>
+        </div>
+      </div>
+      <div class="tip-box" style="margin-top:6px">
+        💡 全套设备投资：约¥350-500（不含三轮车/摊位租金）
+      </div>
+    </div>
+  </div>
+
+  <!-- 9️⃣ 话术 -->
+  <div class="section">
+    <div class="s-title">💬 销售话术</div>
+    <div class="s-body">
+      「孜然炒面！西北夜市同款，大火炒的！面过了凉水，筋道得很。一份¥10，加肉加孜然，香气一飘整条街都闻到！」<br><br>
+      「姐/哥来一份？配个酸梅汤正好解腻，一共¥18搞定一顿晚饭。」<br><br>
+      「大哥要辣不要？孜然味重点还是淡点？马上出锅！」
+    </div>
+  </div>
+
+  <!-- 🔟 市场对标 -->
+  <div class="section">
+    <div class="s-title">🎯 市场对标</div>
+    <div class="s-body">
+      夜市炒面摊普遍有3-5家（鸡蛋炒面¥8 vs 肉丝炒面¥10 vs 牛肉炒面¥15）。<br><br>
+      孜然炒面 vs 普通酱油炒面：普通炒面只有酱油咸香，吃完就忘；孜然炒面有孜然的记忆锚点——「那家孜然味特别重的炒面」是顾客下次再来的原因。<br><br>
+      <b>差异化的终点不是看起来不同，是一闻到就认准你家。</b>
+    </div>
+  </div>
+
+  <!-- 1️⃣1️⃣ 失败条件 -->
+  <div class="section">
+    <div class="s-title">💀 失败条件</div>
+    <div class="s-body">
+      <div class="death-box">
+        <div class="db-title">❌ 以下场景 → 直接放弃或重新评估</div>
+        <div class="db-body">
+          1. 周边夜市已有1家及以上主打孜然炒面的摊 → 同质化拉低售价<br>
+          2. 选址日均人流量＜200人/h → 流量撑不起保本线<br>
+          3. 不能同时配备煮面和炒面的双炉头 → 产能卡死，出餐5份/h后崩盘<br>
+          4. 面条先大量煮好放凉，客人点后直接炒 → 面条发坨，口感差<br>
+          5. 摊主不愿意现场大火爆炒（怕油溅/怕脏）→ 出不了锅气，没有烟火气<br>
+          6. 目标日营收＜¥400 → 固定成本占比超过30%<br>
+          7. 孜然粉买便宜货（掺淀粉的调和粉）→ 没有香气记忆点，不如不做
+        </div>
+        <div class="alert" style="margin-top:8px">
+          📐 量化失效阈值：日销＜25份→模型失效 · 单份出餐＞10min→崩盘 · 毛利率＜50%→不成立 · 损耗率＞8%→盈亏线以下
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1️⃣2️⃣ 避坑 -->
+  <div class="section">
+    <div class="s-title">🚫 避坑指南</div>
+    <div class="s-body">
+      • 面条不过凉水直接炒 → 发粘成团，怎么翻都翻不开<br>
+      • 过凉水后不沥干 → 下锅后变成煮面不是炒面<br>
+      • 孜然粉一开始就下锅 → 炒太久发苦。要最后下，利用余热激发香味<br>
+      • 肉丝腌太久（＞2h）→ 出水变柴。腌5-10分钟够<br>
+      • 油放太少 → 面条粘锅，锅气不足。炒面油要比想象的多30%<br>
+      • 只做一个口味 → 至少分出微辣·孜然重·酱油重三档，回头客多点选择<br>
+      • 忽略成本中的纸巾和竹签 → 虽然少但顾客每天拿，一个月也有¥30-50
+    </div>
+  </div>
+
+  <!-- 1️⃣3️⃣ 付费墙 -->
+  <div class="paywall">
+    <div class="pw-title">🔐 完整版配方 ¥39 解锁</div>
+    <div class="pw-body">
+      解锁内容：<br>
+      • 三款孜然炒面的标准化酱料配比（孜然重口/香辣版/酱油版）<br>
+      • 面条选型方案（5种市面上常见的碱水面实测对比+推荐款）<br>
+      • 批量备料方案（60份/晚的完整备料清单+时间排程）<br>
+      • 口味定制指南（辣度三档梯度、咸度调节公式）<br>
+      • 竞争定价矩阵（周边炒面摊定价调研+差异化定位方案）<br>
+      • 抖音/小红书短视频拍摄脚本（3条预制内容，出摊直接拍）
+    </div>
+    <a class="pw-btn" href="#">微信联系解锁 →</a>
+  </div>
+
+</div>
+</body>
+</html>
