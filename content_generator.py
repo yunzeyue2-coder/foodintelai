@@ -34,7 +34,7 @@ def extract_card_data(filepath):
     # 去掉前缀（如"启动资金："只保留数值部分）
     data['invest'] = re.sub(r'^[^：]*：', '', data['invest_raw'])
     data['income'] = re.sub(r'^[^：]*：', '', data['income_raw'])
-    data['gross'] = data['gross_raw']  # 毛利率通常直接是数值
+    data['gross'] = re.sub(r'^[^：]*：', '', data['gross_raw'])  # 也去掉前缀
     data['roi'] = re.sub(r'^[^：]*：', '', data['roi_raw'])
     
     # 产品说（第一个story块）
@@ -159,51 +159,6 @@ def gen_wechat(data):
 '''
     return body
 
-
-def gen_xiaohongshu(data):
-    """生成小红书笔记"""
-    title = f'🔥{data["title"]}｜{data["sub"][:30]}'
-    
-    body = f'''{title}
-
----
-
-💡 **产品说**
-{data['desc'][:150]}...
-
-💰 **利润模型**
-启动资金：{data['invest']}
-日营收：{data['income']}
-毛利率：{data['gross']}
-回本周期：{data['roi']}
-
-成本拆解：
-'''
-    for name, price in data['costs']:
-        body += f'• {name}：{price}\n'
-    
-    body += f'''
-🔬 **核心工艺**
-{data['process'][:200]}...
-
-⚠️ **三大风险**
-'''
-    for r in data['risks'][:3]:
-        body += f'• {r}\n'
-    
-    body += f'''
-🎯 **适合场景**
-{' · '.join(data['scenes'][:4])}
-
-💬 **卖货话术**
-{data['talk'][:100]}...
-
----
-
-完整配方📩 加微信备注「{data["card_id"]}」
-#摆摊创业 #餐饮创业 #{data["title"]} #配方分享 #小本创业
-'''
-    return title, body
 
 
 def gen_zhihu(data):
@@ -372,13 +327,6 @@ def generate_all(card_id):
     print(f'{"="*60}')
     print(wechat)
     
-    # 小红书
-    xhs_title, xhs_body = gen_xiaohongshu(data)
-    print(f'\n{"="*60}')
-    print(f'📕 小红书笔记')
-    print(f'  标题: {xhs_title}')
-    print(f'{"="*60}')
-    print(xhs_body)
     
     # 知乎回答
     zh_title, zh_body = gen_zhihu(data)
@@ -400,7 +348,6 @@ def generate_all(card_id):
         'card_id': data['card_id'],
         'title': data['title'],
         'wechat': wechat,
-        'xiaohongshu': xhs_body,
         'zhihu': zh_body,
         'zhihu_column': zc_body,
     }
