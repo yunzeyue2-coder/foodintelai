@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PC_K04 韩式豆制品系列 — 韩式拌菜</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+  .card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+  .header { background: linear-gradient(135deg, #8a7a3a 0%, #aa9a4a 50%, #caba5a 100%); padding: 32px 24px 24px; color: #fff; }
+  .header-badge { display: inline-block; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+  .section { padding: 20px 24px; border-bottom: 1px solid #e8e4d8; }
+  .section-title { font-size: 13px; font-weight: 600; color: #8a7a3a; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #d8d4c0; }
+  .verdict-strip { background: #8a7a3a; color: #fff; padding: 10px 24px; font-size: 14px; font-weight: 600; text-align: center; }
+  .dec-card { background: #f0ede4; border-radius: 12px; padding: 14px; margin: 8px 0; }
+  .dec-card strong { color: #8a7a3a; }
+  .callout { background: #f5f2e8; border-left: 3px solid #b8a85a; border-radius: 8px; padding: 12px; margin: 8px 0; font-size: 12px; line-height: 1.6; color: #555; }
+  .callout .cl-label { font-weight: 600; color: #8a7a3a; }
+  .radar { display: flex; flex-direction: column; gap: 10px; }
+  .radar-item { display: flex; align-items: center; gap: 10px; }
+  .radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .radar-item .bar-wrap { flex: 1; height: 10px; background: #e0dcc8; border-radius: 10px; overflow: hidden; }
+  .radar-item .bar { height: 100%; border-radius: 10px; }
+  .radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #8a7a3a; }
+  .bf5 { width: 100%; background: linear-gradient(90deg, #aa9a4a, #caba5a); }
+  .bf4 { width: 80%; background: linear-gradient(90deg, #aa9a4a, #caba5a); }
+  .bf3 { width: 60%; background: linear-gradient(90deg, #b8ae80, #c8be90); }
+  .bf2 { width: 40%; background: linear-gradient(90deg, #b8ae80, #c8be90); }
+  .role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+  .role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #e0dcc8; color: #888; }
+  .role-tag.active { background: #aa9a4a; color: #fff; box-shadow: 0 2px 8px rgba(170,154,74,0.3); }
+  .tree-box { background: #f0ede4; border-radius: 12px; padding: 14px; font-size: 13px; line-height: 2; }
+  .tree-box .t-root { font-weight: 700; color: #8a7a3a; }
+  .tree-box .t-l1 { padding-left: 20px; color: #556; }
+  .tree-box .t-l2 { padding-left: 40px; color: #888; font-size: 12px; }
+  .matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #d8d4c0; border-radius: 12px; margin-top: 8px; background: #f8f6ee; overflow: hidden; }
+  .matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #c8c4b0; }
+  .matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #c8c4b0; }
+  .ql { position: absolute; font-size: 10px; color: #aaa; }
+  .ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+  .ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+  .matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+  .matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+  .dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #aa9a4a; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+  .dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #8a7a3a; white-space: nowrap; transform: translateX(-50%); }
+  .footer-brand { background: #8a7a3a; color: #fff; text-align: center; padding: 24px; }
+  .footer-brand .fb-name { font-size: 18px; font-weight: 700; }
+  .footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+  .footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+  .footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+  .key-num { font-size: 18px; font-weight: 800; color: #8a7a3a; }
+  .recipe-grid { background: #f5f2e8; border-radius: 10px; padding: 14px; margin: 8px 0; }
+  .recipe-grid .rg-title { font-size: 14px; font-weight: 700; color: #8a7a3a; margin-bottom: 6px; }
+  .recipe-grid table { width: 100%; font-size: 11px; border-collapse: collapse; }
+  .recipe-grid td { padding: 3px 6px; border-bottom: 1px solid #e0dcc8; font-size: 11px; color: #555; }
+  .recipe-grid th { padding: 3px 6px; font-size: 10px; color: #8a7a3a; font-weight: 600; border-bottom: 1px solid #c8c4b0; text-align: left; }
+  .recipe-grid .amt { text-align: right; font-weight: 600; color: #8a7a3a; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">PC_K04 · 韩式拌菜</div>
+    <h1>韩式豆制品系列</h1>
+    <div class="subtitle">甜细丝·五香干豆腐·拌豆干/素鸡·甲鱼条·小鱼花生 · 素食友好·高毛利</div>
+    <div class="tags">
+      <span>🫘 大豆蛋白基底</span>
+      <span>🥬 素食友好</span>
+      <span>💰 毛利82-90%</span>
+      <span>🔄 供应链极稳</span>
+      <span>📦 保质期5-7天</span>
+    </div>
+  </div>
+
+  <div class="verdict-strip">判定：<strong>值得做</strong>· 供应链最稳的品类· 全国任何市场都能买到原料· 毛利最高</div>
+
+  <div class="section">
+    <div class="section-title">① 开还是不开 · 30秒判断</div>
+    <div class="dec-card">
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+        <span><strong>🔥 流量</strong> <span class="key-num">3</span>/5</span>
+        <span><strong>💰 毛利</strong> <span class="key-num">5</span>/5</span>
+        <span><strong>⚡ 替代风险</strong> <span style="font-size:18px; font-weight:800; color:#5a8a3a;">3</span>/10</span>
+        <span><strong>🥬 素食适配</strong> <span class="key-num">5</span>/5</span>
+      </div>
+      <hr style="border:none; border-top:1px dashed #d0ccc0; margin:8px 0;">
+      <div><strong>✅ 适合开的情况：</strong>所有韩式门店· 需要素食选项· 需要低成本高毛利品· 全国任何市场</div>
+      <div><strong>💰 收益估算：</strong>甜细丝15-22元（毛利87%）· 五香干豆腐12-18元（毛利85%）· 豆干/素鸡12-18元（毛利82%）· 甲鱼条15-22元（毛利88%）· 小鱼花生12-18元（毛利90%）</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 原材料指南 · 中国名·可替代原料</div>
+    <div class="callout">
+      <div class="cl-label">🫘 豆制品原料说明</div>
+      <strong>鲜族甜细丝：</strong>原料=干豆皮（豆腐皮/千张）· 切细丝后凉水浸泡至软 · 全国批发市场都有· 约6-8元/斤<br>
+      <strong>五香干豆腐丝：</strong>原料=豆腐丝（豆皮丝/千张丝）· 成品干货或鲜货 · 鲜货更好（省去泡发）· 约4-6元/斤<br>
+      <strong>拌豆干/素鸡：</strong>原料=豆块（干豆腐用面碱水煮后卷成卷）· 成品"素鸡"或"豆卷"· 约5-8元/斤<br>
+      <strong>甲鱼条（豆制品）：</strong>注意！<strong>不是真甲鱼</strong>· 甲鱼条=豆制品仿荤· 大豆蛋白压制成条状· 口感像面筋· 约6-10元/斤· 搜"豆制甲鱼条"或"素甲鱼"<br>
+      <strong>小鱼花生：</strong>花生米（红皮/白皮均可）+ 小银鱼干（同PC_K03）· 花生约8-10元/斤· 小银鱼干约20-30元/斤
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 爆品指数 · 五维雷达</div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf2"></div></div><span class="score">2</span></div>
+    </div>
+    <div style="font-size:12px; color:#888; margin-top:8px;">
+      <strong>点评：</strong>豆制品是PC系列中流量和传播性最低的品类（没人拍照），但毛利5★和标准化5★拉满。供应链全国通吃——任何市场都能买到豆腐皮/豆干/花生。替代风险极低（3/10），成品供应商少、自制成本低、几乎没有外采价值。
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 产品价值树</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="tree-box">
+      <div class="t-root">🫘 韩式豆制品系列 · 价值树</div>
+      <div class="t-l1">├─ 利润压舱石</div>
+      <div class="t-l2">│  └─ 毛利82-90% · PC系列最高的品类</div>
+      <div class="t-l1">├─ 素食友好</div>
+      <div class="t-l2">│  └─ PC系列唯一全素品类· 覆盖素食客群</div>
+      <div class="t-l1">├─ 供应链零压力</div>
+      <div class="t-l2">│  └─ 全国任何菜市场都能买到原料· 无需冷链</div>
+      <div class="t-l1">├─ 套餐填充</div>
+      <div class="t-l2">│  └─ 小鱼花生=下酒菜· 豆制品=午餐套餐配菜</div>
+      <div class="t-l1">└─ 原料库零损耗</div>
+      <div class="t-l2">   └─ 干豆皮/花生米/银鱼干都是长保质期干货</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 市场定位 · 竞争画像</div>
+    <div class="callout">
+      <div class="cl-label">🎯 品类定位</div>
+      <strong>韩式豆制品系列=烤肉门店的「素食担当+下酒菜」</strong>——覆盖素食/减肥/养生客群，同时也是喝酒时的经典搭配。对标中式凉菜店的卤豆干：没人专门为了它来，但点了就不亏。<br>
+      <strong>竞争分析：</strong>豆制品品类全国极度分散——每个店自己拌，没有全国性品牌。最大的优势是原料全国通采（豆腐皮/素鸡/豆干全国都有），成本极低，毛利极高。
+    </div>
+    <div class="callout">
+      <div class="cl-label">🧑 客群画像</div>
+      <strong>主客群：</strong>30-45岁女性（健康意识·素食）+ 喝酒客群（下酒刚需）+ 减脂人群（豆制品高蛋白低脂）<br>
+      <strong>消费场景：</strong>配菜拼盘（等烤肉时吃）+ 下酒菜（和牛副/明太鱼一起点）+ 素食套餐（豆制品+拌菜+冷面）
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ PC体系定位图 · K04在这一排第几</div>
+    <div style="font-size:12px; color:#555; line-height:1.8;">
+      <div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #e0d8d0;">
+        <span style="font-weight:700; color:#2c2c2c; min-width:30px;">K01</span>
+        <span style="font-weight:600; color:#b07040; min-width:90px;">辣白菜</span>
+        <span style="color:#d09050;">★★★★★</span>
+        <span style="color:#888; font-size:11px;">必须有</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #e0d8d0;">
+        <span style="font-weight:700; color:#2c2c2c; min-width:30px;">K02</span>
+        <span style="font-weight:600; color:#b07040; min-width:90px;">牛副拌菜</span>
+        <span style="color:#d09050;">★★★★☆</span>
+        <span style="color:#888; font-size:11px;">增强丰富度</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #e0d8d0;">
+        <span style="font-weight:700; color:#2c2c2c; min-width:30px;">K03</span>
+        <span style="font-weight:600; color:#b07040; min-width:90px;">明太鱼</span>
+        <span style="color:#d09050;">★★★★</span>
+        <span style="color:#888; font-size:11px;">下酒菜独特品类</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:5px 0; background:#f5ede4; border-radius:6px; padding:5px 8px;">
+        <span style="font-weight:700; color:#b07040; min-width:30px;">K04</span>
+        <span style="font-weight:700; color:#b07040; min-width:90px;">豆制品</span>
+        <span style="color:#b07040; font-size:15px;">★★★☆</span>
+        <span style="color:#b07040; font-size:11px; font-weight:600;">← 你在这里 · 第4优先级</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #e0d8d0;">
+        <span style="font-weight:700; color:#2c2c2c; min-width:30px;">K05</span>
+        <span style="font-weight:600; color:#b07040; min-width:90px;">腌菜/拌菜</span>
+        <span style="color:#d09050;">★★★</span>
+        <span style="color:#888; font-size:11px;">完整度补充</span>
+      </div>
+    </div>
+    <div style="font-size:11px; color:#888; margin-top:8px; padding:8px; background:#f8f0e8; border-radius:6px;">
+      <strong>为什么排第4：</strong>豆制品毛利和供应链满分，但缺乏流量和传播性——没人专门为了豆制品来吃烤肉。优先级靠后，作为利润补充和素食客群覆盖，建议在辣白菜、牛副和明太鱼之后上。
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 爆品矩阵</div>
+    <div style="font-size:12px; color:#555; line-height:1.8;">
+      <div style="display:flex; align-items:center; padding:6px 0; border-bottom:1px solid #dce8e4;">
+        <span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:#c0392b; color:#fff; text-align:center; line-height:16px; font-size:10px; font-weight:700; margin-right:8px;">王</span>
+        <span style="font-weight:600; color:#8a7a3a; min-width:100px;">认知王</span>
+        <span><strong>五香干豆腐</strong> · 国民认知度最高·最不出错</span>
+      </div>
+      <div style="display:flex; align-items:center; padding:6px 0; border-bottom:1px solid #dce8e4;">
+        <span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:#2980b9; color:#fff; text-align:center; line-height:16px; font-size:10px; font-weight:700; margin-right:8px;">量</span>
+        <span style="font-weight:600; color:#8a7a3a; min-width:100px;">走量款</span>
+        <span><strong>拌豆干/甜细丝</strong> · 常见·性价比高</span>
+      </div>
+      <div style="display:flex; align-items:center; padding:6px 0; border-bottom:1px solid #dce8e4;">
+        <span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:#27ae60; color:#fff; text-align:center; line-height:16px; font-size:10px; font-weight:700; margin-right:8px;">利</span>
+        <span style="font-weight:600; color:#8a7a3a; min-width:100px;">利润款</span>
+        <span><strong>素鸡/小鱼花生</strong> · 成本低·毛利高·适合套餐</span>
+      </div>
+      <div style="display:flex; align-items:center; padding:6px 0;">
+        <span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:#8e44ad; color:#fff; text-align:center; line-height:16px; font-size:10px; font-weight:700; margin-right:8px;">异</span>
+        <span style="font-weight:600; color:#8a7a3a; min-width:100px;">差异化</span>
+        <span><strong>甲鱼条</strong> · 豆制品形态独特·适合拍照传播</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑧ 推荐SKU分级 · 选这6款就够了</div>
+    <div style="font-size:12px; color:#555; line-height:1.8;">
+      <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; background:#e8f5e9; border-radius:8px; margin-bottom:6px;">
+        <span style="font-size:18px;">🟢</span>
+        <span style="font-weight:600; color:#2e7d32; min-width:50px;">必上(2款)</span>
+        <span><strong>五香干豆腐+拌豆干</strong> — 国民度最高·不出错</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; background:#fff8e1; border-radius:8px; margin-bottom:6px;">
+        <span style="font-size:18px;">🟡</span>
+        <span style="font-weight:600; color:#f57f17; min-width:50px;">可选(2款)</span>
+        <span><strong>甜细丝+素鸡</strong> — 女性客群喜欢·素食友好</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; background:#ffebee; border-radius:8px;">
+        <span style="font-size:18px;">🔴</span>
+        <span style="font-weight:600; color:#c62828; min-width:50px;">不建议首批</span>
+        <span><strong>甲鱼条</strong>（认知度低·需要教育）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑨ 工艺配方 · 原料·辅料·调味料全表</div>
+
+    <div style="font-size:12px; color:#555; line-height:2; background:#f0ede4; border-radius:8px; padding:10px; margin-bottom:10px;">
+      <strong>共用逻辑：</strong>五款共用"糖稀+辣椒面+蒜"调味框架 · 豆制品原料全国通采 · 无需冷链 · 保质期5-7天
+    </div>
+
+    <div style="font-size:13px; font-weight:600; color:#8a7a3a; margin:10px 0 4px;">🫘 鲜族甜细丝（走量款 · 毛利87%）</div>
+    <div style="font-size:12px; color:#555; margin-bottom:8px;">干豆皮4斤切丝→喷水回软→加调料拌匀→成本~3元·售价15-22元</div>
+    <details style="margin-bottom:12px; background:#f5f2e8; border-radius:8px; padding:6px 10px; cursor:pointer;">
+      <summary style="font-size:12px; font-weight:600; color:#8a7a3a;">📋 展开完整配方</summary>
+      <div style="padding:8px 0; font-size:11px; color:#555; line-height:1.8;">
+        干豆皮4斤 + 水90g（喷软）+ 盐40g + 味精80g + 糖75g + 香菜子粉15g + 牛肉粉45g + 干辣椒粉215g + 糖稀4.8斤 + 熟色拉油60g + 熟芝麻110g → 拌匀
+      </div>
+    </details>
+
+    <div style="font-size:13px; font-weight:600; color:#8a7a3a; margin:10px 0 4px;">🫘 五香干豆腐丝（经典款 · 毛利85%）</div>
+    <div style="font-size:12px; color:#555; margin-bottom:8px;">豆腐丝3斤+芹菜+胡萝卜+调料拌匀→成本~3元·售价12-18元</div>
+    <details style="margin-bottom:12px; background:#f5f2e8; border-radius:8px; padding:6px 10px; cursor:pointer;">
+      <summary style="font-size:12px; font-weight:600; color:#8a7a3a;">📋 展开完整配方</summary>
+      <div style="padding:8px 0; font-size:11px; color:#555; line-height:1.8;">
+        豆腐丝3斤 + 芹菜段250g + 胡萝卜丝150g + 蒜末130g + 盐65g + 味精35g + 糖50g + 牛肉粉25g + 糖稀190g + 油炸细辣椒面90g + 粗辣椒面8g + 干辣椒粉50g + 花椒油30g + 熟色拉油50g → 拌匀
+      </div>
+    </details>
+
+    <div style="font-size:13px; font-weight:600; color:#8a7a3a; margin:10px 0 4px;">🫘 拌豆干/素鸡（素食经典 · 毛利82%）</div>
+    <div style="font-size:12px; color:#555; margin-bottom:8px;">素鸡3.6斤切片+芹菜胡萝卜+调料拌匀→成本~4元·售价12-18元</div>
+    <details style="margin-bottom:12px; background:#f5f2e8; border-radius:8px; padding:6px 10px; cursor:pointer;">
+      <summary style="font-size:12px; font-weight:600; color:#8a7a3a;">📋 展开完整配方</summary>
+      <div style="padding:8px 0; font-size:11px; color:#555; line-height:1.8;">
+        豆块（素鸡）3.6斤切片2cm + 芹菜7两 + 胡萝卜7两 + 蒜末3两 + 盐50g + 味精30g + 白糖20g + 牛肉粉20g + 粗细辣椒面各50g + 干细辣椒面20g + 熟色拉油50g → 拌匀
+      </div>
+    </details>
+
+    <div style="font-size:13px; font-weight:600; color:#8a7a3a; margin:10px 0 4px;">🫘 甲鱼条（豆制品仿荤 · 毛利88%）</div>
+    <div style="font-size:12px; color:#555; margin-bottom:8px;">甲鱼丝3.65斤喷水回软→加调料拌匀→成本~3元·售价15-22元</div>
+    <details style="margin-bottom:12px; background:#f5f2e8; border-radius:8px; padding:6px 10px; cursor:pointer;">
+      <summary style="font-size:12px; font-weight:600; color:#8a7a3a;">📋 展开完整配方</summary>
+      <div style="padding:8px 0; font-size:11px; color:#555; line-height:1.8;">
+        甲鱼丝（豆制）3.65斤 + 水65g（喷软）+ 盐60g + 味精90g + 糖135g + 香菜子粉25g + 牛肉粉55g + 细辣椒粉155g + 糖稀4.8斤 + 熟色拉油60g + 熟芝麻125g → 拌匀
+      </div>
+    </details>
+
+    <div style="font-size:13px; font-weight:600; color:#8a7a3a; margin:10px 0 4px;">🫘 小鱼花生（下酒王 · 毛利90%·PC系列最高）</div>
+    <div style="font-size:12px; color:#555; margin-bottom:8px;">花生米5.4斤油炸+小银鱼+豌豆+糖稀拌匀→成本~2-3元·售价12-18元</div>
+    <details style="margin-bottom:12px; background:#f5f2e8; border-radius:8px; padding:6px 10px; cursor:pointer;">
+      <summary style="font-size:12px; font-weight:600; color:#8a7a3a;">📋 展开完整配方</summary>
+      <div style="padding:8px 0; font-size:11px; color:#555; line-height:1.8;">
+        花生米5.4斤 + 豌豆粒8两 + 小银鱼干3两 + 糖稀2.3两 + 白糖25g + 盐70g + 味精60g → 花生炸微黄放小银鱼同炸→控油→加料拌匀·凉透密封
+      </div>
+    </details>
+
+    <div style="font-size:11px; color:#999; font-style:italic; margin-top:8px;">⚠️ 防腐剂说明：原配方含防腐剂5-10g（脱氢乙酸钠），GB 2760-2024允许在豆制品中使用，最大限量为0.3g/kg。冷藏销售5-7天内不添加也没问题。</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑩ 创业决策</div>
+
+    <div class="dec-card">
+      <div><strong>💰 做还是买？</strong></div>
+      <div style="font-size:12px; color:#555; margin-top:6px;">
+        <strong>全部建议自制。</strong>豆制品成品供应商少·标准化程度低·自制成本极低。豆腐皮/豆干/花生米全国通采·没有供应链障碍。唯一可能外采的是小鱼花生（有现成的零食级产品）但成本比自制高50%。<br>
+        <strong>替代方案：</strong>所有原料全国菜市场/批发市场都能买到·没有替代焦虑·甲鱼条搜"豆制甲鱼条"或"素甲鱼"·买不到直接用干豆皮替代（口感略不同但调味后差距缩小）。
+      </div>
+    </div>
+
+    <div class="dec-card">
+      <div><strong>📋 菜单策略</strong></div>
+      <div style="font-size:12px; color:#555; margin-top:6px;">
+        • 甜细丝和甲鱼条：标"延边特色拌菜"· 走差异化路线· 定价15-22元<br>
+        • 五香干豆腐丝/拌豆干：做午餐套餐配菜· 12-18元· 走量款<br>
+        • 小鱼花生：下酒菜专区主推· 12-18元· 可以和明太鱼系列放一起<br>
+        • ⚡ 注意：甲鱼条名字容易被误会是真甲鱼——菜单标注"豆制甲鱼条"或"素甲鱼条"<br>
+        • 五款共用糖稀+辣椒面+蒜的调味逻辑，后厨增加一款变形的学习成本几乎为零
+      </div>
+    </div>
+
+    <div class="dec-card">
+      <div><strong>🎯 风险回报</strong></div>
+      <div style="font-size:12px; color:#555; margin-top:6px;">
+        <strong>风险：</strong>极低。原料全国通采·保质期长·工艺简单·毛利极高。唯一风险是甲鱼条的命名混淆。<br>
+        <strong>建议路径：</strong>先上小鱼花生（最简单·毛利最高·客人最爱）→ 加五香干豆腐丝（走量）→ 加甜细丝和甲鱼条（差异化）。<br>
+        <strong>地摊版：</strong>⭐⭐⭐⭐ 小鱼花生和甜细丝非常适合地摊——成本极低·不需要冷藏·出餐即出。
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑪ 未来趋势</div>
+    <div style="font-size:12px; color:#555; line-height:2;">
+      <div><strong>2018</strong> → 豆制品=素菜·只出现在韩式老店·不入流</div>
+      <div><strong>2021</strong> → 植物基饮食风潮带动豆制品·韩式拌豆丝开始走红</div>
+      <div><strong>2024</strong> → 豆制拌菜成趋势·高蛋白低碳水获年轻人关注</div>
+      <div><strong>2026</strong> → 豆制品预制化·干豆皮+调料包=30秒出餐·便利店即食</div>
+    </div>
+    <div style="margin-top:12px; padding:14px; background: #8a7a3a; color: #fff; border-radius: 12px; text-align: center; font-size: 14px; font-weight: 600; line-height: 1.6;">
+      豆制品是PC系列的利润压舱石——原料最便宜·供应链最稳·毛利最高。<br>
+      最大价值不在拉新而在"稳利润"——卖了就赚·不用操心。
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div><div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links"><span>📢 公众号：沧林食品技术</span><span>💬 微信：canglin1985</span></div>
+    <div class="fb-series">韩式拌菜 · PC_K04 韩式豆制品系列</div>
+  </div>
+
+</div>
+</body>
+</html>
