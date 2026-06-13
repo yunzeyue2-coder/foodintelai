@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>原味饭团 · 饭团类子卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.variant-bar{background:linear-gradient(90deg,#2d6a4f,#1b4d3a);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#2d6a4f;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#2d6a4f}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+.food-compare{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.food-item{padding:10px 12px;border-radius:10px;font-size:12px;display:flex;align-items:center;gap:8px}
+.food-item .f-icon{font-size:16px}
+.food-item .f-name{flex:1;font-weight:600;color:#3a322a}
+.food-item .f-feature{color:#b5aaa0;font-size:10px}
+.food-main{background:#e6f4e8;border:1px solid #bdd}
+.food-other{background:#f8f4ef}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#2d6a4f}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#4a3f35;line-height:1.6}
+.pay-area .p-item .p-icon{color:#2d6a4f;font-weight:700;flex-shrink:0;width:18px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#2d6a4f;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#2d6a4f;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #2d6a4f}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;flex-wrap:wrap;margin-bottom:6px}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#2d6a4f;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #2d6a4f;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 变体提示 -->
+<div class="variant-bar">
+  <span class="v-label">🍙 饭团子卡 · ¥9</span>
+  <a class="v-link" href="#">← 母卡：紫菜卷(ZS_004)</a>
+</div>
+
+<!-- 产品头部 -->
+<div class="meta">
+  <h1>🍙 原味饭团</h1>
+  <div class="sub">三角饭团 · 便携主食 · 韩式/日式风味</div>
+  <span class="price-tag">¥9 完整配方包</span>
+</div>
+
+<!-- 与母卡差异总览 -->
+<div class="section">
+  <div class="s-title">🔄 与ZS_004差异总览</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">ZS_004 母卡（¥49）</div>
+      <div>紫菜卷：长卷切段，馅料多样，需刀切，适合盒装分享</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">ZS_005 变体（¥9）</div>
+      <div>三角饭团：手持三角造型，馅料居中，无需刀切，即做即售，适合单手握食</div>
+    </div>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 本卡不含米饭调味、紫菜选择、基础馅料等通用数据，这些请购买母卡ZS_004</div>
+</div>
+
+<!-- 母卡 vs 变体对比表 -->
+<div class="section">
+  <div class="s-title">📊 紫菜卷 vs 饭团</div>
+  <div style="overflow-x:auto">
+    <table>
+      <thead><tr style="background:#3a322a;color:#fff"><th style="border-radius:6px 0 0 0">维度</th><th>紫菜卷（母卡）</th><th style="border-radius:0 6px 0 0">三角饭团（本卡）</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:600">造型</th><td>长条切段</th><td style="color:#2d6a4f;font-weight:700">三角手握</th></tr>
+        <tr style="background:#f8f4ef"><td>食用方式</th><td>盒装、筷子/手抓</th><td style="color:#2d6a4f">单手直握，无需餐具</th></tr>
+        <tr><td style="font-weight:600">馅料分布</th><td>均匀铺开</th><td style="color:#2d6a4f">集中在中心</th></tr>
+        <tr style="background:#f8f4ef"><td>制作耗时</th><td>卷+切约2分钟/条</th><td style="color:#2d6a4f">捏+包约40秒/个</th></tr>
+        <tr><td style="font-weight:600">包装成本</th><td>需盒装（约0.8元）</th><td style="color:#2d6a4f">可选塑料袋/简易膜（0.2元）</th></tr>
+        <tr style="background:#f8f4ef"><td style="border-radius:0 0 0 6px">适合场景</th><td>野餐、外卖便当</th><td style="border-radius:0 0 6px 0">早餐、便利店、快速外带</th></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 为什么做饭团 -->
+<div class="section">
+  <div class="s-title">🎯 为什么做三角饭团</div>
+  <div style="background:#e6f4e8;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;border-left:3px solid #2d6a4f">
+    <strong>如果只有紫菜卷：</strong>会损失追求“快速单手吃”的顾客（如上班族、学生）。紫菜卷需要盒装和筷子/手套，便携性打折扣。<br><br>
+    <strong>增加三角饭团后：</strong>覆盖早餐、课间、会议茶歇等即食场景。制作速度更快（40秒/个），包装成本更低，且更容易做多口味组合销售。<br><br>
+    <strong>定位：</strong>互补型便携单品。与紫菜卷共用米饭和馅料，只需改变塑形方式。适合作为引流低价产品（单个3-5元）或套餐搭配。
+  </div>
+</div>
+
+<!-- 饭团系列对比 -->
+<div class="section">
+  <div class="s-title">🍙 饭团口味系列</div>
+  <div class="food-compare">
+    <div class="food-item food-main">
+      <span class="f-icon">⭐</span>
+      <span class="f-name">原味饭团（本卡）</span>
+      <span class="f-feature">米饭+盐/芝麻+紫菜外皮</span>
+    </div>
+    <div class="food-item food-other">
+      <span class="f-icon">🐟</span>
+      <span class="f-name">金枪鱼饭团</span>
+      <span class="f-feature">金枪鱼沙拉馅</span>
+    </div>
+    <div class="food-item food-other">
+      <span class="f-icon">🥚</span>
+      <span class="f-name">蛋黄肉松饭团</span>
+      <span class="f-feature">咸蛋黄+肉松</span>
+    </div>
+  </div>
+  <div class="badge" style="margin-top:4px">✨ 原味饭团是最基础版，适合作为引流品</div>
+</div>
+
+<!-- 适合谁（饭团特化） -->
+<div class="section">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#3a6b2e;margin-bottom:6px">🎯 适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 已有米饭和紫菜备料，想增加便携单品</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 早餐、学校门口、写字楼周边摊位</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 想低价引流（单个3-5元）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px">✅ 需要快速出餐、包装简单的场景</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#b53b3b;margin-bottom:6px">❌ 不适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 追求饱满馅料（饭团馅料量少于紫菜卷）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 不愿学三角形塑形</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px">❌ 主要做堂食便当（紫菜卷更合适）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 赚钱逻辑（差异） -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑（与母卡差异）</div>
+  <div class="logic-box" style="background:#fdf8f0;border-radius:12px;padding:12px">
+    <div class="l-title" style="font-size:12px;font-weight:700">📈 饭团优势</div>
+    <div class="logic-item" style="display:flex;justify-content:space-between;padding:4px 0"><span>单个成本更低（无包装盒）</span><span class="v">节省¥0.6/个</span></div>
+    <div class="logic-item" style="display:flex;justify-content:space-between;padding:4px 0"><span>制作速度快</span><span class="v">40秒/个 vs 2分钟/卷</span></div>
+    <div class="logic-item" style="display:flex;justify-content:space-between;padding:4px 0"><span>售价可低至3-5元</span><span class="v">薄利多销</span></div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin-top:6px">💰 利润模型</div>
+    <div class="logic-item"><span>原味饭团成本</span><span class="v">¥1.2/个</span></div>
+    <div class="logic-item"><span>建议售价</span><span class="v">¥3～¥5</span></div>
+    <div class="logic-item"><span>毛利</span><span class="v">60%～76%</span></div>
+    <div class="badge" style="margin-top:6px">📌 日售100个，净利润可达¥200-300/天</div>
+  </div>
+</div>
+
+<!-- 专属风险 -->
+<div class="section">
+  <div class="s-title">⚠️ 三角饭团专属风险</div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">1️⃣</span><span>塑形不牢——三角形容易散架，顾客一拿就开</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">2️⃣</span><span>馅料不均——顾客咬不到馅会觉得“不划算”</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">3️⃣</span><span>紫菜受潮——包了海苔的饭团放置30分钟海苔变软，口感差</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;font-size:12px"><span style="font-size:14px">4️⃣</span><span>低温米饭发硬——冷藏后米饭硬，不加热口感差</span></div>
+</div>
+
+<!-- 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得加：</strong>三角饭团与紫菜卷共享90%的备料（米饭、紫菜、馅料），只需增加塑形步骤。制作速度快，包装成本低，适合低价引流。单个利润虽然低，但复购率高（早餐场景）。<br>
+      <strong>❌ 为什么不值得：</strong>如果摊位客流以正餐堂食为主，饭团可能不如紫菜卷受欢迎。塑形需要练习，初期良品率低。<br>
+      <strong>🔑 进入条件：</strong>① 已有米饭和紫菜备料 ② 愿意花1天练习三角形塑形 ③ 有早餐或外带客流。<br>
+      <strong>🚪 退出条件：</strong>试卖1周后日销量＜30个 / 顾客反馈“易散”或“没馅”超过30%。<br>
+      <strong>🎯 最终判断：可进</strong> —— 强烈建议作为紫菜卷的补充品类，定价3-5元，主打“早餐/课间随手一个”。可推出“买5送1”培养复购。
+    </div>
+    <div class="j-tags"><span>#三角饭团</span><span>#便携主食</span><span>#低价引流</span></div>
+  </div>
+</div>
+
+<!-- 核心工艺（饭团专用） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（三角饭团）</div>
+  <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">米饭准备：使用母卡调味好的米饭，保持温热（不烫手）。</span><div class="ps-verify">[验证点] 米饭温度约40-50°C，颗粒分明，捏合不粘手</div></div>
+  <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">馅料置中：取米饭约80g，压扁，中间放馅料（约10g），再盖一层米饭，捏成圆球。</span><div class="ps-verify">[验证点] 馅料完全被米饭包裹，不外露</div></div>
+  <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">三角塑形：用虎口和手掌将圆球整形成三角形，压紧实。</span><div class="ps-verify">[验证点] 三个角分明，表面无裂缝，轻压不散</div></div>
+  <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">贴海苔：在底部或侧面贴上紫菜片（也可不贴），用保鲜膜包裹或放入三角袋。</span><div class="ps-verify">[验证点] 紫菜贴合牢固，饭团不粘手</div></div>
+  <div class="badge">⚠️ 完整配方（米饭量、塑形手法、馅料比例）见下方付费区</div>
+</div>
+
+<!-- 成本利润（差异） -->
+<div class="section">
+  <div class="s-title">📐 成本利润（与原味紫菜卷对比）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">紫菜卷成本/条（约180g）</span><span class="v">¥4.0</span></div>
+    <div class="recipe-line"><span class="k">饭团成本/个（约80g）</span><span class="v">¥1.2</span></div>
+    <div class="recipe-line"><span class="k">紫菜卷售价</span><span class="v">¥12-15</span></div>
+    <div class="recipe-line"><span class="k">饭团建议售价</span><span class="v">¥3～¥5</span></div>
+    <div class="recipe-line"><span class="k">饭团毛利率</span><span class="v">60%～76%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售80个（均价¥4）→ 日毛利¥224，月净利约¥3500（出摊22天）</span></div>
+    <div class="badge" style="margin-top:6px">※ 若搭配包装膜或三角袋，成本增加0.1-0.2元/个</div>
+  </div>
+</div>
+
+<!-- 完整配方包 付费区 -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>🍙 原味饭团 · 完整配方包</h3>
+  <div class="p-sub">定价 ¥9 · 永久解锁 · 包含以下全部数据</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span>三角饭团塑形手法（图解+文字）</div>
+    <div class="p-item"><span class="p-icon">✅</span>米饭与馅料黄金比例（不爆馅）</div>
+    <div class="p-item"><span class="p-icon">✅</span>防散技巧（加糯米饭比例）</div>
+    <div class="p-item"><span class="p-icon">✅</span>批量捏制方案（50个/100个）</div>
+    <div class="p-item"><span class="p-icon">✅</span>海苔防潮包装方案</div>
+    <div class="p-item"><span class="p-icon">✅</span>3款馅料配方（金枪鱼/蛋黄肉松/泡菜）</div>
+    <div class="p-item"><span class="p-icon">✅</span>饭团专用三角袋/保鲜膜选购建议</div>
+  </div>
+  <div class="price-tag">¥9 <small>子卡 · 一次解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后发编号给客服，秒发完整版 / 或直接在此展开</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 塑形手法 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 三角饭团塑形四步法</div>
+    <div class="recipe-box">
+      <div><strong>① 捏圆球：</strong>取80g米饭，中间放10g馅料，再盖米饭，捏成紧实圆球。</div>
+      <div><strong>② 压三角：</strong>左手掌心弯曲，右手将圆球压成三角形。</div>
+      <div><strong>③ 整形：</strong>用双手虎口夹住三角形，旋转压实三个角。</div>
+      <div><strong>④ 贴海苔：</strong>底部贴一长条海苔，或放入三角袋。</div>
+      <div style="margin-top:6px">⚠️ 手掌可沾少许盐水防粘。</div>
+    </div>
+
+    <!-- 2️⃣ 防散配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 防散技巧（增加粘性）</div>
+    <div class="recipe-box">
+      • 煮饭时加5%的糯米（如500g大米+25g糯米），增加米饭粘性。<br>
+      • 调味时多加5g芝麻油，让米饭更润。<br>
+      • 捏饭团前手掌沾淡盐水（盐:水=1:10），防粘且调味。
+    </div>
+
+    <!-- 3️⃣ 馅料配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 三款热门馅料（每10个饭团量）</div>
+    <div class="recipe-box">
+      <div><strong>🐟 金枪鱼馅：</strong>金枪鱼罐头（沥油）100g + 蛋黄酱30g + 黑胡椒粉少许。</div>
+      <div><strong>🥚 蛋黄肉松馅：</strong>熟咸蛋黄2个压碎 + 肉松50g + 沙拉酱15g。</div>
+      <div><strong>🌶️ 泡菜馅：</strong>韩式泡菜切碎60g + 芝麻油3g + 糖2g。</div>
+    </div>
+
+    <!-- 4️⃣ 批量方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 批量预制方案（50个/100个）</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+      <div><strong>50个（约4kg米饭）：</strong>煮2.2kg米，调味后保温。馅料提前备好。捏团每批5个，放在托盘上盖湿布防干。</div>
+      <div><strong>100个：</strong>分两锅煮饭，两人协作，一人捏球一人整形贴海苔。成品冷藏可放4小时。</div>
+    </div>
+
+    <!-- 5️⃣ 包装方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 海苔防潮与包装</div>
+    <div class="recipe-box">
+      • 饭团贴海苔后，用保鲜膜独立包裹（可保留4小时海苔脆度）。<br>
+      • 三角饭团专用袋（带封口），成本0.1元/个，防潮且易撕。<br>
+      • 外卖配送超过20分钟，建议不贴海苔，海苔单独包装，让顾客自己贴。
+    </div>
+
+    <!-- 6️⃣ 实战备注 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 沧林实战备注</div>
+    <div class="recipe-box" style="border-left-color:#2d6a4f">
+      • 饭团重量控制在80-100g，太大不好入口。<br>
+      • 出餐时可用电饭煲保温或微波炉加热10秒，口感更佳。<br>
+      • 定价组合：单个3元，2个5元，5个10元，引导多买。<br>
+      • 学校摊位可推出“早餐饭团+豆浆”套餐，售价6元。<br>
+      • 饭团上可撒白芝麻或海苔碎，提升颜值。<br>
+      • 建议与紫菜卷共用菜单板，注明“饭团系列 即做即食”。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整子卡包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" href="#"><span style="font-size:16px">🍙</span><span style="flex:1">紫菜卷（母卡 ZS_004）</span><span>→</span></a>
+    <a class="rel-item" href="#"><span style="font-size:16px">🍗</span><span style="flex:1">原味黄金炸鸡（母卡 HZ_001）</span><span>→</span></a>
+    <a class="rel-item" href="#"><span style="font-size:16px">🥕</span><span style="flex:1">韩式酸甜脆萝卜（配菜 PC_001）</span><span>→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 母卡包含完整米饭调味、紫菜选择、成本利润等，建议搭配购买</div>
+</div>
+
+<!-- 咨询入口 -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>饭团塑形视频指导 · 馅料比例调整 · 包装选型</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1技术指导 · 成本优化 · 早餐套餐设计</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“饭团卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a;width:auto;padding:8px 20px">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 子卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+</script>
+</body>
+</html>

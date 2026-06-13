@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JL_021 韩式大酱（된장）— 传统酱料母卡</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f5f0eb;
+  color: #2c2c2c;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+.card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+.header { background: linear-gradient(135deg, #6b3a1a 0%, #8b5a3a 50%, #a07050 100%); padding: 32px 24px 24px; color: #fff; }
+.header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; line-height: 1.6; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+.section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 13px; font-weight: 600; color: #6b3a1a; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+.value-stmt { background: #f5ede4; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #6b3a1a; line-height: 1.7; text-align: center; }
+.bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+.bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; flex-shrink: 0; }
+.bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+.radar { display: flex; flex-direction: column; gap: 10px; }
+.radar-item { display: flex; align-items: center; gap: 10px; }
+.radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+.radar-item .bar { height: 100%; border-radius: 10px; }
+.radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #6b3a1a; }
+.bf5 { width: 100%; background: linear-gradient(90deg, #8b5a3a, #a07050); }
+.bf4 { width: 80%; background: linear-gradient(90deg, #8b5a3a, #a07050); }
+.bf3 { width: 60%; background: linear-gradient(90deg, #b09070, #c0a080); }
+.role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+.role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+.role-tag.active { background: #8b5a3a; color: #fff; box-shadow: 0 2px 8px rgba(139,90,58,0.3); }
+.family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #faf4ee; border-radius: 12px; }
+.family-tree .node { margin: 2px 0; }
+.family-tree .branch { color: #6b3a1a; font-weight: 600; }
+.family-tree .leaf { color: #666; padding-left: 24px; }
+.family-tree .highlight { color: #8b5a3a; font-weight: 600; padding-left: 24px; }
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.market-item { background: #f5ede4; border-radius: 10px; padding: 10px 12px; }
+.market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+.market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+.matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+.matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+.matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+.ql { position: absolute; font-size: 10px; color: #aaa; }
+.ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+.ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+.matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+.matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+.dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #a07050; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+.dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #6b3a1a; white-space: nowrap; transform: translateX(-50%); }
+.ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.ingredient-table th { background: #e0d4c8; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+.ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+.ingredient-table .amt { text-align: right; font-weight: 600; color: #6b3a1a; font-size: 12px; }
+.steps { list-style: none; counter-reset: step; }
+.steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #e8ddd0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #6b3a1a; }
+.pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin-top: 8px; }
+.pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; margin-bottom: 2px; }
+.pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+.cost-box { background: #f5ede4; border-radius: 12px; padding: 14px; }
+.cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.cost-row .cr-label { color: #555; }
+.cost-row .cr-value { font-weight: 600; color: #6b3a1a; }
+.cost-divider { border: none; border-top: 1px dashed #e8d0c0; margin: 6px 0; }
+.decision-box { background: #faf4ee; border-radius: 12px; padding: 16px; }
+.decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+.decision-box p:last-child { margin-bottom: 0; }
+.trend-box { background: linear-gradient(135deg, #f5ede4, #f8f4ef); border-radius: 12px; padding: 16px; }
+.trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trend-item:last-child { margin-bottom: 0; }
+.trend-year { font-size: 12px; font-weight: 700; color: #6b3a1a; width: 50px; flex-shrink: 0; }
+.trend-arrow { color: #bbb; }
+.trend-desc { font-size: 13px; color: #555; }
+.trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #6b3a1a; text-align: center; }
+.footer-brand { background: #6b3a1a; color: #fff; text-align: center; padding: 24px; }
+.footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+.footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+.footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">JL_021 · 韩式酱料 · 传统酱料母卡</div>
+    <h1>韩式大酱（된장）</h1>
+    <div class="subtitle">
+      韩餐基础发酵酱 · 쌈장和大酱汤的基底 · 自酿或采购双方案 · 卡售价¥9.9 · FoodIntel推荐：8.5/10
+    </div>
+    <div class="tags">
+      <span>🥘 된장</span>
+      <span>🫘 发酵酱</span>
+      <span>🥣 汤品基底</span>
+      <span>📦 建议采购成品</span>
+      <span>🧪 自酿60天</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      韩餐一切味道的底层 · 大酱汤·쌈장·排骨汤都靠它打底 · <br>
+      发酵越久越香 · 门店建议直接采购成品 · 自酿作为知识延伸
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★</div>
+      <div class="bomb-reason">
+        <strong>隐形的基底。</strong>大酱不像成品那样直接被客人评价，但它决定了所有汤酱类产品的最终品质。流量和传播性低（没人专门发朋友圈夸大酱），但复购5★——每道用到它的菜都离不开它。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf2"></div></div><span class="score">2</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf1"></div></div><span class="score">1</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">JL 韩式传统酱料体系</div>
+      <div class="node leaf">├─ JL_020 烤肉蘸酱（쌈장·本品为基底酱）</div>
+      <div class="node highlight">├─ JL_021 韩式大酱（된장）← 你在这里</div>
+      <div class="node leaf">├─ JL_022 韩式辣椒酱（고추장）</div>
+      <div class="node leaf" style="color:#aaa;">└─ KF系列汤类（大酱汤/排骨汤/部队锅·均以本酱为底）</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟 · 供应链稳定</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">8/10 · 基础必备</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">8/10 · 品牌多</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">10/10 · 通吃</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">2/10 · 采购即有</div></div>
+      <div class="market-item"><div class="m-value" style="color:#555;">创业门槛</div><div class="m-value">低 · 超市就能买</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 配方工艺</div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#6b3a1a;margin-bottom:6px;">🏪 门店方案 · 直接采购成品（推荐）</h4>
+    <table class="ingredient-table">
+      <tr><th>品牌</th><th>规格</th><th>参考价格</th><th>咸度</th><th>评价</th></tr>
+      <tr><td>清净园（CJ）</td><td>1kg/500g</td><td>~18元/500g</td><td>适中</td><td>⭐ 最推荐·大众化·品质稳定</td></tr>
+      <tr><td>小伙子（Sempio）</td><td>1kg/500g</td><td>~15元/500g</td><td>偏咸</td><td>性价比高·适合大批量用</td></tr>
+      <tr><td>禾昌（韩国传统）</td><td>500g</td><td>~25元/500g</td><td>偏淡</td><td>传统风味·适合高端店</td></tr>
+    </table>
+    <div style="font-size:12px;color:#888;margin-top:6px;margin-bottom:14px;">💡 采购建议：批量采购选小伙子（性价比高），高端店选禾昌。不要频繁换品牌——每换一次要重新调整食谱咸度。</div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#6b3a1a;margin-bottom:6px;">🧪 自酿工艺（知识延伸·不建议门店操作）</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量（10kg黄豆）</th><th>备注</th></tr>
+      <tr><td>黄豆</td><td class="amt">10kg</td><td>选非转基因·颗粒饱满</td></tr>
+      <tr><td>粗盐</td><td class="amt">2.5kg</td><td>天然海盐·无添加</td></tr>
+      <tr><td>纯净水</td><td class="amt">15L</td><td>浸泡+盐水用</td></tr>
+    </table>
+    <ol class="steps">
+      <li>黄豆洗净，浸泡12小时（夏天8小时），至豆子饱满无硬心</li>
+      <li>蒸锅蒸熟（大火2-3小时），用手指一捏即烂为标准</li>
+      <li>趁热捣碎（石臼或搅拌机），不捣太细——留一些颗粒感口感更好</li>
+      <li>捏成酱块（约拳头大小），表面沾干盐防霉</li>
+      <li>通风阴凉处晾晒60天以上——表面长出白色霉菌是正常发酵</li>
+      <li>清洗酱块表面霉菌，放入陶缸，加入盐水（水:盐=6:1）淹没酱块</li>
+      <li>密封，二次发酵30-45天——越久越香</li>
+      <li>过滤分离——液体就是韩式酱油（국간장），固体就是大酱（된장）</li>
+    </ol>
+    <div style="font-size:12px;color:#888;margin-top:6px;margin-bottom:6px;">⏱ 总周期：90-105天 · 出酱率：10kg黄豆→约12-15kg大酱+5-8L酱油</div>
+    <div style="font-size:12px;color:#b06040;font-weight:600;margin-bottom:10px;">⚠️ 门店不要自酿——周期长、场地需求大、品质不稳定，直接采购成品更划算。自酿适用于品牌故事/体验店展示。</div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#6b3a1a;margin:12px 0 6px;">🔥 大酱的应用（门店必备用法）</h4>
+    <table class="ingredient-table">
+      <tr><th>用途</th><th>用量参考</th><th>用法</th></tr>
+      <tr><td>大酱汤底</td><td>2大勺/人份</td><td>淘米水+大酱搅散+蔬菜+豆腐+蛤蜊</td></tr>
+      <tr><td>쌈장基底</td><td>80%比例</td><td>大酱4:辣椒酱1+辅料（见JL_020）</td></tr>
+      <tr><td>排骨汤调味</td><td>3大勺/锅</td><td>和辣椒酱1:1混合调底味</td></tr>
+      <tr><td>拌酱（쌈용）</td><td>直接使用</td><td>加香油+芝麻调稀即可</td></tr>
+    </table>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（6条）</div>
+      <div class="p-desc">
+        ① 大酱不能单独做蘸酱——太咸太稠，必须加香油+辅料调和（见JL_020）<br>
+        ② 不同品牌咸度差30%——换品牌必须重新测试调味比例<br>
+        ③ 大酱汤必须用淘米水——清水做的大酱汤风味差一半<br>
+        ④ 大酱不能高温久煮——煮久了发酵香气挥发，汤最后放酱<br>
+        ⑤ 开封后冷藏保存——常温存放会继续发酵变酸<br>
+        ⑥ 批量买大桶装（3kg以上）更划算——大酱保质期长达1年
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 商业决策</div>
+    <div class="cost-box" style="margin-bottom:14px;">
+      <div class="cost-row"><span class="cr-label">采购成本（成品）</span><span class="cr-value">~15-25元/500g</span></div>
+      <div class="cost-row"><span class="cr-label">自酿成本</span><span class="cr-value">~8-10元/500g</span></div>
+      <div class="cost-row"><span class="cr-label">自酿周期</span><span class="cr-value">90-105天</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label">门店建议方案</span><span class="cr-value">采购成品</span></div>
+      <div class="cost-row"><span class="cr-label">月用量（烤肉店）</span><span class="cr-value">~3-5kg</span></div>
+      <div class="cost-row"><span class="cr-label">月成本</span><span class="cr-value">~90-250元</span></div>
+    </div>
+    <div class="decision-box">
+      <p><strong>✅ 适合场景：</strong>所有韩式餐厅必备。大酱汤、排骨汤、쌈장、部队锅——没有大酱这些菜都做不了。属于"不直接卖但绝不能缺"的产品。</p>
+      <p><strong>📌 采购策略：</strong>基础用量买小伙子的1kg装，高端场景用清净园或禾昌。两档备货——后厨用小伙子的平价款，食客自助加酱的桌上配清净园。</p>
+      <p><strong>⚠️ 风险：</strong>最大风险是买到假货或劣质品——有些国产仿韩式大酱没有经过充分发酵，只有咸味没有酱香。认准韩国原装进口的 CJ（清净园）或 Sempio（小伙子）品牌。</p>
+      <p><strong>🎯 关联推荐：</strong>用本酱制作쌈장见 JL_020，做大酱汤见 KF_003 大酱汤卡片。如果要自制辣椒酱基底搭配，见 JL_022 韩式辣椒酱。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑦ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">韩国进口品牌主导市场</span></div>
+      <div class="trend-item"><span class="trend-year">2023</span><span class="trend-arrow">→</span><span class="trend-desc">国产高品质发酵酱品牌开始崛起</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">韩式大酱在非韩餐场景（中式火锅蘸料/日式料理）的应用扩展</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">功能性大酱（低盐/高蛋白/添加益生菌）产品出现</span></div>
+      <div class="trend-verdict">大酱不会消失——它会从"韩式传统酱"变成"中式调味新选择"</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div>
+    <div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links">
+      <span>📢 公众号：沧林食品技术</span>
+      <span>💬 微信：canglin1985</span>
+    </div>
+    <div class="fb-series">韩式传统酱料 · JL_021 韩式大酱（된장）</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>MP_002 梅菜扣肉包 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#e8dfd5;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 顶部评级 ===== */
+.rating-bar{background:linear-gradient(135deg,#1e3a2f,#2d4e3f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+/* 付费锁定区 */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥟 梅菜扣肉包</h1>
+  <div style="font-size:12px;color:#b5aaa0">包子 · 客家风味 · 刚需品类</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">7.9</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">B+级项目</span>
+  </div>
+  <div class="r-tagline">刚需早餐赛道，核心门槛是馅料配方和出餐速度，不是皮是怎么擀的。</div>
+  <div class="r-tags">
+    <span>🔥 热度中等</span>
+    <span>💰 投资2000+</span>
+    <span>👤 1-2人可做</span>
+    <span>🔄 复购稳定</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★☆☆</div><div class="val">中等稳定</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">早餐刚需</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">2000+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★★☆</div><div class="val">馅料是关键</div></div>
+    <div class="radar-item"><div class="label">📈 利润</div><div class="stars">★★★☆☆</div><div class="val">薄利多销</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 新手摆摊 · 早餐刚需</div>
+      <div class="fit-item fit-yes">✅ 社区门口/地铁口出摊</div>
+      <div class="fit-item fit-yes">✅ 中老年经营者</div>
+      <div class="fit-item fit-yes">✅ 夫妻档</div>
+      <div class="fit-item fit-yes">✅ 兼职副业</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 拒绝早起</div>
+      <div class="fit-item fit-no">❌ 追求单笔高毛利</div>
+      <div class="fit-item fit-no">❌ 抗拒备料流程</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：热乎 + 便宜管饱 + 不踩雷的口味</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>梅菜扣肉包（利润款）</span><span class="v">毛利约60%</span></div>
+    <div class="logic-item"><span>鲜肉/素菜包（引流款）</span><span class="v">毛利50-60%</span></div>
+    <div class="logic-item"><span>饮品+茶叶蛋</span><span class="v">客单价拉高30%</span></div>
+    <div class="logic-item"><span>批量采购预制馅料</span><span class="v">降本15%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>推套餐：包子+豆浆+茶叶蛋 组合定价</span><span class="v"></span></div>
+    <div class="logic-item"><span>增加整盒装（6/10个装盒）家庭客买整盒</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>馒头/素菜包保本价出售 → 当天客流吃到即转化</span><span class="v"></span></div>
+    <div class="logic-item"><span>集章卡：买5送1</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥500-1000</div><div class="m-sub">4-6h出摊</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥4500-8000</div><div class="m-sub">出摊25天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">7-15天</div><div class="m-sub">含设备</div></div>
+  </div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">早餐刚需，无需教育市场，打开蒸笼热气自带流量</div>
+      <div class="t-item">复购稳定，社区/写字楼客群早餐高频</div>
+      <div class="t-item">供应链成熟，梅菜扣肉预制馅料/冻品可从批发市场采购（批发价约17元/份解冻后约出6-8个包子馅料）</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">毛利低于炸鸡/烧烤类小吃（包子综合毛利约55%，不如小吃70-80%）</div>
+      <div class="t-item">同质化严重，几乎每个早餐摊都有，差异化成本高</div>
+      <div class="t-item">旺季（秋冬）和淡季（酷暑）营收波动明显</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>中式包点刚需属性强，全国头部品牌巴比食品2025年末加盟门店已达5909家[reference:0]。下沉市场早餐摊竞争激烈但刚需稳定。<br>
+    <strong>未来判断：</strong>包子属于“不会暴富但能养家”的赛道。适合在细分口味上做差异化（如梅菜扣肉、酱肉、麻辣豆腐），不适合卖普通鲜肉包跟批发市场通货竞争。<br>
+    <strong>是否值得进入：是</strong>（前提：掌握一款有记忆点的馅料配方+低摊位费）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估（V5.1维度） ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★★☆</div><div style="font-size:10px;color:#5a4f44">同质化激烈</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★★☆</div><div style="font-size:10px;color:#5a4f44">7-20天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">发面发酵关键</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥200以内试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#D4A574">B+</span></div>
+</div>
+
+<!-- ===== 同赛道对比（带链接） ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th></tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🥟 梅菜扣肉包</td><td>★★★</td><td>★★★★</td><td>★★★</td><td>★★★★</td><td>B+</td><td><a href="#" style="color:#E8652D">#MP_002</a></td></tr>
+        <tr><td>🍗 原味黄金炸鸡</td><td>★★★</td><td>★★★</td><td>★★★★</td><td>★★★★</td><td>A-</td><td><a href="#" style="color:#D4A574">#HZ_001</a></td></tr>
+        <tr style="background:#f8f4ef"><td>🥩 香酥鸡排</td><td>★★</td><td>★★</td><td>★★★</td><td>★★★</td><td>B+</td><td><a href="#" style="color:#5a8f3c">#HZ_005</a></td></tr>
+        <tr><td>🫓 酱香饼</td><td>★</td><td>★★★</td><td>★★★</td><td>★★★</td><td>B</td><td><a href="#">#MP_001</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为已发布FoodIntelAI标准卡，可点击跳转</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>试做20个梅菜扣肉包，跑通和面→发面→包馅→蒸制全流程</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20人试吃，重点收集“咸淡/肉量/梅菜口感”反馈，调整馅料配比</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备80个包子），测试人流/定价/位置</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>根据出摊数据调整产品结构，加入豆浆/饮品，试推套餐</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘营收数据，决定是否长期经营或增加夜宵时段</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7摆摊首日能否卖出60+个包子 ② Day15复购率是否＞15% ③ Day30净利润是否≥¥4000<br>
+    <strong>🚪 退出标准：</strong>连续3天营收＜¥300 / 口味试吃好评率＜40% / 凌晨起不来连续2天延误出摊<br>
+    <strong>✅ 继续标准：</strong>周复购率＞20% / 毛利稳定在55%以上 / 顾客主动询问“明天还有没有梅菜扣肉包”
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（含证照成本） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：和面盆×2(¥50-100) · 蒸笼6-8层(¥150-300) · 蒸包炉(¥300-600) · 冰柜/冰箱(¥800-1500) · 操作台/面板(¥150-300) · 保温桶/保温箱(¥100-200) · 电子秤(¥30-50)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：三轮车(¥500-1500) · 折叠操作台(¥200-400) · 帐篷伞(¥150-300) · 折叠桌椅(¥100-200) · 招牌灯箱(¥50-150) · 价格牌(¥20-50)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：面粉25kg(¥60-80) · 酵母×5包(¥15-20) · 五花肉5kg(¥120-150) · 梅菜干2kg(¥20-30) · 调味料套(¥30-50) · 包装袋500个(¥30-50)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,000-3,000</strong>（已有三轮车，二手设备）</div>
+    <div><strong>💰 完整启动方案：¥3,500-5,500</strong>（含车+冰柜+全新设备）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案¥0-200（各地不同）· 办理时间1-3天 · 流动摊通常不强制营业执照，但需咨询当地城管</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">鲜肉包 · 香菇青菜包</span><span class="t-price">¥2-3/个</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">梅菜扣肉包 · 酱肉包</span><span class="t-price">¥3.5-5/个</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">早餐套餐（包子+豆浆+茶叶蛋）</span><span class="t-price">¥6-12</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★☆☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★☆☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★☆☆☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项，含政策/场地） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>城管突击检查，非许可区域禁止早高峰摆摊，多次违规可能扣车。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>冬季门口/地铁口早晨人流最旺但天冷备料早；夏季酷暑早高峰变早，必须凌晨4点前到，否则没客流。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>包子铺密度大，竞品多——没有差异化口味的摊位只能打价格战，利润被压缩到¥0.5-1元/个。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>发面不稳定——新手3-7天学不好发酵控温，发面失败导致包子发硬/皮厚/馅料塌陷，损失次日全部营收。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>当天卖不完的包子损耗率≥10%，扔了亏钱，留到第二天口感全崩还影响口碑。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>馅料没特色——梅菜扣肉的客家梅菜选错成发黄陈货，或者五花肉肥瘦比不对，顾客吃一次就转头隔壁。</div>
+</div>
+
+<!-- ===== 12 最终决策判断（原沧林判断） ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>启动资金极低（二手三轮+蒸笼2000元起步），早餐刚需自带客流，卖不完在工地区域也能半卖半送保本。<br>
+      <strong>❌ 为什么不值得做：</strong>如果竞品已经有两家以上的稳定包子摊且摊位费＞¥2000/月，利润会被压缩到¥2000-3000/月，不如打工。<br>
+      <strong>🔑 进入条件（满足任意3条）：</strong>① 社区/地铁口无同品质包子摊 ② 掌握差异化馅料配方（如梅菜扣肉/酱肉/辣味） ③ 摊位费＜¥1500/月 ④ 能坚持每天凌晨3点起床备料 ⑤ 已有熟客微信群预定。<br>
+      <strong>🚪 退出条件：</strong>① 连续2周日均营收＜¥350 ② 发面失败率＞20%无法解决 ③ 被城管罚款2次 ④ 尝试3种馅料仍无复购。<br>
+      <strong>🎯 最终判断：可进</strong> —— 属于“累但稳”的赛道，适合能吃苦的人，不适合追求“日入过千”的新手。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">梅菜处理：梅菜干泡发3h→淘洗3遍去沙→挤干水→切碎</span><div class="ps-verify">[验证点] 泡发后梅菜颜色应为深褐色发亮，不发黄（黄梅菜为陈货，带霉味），挤干后无水珠滴下</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">五花肉卤制：五花肉焯水去腥→糖色炒制上色→加香料卤制至软烂</span><div class="ps-verify">[验证点] 用筷子能轻松戳透肉皮，肥肉呈半透明状；卤汤滴在盘子上能挂壁</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">和面发酵：温水化酵母（35°C左右）→与面粉混合→揉至“三光”→醒发60-90分钟至2倍大</span><div class="ps-verify">[验证点] 面团按下去不回弹，内部蜂窝状；室温过低时用蒸锅加热水营造30°C环境发酵</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">包馅蒸制：排气揉面→揪剂擀皮→包馅18-24道褶→二次醒发15分钟→大火蒸12-15分钟</span><div class="ps-verify">[验证点] 揭盖后包子表皮光滑不塌陷，按压迅速回弹；掰开馅料色泽油亮不干柴</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整配比（精确到克）及翻车方案见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润（完整7项） ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本（包子面皮+馅）</span><span class="v">¥1.1-1.3/个</span></div>
+    <div class="recipe-line"><span class="k">包装成本（袋子/纸盒）</span><span class="v">¥0.05-0.10/个</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（燃料/水电）</span><span class="v">¥0.15-0.25/个</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥1.3-1.65/个</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥2.5～¥5/个</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">48%～68%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售180个（均价¥3.2）→ 日毛利约¥576，月净利约¥6,500-8,000（出摊25天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费锁定区，V5.1要求7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥68 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看所有配方、克数、变体和坑点</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 精确配方 (g · 商用版20个量)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>中筋面粉500g</span><span>酵母5g</span></div>
+      <div class="recipe-line"><span>温水260-280g（35°C）</span><span>白糖10g</span></div>
+      <div class="recipe-line"><span>五花肉300g（肥瘦比3:7）</span><span>梅菜干（泡发后）200g</span></div>
+      <div class="recipe-line"><span>生抽15ml · 老抽8ml</span><span>蚝油5g · 冰糖10g</span></div>
+    </div>
+    <!-- 2️⃣ 馅料克数表 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 馅料配比 (每100g生馅)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>五花肉丁60g</span><span>梅菜碎30g</span></div>
+      <div class="recipe-line"><span>卤肉原汤10g</span><span>姜末2g</span></div>
+      <div class="recipe-line"><span>胡椒粉0.5g</span><span>五香粉0.5g</span></div>
+    </div>
+    <!-- 3️⃣ 发面温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 发酵温度曲线</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>夏季：室温约30°C → 发酵50分钟</span></div>
+      <div class="recipe-line"><span>春秋：室温约20°C → 发酵90分钟 + 蒸锅保温醒发</span></div>
+      <div class="recipe-line"><span>冬季：室温约10°C → 烤箱/蒸锅保持30°C发酵120分钟</span></div>
+    </div>
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 批量SOP (100个/200个/400个)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>100个：面粉2.5kg · 五花肉1.5kg · 梅菜1kg · 耗时3h</span></div>
+      <div class="recipe-line"><span>200个：面粉5kg · 五花肉3kg · 梅菜2kg · 耗时5-6h</span></div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>包子发黄/表皮起泡：</strong>食用碱量过多/揉面过度→减碱量，醒发后再揉5分钟</div>
+      <div><strong>包子塌陷：</strong>二次醒发不足/蒸后立刻开盖→蒸完关火焖3分钟再开盖，二次醒发至少15分钟</div>
+      <div><strong>包子皮厚/馅少：</strong>揪剂克数不准→每个剂子40g固定，馅料25g，用电子秤核对</div>
+      <div><strong>馅料太干太柴：</strong>卤肉原汤不足/肉炒过火→保留卤肉原汤10g/100g馅，焖煮不猛火</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款变体 (辣味/酱香/素食)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🌶️ 辣味版：</strong>馅料中加入二荆条辣椒酱8g/100g，减白糖至5g → 适合南方/湖南客群</div>
+      <div><strong>🧄 酱香版：</strong>五花肉切丁爆香后加入黄豆酱10g/100g，不加老抽 → 酱香浓郁，适合北方客群</div>
+      <div><strong>🥬 素食版：</strong>五花肉换为香菇粒+豆腐干粒+梅菜量翻倍 → 毛利提升10%</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      当单日销量＞300个时：建议增加蒸汽发生器（提高蒸效率）、改用半成品预制冷冻生胚、使用和面机/压面机替代手工、雇用1-2名帮手。也可从“流动摊”转型为“社区早餐店+外卖”，复制多家摊位统一馅料配送。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品（同赛道+内部跳转） ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🥟</span><span class="r-name">酱肉包（变体专卡）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥛</span><span class="r-name">现磨豆浆·早餐搭售方案</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍳</span><span class="r-name">茶叶蛋·高毛利搭售</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>摆摊选址评估 · 馅料成本优化 · 发面失败诊断</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1出摊包答疑 · 本地化口味调整 · 规模化方案</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

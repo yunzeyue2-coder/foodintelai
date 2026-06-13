@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>孜然撒粉 · 炸鸡撒粉专卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.variant-bar{background:linear-gradient(90deg,#E8652D,#C0392B);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#C0392B;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#E8652D}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+tr:last-child td{border-bottom:none}
+.sauce-compare{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.sauce-item{padding:10px 12px;border-radius:10px;font-size:12px;display:flex;align-items:center;gap:8px}
+.sauce-item .s-icon{font-size:16px}
+.sauce-item .s-name{flex:1;font-weight:600;color:#3a322a}
+.sauce-item .s-ratio{color:#b5aaa0;font-size:10px}
+.sauce-main{background:#fef2ee;border:1px solid #fdd}
+.sauce-other{background:#f8f4ef}
+.crowd-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.crowd-card{padding:10px;border-radius:10px;text-align:center}
+.crowd-card .c-icon{font-size:20px;margin-bottom:2px}
+.crowd-card .c-name{font-size:11px;font-weight:600;color:#3a322a;margin-bottom:2px}
+.crowd-card .c-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.crowd-card .c-bar .fill{height:100%;border-radius:2px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#4a3f35;line-height:1.6}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:18px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer;border:none;width:100%}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #C0392B}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;margin-bottom:6px}
+.rel-item:active{background:#e8dfd5}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 子卡提示条 ===== -->
+<div class="variant-bar">
+  <span class="v-label">🌿 撒粉子卡 · ¥19</span>
+  <a class="v-link" href="#">← 母卡：原味黄金炸鸡（HZ_001）</a>
+</div>
+
+<!-- ===== 产品头部 ===== -->
+<div class="meta">
+  <h1>🌿 孜然撒粉</h1>
+  <div class="sub">新疆风味 · 孜然香浓 · 烤肉/炸鸡绝配</div>
+  <span class="price-tag">¥19 完整配方包</span>
+</div>
+
+<!-- ===== 与母卡差异总览 ===== -->
+<div class="section">
+  <div class="s-title">🔄 与母卡（HZ_001）差异总览</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">HZ_001 母卡（¥69）</div>
+      <div>完整韩式炸鸡项目体系：设备·成本·30天验证·赛道判断·核心工艺</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">FL_002 子卡（¥19）</div>
+      <div>孜然撒粉：干粉状·无需熬制·西域风味·男性/夜宵客群最爱<br>其余通用数据参照母卡</div>
+    </div>
+  </div>
+  <div class="badge">💡 本卡不含摆摊设备、验证路线等，请结合母卡使用。孜然撒粉适合与烤肉、炸鸡、薯条搭配。</div>
+</div>
+
+<!-- ===== 酱料定位 ===== -->
+<div class="section">
+  <div class="s-title">🎯 撒粉定位</div>
+  <div style="background:#f0f6ec;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;border-left:3px solid #5a8f3c">
+    <strong>为什么需要孜然撒粉？</strong><br>
+    • 中式烧烤灵魂风味，夜市摊主的“万能粉”，顾客认知度极高<br>
+    • 干粉状，无需任何加工，即撒即用，出餐速度极快<br>
+    • 与炸鸡、薯条、年糕、炸鲜奶等高度适配，一粉多用<br>
+    • 男性客群和夜宵场景的绝对主力，能显著提升点单率<br>
+    <strong>推荐组合：</strong>原味炸鸡 + 孜然撒粉 + 辣椒粉 —— 打造“夜市烧烤风”，男性客群复购极高
+  </div>
+</div>
+
+<!-- ===== 与主流撒粉对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 主流撒粉对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:400px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>撒粉</th><th>孜然浓度</th><th>男性偏好</th><th>外卖稳定性</th><th>成本/份</th><th>制作难度</th>   </tr</thead>
+      <tbody>
+        <tr><td>🌿 孜然撒粉（本卡）</td><td>★★★★★</td><td>★★★★★</td><td>★★★★★（干粉）</td><td>¥0.3-0.5</td><td>★☆☆☆☆（混合）</td> </tr
+        <tr style="background:#f8f4ef"><td>🌶️ 麻辣撒粉</td><td>★☆☆☆☆</td><td>★★★★☆</td><td>★★★★★</td><td>¥0.3-0.5</td><td>★☆☆☆☆</td> </tr
+        <tr><td>🧀 芝士撒粉（FL_001）</td><td>☆☆☆☆☆</td><td>★★☆☆☆</td><td>★★★☆☆</td><td>¥0.8-1.2</td><td>★☆☆☆☆</td> </tr
+        <tr style="background:#f8f4ef"><td>🍯 蜂蜜蒜香撒粉</td><td>☆☆☆☆☆</td><td>★★★☆☆</td><td>★★☆☆☆</td><td>¥0.6-0.9</td><td>★☆☆☆☆</td> </tr
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">✨ 孜然撒粉是成本最低、认知度最高的风味之一，夜市摊位必备。</div>
+</div>
+
+<!-- ===== 适合谁 / 不适合谁 ===== -->
+<div class="section">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#3a6b2e;margin-bottom:6px">🎯 适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 夜市、烧烤摊、炸鸡摊（男性客群多）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 想增加“中式烧烤风味”的炸鸡店</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 外卖场景（干粉配送不影响口感）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 成本敏感型摊主（每份成本仅0.3-0.5元）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px">✅ 零经验新手（混合即可，无需技术）</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#b53b3b;margin-bottom:6px">❌ 不适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 主客群为儿童/女性（孜然味接受度低于甜味）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 追求纯韩式风味（会破坏韩式感）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px">❌ 无法接受孜然香气（部分顾客觉得冲）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 客群画像 ===== -->
+<div class="section">
+  <div class="s-title">👥 核心客群</div>
+  <div class="crowd-grid">
+    <div class="crowd-card" style="background:#fef2ee"><div class="c-icon">👨</div><div class="c-name">20-45岁男性</div><div class="c-bar"><div class="fill" style="width:96%;background:#E8652D"></div></div><div style="font-size:9px">夜宵主力</div></div>
+    <div class="crowd-card" style="background:#fef6ec"><div class="c-icon">🍺</div><div class="c-name">烧烤啤酒客</div><div class="c-bar"><div class="fill" style="width:90%;background:#D4A574"></div></div><div style="font-size:9px">孜然是灵魂</div></div>
+    <div class="crowd-card" style="background:#f0f6ec"><div class="c-icon">🌙</div><div class="c-name">夜市夜宵族</div><div class="c-bar"><div class="fill" style="width:88%;background:#5a8f3c"></div></div><div style="font-size:9px">熟悉味道</div></div>
+    <div class="crowd-card" style="background:#eef2ff"><div class="c-icon">🇨🇳</div><div class="c-name">中式口味爱好者</div><div class="c-bar"><div class="fill" style="width:85%;background:#4f6ef7"></div></div><div style="font-size:9px">传统烧烤风</div></div>
+  </div>
+</div>
+
+<!-- ===== 赚钱逻辑（撒粉维度） ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>每份撒粉成本（自制）</span><span class="v">¥0.3-0.5</span></div>
+    <div class="logic-item"><span>每份撒粉成本（市售成品孜然粉）</span><span class="v">¥0.8-1.2</span></div>
+    <div class="logic-item"><span>自制每份节省</span><span class="v">¥0.5-0.7</span></div>
+    <div class="logic-item"><span>日售50份 · 月省利润</span><span class="v">¥750-1050</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>孜然炸鸡 + ¥1（风味升级）</span><span class="v"></span></div>
+    <div class="logic-item"><span>“孜然+辣椒”双拼撒粉 +¥1.5</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>买炸鸡送孜然撒粉小包，培养蘸粉习惯</span><span class="v"></span></div>
+    <div class="logic-item"><span>推出“孜然烤鸡翅”作为引流单品</span><span class="v"></span></div>
+  </div>
+</div>
+
+<!-- ===== 专属风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 孜然撒粉专属风险</div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">1️⃣</span><span>孜然品质差异大 — 陈年孜然香味淡，需采购当年新货</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">2️⃣</span><span>盐分不均 — 混合不均会导致第一勺极咸，后面淡</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">3️⃣</span><span>受潮结块 — 南方回南天或雨天，撒粉易结块，撒不均匀</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">4️⃣</span><span>孜然粒太大 — 未打粉的孜然粒会硌牙，影响口感</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">5️⃣</span><span>部分顾客觉得“有羊肉串味”与炸鸡不搭</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;font-size:12px"><span style="font-size:14px">6️⃣</span><span>外卖配送后易洒出，需密封小包装</span></div>
+</div>
+
+<!-- ===== 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>孜然撒粉是成本最低、受众最广的撒粉之一，制作简单（混合即可），每份成本仅0.3-0.5元。男性客群忠诚度高，适合夜宵档、烧烤摊、炸鸡摊。<br>
+      <strong>❌ 为什么不值得做：</strong>如果摊位主打韩式炸鸡且客群以女性、儿童为主，孜然味可能水土不服。且需要额外采购多种香料，小批量不划算。<br>
+      <strong>🔑 进入条件：</strong>① 摊位有大量男性客群或夜宵场景 ② 能采购到高品质孜然粒（自己打粉）或孜然粉 ③ 有密封罐保存撒粉防潮 ④ 愿意每周混合一次小批量。<br>
+      <strong>🚪 退出条件：</strong>连续2周日销量＜10份孜然味产品 / 顾客反馈“太冲”超过25% / 孜然原料大幅涨价。<br>
+      <strong>🎯 最终判断：可进</strong> —— 作为标配撒粉之一，与辣椒粉、甘梅粉形成基础三件套。尤其适合夜市、烧烤摊，与炸鸡组合能提升点单率。
+    </div>
+    <div class="j-tags"><span>#孜然撒粉</span><span>#中式烧烤</span><span>#男性客群</span><span>#低成本</span></div>
+  </div>
+</div>
+
+<!-- ===== 付费区：完整配方包（19元） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>孜然撒粉 · 完整配方包</h3>
+  <div class="p-sub">定价 ¥19 · 永久解锁 · 包含以下全部数据</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span>商用孜然撒粉标准配方（500g成品·精确到克）</div>
+    <div class="p-item"><span class="p-icon">✅</span>孜然品种推荐（新疆/进口）及打粉技巧</div>
+    <div class="p-item"><span class="p-icon">✅</span>盐和味精比例调节（太咸/太淡改法）</div>
+    <div class="p-item"><span class="p-icon">✅</span>防结块方案（加米粉/干燥剂）</div>
+    <div class="p-item"><span class="p-icon">✅</span>批量混合SOP（1kg/5kg）及密封保存方法</div>
+    <div class="p-item"><span class="p-icon">✅</span>每份炸鸡/薯条撒粉用量对照表（3g/5g/8g）</div>
+    <div class="p-item"><span class="p-icon">✅</span>变体方案：辣味孜然粉、五香孜然粉、孜然辣椒粉</div>
+    <div class="p-item"><span class="p-icon">✅</span>外卖专用小包装方案（独立小包/撒粉瓶）</div>
+    <div class="p-item"><span class="p-icon">✅</span>翻车修正表（太咸/太淡/香味不足/结块）</div>
+    <div class="p-item"><span class="p-icon">✅</span>成本利润测算表（自制vs市售）</div>
+  </div>
+  <div class="price-tag">¥19 <small>子卡 · 一次解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后发编号给客服，秒发完整版 / 或直接在此展开</div>
+
+  <!-- 解锁后显示内容 -->
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 标准配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 商用标准配方（每500g成品）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span class="k">熟孜然粉（新疆孜然打粉）</span><span class="v">200g</span></div>
+      <div class="recipe-line"><span class="k">小茴香粉</span><span class="v">20g</span></div>
+      <div class="recipe-line"><span class="k">味精（味粉）</span><span class="v">25g</span></div>
+      <div class="recipe-line"><span class="k">细盐</span><span class="v">15g</span></div>
+      <div class="recipe-line"><span class="k">大红袍花椒粉</span><span class="v">6g</span></div>
+      <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;font-size:11px">🔹 孜然香浓郁，微麻，咸鲜适口。<br>🔹 每500g可撒约100-150份炸鸡（每份3-5g）。</div>
+    </div>
+
+    <!-- 2️⃣ 孜然处理 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 孜然选择与打粉技巧</div>
+    <div class="recipe-box" style="border-left-color:#D4A574">
+      • <strong>品种：</strong>新疆孜然粒（颗粒饱满、香味浓）优于进口孜然。<br>
+      • <strong>炒制：</strong>孜然粒干锅小火炒3分钟至微黄出香，冷却后打粉。<br>
+      • <strong>打粉：</strong>用破壁机或研磨机打成中细粉，不宜过细（会失去颗粒感）。<br>
+      • <strong>保存：</strong>打好的孜然粉密封避光保存，1个月内用完风味最佳。
+    </div>
+
+    <!-- 3️⃣ 混合与防结块 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 混合步骤与防结块</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>步骤1</span><span class="v">所有粉料过筛（防结块）</span></div>
+      <div class="recipe-line"><span>步骤2</span><span class="v">按比例称重，放入密封袋或罐中</span></div>
+      <div class="recipe-line"><span>步骤3</span><span class="v">用力摇晃混合均匀（至少2分钟）</span></div>
+      <div style="margin-top:6px">防结块：可在罐中放入一小包食品干燥剂（硅胶包），或添加5g米粉吸湿。</div>
+    </div>
+
+    <!-- 4️⃣ 咸淡调节 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 咸淡/麻度调节表（每500g）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>太咸</span><span class="v">加孜然粉30g 或 味精10g</span></div>
+      <div class="recipe-line"><span>太淡</span><span class="v">加盐10g 或 味精8g</span></div>
+      <div class="recipe-line"><span>太麻（花椒味重）</span><span class="v">减花椒粉至3g，补小茴香粉3g</span></div>
+      <div class="recipe-line"><span>孜然味不足</span><span class="v">加孜然粉40g，减盐5g</span></div>
+    </div>
+
+    <!-- 5️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 变体方案</div>
+    <div class="recipe-box" style="border-left-color:#E8652D">
+      <strong>🌶️ 辣味孜然粉：</strong>加入辣椒面30g（二荆条粉），减盐5g。<br>
+      <strong>🌿 五香孜然粉：</strong>加入五香粉10g（八角、桂皮、丁香等）。<br>
+      <strong>🍋 柠香孜然粉：</strong>加入柠檬皮屑5g（烘干打粉），适合海鲜。
+    </div>
+
+    <!-- 6️⃣ 每份用量 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 每份撒粉用量对照表</div>
+    <div style="background:#f8f4ef;border-radius:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr;padding:6px 10px;background:#3a322a;color:#fff;font-size:10px"><span>份量</span><span>撒粉用量（g）</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>小份炸鸡（200g）</span><span>3g</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb"><span>中份炸鸡（300g）</span><span>5g</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 10px"><span>大份炸鸡（500g）</span><span>8g</span></div>
+    </div>
+
+    <!-- 7️⃣ 外卖小包装方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 外卖配送包装</div>
+    <div class="recipe-box" style="border-left-color:#5a8f3c">
+      • 使用2g/5g独立小包装防潮袋（网购食品级铝箔袋）。<br>
+      • 或使用带盖撒粉瓶（可重复使用），顾客自行撒粉。<br>
+      • 撒粉需单独密封，不可直接倒在炸鸡上配送（会受潮变软）。
+    </div>
+
+    <!-- 8️⃣ 批量预制SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">8️⃣ 批量预制（1kg/5kg）及保质期</div>
+    <div class="recipe-box">
+      <div><strong>1kg成品撒粉（约200份中份）</strong></div>
+      <div class="recipe-line"><span>孜然粉400g · 小茴香粉40g · 味精50g · 盐30g · 花椒粉12g</span></div>
+      <div style="margin-top:6px"><strong>操作：</strong>所有粉料混合过筛，装入密封罐或铝箔袋。<br>
+      <strong>常温保质期：</strong>3个月（密封避光）。<br>
+      <strong>开封后：</strong>建议1个月内用完，防潮结块。</div>
+    </div>
+
+    <!-- 9️⃣ 翻车修正表 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">9️⃣ 翻车修正表（每500g）</div>
+    <div style="background:#f8f4ef;border-radius:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:6px 10px;background:#3a322a;color:#fff;font-size:10px"><span>问题</span><span>修正方法</span><span>用量</span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>太咸</span><span>加孜然粉30g + 味精10g</span><span></span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb"><span>结块</span><span>过筛后加干燥剂，下次减少混合时的湿度</span><span></span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>香味不足</span><span>增加孜然粉比例，或使用新鲜打粉的孜然</span><span></span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px"><span>颗粒太粗</span><span>用料理机再打一遍，过筛</span><span></span></div>
+    </div>
+
+    <!-- 🔟 成本利润 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">🔟 成本利润测算（每份中份炸鸡）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>撒粉成本（自制）</span><span class="v">¥0.35</span></div>
+      <div class="recipe-line"><span>撒粉成本（市售成品孜然撒粉）</span><span class="v">¥0.8-1.2</span></div>
+      <div class="recipe-line"><span>每份节省</span><span class="v">¥0.45-0.85</span></div>
+      <div class="recipe-line"><span>日售50份，月省利润</span><span class="v">¥675-1275</span></div>
+      <div class="recipe-line"><span>售价溢价（升级孜然口味）</span><span class="v">+¥1</span></div>
+      <div class="recipe-line"><span>月增利润（升级费）</span><span class="v">¥1500（50份×¥1×30天）</span></div>
+      <div class="badge" style="margin-top:6px">💡 孜然撒粉成本极低，是提升男性客群复购的利器，强烈建议作为基础撒粉。</div>
+    </div>
+
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <a class="rel-item" href="#"><span class="r-emoji">🍗</span><span class="r-name">原味黄金炸鸡（母卡·完整项目）</span><span class="r-arrow">→</span></a>
+  <a class="rel-item" href="#"><span class="r-emoji">🌶️</span><span class="r-name">红辣椒撒粉（FL_003）</span><span class="r-arrow">→</span></a>
+  <a class="rel-item" href="#"><span class="r-emoji">🍠</span><span class="r-name">甘梅地瓜条（小吃）</span><span class="r-arrow">→</span></a>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 子卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+</script>
+
+
+<!-- ===== 咨询入口 ===== -->
+<div class="section">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center;font-size:12px;color:#5a4f44">
+    <div><strong>📌 咨询场景：</strong>摆摊选址评估 · 成本优化 · 翻车远程诊断</div>
+    <div style="margin-top:6px"><strong>📱 联系方式：</strong>微信 canglin1985（备注卡号）</div>
+    <a style="display:inline-block;margin-top:8px;padding:8px 20px;background:#3a322a;color:#fff;border-radius:8px;text-decoration:none;font-size:12px" href="javascript:void(0)" onclick="copyWx()">📲 加微信咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 决策先于工艺 · 沧林食品工作站</div>
+</div>
+
+<script>
+document.getElementById('unlockBtn')&&document.getElementById('unlockBtn').addEventListener('click',function(){var e=document.getElementById('payContent');e&&(e.classList.toggle('show'),this.textContent=this.textContent.indexOf('点击解锁')>=0?'收起完整出摊包':'点击解锁全部内容')});
+function copyWx(){var e=document.createElement('textarea');e.value='canglin1985';document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e);alert('✅ 微信号已复制：canglin1985');}
+</script>
+
+</body>
+</html>

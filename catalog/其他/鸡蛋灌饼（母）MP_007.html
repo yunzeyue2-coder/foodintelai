@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>MP_007 鸡蛋灌饼 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#e8dfd5;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#1e3a2f,#2d4e3f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥚 鸡蛋灌饼</h1>
+  <div style="font-size:12px;color:#b5aaa0">灌饼 · 酱香饼 · 街头早餐之王</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.6</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">技术型小吃，核心壁垒是“灌”的功夫和酱料，饼胚不是关键。</div>
+  <div class="r-tags">
+    <span>🔥 热度极高</span>
+    <span>💰 投资2000+</span>
+    <span>👤 1人可做</span>
+    <span>🔄 复购高</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">国民早餐</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">酱料+灌蛋记忆点</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★☆☆☆</div><div class="val">2000+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">灌蛋手法需练</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">加料毛利高</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 有耐心练手法的新手</div>
+      <div class="fit-item fit-yes">✅ 学校/写字楼/地铁口</div>
+      <div class="fit-item fit-yes">✅ 早餐+夜宵兼营</div>
+      <div class="fit-item fit-yes">✅ 夫妻档</div>
+      <div class="fit-item fit-yes">✅ 想做技术差异化</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 拒绝早起</div>
+      <div class="fit-item fit-no">❌ 不想练灌蛋技术</div>
+      <div class="fit-item fit-no">❌ 追求极速出餐</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：饼皮酥脆 + 鸡蛋均匀灌入每一层 + 酱香浓郁</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>基础鸡蛋灌饼</span><span class="v">毛利60%</span></div>
+    <div class="logic-item"><span>加料：火腿/里脊/培根/肉松/生菜</span><span class="v">毛利70-85%</span></div>
+    <div class="logic-item"><span>秘制甜面酱/辣酱</span><span class="v">拉高复购</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>推“豪华灌饼”：饼+双蛋+里脊+火腿+肉松</span><span class="v">客单价12-18元</span></div>
+    <div class="logic-item"><span>加杯豆浆/绿豆沙</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>每月一款限定酱料（如：藤椒/蒜蓉辣酱）</span><span class="v"></span></div>
+    <div class="logic-item"><span>集章卡：买5送1</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥700-1400</div><div class="m-sub">4-6h出摊</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥6000-10000</div><div class="m-sub">出摊25天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">6-12天</div><div class="m-sub">含设备</div></div>
+  </div>
+</div>
+
+<!-- ===== 05 赛道判断（≥150字） ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">认知度极高，几乎不用解释卖什么</div>
+      <div class="t-item">鸡蛋灌饼比手抓饼更有“现场制作”感，灌蛋过程吸引人</div>
+      <div class="t-item">酱料和灌蛋技术形成天然差异化，普通摊位做不好</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">同质化严重，但灌蛋技术好的人少</div>
+      <div class="t-item">出餐速度比手抓饼慢（需灌蛋，约1-1.5分钟/个）</div>
+      <div class="t-item">学习周期稍长（灌蛋手法需练3-7天）</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>鸡蛋灌饼摊位数低于手抓饼，但品质参差不齐。很多摊位的鸡蛋是“抹”在饼上而不是灌进去，导致口感差。<br>
+    <strong>未来判断：</strong>真正能“灌”进去的鸡蛋灌饼依然有市场红利。消费者愿意为“层次分明、每口都有蛋”的灌饼支付更高价格（6-8元基础价）。<br>
+    <strong>是否值得进入：是</strong>（前提：掌握油酥起层和灌蛋手法，且自熬酱料）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★★☆</div><div style="font-size:10px;color:#5a4f44">激烈但技术壁垒</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">3-7天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">灌蛋易破</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥200试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- ===== 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th>}</thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🥚 鸡蛋灌饼</th><td>★★<td>★★★<td>★★★★<td>★★★★<td>A-<td><a href="#" style="color:#E8652D">#MP_007</a></tr>
+        <tr><td>🫓 手抓饼</th><td>★★<td>★★<td>★★★★<td>★★★★★<td>A-<td><a href="#" style="color:#D4A574">#MP_006</a></tr>
+        <tr style="background:#f8f4ef"><td>🥞 煎饼果子</th><td>★★<td>★★★<td>★★★<td>★★★★<td>B+<td><a href="#" style="color:#5a8f3c">#MP_003</a></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为已发布FoodIntelAI标准卡</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>学做油酥面团，试擀饼胚，练习“中间厚四周薄”</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>练习灌蛋：饼煎至鼓起时用筷子戳破灌入蛋液，做20个不破不漏</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>自熬酱料（甜面酱+辣酱），邀请20人盲测，确定最终酱料</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>第一次摆摊（预备50个饼），测试灌蛋速度及顾客反馈</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘：日均销量、灌蛋成功率、酱料好评率，决定是否长期</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7灌蛋成功率＞80% ② Day15首日能否卖出40+个 ③ Day30复购率＞20%<br>
+    <strong>🚪 退出标准：</strong>连续5天日均＜30个 / 灌蛋破漏率＞30% / 酱料好评率＜40%<br>
+    <strong>✅ 继续标准：</strong>灌蛋成功率＞95% / 加料占比＞50% / 顾客主动夸“蛋灌得匀”
+  </div>
+</div>
+
+<!-- ===== 08 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：电扒炉/煎饼炉(¥300-600) · 操作台(¥200-400) · 冰柜(¥600-1000) · 酱料挤压瓶×4(¥20-40) · 擀面杖(¥10-20) · 不锈钢盆×3(¥30-60) · 电子秤(¥30-50)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：三轮车/早餐车(¥500-1500) · 折叠操作台(¥150-300) · 帐篷伞(¥150-300) · 招牌灯箱(¥80-150) · 价格牌(¥20-50)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：中筋面粉10kg(¥30-40) · 食用油5L(¥40-60) · 鸡蛋200个(¥120-150) · 甜面酱/黄豆酱(¥20-30) · 生菜/火腿/里脊肉(¥150-200) · 包装纸袋200个(¥30-50)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥1,800-2,800</strong>（已有三轮车，二手扒炉）</div>
+    <div><strong>💰 完整启动方案：¥3,000-4,500</strong>（含冰柜+全新设备）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案¥0-200 · 办理时间1-3天</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">基础鸡蛋灌饼（加生菜+酱）</span><span class="t-price">¥5-6</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">加火腿/里脊/培根/肉松/烤肠</span><span class="t-price">¥7-12</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">灌饼+豆浆/绿豆沙+茶叶蛋</span><span class="t-price">¥10-16</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★☆☆☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>早餐车需审批，占道经营可能被扣车；油烟问题可能被投诉。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>冬季早高峰天冷需早起；学校门口寒暑假客流腰斩。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>灌蛋技术不稳定——新手容易戳破饼皮，蛋液漏出，成品难看且口感差。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>同质化竞争——如果酱料普通且灌蛋手法不精湛，顾客尝不出区别。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>出餐速度慢——高峰期1.5分钟/个，排队超过5分钟就会流失顾客。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>饼胚品质不稳定——面团醒发时间不足会导致饼不鼓，无法灌蛋。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>技术型小吃，一旦灌蛋手法熟练，就能形成差异化。启动资金低，利润可观，顾客对“灌进去的蛋”有天然好感。<br>
+      <strong>❌ 为什么不值得做：</strong>如果没耐心练灌蛋（至少练200个饼），出品和普通煎饼没区别。出餐速度慢，单人高峰期容易崩。<br>
+      <strong>🔑 进入条件：</strong>① 愿意花一周练灌蛋技术 ② 能自熬一款特色酱料 ③ 摊位周围500m无优质灌饼摊 ④ 摊位费＜¥1500/月。<br>
+      <strong>🚪 退出条件：</strong>① 连续2周日均＜35个 ② 灌蛋破漏率＞20% ③ 顾客反馈“蛋没灌进去”占比＞30%。<br>
+      <strong>🎯 最终判断：可进</strong> —— 适合愿意打磨手艺的人，不适合只想赚快钱的。灌蛋技术是护城河，但需要前期投入练习。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点·源自和面技术+各种饼文件） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">和面制油酥：面粉+盐+温水揉成光滑面团，醒30分钟；另调油酥（面粉+热油）</span><div class="ps-verify">[验证点] 面团表面光滑不粘手，按压有弹性；油酥呈浓稠酸奶状</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">包酥擀饼：面团分剂，包入油酥，收口压扁，擀成直径15cm圆饼（中间厚边缘薄）</span><div class="ps-verify">[验证点] 擀好的饼对着光看，中间略厚，边缘均匀；油酥不外露</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">煎制灌蛋：扒炉180°C放饼，煎至底面微黄翻面，饼身鼓起大泡时用筷子戳孔灌入蛋液</span><div class="ps-verify">[验证点] 饼鼓起高度≥1cm，筷子戳孔不破底；蛋液灌入后迅速铺满内部，不溢出</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">刷酱加料：煎至两面金黄，刷自熬甜面酱/辣酱，加生菜、火腿等，卷起出餐</span><div class="ps-verify">[验证点] 酱料均匀薄涂，卷起后两端不漏酱；切开断面可见蛋层均匀分布在饼内</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整商用配方（精确克数）及酱料配比见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">面饼+油酥成本</span><span class="v">¥0.6-0.8/个</span></div>
+    <div class="recipe-line"><span class="k">鸡蛋成本</span><span class="v">¥0.6-0.8/个</span></div>
+    <div class="recipe-line"><span class="k">酱料+生菜成本</span><span class="v">¥0.3-0.5/个</span></div>
+    <div class="recipe-line"><span class="k">加料成本（火腿/里脊）</span><span class="v">¥1.0-2.0/个</span></div>
+    <div class="recipe-line"><span class="k">包装成本</span><span class="v">¥0.2-0.3/个</span></div>
+    <div class="recipe-line"><span class="k">单份总成本（基础）</span><span class="v">¥1.7-2.4/个（加料后¥3-4.5）</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥5～¥15/个</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">55%～75%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售90个（均价¥8）→ 日毛利约¥500，月净利约¥7,000-9,000（出摊25天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区·7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥68 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看商用甜面酱配方、灌蛋手法详解、加料成本对照表</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 · 饼胚 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用饼胚配方 (20个量)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>中筋面粉500g</span><span>盐5g</span></div>
+      <div class="recipe-line"><span>温水（50°C）300g</span><span>食用油15g</span></div>
+      <div class="recipe-line"><span>油酥：面粉50g + 热油50g</span><span>醒面30分钟</span></div>
+    </div>
+    <!-- 2️⃣ 自熬甜面酱 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 商用甜面酱配方 (出500g)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>市售甜面酱200g</span><span>黄豆酱100g</span></div>
+      <div class="recipe-line"><span>番茄沙司50g</span><span>白糖30g</span></div>
+      <div class="recipe-line"><span>水100g</span><span>蒜末10g</span></div>
+      <div class="recipe-line"><span>小火熬10分钟至粘稠</span><span>晾凉备用</span></div>
+    </div>
+    <!-- 3️⃣ 辣酱配方 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 香辣酱配方</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>郫县豆瓣酱50g（剁碎）</span><span>辣椒粉20g</span></div>
+      <div class="recipe-line"><span>蒜末20g · 姜末10g</span><span>五香粉3g</span></div>
+      <div class="recipe-line"><span>食用油100g炒香</span><span>加水150g熬5分钟</span></div>
+    </div>
+    <!-- 4️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 扒炉温度曲线</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>预热：180°C（手距10cm热感明显）</span></div>
+      <div class="recipe-line"><span>下饼：170-180°C，每面40秒后翻面</span></div>
+      <div class="recipe-line"><span>灌蛋后：160°C，煎1分钟至蛋凝固</span></div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>饼不鼓泡：</strong>油酥太少/面皮太厚→每张饼包油酥15g，擀成中间厚边缘薄；醒面时间不足→至少醒30分钟</div>
+      <div><strong>灌蛋漏液：</strong>戳孔太大/饼皮已破→用筷子尖戳一个小孔，蛋液分两次灌入；饼翻面后马上灌</div>
+      <div><strong>鸡蛋不熟：</strong>灌蛋后火太大→转160°C慢煎1分钟，可盖盖焖30秒</div>
+      <div><strong>饼发硬：</strong>面团水太少→面粉:水比例2:1.2；煎制时间过长→每面不超过50秒</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 4款变体</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🌿 菠菜灌饼：</strong>和面时加菠菜汁（替代等量水），绿色饼皮吸引儿童</div>
+      <div><strong>🧀 芝士灌饼：</strong>灌蛋后撒马苏里拉芝士，加热至拉丝，售价+3元</div>
+      <div><strong>🌶️ 麻辣灌饼：</strong>刷辣酱+撒花椒粉+孜然粉，迎合重口味</div>
+      <div><strong>🥬 全素灌饼：</strong>不加肉，双份生菜+黄瓜丝+土豆丝，素食者专供</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      当单日销量＞120个时：建议增加第二台扒炉，提前预制饼胚（冷藏保存24小时），招募一名帮工负责加料和收银。可扩展为“灌饼+烤冷面”双品类，摊薄摊位费。若做外卖，需将酱料单独包装，避免饼皮变软。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🫓</span><span class="r-name">手抓饼·同品类对比</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥛</span><span class="r-name">现磨豆浆·早餐搭售</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍳</span><span class="r-name">茶叶蛋·高毛利搭售</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>灌蛋手法远程指导 · 酱料调试 · 摊位选址评估</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1技术答疑 · 出餐效率提升 · 成本优化</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

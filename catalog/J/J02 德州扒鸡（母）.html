@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>J02 德州扒鸡 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.prod-header{padding:18px 18px 10px;text-align:center;background:#faf8f5}
+.prod-header .ph-name{font-size:22px;font-weight:800;color:#3a2a1a;letter-spacing:1px}
+.prod-header .ph-sub{font-size:11px;color:#b5aaa0;margin-top:2px;font-weight:400;letter-spacing:2px}
+.rating-bar{background:linear-gradient(135deg,#3a2a1a,#2a1a0a);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}.mc-green .m-val{color:#5a8f3c}
+.eval-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.eval-item{padding:12px 10px;border-radius:10px;text-align:center;background:#f8f4ef}
+.eval-item .ev-label{font-size:10px;color:#7a7269;margin-bottom:4px}
+.eval-item .ev-stars{font-size:14px}
+.eval-item .ev-desc{font-size:10px;color:#5a4f44;margin-top:3px}
+.comp-row{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid #f0ece6;font-size:12px}
+.comp-row:last-child{border-bottom:none}
+.comp-row .c-score{width:28px;height:20px;border-radius:4px;background:#f5ede5;font-weight:700;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.comp-row .c-name{flex:1;color:#3a322a}
+.comp-row .c-note{color:#b5aaa0;font-size:10px}
+.comp-score-a{background:#e8f0e0;color:#3a6b2e}
+.comp-score-b{background:#fef6ec;color:#D4A574}
+.comp-score-c{background:#fdf2ee;color:#b53b3b}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}.track-bad .t-h{color:#C0392B}
+.device-list{background:#f8f4ef;border-radius:10px;padding:12px;margin:6px 0}
+.device-item{display:flex;justify-content:space-between;font-size:11px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.device-item:last-child{border-bottom:none}
+.device-item .d-name{font-weight:500}
+.device-item .d-price{color:#C0392B;font-weight:600}
+.device-sum{font-size:11px;font-weight:700;text-align:right;padding:8px 0 0;color:#3a322a;border-top:1px solid #e0d8ce}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.proc-card{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:8px}
+.proc-card .pc-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.proc-card .pc-desc{font-size:11px;color:#5a4f44;line-height:1.7}
+.cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cost-item{padding:10px;border-radius:10px;text-align:center;background:#f8f4ef}
+.cost-item .c-label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.cost-item .c-val{font-size:14px;font-weight:700;color:#3a322a}
+.cost-item .c-sub{font-size:9px;color:#b5aaa0;margin-top:1px}
+.cost-highlight{color:#C0392B!important}
+.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pack-item{background:#f8f4ef;border-radius:10px;padding:10px;font-size:11px;color:#5a4f44;line-height:1.5}
+.pack-item .p-icon{font-size:16px;margin-bottom:2px}
+.pack-item .p-title{font-weight:700;color:#3a322a;margin-bottom:2px}
+.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.rel-item{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;font-size:11px;color:#3a322a}
+.rel-item .r-emoji{font-size:14px}
+.rel-item .r-name{flex:1;font-weight:500}
+.rel-item .r-arrow{color:#b5aaa0;font-size:10px}
+.consult-box{background:#f8f4ef;border-radius:12px;padding:16px;margin:0 18px 16px;border:1px solid #eee5d8}
+.consult-box .c-head{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.consult-box .c-desc{font-size:11px;color:#7a7269;margin-bottom:10px}
+.consult-box .c-wx{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-radius:8px;font-size:12px;font-weight:600;color:#3a322a;cursor:pointer;justify-content:center;border:1px solid #D4A574}
+.consult-box .c-copy{font-size:9px;color:#b5aaa0;text-align:center;margin-top:4px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#faf8f5,#f5ede5);text-align:center;border-top:2px dashed #ddd4ca}
+.pay-area .lock-icon{font-size:28px;margin-bottom:4px}
+.pay-area h3{font-size:15px;color:#3a322a;margin-bottom:4px}
+.pay-area .p-sub{font-size:11px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;margin:0 auto 10px;max-width:360px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:6px;font-size:13px;line-height:1.6;padding:5px 0;color:#3a322a}
+.pay-area .p-item .p-icon{flex-shrink:0;color:#5a8f3c}
+.pay-area .price-tag{font-size:24px;font-weight:800;color:#C0392B;margin-bottom:8px}
+.pay-area .price-tag small{font-size:12px;font-weight:400;color:#7a7269}
+.pay-area .btn{display:inline-block;padding:12px 40px;background:#C0392B;color:#fff;border-radius:8px;text-decoration:none;font-size:14px;font-weight:700;transition:.15s}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:6px}
+.recipe-box{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px}
+.recipe-box .rb-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.recipe-line{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .rl-val{font-weight:600;color:#3a322a}
+.ftr{padding:16px 18px;text-align:center;background:#3a322a;color:#b5aaa0;font-size:11px;line-height:1.8}
+.ftr .f-brand{font-size:12px;font-weight:700;color:#e0d5ca;margin-bottom:2px}
+.ftr .f-tagline{font-size:10px;color:#988d80;margin-bottom:6px}
+.ftr .f-links{display:flex;justify-content:center;gap:12px;font-size:10px}
+.ftr .f-links a{color:#D4A574;text-decoration:none}
+.process-step{background:#fdfaf5;border-radius:12px;padding:14px;margin-bottom:8px;border-left:4px solid #D4A574}
+.process-step strong{color:#3a2a1a;font-size:12px}
+.process-step p{font-size:11px;color:#5a4f44;margin-top:4px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 产品名称 -->
+<div class="prod-header">
+  <div class="ph-name">德州扒鸡</div>
+  <div class="ph-sub">Dezhou Braised Chicken · 名品母卡</div>
+</div>
+
+<!-- 评分栏 -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score"><span class="r-num">8.4</span><span class="r-label">综合评分</span></div>
+    <span class="r-grade">A级项目</span>
+  </div>
+  <div class="r-tagline">百年名鸡 · 脱骨扒鸡 · 宴席送礼硬通货</div>
+  <div class="r-tags">
+    <span>🔥 热度高</span>
+    <span>💰 投资 8000~20000元</span>
+    <span>👥 2人起</span>
+    <span>🎁 送礼属性强</span>
+    <span>🐔 德州扒鸡</span>
+  </div>
+</div>
+
+<!-- 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">国民IP</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div><div class="val">节庆+口碑</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★☆☆☆</div><div class="val">中高门槛</div></div>
+    <div class="radar-item"><div class="label">📚 难度</div><div class="stars">★★★☆☆</div><div class="val">火候+造型</div></div>
+    <div class="radar-item high"><div class="label">💵 利润</div><div class="stars">★★★★☆</div><div class="val">高客单</div></div>
+    <div class="radar-item"><div class="label">📈 空间</div><div class="stars">★★★★☆</div><div class="val">礼盒/电商</div></div>
+  </div>
+</div>
+
+<!-- 适合谁 -->
+<div class="section">
+  <div class="s-title">🎯 适合谁</div>
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head">✅ 适合</div>
+      <div class="fit-item fit-yes">已有卤味店/熟食店，想增加扒鸡提升档次</div>
+      <div class="fit-item fit-yes">社区门店+节日礼盒备货（春节/中秋翻倍）</div>
+      <div class="fit-item fit-yes">懂火候的酱卤熟手，能掌握焖泡工艺</div>
+      <div class="fit-item fit-yes">有真空包装机+冷柜，能做常温礼盒邮寄</div>
+      <div class="fit-item fit-yes">区域特产店、高速服务区、旅游伴手礼场景</div>
+    </div>
+    <div class="fit-col"><div class="f-head">❌ 不适合</div>
+      <div class="fit-item fit-no">纯流动摊位（无固定加工/冷藏条件）</div>
+      <div class="fit-item fit-no">零卤味经验新手（建议先试鸡爪练手）</div>
+      <div class="fit-item fit-no">客群年轻化且单人消费为主（一只鸡难消耗）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧑‍🍳 顾客买什么</div>
+    <div class="logic-item"><span>一只成品德州扒鸡（五香脱骨）</span><span class="v">25~38元</span></div>
+    <div class="logic-item"><span>真空礼盒装（特产送礼）</span><span class="v">48~68元</span></div>
+    <div class="logic-item"><span>团购/企业福利订单</span><span class="v">20只起订</span></div>
+  </div>
+  <div class="logic-box">
+    <div class="l-title">📈 利润体系</div>
+    <div class="logic-item"><span>单只整鸡售价</span><span class="v">25~38元</span></div>
+    <div class="logic-item"><span>单只整鸡成本</span><span class="v">4~19元</span></div>
+    <div class="logic-item"><span>（三黄鸡小号350g）</span><span class="v">成本约3~4元/只</span></div>
+    <div class="logic-item"><span>（三黄鸡大号1.3kg）</span><span class="v">成本约14元/只</span></div>
+    <div class="logic-item"><span>（淘汰蛋鸡1.2kg）</span><span class="v">成本约15~18元/只</span></div>
+    <div class="logic-item"><span>单只毛利</span><span class="v">15~22元（55%~60%）</span></div>
+    <div class="logic-item"><span>日售30只</span><span class="v">日毛利450~660元</span></div>
+    <div class="logic-item"><span>日售50只</span><span class="v">日毛利750~1100元</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">750~1900元</div><div class="m-sub">30~50只计</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">9000~20000元</div><div class="m-sub">扣房租人工</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本</div><div class="m-val">1~2.5月</div><div class="m-sub">总投资1~2万</div></div>
+  </div>
+  <div style="font-size:11px;color:#7a7269;margin-top:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px">
+    <strong>💡 如何提高客单价：</strong>①真空扒鸡+特色礼盒+手提袋（溢价50~80%）②半只切配降低门槛→拼鸡副套餐 ③节前预售价+满赠活动。<br>
+    <strong>💡 如何提高复购：</strong>①会员储值送鸡 ②建立社区团购群，每周扒鸡盲盒 ③代寄快递服务（方便子女给父母送礼）
+  </div>
+</div>
+
+<!-- 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>德州扒鸡</strong>是中国三大名鸡之首，认知度0门槛，南北通吃。与普通烧鸡不同，德州扒鸡以“脱骨”为绝对壁垒——骨酥肉烂、抖腿即散。传统工艺通过长时焖泡实现，技术壁垒远高于普通卤鸡。<br><br>
+      <strong>优势：</strong>①老字号光环，自带信任 ②送礼硬通货，礼盒溢价空间大 ③脱骨属性形成产品护城河 ④可真空长保，电商潜力强。<br><br>
+      <strong>劣势：</strong>①正宗工艺耗时长（焖泡3-5h）②投资高于普通鸡副 ③日常复购不如鸡爪高频 ④劣质低价扒鸡扰乱市场。<br><br>
+      <strong>2026判断：</strong>扒鸡品类存量竞争但差异化机会明显。坚持纯五香、老汤工艺的店能形成区域口碑。推荐卤味熟手作为利润单品引入，不建议小白直接押注。
+    </div>
+  </div>
+</div>
+
+<!-- 项目评估 -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div class="eval-grid">
+    <div class="eval-item"><div class="ev-label">市场竞争</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">中等，区域品牌为主</div></div>
+    <div class="eval-item"><div class="ev-label">学习周期</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">火候+造型约3~4周</div></div>
+    <div class="eval-item"><div class="ev-label">操作容错度</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">焖泡时间影响脱骨</div></div>
+    <div class="eval-item"><div class="ev-label">最低验证资金</div><div class="ev-stars">★★☆☆☆</div><div class="ev-desc">设备+原料≈8000元</div></div>
+  </div>
+  <div style="text-align:center;margin-top:8px;padding:6px 12px;background:#fdf2ee;border-radius:6px;font-size:11px;font-weight:700;color:#C0392B">推荐等级：A 丨 熟手稳利单品，宴席送礼首选</div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div class="comp-row"><span class="c-score comp-score-a">8.4</span><span class="c-name">德州扒鸡（本卡）</span><span class="c-note">脱骨·送礼·五香经典</span></div>
+  <div class="comp-row"><span class="c-score comp-score-a">8.5</span><span class="c-name">五香整鸡（母卡）</span><span class="c-note">综合框架·多路线</span></div>
+  <div class="comp-row"><span class="c-score comp-score-a">8.2</span><span class="c-name">道口烧鸡</span><span class="c-note">先炸后焖·药膳工艺</span></div>
+  <div class="comp-row"><span class="c-score comp-score-b">7.8</span><span class="c-name">熏鸡</span><span class="c-note">烟熏风味·区域性强</span></div>
+  <div class="comp-row"><span class="c-score comp-score-b">7.0</span><span class="c-name">风干鸡</span><span class="c-note">周期长·特色小众</span></div>
+  <div style="margin-top:6px;font-size:9px;color:#b5aaa0;text-align:center">评分维度：投资回报30% · 执行难度20% · 品牌势能25% · 复购能力15% · 扩展空间10%</div>
+</div>
+
+<!-- 30天验证路线 -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">Day1~3 丨 试卤+造型</div><div class="t-item">买三黄鸡做造型（别腿别翅）</div><div class="t-item">按五香底料小火卤40min+焖泡3h</div><div class="t-item">测试血水去除度+脱骨效果</div></div>
+    <div class="track-box track-good"><div class="t-h">Day7 丨 盲测试吃</div><div class="t-item">卤3只送邻居/朋友圈试吃</div><div class="t-item">问卷打分“脱骨度&咸鲜比”</div><div class="t-item">调整香料盐度曲线</div></div>
+    <div class="track-box track-good"><div class="t-h">Day15 丨 试卖接龙</div><div class="t-item">社区群/宝妈群发起扒鸡团购（10只起）</div><div class="t-item">测试真空包装出货+成本利润验证</div><div class="t-item">计算单只耗时与人力</div></div>
+    <div class="track-box track-good"><div class="t-h">Day30 丨 复购模型</div><div class="t-item">首购顾客是否有二次下单</div><div class="t-item">评估是否增加礼盒/长期上架</div><div class="t-item">合计净利率是否>25%</div></div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;padding:8px 0 0;line-height:1.5">
+    <strong>退出标准：</strong>试吃反馈中“愿意购买”＜50% → 调整香料或焖泡时间；试卖7天内不足8单→暂缓。<br>
+    <strong>继续标准：</strong>复购率≥30%，单只毛利＞12元，可正式纳入产品线。
+  </div>
+</div>
+
+<!-- 设备清单 -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div class="device-list">
+    <div class="device-item"><span class="d-name">不锈钢卤桶（直径50cm）</span><span class="d-price">400~800元</span></div>
+    <div class="device-item"><span class="d-name">卡式炉/猛火灶+燃气</span><span class="d-price">200~450元</span></div>
+    <div class="device-item"><span class="d-name">操作台/腌渍台</span><span class="d-price">500~1000元</span></div>
+    <div class="device-item"><span class="d-name">真空包装机</span><span class="d-price">200~500元</span></div>
+    <div class="device-item"><span class="d-name">冷藏展示柜（>300L）</span><span class="d-price">1500~3000元</span></div>
+    <div class="device-item"><span class="d-name">电子秤/探针温度计/计时器</span><span class="d-price">100~200元</span></div>
+    <div class="device-item"><span class="d-name">不锈钢盆/漏勺/鸡造型钳</span><span class="d-price">150~250元</span></div>
+    <div class="device-item"><span class="d-name">首批原料（三黄鸡/香料/调料）</span><span class="d-price">800~1500元</span></div>
+    <div class="device-item"><span class="d-name">扒鸡专用包装袋+礼盒</span><span class="d-price">200~600元</span></div>
+    <div class="device-sum">设备总投入估算：约 4200~8500元</div>
+  </div>
+  <div style="font-size:11px;color:#7a7269;padding:8px 10px;background:#fdf8f0;border-radius:8px">
+    <strong>⚖️ 证照成本：</strong>健康证（100元/人·7天）· 食品小经营店备案/小作坊证（0~500元）· 摊位/门店押金（1000~3000元）· 最低启动4000元（卤桶+炉+基础工具）· 完整配置12000元（柜+包装机+礼盒模切）
+  </div>
+</div>
+
+<!-- 产品结构 -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">五香鸡爪 · 鸡翅尖</span><span class="t-price">¥12~18/份</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">德州扒鸡（核心单品）</span><span class="t-price">¥25~38/只</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">扒鸡+鸡爪+老汤豆干+真空礼盒</span><span class="t-price">¥49~69/套</span></div>
+  </div>
+</div>
+
+<!-- 摆摊指数 -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🏪 社区熟食店</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🥬 菜市场档口</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🎁 节日市集/年货节</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">📦 社区团购/接龙</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fdf2ee"><div class="s-name">🌃 夜市小吃摊</div><div class="stars">★★☆☆☆</div></div>
+    <div class="stall-item" style="background:#eef2ff"><div class="s-name">🏢 企业团购/福利采购</div><div class="stars">★★★★☆</div></div>
+  </div>
+</div>
+
+<!-- 最大风险（6项） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">💀</span><span><strong>血水残留+焖泡酸败：</strong>大腿根血水最难除，必须沸水焯透；夏天焖泡时间超4h极易变馊，必须监控室温/冷藏泡制。</span></div>
+  <div class="risk-item"><span class="r-icon">🕰️</span><span><strong>时间成本高：</strong>解冻+造型+焯水+卤制+焖泡≥6小时，日产能限制在50只以内，人工压力大。</span></div>
+  <div class="risk-item"><span class="r-icon">🎪</span><span><strong>场地固定需求：</strong>需要操作台、卤锅、冷柜，无法移动出摊；门店/作坊是唯一选择。</span></div>
+  <div class="risk-item"><span class="r-icon">🌦️</span><span><strong>季节波动明显：</strong>冬季热销，夏季走量下降，节日（春节/中秋）业绩占全年40%。</span></div>
+  <div class="risk-item"><span class="r-icon">📋</span><span><strong>散装熟食经营许可：</strong>部分城市要求现场制售许可证，整鸡类监管较严，提前咨询当地市监局。</span></div>
+  <div class="risk-item"><span class="r-icon">🥩</span><span><strong>原料价格波动：</strong>三黄鸡/蛋鸡受禽周期影响，冬至前后涨20%+，需锁定供应商价格。</span></div>
+</div>
+
+<!-- 核心工艺：德州扒鸡（不油炸·脱骨型） -->
+<div class="section">
+  <div class="s-title">🔪 德州扒鸡核心工艺（扒鸡型·无油炸版）</div>
+  <div class="process-step"><strong>① 选料造型</strong><p>三黄鸡1~1.3kg（大小适中）；鸡腿折叠入腹，左翅从喉部刀口穿入口腔别住，右翅向后别，形成“鸭浮水”紧凑造型。</p></div>
+  <div class="process-step"><strong>② 关键焯水（去血水）</strong><p>沸水浸烫2分钟（大腿根部血水必须焯透），捞出冲洗干净。不焯水直接卤制40分钟内部一定带血，严重影响风味。</p></div>
+  <div class="process-step"><strong>③ 调五香卤水</strong><p>鸡专用卤水（不用豆油），香料为鸭量的65%，八角桂皮白芷为主。烧开后撇净浮沫，保持清卤。</p></div>
+  <div class="process-step"><strong>④ 小火卤制</strong><p>焯水后鸡入卤汤，温度保持85~90℃（似开非开），卤制30~40分钟，切忌大火翻滚导致破皮。</p></div>
+  <div class="process-step"><strong>⑤ 长时焖泡（脱骨之魂）</strong><p>关火后原汤焖泡3~4小时（冬季可4.5h），使肉质酥烂脱骨，自然冷却后捞出。夏天必须控制室温或入冷库泡。</p></div>
+  <div class="process-step"><strong>⑥ 晾凉/包装</strong><p>捞出后自然冷却20分钟，刷香油增亮，真空包装或直接售卖。扒鸡以冷吃为佳，风味醇厚。</p></div>
+  <div style="background:#eef2ff;padding:10px;border-radius:8px;margin-top:8px;font-size:11px;"><strong>✅ [验证点]</strong> 鸡皮完整不破，大腿切开无血水，提起鸡腿骨肉自然分离，五香浓郁后味回甘。</div>
+</div>
+
+<!-- 成本利润 -->
+<div class="section">
+  <div class="s-title">💰 成本利润</div>
+  <div class="cost-grid">
+    <div class="cost-item"><div class="c-label">整鸡进货（三黄鸡）</div><div class="c-val cost-highlight">3~14元</div><div class="c-sub">小号3~4元·大号14元</div></div>
+    <div class="cost-item"><div class="c-label">香料/辅料均摊</div><div class="c-val">0.5~1元</div><div class="c-sub">五香料+盐糖葱姜</div></div>
+    <div class="cost-item"><div class="c-label">包装/人工/水电</div><div class="c-val">1.5~2.5元</div><div class="c-sub">真空袋+工时+能耗</div></div>
+    <div class="cost-item"><div class="c-label">单只总成本</div><div class="c-val cost-highlight">5~17.5元</div><div class="c-sub">按鸡只大小浮动</div></div>
+  </div>
+  <div style="margin-top:8px;padding:10px 12px;background:#f0f6ec;border-radius:8px;font-size:11px;color:#3a6b2e;line-height:1.6">
+    <strong>利润分析：</strong>小号三黄鸡成本3~4元，售价18~25元，毛利极高；大号三黄鸡成本14元，售价30~38元，毛利50%左右。综合毛利率55%+，日卖40只毛利超过600元，月入2w可期。淘汰蛋鸡肉质更香但成本更高（18元），适合高端礼盒定位。
+  </div>
+</div>
+
+<!-- 完整出摊包 -->
+<div class="section">
+  <div class="s-title">🎒 完整出摊包</div>
+  <div class="pack-grid">
+    <div class="pack-item"><div class="p-icon">🧂</div><div class="p-title">五香扒鸡香料库</div>八角·桂皮·白芷·小茴香·丁香·草果等，鸡卤水专配比例</div>
+    <div class="pack-item"><div class="p-icon">🌡️</div><div class="p-title">焖泡温度曲线</div>焯水100℃/2min · 卤制85~90℃/35min · 焖泡自然降温3~4h</div>
+    <div class="pack-item"><div class="p-icon">📋</div><div class="p-title">批量SOP</div>10只/30只/50只版：卤水增量、香料倍数、焖泡延时标准</div>
+    <div class="pack-item"><div class="p-icon">⚠️</div><div class="p-title">扒鸡翻车手册</div>皮破·带血水·骨肉不散·过烂不成型·夏季酸败</div>
+    <div class="pack-item"><div class="p-icon">🔄</div><div class="p-title">鸡卤水养护</div>每天撇鸡油，不加植物油，香料包2锅一换，夏季每天煮沸杀菌</div>
+    <div class="pack-item"><div class="p-icon">📦</div><div class="p-title">德州扒鸡真空工艺</div>完全冷透后真空，搭配牛皮纸礼盒+不干胶贴，常温快递实测7天保鲜</div>
+  </div>
+</div>
+
+<!-- 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="J01.html"><span class="r-emoji">🐔</span><span class="r-name">J01 五香整鸡</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="J03.html"><span class="r-emoji">🍗</span><span class="r-name">J03 五香烧鸡</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="J06.html"><span class="r-emoji">🐓</span><span class="r-name">J06 五香鸡爪</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="J10.html"><span class="r-emoji">🔥</span><span class="r-name">J10 虎皮风爪</span><span class="r-arrow">→</span></a>
+  </div>
+</div>
+
+<!-- 付费区·完整数据包（含香料配方/SOP/养护） -->
+<div class="section" style="border-top:2px dashed #ddd4ca">
+  <div class="s-title">💎 德州扒鸡 · 完整数据包</div>
+  <div class="recipe-box">
+    <div class="rb-title">🧂 五香香料包精确配比（10L卤水基准·德州扒鸡专用）</div>
+    <div class="recipe-line"><span>八角</span><span class="rl-val">50g</span></div>
+    <div class="recipe-line"><span>桂皮</span><span class="rl-val">45g</span></div>
+    <div class="recipe-line"><span>白芷</span><span class="rl-val">35g</span></div>
+    <div class="recipe-line"><span>小茴香</span><span class="rl-val">25g</span></div>
+    <div class="recipe-line"><span>丁香</span><span class="rl-val">12g</span></div>
+    <div class="recipe-line"><span>草果</span><span class="rl-val">18g（拍破）</span></div>
+    <div class="recipe-line"><span>肉豆蔻</span><span class="rl-val">12g</span></div>
+    <div class="recipe-line"><span>砂仁</span><span class="rl-val">8g</span></div>
+    <div class="recipe-line"><span>陈皮</span><span class="rl-val">12g</span></div>
+    <div class="recipe-line"><span>花椒</span><span class="rl-val">15g（去籽）</span></div>
+    <div class="recipe-line"><span>甘草</span><span class="rl-val">8g</span></div>
+    <div class="recipe-line"><span>生姜</span><span class="rl-val">100g（拍破）</span></div>
+    <div class="recipe-line"><span>大葱</span><span class="rl-val">100g</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>精盐</span><span class="rl-val">220g（根据卤水量微调）</span></div>
+  </div>
+  <div class="recipe-box">
+    <div class="rb-title">🌡️ 温度曲线·德州扒鸡（不油炸）</div>
+    <div class="recipe-line"><span>焯水</span><span class="rl-val">沸水下锅→再沸腾后1.5min捞出</span></div>
+    <div class="recipe-line"><span>卤制火候</span><span class="rl-val">小火85~90℃·微沸状态</span></div>
+    <div class="recipe-line"><span>卤制时间（三黄鸡）</span><span class="rl-val">35~40分钟</span></div>
+    <div class="recipe-line"><span>焖泡（脱骨关键）</span><span class="rl-val">关火自然降温浸泡3~4小时</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>老母鸡版煮制</span><span class="rl-val">小火2h+焖泡2h</span></div>
+  </div>
+  <div class="recipe-box">
+    <div class="rb-title">📋 批量SOP（10只/30只/50只）</div>
+    <div class="recipe-line"><span>项目</span><span class="rl-val">10只</span><span class="rl-val">30只</span><span class="rl-val">50只</span></div>
+    <div class="recipe-line"><span>卤水</span><span class="rl-val">15L</span><span class="rl-val">40L</span><span class="rl-val">65L</span></div>
+    <div class="recipe-line"><span>香料包倍数</span><span class="rl-val">1.5×</span><span class="rl-val">4×</span><span class="rl-val">6.5×</span></div>
+    <div class="recipe-line"><span>卤制时间</span><span class="rl-val">35min</span><span class="rl-val">40min</span><span class="rl-val">45min</span></div>
+    <div class="recipe-line"><span>焖泡时间</span><span class="rl-val">3h</span><span class="rl-val">3.5h</span><span class="rl-val">4h</span></div>
+    <div class="recipe-line"><span>盐量</span><span class="rl-val">330g</span><span class="rl-val">900g</span><span class="rl-val">1450g</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>总耗时</span><span class="rl-val">~4.5h</span><span class="rl-val">~5.5h</span><span class="rl-val">~7h</span></div>
+  </div>
+  <div class="recipe-box">
+    <div class="rb-title">⚠️ 翻车解决方案·扒鸡特辑</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>骨肉不脱/硬柴：</strong>焖泡时间不足或卤水温度过低，必须保证关火后焖满3h。</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>鸡皮破损：</strong>造型未扎紧或卤水翻滚剧烈，改用微火并别好鸡腿鸡翅。</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>大腿内侧血水：</strong>沸水焯水不足2分钟；改进：焯水时反复淋烫大腿内侧。</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>扒鸡发黑：</strong>铁锅反应或老汤太浓；用不锈钢桶，不加老抽，用糖色上色。</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>夏季酸败：</strong>卤汤焖泡超过4h风险极高，建议入冷库0~4℃焖泡或在空调房完成。</div>
+  </div>
+  <div class="recipe-box">
+    <div class="rb-title">🔄 鸡卤水养护体系（扒鸡专用）</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>每日撇油：</strong>鸡油极多，卤水表面浮油必须撇净，否则卤水发腻酸败加速。</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>香料更换：</strong>每卤2锅（约40只）换新香料包，保证风味稳定。</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>老汤补盐：</strong>加水同时按每升水补15g盐，每10只鸡补8g糖色。</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>寿命管理：</strong>鸡卤水比鸭卤水氧化快，建议连续使用10天重起新汤。</div>
+  </div>
+  <div class="recipe-box">
+    <div class="rb-title">📦 真空包装&礼盒溢价方案</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>冷真空：</strong>扒鸡完全凉透（中心<15℃）再真空，汤汁不会溢流，封口牢固。</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>保质期：</strong>冷藏7天，冷冻30天；常温搭配脱氧剂可存放10~15天（试验后发售）。</div>
+    <div class="fc-item" style="font-size:11px;color:#5a4f44;padding:4px 0"><strong>礼盒包装：</strong>牛皮纸窗式盒+内衬塑托+不干胶“德州五香脱骨扒鸡”，节日溢价至58~78元/只。</div>
+  </div>
+</div>
+
+<!-- 咨询入口 -->
+<div class="consult-box">
+  <div class="c-head">📱 咨询沧林</div>
+  <div class="c-desc">关于德州扒鸡工艺/香料/礼盒的任何问题，直接问</div>
+  <div class="c-wx" onclick="copyWx()">📋 复制微信号：canglin1985</div>
+  <div class="c-copy">微信复制 · 添加好友 · 获取扒鸡技术包</div>
+</div>
+
+<!-- 底部品牌 -->
+<div class="ftr">
+  <div class="f-brand">🍗 FoodIntel AI · 创业决策系统</div>
+  <div class="f-tagline">知识图谱 · 品类锚点 · 德州扒鸡专属</div>
+  <div class="f-links">
+    <a href="https://foodintelai.com">官网</a>
+    <a href="#">知识库</a>
+    <a href="#">微信 canglin1985</a>
+  </div>
+</div>
+
+</div>
+
+<script>
+function copyWx(){var e=document.createElement('textarea');e.value='canglin1985';document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e);alert('微信号已复制，打开微信添加好友');}
+</script>
+</body>
+</html>

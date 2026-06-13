@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>脆皮烤鸡 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#8b5a2b,#5a3a1a);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#8b5a2b;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #8b5a2b;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#8b5a2b;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#8b5a2b;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 01 Header -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍗 脆皮烤鸡</h1>
+  <div style="font-size:12px;color:#b5aaa0">整鸡/鸡腿 · 脆皮工艺 · 原味/香辣/奥尔良</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.5</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">脆皮烤鸡的核心是皮脆肉嫩+腌制入味，比普通烤鸡溢价3-5元。</div>
+  <div class="r-tags">
+    <span>🔥 热度高</span>
+    <span>💰 投资4000+</span>
+    <span>👤 1人操作</span>
+    <span>🔄 复购高</span>
+  </div>
+</div>
+
+<!-- 02 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">4000+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等（风干脆皮）</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+  </div>
+</div>
+
+<!-- 03 适合谁 -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 想做烤鸡且追求脆皮口感的摊主</div>
+      <div class="fit-item fit-yes">✅ 已有烤箱/空气炸锅设备的摊位</div>
+      <div class="fit-item fit-yes">✅ 社区店、商场美食街（堂食为主）</div>
+      <div class="fit-item fit-yes">✅ 愿意花时间做风干工艺（脆皮关键）</div>
+      <div class="fit-item fit-yes">✅ 想避开奥尔良口味做差异化</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求极速出餐（风干+烤制需40分钟+）</div>
+      <div class="fit-item fit-no">❌ 场地无冷藏风干设备</div>
+      <div class="fit-item fit-no">❌ 只想卖低价走量（脆皮工艺增加时间成本）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：玻璃脆皮 × 爆汁肉质 × 原味肉香 × 仪式感整鸡</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>脆皮烤鸡（整只）</span><span class="v">毛利60%</span></div>
+    <div class="logic-item"><span>半只+小食套餐</span><span class="v">客单价+8元</span></div>
+    <div class="logic-item"><span>脆皮烤鸡腿（单只）</span><span class="v">毛利65%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>加购特制蘸酱（泰式甜辣/蜂蜜芥末）</span><span class="v">+¥2</span></div>
+    <div class="logic-item"><span>整鸡+烤蔬菜+饮品分享套餐</span><span class="v">¥45-58</span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>推出不同风味脆皮烤鸡（原味/香辣/椒麻）</span><span class="v"></span></div>
+    <div class="logic-item"><span>会员日买整鸡送半只烤鸡腿</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥800-1300</div><div class="m-sub">8h经营</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥6000-9000</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">8-12天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">*数据基于一线城市社区店/商圈实测（2025年）</div>
+</div>
+
+<!-- 05 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">脆皮烤鸡在市场上供给少，大多烤鸡是“软皮”</div>
+      <div class="t-item">鸡皮玻璃脆响极具视觉+听觉冲击，易传播</div>
+      <div class="t-item">整鸡仪式感强，适合家庭/聚会场景</div>
+      <div class="t-item">可搭配多种风味（原味、椒盐、香辣）</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">风干工艺耗时长（需要提前4小时以上腌制+风干）</div>
+      <div class="t-item">需要大功率烤箱（3000W+）</div>
+      <div class="t-item">堂食最佳，外卖配送后脆皮会变软</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>烤鸡摊位普遍卖奥尔良风味，脆皮工艺极少有人做。能做到“皮脆肉嫩”的烤鸡在夜市/社区店属于稀缺品。<br>
+    <strong>未来判断：</strong>2026-2027年，消费者对烤鸡的要求从“好吃”升级到“脆皮爆汁”。掌握风干脆皮技术的摊主能建立壁垒。<br>
+    <strong>是否值得进入：是</strong> —— 但必须接受长时间备料（风干），适合社区店、预约制或提前备货的摊位。不建议在高速客流夜市做唯一品种。
+  </div>
+</div>
+
+<!-- 06 项目评估 -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★☆☆☆</div><div style="font-size:10px;color:#5a4f44">低（脆皮稀缺）</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">5-7天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">风干/温度关键</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★☆</div><div style="font-size:10px;color:#5a4f44">¥600以内试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>脆度</th><th>推荐</th><th>卡片</th> </tr</thead>
+      <tbody>
+        <tr style="background:#f5e6d0"><td>🍗 脆皮烤鸡</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★★★</th><td>A-</th><td><a href="#" style="color:#8b5a2b">#XC_029</a></th> </tr>
+        <tr><td>🍗 奥尔良烤鸡</th><td>★★★</th><td>★★</th><td>★★★★</th><td>★★★</th><td>B+</th><td><a href="#">#XC_028</a></th> </tr>
+        <tr style="background:#f8f4ef"><td>🍗 美式炸鸡</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★★</th><td>A-</th><td><a href="#">#XC_027</a></th> </tr>
+        <tr><td>🍗 韩式炸鸡</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★★</th><td>A-</th><td><a href="#">#HZ_001</a></th> </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- 07 30天验证路线 -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>试做脆皮工艺：腌制整鸡，风干4小时，200°C烤40分钟，记录脆皮效果</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20人试吃脆皮烤鸡，对比普通烤鸡，统计对“脆皮”的喜好</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备15只整鸡），测试定价¥38-48区间销量</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加半只售卖和鸡腿单品，记录客单价和转化率</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘脆皮成功率、复购率，决定是否增加预订单模式</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7脆皮烤鸡销量是否＞10只/天 ② 顾客主动评价“皮脆”比例＞70% ③ 复购率＞20%<br>
+    <strong>🚪 退出标准：</strong>连续3天销量＜5只 / 脆皮失败率＞40% / 顾客反馈“皮不脆/肉柴”超过30%<br>
+    <strong>✅ 继续标准：</strong>日均销量稳定10只以上 / 脆皮成功率＞80% / 顾客愿意为脆皮支付溢价（比普通烤鸡贵5元）
+  </div>
+</div>
+
+<!-- 08 设备清单 -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：商用烤箱/旋转烤炉(¥2000-4000) · 操作台(¥200-400) · 不锈钢盆×4(¥60-100) · 电子秤(¥30-50) · 腌制桶(¥20) · 风干架/网架(¥50-100) · 风扇(¥50) · 食品温度计(¥20) · 保温柜(¥300-500)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：三轮车/手推车(¥600-1800) · 折叠桌(¥100-200) · 帐篷伞(¥150-300) · 招牌灯箱(¥80-180) · 价格立牌(¥20-50) · 大功率插座+延长线(¥100) · 斩鸡刀/砧板(¥50)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：整鸡10只(¥120-180) · 腌料(自制) ¥50 · 铝箔纸/烤盘纸(¥20) · 包装纸盒/纸袋200套(¥80-120) · 蘸酱包(¥20) · 刷子/手套(¥15)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥3,000-4,500</strong>（已有手推车，用空气炸锅+小烤箱）</div>
+    <div><strong>💰 完整启动方案：¥5,500-8,000</strong>（含商用旋转烤炉、保温柜、三轮车）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案0-200元 · 办理时间2-5天 · 烤制油烟小，审批较容易</div>
+  </div>
+</div>
+
+<!-- 09 产品结构 -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">脆皮烤鸡腿（单只）</span><span class="t-price">¥12-15</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">脆皮烤整鸡（原味/香辣）</span><span class="t-price">¥38-48</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">半只脆皮鸡+小薯+可乐</span><span class="t-price">¥25-30</span></div>
+  </div>
+</div>
+
+<!-- 10 摆摊指数 -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🏠 社区</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">📱 外卖</div><div class="stars">★★★☆☆</div></div>
+  </div>
+</div>
+
+<!-- 11 最大风险（6项） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>大功率烤箱（3000W+）需确认摊位电力容量，否则跳闸无法经营。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季高温时段烤鸡销量下降（太热不想吃），冬季热销但需保温设备。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>风干耗时长——需要提前4-6小时腌制+风干，无法临时加单，备货量难预估。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>脆皮失败率——风干不足或烤箱温度不准，皮不脆；烤过火则皮焦肉柴。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>外卖配送变软——脆皮在密封外卖盒里10分钟就软塌，差评率高。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>整鸡成本高——整鸡进价约9-12元/只，如果卖不出去损耗大。</div>
+</div>
+
+<!-- 12 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>脆皮烤鸡是烤鸡品类中的“升级款”，视觉+听觉冲击强，容易形成网红效应。目前市场供给极少，可建立技术壁垒。适合社区店、家庭客群，客单价高。<br>
+      <strong>❌ 为什么不值得：</strong>备料时间长（风干4小时+），无法应对突发客流。外卖体验差，不适合纯外卖摊。设备投资比普通烤鸡高。<br>
+      <strong>🔑 进入条件：</strong>① 有足够的冷藏和风干空间（家中或摊位） ② 能接受每日限量（卖完即止） ③ 愿意花一周调试脆皮工艺 ④ 摊位以堂食或社区预订单为主。<br>
+      <strong>🚪 退出条件：</strong>连续2周日均销量＜8只 / 脆皮失败率超过30% / 顾客反馈“皮不脆”超过25% / 电力问题无法解决。<br>
+      <strong>🎯 最终判断：可进</strong> —— 但建议走“限量+预订单”模式，每日只烤20-30只，卖完即止。主打“脆皮”这个稀缺卖点，定价可以比普通烤鸡高30%。不适合追求快销量的夜市摊位。
+    </div>
+    <div class="j-tags"><span>#脆皮烤鸡</span><span>#风干工艺</span><span>#限量供应</span></div>
+  </div>
+</div>
+
+<!-- 13 核心工艺（带验证点） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">腌制：整鸡/鸡腿用盐、蒜粉、洋葱粉、黑胡椒、辣椒粉（可选）腌制，冷藏4小时。</span><div class="ps-verify">[验证点] 腌制后鸡肉表面均匀沾附调料，闻起来咸香</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">风干（脆皮核心）：腌制好的鸡取出，用厨房纸擦干表面，放在网架上，风扇吹2-4小时，至鸡皮干燥发亮。</span><div class="ps-verify">[验证点] 鸡皮表面无水分，摸起来光滑且略硬，皮与肉之间空气感明显</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">烤制：烤箱预热200°C，鸡皮表面刷一层薄油（或醋水），烤35-45分钟（整鸡），中途翻面。</span><div class="ps-verify">[验证点] 鸡皮金黄酥脆，轻敲有“咔咔”声，切开肉汁清澈</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">静置与斩件：烤好的鸡静置5分钟再切，锁住肉汁。</span><div class="ps-verify">[验证点] 切块后鸡肉不干柴，皮不脱落</div></div>
+  </div>
+  <div class="badge">⚠️ 完整配方（腌料配比、风干技巧、烤制温度曲线）见下方付费区</div>
+</div>
+
+<!-- 14 成本利润 -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">整鸡（约1kg）</span><span class="v">¥10</span></div>
+    <div class="recipe-line"><span class="k">腌料+调料</span><span class="v">¥1.0</span></div>
+    <div class="recipe-line"><span class="k">电费+包装+锡纸</span><span class="v">¥2.0</span></div>
+    <div class="recipe-line"><span class="k">单份总成本（整只）</span><span class="v">¥13.0</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥38～¥48</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">65%～73%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售15只（均价¥42）→ 日毛利¥435，月净利约¥7400（出摊22天）</span></div>
+  </div>
+  <div class="badge" style="margin-top:6px">※ 鸡腿成本约3元/只，售价12-15元，毛利70%左右。</div>
+</div>
+
+<!-- 15 完整出摊包（付费区） -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>🍗 脆皮烤鸡 · 完整出摊包</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥49 <small>母卡限时解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后获取脆皮腌料配方、风干工艺细节、烤制温度时间表</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 腌料配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 脆皮烤鸡腌料配方（每只1kg整鸡）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>盐</span><span>12g</span></div>
+      <div class="recipe-line"><span>蒜粉</span><span>6g</span></div>
+      <div class="recipe-line"><span>洋葱粉</span><span>5g</span></div>
+      <div class="recipe-line"><span>黑胡椒粉</span><span>4g</span></div>
+      <div class="recipe-line"><span>辣椒粉（可选）</span><span>5g</span></div>
+      <div class="recipe-line"><span>干迷迭香/百里香</span><span>1g</span></div>
+      <div class="recipe-line"><span>食用油</span><span>10g（帮助附着）</span></div>
+    </div>
+
+    <!-- 2️⃣ 风干工艺细节 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 风干工艺（脆皮核心）</div>
+    <div class="recipe-box" style="border-left-color:#E8652D">
+      • 鸡表面一定要擦干，可用厨房纸按压吸干水分。<br>
+      • 放在网架上（底部通风），用风扇中档吹2小时，或冰箱冷藏不盖膜风干4小时。<br>
+      • 风干标准：鸡皮摸起来干燥、紧实，按压有回弹。<br>
+      • 可提前一晚腌制+风干，第二天直接烤制。
+    </div>
+
+    <!-- 3️⃣ 烤制温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 烤制温度时间表（烤箱）</div>
+    <div style="background:#f8f4ef;border-radius:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:6px 10px;background:#3a322a;color:#fff;font-size:10px"><span>品类</span><span>温度</span><span>时间</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>整鸡（1kg）</span><span>200°C</span><span>40-45分钟</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb"><span>鸡腿（大）</span><span>200°C</span><span>25-30分钟</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px"><span>空气炸锅（整鸡）</span><span>180°C</span><span>40分钟（翻面）</span></div>
+    </div>
+
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 批量预制SOP（10只/20只整鸡）</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+      <div><strong>10只整鸡：</strong>提前一晚腌制+风干（冷藏不盖膜），第二天分2-3炉烤制（每炉4只）。</div>
+      <div><strong>20只整鸡：</strong>需要两台烤箱或旋转烤炉，分批次风干，建议只接受预订单，避免浪费。</div>
+    </div>
+
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 翻车解决方案</div>
+    <div class="recipe-box">
+      <div><strong>皮不脆：</strong>风干不足或烤前鸡皮有水 → 延长风干时间，烤前用厨房纸再擦一遍。</div>
+      <div><strong>皮焦肉生：</strong>烤箱温度过高或鸡太大 → 降低温度至180°C，延长烤制时间，用锡纸盖住鸡身。</div>
+      <div><strong>肉干柴：</strong>烤过火或没静置 → 腌制时加5g小苏打或酸奶，烤后静置5分钟再切。</div>
+    </div>
+
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 三款变体</div>
+    <div class="recipe-box">
+      <div><strong>🌶️ 香辣脆皮鸡：</strong>腌料中加辣椒粉8g+花椒粉3g。</div>
+      <div><strong>🍋 柠檬香草脆皮鸡：</strong>腌料中加入柠檬皮屑、新鲜迷迭香，烤前塞柠檬片。</div>
+      <div><strong>🍯 蜂蜜脆皮鸡：</strong>烤制最后5分钟刷蜂蜜水，增加甜脆感。</div>
+    </div>
+
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 规模化方案</div>
+    <div class="recipe-box">
+      当日销量＞30只整鸡时：使用商用旋转烤炉（一次烤12-20只），腌制使用真空滚揉机（30分钟入味+风干辅助）。可转型为“脆皮烤鸡专门店”，增加半成品冷鲜配送。
+    </div>
+
+    <!-- 8️⃣ 实战备注 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">8️⃣ 沧林实战备注</div>
+    <div class="recipe-box" style="border-left-color:#8b5a2b">
+      • 脆皮最关键的步骤是“风干”，宁可风干过一点（皮更脆），也不要急于烤制。<br>
+      • 烤鸡出炉后放在网架上散热，不要直接放盘子里，否则底部皮会回软。<br>
+      • 外卖建议：只接预订单且配送时间≤15分钟，使用带透气孔纸盒，不放酱料包。<br>
+      • 定价技巧：整鸡38元（基础版），42元（香辣版），48元（蜂蜜版）。半只卖22-25元。<br>
+      • 社区摊位可以推出“周末预约烤鸡”，周五前接单，周六统一烤制配送，零库存。<br>
+      • 摆盘：整鸡放在木砧板上，撒欧芹碎，配椒盐蘸料，仪式感强，适合拍照。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 16 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🍗</span><span class="r-name">奥尔良烤鸡（母卡 XC_028）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥗</span><span class="r-name">卷心菜沙拉（配菜 PC_003）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍯</span><span class="r-name">泰式甜辣酱（酱料专卡）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- 17 咨询入口 -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>脆皮风干工艺 · 烤箱选型 · 脆皮失败诊断</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1工艺指导 · 成本核算 · 预订单模式设计</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“脆皮烤鸡卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 母卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整出摊包' : '点击解锁全部内容 →';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VC_K002 · 韩式原味牛肉系列</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+        }
+        .card {
+            width: 540px;
+            max-width: 100%;
+            background: linear-gradient(145deg, #6b2d5a 0%, #b06090 40%, #d4a0c0 70%, #e8c8d8 100%);
+            border-radius: 32px;
+            padding: 3px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08) inset;
+        }
+        .card-inner {
+            background: #0f0f0f;
+            border-radius: 30px;
+            padding: 32px 28px;
+            color: #f0e6ee;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-inner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6b2d5a, #b06090, #d4a0c0, #b06090, #6b2d5a);
+            opacity: 0.6;
+        }
+
+        /* Header */
+        .code-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #6b2d5a, #b06090);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 4px 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+        .sub-brand {
+            font-size: 12px;
+            color: #c090b0;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .main-title {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f0d6e8, #fff0f8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        .sub-title {
+            font-size: 14px;
+            color: #c8a0b8;
+            letter-spacing: 1px;
+            font-weight: 400;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 10px;
+            margin-top: 2px;
+        }
+
+        /* Section */
+        .section {
+            margin-top: 28px;
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #d4a0c0;
+            letter-spacing: 2px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(180, 100, 140, 0.25);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6b2d5a, #b06090);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Content styles */
+        .text-glow {
+            color: #e8d0e0;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .text-glow strong {
+            color: #f0d6e8;
+        }
+        .text-muted {
+            color: #b090a8;
+            font-size: 13px;
+        }
+        .highlight {
+            color: #e8b0d0;
+            font-weight: 600;
+        }
+        .tag {
+            display: inline-block;
+            background: rgba(107, 45, 90, 0.3);
+            border: 1px solid rgba(180, 100, 140, 0.2);
+            color: #d4a0c0;
+            font-size: 11px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            margin: 2px 3px;
+        }
+
+        /* Radar */
+        .radar-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .radar-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(180, 100, 140, 0.15);
+            border-radius: 12px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        .radar-item .label {
+            font-size: 11px;
+            color: #b090a8;
+        }
+        .radar-item .value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f0d6e8;
+            margin-top: 2px;
+        }
+
+        /* Matrix table - use flex grid since no tables */
+        .matrix-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .matrix-cell {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(180, 100, 140, 0.12);
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
+        .matrix-cell .name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e0c0d0;
+        }
+        .matrix-cell .spec {
+            font-size: 11px;
+            color: #b090a8;
+            margin-top: 2px;
+        }
+        .matrix-cell .price {
+            font-size: 12px;
+            color: #e8b0d0;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Recipe blocks */
+        .recipe-block {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(180, 100, 140, 0.12);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+        .recipe-block .r-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #e0c0d0;
+            margin-bottom: 6px;
+        }
+        .recipe-block .r-body {
+            font-size: 13px;
+            color: #c8b0c0;
+            line-height: 1.7;
+        }
+        .recipe-block .r-body .ing {
+            display: inline-block;
+            background: rgba(107, 45, 90, 0.2);
+            border-radius: 6px;
+            padding: 0 6px;
+            font-size: 12px;
+            color: #d0a8c0;
+        }
+
+        /* Decision cards */
+        .decision-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .decision-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(180, 100, 140, 0.12);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .decision-item .d-label {
+            font-size: 11px;
+            color: #b090a8;
+            letter-spacing: 1px;
+        }
+        .decision-item .d-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e8d0e0;
+            margin-top: 3px;
+        }
+
+        /* Family tree */
+        .tree-root {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #e0c0d0;
+            padding: 8px 16px;
+            background: rgba(107, 45, 90, 0.2);
+            border-radius: 20px;
+            border: 1px solid rgba(180, 100, 140, 0.2);
+            display: inline-block;
+            margin: 0 auto 10px;
+        }
+        .tree-branches {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+        }
+        .tree-branch {
+            flex: 1;
+            min-width: 110px;
+            text-align: center;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(180, 100, 140, 0.1);
+            border-radius: 12px;
+            padding: 8px 6px;
+        }
+        .tree-branch .b-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #d4a0c0;
+        }
+        .tree-branch .b-sub {
+            font-size: 10px;
+            color: #a08098;
+            margin-top: 2px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(180,100,140,0.2), transparent);
+            margin: 20px 0;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 28px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(180, 100, 140, 0.15);
+            text-align: center;
+        }
+        .footer-brand {
+            font-size: 12px;
+            font-weight: 600;
+            color: #b090a8;
+            letter-spacing: 3px;
+        }
+        .footer-brand span {
+            color: #d4a0c0;
+        }
+
+        /* Responsive */
+        @media (max-width: 560px) {
+            .card-inner { padding: 22px 16px; }
+            .main-title { font-size: 26px; }
+            .radar-grid { grid-template-columns: 1fr 1fr; }
+            .decision-grid { grid-template-columns: 1fr; }
+            .matrix-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-inner">
+
+            <!-- HEADER -->
+            <div class="code-badge">VC_K002</div>
+            <div class="sub-brand">韩式融合烤肉</div>
+            <div class="main-title">韩式原味牛肉系列</div>
+            <div class="sub-title">拌肉 · 原切 · 拼盘 · 精品部位 · 还原牛肉本味</div>
+
+            <!-- ① 产品定义 -->
+            <div class="section">
+                <div class="section-title"><span class="num">①</span> 产品定义</div>
+                <div class="text-glow">
+                    以<strong>「韩式原味牛肉」</strong>为核心主轴，整合四款互补子编码——<span class="highlight">拌肉型</span>（秘制大块肉·特色拌肉·黑椒牛肉粒）、<span class="highlight">原味型</span>（雪花牛肋条·厚切牛舌·大片上脑）、<span class="highlight">拼盘型</span>（摩天轮·9宫格·肥牛四兄弟）、<span class="highlight">精品部位</span>（胸口·三筋·护心肉·老式肥牛·熟筋·香辣牛肉）——形成覆盖爆品引流、高毛利走量、仪式感体验、细分差异化的完整牛肉产品矩阵，满足韩式烤肉全场景需求。
+                </div>
+            </div>
+
+            <!-- ② 爆品雷达 -->
+            <div class="section">
+                <div class="section-title"><span class="num">②</span> 爆品雷达</div>
+                <div class="radar-grid">
+                    <div class="radar-item"><div class="label">🥩 拌肉型·大块肉</div><div class="value">82-85%</div><div class="label" style="font-size:10px;">毛利率</div></div>
+                    <div class="radar-item"><div class="label">🥩 拌肉型·特色拌肉</div><div class="value">85-87%</div><div class="label" style="font-size:10px;">毛利率</div></div>
+                    <div class="radar-item"><div class="label">🍖 精品·老式肥牛</div><div class="value">83-85%</div><div class="label" style="font-size:10px;">毛利率</div></div>
+                    <div class="radar-item"><div class="label">🍖 精品·熟筋</div><div class="value">85-87%</div><div class="label" style="font-size:10px;">毛利率</div></div>
+                    <div class="radar-item"><div class="label">🎡 拼盘·肥牛四兄弟</div><div class="value">83-86%</div><div class="label" style="font-size:10px;">毛利率</div></div>
+                    <div class="radar-item"><div class="label">🥩 原味·大片上脑</div><div class="value">80-83%</div><div class="label" style="font-size:10px;">毛利率</div></div>
+                </div>
+                <div style="margin-top:8px; text-align:center; font-size:11px; color:#a08098;">
+                    ⚡ 毛利率「85-87%」双冠：特色拌肉 &amp; 熟筋 · 毛利最低（68-74%）雪花牛肋条（高价值引流）
+                </div>
+            </div>
+
+            <!-- ③ 产品角色 · 家族树 -->
+            <div class="section">
+                <div class="section-title"><span class="num">③</span> 产品角色 · 家族树</div>
+                <div style="text-align:center;">
+                    <div class="tree-root">🍖 韩式原味牛肉系列</div>
+                </div>
+                <div class="tree-branches">
+                    <div class="tree-branch">
+                        <div class="b-name">VC_K021 · 拌肉型</div>
+                        <div class="b-sub">秘制大块肉·特色拌肉·黑椒牛肉粒</div>
+                        <div style="font-size:11px; color:#906880; margin-top:4px;">酱香爆品 · 高毛利引擎</div>
+                    </div>
+                    <div class="tree-branch">
+                        <div class="b-name">VC_K022 · 原味型</div>
+                        <div class="b-sub">雪花牛肋条·厚切牛舌·大片上脑</div>
+                        <div style="font-size:11px; color:#906880; margin-top:4px;">品质担当 · 原切本味</div>
+                    </div>
+                    <div class="tree-branch">
+                        <div class="b-name">VC_K023 · 拼盘型</div>
+                        <div class="b-sub">摩天轮·9宫格·肥牛四兄弟</div>
+                        <div style="font-size:11px; color:#906880; margin-top:4px;">仪式感引流 · 社交传播</div>
+                    </div>
+                    <div class="tree-branch">
+                        <div class="b-name">VC_K024 · 精品部位</div>
+                        <div class="b-sub">胸口·三筋·护心肉·老式肥牛·熟筋·香辣牛肉</div>
+                        <div style="font-size:11px; color:#906880; margin-top:4px;">差异化全垒打 · 下酒利器</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ④ 市场定位 -->
+            <div class="section">
+                <div class="section-title"><span class="num">④</span> 市场定位</div>
+                <div class="text-glow">
+                    <strong>核心客群：</strong>18-38岁韩式烤肉爱好者、聚餐社交群体、品质美食探索者<br>
+                    <strong>价格带：</strong>28-168元（覆盖SKU定价从28元熟筋到168元摩天轮）<br>
+                    <strong>差异化锚点：</strong>「一牛四吃」——<span class="highlight">酱拌浓香</span>（拌肉型）、<span class="highlight">原切本味</span>（原味型）、<span class="highlight">视觉盛宴</span>（拼盘型）、<span class="highlight">稀缺猎奇</span>（精品部位）四大维度满足从极致性价比到高端体验的全部需求。<br>
+                    <strong>竞争壁垒：</strong>秘制酱料配方（大块肉酱/拌肉料/老式肥牛配方）+ 精细部位切割标准 + 摆盘仪式感差异化。
+                </div>
+            </div>
+
+            <!-- ⑤ 爆品矩阵 -->
+            <div class="section">
+                <div class="section-title"><span class="num">⑤</span> 爆品矩阵</div>
+                <div style="font-size:13px; color:#c8a0b8; margin-bottom:8px; font-weight:600;">🔥 拌肉型（VC_K021）</div>
+                <div class="matrix-row">
+                    <div class="matrix-cell"><div class="name">秘制大块肉</div><div class="spec">鲜肉上脑10斤/1cm厚片</div><div class="price">200-250g · 48-68元</div></div>
+                    <div class="matrix-cell"><div class="name">特色拌肉</div><div class="spec">肋扇肉/上脑200g</div><div class="price">38-48元</div></div>
+                    <div class="matrix-cell"><div class="name">黑椒牛肉粒</div><div class="spec">长肋条24块/170g</div><div class="price">48-58元</div></div>
+                </div>
+
+                <div style="font-size:13px; color:#c8a0b8; margin-bottom:8px; margin-top:12px; font-weight:600;">🥩 原味型（VC_K022）</div>
+                <div class="matrix-row">
+                    <div class="matrix-cell"><div class="name">雪花牛肋条</div><div class="spec">美国短肋斜切3mm</div><div class="price">170g · 58-78元</div></div>
+                    <div class="matrix-cell"><div class="name">厚切牛舌</div><div class="spec">牛舌根段5-8mm</div><div class="price">150g · 58-88元</div></div>
+                    <div class="matrix-cell"><div class="name">大片雪花上脑</div><div class="spec">上脑3mm</div><div class="price">200g · 48-68元</div></div>
+                </div>
+
+                <div style="font-size:13px; color:#c8a0b8; margin-bottom:8px; margin-top:12px; font-weight:600;">🎡 拼盘型（VC_K023）</div>
+                <div class="matrix-row">
+                    <div class="matrix-cell"><div class="name">网红摩天轮</div><div class="spec">12种×100g/1.2kg</div><div class="price">128-168元</div></div>
+                    <div class="matrix-cell"><div class="name">日式9宫格</div><div class="spec">9种原肉×100g/900g</div><div class="price">98-128元</div></div>
+                    <div class="matrix-cell"><div class="name">肥牛四兄弟</div><div class="spec">4种刷酱肥牛×75g/300g</div><div class="price">68-88元</div></div>
+                </div>
+
+                <div style="font-size:13px; color:#c8a0b8; margin-bottom:8px; margin-top:12px; font-weight:600;">🍖 精品部位（VC_K024）</div>
+                <div class="matrix-row">
+                    <div class="matrix-cell"><div class="name">烤胸口</div><div class="spec">48-68元 · 毛利80-83%</div></div>
+                    <div class="matrix-cell"><div class="name">三筋</div><div class="spec">58-88元 · 毛利72-78%</div></div>
+                    <div class="matrix-cell"><div class="name">护心肉</div><div class="spec">48-68元 · 毛利75-80%</div></div>
+                </div>
+                <div class="matrix-row">
+                    <div class="matrix-cell"><div class="name">老式肥牛</div><div class="spec">32-48元 · 毛利83-85%</div></div>
+                    <div class="matrix-cell"><div class="name">熟筋</div><div class="spec">28-38元 · 毛利85-87%</div></div>
+                    <div class="matrix-cell"><div class="name">香辣牛肉</div><div class="spec">28-38元 · 毛利80-82%</div></div>
+                </div>
+            </div>
+
+            <!-- ⑥ 工艺配方 -->
+            <div class="section">
+                <div class="section-title"><span class="num">⑥</span> 工艺配方</div>
+
+                <!-- 主推：拌肉型 -->
+                <div class="recipe-block">
+                    <div class="r-title">🔥 主推 · 拌肉型三大变形体（VC_K021）</div>
+                    <div class="r-body">
+                        <strong style="color:#e0c0d0;">① 秘制大块肉</strong><br>
+                        鲜肉上脑10斤、切1cm厚片 → <span class="ing">小苏打嫩化30分钟</span> → 洗两遍 → <span class="ing">秘制大块肉酱</span>抓拌。200-250g/份。<br>
+                        <span style="color:#a08098;">秘制大块肉酱（10斤肉）：</span> 盐25g + 牛肉粉10g + 味精10g + 白糖70g + 黑胡椒粉3g + 二锅头5g + 肉宝王1g + 牛肉酱30g + 苹果+洋葱+姜+蒜打汁<br><br>
+
+                        <strong style="color:#e0c0d0;">② 特色拌肉</strong><br>
+                        肋扇肉/上脑200g → <span class="ing">拌肉料18g/斤</span> + 香菜 + 圆葱丝 + 豆油。38-48元。<br>
+                        <span style="color:#a08098;">拌肉料（批量）：</span> 盐180g + 细味精160g + 白糖160g + 孜然粉半碎50g + 千里香籽粉24g + 小茴香碎60g + 芝麻30g + 辣椒面50g + 麻辣鲜10g + 十三香10g<br><br>
+
+                        <strong style="color:#e0c0d0;">③ 黑椒牛肉粒</strong><br>
+                        长肋条斜切方块24块/170g → <span class="ing">黑胡椒酱15g/份</span> + 干冰起雾。48-58元。
+                    </div>
+                </div>
+
+                <!-- 🧂 烤肉撒料与蘸料 -->
+                <div class="recipe-block">
+                    <div class="r-title">🧂 烤肉撒料与蘸料</div>
+                    <div class="r-body">
+                        <strong style="color:#e0c0d0;">韩式烤肉干料（通用配方·批量250份）</strong><br>
+                        <span class="ing">十三香1包</span> + <span class="ing">麻辣鲜1包（46g）</span> + <span class="ing">孜然粉500g（半碎）</span> + <span class="ing">黄豆粉500g（炒熟打粉）</span> + <span class="ing">细辣椒面500g（二荆条）</span> + <span class="ing">芝麻粉250g（半碎）</span><br>
+                        全部混合，密封30天。每份5-8g，小碟蘸食或烤后撒。<br><br>
+
+                        <strong style="color:#e0c0d0;">麻酱蘸料（经典韩式·单份）</strong><br>
+                        <span class="ing">芝麻酱20g</span> + <span class="ing">香油5g</span> + <span class="ing">盐1g</span> + <span class="ing">韭菜花2g</span> + <span class="ing">腐乳汁2g</span> + <span class="ing">白糖1g</span><br>
+                        油澥法（不用水澥）。<br><br>
+
+                        <strong style="color:#e0c0d0;">海鲜汁（批量150份）</strong><br>
+                        <span class="ing">酿造酱油2500g</span> + <span class="ing">白砂糖2500g</span> + <span class="ing">清酒800g</span> + <span class="ing">味精150g</span> → 搅匀冷藏<br>
+                        每份30g小碟，蘸食原味烤肉。
+                    </div>
+                </div>
+
+                <!-- 变形体扩展：原味型 -->
+                <div class="recipe-block">
+                    <div class="r-title">🥩 变形体 · 原味型（VC_K022）</div>
+                    <div class="r-body">
+                        <strong style="color:#e0c0d0;">雪花牛肋条</strong>：美国短肋斜切3mm/170g · 58-78元 · 配包肉酱/海鲜汁/芝麻酱 · 毛利68-74%<br>
+                        <strong style="color:#e0c0d0;">厚切牛舌</strong>：牛舌根段5-8mm/150g · 58-88元 · 配香油盐/海鲜汁 · 毛利78-83%<br>
+                        <strong style="color:#e0c0d0;">大片雪花上脑</strong>：上脑3mm/200g · 48-68元 · 毛利80-83%<br>
+                        <span style="color:#a08098;">统一工艺：</span>半解冻原切 · 不腌不拌 · 竹帘粽叶摆盘
+                    </div>
+                </div>
+
+                <!-- 变形体扩展：拼盘型 -->
+                <div class="recipe-block">
+                    <div class="r-title">🎡 变形体 · 拼盘型（VC_K023）</div>
+                    <div class="r-body">
+                        <strong style="color:#e0c0d0;">网红摩天轮</strong>：12种×100g/1.2kg · 128-168元 · 毛利68-73%<br>
+                        <strong style="color:#e0c0d0;">日式9宫格</strong>：9种原肉×100g/900g · 98-128元 · 毛利70-73%<br>
+                        <strong style="color:#e0c0d0;">肥牛四兄弟</strong>：4种刷酱肥牛×75g/300g · 68-88元 · 毛利83-86%
+                    </div>
+                </div>
+
+                <!-- 变形体扩展：精品部位 -->
+                <div class="recipe-block">
+                    <div class="r-title">🍖 变形体 · 精品部位（VC_K024）</div>
+                    <div class="r-body">
+                        <strong style="color:#e0c0d0;">烤胸口</strong>：48-68元 · 毛利80-83%<br>
+                        <strong style="color:#e0c0d0;">三筋</strong>：58-88元 · 毛利72-78%<br>
+                        <strong style="color:#e0c0d0;">护心肉</strong>：48-68元 · 毛利75-80%<br>
+                        <strong style="color:#e0c0d0;">老式肥牛</strong>：32-48元 · 毛利83-85%<br>
+                        <span style="color:#a08098;">配方：</span>白糖100g + 牛肉酱100g + 盐25g + 味精20g + 牛肉粉20g + 黑胡椒粉10g + 果蔬汁 + 酵素3鸡蛋 + 猕猴桃25g<br><br>
+                        <strong style="color:#e0c0d0;">熟筋</strong>：28-38元 · 毛利85-87%<br>
+                        <span style="color:#a08098;">工艺：</span>牛筋呼45分钟 → 加味精3g + 牛肉粉8g + 红油20g + 粗辣椒粉3g + 孜然10g拌匀<br><br>
+                        <strong style="color:#e0c0d0;">香辣牛肉</strong>：28-38元 · 毛利80-82%
+                    </div>
+                </div>
+            </div>
+
+            <!-- ⑦ 商业决策 -->
+            <div class="section">
+                <div class="section-title"><span class="num">⑦</span> 商业决策</div>
+                <div class="decision-grid">
+                    <div class="decision-item">
+                        <div class="d-label">🏆 爆品首选</div>
+                        <div class="d-value">秘制大块肉 + 特色拌肉</div>
+                        <div style="font-size:11px; color:#a08098;">超高毛利(82-87%)·酱料壁垒·复购率强</div>
+                    </div>
+                    <div class="decision-item">
+                        <div class="d-label">📸 引流担当</div>
+                        <div class="d-value">网红摩天轮 + 黑椒牛肉粒(干冰)</div>
+                        <div style="font-size:11px; color:#a08098;">视觉传播·社交裂变·打卡属性</div>
+                    </div>
+                    <div class="decision-item">
+                        <div class="d-label">💰 利润基石</div>
+                        <div class="d-value">老式肥牛 + 熟筋 + 香辣牛肉</div>
+                        <div style="font-size:11px; color:#a08098;">低客单高毛利(80-87%)·下酒刚需</div>
+                    </div>
+                    <div class="decision-item">
+                        <div class="d-label">🎯 品质标杆</div>
+                        <div class="d-value">雪花牛肋条 + 厚切牛舌</div>
+                        <div style="font-size:11px; color:#a08098;">高端定位·客单价拉升·专业背书</div>
+                    </div>
+                    <div class="decision-item">
+                        <div class="d-label">🧑‍🍳 出餐策略</div>
+                        <div class="d-value">拌肉预制酱料·原味现切现出</div>
+                        <div style="font-size:11px; color:#a08098;">大块肉酱/拌肉料批量预制·原味型高峰前备好</div>
+                    </div>
+                    <div class="decision-item">
+                        <div class="d-label">📦 成本管控</div>
+                        <div class="d-value">上脑统一采购·一肉多用</div>
+                        <div style="font-size:11px; color:#a08098;">大块肉/拌肉/上脑片共用上脑·降低损耗</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ⑧ 未来趋势 -->
+            <div class="section">
+                <div class="section-title"><span class="num">⑧</span> 未来趋势</div>
+                <div class="text-glow">
+                    <strong>趋势一 · 酱料升级：</strong>大块肉酱可延伸出辣白菜酱、柚子酱等韩式变体，打造「一肉多吃」体验。<br><br>
+                    <strong>趋势二 · 部位细分：</strong>精品部位赛道持续升温（胸口、三筋、护心肉），建议增加牛小肠、牛肚领等韩式经典内脏品类，形成「部位专营」差异化。<br><br>
+                    <strong>趋势三 · 拼盘场景化：</strong>摩天轮/9宫格可绑定节日限定（情人节·中秋·圣诞），搭配定制摆盘器具，提升客单价与传播属性。<br><br>
+                    <strong>趋势四 · 小份化/一人食：</strong>针对午市/一人食场景，推出小份拌肉（100g/22-28元）和 mini 拼盘，拓宽消费频次。<br><br>
+                    <strong>趋势五 · 数字化配方管理：</strong>所有酱料/拌料配方建立标准化 SOP，支撑多店复制与品质统一。
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer">
+                <div class="footer-brand"><span>🍖</span> FoodIntelAI · 数据驱动餐饮决策 <span>🔥</span></div>
+                <div style="font-size:10px; color:#806878; margin-top:4px;">VC_K002 · 韩式原味牛肉系列 v1.0</div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

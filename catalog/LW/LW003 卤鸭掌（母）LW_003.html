@@ -1,0 +1,353 @@
+     1|<!DOCTYPE html>
+     2|<html lang="zh-CN">
+     3|<head>
+     4|<meta charset="UTF-8">
+     5|<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+     6|<title>LW_003 卤鸭掌 · 创业项目测评 V5.1</title><style>
+     7|*{margin:0;padding:0;box-sizing:border-box}
+     8|body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+     9|.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+    10|.rating-bar{background:linear-gradient(135deg,#3a2a1a,#2a1a0a);padding:16px 18px;color:#fff}
+    11|.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+    12|.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+    13|.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+    14|.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+    15|.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+    16|.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+    17|.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+    18|.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+    19|.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+    20|.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    21|.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    22|.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+    23|.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+    24|.radar-item .stars{font-size:13px;letter-spacing:0px}
+    25|.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+    26|.radar-item.high{background:#fef2ee}
+    27|.radar-item.high .stars{color:#E8652D}
+    28|.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    29|.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+    30|.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+    31|.fit-yes{background:#f0f6ec;color:#3a6b2e}
+    32|.fit-no{background:#fef2f2;color:#b53b3b}
+    33|.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+    34|.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+    35|.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+    36|.logic-item:last-child{border-bottom:none}
+    37|.logic-item .v{font-weight:700;color:#C0392B}
+    38|.metric-row{display:flex;gap:6px;margin-top:6px}
+    39|.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+    40|.metric-card .m-label{font-size:9px;color:#7a7269}
+    41|.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+    42|.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+    43|.mc-orange{background:#fdf2ee}
+    44|.mc-orange .m-val{color:#E8652D}
+    45|.mc-gold{background:#fef6ec}
+    46|.mc-gold .m-val{color:#D4A574}
+    47|.mc-green{background:#f0f6ec}
+    48|.mc-green .m-val{color:#5a8f3c}
+    49|.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    50|.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+    51|.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+    52|.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+    53|.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+    54|.track-good .t-h{color:#5a8f3c}
+    55|.track-bad .t-h{color:#C0392B}
+    56|.prod-struct{display:flex;flex-direction:column;gap:8px}
+    57|.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+    58|.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+    59|.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+    60|.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+    61|.tier-lead{background:#fef6ec}
+    62|.tier-lead .t-badge{background:#E8652D;color:#fff}
+    63|.tier-profit{background:#f0f6ec}
+    64|.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+    65|.tier-set{background:#eef2ff}
+    66|.tier-set .t-badge{background:#4f6ef7;color:#fff}
+    67|.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    68|.stall-item{padding:10px;border-radius:10px;text-align:center}
+    69|.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+    70|.stall-item .stars{font-size:12px;letter-spacing:1px}
+    71|.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+    72|.risk-item:last-child{border-bottom:none}
+    73|.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+    74|.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+    75|.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+    76|.judge-box .j-text strong{color:#C0392B}
+    77|.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+    78|.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+    79|.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+    80|.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+    81|.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    82|.process-step .ps-desc{flex:1}
+    83|.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+    84|.rel-grid{display:flex;flex-direction:column;gap:6px}
+    85|.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+    86|.rel-item:visited{color:#3a322a}
+    87|.rel-item:hover{background:#efe8df}
+    88|.rel-item .r-emoji{font-size:16px}
+    89|.rel-item .r-name{flex:1;font-weight:600}
+    90|.rel-item .r-arrow{color:#b5aaa0;font-size:11px}
+    91|.consult-box{background:#f8f4ef;border-radius:12px;padding:16px;margin:0 18px 16px;border:1px solid #eee5d8}
+    92|.consult-box .c-head{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+    93|.consult-box .c-desc{font-size:11px;color:#7a7269;margin-bottom:10px}
+    94|.consult-box .c-wx{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-radius:8px;font-size:12px;font-weight:600;color:#3a322a;cursor:pointer;justify-content:center;border:1px solid #D4A574}
+    95|.consult-box .c-copy{font-size:9px;color:#b5aaa0;text-align:center;margin-top:4px}
+    96|.pay-area{padding:20px 18px;background:linear-gradient(180deg,#faf8f5,#f5ede5);text-align:center;border-top:2px dashed #ddd4ca}
+    97|.pay-area .lock-icon{font-size:28px;margin-bottom:4px}
+    98|.pay-area h3{font-size:15px;color:#3a322a;margin-bottom:4px}
+    99|.pay-area .p-sub{font-size:11px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+   100|.pay-area .p-list{text-align:left;margin:0 auto 10px;max-width:360px}
+   101|.pay-area .p-item{display:flex;align-items:flex-start;gap:6px;font-size:13px;line-height:1.6;padding:5px 0;color:#3a322a}
+   102|.pay-area .p-item .p-icon{flex-shrink:0;color:#5a8f3c}
+   103|.pay-area .price-tag{font-size:24px;font-weight:800;color:#C0392B;margin-bottom:8px}
+   104|.pay-area .price-tag small{font-size:12px;font-weight:400;color:#7a7269}
+   105|.pay-area .btn{display:inline-block;padding:12px 40px;background:#C0392B;color:#fff;border-radius:8px;text-decoration:none;font-size:14px;font-weight:700;transition:.15s}
+   106|.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:6px}
+   107|.pay-content{display:none;padding:16px 18px;background:#fdfcf9}
+   108|.pay-content.show{display:block}
+   109|.pay-content .pc-title{font-size:15px;font-weight:700;color:#3a322a;margin-bottom:12px;text-align:center;border-bottom:2px dashed #ddd4ca;padding-bottom:10px}
+   110|.recipe-box{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px}
+   111|.recipe-box .rb-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+   112|.recipe-line{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+   113|.recipe-line:last-child{border-bottom:none}
+   114|.recipe-line .rl-val{font-weight:600;color:#3a322a}
+   115|.ftr{padding:16px 18px;text-align:center;background:#3a322a;color:#b5aaa0;font-size:11px;line-height:1.8}
+   116|.ftr .f-brand{font-size:12px;font-weight:700;color:#e0d5ca;margin-bottom:2px}
+   117|.ftr .f-tagline{font-size:10px;color:#988d80;margin-bottom:6px}
+   118|.ftr .f-links{display:flex;justify-content:center;gap:12px;font-size:10px}
+   119|.ftr .f-links a{color:#D4A574;text-decoration:none}
+   120|</style></head><body><div class="card">
+   121|
+   122|<div class="rating-bar">
+   123|  <div class="r-top"><div class="r-score"><span class="r-num">8.7</span><span class="r-label">综合评分</span></div><span class="r-grade">A级项目</span></div>
+   124|  <div class="r-tagline">卤味摊中毛利最高的鸭副产品，配酒绝佳</div>
+   125|  <div class="r-tags"><span>🔥 热度高</span><span>💰 投资 3000~5500元</span><span>👥 1人起摊</span><span>🔄 复购强</span></div>
+   126|</div>
+   127|
+   128|<div class="section">
+   129|  <div class="s-title">📊 项目速览</div>
+   130|  <div class="radar-grid">
+   131|    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">全国认知高</div></div>
+   132|    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">上瘾属性</div></div>
+   133|    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">本小</div></div>
+   134|    <div class="radar-item"><div class="label">📚 难度</div><div class="stars">★★★★☆</div><div class="val">入门中低</div></div>
+   135|    <div class="radar-item high"><div class="label">💵 利润</div><div class="stars">★★★★★</div><div class="val">高毛利</div></div>
+   136|    <div class="radar-item"><div class="label">📈 空间</div><div class="stars">★★★★☆</div><div class="val">可扩展</div></div>
+   137|  </div>
+   138|</div>
+   139|
+   140|<div class="section">
+   141|  <div class="s-title">🎯 适合谁</div>
+   142|  <div class="fit-wrap"><div class="fit-col"><div class="f-head">✅ 适合（5条）</div>
+   143|    <div class="fit-item">卤味摊需要高毛利利润品的人</div>
+   144|    <div class="fit-item">摊位周边有饮酒习惯的客群</div>
+   145|    <div class="fit-item">想做卤味全品类的综合摊位</div>
+   146|    <div class="fit-item">能接受鸭掌清洗处理工序的人</div>
+   147|    <div class="fit-item">想用鸭掌做虎皮炸卤搭配的人</div>
+   148|  </div><div class="fit-col"><div class="f-head">❌ 不适合（3条）</div>
+   149|    <div class="fit-item">不愿意花时间处理鸭掌趾甲的人</div>
+   150|    <div class="fit-item">摊位以学生为主（消费力偏弱）</div>
+   151|    <div class="fit-item">只做单一品不设利润搭配的人</div>
+   152|  </div></div>
+   153|</div>
+   154|
+   155|<div class="section">
+   156|  <div class="s-title">💰 赚钱逻辑</div>
+   157|  <div class="logic-box">
+   158|    <div class="l-title">顾客为什么买</div>
+   159|    <div style="font-size:12px;color:#5a4f44;margin-bottom:10px">鸭掌口感独特——筋多有嚼劲，骨头缝里的筋和软骨是最贵的部分。配啤酒绝配，客单价高但客户愿意付。</div>
+   160|    <div class="l-title">利润来源</div>
+   161|    <div class="logic-item"><span>鸭掌进货成本</span><span class="v">12~18元/kg（约40~50个/kg）</span></div>
+   162|    <div class="logic-item"><span>成品售价</span><span class="v">2~3元/个（或15~25元/斤）</span></div>
+   163|    <div class="logic-item"><span>毛利区间</span><span class="v">65%~78%</span></div>
+   164|    <div class="l-title">量化三件套</div>
+   165|    <div class="metric-row">
+   166|      <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">200~500</div><div class="m-sub">元/日（预估）</div></div>
+   167|      <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">3000~8000</div><div class="m-sub">元/月（预估）</div></div>
+   168|      <div class="metric-card mc-green"><div class="m-label">回本</div><div class="m-val">5~12</div><div class="m-sub">天（预估）</div></div>
+   169|    </div>
+   170|  </div>
+   171|</div>
+   172|
+   173|<div class="section">
+   174|  <div class="s-title">📈 赛道判断</div>
+   175|  <div style="font-size:12px;color:#5a4f44;line-height:1.8">
+   176|    <p><strong>优势：</strong>鸭掌是卤味中毛利最高的品类之一。卤制可以用同一锅卤水，边际成本极低。可以做虎皮鸭掌（先炸后卤）溢价更高。</p>
+   177|    <p style="margin-top:6px"><strong>劣势：</strong>清洗处理工序繁琐（去趾甲、去老皮），出摊前备料时间长。按个卖单价低，必须按斤或按份卖才能拉升客单。部分消费者嫌鸭掌啃着麻烦。</p>
+   178|    <p style="margin-top:6px"><strong>市场现状：</strong>绝味鸭掌约25~30元/斤，独立摊位15~25元/斤有价格优势。夜市啤酒摊周边的卤鸭掌走量很好。</p>
+   179|    <p style="margin-top:6px"><strong>未来判断：</strong>鸭掌的消费场景主要在配酒和追剧零嘴，与鸭脖互补。虎皮鸭掌是近年增长较快的细分方向。</p>
+   180|    <p style="margin-top:6px"><strong>是否值得进入：</strong>是。作为利润型SKU配合鸭脖和鸭翅一起卖。</p>
+   181|  </div>
+   182|</div>
+   183|
+   184|<div class="section">
+   185|  <div class="s-title">🚦 项目评估</div>
+   186|  <div class="radar-grid" style="grid-template-columns:1fr 1fr;">
+   187|    <div class="radar-item"><div class="label">市场竞争</div><div class="stars">★★★☆☆</div><div class="val">中度竞争</div></div>
+   188|    <div class="radar-item"><div class="label">学习周期</div><div class="stars">★★★★☆</div><div class="val">2~5天</div></div>
+   189|    <div class="radar-item high"><div class="label">操作容错度</div><div class="stars">★★★★☆</div><div class="val">容错高</div></div>
+   190|    <div class="radar-item high"><div class="label">最低验证资金</div><div class="stars">★★★★★</div><div class="val">本极低</div></div>
+   191|  </div>
+   192|  <div style="text-align:center;margin-top:8px"><span style="font-size:11px;color:#7a7269">推荐等级 </span><span style="font-size:16px;font-weight:800;color:#E8652D">A</span></div>
+   193|  <div style="font-size:9px;color:#b5aaa0;text-align:center;margin-top:4px">投资回报30% · 执行难度20% · 市场竞争20% · 复购能力20% · 扩展空间10%</div>
+   194|</div>
+   195|
+   196|<div class="section">
+   197|  <div class="s-title">🗓️ 30天验证路线</div>
+   198|  <div class="track-grid">
+   199|    <div class="track-box"><div class="t-h">Day1-3</div><div class="t-item">试做基础卤鸭掌和虎皮鸭掌</div><div class="t-item">对比口感，选方向</div></div>
+   200|    <div class="track-box"><div class="t-h">Day4-7</div><div class="t-item">内部试吃，确定定价和份量</div></div>
+   201|    <div class="track-box"><div class="t-h">Day8-15</div><div class="t-item">搭配鸭脖鸭翅试卖</div></div>
+   202|    <div class="track-box"><div class="t-h">Day16-30</div><div class="t-item">稳定卤制工艺和供货渠道</div></div>
+   203|  </div>
+   204|  <div style="margin-top:8px">
+   205|    <div class="track-box track-good" style="margin-bottom:4px"><div class="t-h">✅ 继续标准</div><div class="t-item">日销2kg以上</div><div class="t-item">顾客主动回头买鸭掌</div></div>
+   206|    <div class="track-box track-bad"><div class="t-h">❌ 退出标准</div><div class="t-item">鸭掌销量长期低于鸭翅</div><div class="t-item">处理工序太费时影响出摊</div></div>
+   207|  </div>
+   208|</div>
+   209|
+   210|<div class="section">
+   211|  <div class="s-title">🛠️ 设备清单</div>
+   212|  <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:8px">
+   213|    <strong>固定设备：</strong>不锈钢卤桶（与鸭脖共用）/卡式炉/电子秤<br>
+   214|    <strong>摊位设备：</strong>折叠桌/不锈钢托盘/手套口罩/收款码/灯箱/保温箱<br>
+   215|    <strong>新增耗材：</strong>鸭掌冻品5kg（100~120元）/处理工具（剪刀1把10元）
+   216|  </div>
+   217|  <div style="padding:8px;background:#f0f6ec;border-radius:8px;font-size:11px">
+   218|    总投入与LW001相近（共用设备），约2500~5500元
+   219|  </div>
+   220|</div>
+   221|
+   222|<div class="section">
+   223|  <div class="s-title">📦 产品结构</div>
+   224|  <div class="prod-struct">
+   225|    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">卤鸭掌（按个）</span><span class="t-price">1.5~2.5元</span></div>
+   226|    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">卤鸭掌（半斤装）</span><span class="t-price">10~14元</span></div>
+   227|    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">虎皮鸭掌（半斤装）</span><span class="t-price">14~18元</span></div>
+   228|    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">卤味拼盘（鸭脖+鸭翅+鸭掌）</span><span class="t-price">20~30元</span></div>
+   229|  </div>
+   230|</div>
+   231|
+   232|<div class="section">
+   233|  <div class="s-title">🔥 摆摊指数</div>
+   234|  <div class="stall-grid">
+   235|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🌃 夜市</div><div class="stars">★★★★★</div></div>
+   236|    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🏫 学校</div><div class="stars">★★★☆☆</div></div>
+   237|    <div class="stall-item" style="background:#fdf2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+   238|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🏘️ 社区</div><div class="stars">★★★★☆</div></div>
+   239|    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+   240|    <div class="stall-item" style="background:#eef2ff"><div class="s-name">📱 外卖</div><div class="stars">★★☆☆☆</div></div>
+   241|  </div>
+   242|</div>
+   243|
+   244|<div class="section">
+   245|  <div class="s-title">⚠️ 最大风险</div>
+   246|  <div class="risk-item"><span class="r-icon">🏛️</span><span><strong>政策与证照风险：</strong>同LW001，需确认摊贩备案政策。</span></div>
+   247|  <div class="risk-item"><span class="r-icon">🌤️</span><span><strong>场地与季节风险：</strong>鸭掌冷吃为主，冬季销量下降明显。</span></div>
+   248|  <div class="risk-item"><span class="r-icon">🦶</span><span><strong>处理工序复杂：</strong>鸭掌去趾甲、去老皮耗时费力，批量处理可能需要增加人手。</span></div>
+   249|  <div class="risk-item"><span class="r-icon">🥩</span><span><strong>鸭掌大小差异：</strong>冻品鸭掌大小参差不齐，影响按个卖的定价一致性。</span></div>
+   250|  <div class="risk-item"><span class="r-icon">🧪</span><span><strong>虎皮工艺控制：</strong>虎皮鸭掌的炸制温度和时间控制不好会发硬或炸焦。</span></div>
+   251|  <div class="risk-item"><span class="r-icon">💪</span><span><strong>劳力强度：</strong>鸭掌处理+卤制+打包，叠加其他产品后备料时间明显增加。</span></div>
+   252|</div>
+   253|
+   254|<div class="section">
+   255|  <div class="s-title">🧠 最终决策判断</div>
+   256|  <div class="judge-box"><div class="j-text">
+   257|    <strong>为什么值得做：</strong>鸭掌是卤味摊中毛利最高的品类之一（65%~78%），与鸭脖共用卤水。虎皮鸭掌溢价能力强，差异化明显。夜市啤酒摊周边走量很好。<br><br>
+   258|    <strong>为什么不值得做：</strong>清洗处理工序繁琐，单人操作鸭掌会占用大量备料时间。如果摊位面积小、人手少，鸭掌处理的性价比可能不如鸭翅。<br><br>
+   259|    <strong>进入条件：</strong>①已有综合卤味摊主做；②有耐心处理鸭掌；③摊位周边有饮酒客群。<br><br>
+   260|    <strong>退出条件：</strong>①处理耗时超过备料时间的30%；②鸭掌销量低于整体卤味营收的10%。<br><br>
+   261|    <strong>最终判断：可进。</strong>利润型SKU，但不建议作为主打品。有条件的摊位可以做虎皮鸭掌溢价。
+   262|  </div><div class="j-tags"><span>#利润品</span><span>#虎皮可溢价</span><span>#配酒绝佳</span><span>#共用卤水</span></div></div>
+   263|</div>
+   264|
+   265|<div class="section">
+   266|  <div class="s-title">🔪 核心工艺</div>
+   267|  <div class="process-flow">
+   268|    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc"><strong>去趾甲+清洗：</strong>鸭掌解冻后剪去趾甲，搓洗去老皮，冲净血水</span><span class="ps-verify">[验证点：趾甲根部和脚垫老皮全部去除，摸起来不扎手]</span></div>
+   269|    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc"><strong>焯水：</strong>冷水下锅加姜片料酒去腥，沸前打浮沫，捞出冲凉</span><span class="ps-verify">[验证点：浮沫打净，鸭掌不发粘]</span></div>
+   270|    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc"><strong>卤制：</strong>鸭掌入卤水，中小火卤制约15~20分钟（比鸭翅更短）</span><span class="ps-verify">[验证点：鸭掌掌蹼不破，脚掌骨能轻扭即断]</span></div>
+   271|    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc"><strong>焖泡入味：</strong>关火焖泡20~30分钟，捞出晾凉（虎皮版:炸至起泡再卤）</span><span class="ps-verify">[验证点：啃开鸭掌筋皮Q弹，骨缝有卤色入味]</span></div>
+   272|  </div>
+   273|  <div style="font-size:11px;color:#b5aaa0;text-align:center;margin-top:6px">💡 虎皮鸭掌的炸制油温和时间控制——解锁后查看完整出摊包。</div>
+   274|</div>
+   275|
+   276|<div class="section">
+   277|  <div class="s-title">📊 成本利润</div>
+   278|  <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+   279|    <div class="recipe-line"><span>核心原料成本（鸭掌）</span><span class="rl-val">0.53~0.60元/个</span></div>
+   280|    <div class="recipe-line"><span>卤料分摊</span><span class="rl-val">0.08~0.12元/个</span></div>
+   281|    <div class="recipe-line"><span>包装成本</span><span class="rl-val">0.1~0.2元/个</span></div>
+   282|    <div class="recipe-line"><span><strong>单份总成本</strong></span><span class="rl-val" style="font-weight:700">0.8~1.0元/个</span></div>
+   283|    <div class="recipe-line"><span>售价区间</span><span class="rl-val">2~3元/个</span></div>
+   284|    <div class="recipe-line"><span>毛利区间</span><span class="rl-val">65%~78%</span></div>
+   285|  </div>
+   286|  <div style="margin-top:6px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#5a4f44">日售鸭掌5斤（约200个）×均价2元=日营收400元，日毛利约260元。</div>
+   287|</div>
+   288|
+   289|<div class="section">
+   290|  <div class="s-title">🔗 关联产品</div>
+   291|  <div class="rel-grid">
+   292|    <a class="rel-item" href="#"><span class="r-emoji">🦆</span><span class="r-name">LW001 卤鸭脖</span><span class="r-arrow">→</span></a>
+   293|    <a class="rel-item" href="#"><span class="r-emoji">🦆</span><span class="r-name">LW002 卤鸭翅</span><span class="r-arrow">→</span></a>
+   294|    <a class="rel-item" href="#"><span class="r-emoji">🥚</span><span class="r-name">LW010 卤蛋</span><span class="r-arrow">→</span></a>
+   295|  </div>
+   296|</div>
+   297|
+   298|<div class="consult-box">
+   299|  <div class="c-head">📱 还有疑问？</div>
+   300|  <div class="c-desc">拿不准这个项目适不适合你，直接问沧林</div>
+   301|  <div class="c-wx" onclick="copyWx()"><span>📋</span> 复制微信号：canglin1985</div>
+   302|  <div class="c-copy" id="toast-msg">点击复制，去微信搜索添加</div>
+   303|</div>
+   304|
+   305|<div class="pay-area">
+   306|  <div class="lock-icon">🔒</div>
+   307|  <h3>完整出摊包</h3>
+   308|  <div class="p-sub">你买的不是一个配方。<br>是一套经过验证的出摊方案。</div>
+   309|  <div class="p-list">
+   310|    <div class="p-item"><span class="p-icon">✅</span><span>精确配方 — 卤水香料配比精确到g</span></div>
+   311|    <div class="p-item"><span class="p-icon">✅</span><span>虎皮鸭掌 — 炸制油温/时间对照表</span></div>
+   312|    <div class="p-item"><span class="p-icon">✅</span><span>批量SOP — 10kg/30kg版</span></div>
+   313|    <div class="p-item"><span class="p-icon">✅</span><span>翻车解决方案 — 发硬/脱皮/不入味</span></div>
+   314|  </div>
+   315|  <div class="price-tag">¥29 <small>一次解锁 · 完整出摊包</small></div>
+   316|  <a class="btn" href="#" onclick="togglePay();return false;">立即解锁 →</a>
+   317|  <div class="note">解锁后发编号给客服，秒发完整版</div>
+   318|</div>
+   319|
+   320|<div class="pay-content show" id="payContent">
+   321|  <div class="pc-title">💎 完整出摊包 · 数据全开</div>
+   322|  <div class="recipe-box">
+   323|    <div class="rb-title">📐 基础卤水配方（同LW001，共用）</div>
+   324|    <div class="recipe-line"><span>清水/高汤</span><span class="rl-val">10L</span></div>
+   325|    <div class="recipe-line"><span>盐</span><span class="rl-val">120~150g</span></div>
+   326|    <div class="recipe-line"><span>冰糖</span><span class="rl-val">150~200g</span></div>
+   327|    <div class="recipe-line"><span>生抽/老抽/料酒/香料包</span><span class="rl-val">同LW001</span></div>
+   328|  </div>
+   329|  <div class="recipe-box">
+   330|    <div class="rb-title">🔥 虎皮鸭掌工艺</div>
+   331|    <div style="font-size:11px;color:#5a4f44;line-height:1.7;padding:4px 0">
+   332|      <strong>1. 焯水后晾干：</strong>鸭掌焯水后彻底晾干表面水分（风扇吹10分钟）<br>
+   333|      <strong>2. 炸制：</strong>油温180℃，下锅炸至表面起泡呈浅金黄（约40秒~1分钟）<br>
+   334|      <strong>3. 冰水浸泡：</strong>炸后立即入冰水浸泡10~15分钟（虎皮成型关键）<br>
+   335|      <strong>4. 入卤水卤制：</strong>按常规卤鸭掌流程卤制15~20分钟，焖泡入味<br>
+   336|      <span style="color:#C0392B;font-size:10px">⚠️ 油温控制：油温过低不起泡，过高炸焦。180℃±5℃为最佳。</span>
+   337|    </div>
+   338|  </div>
+   339|</div>
+   340|
+   341|<div class="ftr">
+   342|  <div class="f-brand">🦆 FoodIntelAI · 创业决策数据库</div>
+   343|  <div class="f-tagline">不卖配方 · 帮你看清一个项目值不值得干</div>
+   344|  <div class="f-links"><a href="https://foodintelai.com">官网</a><a href="https://foodintelai.com/kb">知识库</a><a>微信：canglin1985</a></div>
+   345|</div>
+   346|
+   347|</div>
+   348|<script>
+   349|function togglePay(){var el=document.getElementById('payContent');el.classList.toggle('show');var btn=document.querySelector('.btn');btn.textContent=el.classList.contains('show')?'收起内容 ↑':'立即解锁 →';}
+   350|function copyWx(){var w='canglin1985';if(navigator.clipboard)navigator.clipboard.writeText(w);else{var t=document.createElement('textarea');t.value=w;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}var t=document.getElementById('toast-msg');t.textContent='✅ 已复制：canglin1985，去微信添加吧';t.style.display='block';setTimeout(function(){t.style.display='none';},3000);}
+   351|</script>
+   352|</body></html>
+   353|

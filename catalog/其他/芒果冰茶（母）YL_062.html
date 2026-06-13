@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>芒果冰茶 · 饮品项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#f39c12,#e67e22);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#f39c12;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #f39c12;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#f39c12;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#f39c12;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 01 Header -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥭 芒果冰茶</h1>
+  <div style="font-size:12px;color:#b5aaa0">芒果果肉冰茶 · 热带风味 · 夏日爆品</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.5</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">芒果冰茶是夏季销量最高的果茶之一，果香浓郁，酸甜可口，与油炸小食绝配。</div>
+  <div class="r-tags">
+    <span>🥭 热带果茶</span>
+    <span>💰 投资2500+</span>
+    <span>👤 1人操作</span>
+    <span>🔄 复购高</span>
+  </div>
+</div>
+
+<!-- 02 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★☆☆☆</div><div class="val">2500-4000</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div><div class="val">简单</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+  </div>
+</div>
+
+<!-- 03 适合谁 -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 所有油炸类小吃摊位（解腻黄金搭档）</div>
+      <div class="fit-item fit-yes">✅ 夏季夜市、商圈、学校周边</div>
+      <div class="fit-item fit-yes">✅ 女性客群、年轻人（芒果口味接受度高）</div>
+      <div class="fit-item fit-yes">✅ 想做高颜值、高毛利果茶</div>
+      <div class="fit-item fit-yes">✅ 能采购到新鲜芒果或优质果酱</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 芒果过敏人群集中区域</div>
+      <div class="fit-item fit-no">❌ 冬季为主的摊位（芒果冬季贵）</div>
+      <div class="fit-item fit-no">❌ 无法保证芒果新鲜度</div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：浓郁芒果香 × 果肉颗粒感 × 冰爽解腻 × 高颜值</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>芒果冰茶（杯）</span><span class="v">毛利72%</span></div>
+    <div class="logic-item"><span>加小料（寒天/椰果/芦荟）</span><span class="v">毛利80%</span></div>
+    <div class="logic-item"><span>套餐（+炸鸡/年糕）</span><span class="v">客单价+6元</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>升级为大杯（更多果肉）</span><span class="v">+¥3</span></div>
+    <div class="logic-item"><span>加奶盖/芝士奶盖</span><span class="v">+¥4</span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>推出“芒果+百香果”双果茶</span><span class="v"></span></div>
+    <div class="logic-item"><span>集章卡/第二杯半价</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥700-1300</div><div class="m-sub">5-7h经营</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥5000-8000</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">5-7天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">*数据基于二线茶饮摊位实测（2025年夏季）</div>
+</div>
+
+<!-- 05 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">芒果口味认知度极高，是夏季最畅销果茶之一</div>
+      <div class="t-item">果肉颗粒感增加价值感，顾客愿意付高价</div>
+      <div class="t-item">出杯速度快，适合夜市高峰</div>
+      <div class="t-item">可用新鲜芒果或冷冻芒果浆，全年可做</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">竞争激烈，同质化严重</div>
+      <div class="t-item">新鲜芒果价格波动大（冬季翻倍）</div>
+      <div class="t-item">需要制冰机和冷藏设备</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>芒果茶饮在茶饮店、夜市摊点非常普遍，属于“必须有”的单品，但利润空间被压缩。<br>
+    <strong>未来判断：</strong>2026-2027年，普通芒果冰茶很难卖出高价，必须升级为“芒果+百香果”“芒果奶盖”或“杨枝甘露”等变体。<br>
+    <strong>是否值得进入：是</strong> —— 作为油炸小食摊位的必搭饮品，或茶饮摊的引流款。建议用新鲜芒果肉制造差异化。
+  </div>
+</div>
+
+<!-- 06 项目评估 -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★★☆</div><div style="font-size:10px;color:#5a4f44">激烈</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★☆☆☆☆</div><div style="font-size:10px;color:#5a4f44">1天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">果酱比例关键</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥300以内</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th> </tr</thead>
+      <tbody>
+        <tr style="background:#fef5e0"><td>🥭 芒果冰茶</th><td>★★</th><td>★★</th><td>★★★★</th><td>★★★★</th><td>A-</th><td><a href="#" style="color:#f39c12">#YL_062</a></th> <tr>
+        <tr><td>🍑 桃桃蜜柚</th><td>★★</th><td>★★</th><td>★★★★</th><td>★★★</th><td>B+</th><td><a href="#">#YL_035</a></th> </tr>
+        <tr style="background:#f8f4ef"><td>🍋 爆打柠檬茶</th><td>★★</th><td>★★</th><td>★★★★</th><td>★★★★★</th><td>B+</th><td><a href="#">#YL_030</a></th> </tr>
+        <tr><td>🥭 杨枝甘露</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★</th><td>A</th><td><a href="#">#YL_068</a></th> </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- 07 30天验证路线 -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>试做芒果果酱或新鲜芒果泥，泡茶底，调配酸甜比例</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20人试饮，对比新鲜芒果vs冷冻芒果浆，收集反馈</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备30杯），测试定价¥8-12区间销量</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加奶盖/百香果版本，记录客单价变化</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘复购率、果肉成本，决定是否切换为冷冻芒果浆</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7能否卖出25杯以上 ② 顾客评价“果肉多”比例＞60% ③ 复购率＞20%<br>
+    <strong>🚪 退出标准：</strong>连续3天销量＜12杯 / 顾客反馈“没芒果味”超过30% / 芒果成本占比＞25%<br>
+    <strong>✅ 继续标准：</strong>日均销量稳定30杯以上 / 毛利＞65% / 顾客愿意加价升级奶盖版
+  </div>
+</div>
+
+<!-- 08 设备清单 -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：制冰机(¥800-1500) · 雪克壶×2(¥30-60) · 量杯(¥10-20) · 保温桶(¥50-100) · 封口机(¥200-400) · 果糖机(可选)(¥300-600) · 冷藏柜(¥600-1200) · 不锈钢操作台(¥200-400) · 水果刀/砧板(¥30)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：手推车/折叠桌(¥200-800) · 帐篷伞(¥150-300) · 招牌灯箱(¥80-150) · 价格立牌(¥20-50) · 一次性杯架(¥20)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：新鲜芒果2kg(¥20-30)或冷冻芒果浆1kg(¥25) · 茶包(绿茶/红茶)(¥20) · 果糖/蜂蜜(¥30) · 冰块(自制或外购) · 一次性杯子+封口膜500套(¥80-120) · 吸管(¥10) · 小料(寒天/椰果)(¥20)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,000-3,000</strong>（已有冰箱，外购冰块，手动摇）</div>
+    <div><strong>💰 完整启动方案：¥3,500-5,500</strong>（含制冰机、果糖机）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品经营许可证（冷热饮品制售）¥200-500 · 办理时间7-15天</div>
+  </div>
+</div>
+
+<!-- 09 产品结构 -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">芒果冰茶（中杯）</span><span class="t-price">¥8-10</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">芒果奶盖茶 · 芒果百香果茶</span><span class="t-price">¥12-16</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">饮品+炸鸡小份</span><span class="t-price">¥15-20</span></div>
+  </div>
+</div>
+
+<!-- 10 摆摊指数 -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">📱 外卖</div><div class="stars">★★★★☆</div></div>
+  </div>
+</div>
+
+<!-- 11 最大风险（6项） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>茶饮需办理食品经营许可证（冷食类），普通摊贩备案可能不覆盖。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季冰饮热销，冬季销量下降50%以上；冬季芒果价格高。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>芒果成本波动——新鲜芒果夏天3-5元/斤，冬天15-20元/斤，成本控制难。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>果肉氧化变色——芒果切好后容易发黑，影响卖相，需新鲜现切或加柠檬汁。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>冷冻芒果浆品质差异——劣质浆有添加剂味，顾客能喝出来。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>同质化竞争——奶茶店、水果茶摊都有芒果系列，价格战激烈。</div>
+</div>
+
+<!-- 12 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>芒果冰茶是夏季夜市最畅销的果茶之一，口感香甜，解腻效果好。用新鲜芒果肉可形成明显的差异化（顾客看得见果粒）。成本可控，毛利高，适合作为油炸摊位的搭售饮品。<br>
+      <strong>❌ 为什么不值得：</strong>冬季芒果成本翻倍，若没有稳定供应链，利润会被压缩。如果只用果酱/浓缩汁，无法与连锁茶饮店竞争。<br>
+      <strong>🔑 进入条件：</strong>① 摊位位于夏季客流大的夜市/学校 ② 能稳定采购到新鲜芒果或优质冷冻芒果浆 ③ 愿意做奶盖/百香果等升级版。<br>
+      <strong>🚪 退出条件：</strong>连续2周日均销量＜15杯 / 顾客反馈“没芒果味”或“太水”超过30% / 毛利低于55%。<br>
+      <strong>🎯 最终判断：可进</strong> —— 但建议夏季主推（4-9月），冬季可替换为热饮或停售。夏季用新鲜芒果，冬季用冷冻芒果浆+果酱混合，保持风味。
+    </div>
+    <div class="j-tags"><span>#热带果茶</span><span>#夏日爆款</span><span>#果肉可见</span></div>
+  </div>
+</div>
+
+<!-- 13 核心工艺（带验证点） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">芒果预处理：新鲜芒果去皮去核，切小块（约1cm见方），一半捣成泥，一半保留果粒。</span><div class="ps-verify">[验证点] 果泥细腻，果粒完整，颜色金黄，无氧化发黑</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">茶底冲泡：茉莉绿茶用80°C热水泡3分钟，取出茶包，冷却备用。</span><div class="ps-verify">[验证点] 茶汤清亮，茉莉花香明显，无涩味</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">雪克：雪克壶中加入茶底、果糖（或蜂蜜）、芒果泥、柠檬汁、冰块，用力摇匀。</span><div class="ps-verify">[验证点] 摇出细密泡沫，颜色呈芒果黄</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">装杯：杯底放芒果果粒，倒入摇好的冰茶，装饰芒果片或薄荷叶。</span><div class="ps-verify">[验证点] 果粒悬浮，分层漂亮，入口芒果味浓郁</div></div>
+  </div>
+  <div class="badge">⚠️ 完整配方（芒果泥配比、糖浆比例、升级版奶盖）见下方付费区</div>
+</div>
+
+<!-- 14 成本利润 -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">芒果肉（新鲜/冷冻）约80g</span><span class="v">¥1.2-2.0</span></div>
+    <div class="recipe-line"><span class="k">茶底+果糖</span><span class="v">¥0.8</span></div>
+    <div class="recipe-line"><span class="k">柠檬汁+冰块</span><span class="v">¥0.5</span></div>
+    <div class="recipe-line"><span class="k">杯子+封口膜+吸管</span><span class="v">¥0.7</span></div>
+    <div class="recipe-line"><span class="k">水电+损耗</span><span class="v">¥0.3</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥3.5～4.3</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥8～¥12</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">55%～70%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售40杯（均价¥10）→ 日毛利¥228，月净利约¥4000（出摊22天）</span></div>
+  </div>
+  <div class="badge" style="margin-top:6px">※ 夏季新鲜芒果成本低，冬季成本翻倍，需调整售价或改用冷冻浆。</div>
+</div>
+
+<!-- 15 完整出摊包（付费区） -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>🥭 芒果冰茶 · 完整出摊包</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥39 <small>母卡限时解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后获取芒果泥配比、新鲜芒果vs冷冻浆对比、奶盖配方</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 芒果基底配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 商用芒果基底（每500ml杯）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>新鲜芒果肉或冷冻芒果浆</span><span>80g</span></div>
+      <div class="recipe-line"><span>果糖（或冰糖浆）</span><span>30ml</span></div>
+      <div class="recipe-line"><span>柠檬汁（鲜挤）</span><span>10ml</span></div>
+      <div class="recipe-line"><span>茉莉绿茶汤</span><span>150ml</span></div>
+      <div class="recipe-line"><span>冰块</span><span>200g</span></div>
+    </div>
+
+    <!-- 2️⃣ 新鲜芒果 vs 冷冻芒果浆 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 芒果原料选择建议</div>
+    <div class="recipe-box" style="border-left-color:#E8652D">
+      • <strong>新鲜芒果（夏季推荐）</strong>：台农芒/水仙芒，香气浓，成本3-5元/斤。出杯成本约1.2元。<br>
+      • <strong>冷冻芒果浆（冬季推荐）</strong>：品牌如“德馨”“广禧”，解冻即用，口感稳定。成本约1.8元/杯。<br>
+      • 混合方案：50%鲜果+50%冷冻浆，平衡成本与风味。
+    </div>
+
+    <!-- 3️⃣ 奶盖配方（升级版） -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 海盐芝士奶盖（每份+¥4）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>奶油奶酪</span><span>30g</span></div>
+      <div class="recipe-line"><span>淡奶油</span><span>80g</span></div>
+      <div class="recipe-line"><span>牛奶</span><span>20g</span></div>
+      <div class="recipe-line"><span>海盐</span><span>0.5g</span></div>
+      <div class="recipe-line"><span>炼乳</span><span>10g</span></div>
+      <div style="margin-top:6px;font-size:11px">打发至浓稠酸奶状，舀在冰茶上层。</div>
+    </div>
+
+    <!-- 4️⃣ 升级版变体 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 两款热门变体</div>
+    <div class="recipe-box">
+      <div><strong>🟡 芒果百香果茶：</strong>芒果基底+百香果半颗（约15g），酸甜层次更丰富。</div>
+      <div><strong>🥭 杨枝甘露风味：</strong>芒果泥+椰浆+西柚粒+西米，即简易版杨枝甘露。</div>
+    </div>
+
+    <!-- 5️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 批量预制方案（30杯/60杯）</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+      <div><strong>30杯：</strong>芒果提前切块分装（每杯80g），茶底提前泡好冷藏。出餐时雪克。</div>
+      <div><strong>60杯：</strong>分两批切芒果，用冰水浸泡防氧化。高峰前预调芒果泥+茶底（不加冰块），出餐时加冰摇匀。</div>
+    </div>
+
+    <!-- 6️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 翻车解决方案</div>
+    <div class="recipe-box">
+      <div><strong>太甜/太淡：</strong>果糖用量不准 → 用果糖机或量杯精确控制30ml。</div>
+      <div><strong>有涩味：</strong>茶底泡太久或水温高 → 控制80°C，泡3分钟即取出茶包。</div>
+      <div><strong>芒果氧化变黑：</strong>切好后浸泡在柠檬冰水中（每1L水+10ml柠檬汁）。</div>
+    </div>
+
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 规模化方案</div>
+    <div class="recipe-box">
+      当日销量＞100杯时：使用果糖机，芒果提前批量切丁真空冷藏，茶底用桶装泡制冷藏。可增加水果茶专线，如百香果双响炮、柠檬茶等。
+    </div>
+
+    <!-- 8️⃣ 实战备注 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">8️⃣ 沧林实战备注</div>
+    <div class="recipe-box" style="border-left-color:#f39c12">
+      • 芒果选熟透的（表皮发黄带红点），香气最浓。青芒果不要用，酸涩。<br>
+      • 果糖比蜂蜜成本低，但蜂蜜更健康，可做溢价选项。<br>
+      • 摆杯用透明PET杯+金色封口膜，突出芒果粒，拍照好看。<br>
+      • 定价技巧：中杯8元，大杯11元，加奶盖+4元。套餐搭配炸鸡立减1元。<br>
+      • 冬季可将芒果冰茶改为热饮（加热水+减少冰块），但果香会略减。<br>
+      • 出杯时可加一小片薄荷叶或柠檬片，提升颜值。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 16 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🍗</span><span class="r-name">原味黄金炸鸡（母卡 HZ_001）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍡</span><span class="r-name">韩式炒年糕（母卡 ZS_008）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍯</span><span class="r-name">蜂蜜冰茶（饮品 YL_061）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- 17 咨询入口 -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>芒果采购渠道 · 抗氧化技巧 · 奶盖调制</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1配方调整 · 成本优化 · 套餐设计</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“芒果冰茶卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 母卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整出摊包' : '点击解锁全部内容 →';
+  });
+</script>
+</body>
+</html>

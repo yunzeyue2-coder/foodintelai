@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>KF_008 黄皮美式 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 顶部评级 ===== */
+.rating-bar{background:linear-gradient(135deg,#b8860b,#8b5a2b);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+/* 付费锁定区 */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍊 黄皮美式 · 咸甜回甘</h1>
+  <div style="font-size:12px;color:#b5aaa0">岭南特色水果×咖啡 · 地域限定爆款</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">7.8</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">B级项目</span>
+  </div>
+  <div class="r-tagline">黄皮美式是油柑美式的“姐妹款”，咸甜独特，但季节性更强，适合南方市场。</div>
+  <div class="r-tags">
+    <span>🔥 热度中等</span>
+    <span>💰 投资3500+</span>
+    <span>👤 1人可做</span>
+    <span>🔄 复购两极</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★☆☆</div><div class="val">地域认知</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div><div class="val">喜好分化</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">3500+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★★☆</div><div class="val">去核费时</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">70%+</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 广东/广西/福建等黄皮产地摊主</div>
+      <div class="fit-item fit-yes">✅ 已有特调咖啡（油柑/柠檬美式）基础</div>
+      <div class="fit-item fit-yes">✅ 夏季水果季限定菜单</div>
+      <div class="fit-item fit-yes">✅ 追求猎奇打卡的创意咖啡摊</div>
+      <div class="fit-item fit-yes">✅ 搭配咸口小食（烧烤/炸鸡）解腻</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 非黄皮产区（冷链成本高）</div>
+      <div class="fit-item fit-no">❌ 无法接受“咸甜怪味”的客群</div>
+      <div class="fit-item fit-no">❌ 冬季出摊（黄皮过季）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：黄皮独特的“咸甜回甘” × 解暑功效 × 地域情怀</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>黄皮美式（基础）</span><span class="v">毛利68%</span></div>
+    <div class="logic-item"><span>加海盐黄皮奶盖 +¥4</span><span class="v">毛利80%</span></div>
+    <div class="logic-item"><span>黄皮气泡美式（加苏打水）</span><span class="v">毛利72%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>推出“老盐黄皮美式”（加老盐+¥2）</span><span class="v"></span></div>
+    <div class="logic-item"><span>套餐：黄皮美式+烤生蚝/炸云吞</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>季节限定：“黄皮季”集章换购</span><span class="v"></span></div>
+    <div class="logic-item"><span>教顾客自留黄皮核回家种植（话题性）</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥400-750</div><div class="m-sub">4-6h</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥3000-5000</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">18-28天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">📌 数据基于广州/深圳夜市实测（6-8月黄皮季），黄皮美式占特调销量10-20%，复购率低于柠檬美式。</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">极其差异化，北方市场几乎无竞品，自带“地域神秘感”</div>
+      <div class="t-item">黄皮有消食理气功效，搭配夜市烧烤形成“养生解腻”卖点</div>
+      <div class="t-item">原料成本低（产地批发价3-5元/斤），单杯黄皮成本约1元</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">黄皮产季仅6-8月，其余时间只能依赖冷冻果肉或果酱，口感下降</div>
+      <div class="t-item">去核极其耗时，人工成本高，高峰期影响出杯速度</div>
+      <div class="t-item">口味两极分化：爱的人回购，不爱的人觉得“像咳嗽药水”</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>黄皮美式在2022-2023年由喜茶等品牌带火，目前独立咖啡摊较少见。由于黄皮鲜果供应链不成熟，多数摊位不敢尝试。<br>
+    <strong>未来判断：</strong>适合作为“夏季快闪”或“产地限定”产品，不推荐全年售卖。如果能解决快速去核和冷冻果肉标准化问题，有机会成为区域性爆款。<br>
+    <strong>是否值得进入：可进</strong>（前提：位于黄皮产区或能稳定获得鲜果，且愿意接受季节性经营）。
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">小众蓝海</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★★☆</div><div style="font-size:10px;color:#5a4f44">去核技巧+配比</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">咸甜平衡难调</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">¥100买黄皮试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">B</span></div>
+</div>
+
+<!-- ===== 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th></tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🍊 黄皮美式(本卡)</td><td>★★★</span><td>★★★★</span><td>★★★★</span><td>★★★</span><td>B</span><td>#KF_008</span></tr>
+        <tr><td>🫒 油柑美式</span><td>★★★</span><td>★★★★</span><td>★★★★</span><td>★★★</span><td>B</span><td><a href="#" style="color:#E8652D">#KF_007</a></span></tr>
+        <tr style="background:#f8f4ef"><td>🍋 柠檬美式</span><td>★★★★</span><td>★★</span><td>★★★★</span><td>★★★★</span><td>A-</span><td><a href="#" style="color:#5a8f3c">#KF_006</a></span></tr>
+        <tr><td style="border-radius:0 0 0 6px">🥥 生椰拿铁</span><td>★★★</span><td>★★</span><td>★★★★★</span><td>★★★★</span><td>A</span><td style="border-radius:0 0 6px 0"><a href="#">#KF_005</a></span></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡（模拟跳转）</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购鲜黄皮，练习去核取肉，测试黄皮汁:糖:盐比例</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20人盲测（纯黄皮美式vs老盐黄皮美式），确定配方</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>试卖（南方夜市/水果主题市集），预备20杯，观察点单率</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加黄皮气泡美式/海盐奶盖版，记录复购率</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>核算损耗率，决定是否在黄皮季持续售卖</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7能否卖出12杯以上 ② 复购率是否＞12% ③ 黄皮去核平均时间＜15秒/颗<br>
+    <strong>🚪 退出标准：</strong>连续1周日销量＜8杯 / 黄皮损耗率超过25% / 顾客“太咸/太涩”差评超过35%<br>
+    <strong>✅ 继续标准：</strong>周复购＞15% / 黄皮美式占咖啡总销量＞8% / 顾客主动询问黄皮产地
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（含证照成本） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：意式咖啡机 · 电动磨豆机 · 电子秤 · 压粉锤 · 手动/电动压榨器（黄皮去核） · 细滤网 · 雪克壶</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠操作台 · 户外电源(500W+) · 车载冰箱(保存黄皮鲜果) · 冰桶 · 招牌灯箱(突出“黄皮”字样) · 挤压瓶(装黄皮糖浆)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：咖啡豆2kg · 新鲜黄皮5kg · 冰糖/老盐 · 一次性杯(12oz)150套 · 苏打水(气泡版) · 冰块</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,800-3,800</strong>（手压意式机+手摇磨+手动去核器+冰桶）</div>
+    <div><strong>💰 完整启动方案：¥5,500-8,000</strong>（意式机+电动磨豆机+电动去核机+户外电源+冷藏箱）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案¥0-100。黄皮属于新鲜水果，需注意当日废弃记录。办理时间1-3天。</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">经典黄皮美式（冰）</span><span class="t-price">¥15-19</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">老盐黄皮美式 · 黄皮气泡美式 · 海盐奶盖黄皮美式</span><span class="t-price">¥19-25</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">黄皮美式+烤生蚝 · 黄皮美式+炸云吞</span><span class="t-price">¥28-35</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏫 学校</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★☆☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏔️ 景区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★☆☆☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项含政策/场地） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>鲜果类原料需当日加工废弃，若被抽查发现使用隔夜黄皮汁可能被警告。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>黄皮产季仅6-8月，其他时间无鲜果；冷冻果肉口感损失30%，且价格翻倍。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>去核人工成本高：每斤黄皮约有80-100颗，去核耗时约10分钟，高峰期备料压力大。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>咸甜比例极难标准化：不同批次黄皮酸甜度差异大，需要每批调试盐糖比例。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>消费者认知门槛：非两广地区顾客不知道黄皮是什么，需花费时间解释。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>氧化变色：黄皮榨汁后10分钟开始褐变，影响卖相，需要加维生素C或现榨现用。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>黄皮美式在特定区域（广东/广西/福建）具备文化认同，且竞品极少。作为“夏季限定+地域特色”，能够吸引游客和猎奇客群，毛利可观。<br>
+      <strong>❌ 为什么不值得做：</strong>非产区采购冷链成本高，且鲜果供应期仅3个月。去核耗时严重影响出杯效率，口味两极分化，难以成为稳定销量来源。<br>
+      <strong>🔑 进入条件：</strong>① 摊位位于黄皮产区或周边城市 ② 6-8月黄皮季期间出摊 ③ 能接受每日去核1-2小时的备料工作 ④ 准备至少一款“老盐”版本降低苦涩。<br>
+      <strong>🚪 退出条件：</strong>① 连续1周日销量＜10杯 ② 黄皮采购价超过8元/斤 ③ 因氧化变色导致顾客投诉超过2次 ④ 冻果版本口感差评率超过50%。<br>
+      <strong>🎯 最终判断：可进</strong> —— 强烈建议作为“夏季限时快闪”产品，只卖6-8月，搭配特色文案（如“黄皮仙露”），过季立即下架。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">黄皮去核取肉：鲜黄皮洗净，用手挤压或用去核器将果核挤出，保留果肉和汁水</span><div class="ps-verify">[验证点] 果核完整取出不破碎，果肉成瓣状，无明显碎核残留；每颗耗时约8秒</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">调制黄皮基底：黄皮果肉30g+冰糖浆15g+老盐0.5g+水20ml，捣压出汁</span><div class="ps-verify">[验证点] 混合液尝一口先咸后甜，有黄皮特有清香，无生涩感；盐量控制在0.3-0.8g之间</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">萃取浓缩（18g粉，36g液）并冷却</span><div class="ps-verify">[验证点] 浓缩室温冷却后加入，避免热浓缩破坏黄皮风味</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">组装：杯底加黄皮基底+冰块，淋入浓缩，加饮用水至满，用吧勺提拉混合</span><div class="ps-verify">[验证点] 出杯前搅拌3次，液体呈浑浊琥珀色，表面有黄皮果肉颗粒，入口咸甜后回甘</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整防氧化配方、快速去核工具推荐、冻果还原方案见付费区</div>
+</div>
+
+<!-- ===== 14 成本利润（完整7项） ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本(豆+黄皮+糖+盐)</span><span class="v">¥4.0/杯</span></div>
+    <div class="recipe-line"><span class="k">包装成本（杯+盖+杯套）</span><span class="v">¥0.9/杯</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（冰块/清洁）</span><span class="v">¥0.5/杯</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥5.4/杯</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥15～¥25</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">64%～78%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售18杯（均价¥18）→日毛利¥227，月净利¥3,300（出摊22天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区，7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 黄皮美式商用方案</h3>
+  <div class="p-sub">7大模块：精确配方 · 快速去核技巧 · 防氧化方案 · 批量SOP · 翻车处理 · 变体方案 · 冻果标准化方案</div>
+  <div class="price-tag">¥49 <small>永久解锁（黄皮专卡）</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后获得商用黄皮果酱配方、老盐比例、冷冻果肉还原技术等</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用黄皮美式配方(12oz)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>鲜黄皮果肉30g（约8-10颗）</span><span>冰糖浆15g（可按甜度调整）</span></div>
+      <div class="recipe-line"><span>海盐/老盐0.5g</span><span>纯净水20ml（捣压用）</span></div>
+      <div class="recipe-line"><span>浓缩36g</span><span>冰块150g</span></div>
+      <div class="recipe-line"><span>老盐黄皮版：盐增加至1g，减糖至10g</span></div>
+    </div>
+    <!-- 2️⃣ 快速去核工具 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 去核效率方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>🔧 手动去核器（¥20-30）：类似樱桃去核器，按压即出核，效率提升2倍</div>
+      <div>⚡ 电动去核机（¥600-1000）：一次处理500g，适合日销30杯以上</div>
+      <div>💡 技巧：黄皮冷冻30分钟后去核，果核收缩更容易取出</div>
+    </div>
+    <!-- 3️⃣ 防氧化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 黄皮基底防褐变</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>黄皮果肉捣压后立即加入柠檬汁2ml或维生素C粉0.2g，可延缓氧化1小时。出摊前批量制作不超过30分钟用量，冷藏保存。</div>
+    </div>
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 高峰期出品流程</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>提前2小时：去核黄皮果肉，按每份30g分装于小保鲜盒冷藏。点单后直接取一份+糖盐捣压，萃取浓缩同时完成捣压，总时间约70秒/杯。</div>
+      <div>日销超30杯建议使用黄皮果酱（黄皮+糖熬制），风味略差但速度提升至40秒。</div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>太咸/太甜：</strong>加饮用水稀释10-20ml，或追加浓缩/黄皮汁调节</div>
+      <div><strong>苦涩味重：</strong>黄皮品种不好或盐放太少；加冰糖浆5g+柠檬片一片改善</div>
+      <div><strong>氧化变色严重：</strong>该批次废弃，后续加维C粉并缩短预制时间</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款爆款变体</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>🧂 老盐黄皮美式：老盐1g，减糖至10g，咸味突出更解渴</div>
+      <div>🫧 黄皮气泡美式：用苏打水代替饮用水，增加清爽感</div>
+      <div>🍯 海盐奶盖黄皮美式：顶部加2cm海盐奶盖+黄皮果肉装饰</div>
+    </div>
+    <!-- 7️⃣ 冻果标准化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 非黄皮季解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      鲜黄皮冷冻（去核后真空包装）可保存6个月，使用时无需解冻直接捣压，但风味损失约20%。也可自制黄皮果酱：黄皮果肉1kg+冰糖500g+水200ml熬煮浓稠，每杯用30g果酱代替鲜果，减少去核工序，但需额外加柠檬汁平衡甜度。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品（同赛道+内部跳转） ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🍊</span><span class="r-name">黄皮果酱自制卡（季节延长）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🫒</span><span class="r-name">油柑美式 KF_007（同类竞品）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍋</span><span class="r-name">柠檬美式（普适特调）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>黄皮去核工具·冷冻果肉技术·老盐配比·季节性菜单规划</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1黄皮美式品控·产地供应链对接·夏季限时营销</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“黄皮KF_008”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺 · KF_008 黄皮美式</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

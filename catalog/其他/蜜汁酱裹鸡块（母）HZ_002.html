@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>蜜汁酱裹鸡块 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800}
+.rating-bar .r-label{font-size:10px;opacity:.6}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;background:rgba(255,255,255,.08);border-radius:3px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269}
+.radar-item .stars{font-size:13px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer;border:none}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #C0392B}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍗 蜜汁/酱裹鸡块</h1>
+  <div style="font-size:12px;color:#b5aaa0">浓稠酱裹 · 甜口炸鸡 · 外卖专精</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score"><span class="r-num">8.9</span><span class="r-label">FoodIntelAI评分</span></div>
+    <span class="r-grade">A级项目</span>
+  </div>
+  <div class="r-tagline">不是薄浆脆皮，而是厚酱裹衣。外卖王者，复购率最高。</div>
+  <div class="r-tags">
+    <span>🔥 热度 A-</span><span>💰 投资¥3500+</span><span>👤 1人可出餐</span><span>🔄 极高复购</span><span>📱 外卖首选</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">中高</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">3500+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 外卖专营店主</div>
+      <div class="fit-item fit-yes">✅ 喜欢甜口的人群</div>
+      <div class="fit-item fit-yes">✅ 1人档口（出餐快）</div>
+      <div class="fit-item fit-yes">✅ 社区摆摊</div>
+      <div class="fit-item fit-yes">✅ 炸鸡店增加甜口SKU</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求薄脆口感</div>
+      <div class="fit-item fit-no">❌ 反感甜味炸鸡</div>
+      <div class="fit-item fit-no">❌ 只做辣味爆款</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;margin-bottom:8px">买的是：酱汁包裹的满足感 × 甜味炸鸡 × 外卖不软</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>基础蜜汁鸡块（引流）</span><span class="v">毛利65%</span></div>
+    <div class="logic-item"><span>双拼酱裹（+¥4）</span><span class="v">毛利82%</span></div>
+    <div class="logic-item"><span>大份套餐 + 饮料</span><span class="v">客单价+50%</span></div>
+    <div class="l-title">📈 如何提高客单价</div>
+    <div class="logic-item"><span>“酱多多”升级（多加30%酱）→ +¥3</span><span></span></div>
+    <div class="logic-item"><span>组合年糕/薯角 → +¥6</span><span></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>每月一款限定酱（蜂蜜/蒜香/柚子）</span><span></span></div>
+    <div class="logic-item"><span>积分卡：满5次送小份蜜汁鸡块</span><span></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥900-1500</div><div class="m-sub">外卖+堂食混合</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥7500-11000</div><div class="m-sub">出摊25天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">7-10天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">📊 数据预估来源：杭州/成都外卖炸鸡店实测均值</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">外卖适配极强：酱裹保护炸鸡不软，配送20分钟口感下降仅10%</div>
+      <div class="t-item">复购率明显高于干粉撒料炸鸡</div>
+      <div class="t-item">出餐快，单份裹酱只需5秒</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">甜口受众比辣口窄，男性群体接受度略低</div>
+      <div class="t-item">酱料成本较高（每份¥1.2-1.8）</div>
+      <div class="t-item">需要提前熬制酱料，增加备餐时间</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>蜜汁/酱裹类炸鸡在一二线城市外卖平台增长迅速，但同质化已开始出现。<br>
+    <strong>未来判断：</strong>适合以外卖为核心、辅以社区摆摊。差异化在于酱料配方（甜度层次、粘稠度）。<br>
+    <strong>是否值得进入：是</strong>（必须掌握一款有记忆点的蜜汁酱，建议搭配1-2款变体）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估（V5.1） ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★☆☆</div><div style="font-size:10px">中等偏上</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px">5-10天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★★☆</div><div style="font-size:10px">酱裹容错高</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px">¥200试酱</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;justify-content:space-between"><span style="font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A</span></div>
+</div>
+
+<!-- ===== 同赛道对比（链接） ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th></tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🍗 蜜汁/酱裹鸡块</td><td>★★★</td><td>★★★</td><td>★★★★</td><td>★★★</td><td>A</td><td><a href="#" style="color:#E8652D">#HZ_002</a></td></tr>
+        <tr><td>🍗 原味黄金炸鸡</td><td>★★★</td><td>★★★</td><td>★★★★</td><td>★★★★</td><td>A-</td><td><a href="HZ_001.html">#HZ_001</a></td></tr>
+        <tr style="background:#f8f4ef"><td>🍗 韩式甜辣炸鸡</td><td>★★★</td><td>★★★</td><td>★★★★</td><td>★★★★</td><td>B+</td><td><a href="#">#HZ_003</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为已发布FoodIntelAI标准卡</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>熬制蜜汁酱500g，试裹10份鸡块，测试甜度和粘稠度</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请15人试吃（侧重女性/儿童），收集甜度反馈</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>上线外卖平台（预备50份），测试包装、配送后口感</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>根据复购率调整甜度，增加蜂蜜蒜香变体</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘外卖数据，决定是否长期经营或改进酱料</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7外卖首周复购率＞25%  ② Day15差评中“太甜/太稀”＜10%  ③ Day30日均单量＞20单（外卖）<br>
+    <strong>🚪 退出标准：</strong>连续5天外卖单量＜10单 / 酱料好评率＜60% / 包装导致漏酱投诉＞15%<br>
+    <strong>✅ 继续标准：</strong>月复购率＞30% / 酱料成本可控＜¥1.5/份 / 顾客主动要求加酱
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（含证照） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：单缸炸锅(¥350-550) · 不锈钢操作台(¥250-450) · 保温展示柜(¥300-600) · 油温计(¥20) · 酱料保温桶(5L, ¥80) · 电子秤(¥30) · 不锈钢盆×5(¥60)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位/外卖配套</strong>：电动三轮车(¥1500-2500) · 外卖打包台(¥200) · 帐篷伞(¥150) · 折叠桌椅(¥100) · 外卖打印机(¥200-400) · 保温送餐箱(¥80)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：鸡腿肉15kg(¥250) · 裹粉(玉米/土豆淀粉)8kg(¥60) · 炸油15L(¥120) · 蜜汁酱原料(糖浆/蜂蜜/酱油等) (¥150) · 外卖包装500套(¥180) · 一次性手套/酱料杯(¥50)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,000-2,800</strong>（已有三轮车，主攻外卖）</div>
+    <div><strong>💰 完整启动方案：¥3,500-5,000</strong>（含车+帐篷+全套设备）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80 · 食品摊贩备案¥0-150 · 外卖平台入驻费约¥0-500（部分平台免）</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">经典蜜汁鸡块（6块）</span><span class="t-price">¥12-15</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">蜂蜜蒜香 · 柚子酱鸡块</span><span class="t-price">¥22-28</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">单人酱裹餐（+年糕+可乐）· 双人分享桶</span><span class="t-price">¥28-45</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🌙 夜市</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🏠 社区</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">📱 外卖</div><div class="stars">★★★★★</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>油炸摊位在部分城市被限制；外卖需办理小餐饮证</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>雨季外卖单量下降30%，夏季酱料易变质（需保温桶50°C以上）</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>甜度平衡难：过甜劝退男性/低糖人群，过淡没有记忆点</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>酱料成本高：蜂蜜/糖浆价格波动，利润受挤压</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>外卖包装漏酱：差评核心来源之一，需要测试包装密封性</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>同质化竞争：外卖平台大量蜜汁炸鸡，价格战严重</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>外卖复购率极高，出餐快，人工成本低。社区+外卖混合模式已验证可行。<br>
+      <strong>❌ 为什么不值得做：</strong>如果当地外卖平台抽成高（>25%）且无法自配送，利润被严重压缩。<br>
+      <strong>🔑 进入条件：</strong>① 外卖平台抽成＜22% ② 有低成本蜂蜜/糖浆供应链 ③ 社区/学校周边2km无同类竞品 ④ 愿意花3天调试甜度。<br>
+      <strong>🚪 退出条件：</strong>① 外卖月单量＜300单 ② 复购率＜15% ③ 酱料成本超过¥2/份 ④ 差评“太甜”连续一周。<br>
+      <strong>🎯 最终判断：可进</strong> —— 作为外卖专营或社区摊位第二主力，但必须做出甜度差异化。
+    </div>
+    <div class="j-tags"><span>#蜜汁炸鸡</span><span>#酱裹炸鸡</span><span>#外卖项目</span><span>#高复购</span></div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">鸡块牛奶浸泡去腥（30分钟）</span><div class="ps-verify">[验证点] 捞出后无异味，肉质微白</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">裹粉（薄浆+干粉二选一，酱裹推荐干粉）</span><div class="ps-verify">[验证点] 干粉裹后轻拍，表面有均匀鳞片状</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">170°C炸制5分钟至金黄</span><div class="ps-verify">[验证点] 油温计必须显示170°C，炸后外壳硬挺</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">熬制蜜汁酱（糖浆+蜂蜜+酱油+蒜泥）</span><div class="ps-verify">[验证点] 酱汁挂勺不滴落，甜味先于咸味</div></div>
+    <div class="process-step"><span class="ps-num">5</span><span class="ps-desc">趁热裹酱（出锅2分钟内）</span><div class="ps-verify">[验证点] 每块鸡均匀裹满，盘底无积酱</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整配比（精确到克）及酱料熬制温度曲线见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span>核心原料成本（鸡+裹粉）</span><span>¥5.8/份</span></div>
+    <div class="recipe-line"><span>酱料成本（蜜汁酱）</span><span>¥1.4/份</span></div>
+    <div class="recipe-line"><span>包装成本</span><span>¥1.0/份</span></div>
+    <div class="recipe-line"><span>耗材（油/燃气）</span><span>¥0.8/份</span></div>
+    <div class="recipe-line"><span>单份总成本</span><span>¥9.0/份</span></div>
+    <div class="recipe-line"><span>售价区间</span><span>¥16～¥28</span></div>
+    <div class="recipe-line"><span>毛利区间</span><span>44%～68%</span></div>
+    <div class="recipe-line"><span>示例利润模型</span><span>日售70份（均价¥20）→ 日毛利¥770，月净利¥11,550（出摊25天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区，¥69） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 蜜汁/酱裹鸡块</h3>
+  <div class="p-sub">7大模块：精确配方 · 克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥69 <small>母卡 · 永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后查看完整蜜汁酱配方、温度曲线、变体及坑点</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 蜜汁酱标准配方（每500g成品酱）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>水饴（玉米糖浆）</span><span>200g</span></div>
+      <div class="recipe-line"><span>蜂蜜</span><span>80g</span></div>
+      <div class="recipe-line"><span>白砂糖</span><span>40g</span></div>
+      <div class="recipe-line"><span>酿造酱油（生抽）</span><span>30g</span></div>
+      <div class="recipe-line"><span>蒜泥</span><span>15g</span></div>
+      <div class="recipe-line"><span>姜汁</span><span>5g</span></div>
+      <div class="recipe-line"><span>水</span><span>130g</span></div>
+      <div class="recipe-line"><span>玉米淀粉（勾芡）</span><span>8g</span></div>
+      <div style="margin-top:6px;border-top:1px solid #ddd4ca;font-size:11px">熬制: 除淀粉水外全料小火煮至糖化，转中火冒泡后淋入淀粉水，搅拌至挂勺。成本≈¥1.4/份。</div>
+    </div>
+    <!-- 2️⃣ 精确克数 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 裹粉配比（干粉）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>中筋面粉</span><span>400g</span></div>
+      <div class="recipe-line"><span>玉米淀粉</span><span>200g</span></div>
+      <div class="recipe-line"><span>土豆淀粉</span><span>100g</span></div>
+      <div class="recipe-line"><span>泡打粉</span><span>6g</span></div>
+      <div class="recipe-line"><span>盐</span><span>8g</span></div>
+      <div class="recipe-line"><span>白胡椒粉</span><span>3g</span></div>
+    </div>
+    <!-- 3️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 炸制+酱料温度曲线</div>
+    <div class="recipe-box">
+      <div>炸锅油温: 170°C 下锅 → 155°C 出锅（每锅约4分钟）</div>
+      <div>酱料保温: 熬好后55°C保温桶储存，低于50°C影响裹附力</div>
+      <div>裹酱最佳时机: 炸鸡出锅后2分钟内，表面温度≥60°C</div>
+    </div>
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 批量SOP（10kg鸡块）</div>
+    <div class="recipe-box">
+      <div>裹粉总量: 3.5kg · 酱料总量: 2.8kg · 耗时: 约2小时</div>
+      <div>30kg: 裹粉10.5kg · 酱料8.4kg · 耗时5-6小时</div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 翻车解决方案</div>
+    <div class="recipe-box">
+      <strong>酱太稀：</strong>回锅小火收汁或补玉米淀粉水。<br>
+      <strong>酱太甜：</strong>加酱油和少量白醋中和。<br>
+      <strong>裹不上酱：</strong>炸鸡表面太干，淋一点热油再裹；或酱料温度不够。<br>
+      <strong>炸鸡皮不脆：</strong>油温不够或炸制时间短，复炸30秒。
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 三款变体方案</div>
+    <div class="recipe-box">
+      <strong>🍯 蜂蜜蒜香版：</strong>基础酱+蜂蜜20g+烤蒜碎10g<br>
+      <strong>🍊 柚子酱版：</strong>替换20g水为柚子茶酱，增加果香<br>
+      <strong>🌶️ 甜辣版：</strong>加韩式辣酱30g+辣椒粉5g，减糖10g
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 规模化方案</div>
+    <div class="recipe-box">
+      日销＞150份: 增加第二炸锅，酱料改用商用搅拌熬酱桶（50L），外卖专营可租用共享厨房降低证照成本。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="HZ_001.html"><span>🍗</span><span style="flex:1">原味黄金炸鸡（薄浆脆皮）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="#"><span>🍯</span><span style="flex:1">蜂蜜芥末炸鸡（变体）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="#"><span>🍟</span><span style="flex:1">韩式年糕（搭售小食）</span><span>→</span></a>
+  </div>
+</div>
+
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+
+</div>
+
+<div class="cf-tagline">决策先于工艺 · 看见水面之下的力量</div>
+  <div class="cf-contact">微信 canglin1985 · <a href="https://foodintelai.com">foodintelai.com</a></div>
+</div>
+
+<script>
+
+
+<!-- ===== 咨询入口 ===== -->
+<div class="section">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center;font-size:12px;color:#5a4f44">
+    <div><strong>📌 咨询场景：</strong>摆摊选址评估 · 成本优化 · 翻车远程诊断</div>
+    <div style="margin-top:6px"><strong>📱 联系方式：</strong>微信 canglin1985（备注卡号）</div>
+    <a style="display:inline-block;margin-top:8px;padding:8px 20px;background:#3a322a;color:#fff;border-radius:8px;text-decoration:none;font-size:12px" href="javascript:void(0)" onclick="copyWx()">📲 加微信咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 决策先于工艺 · 沧林食品工作站</div>
+</div>
+
+<script>
+document.getElementById('unlockBtn')&&document.getElementById('unlockBtn').addEventListener('click',function(){var e=document.getElementById('payContent');e&&(e.classList.toggle('show'),this.textContent=this.textContent.indexOf('点击解锁')>=0?'收起完整出摊包':'点击解锁全部内容')});
+function copyWx(){var e=document.createElement('textarea');e.value='canglin1985';document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e);alert('✅ 微信号已复制：canglin1985');}
+</script>
+
+</body>

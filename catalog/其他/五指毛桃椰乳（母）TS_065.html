@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>TS_065 五指毛桃椰乳 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#efe6db;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* 顶部评级栏（五指毛桃土色渐变） */
+.rating-bar{background:linear-gradient(135deg,#a67c52,#7a5a3a);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+/* 付费锁定区 */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🌿 五指毛桃椰乳</h1>
+  <div style="font-size:12px;color:#b5aaa0">草本椰香 · 药食同源</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.0</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">五指毛桃+椰子，粤式养生饮品的差异化黑马。</div>
+  <div class="r-tags">
+    <span>🌿 草本养生</span>
+    <span>💰 投资2400+</span>
+    <span>🧑‍🍳 1人可做</span>
+    <span>🔄 复购中高</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★☆☆</div><div class="val">小众上升</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★☆</div><div class="val">2400+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item"><div class="label">📈 利润</div><div class="stars">★★★☆☆</div><div class="val">中等偏高</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 粤式/广式糖水摊主</div>
+      <div class="fit-item fit-yes">✅ 主打养生概念的摊位</div>
+      <div class="fit-item fit-yes">✅ 已有椰子类产品（厚椰乳）想做差异化</div>
+      <div class="fit-item fit-yes">✅ 对中草药有一定认知的创业者</div>
+      <div class="fit-item fit-yes">✅ 社区/夜市追求新鲜感客群</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 不接受药材风味的地域</div>
+      <div class="fit-item fit-no">❌ 追求极简备料（需提前煮五指毛桃）</div>
+      <div class="fit-item fit-no">❌ 完全不懂草木风味调配</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是“椰香+草本”的新奇体验，以及五指毛桃祛湿健脾的养生认知。</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>厚椰乳基底（供应成熟）</span><span class="v">毛利60%</span></div>
+    <div class="logic-item"><span>五指毛桃煮水（成本极低）</span><span class="v">溢价+3元</span></div>
+    <div class="logic-item"><span>加料（桃胶/皂角米/椰冻）</span><span class="v">每加+2-4元</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>推出“五指毛桃桃胶椰乳”（高端养生版）</span><span class="v"></span></div>
+    <div class="logic-item"><span>搭配茯苓糕/艾草糍粑组合套餐</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>强调“每周喝2次祛湿”，培养周期性消费习惯</span><span class="v"></span></div>
+    <div class="logic-item"><span>集杯卡买5送1，锁定养生人群</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥450-900</div><div class="m-sub">夜市/糖水摊位</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥4500-7500</div><div class="m-sub">出摊25天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">8-12天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">📌 量化数据来源：基于2024-2025年珠三角地区养生饮品摊位实测数据推算</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">差异化极强——地摊几乎无人做五指毛桃椰乳</div>
+      <div class="t-item">符合药食同源趋势，客群为注重健康的年轻人+中年女性</div>
+      <div class="t-item">五指毛桃自带椰香，与椰乳融合度极高，不违和</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">认知度局限：非广东地区顾客可能不知道五指毛桃</div>
+      <div class="t-item">备料需提前煮五指毛桃水，增加工序</div>
+      <div class="t-item">草本味道接受度因人而异，需要试喝教育</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>五指毛桃在广东糖水/汤料中常见，但在全国地摊饮品中几乎空白。目前少数茶饮店开始推“五指毛桃奶茶”，地摊仍是蓝海。<br>
+    <strong>未来判断：</strong>养生细分赛道会持续增长，但需要摊主主动向顾客解释功效，适合有讲解能力的创业者。<br>
+    <strong>是否值得进入：是</strong>（建议在广东/广西/福建等有认知基础的地区优先，其他地方需做试喝推广）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★☆☆☆☆</div><div style="font-size:10px;color:#5a4f44">几乎无竞品</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">3天掌握</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">草本浓度敏感</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥150试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- ===== 同赛道对比（固定表格） ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目名称</th><th>投资(1-5)</th><th>难度(1-5)</th><th>利润(1-5)</th><th>竞争(1-5)</th><th>推荐等级</th><th>卡片链接</th></tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🌿 五指毛桃椰乳</th><td>★★★★☆</th><td>★★★☆☆</th><td>★★★☆☆</th><td>★☆☆☆☆</th><td>A-</th><td><a href="#" style="color:#E8652D">#HZ_065</a></th></tr>
+        <tr><td>🥥 厚椰冻冻</th><td>★★★★☆</th><td>★★☆☆☆</th><td>★★★★☆</th><td>★★★☆☆</th><td>A-</th><td><a href="#" style="color:#D4A574">#HZ_020</a></th></tr>
+        <tr style="background:#f8f4ef"><td>🍐 陈皮雪梨饮</th><td>★★★★☆</th><td>★★☆☆☆</th><td>★★★☆☆</th><td>★☆☆☆☆</th><td>A-</th><td><a href="#" style="color:#5a8f3c">#HZ_045</a></th></tr>
+        <tr><td>🥣 茯苓薏米水</th><td>★★★☆☆</th><td>★★★☆☆</th><td>★★☆☆☆</th><td>★☆☆☆☆</th><td>B+</th><td><a href="#">#HZ_067</a></th></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡，点击可跳转</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购五指毛桃（根段）、厚椰乳，试煮五指毛桃水，与椰乳混合配比</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>确定糖度，制作试饮装邀请20人盲测，调整五指毛桃浓度</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>首日摆摊（备料30杯+五指毛桃展示），定价12-16元，观察接受度</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加桃胶/椰冻加料选项，测试客单价提升</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘复购率和功效反馈，决定是否加入长期菜单</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7能否卖出30+杯 ② Day15加料附加率＞25% ③ Day30回头客占比＞30%<br>
+    <strong>🚪 退出标准：</strong>连续5天营收＜350元 / 顾客反馈“中药味太重”＞35% / 五指毛桃货源不稳定<br>
+    <strong>✅ 继续标准：</strong>周末日营收＞800元 / 主动咨询功效的老客超过10人 / 好评“很特别”
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（含证照） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：冷藏展示柜(¥800-1500) · 封口机(¥200-400) · 不锈钢煮锅(10L, ¥100) · 滤网/纱布(¥20) · 电子秤(¥20) · 雪克壶(¥30)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠操作台(¥150) · 保温桶(存放五指毛桃水, ¥80) · 招牌灯箱(¥100) · 防虫罩(¥50) · 露营车(¥200) · 收款码牌(¥10)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：五指毛桃干根(¥40/500g) · 厚椰乳8L(¥120) · 冰糖(¥20) · 一次性杯+封口膜400套(¥120) · 桃胶/椰冻小料(¥80) · 定制杯贴(¥30)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥1,300-1,800</strong>（用家用冰箱+普通锅，不买展示柜）</div>
+    <div><strong>💰 完整启动方案：¥2,400-3,800</strong>（含展示柜、封口机、全套新设备）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本及时间：</strong>健康证¥80（1天），食品摊贩备案（免费-¥50），现制饮品需提供原料合格证，摊位费押金¥500-1500。办理时间2-3天。</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流款</span><span class="t-name">经典五指毛桃椰乳（中杯）</span><span class="t-price">¥10-12</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润款</span><span class="t-name">桃胶五指毛桃椰乳 · 椰冻款</span><span class="t-price">¥15-18</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐款</span><span class="t-name">五指毛桃椰乳+茯苓糕组合</span><span class="t-price">¥20-24</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★☆☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏠 社区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★☆☆☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项含政策/场地） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>部分城管认为中药材添加需要额外许可，建议提前咨询当地市监局。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季养生饮品需求减弱，主要靠春秋冬三季；摊位费固定，暖冬销量下降明显。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>认知教育成本：非两广地区顾客可能问“五指毛桃是什么”，需要花时间解释。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>草本味道不稳定：不同批次五指毛桃香气浓度不同，需每批调整用量。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>原料采购难度：优质五指毛桃（无硫熏）需找可靠药材商，劣质品有霉味。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>出餐速度相对慢：五指毛桃水需提前煮好，且需现场加料、雪克，比普通奶茶多15秒。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>极度差异化蓝海，竞争几乎为零。养生趋势下，有认知基础的区域（华南）容易起量，且毛利可观。<br>
+      <strong>❌ 为什么不值得做：</strong>认知门槛高，需要向顾客解释五指毛桃功效，不适合不爱说话的摊主。冬季虽可热饮，但草本风味接受度仍有限制。<br>
+      <strong>🔑 进入条件：</strong>① 所在城市有粤式糖水/汤文化基础（或愿意推广） ② 能找到无硫熏五指毛桃稳定货源 ③ 愿意每天花1小时煮五指毛桃水。<br>
+      <strong>🚪 退出条件：</strong>连续2周日均销量＜25杯 / 差评“中药味”超过30% / 顾客咨询后不购买比例过高。<br>
+      <strong>🎯 最终判断：可进（利基市场）</strong> —— 适合作为差异化单品，不建议作为新手第一个项目，推荐有经验的饮品摊主增加此SKU。
+    </div>
+    <div class="j-tags"><span>#五指毛桃</span><span>#养生椰乳</span><span>#差异化蓝海</span><span>#药食同源</span></div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">五指毛桃根洗净，加水煮沸后转小火煮20分钟</span><div class="ps-verify">[验证点] 煮出的水呈淡黄色，散发浓郁椰奶香气，无酸味</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">过滤取五指毛桃水，加入冰糖搅拌至融化</span><div class="ps-verify">[验证点] 糖水清澈无杂质，甜度比目标成品略高20%（因后续加椰乳）</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">雪克杯中加五指毛桃水:厚椰乳=4:6，加冰块雪克10次</span><div class="ps-verify">[验证点] 出品色泽均匀乳白带淡黄，五指毛桃香气主导但不掩盖椰香</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">倒入杯中，可加桃胶/椰冻等小料，封口出品</span><div class="ps-verify">[验证点] 封口无漏液，小料分布均匀</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整配比（精确到克）及翻车方案见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本</span><span class="v">¥4.0/500ml</span></div>
+    <div class="recipe-line"><span class="k">包装成本</span><span class="v">¥0.9/杯</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（燃料/冰）</span><span class="v">¥0.6/杯</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥5.5/杯</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥10～¥18</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">39%～69%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售60杯（均价¥13）→ 日毛利¥450，月净利¥6,750（出摊25天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区，7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥59 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看完整配方、五指毛桃浓度曲线、变体与翻车解决方案</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 精确配方 (500ml标准杯)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>五指毛桃水（浓度：50g根:1L水煮）</span><span>200ml</span></div>
+      <div class="recipe-line"><span>厚椰乳（推荐佳乐/可可满分）</span><span>300ml</span></div>
+      <div class="recipe-line"><span>冰糖浆（35波美）</span><span>15ml</span></div>
+      <div class="recipe-line"><span>冰块</span><span>180g</span></div>
+    </div>
+    <!-- 2️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 五指毛桃水熬煮曲线</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>冷水下锅煮沸</span><span>10分钟（去涩味）</span></div>
+      <div class="recipe-line"><span>转小火熬煮</span><span>20-25分钟（香气充分释放）</span></div>
+      <div class="recipe-line"><span>热饮版（冬季）</span><span>五指毛桃水:厚椰乳=3:7，加热至65°C</span></div>
+    </div>
+    <!-- 3️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 批量SOP (30杯/80杯)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>30杯（需要6L五指毛桃水）</span><span>用100g五指毛桃+2L水煮，分3锅</span></div>
+      <div class="recipe-line"><span>80杯（16L五指毛桃水）</span><span>用250g五指毛桃+5L水，大锅一次煮</span></div>
+    </div>
+    <!-- 4️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>五指毛桃味太浓/发苦：</strong>减少熬煮时间或降低根比例→加椰乳稀释</div>
+      <div><strong>香气不足：</strong>五指毛桃品质差→换新会/河源产区；或增加用量20%</div>
+      <div><strong>分层：</strong>五指毛桃水与椰乳温差大→雪克前两者温度接近</div>
+    </div>
+    <!-- 5️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 3款变体 (桃胶/椰乳冻/薏米)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🍑 桃胶五指毛桃：</strong>加泡发桃胶30g，售价+4元</div>
+      <div><strong>🥥 双椰冻款：</strong>加自制椰奶冻50g，增加咀嚼感</div>
+      <div><strong>🌾 薏米茯苓款：</strong>加熟薏米20g+茯苓粉3g，强化祛湿概念</div>
+    </div>
+    <!-- 6️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      当日销量＞150杯：改用商用蒸汽熬煮锅，提前批量煮好五指毛桃水冷藏（保质2天），增加第二雪克位，开发“五指毛桃椰乳粉”预拌包（需定制）。
+    </div>
+    <!-- 7️⃣ 加料区利润 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 加料成本利润表</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      <div class="recipe-line"><span>桃胶（20g）</span><span>成本1.2元·售价+4元</span></div>
+      <div class="recipe-line"><span>椰奶冻（40g）</span><span>成本0.6元·售价+2元</span></div>
+      <div class="recipe-line"><span>薏米茯苓包</span><span>成本0.8元·售价+3元</span></div>
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品（同赛道，内部卡片） ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🥥</span><span class="r-name">厚椰冻冻·甜品母卡</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍐</span><span class="r-name">陈皮雪梨饮·养生热饮卡</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🌿</span><span class="r-name">茯苓薏米水·祛湿茶卡</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡，点击可跳转</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>五指毛桃货源鉴别 · 浓度配比校准 · 功效话术设计</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1配方微调 · 区域适应性改版 · 摊位养生定位</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“五指毛桃”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

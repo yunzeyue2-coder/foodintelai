@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>旧卡存档 · 独立沙盒</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f0e9e2;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;padding:14px;color:#1a1a1a}
+.box{max-width:600px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.header{background:linear-gradient(135deg,#4a3a2a,#3a2a1a);padding:20px;color:#fff;text-align:center}
+.header h1{font-size:18px;font-weight:800;letter-spacing:1px}
+.header p{font-size:11px;opacity:.6;margin-top:4px}
+.header .badge{display:inline-block;background:rgba(255,255,255,.1);padding:3px 12px;border-radius:4px;font-size:10px;margin-top:8px}
+.body{padding:16px 18px}
+.body .note{padding:10px 14px;background:#fef6ec;border-radius:10px;font-size:11px;color:#7a5a3a;margin-bottom:14px;border:1px solid #f5ede5}
+.body h3{font-size:13px;font-weight:700;color:#3a2a1a;margin-bottom:8px}
+.file-list{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.file-list a{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;text-decoration:none;color:#5a4f44;font-size:10px}
+.file-list a:hover{background:#f5ede5}
+.file-list a .fl-icon{font-size:12px;flex-shrink:0}
+.file-list a .fl-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ftr{text-align:center;padding:14px;font-size:10px;color:#b5aaa0}
+.back{display:block;text-align:center;padding:10px 0 0}
+.back a{color:#C0392B;font-size:11px;font-weight:600;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="header">
+    <h1>📦 旧卡存档 · 独立沙盒</h1>
+    <p>已下架的地摊产品卡 · 仅供存档参考</p>
+    <div class="badge">⚠️ 内容可能已过时</div>
+  </div>
+  <div class="body">
+    <div class="note">🔒 这些卡片已从主站下架，移至独立沙盒。内容不作更新，仅供历史查阅。</div>
+    <h3>📄 存档文件（511 项）</h3>
+    <div class="file-list" id="fileList"></div>
+  </div>
+  <div class="back"><a href="index.html">← 返回主页</a></div>
+  <div class="ftr">FoodIntelAI · 存档沙盒</div>
+</div>
+<script>
+// Fetch and list files
+fetch('sandbox/').then(r=>r.text()).then(html=>{
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const links = doc.querySelectorAll('a');
+  const list = document.getElementById('fileList');
+  let count = 0;
+  links.forEach(a => {
+    const href = a.getAttribute('href');
+    if(href && href.endsWith('.html') && !href.startsWith('?')) {
+      const name = decodeURIComponent(href);
+      list.innerHTML += '<a href="sandbox/'+href+'"><span class="fl-icon">📄</span><span class="fl-name">'+name+'</span></a>';
+      count++;
+    }
+  });
+  document.querySelector('h3').textContent = '📄 存档文件（'+count+' 项）';
+});
+</script>
+</body>
+</html>

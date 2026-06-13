@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KF_009 泡菜汤 — 韩式美食·汤类母卡</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+.card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+.header { background: linear-gradient(135deg, #b85a30 0%, #d07040 50%, #e89060 100%); padding: 32px 24px 24px; color: #fff; }
+.header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; line-height: 1.6; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+.section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 13px; font-weight: 600; color: #b85a30; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+.value-stmt { background: #fdf0e8; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #b85a30; line-height: 1.7; text-align: center; }
+.bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+.bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; flex-shrink: 0; }
+.bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+.radar { display: flex; flex-direction: column; gap: 10px; }
+.radar-item { display: flex; align-items: center; gap: 10px; }
+.radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+.radar-item .bar { height: 100%; border-radius: 10px; }
+.radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #b85a30; }
+.bf5 { width: 100%; background: linear-gradient(90deg, #d07040, #e89060); }
+.bf4 { width: 80%; background: linear-gradient(90deg, #d07040, #e89060); }
+.bf3 { width: 60%; background: linear-gradient(90deg, #d8a080, #e8b898); }
+.role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+.role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+.role-tag.active { background: #d07040; color: #fff; box-shadow: 0 2px 8px rgba(208,112,64,0.3); }
+.family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #faf4ee; border-radius: 12px; }
+.family-tree .node { margin: 2px 0; }
+.family-tree .branch { color: #b85a30; font-weight: 600; }
+.family-tree .leaf { color: #666; padding-left: 24px; }
+.family-tree .highlight { color: #d07040; font-weight: 600; padding-left: 24px; }
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.market-item { background: #fdf0e8; border-radius: 10px; padding: 10px 12px; }
+.market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+.market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+.matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+.matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+.matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+.ql { position: absolute; font-size: 10px; color: #aaa; }
+.ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+.ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+.matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+.matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+.dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #e89060; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+.dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #b85a30; white-space: nowrap; transform: translateX(-50%); }
+.ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.ingredient-table th { background: #f0e0d0; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+.ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+.ingredient-table .amt { text-align: right; font-weight: 600; color: #b85a30; font-size: 12px; }
+.steps { list-style: none; counter-reset: step; }
+.steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #e8ddd0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #b85a30; }
+.pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin-top: 8px; }
+.pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; margin-bottom: 2px; }
+.pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+.cost-box { background: #fdf0e8; border-radius: 12px; padding: 14px; }
+.cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.cost-row .cr-label { color: #555; }
+.cost-row .cr-value { font-weight: 600; color: #b85a30; }
+.cost-divider { border: none; border-top: 1px dashed #e8d0c0; margin: 6px 0; }
+.decision-box { background: #faf4ee; border-radius: 12px; padding: 16px; }
+.decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+.decision-box p:last-child { margin-bottom: 0; }
+.trend-box { background: linear-gradient(135deg, #fdf0e8, #f8f4ef); border-radius: 12px; padding: 16px; }
+.trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trend-item:last-child { margin-bottom: 0; }
+.trend-year { font-size: 12px; font-weight: 700; color: #b85a30; width: 50px; flex-shrink: 0; }
+.trend-arrow { color: #bbb; }
+.trend-desc { font-size: 13px; color: #555; }
+.trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #b85a30; text-align: center; }
+.footer-brand { background: #b85a30; color: #fff; text-align: center; padding: 24px; }
+.footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+.footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+.footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">KF_009 · 韩式美食 · 汤类母卡</div>
+    <h1>泡菜汤</h1>
+    <div class="subtitle">
+      韩式国民汤品 · 烤肉标配 · 醒酒神器 · 卡售价¥19.9 · FoodIntel推荐：8.5/10
+    </div>
+    <div class="tags">
+      <span>🥘 泡菜汤</span>
+      <span>🥩 五花肉</span>
+      <span>🫘 豆腐</span>
+      <span>🔥 酸泡菜</span>
+      <span>🍚 配紫米饭</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      韩式烤肉店必备汤品 · 热乎乎一锅出 · 每桌点单率25% · <br>
+      成本~5元/份 · 毛利率80-85% · 出餐10分钟
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★★</div>
+      <div class="bomb-reason">
+        <strong>国民汤品之王。</strong>流量和毛利双5★——泡菜汤是中国人最熟悉的韩式汤品之一，单价不高但成本极低。复购5★——冬天暖身、夏天开胃、喝酒后醒酒，全场景覆盖。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KF 韩式美食体系</div>
+      <div class="node leaf">├─ KF_001~008 主食系列</div>
+      <div class="node highlight">├─ KF_009 泡菜汤 ← 你在这里</div>
+      <div class="node leaf">├─ KF_010 部队锅</div>
+      <div class="node leaf">├─ KF_011 参鸡汤</div>
+      <div class="node leaf">└─ KF_012 排骨汤</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟品类</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">9/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">8/10 · 高</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">10/10 · 通吃</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">3/10 · 低</div></div>
+      <div class="market-item"><div class="m-value" style="color:#555;">创业门槛</div><div class="m-value">低 · 有泡菜就能做</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div>
+      <div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div>
+      <div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div>
+      <div class="y-label">传播性 →</div>
+      <div class="dot" style="left:80%;top:40%;"></div>
+      <div class="dot-label" style="left:80%;top:33%;">泡菜汤（高复购·中传播·国民汤品）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>泡菜汤位于右上偏右下——复购率极高（国人最爱点），传播性中低（太常见了没人专门拍照）。核心价值是"无脑点"——客人不知道喝什么汤的时候选泡菜汤不会错。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方</div>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：1份约600ml（含汤料）· 配米饭
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b85a30;margin-bottom:6px;">配方（1份）</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+      <tr><td>老泡菜（切段）</td><td class="amt">150g</td><td>必须发酵超过2周的酸泡菜</td></tr>
+      <tr><td>五花肉片</td><td class="amt">50g</td><td>切薄片·煸出油</td></tr>
+      <tr><td>嫩豆腐</td><td class="amt">100g</td><td>切2cm方块</td></tr>
+      <tr><td>洋葱</td><td class="amt">30g</td><td>切丝</td></tr>
+      <tr><td>蒜末</td><td class="amt">15g</td><td></td></tr>
+      <tr><td>大葱</td><td class="amt">20g</td><td>切圈</td></tr>
+      <tr><td>青椒</td><td class="amt">15g</td><td>切圈·可选</td></tr>
+      <tr><td>淘米水/清水</td><td class="amt">400ml</td><td>淘米水风味更好</td></tr>
+      <tr><td>韩式大酱（된장）</td><td class="amt">1小勺</td><td>可选·增加醇厚感</td></tr>
+      <tr><td>辣椒粉（细）</td><td class="amt">5g</td><td>增色</td></tr>
+      <tr><td>盐</td><td class="amt">适量</td><td>泡菜本身有咸味·试味后加</td></tr>
+    </table>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b85a30;margin:12px 0 6px;">出餐流程</h4>
+    <ol class="steps">
+      <li>五花肉片直接下锅（不加油），中火煸至出油、表面微焦</li>
+      <li>加入洋葱丝、蒜末炒香（约30秒）</li>
+      <li>加入泡菜段，中火炒2min——炒过的泡菜酸味更醇、香味更足</li>
+      <li>倒入淘米水，大火煮开</li>
+      <li>下豆腐块，转中火煮5min</li>
+      <li>加大酱（可选）、辣椒粉，调色调味</li>
+      <li>最后撒葱圈、青椒圈，关火出锅</li>
+    </ol>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b85a30;margin:12px 0 6px;">🔥 备货关键 · 泡菜管理</h4>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fdf0e8;border-radius:8px;padding:12px;margin-bottom:10px;">
+      泡菜汤的成败80%在泡菜本身——<strong>新泡菜（发酵<1周）做的泡菜汤不酸不香</strong>，需要加醋或柠檬酸，但风味差很多。<br><br>
+      <strong>管理方案：</strong>每次腌制泡菜时，留一部分专门做汤用——自然发酵2-4周的最佳。<br>
+      <strong>应急方案：</strong>新泡菜+适量泡菜汤汤底汁（泡菜的腌汁）可以加速出酸味。
+    </div>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（6条）</div>
+      <div class="p-desc">
+        ① 新泡菜做汤不酸——必须用发酵超过2周的酸泡菜，否则风味差一半<br>
+        ② 五花肉必须先煸出油——不煸直接煮出来的是白汤，香味出不来<br>
+        ③ 泡菜必须先炒再加水——炒过比没直接煮的泡菜汤香气浓郁2倍以上<br>
+        ④ 豆腐后放且不要久煮——豆腐煮太久变蜂窝状，口感变差<br>
+        ⑤ 淘米水是秘诀——清水也能做，但淘米水做的汤底更醇厚<br>
+        ⑥ 大酱可放可不放——放了大酱汤更醇厚，不放更清爽，根据店铺口味定位决定
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 商业决策</div>
+    <div class="cost-box" style="margin-bottom:14px;">
+      <div class="cost-row"><span class="cr-label">原料成本</span><span class="cr-value">~5元/份</span></div>
+      <div class="cost-row"><span class="cr-label">米饭</span><span class="cr-value">~0.5元/份</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label">总成本</span><span class="cr-value">~5.5元/份</span></div>
+      <div class="cost-row"><span class="cr-label" style="font-weight:700;">建议售价</span><span class="cr-value" style="font-weight:800;font-size:16px;">28-38元/份</span></div>
+      <div class="cost-row"><span class="cr-label">毛利率</span><span class="cr-value" style="color:#2d8a40;">80-85%</span></div>
+      <div class="cost-row"><span class="cr-label">日均销量</span><span class="cr-value">20-35份</span></div>
+      <div class="cost-row"><span class="cr-label">月毛利贡献</span><span class="cr-value" style="font-size:16px;">~1.5-2.5万元</span></div>
+    </div>
+    <div class="decision-box">
+      <p><strong>✅ 适合场景：</strong>所有韩式烤肉店、韩式汤饭专门店必备。午市套餐首选——泡菜汤+米饭组合，定价28-35元，出餐快、利润好。</p>
+      <p><strong>📌 菜单位置：</strong>汤品区第一道。"醒酒汤"的标签能在夜间时段提升点单率。建议配紫米饭（紫米+大米1:3混合），比白米饭更适合泡菜汤。</p>
+      <p><strong>⚠️ 风险：</strong>最大的风险是新泡菜不够酸——如果没有存量酸泡菜，当天的泡菜汤风味会打折扣。建议店里始终保持一缸"汤用老泡菜"，专门存放2周以上的发酵泡菜。</p>
+      <p><strong>🎯 地摊版：</strong>泡菜汤不适合地摊——需要现场煮，翻台率低。但可以做预包装冷冻版（做好后密封冷冻），复热后风味损失不大。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">传统泡菜汤+米饭套餐模式</span></div>
+      <div class="trend-item"><span class="trend-year">2023</span><span class="trend-arrow">→</span><span class="trend-desc">泡菜汤肥牛/泡菜汤午餐肉等加料版出现</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">冷冻预制泡菜汤零售化</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">泡菜汤专门店模式——30种配料自由组合</span></div>
+      <div class="trend-verdict">泡菜汤永远不会过时——它是韩餐的"番茄炒蛋"</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div>
+    <div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links">
+      <span>📢 公众号：沧林食品技术</span>
+      <span>💬 微信：canglin1985</span>
+    </div>
+    <div class="fb-series">韩式美食 · KF_009 泡菜汤</div>
+  </div>
+
+</div>
+</body>
+</html>

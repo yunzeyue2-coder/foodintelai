@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>TS_091 陈皮雪梨饮 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5efe7;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* 顶部评级栏（陈皮暖棕渐变） */
+.rating-bar{background:linear-gradient(135deg,#b87c4f,#9b5e2e);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+/* 付费锁定区 */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍐 陈皮雪梨饮</h1>
+  <div style="font-size:12px;color:#b5aaa0">古法熬煮 · 润燥清润</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.1</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">养生刚需+药食同源，秋冬季节的复购明星。</div>
+  <div class="r-tags">
+    <span>🍐 养生标签</span>
+    <span>💰 投资2200+</span>
+    <span>🧑‍🍳 1人可做</span>
+    <span>🔄 复购稳定</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★☆☆</div><div class="val">季节性中等</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★☆</div><div class="val">2200+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div><div class="val">简单</div></div>
+    <div class="radar-item"><div class="label">📈 利润</div><div class="stars">★★★☆☆</div><div class="val">中等偏高</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 秋冬季户外摆摊创业者</div>
+      <div class="fit-item fit-yes">✅ 定位养生/宝妈/银发客群</div>
+      <div class="fit-item fit-yes">✅ 已有炸鸡/烧烤重油摊想增加搭配</div>
+      <div class="fit-item fit-yes">✅ 愿意每天花1小时熬煮</div>
+      <div class="fit-item fit-yes">✅ 社区/菜市场/学校周边</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求快速出餐（雪克类）</div>
+      <div class="fit-item fit-no">❌ 无法接受备料熬煮时间</div>
+      <div class="fit-item fit-no">❌ 夏季为主要经营季节</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是“真材实料熬煮”的健康信任感，以及陈皮+雪梨组合的润喉功效认知。</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>雪梨+陈皮+红枣（原料成本可控）</span><span class="v">毛利60%+</span></div>
+    <div class="logic-item"><span>升级版（加银耳/枸杞/海底椰）</span><span class="v">每升级+3元</span></div>
+    <div class="logic-item"><span>保温瓶大容量装（家庭分享）</span><span class="v">客单价拉高50%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>推出“银耳雪梨羹”版本（+3元）</span><span class="v"></span></div>
+    <div class="logic-item"><span>搭配润喉糖/陈皮零食组合包</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>每天限量100杯，制造稀缺感+保温瓶回购优惠</span><span class="v"></span></div>
+    <div class="logic-item"><span>“咳嗽好转反图”打卡活动，积累口碑</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥400-900</div><div class="m-sub">秋冬季4-5h</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥4500-7500</div><div class="m-sub">出摊25天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">8-12天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">📌 量化数据来源：基于2024年南京/西安秋冬季节养生热饮摊位实测均值推算</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">养生认知已成熟，无需教育市场（都知道雪梨润肺）</div>
+      <div class="t-item">竞争极小——地摊极少做真熬煮养生饮，多是冲泡粉</div>
+      <div class="t-item">复购稳定：回头客多为有咳嗽/咽干症状者</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">季节性极强（10月-次年3月为主，夏季基本没生意）</div>
+      <div class="t-item">出餐慢（需保温桶提前熬好，现场倒，无法现做）</div>
+      <div class="t-item">原料成本受鲜梨价格波动影响大</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>秋冬季路边“小吊梨汤”“雪梨银耳”摊位开始出现，但多使用浓缩液勾兑，真熬煮摊位稀缺且有辨识度。<br>
+    <strong>未来判断：</strong>养生赛道将持续增长，但陈皮雪梨饮需往“可视化熬煮”方向发展（现场展示整颗梨+陈皮）。<br>
+    <strong>是否值得进入：是</strong>（作为秋冬组合项目，不建议作为全年唯一项目）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★☆☆☆☆</div><div style="font-size:10px;color:#5a4f44">几乎无直接竞品</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★☆</div><div style="font-size:10px;color:#5a4f44">2天掌握</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★★☆</div><div style="font-size:10px;color:#5a4f44">熬煮时间容错高</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥150试熬</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- ===== 同赛道对比（固定表格） ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目名称</th><th>投资(1-5)</th><th>难度(1-5)</th><th>利润(1-5)</th><th>竞争(1-5)</th><th>推荐等级</th><th>卡片链接</th></tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🍐 陈皮雪梨饮</th><td>★★★★☆</th><td>★★☆☆☆</th><td>★★★☆☆</th><td>★☆☆☆☆</th><td>A-</th><td><a href="#" style="color:#E8652D">#HZ_045</a></th></tr>
+        <tr><td>🍐 小吊梨汤</th><td>★★★★☆</th><td>★★☆☆☆</th><td>★★★☆☆</th><td>★★☆☆☆</th><td>B+</th><td><a href="#" style="color:#D4A574">#HZ_041</a></th></tr>
+        <tr style="background:#f8f4ef"><td>🍠 红糖姜枣茶</th><td>★★★★☆</th><td>★★☆☆☆</th><td>★★★☆☆</th><td>★☆☆☆☆</th><td>B+</th><td><a href="#" style="color:#5a8f3c">#HZ_043</a></th></tr>
+        <tr><td>🥣 银耳莲子羹</th><td>★★★★☆</th><td>★★★☆☆</th><td>★★★☆☆</th><td>★★☆☆☆</th><td>B</th><td><a href="#">#HZ_047</a></th></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡，点击可跳转</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购雪梨、陈皮、红枣，试熬2L，调整甜度与陈皮用量</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>确定保温桶容量、杯型定价（500ml/700ml），设计招牌“真梨熬煮”</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>首次摆摊（备料30L），测试人群反应，定价8-12元</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加银耳升级版（+3元），测试点购率</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘复购率与天气影响，决定是否长期经营至冬季结束</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7能否卖出40+杯 ② Day15升级版附加率＞20% ③ Day30回头客占比是否＞35%<br>
+    <strong>🚪 退出标准：</strong>连续5天营收＜350元 / 顾客反馈“太淡/水味”＞25% / 梨价上涨导致单杯成本超过6元<br>
+    <strong>✅ 继续标准：</strong>周末日营收＞800元 / 主动自带杯子回购的老客超过15人 / 好评“真材实料”
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（含证照） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：商用保温桶(10L/20L，¥150-300) · 大号不锈钢熬煮锅(20L，¥200) · 卡式炉/猛火灶(¥150) · 电子秤(¥20) · 切梨砧板+刀具(¥30) · 长柄勺(¥15)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠操作台(¥150) · 招牌灯箱/手写黑板(¥80) · 防虫透明罩(¥50) · 收款码牌(¥10) · 露营车(¥200) · 一次性杯子架(¥20)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：雪梨15kg(约¥50-70) · 陈皮(¥30/100g) · 红枣/冰糖(¥40) · 银耳(¥30) · 一次性杯+防漏盖+杯套400套(¥150) · 打包袋(¥20)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥1,000-1,500</strong>（用家用大锅+普通保温桶，不买灯箱）</div>
+    <div><strong>💰 完整启动方案：¥2,200-3,500</strong>（含商用保温桶、展示型熬煮锅、全套新设备）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本及时间：</strong>健康证¥80（1天），食品摊贩备案（免费-¥50），现制饮品需提供原料票据，摊位费押金¥500-1500。办理时间2-3天。</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流款</span><span class="t-name">经典陈皮雪梨饮（500ml）</span><span class="t-price">¥8-10</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润款</span><span class="t-name">银耳雪梨羹 · 海底椰雪梨</span><span class="t-price">¥12-15</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐款</span><span class="t-name">雪梨饮+陈皮糖/润喉糖组合</span><span class="t-price">¥15-18</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏠 社区</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★☆☆☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项含政策/场地） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>部分街道禁止明火熬煮（卡式炉），需提前确认城管规定，否则会被罚款。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>秋冬季摊位费不降，但遇连续阴雨天/寒潮，日营收可能跌破300元；暖冬年份销量大减。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>原料品质波动：劣质陈皮有霉味，雪梨品种不对（如用鸭梨）熬出汤水酸涩。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>保鲜问题：熬好的饮品质保期短，当天没卖完需倒掉，损耗率可达15-20%。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>出餐慢导致排队流失：只有一个人时，倒杯+封口+收银，高峰期每分钟只能出2-3杯。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>同质化隐忧：一旦生意好，周边会冒出“小吊梨汤”摊，用浓缩液低价竞争。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>竞争极小、天然差异化、养生信任度高。秋冬三个月能快速回本并赚取丰厚利润，且操作简单，新手友好。<br>
+      <strong>❌ 为什么不值得做：</strong>季节性太强，夏季几乎没有生意，不能作为全年唯一项目。熬煮+保温模式缺乏现场表演性，部分年轻客群无感。<br>
+      <strong>🔑 进入条件：</strong>① 只做11月-次年2月（三个月窗口） ② 能找到稳定出摊的社区或学校门口 ③ 愿意每天熬煮2小时备料。<br>
+      <strong>🚪 退出条件：</strong>连续1周日均销量＜25杯 / 周边出现3家以上竞品 / 顾客投诉有香精味。<br>
+      <strong>🎯 最终判断：可进（作为季节性项目）</strong> —— 强烈建议10月底入场，主攻三个月，2月后转型或结束。
+    </div>
+    <div class="j-tags"><span>#陈皮雪梨饮</span><span>#养生热饮</span><span>#秋冬爆款</span><span>#低竞争</span></div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">雪梨洗净去核切块（不去皮，保留营养）</span><div class="ps-verify">[验证点] 梨块大小均匀约3cm，皮薄肉白，无褐变</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">锅中加水，放入梨块、陈皮、红枣，大火煮沸转小火</span><div class="ps-verify">[验证点] 水开后表面浮沫少，陈皮香气明显飘出</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">小火熬煮40-50分钟，最后10分钟加冰糖</span><div class="ps-verify">[验证点] 汤汁呈琥珀色，梨块软而不烂，用勺子轻压即碎</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">过滤或带料灌入保温桶，保持温度65-75°C</span><div class="ps-verify">[验证点] 保温桶温度显示不低于65°C，喝起来烫嘴但可接受</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整配比（精确到克）及翻车方案见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本</span><span class="v">¥3.2/500ml</span></div>
+    <div class="recipe-line"><span class="k">包装成本</span><span class="v">¥0.9/杯</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（燃料/水电）</span><span class="v">¥0.6/杯</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥4.7/杯</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥8～¥15</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">41%～69%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售70杯（均价¥11）→ 日毛利¥441，月净利¥6,615（出摊25天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区，7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥49 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看完整配方、熬煮时间表、变体与翻车解决方案</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 精确配方 (10L成品)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>雪梨（去皮去核后净重）</span><span>3000g</span></div>
+      <div class="recipe-line"><span>纯净水</span><span>8000ml</span></div>
+      <div class="recipe-line"><span>陈皮（新会/普通）</span><span>30g</span></div>
+      <div class="recipe-line"><span>红枣（去核）</span><span>100g</span></div>
+      <div class="recipe-line"><span>冰糖</span><span>180g（可按口味增减）</span></div>
+    </div>
+    <!-- 2️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 熬煮温度曲线</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>大火煮沸</span><span>100°C，约10分钟</span></div>
+      <div class="recipe-line"><span>小火慢熬</span><span>85-90°C保持40分钟</span></div>
+      <div class="recipe-line"><span>保温售卖</span><span>65-75°C（最佳饮用温度）</span></div>
+    </div>
+    <!-- 3️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 批量SOP (30L/60L)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>30L</span><span>需用40L大锅，分2锅熬，总耗时2.5小时</span></div>
+      <div class="recipe-line"><span>60L</span><span>两口大锅同时熬，需2人协作，准备2个保温桶</span></div>
+    </div>
+    <!-- 4️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>味道发苦：</strong>陈皮放太多或煮太久→减少陈皮用量至20g，熬煮不超过50分钟</div>
+      <div><strong>汤汁浑浊：</strong>火太大导致梨肉煮烂→全程小火保持微沸</div>
+      <div><strong>甜度不够/太甜：</strong>冰糖最后10分钟加，先加一半，尝味再补</div>
+    </div>
+    <!-- 5️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 3款变体 (银耳/海底椰/桂圆)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🍐 银耳雪梨羹：</strong>加泡发银耳150g（10L），同煮，胶质更浓</div>
+      <div><strong>🌊 海底椰雪梨：</strong>加干海底椰片20g，增加清润感</div>
+      <div><strong>🍬 桂圆红枣雪梨：</strong>加桂圆肉50g，补气血版本</div>
+    </div>
+    <!-- 6️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      当日销＞150杯（约75L）：可改用商用蒸汽熬煮锅（省人工），提前一晚熬好冷藏，次日加热售卖；增加第二个保温桶并增设“速热恒温桶”。对接企业团餐（加班润喉饮品）。
+    </div>
+    <!-- 7️⃣ 加料区利润 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 加料成本利润表</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      <div class="recipe-line"><span>银耳羹升级</span><span>成本加0.8元·售价+3元</span></div>
+      <div class="recipe-line"><span>海底椰升级</span><span>成本加0.6元·售价+3元</span></div>
+      <div class="recipe-line"><span>大容量保温瓶(1L)</span><span>瓶身成本3元·售价+8元</span></div>
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品（同赛道，内部卡片） ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🍠</span><span class="r-name">红糖姜枣茶·秋冬暖饮卡</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥣</span><span class="r-name">银耳莲子羹·养生甜品卡</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍐</span><span class="r-name">小吊梨汤·对标竞品卡</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡，点击可跳转</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>陈皮货源鉴别 · 熬煮效率优化 · 冬季摊位选点</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1配方调整 · 损耗控制 · 保温桶推荐</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“陈皮雪梨”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

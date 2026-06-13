@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>MP_015 山东杂粮煎饼 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#e8dfd5;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#1e3a2f,#2d4e3f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🫔 山东杂粮煎饼</h1>
+  <div style="font-size:12px;color:#b5aaa0">杂粮煎饼 · 煎饼果子 · 薄脆是关键</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.5</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">国民早餐车之王，核心竞争力是杂粮面糊配比和薄脆。</div>
+  <div class="r-tags">
+    <span>🔥 热度极高</span>
+    <span>💰 投资2500+</span>
+    <span>👤 1人可做</span>
+    <span>🔄 复购高</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">国民早餐</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">酱料+薄脆</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★☆☆☆</div><div class="val">2500+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">面糊/摊制</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">加料毛利高</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 新手摆摊（需练摊制）</div>
+      <div class="fit-item fit-yes">✅ 学校/地铁口/写字楼</div>
+      <div class="fit-item fit-yes">✅ 早餐+夜宵兼营</div>
+      <div class="fit-item fit-yes">✅ 1人操作</div>
+      <div class="fit-item fit-yes">✅ 外卖+堂食兼顾</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 拒绝早起（早餐）</div>
+      <div class="fit-item fit-no">❌ 不想学摊饼手法</div>
+      <div class="fit-item fit-no">❌ 只卖基础款不加料</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：杂粮香 + 薄脆酥 + 酱料味 + 加料自由</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>基础煎饼（鸡蛋+薄脆）</span><span class="v">毛利65%</span></div>
+    <div class="logic-item"><span>加料：里脊/火腿/培根/肉松/烤肠</span><span class="v">毛利75-85%</span></div>
+    <div class="logic-item"><span>秘制甜面酱/辣酱</span><span class="v">拉高复购</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>推“豪华煎饼”：饼+双蛋+里脊+火腿+肉松+薄脆</span><span class="v">客单价12-20元</span></div>
+    <div class="logic-item"><span>加购豆浆/绿豆沙</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>每月一款限定酱料（如：藤椒/番茄）</span><span class="v"></span></div>
+    <div class="logic-item"><span>集章卡：买5送1</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥800-1500</div><div class="m-sub">4-6h出摊</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥7000-11000</div><div class="m-sub">出摊25天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">5-10天</div><div class="m-sub">含设备</div></div>
+  </div>
+</div>
+
+<!-- ===== 05 赛道判断（≥150字） ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">国民认知度第一梯队，杂粮煎饼比白面煎饼更“健康”标签</div>
+      <div class="t-item">出餐快（40秒/个），高峰期不压单</div>
+      <div class="t-item">薄脆可批量预制或外购，降低操作难度</div>
+      <div class="t-item">早中晚全时段可卖，北方市场极受欢迎</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">同质化极其严重，一条街可能3-5家煎饼摊</div>
+      <div class="t-item">核心竞争力是面糊和酱料，普通摊位很难做出差异</div>
+      <div class="t-item">薄脆品质不稳定（外购易受潮）</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>山东杂粮煎饼已遍布全国，但品质参差不齐。很多摊位面糊只用白面+玉米面，杂粮比例低，没有香气。薄脆用批发货，不酥脆。<br>
+    <strong>未来判断：</strong>消费者对“杂粮”认知加深，愿意为真正的杂粮香支付更高价格。能做出“绿豆面+小米面+黄豆面”黄金配比且薄脆自炸的摊位，有差异化红利。<br>
+    <strong>是否值得进入：是</strong>（前提：掌握杂粮面糊配比+自炸薄脆或找到优质供应商）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★★★</div><div style="font-size:10px;color:#5a4f44">极度激烈</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">3-7天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">面糊稠度/摊制</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥200试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- ===== 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th>}</thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🫔 杂粮煎饼</th><td>★★</th><td>★★★</th><td>★★★★</th><td>★★★★★</th><td>A-</th><td><a href="#" style="color:#E8652D">#MP_015</a>}</tr>
+        <tr><td>🥞 煎饼果子</th><td>★★</th><td>★★★</th><td>★★★★</th><td>★★★★★</th><td>B+</th><td><a href="#" style="color:#D4A574">#MP_003</a>}</tr>
+        <tr style="background:#f8f4ef"><td>🫓 手抓饼</th><td>★★</th><td>★★</th><td>★★★★</th><td>★★★★★</th><td>A-</th><td><a href="#" style="color:#5a8f3c">#MP_006</a>}</tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为已发布FoodIntelAI标准卡</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>调杂粮面糊（绿豆+小米+黄豆+白面），试摊10个，找稠度感觉</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>自炸薄脆（或找供应商），邀请20人对比盲测脆度</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备50个饼胚），测试面糊稳定性和出餐速度</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>根据反馈调整酱料（甜面酱+辣酱比例），增加加料种类</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘：日均销量、薄脆酥脆保持时间、复购率</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7首日能否卖出40+个 ② Day15复购率＞15% ③ Day30薄脆好评率＞80%<br>
+    <strong>🚪 退出标准：</strong>连续5天日均＜30个 / 面糊隔夜发酸 / 薄脆受潮反馈率＞30%<br>
+    <strong>✅ 继续标准：</strong>面糊稳定出饼30个/小时 / 加料占比＞50% / 有人专门来买薄脆
+  </div>
+</div>
+
+<!-- ===== 08 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：煎饼炉/鏊子(¥300-600) · 竹刮板/耙子(¥20-40) · 操作台(¥200-400) · 冰柜(¥600-1000) · 面糊桶(¥30-50) · 酱料挤压瓶×4(¥20-40) · 电子秤(¥30-50)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：三轮车/早餐车(¥500-1500) · 折叠操作台(¥150-300) · 帐篷伞(¥150-300) · 招牌灯箱(¥80-150) · 价格牌(¥20-50) · 保温展示柜(¥300-500)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：杂粮面粉（绿豆/小米/黄豆/白面）15kg(¥60-100) · 鸡蛋200个(¥120-150) · 薄脆200片(¥40-60) · 甜面酱/辣酱(¥30-50) · 生菜/火腿/里脊肉(¥150-200) · 包装袋/纸袋200个(¥40-60)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,000-3,000</strong>（已有三轮车，二手煎饼炉）</div>
+    <div><strong>💰 完整启动方案：¥3,500-5,000</strong>（含冰柜+全新设备）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案¥0-200 · 办理时间1-3天</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">基础杂粮煎饼（鸡蛋+薄脆+生菜）</span><span class="t-price">¥6-7</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">加火腿/里脊/培根/肉松/烤肠/芝士</span><span class="t-price">¥8-15</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">煎饼+豆浆/绿豆沙+茶叶蛋</span><span class="t-price">¥10-18</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★★☆☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>早餐车需审批，占道经营可能被清理；杂粮煎饼油烟小，相对安全。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>雨季/冬季早高峰人流减少；学校门口寒暑假影响大。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>面糊品质不稳定——夏天面糊发酵变酸，冬天太稠摊不开，需要每天调。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>薄脆受潮变软——外购薄脆容易吸湿，没有自炸能力则口感忽好忽坏。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>同质化价格战——周边摊位降价1元，顾客立刻流失，利润被压缩。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>酱料没有特色——90%摊位用通货甜面酱+辣酱，顾客觉得“哪家都一样”。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>启动资金低，出餐快，国民认知度高。如果能做出独特的杂粮香和自熬酱料，就能在同质化中突围。<br>
+      <strong>❌ 为什么不值得做：</strong>竞争极度激烈，如果只会用通货面糊和酱料，只能打价格战。不适合不愿意每天凌晨调面糊的人。<br>
+      <strong>🔑 进入条件：</strong>① 掌握杂粮面糊配比（绿豆:小米:黄豆:白面=4:2:1:3） ② 能自炸薄脆或找到稳定供应商 ③ 摊位周边500m内无同品质煎饼 ④ 摊位费＜¥2000/月。<br>
+      <strong>🚪 退出条件：</strong>① 连续2周日均＜35个 ② 薄脆受潮投诉率＞30% ③ 周边出现3家以上煎饼摊且价格更低。<br>
+      <strong>🎯 最终判断：可进</strong> —— 属于“勤行”，需要每天早起调面糊、备料。核心竞争力在于面糊和酱料，适合能吃苦且愿意钻研细节的人。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点·源自杂粮煎饼通用做法） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">杂粮面糊调制：绿豆粉+小米粉+黄豆粉+白面+水+五香粉，静置醒30分钟</span><div class="ps-verify">[验证点] 面糊舀起倒下呈直线不断线，稠度如酸奶；摊开能自然流平无疙瘩</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">薄脆制作（自炸）：馄饨皮/春卷皮对折划口，170°C油炸至金黄</span><div class="ps-verify">[验证点] 薄脆掰开有清脆“咔嚓”声，不吸油不焦黑；放置2小时仍酥脆</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">摊饼：鏊子预热180°C，舀面糊用竹刮板快速摊圆，打蛋撒芝麻翻面</span><div class="ps-verify">[验证点] 饼直径35-40cm，厚薄均匀无破洞；翻面时整张饼不碎裂</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">刷酱加料：翻面后刷甜面酱+辣酱，放薄脆、生菜、加料，折叠出餐</span><div class="ps-verify">[验证点] 酱料均匀不堆积；折叠后两端不漏酱，薄脆完整不碎裂</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整商用配方（精确克数、自熬酱料）见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">面糊+鸡蛋成本</span><span class="v">¥1.5-2.0/个</span></div>
+    <div class="recipe-line"><span class="k">薄脆成本</span><span class="v">¥0.4-0.6/个（自炸更低）</span></div>
+    <div class="recipe-line"><span class="k">酱料+生菜成本</span><span class="v">¥0.3-0.5/个</span></div>
+    <div class="recipe-line"><span class="k">加料成本（火腿/里脊）</span><span class="v">¥1.0-2.5/个</span></div>
+    <div class="recipe-line"><span class="k">包装成本</span><span class="v">¥0.3-0.5/个</span></div>
+    <div class="recipe-line"><span class="k">单份总成本（基础）</span><span class="v">¥2.5-3.6/个（加料后¥4-6）</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥6～¥18/个</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">55%～75%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售100个（均价¥8.5）→ 日毛利约¥550，月净利约¥8,500（出摊25天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区·7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥68 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看杂粮面糊黄金配比、自熬甜辣酱配方、薄脆批量制作</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 · 面糊 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用杂粮面糊配方 (出20个饼)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>绿豆粉400g</span><span>小米粉200g</span></div>
+      <div class="recipe-line"><span>黄豆粉100g</span><span>中筋面粉300g</span></div>
+      <div class="recipe-line"><span>五香粉8g · 盐10g</span><span>清水1600-1800g</span></div>
+      <div class="recipe-line"><span>醒面30分钟</span><span>每饼面糊约90g</span></div>
+    </div>
+    <!-- 2️⃣ 自熬甜辣酱 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 商用甜辣酱配方 (出500g)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>甜面酱200g</span><span>蒜蓉辣酱100g</span></div>
+      <div class="recipe-line"><span>番茄沙司50g</span><span>白糖30g · 水100g</span></div>
+      <div class="recipe-line"><span>小火熬5分钟至冒泡</span><span>晾凉装瓶</span></div>
+    </div>
+    <!-- 3️⃣ 薄脆自炸 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 薄脆制作 (100片)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>馄饨皮/春卷皮500g</span><span>油温170°C</span></div>
+      <div class="recipe-line"><span>每片对折，中间划两刀</span><span>炸15-20秒至金黄</span></div>
+    </div>
+    <!-- 4️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 鏊子温度曲线</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>预热：180°C（水滴瞬间蒸发）</span></div>
+      <div class="recipe-line"><span>摊饼：170-180°C</span></div>
+      <div class="recipe-line"><span>打蛋后：160°C防止蛋焦</span></div>
+      <div class="recipe-line"><span>连续出20个后需降温30秒</span></div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>饼摊不开/有疙瘩：</strong>面糊太稠或未醒→加水调稀至流平状，醒面至少30分钟</div>
+      <div><strong>饼易破不筋道：</strong>白面比例太低→增加白面至30%，加一个鸡蛋入面糊</div>
+      <div><strong>薄脆不脆：</strong>油温太低/炸太久→170°C下锅，15-20秒捞出控油</div>
+      <div><strong>酱太咸：</strong>甜面酱含盐高→加糖和水稀释，或换低盐酱</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 4款变体</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🌶️ 麻辣煎饼：</strong>酱料中加入花椒粉+辣椒粉，出锅撒孜然粉</div>
+      <div><strong>🧀 芝士煎饼：</strong>加马苏里拉芝士，加热至拉丝，售价+3元</div>
+      <div><strong>🍯 蜂蜜芥末煎饼：</strong>甜面酱替换为蜂蜜芥末酱，年轻人最爱</div>
+      <div><strong>🥬 全素煎饼：</strong>不加蛋不加肉，双份生菜+黄瓜丝+土豆丝</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      当单日销量＞150个时：建议增加第二台煎饼炉，面糊一次调制50个饼量（冷藏24小时稳定），薄脆一次炸500片密封保存。可招募一名帮手负责加料和收银。若做外卖，薄脆需单独包装，顾客自行加入，防止受潮。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🥛</span><span class="r-name">现磨豆浆·早餐搭售</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🫓</span><span class="r-name">手抓饼·同品类对比</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥚</span><span class="r-name">鸡蛋灌饼·技术型竞品</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>面糊稠度调试 · 薄脆制作指导 · 酱料配比优化</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1技术答疑 · 摊位选址评估 · 出餐效率提升</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

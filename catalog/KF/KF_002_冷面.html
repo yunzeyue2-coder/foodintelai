@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KF_002 冷面 — 韩式美食</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+  .card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+  .header { background: linear-gradient(135deg, #2a7a8a 0%, #3a9aaa 50%, #5abaca 100%); padding: 32px 24px 24px; color: #fff; }
+  .header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+  .section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+  .section-title { font-size: 13px; font-weight: 600; color: #2a7a8a; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+  .value-stmt { background: #e8f4f7; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #2a7a8a; line-height: 1.7; text-align: center; }
+  .radar { display: flex; flex-direction: column; gap: 10px; }
+  .radar-item { display: flex; align-items: center; gap: 10px; }
+  .radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+  .radar-item .bar { height: 100%; border-radius: 10px; }
+  .radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #2a7a8a; }
+  .bf5 { width: 100%; background: linear-gradient(90deg, #3a9aaa, #5abaca); }
+  .bf4 { width: 80%; background: linear-gradient(90deg, #3a9aaa, #5abaca); }
+  .bf3 { width: 60%; background: linear-gradient(90deg, #7ab8c8, #90ccd8); }
+  .bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+  .bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; flex-shrink: 0; }
+  .bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+  .role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+  .role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+  .role-tag.active { background: #3a9aaa; color: #fff; box-shadow: 0 2px 8px rgba(58,154,170,0.3); }
+  .family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #eef5f7; border-radius: 12px; }
+  .family-tree .node { margin: 2px 0; }
+  .family-tree .branch { color: #2a7a8a; font-weight: 600; }
+  .family-tree .leaf { color: #666; padding-left: 24px; }
+  .family-tree .highlight { color: #3a9aaa; font-weight: 600; padding-left: 24px; }
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .market-item { background: #e8f4f7; border-radius: 10px; padding: 10px 12px; }
+  .market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+  .market-item .m-value { font-size: 14px; font-weight: 600; }
+
+  .matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+  .matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+  .matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+  .ql { position: absolute; font-size: 10px; color: #aaa; }
+  .ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+  .ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+  .matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+  .matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+  .dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #5abaca; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+  .dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #2a7a8a; white-space: nowrap; transform: translateX(-50%); }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .compare-item { background: #e8f4f7; border-radius: 10px; padding: 12px; }
+  .compare-item .c-title { font-size: 14px; font-weight: 700; color: #2a7a8a; margin-bottom: 6px; }
+  .compare-item .c-data { font-size: 12px; color: #555; line-height: 1.8; }
+
+  .ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .ingredient-table th { background: #f0e8e0; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+  .ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+  .ingredient-table .amt { text-align: right; font-weight: 600; color: #2a7a8a; font-size: 12px; }
+
+  .steps { list-style: none; counter-reset: step; }
+  .steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+  .steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #e8ddd0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #2a7a8a; }
+
+  .pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin-top: 8px; }
+  .pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; margin-bottom: 2px; }
+  .pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+
+  .customer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .customer-item { background: #e8f4f7; border-radius: 10px; padding: 12px; }
+  .customer-item .c-icon { font-size: 20px; margin-bottom: 4px; }
+  .customer-item .c-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .customer-item .c-desc { font-size: 11px; color: #888; line-height: 1.5; }
+
+  .cost-box { background: #e8f4f7; border-radius: 12px; padding: 14px; }
+  .cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .cost-row .cr-label { color: #555; }
+  .cost-row .cr-value { font-weight: 600; color: #2a7a8a; }
+  .cost-divider { border: none; border-top: 1px dashed #c8dce0; margin: 6px 0; }
+
+  .decision-box { background: #eef5f7; border-radius: 12px; padding: 16px; }
+  .decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+  .decision-box p:last-child { margin-bottom: 0; }
+
+  .trend-box { background: linear-gradient(135deg, #e8f4f7, #f8f4ef); border-radius: 12px; padding: 16px; }
+  .trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .trend-item:last-child { margin-bottom: 0; }
+  .trend-year { font-size: 12px; font-weight: 700; color: #2a7a8a; width: 50px; flex-shrink: 0; }
+  .trend-arrow { color: #bbb; }
+  .trend-desc { font-size: 13px; color: #555; }
+  .trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #2a7a8a; text-align: center; }
+
+  .recipe-block { background: #e0f0f4; border-radius: 10px; padding: 14px; margin-top: 12px; }
+  .recipe-block .rb-title { font-size: 14px; font-weight: 700; color: #2a7a8a; margin-bottom: 8px; }
+  .recipe-block table { width: 100%; font-size: 11px; border-collapse: collapse; }
+  .recipe-block td { padding: 3px 6px; border-bottom: 1px solid #c8dce0; font-size: 11px; color: #555; }
+  .recipe-block .amt { text-align: right; font-weight: 600; color: #2a7a8a; }
+
+  .footer-brand { background: #2a7a8a; color: #fff; text-align: center; padding: 24px; }
+  .footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+  .footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+  .footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">KF_002 · 韩式美食 · 主食母卡</div>
+    <h1>冷面 · 白冷面 / 荞麦冷面</h1>
+    <div class="subtitle">夏季爆品 · 搭配烤肉解腻 · 单店夏季月销300+份</div>
+    <div class="tags">
+      <span>🍜 白冷面/荞麦冷面</span>
+      <span>🧊 冰镇汤底</span>
+      <span>🥩 配烤肉解腻</span>
+      <span>☀️ 夏季必点</span>
+      <span>💰 毛利率85%</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      夏季销量是冬季3倍的季节性爆品 · 搭配烤肉解腻黄金搭档<br>
+      白冷面经典 · 荞麦冷面健康 · 冷面汤是灵魂
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★☆</div>
+      <div class="bomb-reason">
+        <strong>季节性爆品。</strong>夏季月销300+份，冬季降到80-100份。复购4★因为夏天客人几乎每次来都会点。标准化5★——冷面汤批量预制后，煮面30秒就出餐。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KF 韩式美食体系</div>
+      <div class="node leaf">├─ KF_001 石锅拌饭</div>
+      <div class="node highlight">├─ KF_002 冷面（白冷面/荞麦冷面）← 你在这里</div>
+      <div class="node leaf">├─ KF_003 大酱汤</div>
+      <div class="node leaf">├─ KF_004 嫩豆腐汤</div>
+      <div class="node leaf">├─ KF_005 肥牛拌饭</div>
+      <div class="node leaf">├─ KF_006 辣白菜炒饭</div>
+      <div class="node leaf">├─ KF_007 海鲜葱饼</div>
+      <div class="node leaf">└─ KF_008 辣炒年糕</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟品类</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">8/10（夏季10/10）</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">7/10 · 中高</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">9/10 · 通吃</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">3/10 · 低</div></div>
+      <div class="market-item"><div class="m-label">创业门槛</div><div class="m-value">低 · 汤底批量做</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div><div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div><div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div><div class="y-label">传播性 →</div>
+      <div class="dot" style="left:70%;top:55%;"></div>
+      <div class="dot-label" style="left:70%;top:48%;">冷面（右上·夏季爆品）</div>
+      <div class="dot" style="left:80%;top:30%;background:#ddd;width:10px;height:10px;"></div>
+      <div class="dot-label" style="left:80%;top:23%;color:#bbb;font-size:10px;">石锅拌饭（右上·全年主食）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>冷面位于右上象限（高复购中传播）——季节性强，夏季复购率极高。<br>
+      和石锅拌饭形成冬夏互补：冬季石锅拌饭暖身，夏季冷面解暑。两碗主食覆盖全年需求。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方 · 两款冷面对比</div>
+
+    <div class="compare-grid">
+      <div class="compare-item">
+        <div class="c-title">🍜 白冷面</div>
+        <div class="c-data">
+          <strong>主料：</strong>白冷面200g<br>
+          <strong>配料：</strong>酱牛肉1片8g · 冷面酱30g · 煮蛋半个 · 黄瓜丝20g · 苹果1片 · 泡菜30g<br>
+          <strong>汤底：</strong>冷面汤450g（带冰渣）<br>
+          <strong>煮制：</strong>水开下冷面煮30秒→捞出冲凉→挤干→摆盘→浇汤
+        </div>
+      </div>
+      <div class="compare-item">
+        <div class="c-title">🌾 荞麦冷面</div>
+        <div class="c-data">
+          <strong>主料：</strong>荞麦冷面180g<br>
+          <strong>配料：</strong>酱牛肉1片5g · 冷面酱15g · 煮蛋半个 · 黄瓜丝5g · 苹果1片 · 泡菜10g<br>
+          <strong>汤底：</strong>冷面汤260g（带冰渣）<br>
+          <strong>煮制：</strong>水开下冷面煮40秒→捞出冲凉→挤干→摆盘→浇汤
+        </div>
+      </div>
+    </div>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（6条）</div>
+      <div class="p-desc">
+        ① 煮面时间严格控制——白冷面30秒、荞麦40秒，煮过头面条软烂失去嚼劲<br>
+        ② 煮好后必须冲凉挤干——不冲凉面条继续熟化变烂，不挤干汤底被稀释变淡<br>
+        ③ 冷面汤必须带冰渣上桌——温汤冷面是灾难，汤底提前冷藏至4°C以下<br>
+        ④ 荞麦面比白面贵30%但更健康——建议菜单上荞麦面定价高5元<br>
+        ⑤ 酱牛肉用卤好的牛腱子切片——一次卤一批用3天<br>
+        ⑥ 冷面酱不要放太多——30g/15g是标准量，多了会抢汤底的清甜
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 工艺配方 · 冷面汤（批量 · 60斤配方）</div>
+
+    <div class="recipe-block">
+      <div class="rb-title">🧊 冷面汤批量配方（60斤 · 可用3-4天）</div>
+      <table>
+        <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+        <tr><td>纯净水</td><td class="amt">60斤</td><td>底汤</td></tr>
+        <tr><td>白糖</td><td class="amt">9.3斤</td><td>甜度核心</td></tr>
+        <tr><td>雪碧</td><td class="amt">2斤</td><td>增加清爽感</td></tr>
+        <tr><td>西塔醋精</td><td class="amt">2斤</td><td>提酸度</td></tr>
+        <tr><td>苹果·梨·菠萝</td><td class="amt">各适量</td><td rowspan="2">所有果蔬切片，浸泡不少于5小时</td></tr>
+        <tr><td>黄瓜·尖椒·葱·姜·蒜</td><td class="amt">各适量</td></tr>
+      </table>
+      <p style="font-size:11px;color:#777;margin-top:6px;">
+        📌 做法：水+调料包+白糖+醋精+雪碧搅匀→加入果蔬包→浸泡5小时以上→过滤果蔬→取汤冷藏。<br>
+        冰箱温度白天4°C，晚上2°C。冰渣状态下出餐口感最佳。
+      </p>
+    </div>
+
+    <div class="recipe-block">
+      <div class="rb-title">🥣 冷面酱配方（批量）</div>
+      <table>
+        <tr><th>原料</th><th>用量</th></tr>
+        <tr><td>大葱（切碎）</td><td class="amt">6斤</td></tr>
+        <tr><td>粗辣椒面</td><td class="amt">450g</td></tr>
+        <tr><td>白芝麻</td><td class="amt">150g</td></tr>
+        <tr><td>冷面酱包</td><td class="amt">1包（成品料）</td></tr>
+      </table>
+      <p style="font-size:11px;color:#777;margin-top:4px;">做法：所有材料混合搅拌均匀，冷藏保存。如无成品冷面酱包，可用韩国辣酱300g+蒜泥50g+糖稀50g+鱼露30g替代。</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑧ 商业决策</div>
+    <div class="decision-box">
+      <p><strong>💰 成本利润：</strong>冷面~2.5元 + 配料~2元 + 汤底~0.5元 = <strong>~5元/份</strong> · 白冷面售价22-28元 · 荞麦冷面售价28-35元 · 毛利率80-85%。<strong>夏季日均40-60份，月毛利贡献~2-3万元。</strong></p>
+      <p><strong>📌 季节策略：</strong>冷面是典型的"夏季爆品冬季配角"。建议夏季菜单放大图片放到主食区第二（紧挨石锅拌饭），冬季缩到菜单底部小字。冬季可推出的"温拌冷面"版本（面不过凉水，汤加热）维持产品线但销量不大。</p>
+      <p><strong>🎯 地摊版：</strong>冷面是地摊神器——批量煮好过凉分装，顾客点单时直接加汤加料出餐，30秒一份。地摊卖15-20元/份，成本不到4元，毛利率80%。建议用透明杯装，带冰渣汤底+黄瓜丝苹果片，视觉清爽诱人。</p>
+      <p><strong>⚠️ 风险：</strong>冷面汤底批量预制后的保质期是关键——夏季冷藏最多4天，第5天开始发酸。建议贴标签标注制作日期。超过4天未用完的汤底直接弃掉，不要冒险。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑨ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">传统冷面 · 白面为主</span></div>
+      <div class="trend-item"><span class="trend-year">2023</span><span class="trend-arrow">→</span><span class="trend-desc">荞麦冷面占比上升至40% · 健康化趋势</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">冷面杯装化 · 外卖冷面专用包装 · 汤面分离</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">冷面四季化 · 室内恒温技术让冷面全年可卖</span></div>
+      <div class="trend-verdict">冷面的未来是杯装化+外卖化——汤面分离技术成熟后，冷面将成为外卖烤肉的最佳搭档</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div><div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links"><span>📢 公众号：沧林食品技术</span><span>💬 微信：canglin1985</span></div>
+    <div class="fb-series">韩式美食 · KF_002 冷面</div>
+  </div>
+
+</div>
+</body>
+</html>

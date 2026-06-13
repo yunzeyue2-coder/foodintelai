@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KR_005 烤大肠 — 韩式烤肉差异化单品母卡</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f5f0eb;
+  color: #2c2c2c;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+.card {
+  max-width: 540px;
+  width: 100%;
+  background: #fffcf8;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+.header {
+  background: linear-gradient(135deg, #b06040 0%, #d08050 50%, #e8a060 100%);
+  padding: 32px 24px 24px;
+  color: #fff;
+}
+.header-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; line-height: 1.6; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+.section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 13px; font-weight: 600; color: #b06040; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+.value-stmt { background: #fdf5ee; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #b06040; line-height: 1.7; text-align: center; }
+.bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+.bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; flex-shrink: 0; }
+.bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+.radar { display: flex; flex-direction: column; gap: 10px; }
+.radar-item { display: flex; align-items: center; gap: 10px; }
+.radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+.radar-item .bar { height: 100%; border-radius: 10px; }
+.radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #b06040; }
+.bf5 { width: 100%; background: linear-gradient(90deg, #d08050, #e8a060); }
+.bf4 { width: 80%; background: linear-gradient(90deg, #d08050, #e8a060); }
+.bf3 { width: 60%; background: linear-gradient(90deg, #e0a880, #e8c0a0); }
+.bf2 { width: 40%; background: linear-gradient(90deg, #e0a880, #e8c0a0); }
+.role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+.role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+.role-tag.active { background: #d08050; color: #fff; box-shadow: 0 2px 8px rgba(208,128,80,0.3); }
+.family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #faf4ee; border-radius: 12px; }
+.family-tree .node { margin: 2px 0; }
+.family-tree .branch { color: #b06040; font-weight: 600; }
+.family-tree .leaf { color: #666; padding-left: 24px; }
+.family-tree .highlight { color: #d08050; font-weight: 600; padding-left: 24px; }
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.market-item { background: #fdf5ee; border-radius: 10px; padding: 10px 12px; }
+.market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+.market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+.matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+.matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+.matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+.ql { position: absolute; font-size: 10px; color: #aaa; }
+.ql-tr { top: 22px; right: 20px; text-align: right; }
+.ql-tl { top: 22px; left: 50px; }
+.ql-br { bottom: 32px; right: 20px; text-align: right; }
+.ql-bl { bottom: 32px; left: 50px; }
+.matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+.matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+.dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #e8a060; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+.dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #b06040; white-space: nowrap; transform: translateX(-50%); }
+.ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.ingredient-table th { background: #f0e0d0; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+.ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+.ingredient-table .amt { text-align: right; font-weight: 600; color: #b06040; font-size: 12px; }
+.steps { list-style: none; counter-reset: step; }
+.steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #e8ddd0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #b06040; }
+.pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin-top: 8px; }
+.pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; margin-bottom: 2px; }
+.pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+.cost-box { background: #fdf5ee; border-radius: 12px; padding: 14px; }
+.cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.cost-row .cr-label { color: #555; }
+.cost-row .cr-value { font-weight: 600; color: #b06040; }
+.cost-divider { border: none; border-top: 1px dashed #e8d0c0; margin: 6px 0; }
+.decision-box { background: #faf4ee; border-radius: 12px; padding: 16px; }
+.decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+.decision-box p:last-child { margin-bottom: 0; }
+.trend-box { background: linear-gradient(135deg, #fdf5ee, #f8f4ef); border-radius: 12px; padding: 16px; }
+.trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trend-item:last-child { margin-bottom: 0; }
+.trend-year { font-size: 12px; font-weight: 700; color: #b06040; width: 50px; flex-shrink: 0; }
+.trend-arrow { color: #bbb; }
+.trend-desc { font-size: 13px; color: #555; }
+.trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #b06040; text-align: center; }
+.footer-brand { background: #b06040; color: #fff; text-align: center; padding: 24px; }
+.footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+.footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+.footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- ===== HEADER ===== -->
+  <div class="header">
+    <div class="header-badge">KR_005 · 韩式烤肉 · 差异化单品母卡</div>
+    <h1>烤大肠</h1>
+    <div class="subtitle">
+      韩式烤肉近年爆火单品 · 社交传播性极强的差异化利器 · 卡售价¥29.9 · FoodIntel推荐：8.5/10
+    </div>
+    <div class="tags">
+      <span>🥩 대창구이</span>
+      <span>🔥 近年爆火</span>
+      <span>🧼 清洗四步法</span>
+      <span>📸 社交传播</span>
+      <span>🍺 下酒绝配</span>
+    </div>
+  </div>
+
+  <!-- ===== ① 产品定义·一句话价值 ===== -->
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      韩式烤肉店最强社交传播单品 · 年轻人必点 · 近年专门店模式爆发 · <br>
+      定价78-128元/份 · 毛利率70-80% · 社交媒体自带话题
+    </div>
+  </div>
+
+  <!-- ===== ② 爆品指数·五维雷达 ===== -->
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★★</div>
+      <div class="bomb-reason">
+        <strong>社交传播之王。</strong>烤大肠在社媒上的传播力超过五花肉——"吃大肠"本身有猎奇属性，烤制视频画面冲击力强，适合短视频平台。流量和传播性双5★。毛利高但原料成本不低。标准化难点在清洗环节，洗不干净就是灾难。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+    </div>
+  </div>
+
+  <!-- ===== ③ 产品角色·产品家族 ===== -->
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag active">社交产品</span>
+      <span class="role-tag">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KR 韩式烤肉体系</div>
+      <div class="node leaf">├─ KR_001 秘制大块肉（流量母卡）</div>
+      <div class="node leaf">├─ KR_002 厚切五花肉（灵魂单品）</div>
+      <div class="node leaf">├─ KR_003 LA牛排（高客单价担当）</div>
+      <div class="node leaf">├─ KR_004 烤护心肉（稀缺利润单品）</div>
+      <div class="node highlight">├─ KR_005 烤大肠 ← 你在这里</div>
+      <div class="node leaf">├─ KR_006 烤猪皮（高毛利单品）</div>
+      <div class="node leaf">├─ KR_01~03 系列流量母卡</div>
+      <div class="node leaf">└─ VC_K001~K004 变体卡系</div>
+    </div>
+  </div>
+
+  <!-- ===== ④ 市场定位 ===== -->
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">高速增长</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">9/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">6/10 · 中</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">7/10 · 偏好北方/华东</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">7/10 · 清洗是门槛</div></div>
+      <div class="market-item"><div class="m-value" style="color:#555;">创业门槛</div><div class="m-value">中高 · 清洗技术+货源</div></div>
+    </div>
+  </div>
+
+  <!-- ===== ⑤ 爆品矩阵 ===== -->
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div>
+      <div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div>
+      <div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div>
+      <div class="y-label">传播性 →</div>
+      <div class="dot" style="left:45%;top:18%;"></div>
+      <div class="dot-label" style="left:45%;top:11%;">烤大肠（中复购·高传播）</div>
+      <div class="dot" style="left:75%;top:60%;background:#ddd;width:10px;height:10px;"></div>
+      <div class="dot-label" style="left:75%;top:53%;color:#bbb;font-size:10px;">厚切五花肉（高复购·中传播）</div>
+      <div class="dot" style="left:65%;top:25%;background:#ddd;width:10px;height:10px;"></div>
+      <div class="dot-label" style="left:65%;top:18%;color:#bbb;font-size:10px;">烤护心肉（中高复购·中高传播）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>烤大肠坐落在左上象限（高传播·中复购）——它是社媒上最火的韩式烤肉单品之一，大量探店视频都以烤大肠为封面。但复购率低于五花肉——一部分食客尝鲜后觉得"处理得太干净没大肠味"或"太油腻"就不再点。核心是做好清洗的度——既要干净无杂味，又要保留大肠特有的脂香。
+    </p>
+  </div>
+
+  <!-- ===== ⑥ 工艺配方 ===== -->
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方</div>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：250-300g/份 · 切4-5cm段 · 约8-10段
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b06040;margin-bottom:6px;">🧼 清洗四步法（最关键环节）</h4>
+    <table class="ingredient-table">
+      <tr><th>步骤</th><th>方法</th><th>作用</th></tr>
+      <tr><td>① 盐搓</td><td>粗盐+面粉各一把，反复搓洗大肠表面3min，流水冲净</td><td>去除表面黏液和杂质</td></tr>
+      <tr><td>② 翻面去油</td><td>大肠翻面，撕掉过多脂肪（保留薄薄一层脂香），再次盐搓</td><td>控油量和口感平衡</td></tr>
+      <tr><td>③ 醋洗</td><td>白醋+水1:3浸泡10min，去腥杀菌</td><td>去除异味</td></tr>
+      <tr><td>④ 焯水定型</td><td>冷水下锅+姜片+葱段+料酒，煮开后3min捞出冰水过凉</td><td>定型+去腥+锁脆</td></tr>
+    </table>
+    <div style="font-size:12px;color:#888;margin-top:4px;margin-bottom:10px;">💡 核心标准：洗到水变清为止，不管洗几遍。洗不干净一切白费。</div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b06040;margin-bottom:6px;">🌶️ 烧烤撒料（简易小批量配方）</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量（500g）</th><th>备注</th></tr>
+      <tr><td>粗辣椒粉（中粗）</td><td class="amt">200g</td><td>提香不抢味</td></tr>
+      <tr><td>熟芝麻（整粒）</td><td class="amt">120g</td><td></td></tr>
+      <tr><td>孜然粉</td><td class="amt">60g</td><td>韩式少用·但中国顾客喜欢</td></tr>
+      <tr><td>苏子粉（깻잎가루）</td><td class="amt">40g</td><td>韩式特有香料·可选</td></tr>
+      <tr><td>蒜粉</td><td class="amt">30g</td><td></td></tr>
+      <tr><td>洋葱粉</td><td class="amt">20g</td><td></td></tr>
+      <tr><td>白糖</td><td class="amt">15g</td><td></td></tr>
+      <tr><td>味精/昆布粉</td><td class="amt">10g</td><td>提鲜</td></tr>
+      <tr><td>白胡椒粉</td><td class="amt">5g</td><td></td></tr>
+    </table>
+    <div style="font-size:11px;color:#999;margin-top:4px;margin-bottom:10px;">💡 全部混合后直接撒烤好的大肠上。大批量生产方案见 JL系列 酱料卡工业调配标准。</div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b06040;margin-bottom:6px;">🥫 腌制方案</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量（10份）</th><th>备注</th></tr>
+      <tr><td>清洗好的大肠</td><td class="amt">3kg</td><td>焯水后沥干</td></tr>
+      <tr><td>韩国辣椒酱</td><td class="amt">200g</td><td>基底酱</td></tr>
+      <tr><td>辣椒粉（粗粒）</td><td class="amt">50g</td><td>增色增辣</td></tr>
+      <tr><td>酱油</td><td class="amt">80g</td><td></td></tr>
+      <tr><td>蒜末</td><td class="amt">120g</td><td>去腥关键</td></tr>
+      <tr><td>清酒</td><td class="amt">100g</td><td>去腥</td></tr>
+      <tr><td>蜂蜜/糖稀</td><td class="amt">60g</td><td>光泽+焦香</td></tr>
+      <tr><td>香油</td><td class="amt">40g</td><td>增香</td></tr>
+      <tr><td>白胡椒粉</td><td class="amt">5g</td><td></td></tr>
+    </table>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b06040;margin:12px 0 6px;">出餐流程</h4>
+    <ol class="steps">
+      <li>大肠清洗完成后，焯水3min，捞出冰水过凉，切4-5cm段</li>
+      <li>腌料混合均匀，倒入大肠抓匀，腌制20-30min</li>
+      <li>烤盘大火预热（220℃），刷薄油</li>
+      <li>大肠段平铺上烤盘，不要堆叠——每段留间距</li>
+      <li>烤至一面金黄焦脆（约3min），翻面再烤2-3min，外焦里嫩为标准</li>
+      <li>配泡菜、青椒圈、蒜片、쌈장上桌</li>
+      <li>吃完大肠后烤盘上炒泡菜饭——大肠的油脂渗入饭里，是韩式收尾经典</li>
+    </ol>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（8条）</div>
+      <div class="p-desc">
+        ① 清洗是最大门槛——洗不干净有异味直接劝退，务必以"水清"为标准而非"洗了几遍"<br>
+        ② 脂肪不要撕光——大肠的灵魂在油脂，撕光只剩一层皮，烤出来干硬无味<br>
+        ③ 焯水时间不能长——超过5分钟大肠变老变硬，失去脆嫩口感<br>
+        ④ 烤制不能小火——高温大火才能烤出外焦里嫩，小火慢烤会变成"煮大肠"<br>
+        ⑤ 腌制时间不超过30分钟——腌太久辣酱渗透过度，大肠失去本身香味<br>
+        ⑥ 回热问题——大肠凉了以后油脂凝固变腻，必须整份现烤现吃，不适合做好保温<br>
+        ⑦ 备货建议——清洗好的大肠可冷藏保存1天，但腌好后建议即腌即烤<br>
+        ⑧ 不吃大肠的客人——菜单上标注清楚，避免误点差评
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ⑦ 商业决策 ===== -->
+  <div class="section">
+    <div class="section-title">⑦ 商业决策</div>
+    <div class="cost-box" style="margin-bottom:14px;">
+      <div class="cost-row"><span class="cr-label">原料成本（大肠）</span><span class="cr-value">~15-20元/份</span></div>
+      <div class="cost-row"><span class="cr-label">腌料+配菜</span><span class="cr-value">~3元/份</span></div>
+      <div class="cost-row"><span class="cr-label">人工（清洗耗时）</span><span class="cr-value">~3元/份</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label">总成本</span><span class="cr-value">~21-26元/份</span></div>
+      <div class="cost-row"><span class="cr-label" style="font-weight:700;">建议售价</span><span class="cr-value" style="font-weight:800;font-size:16px;">78-128元/份</span></div>
+      <div class="cost-row"><span class="cr-label">毛利率</span><span class="cr-value" style="color:#2d8a40;">70-80%</span></div>
+      <div class="cost-row"><span class="cr-label">日均销量</span><span class="cr-value">12-20份</span></div>
+      <div class="cost-row"><span class="cr-label">月毛利贡献</span><span class="cr-value" style="font-size:16px;">~2-3万元</span></div>
+    </div>
+    <div class="decision-box">
+      <p><strong>✅ 适合场景：</strong>中高端韩式烤肉店必备差异化爆款。年轻人聚餐场景点单率极高——"烤大肠"三个字本身是流量密码，适合大众点评/小红书的种草素材。如果店面靠近大学城或年轻社区，烤大肠必上。</p>
+      <p><strong>📌 菜单位置：</strong>建议放在"招牌推荐"第一位——烤大肠是社媒传播力最强的单品，进店客人第一眼看到。配一张烤制中滋滋冒油的动图（或视频二维码），点单率提升50%。</p>
+      <p><strong>⚠️ 风险：</strong>清洗环节出问题直接导致差评潮。建议固定1-2名熟练工负责清洗，做清洗SOP贴在操作台。另外烤大肠的客群相对窄——中老年人、不吃内脏的人不点，需有替代产品兜底。</p>
+      <p><strong>🎯 专门店模式：</strong>烤大肠专门店是一线城市的新趋势——全店主打大肠类产品（烤大肠+大肠锅+大肠炒饭），客单价120-180元，食材成本极低（统一采购），毛利率可做到80%+。但清洗成本高，单店需2人专门洗大肠。</p>
+      <p><strong>🎯 地摊/精简版：</strong>大肠成本高、清洗复杂，不适合地摊。可用小肠替代——小肠更便宜、更容易清洗，但口感脆度不如大肠。</p>
+    </div>
+  </div>
+
+  <!-- ===== ⑧ 未来趋势 ===== -->
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">烤大肠只在韩国本土和少数一线城市韩餐专门店出现</span></div>
+      <div class="trend-item"><span class="trend-year">2023</span><span class="trend-arrow">→</span><span class="trend-desc">短视频引爆——\"烤大肠\"相关视频播放量破亿，专门店模式在一二线城市爆发</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">中端烤肉店普遍引入，供应链出现预清洗半成品，降低操作门槛</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">预包装冷冻烤大肠产品出现，家庭烤肉场景扩展</span></div>
+      <div class="trend-verdict">烤大肠已经从"小众猎奇"进化到"大众爆品"——现在还不上就晚了</div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div>
+    <div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links">
+      <span>📢 公众号：沧林食品技术</span>
+      <span>💬 微信：canglin1985</span>
+    </div>
+    <div class="fb-series">韩式烤肉 · KR_005 烤大肠</div>
+  </div>
+
+</div>
+</body>
+</html>

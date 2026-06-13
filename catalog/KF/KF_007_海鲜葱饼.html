@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KF_007 海鲜葱饼 — 韩式美食</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+  .card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+  .header { background: linear-gradient(135deg, #b84030 0%, #d06040 50%, #e88060 100%); padding: 32px 24px 24px; color: #fff; }
+  .header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+  .section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+  .section-title { font-size: 13px; font-weight: 600; color: #b84030; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+  .value-stmt { background: #fdf0ec; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #b84030; line-height: 1.7; text-align: center; }
+  .radar { display: flex; flex-direction: column; gap: 10px; }
+  .radar-item { display: flex; align-items: center; gap: 10px; }
+  .radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+  .radar-item .bar { height: 100%; border-radius: 10px; }
+  .radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #b84030; }
+  .bf5 { width: 100%; background: linear-gradient(90deg, #d06040, #e88060); }
+  .bf4 { width: 80%; background: linear-gradient(90deg, #d06040, #e88060); }
+  .bf3 { width: 60%; background: linear-gradient(90deg, #d8a090, #e8bab0); }
+  .bf2 { width: 40%; background: linear-gradient(90deg, #d8a090, #e8bab0); }
+  .bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+  .bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; }
+  .bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+  .role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+  .role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+  .role-tag.active { background: #d06040; color: #fff; box-shadow: 0 2px 8px rgba(208,96,64,0.3); }
+  .family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #fdf0ec; border-radius: 12px; }
+  .family-tree .node { margin: 2px 0; }
+  .family-tree .branch { color: #b84030; font-weight: 600; }
+  .family-tree .leaf { color: #666; padding-left: 24px; }
+  .family-tree .highlight { color: #d06040; font-weight: 600; padding-left: 24px; }
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .market-item { background: #fdf0ec; border-radius: 10px; padding: 10px 12px; }
+  .market-item .m-label { font-size: 11px; color: #999; }
+  .market-item .m-value { font-size: 14px; font-weight: 600; }
+  .matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+  .matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+  .matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+  .ql { position: absolute; font-size: 10px; color: #aaa; }
+  .ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+  .ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+  .matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+  .matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+  .dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #e88060; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+  .dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #b84030; white-space: nowrap; transform: translateX(-50%); }
+  .ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .ingredient-table th { background: #f0e4de; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+  .ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+  .ingredient-table .amt { text-align: right; font-weight: 600; color: #b84030; }
+  .steps { list-style: none; counter-reset: step; }
+  .steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+  .steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #e8ddd0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #b84030; }
+  .pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin-top: 8px; }
+  .pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; }
+  .pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+  .recipe-block { background: #fdf0ec; border-radius: 10px; padding: 14px; margin: 12px 0; }
+  .recipe-block .rb-title { font-size: 14px; font-weight: 700; color: #b84030; margin-bottom: 8px; }
+  .recipe-block table { width: 100%; font-size: 11px; border-collapse: collapse; }
+  .recipe-block td { padding: 3px 6px; border-bottom: 1px solid #e8d8d0; font-size: 11px; color: #555; }
+  .recipe-block .amt { text-align: right; font-weight: 600; color: #b84030; }
+  .customer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .customer-item { background: #fdf0ec; border-radius: 10px; padding: 12px; }
+  .customer-item .c-icon { font-size: 20px; }
+  .customer-item .c-name { font-size: 13px; font-weight: 600; }
+  .customer-item .c-desc { font-size: 11px; color: #888; line-height: 1.5; }
+  .cost-box { background: #fdf0ec; border-radius: 12px; padding: 14px; }
+  .cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .cost-row .cr-label { color: #555; }
+  .cost-row .cr-value { font-weight: 600; color: #b84030; }
+  .cost-divider { border: none; border-top: 1px dashed #e8d0c8; margin: 6px 0; }
+  .decision-box { background: #fdf0ec; border-radius: 12px; padding: 16px; }
+  .decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+  .decision-box p:last-child { margin-bottom: 0; }
+  .trend-box { background: linear-gradient(135deg, #fdf0ec, #f8f4ef); border-radius: 12px; padding: 16px; }
+  .trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .trend-item:last-child { margin-bottom: 0; }
+  .trend-year { font-size: 12px; font-weight: 700; color: #b84030; width: 50px; }
+  .trend-arrow { color: #bbb; }
+  .trend-desc { font-size: 13px; color: #555; }
+  .trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #b84030; text-align: center; }
+  .footer-brand { background: #b84030; color: #fff; text-align: center; padding: 24px; }
+  .footer-brand .fb-name { font-size: 18px; font-weight: 700; }
+  .footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+  .footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+  .footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">KF_007 · 韩式美食</div>
+    <h1>海鲜葱饼</h1>
+    <div class="subtitle">韩式烤肉桌的标配主食·配饼汁蘸食·煎制8分钟·毛利73-78%</div>
+    <div class="tags">
+      <span>🦐 饼粉炸粉1:1</span>
+      <span>🌿 小葱段60g</span>
+      <span>🥔 土豆丝增脆</span>
+      <span>🍶 配蘸汁上桌</span>
+      <span>🍽️ 3-4人分享</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      韩式烤肉桌上唯一兼具\"主食\"和\"下酒菜\"角色的产品·出餐8分钟·毛利73%+<br>
+      不是单个顾客点的东西——3-4人桌必点·客单价的推动器·饼汁蘸食的设计让人停不下来
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★☆☆</div>
+      <div class="bomb-reason">
+        <strong>桌桌必点但不出圈。</strong>海鲜葱饼不是拉新产品，是"桌上少个主食"时的自然选择。在韩式烤肉店里，3-4人桌几乎必点一份——价不贵、能吃饱、配蘸汁有满足感。<br>
+        <strong>⚠️ 硬伤：</strong>制作时间8分钟（从调糊到煎好），高峰时段容易堵单。标准化需要稳定的饼粉配比和煎台流程。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf2"></div></div><span class="score">2</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KF 韩式美食体系</div>
+      <div class="node leaf">├─ KF_001 石锅拌饭</div>
+      <div class="node leaf">├─ KF_002 冷面</div>
+      <div class="node leaf">├─ KF_003 大酱汤</div>
+      <div class="node leaf">├─ KF_004 嫩豆腐汤</div>
+      <div class="node leaf">├─ KF_005 肥牛拌饭</div>
+      <div class="node leaf">├─ KF_006 辣白菜炒饭</div>
+      <div class="node highlight">├─ KF_007 海鲜葱饼 ← 你在这里</div>
+      <div class="node leaf">└─ KF_008 辣炒年糕</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟品类</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">6/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">5/10 · 中低</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">8/10</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">4/10 · 低</div></div>
+      <div class="market-item"><div class="m-label">食材可得性</div><div class="m-value">⭐⭐⭐⭐</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div><div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div><div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div><div class="y-label">传播性 →</div>
+      <div class="dot" style="left:40%;top:75%;"></div>
+      <div class="dot-label" style="left:40%;top:67%;">海鲜葱饼（偏左·复购偏低·桌桌必点型）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>海鲜葱饼在基础型偏左端——复购率不高（一个顾客一年可能只想吃一两次），但<strong>上桌率极高</strong>（每3-4人桌几乎必点一份）。它的价值不在个人复购而在"多人聚餐场景下的刚需主食"。口感偏油腻是复购低的核心原因。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方 · 海鲜葱饼（西塔标准版）</div>
+
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：饼直径约22cm（整张不切）· 适合3-4人分享<br>
+      <strong>饼料</strong>：饼粉25g + 炸粉25g（1:1）· 小葱段60g · 鸡蛋1个 · 水130g · 调味料5g<br>
+      <strong>海鲜</strong>：虾仁4个（中间片开变8瓣）· 鱿鱼丝20g · 蟹棒20g（顶刀切）<br>
+      <strong>辅料</strong>：土豆丝60g（撒在饼面上，翻面后关火防糊）<br>
+      <strong>配汁</strong>：海鲜葱饼汁30g（蘸食）
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b84030;margin-bottom:6px;">🥣 饼粉配比</h4>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:12px;background:#fdf0ec;border-radius:8px;padding:10px;">
+      <strong>饼粉：炸粉 = 1 : 1</strong>（50g总粉量/份）<br>
+      — 饼粉（低筋面粉+泡打粉）提供筋性和结构<br>
+      — 炸粉（低筋面粉+淀粉+膨松剂）提供酥脆口感<br>
+      <strong>替代方案：</strong>没有炸粉的用中筋面粉+玉米淀粉（2:1）代替，加1g泡打粉——酥脆度会打折扣但可以用。<br>
+      <strong>调味料配比（批量预制）：</strong>牛肉粉100g + 鸡精100g + 味精60g + 胡椒粉40g → 打碎混合。每份取5g。
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b84030;margin-bottom:6px;">出品流程</h4>
+    <ol class="steps">
+      <li>调糊：饼粉25g + 炸粉25g + 鸡蛋1个 + 水130g + 调味料5g → 搅匀至无颗粒（不要过度搅拌，免得起筋）</li>
+      <li>饼锅加色拉油30g（约两勺），中火烧至6成热</li>
+      <li>倒入调好的糊，摇晃锅身使面糊均匀铺开成圆形（约22cm）</li>
+      <li>趁面糊未凝固：摆上虾仁（每瓣一片）、鱿鱼丝、蟹棒碎，用筷子稍微压入面糊</li>
+      <li>转小火慢煎，定型后（约2分钟）均匀撒上土豆丝60g</li>
+      <li>继续小火煎至下层金黄酥脆（约2分钟）——<strong>葱香味必须充分煎出来</strong></li>
+      <li>翻面：用锅铲辅助翻面（或颠锅），继续小火煎1分钟</li>
+      <li><strong>翻面后立即关火</strong>——土豆丝已是熟料，上层的目的是沾锅气增香，继续加热会导致土豆丝糊</li>
+      <li>出锅后配海鲜葱饼汁30g + 小碟葱花蒜末辣椒碎上桌</li>
+    </ol>
+
+    <div class="recipe-block">
+      <div class="rb-title">🍶 海鲜葱饼汁配方（可批量）</div>
+      <table>
+        <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+        <tr><td>东古酱油</td><td class="amt">300g</td><td>底味咸鲜</td></tr>
+        <tr><td>雪碧</td><td class="amt">300g</td><td>提鲜去腻，替代糖水</td></tr>
+        <tr><td>白糖</td><td class="amt">10g</td><td>补甜度</td></tr>
+      </table>
+      <div style="font-size:11px;color:#777;margin-top:6px;">
+        <strong>做法：</strong>酱油+雪碧+白糖混合搅匀即可，冷藏保存7天。每份出餐前取30g汁，加入备好的小碟（大葱花4g+蒜末2g+小米椒线椒共4g）搅匀上桌。<br>
+        <strong>🔑 关键：</strong>雪碧是韩式饼汁的标配——没有雪碧用糖水（水:白糖=10:1）+ 一点点柠檬酸（或白醋）。不要用可乐替代。
+      </div>
+    </div>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（6条）</div>
+      <div class="p-desc">
+        ① 面糊不要搅太久——搅到无颗粒即可，过度搅拌面粉起筋，煎出来硬而不酥<br>
+        ② 火候控制分三段：下锅定形用中火→煎下层酥脆用小火→翻面后关火。全程大火=外焦里生<br>
+        ③ 撒土豆丝的时机很关键——面糊半凝固时撒（太早沉底不起作用，太晚粘不住）<br>
+        ④ 翻面后用锅铲轻轻按压饼面——让土豆丝和饼结合更紧密<br>
+        ⑤ 葱香味没有充分出来就翻面——香气来源于小葱和锅底接触的美拉德反应，必须耐心煎到下层金黄焦脆才翻<br>
+        ⑥ 饼不够酥脆的原因：油量不够（至少30g/份）/ 饼粉比例不对（炸粉比例低了）/ 翻面过早
+      </div>
+    </div>
+
+    <h4 style="font-size:14px;font-weight:600;color:#b84030;margin:20px 0 10px;display:flex;align-items:center;gap:6px;">🥬&nbsp;变形体扩展 · 同一模式两种变形</h4>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fdf0ec;border-radius:8px;padding:10px;margin-bottom:14px;">
+      <strong>共同标准：</strong>饼粉炸粉1:1 · 蛋糊配比1:1（蛋+水=130g） · 直径22cm整张不切 · 配饼汁蘸食。以下变形体仅在<strong>主料</strong>上做变化，饼底不变。
+    </div>
+
+    <h5 style="font-size:13px;font-weight:600;color:#b84030;margin:12px 0 6px;">变形体一 · 韭菜海鲜饼（更甜的葱香替代）</h5>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fff8f0;border-left:3px solid #e8a030;border-radius:8px;padding:10px;margin-bottom:10px;">
+      <strong>出品规格：</strong>饼底不变 · 韭菜段60g替代小葱 · 虾仁鱿鱼蟹棒不变<br>
+      <strong>做法：</strong>韭菜切4cm段加入面糊搅匀再下锅——韭菜比小葱软，先和面糊混合再煎不易焦。海鲜按标准流程铺面。<br>
+      <strong>🔑 关键：</strong>韭菜的辛辣味比小葱淡，香味层次不如葱饼丰富。搭配酱汁时加一点蒜泥提味。<br>
+      <strong>💰 成本：</strong>与小葱版接近 · 售价22-28元<br>
+      <strong>适用场景：</strong>小葱断季或涨价时的替代方案。韭菜全年平价，供应链更稳定。
+    </div>
+
+    <h5 style="font-size:13px;font-weight:600;color:#b84030;margin:12px 0 6px;">变形体二 · 泡菜煎饼（低配素食版）</h5>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fff8f0;border-left:3px solid #e8a030;border-radius:8px;padding:10px;margin-bottom:10px;">
+      <strong>出品规格：</strong>饼底不变 · 辣白菜碎80g替代海鲜 · 小葱30g<br>
+      <strong>做法：</strong>辣白菜挤干汤汁切碎（约1cm）→ 和饼粉炸粉蛋液混合搅匀 → 加泡菜汁10g调色（不用另加水）→ 下锅煎制流程同上<br>
+      <strong>🔑 关键：</strong>泡菜汁替代部分水，颜色更好看（自然红色）。辣白菜本身有咸味，不用再放调味料。<br>
+      <strong>💰 成本：</strong>~2.5元/份 · 建议售价18-22元 · 毛利率88%<br>
+      <strong>适用场景：</strong>素食客群、外卖套餐搭配品、低成本补充。不需要备海鲜，冰箱里有辣白菜就能做。
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 商业决策</div>
+    <div class="decision-box">
+      <p><strong>💰 成本利润：</strong>海鲜葱饼~6元/份 · 售价22-28元 · 毛利率73-78%（成本偏高因虾仁）。<br>
+      变形体：韭菜海鲜饼成本接近；泡菜煎饼~2.5元/份 · 售价18-22元 · 毛利率88%（利润王）。<br>
+      <strong>怎么选：</strong>海鲜葱饼是招牌标配（虾仁+鱿鱼的丰富感无可替代），泡菜煎饼作为低成本午餐补充或素食备用。<br>
+      <strong>⚠️ 注意：</strong>海鲜葱饼的毛利偏低于KF系列其他产品——因为虾仁占了成本大头。不要用冷冻虾仁替代活虾——冷冻虾仁出水多，饼会软塌。</p>
+      <p><strong>✅ 供应链注意：</strong>虾仁、鱿鱼、蟹棒需冷冻储存。如果烤肉店本身没有冻品备货（只做纯烤肉+主食），不建议专门为葱饼备冻品。只有确定走韩式融合套餐路线的店才值得上。<br>
+      <strong>🎯 地摊版：</strong>⭐⭐⭐⭐ 适合但不极致。地摊卖只能做泡菜煎饼（低成本版）或者小份葱饼——一张饼够两个人吃，地摊卖15-18元，成本3-4元。</p>
+      <p><strong>❗ 出餐节奏提醒：</strong>一张饼出餐8分钟。高峰时段如果同时来3桌都要海鲜葱饼，煎台会卡住。建议提前批量调好饼粉料（干粉+调味料混合分装），高峰时加水调糊即可。或配两台煎饼机轮流出。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2018</span><span class="trend-arrow">→</span><span class="trend-desc">海鲜葱饼是韩式烤肉店标配，没人多想</span></div>
+      <div class="trend-item"><span class="trend-year">2021</span><span class="trend-arrow">→</span><span class="trend-desc">小份化趋势——单人或双人份小葱饼开始流行</span></div>
+      <div class="trend-item"><span class="trend-year">2024</span><span class="trend-arrow">→</span><span class="trend-desc">厚煎葱饼（日式大阪烧风）成网红，但非韩式主流</span></div>
+      <div class="trend-item"><span class="trend-year">2026</span><span class="trend-arrow">→</span><span class="trend-desc">葱饼回归薄脆路线，预制饼糊+标准化煎饼机普及</span></div>
+      <div class="trend-verdict">海鲜葱饼不会消失也不会爆火——它的终局是"烤肉桌上稳定存在的主食配角"。真正的增量不在升级而在于：小份化（做单人份）、低配化（做泡菜煎饼）、标准化（预制饼糊）。</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div><div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links"><span>📢 公众号：沧林食品技术</span><span>💬 微信：canglin1985</span></div>
+    <div class="fb-series">韩式美食 · KF_007 海鲜葱饼</div>
+  </div>
+
+</div>
+</body>
+</html>

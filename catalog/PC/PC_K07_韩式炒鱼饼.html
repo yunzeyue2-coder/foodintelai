@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PC_K07 韩式炒鱼饼 — 韩式小菜母卡</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+.card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+.header { background: linear-gradient(135deg, #5a7a3a 0%, #7a9a4a 50%, #9aba5a 100%); padding: 32px 24px 24px; color: #fff; }
+.header-badge { display: inline-block; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; line-height: 1.6; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+.section { padding: 20px 24px; border-bottom: 1px solid #e8e8d0; }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 13px; font-weight: 600; color: #5a7a3a; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: #d8e0c8; }
+.value-stmt { background: #edf5e4; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #5a7a3a; line-height: 1.7; text-align: center; }
+.bomb-box { display: flex; align-items: center; gap: 12px; background: #fafff0; border-radius: 12px; padding: 14px; border: 1px solid #d8e8c8; }
+.bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; flex-shrink: 0; }
+.bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+.radar { display: flex; flex-direction: column; gap: 10px; }
+.radar-item { display: flex; align-items: center; gap: 10px; }
+.radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.radar-item .bar-wrap { flex: 1; height: 10px; background: #e0e8d0; border-radius: 10px; overflow: hidden; }
+.radar-item .bar { height: 100%; border-radius: 10px; }
+.radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #5a7a3a; }
+.bf5 { width: 100%; background: linear-gradient(90deg, #7a9a4a, #9aba5a); }
+.bf4 { width: 80%; background: linear-gradient(90deg, #7a9a4a, #9aba5a); }
+.bf3 { width: 60%; background: linear-gradient(90deg, #a0b888, #b0c898); }
+.role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+.role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #e8e8d0; color: #888; }
+.role-tag.active { background: #7a9a4a; color: #fff; box-shadow: 0 2px 8px rgba(122,154,74,0.3); }
+.family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #f2f8ea; border-radius: 12px; }
+.family-tree .node { margin: 2px 0; }
+.family-tree .branch { color: #5a7a3a; font-weight: 600; }
+.family-tree .leaf { color: #666; padding-left: 24px; }
+.family-tree .highlight { color: #7a9a4a; font-weight: 600; padding-left: 24px; }
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.market-item { background: #edf5e4; border-radius: 10px; padding: 10px 12px; }
+.market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+.market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+.matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #d8e0c8; border-radius: 12px; margin-top: 8px; background: #f8faf2; overflow: hidden; }
+.matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #c8d0b8; }
+.matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #c8d0b8; }
+.ql { position: absolute; font-size: 10px; color: #aaa; }
+.ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+.ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+.matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+.matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+.dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #9aba5a; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+.dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #5a7a3a; white-space: nowrap; transform: translateX(-50%); }
+.ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.ingredient-table th { background: #d8e0c8; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+.ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #e8e8d0; font-size: 12px; }
+.ingredient-table .amt { text-align: right; font-weight: 600; color: #5a7a3a; font-size: 12px; }
+.steps { list-style: none; counter-reset: step; }
+.steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #d8e0c8; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #5a7a3a; }
+.pitfall-box { background: #f2fcea; border-left: 3px solid #b8c878; border-radius: 8px; padding: 12px; margin-top: 8px; }
+.pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #7a8840; margin-bottom: 2px; }
+.pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+.cost-box { background: #edf5e4; border-radius: 12px; padding: 14px; }
+.cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.cost-row .cr-label { color: #555; }
+.cost-row .cr-value { font-weight: 600; color: #5a7a3a; }
+.cost-divider { border: none; border-top: 1px dashed #c8d8b8; margin: 6px 0; }
+.decision-box { background: #f2f8ea; border-radius: 12px; padding: 16px; }
+.decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+.decision-box p:last-child { margin-bottom: 0; }
+.trend-box { background: linear-gradient(135deg, #edf5e4, #f8faf2); border-radius: 12px; padding: 16px; }
+.trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trend-item:last-child { margin-bottom: 0; }
+.trend-year { font-size: 12px; font-weight: 700; color: #5a7a3a; width: 50px; flex-shrink: 0; }
+.trend-arrow { color: #bbb; }
+.trend-desc { font-size: 13px; color: #555; }
+.trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #d8e0c8; font-size: 14px; font-weight: 600; color: #5a7a3a; text-align: center; }
+.footer-brand { background: #5a7a3a; color: #fff; text-align: center; padding: 24px; }
+.footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+.footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+.footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">PC_K07 · 韩式小菜 · 小菜母卡</div>
+    <h1>韩式炒鱼饼</h1>
+    <div class="subtitle">
+      韩式小菜中的人气王 · 小孩最爱 · 微甜微辣 · 卡售价¥9.9 · FoodIntel推荐：8.0/10
+    </div>
+    <div class="tags">
+      <span>🥟 어묵볶음</span>
+      <span>🧒 小孩最爱</span>
+      <span>💰 成本~3元</span>
+      <span>🌶️ 微甜微辣</span>
+      <span>🥢 下饭神器</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      韩式小菜中唯一热食出品的选手 · 微甜微辣 · 万能搭饭搭面 · <br>
+      成本~3元/份 · 出餐5分钟 · 小孩和年轻人回头率最高的小菜
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★</div>
+      <div class="bomb-reason">
+        <strong>小菜人气王。</strong>在小菜中属于流量和传播性偏高的——韩式炒鱼饼是韩剧里经常出现的街边小吃，自带认知度。毛利4★——成本适中。标准化4★——炒制流程固定、酱汁比例固定。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">PC 韩式小菜体系</div>
+      <div class="node leaf">├─ PC_K01~K05 韩式辣白菜/牛副/明太鱼/豆制品/腌菜系列</div>
+      <div class="node leaf">├─ PC_K06 韩式拌豆芽</div>
+      <div class="node highlight">├─ PC_K07 韩式炒鱼饼 ← 你在这里</div>
+      <div class="node leaf">└─ PC_K08 韩式拌菠菜</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">7/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">6/10 · 中等</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">8/10 · 偏城市</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">3/10 · 低</div></div>
+      <div class="market-item"><div class="m-value" style="color:#555;">创业门槛</div><div class="m-value">低 · 鱼饼买得到就能做</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 工艺配方</div>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：1份约100g（小菜碟量）
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#5a7a3a;margin-bottom:6px;">配方（批量5份）</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+      <tr><td>韩式鱼饼（어묵）</td><td class="amt">500g</td><td>进口厚片鱼饼最佳·切三角片</td></tr>
+      <tr><td>洋葱</td><td class="amt">100g</td><td>切丝</td></tr>
+      <tr><td>胡萝卜</td><td class="amt">50g</td><td>切菱形片·配色</td></tr>
+      <tr><td>大葱</td><td class="amt">1根</td><td>斜切圈</td></tr>
+      <tr><td>青椒</td><td class="amt">1个</td><td>切丝·可选</td></tr>
+    </table>
+
+    <h4 style="font-size:13px;font-weight:600;color:#5a7a3a;margin:12px 0 6px;">炒酱配方</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+      <tr><td>酱油</td><td class="amt">40g</td><td></td></tr>
+      <tr><td>韩式辣椒酱（고추장）</td><td class="amt">30g</td><td>见JL_022</td></tr>
+      <tr><td>白糖</td><td class="amt">25g</td><td>甜味是炒鱼饼的灵魂</td></tr>
+      <tr><td>蒜末</td><td class="amt">15g</td><td></td></tr>
+      <tr><td>清酒/料酒</td><td class="amt">15g</td><td>去腥</td></tr>
+      <tr><td>韩国辣椒粉</td><td class="amt">5g</td><td>增色</td></tr>
+      <tr><td>香油</td><td class="amt">10g</td><td>最后放</td></tr>
+      <tr><td>熟芝麻</td><td class="amt">5g</td><td>点缀</td></tr>
+    </table>
+    <div style="font-size:11px;color:#999;margin-top:4px;margin-bottom:10px;">💡 炒酱基底见 JL_022 韩式辣椒酱。大批量生产时参考工业调配方案。</div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#5a7a3a;margin:12px 0 6px;">出餐流程</h4>
+    <ol class="steps">
+      <li>鱼饼切三角片——不要切太小，口感会碎</li>
+      <li>烧一锅水，水开后下鱼饼焯水30秒——去油去杂质</li>
+      <li>捞出沥干——用厨房纸吸干表面水分</li>
+      <li>热锅冷油，中火爆香洋葱丝+胡萝卜片（约1min）</li>
+      <li>加入炒酱，小火炒出红油</li>
+      <li>加入鱼饼，转中大火翻炒，让每片鱼饼都裹上酱汁（约2min）</li>
+      <li>加葱圈+青椒丝，翻炒几下</li>
+      <li>淋香油、撒芝麻，出锅</li>
+    </ol>
+
+    <h4 style="font-size:13px;font-weight:600;color:#5a7a3a;margin:12px 0 6px;">鱼饼选购指南</h4>
+    <table class="ingredient-table">
+      <tr><th>类型</th><th>特点</th><th>推荐度</th></tr>
+      <tr><td>韩国进口厚片鱼饼</td><td>口感扎实·鱼味浓·不散不碎</td><td>⭐⭐⭐⭐⭐ 首选</td></tr>
+      <tr><td>国产韩式鱼饼</td><td>价格便宜·偏薄偏软</td><td>⭐⭐⭐ 可替代</td></tr>
+      <tr><td>火锅鱼豆腐</td><td>太软·炒了会碎</td><td>⭐ 不适用</td></tr>
+    </table>
+    <div style="font-size:12px;color:#888;margin-top:6px;">💡 鱼饼冷冻保存保质期长（6个月），建议一次性批量采购韩国进口厚片鱼饼，冷冻备用。</div>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（6条）</div>
+      <div class="p-desc">
+        ① 鱼饼必须焯水——不焯水直接炒会出很多油，口感腻<br>
+        ② 甜味不能少——炒鱼饼的灵魂是甜辣口，糖不够就不是那个味<br>
+        ③ 大火快炒不能久炒——鱼饼在锅里时间长了会变硬，2分钟足够<br>
+        ④ 鱼饼别切太小——每片三角片边长3-4cm最佳，太小炒出来像一堆碎渣<br>
+        ⑤ 酱汁先调好再炒——边炒边加调料容易糊锅，提前调好酱汁一锅出<br>
+        ⑥ 鱼饼选厚不选薄——薄鱼饼一炒就卷边变硬，厚鱼饼口感好
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 商业决策</div>
+    <div class="cost-box" style="margin-bottom:14px;">
+      <div class="cost-row"><span class="cr-label">鱼饼成本</span><span class="cr-value">~2元/份</span></div>
+      <div class="cost-row"><span class="cr-label">配菜+酱料</span><span class="cr-value">~1元/份</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label">总成本</span><span class="cr-value">~3元/份</span></div>
+      <div class="cost-row"><span class="cr-label" style="font-weight:700;">单点售价</span><span class="cr-value" style="font-weight:800;">12-18元/份</span></div>
+      <div class="cost-row"><span class="cr-label">毛利率</span><span class="cr-value" style="color:#2d8a40;">75-82%</span></div>
+      <div class="cost-row"><span class="cr-label">备货周期</span><span class="cr-value">当天做当天卖完</span></div>
+    </div>
+    <div class="decision-box">
+      <p><strong>✅ 适合场景：</strong>韩式烤肉店小菜拼盘中的"热菜担当"——其他小菜都是凉菜，唯有炒鱼饼是热气腾腾的，形成温度对比。也适合鱼饼串专门店（어묵꼬치）——热汤鱼饼配炒鱼饼双拼。</p>
+      <p><strong>📌 出品方式：</strong>如果是赠送小菜，用小碟装100g即可。如果单点，建议用小铁板或热石盘上桌——滋滋冒油的状态最能激发食欲。配米饭可以做成"鱼饼盖饭"，卖18-22元/份。</p>
+      <p><strong>⚠️ 风险：</strong>鱼饼选品是最大风险——便宜的国产鱼饼淀粉含量高、一炒就散。必须用进口厚片鱼饼。另一个风险是炒鱼饼凉了以后会变硬——建议少量多次现炒，不要一次性大批量做好放着。</p>
+      <p><strong>🎯 地摊版：</strong>炒鱼饼非常适合地摊——出餐快、成本低、味道好。鱼饼串（竹签串好煮在热汤里）是韩国街头最常见的路边摊小吃，一串卖5-8元，毛利率90%+。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑦ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">韩国进口鱼饼主导市场</span></div>
+      <div class="trend-item"><span class="trend-arrow">→</span><span class="trend-desc">韩剧/综艺带动鱼饼认知度上升</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">国产高品质鱼饼品牌出现</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">预包装炒鱼饼即食产品</span></div>
+      <div class="trend-verdict">炒鱼饼的问题不是好不好吃——是能不能买到好的鱼饼</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div>
+    <div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links">
+      <span>📢 公众号：沧林食品技术</span>
+      <span>💬 微信：canglin1985</span>
+    </div>
+    <div class="fb-series">韩式小菜 · PC_K07 韩式炒鱼饼</div>
+  </div>
+
+</div>
+</body>
+</html>

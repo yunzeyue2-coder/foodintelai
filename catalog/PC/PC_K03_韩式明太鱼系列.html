@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PC_K03 韩式明太鱼系列 — 韩式拌菜</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+  .card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+  .header { background: linear-gradient(135deg, #3a6a7a 0%, #5a8a9a 50%, #7aaa9a 100%); padding: 32px 24px 24px; color: #fff; }
+  .header-badge { display: inline-block; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+  .section { padding: 20px 24px; border-bottom: 1px solid #dce8e4; }
+  .section-title { font-size: 13px; font-weight: 600; color: #3a6a7a; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #c8d8d4; }
+  .verdict-strip { background: #3a6a7a; color: #fff; padding: 10px 24px; font-size: 14px; font-weight: 600; text-align: center; }
+  .dec-card { background: #e8f0ee; border-radius: 12px; padding: 14px; margin: 8px 0; }
+  .dec-card strong { color: #3a6a7a; }
+  .callout { background: #eef5f2; border-left: 3px solid #6a9a7a; border-radius: 8px; padding: 12px; margin: 8px 0; font-size: 12px; line-height: 1.6; color: #555; }
+  .callout .cl-label { font-weight: 600; color: #3a6a7a; }
+  .radar { display: flex; flex-direction: column; gap: 10px; }
+  .radar-item { display: flex; align-items: center; gap: 10px; }
+  .radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .radar-item .bar-wrap { flex: 1; height: 10px; background: #dce8e4; border-radius: 10px; overflow: hidden; }
+  .radar-item .bar { height: 100%; border-radius: 10px; }
+  .radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #3a6a7a; }
+  .bf5 { width: 100%; background: linear-gradient(90deg, #5a8a9a, #7aaa9a); }
+  .bf4 { width: 80%; background: linear-gradient(90deg, #5a8a9a, #7aaa9a); }
+  .bf3 { width: 60%; background: linear-gradient(90deg, #80a8a8, #90b8b8); }
+  .bf2 { width: 40%; background: linear-gradient(90deg, #80a8a8, #90b8b8); }
+  .role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+  .role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #dce8e4; color: #888; }
+  .role-tag.active { background: #5a8a9a; color: #fff; box-shadow: 0 2px 8px rgba(90,138,154,0.3); }
+  .tree-box { background: #e8f0ee; border-radius: 12px; padding: 14px; font-size: 13px; line-height: 2; }
+  .tree-box .t-root { font-weight: 700; color: #3a6a7a; }
+  .tree-box .t-l1 { padding-left: 20px; color: #556; }
+  .tree-box .t-l2 { padding-left: 40px; color: #888; font-size: 12px; }
+  .matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #c8d8d4; border-radius: 12px; margin-top: 8px; background: #f4f8f6; overflow: hidden; }
+  .matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #c0d0cc; }
+  .matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #c0d0cc; }
+  .ql { position: absolute; font-size: 10px; color: #aaa; }
+  .ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+  .ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+  .matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+  .matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+  .dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #5a8a9a; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+  .dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #3a6a7a; white-space: nowrap; transform: translateX(-50%); }
+  .footer-brand { background: #3a6a7a; color: #fff; text-align: center; padding: 24px; }
+  .footer-brand .fb-name { font-size: 18px; font-weight: 700; }
+  .footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+  .footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+  .footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+  .key-num { font-size: 18px; font-weight: 800; color: #3a6a7a; }
+  .source-table { background: #eef5f2; border-radius: 10px; padding: 12px; font-size: 12px; line-height: 1.8; }
+  .source-table .st-row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #dce8e4; }
+  .source-table .st-name { font-weight: 600; color: #3a6a7a; }
+  .source-table .st-alt { color: #555; text-align: right; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">PC_K03 · 韩式拌菜</div>
+    <h1>韩式明太鱼系列</h1>
+    <div class="subtitle">明太鱼干/丝/皮+鱼子酱+小银鱼干+干泥鳅鱼 · 韩式下酒菜独特品类</div>
+    <div class="tags">
+      <span>🐟 明太鱼（狭鳕）</span>
+      <span>💡 国产替代方案全</span>
+      <span>💰 成本3-8元/份</span>
+      <span>🍻 下酒菜独特性</span>
+      <span>🔄 替代风险7/10</span>
+    </div>
+  </div>
+
+  <div class="verdict-strip">判定：<strong>可做但需评估供应链</strong>· 明太鱼全国供应链弱· 建议先试后推</div>
+
+  <div class="section">
+    <div class="section-title">① 开还是不开 · 30秒判断</div>
+    <div class="dec-card">
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+        <span><strong>🔥 流量</strong> <span class="key-num">2</span>/5</span>
+        <span><strong>💰 毛利</strong> <span class="key-num">4</span>/5</span>
+        <span><strong>⚡ 替代风险</strong> <span style="font-size:18px; font-weight:800; color:#b87040;">7</span>/10</span>
+        <span><strong>🍻 独特性</strong> <span class="key-num">5</span>/5</span>
+      </div>
+      <hr style="border:none; border-top:1px dashed #c8d8d4; margin:8px 0;">
+      <div><strong>✅ 适合开的情况：</strong>已有韩式供应链·东北地区（明太鱼好拿货）· 需要差异化拌菜单· 有下酒菜需求</div>
+      <div><strong>❌ 不建议开的情况：</strong>纯南方市场（明太鱼难买）· 日销量＜10份（单品损耗高）· 没有冻品供应链</div>
+      <div><strong>💰 收益估算：</strong>明太鱼干15-25元/份（毛利80%+）· 鱼子酱18-28元（毛利75%）· 小银鱼干12-18元（毛利85%）</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 原材料指南 · 中国名·可替代原料</div>
+    <div class="source-table">
+      <div class="st-row"><span class="st-name">明太鱼（韩语명태）</span><span class="st-alt"><strong>中国名：狭鳕</strong>（阿拉斯加鳕·Gadus chalcogrammus）</span></div>
+      <div class="st-row"><span class="st-name">明太鱼干（整条）</span><span class="st-alt"><strong>可替代：</strong>狭鳕干/阿拉斯加鳕鱼干/太平洋鳕干</span></div>
+      <div class="st-row"><span class="st-name">干明太鱼丝</span><span class="st-alt"><strong>可替代：</strong>鳕鱼丝（国产零食级鳕鱼丝）/手撕鳕鱼条</span></div>
+      <div class="st-row"><span class="st-name">干明太鱼皮</span><span class="st-alt"><strong>可替代：</strong>鳕鱼皮干/无需替代（采购集中）</span></div>
+      <div class="st-row"><span class="st-name">明太鱼子</span><span class="st-alt"><strong>可替代：</strong>鳕鱼子/多春鱼子（口感略逊）</span></div>
+      <div class="st-row"><span class="st-name">小银鱼（韩语잔멸치）</span><span class="st-alt"><strong>中国名：银鱼</strong>· 可替代：太湖银鱼/东海银鱼干</span></div>
+      <div class="st-row"><span class="st-name">干泥鳅鱼</span><span class="st-alt"><strong>中国名：泥鳅干</strong>· 可替代：淡水养殖泥鳅自制烘干</span></div>
+    </div>
+    <div class="callout" style="margin-top:8px;">
+      <div class="cl-label">💡 采购建议</div>
+      <strong>明太鱼供应链：</strong>东北（延边/牡丹江/大连）是明太鱼加工集散地——90%以上明太鱼加工在东北完成。南方门店建议直接用<strong>替代品：鳕鱼丝</strong>（全国批发市场都有·成本相当·口感接近）。明太鱼干和鳕鱼干在工艺上同属一个品类，调味后顾客吃不出区别。<br>
+      <strong>怎么买：</strong>搜"狭鳕干"或"阿拉斯加鳕鱼干"（1688或冻品批发市场）· 山东青岛/威海也有加工厂· 比搜"明太鱼"便宜20-30%。
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 爆品指数 · 五维雷达</div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf2"></div></div><span class="score">2</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+    </div>
+    <div style="font-size:12px; color:#888; margin-top:8px;">
+      <strong>点评：</strong>明太鱼最大的问题是流量低（不是所有人都爱吃鱼干）和供应链弱（南方难买）。但独特性强——大部分韩式烤肉店没有明太鱼，上了就是差异化记忆点。标准化3★——干明太鱼蒸制时间对口感影响大。
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 产品价值树</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag active">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag">套餐产品</span>
+    </div>
+    <div class="tree-box">
+      <div class="t-root">🐟 韩式明太鱼系列 · 价值树</div>
+      <div class="t-l1">├─ 差异化记忆点</div>
+      <div class="t-l2">│  └─ 大部分店没有明太鱼·上了就不同</div>
+      <div class="t-l1">├─ 下酒菜独特性</div>
+      <div class="t-l2">│  └─ 明太鱼干撕着吃配烧酒·韩剧经典</div>
+      <div class="t-l1">├─ 高毛利品类</div>
+      <div class="t-l2">│  └─ 干明太鱼/银鱼干/泥鳅干成本极低·毛利80%+</div>
+      <div class="t-l1">├─ 东北延边文化符号</div>
+      <div class="t-l2">│  └─ 明太鱼在延边=必备年货·自带文化认同</div>
+      <div class="t-l1">└─ 零售化潜力</div>
+      <div class="t-l2">   └─ 真空明太鱼丝/鱼子酱·便利店下酒零食</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ PC体系定位图 · K03在这一排第几</div>
+    <div style="font-size:12px; color:#555; line-height:1.8;">
+      <div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #e0d8d0;">
+        <span style="font-weight:700; color:#2c2c2c; min-width:30px;">K01</span>
+        <span style="font-weight:600; color:#b07040; min-width:90px;">辣白菜</span>
+        <span style="color:#d09050;">★★★★★</span>
+        <span style="color:#888; font-size:11px;">必须有</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #e0d8d0;">
+        <span style="font-weight:700; color:#2c2c2c; min-width:30px;">K02</span>
+        <span style="font-weight:600; color:#b07040; min-width:90px;">牛副拌菜</span>
+        <span style="color:#d09050;">★★★★☆</span>
+        <span style="color:#888; font-size:11px;">增强丰富度</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:5px 0; background:#f5ede4; border-radius:6px; padding:5px 8px;">
+        <span style="font-weight:700; color:#b07040; min-width:30px;">K03</span>
+        <span style="font-weight:700; color:#b07040; min-width:90px;">明太鱼</span>
+        <span style="color:#b07040; font-size:15px;">★★★★</span>
+        <span style="color:#b07040; font-size:11px; font-weight:600;">← 你在这里 · 第3优先级</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #e0d8d0;">
+        <span style="font-weight:700; color:#2c2c2c; min-width:30px;">K04</span>
+        <span style="font-weight:600; color:#b07040; min-width:90px;">豆制品</span>
+        <span style="color:#d09050;">★★★☆</span>
+        <span style="color:#888; font-size:11px;">素食补充</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed #e0d8d0;">
+        <span style="font-weight:700; color:#2c2c2c; min-width:30px;">K05</span>
+        <span style="font-weight:600; color:#b07040; min-width:90px;">腌菜/拌菜</span>
+        <span style="color:#d09050;">★★★</span>
+        <span style="color:#888; font-size:11px;">完整度补充</span>
+      </div>
+    </div>
+    <div style="font-size:11px; color:#888; margin-top:8px; padding:8px; background:#f8f0e8; border-radius:6px;">
+      <strong>为什么排第3：</strong>明太鱼是韩式下酒菜独特品类——不是每家都做，但做了就有差异化。优先级居中，看门店定位决定。如果是主打下酒菜的店可以提到第2。
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 爆品矩阵</div>
+    <div style="font-size:12px; color:#555; line-height:1.8;">
+      <div style="display:flex; align-items:center; padding:6px 0; border-bottom:1px solid #dce8e4;">
+        <span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:#c0392b; color:#fff; text-align:center; line-height:16px; font-size:10px; font-weight:700; margin-right:8px;">王</span>
+        <span style="font-weight:600; color:#3a6a7a; min-width:100px;">认知王</span>
+        <span><strong>明太鱼干(撕条)</strong> · 韩式下酒菜灵魂·认知度最高</span>
+      </div>
+      <div style="display:flex; align-items:center; padding:6px 0; border-bottom:1px solid #dce8e4;">
+        <span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:#2980b9; color:#fff; text-align:center; line-height:16px; font-size:10px; font-weight:700; margin-right:8px;">量</span>
+        <span style="font-weight:600; color:#3a6a7a; min-width:100px;">走量款</span>
+        <span><strong>明太鱼丝/小银鱼干</strong> · 价格适中·点单率高</span>
+      </div>
+      <div style="display:flex; align-items:center; padding:6px 0; border-bottom:1px solid #dce8e4;">
+        <span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:#27ae60; color:#fff; text-align:center; line-height:16px; font-size:10px; font-weight:700; margin-right:8px;">利</span>
+        <span style="font-weight:600; color:#3a6a7a; min-width:100px;">利润款</span>
+        <span><strong>明太鱼皮/鱼子酱</strong> · 原料成本低·毛利高</span>
+      </div>
+      <div style="display:flex; align-items:center; padding:6px 0;">
+        <span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:#8e44ad; color:#fff; text-align:center; line-height:16px; font-size:10px; font-weight:700; margin-right:8px;">异</span>
+        <span style="font-weight:600; color:#3a6a7a; min-width:100px;">差异化</span>
+        <span><strong>干泥鳅鱼</strong> · 小众但记忆点强·适合直播宣传</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 推荐SKU分级 · 选这6款就够了</div>
+    <div style="font-size:12px; color:#555; line-height:1.8;">
+      <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; background:#e8f5e9; border-radius:8px; margin-bottom:6px;">
+        <span style="font-size:18px;">🟢</span>
+        <span style="font-weight:600; color:#2e7d32; min-width:50px;">必上(2款)</span>
+        <span><strong>明太鱼干(撕条)+明太鱼丝</strong> — 认知高·走量稳</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; background:#fff8e1; border-radius:8px; margin-bottom:6px;">
+        <span style="font-size:18px;">🟡</span>
+        <span style="font-weight:600; color:#f57f17; min-width:50px;">可选(2款)</span>
+        <span><strong>小银鱼干+明太鱼皮</strong> — 丰富品类</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; background:#ffebee; border-radius:8px;">
+        <span style="font-size:18px;">🔴</span>
+        <span style="font-weight:600; color:#c62828; min-width:50px;">不建议首批</span>
+        <span><strong>干泥鳅鱼</strong>（受众窄·偏东北）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑧ 工艺摘要</div>
+
+    <div style="font-size:13px; font-weight:600; color:#3a6a7a; text-align:center; margin-bottom:10px;">
+      6款共用"蒜+糖稀+辣椒面+芝麻"调味框架 · 核心工艺在"干鱼蒸制"
+    </div>
+
+    <div class="callout">
+      <div class="cl-label">🐟 核心工艺（干明太鱼通用）</div>
+      干明太鱼（狭鳕干）→ 喷水回软 → 淋糖稀 → <strong>隔水蒸4分→翻动再蒸3分→焖15分</strong> → 放凉 → 加料拌匀<br>
+      <strong>📏 处理：</strong>整条1.4-1.8两/条·鱼丝撕3-4cm段·鱼皮炸前剪3cm方块<br>
+      <strong>💰 成本：</strong>鱼干~5元·售18-25元·毛利80%+ · 鱼丝~4元·15-22元·82% · 鱼皮~3元·15-20元·85%<br>
+      <strong>鱼子酱：</strong>鱼子（鳕鱼子替代）+蒜+盐+辣椒面+糖稀→不能沾油·隔夜更好·成本~6-8元·售18-28元·毛利75%<br>
+      <strong>小银鱼干/泥鳅干/小鱼花生：</strong>炸酥→糖稀拌匀→加调料·成本~2-4元·售12-22元·毛利82-86%<br>
+      <strong>可替代：</strong>明太鱼→狭鳕干/鳕鱼丝·鱼子→鳕鱼子/多春鱼子·味型一致
+    </div>
+
+    <details style="margin-top:12px; background:#e8f0ee; border-radius:10px; padding:8px 12px; cursor:pointer;">
+      <summary style="font-size:13px; font-weight:600; color:#3a6a7a; padding:4px 0;">📋 展开查看完整配方（精确克数+工艺细节）</summary>
+      <div style="padding:10px 0 4px; font-size:11px; color:#555; line-height:1.8;">
+        <strong>明太鱼干（整条）：</strong>干明太鱼（狭鳕干）1.68斤/1.4两每条 + 糖稀5.32斤 + 蒜末515g + 盐15g + 味精68g + 糖60g + 香菜子粉5g + 牛肉粉30g + 干细辣椒面90g + 熟芝麻90g + 熟色拉油60g → 明太鱼和糖稀隔水蒸4分钟→翻动再蒸3分钟→焖15分钟→放凉→加调料抹匀<br>
+        <strong>干明太鱼丝：</strong>干鱼丝3斤喷水40g + 糖稀4.37斤蒸用 + 蒜末7.6两 + 盐15g + 味精50g + 白糖30g + 香菜子粉5g + 牛肉粉45g + 干细辣椒粉105g + 糖稀930g + 熟色拉油150g + 熟芝麻110g → 同上蒸制工艺<br>
+        <strong>干明太鱼皮：</strong>干鱼皮2斤炸后4.9斤 + 蒜4两 + 盐20g + 味精65g + 糖125g + 糖稀2.4斤 + 辣椒丝1.3两 + 醋精40g + 炸豌豆粒3两 + 牛肉粉35g + 辣椒粉35g + 花椒油45g + 芝麻100g + 炸辣椒面200g + 海鲜酱油55g → 炸酥后加调料拌匀<br>
+        <strong>鱼子酱：</strong>鱼子6斤 + 蒜710g + 盐180g + 味精125g + 糖135g + 香菜子粉40g + 牛肉粉95g + 回味粉10g + 干辣椒面215g + 细辣椒粉280g + 糖稀850g → 不能沾油·隔夜吃更好<br>
+        <strong>小银鱼干：</strong>小鱼干5斤炸至6-7成熟 + 糖稀15斤 + 蒜末3.8两 + 味精55g + 糖100g + 牛肉粉35g + 海鲜酱油75g + 炸辣椒面135g + 细辣椒丝少许 + 芝麻85g → 糖稀拌匀放凉一夜再加其余调料<br>
+        <strong>干泥鳅鱼：</strong>干泥鳅鱼1.8斤炸后2.3斤 + 干辣椒丝60g + 青豆粒150g + 蒜末170g + 盐15g + 味精80g + 糖90g + 牛肉粉55g + 醋精50g + 粗辣椒面90g + 干细辣椒面58g + 花椒油35g + 熟芝麻100g<br>
+        <strong>小鱼花生：</strong>花生米5.4斤油炸 + 豌豆粒8两 + 小银鱼3两 + 糖稀2.3两 + 白糖25g + 盐70g + 味精60g → 花生炸微黄放银鱼同炸→控油→加料拌匀
+      </div>
+    </details>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑨ 市场定位</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+      <div style="background:#e8f0ee; border-radius:10px; padding:10px;"><div style="font-size:11px; color:#999;">市场阶段</div><div style="font-size:14px; font-weight:600;">小众 · 延边特色</div></div>
+      <div style="background:#e8f0ee; border-radius:10px; padding:10px;"><div style="font-size:11px; color:#999;">替代风险</div><div style="font-size:14px; font-weight:600; color:#b87040;">7/10</div></div>
+      <div style="background:#e8f0ee; border-radius:10px; padding:10px;"><div style="font-size:11px; color:#999;">竞争强度</div><div style="font-size:14px; font-weight:600;">3/10 · 低</div></div>
+      <div style="background:#e8f0ee; border-radius:10px; padding:10px;"><div style="font-size:11px; color:#999;">供应链难度</div><div style="font-size:14px; font-weight:600;">高 · 东北集散</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑩ 创业决策</div>
+
+    <div class="dec-card">
+      <div><strong>💰 做还是买？</strong></div>
+      <div style="font-size:12px; color:#555; margin-top:6px;">
+        <strong>建议自制+外采结合。</strong>明太鱼干/丝/皮可外采（东北加工厂出品·比自己加工便宜）· 小银鱼干/泥鳅干买冻品自炸更划算（工艺简单·成本可控）· 鱼子酱自制（配方简单·批次可控）。<br>
+        <strong>替代方案：</strong>如果买不到明太鱼，直接全线换成<strong>鳕鱼丝</strong>（同品类·调味后口感一致）。小银鱼干全国有货（太湖/鄱阳湖/东海），不存在供应链问题。泥鳅干用养殖泥鳅（8-12元/斤）自烘干。
+      </div>
+    </div>
+
+    <div class="dec-card">
+      <div><strong>📋 菜单策略</strong></div>
+      <div style="font-size:12px; color:#555; margin-top:6px;">
+        • 明太鱼干：标"韩式手撕明太鱼"· 定价18-25元 · 配剪刀上桌（客人自己剪着吃）<br>
+        • 鱼子酱：小碟装 · 定价18-28元 · 标"延边鱼子酱" · 配烧酒最佳<br>
+        • 小银鱼干/泥鳅干：做下酒菜专区 · 定价12-18元 · 对标花生米<br>
+        • ⚡ 不要：南方市场把明太鱼当招牌——客群认知度低。建议用"鳕鱼"替代命名（顾客听鳕鱼比明太鱼熟悉）
+      </div>
+    </div>
+
+    <div class="dec-card">
+      <div><strong>🎯 风险回报</strong></div>
+      <div style="font-size:12px; color:#555; margin-top:6px;">
+        <strong>供应链风险：</strong>明太鱼加工集中在东北延边/牡丹江/大连，南方门店物流成本高。替代方案（鳕鱼丝）可解决但需要试口味。<br>
+        <strong>保鲜风险：</strong>干明太鱼拌好后冷藏可卖5-7天（比辣白菜还长）。鱼子酱注意不能沾油。<br>
+        <strong>建议路径：</strong>先上小银鱼干（全国有货·成本最低·毛利最高）→ 试水成功后再加明太鱼干 → 最后加鱼子酱。先试后推。<br>
+        <strong>地摊版：</strong>⭐⭐ 不推荐。明太鱼需要蒸制+拌匀两个步骤，地摊不具备条件。
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑪ 未来趋势</div>
+    <div style="font-size:12px; color:#555; line-height:2;">
+      <div><strong>2018</strong> → 明太鱼=延边特产·只在东北韩式店有·南方无人知</div>
+      <div><strong>2021</strong> → 电商推进明太鱼零食化·真空即食明太鱼丝出现</div>
+      <div><strong>2024</strong> → 明太鱼加工品全国冷链覆盖·一二线城市韩式店开始上</div>
+      <div><strong>2026</strong> → 国产鳕鱼丝替代成熟·"明太鱼"概念淡化·"韩式手撕鱼"成为新品类</div>
+    </div>
+    <div style="margin-top:12px; padding:14px; background: #3a6a7a; color: #fff; border-radius: 12px; text-align: center; font-size: 14px; font-weight: 600; line-height: 1.6;">
+      明太鱼系列的核心不是明太鱼本身而是"韩式干鱼调味体系"——用任何白身鱼干都能做。<br>
+      供应链短板不影响方案落地——国产替代方案已全覆盖。
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div><div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links"><span>📢 公众号：沧林食品技术</span><span>💬 微信：canglin1985</span></div>
+    <div class="fb-series">韩式拌菜 · PC_K03 韩式明太鱼系列</div>
+  </div>
+
+</div>
+</body>
+</html>

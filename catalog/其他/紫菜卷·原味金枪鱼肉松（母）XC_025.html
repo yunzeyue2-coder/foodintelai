@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>紫菜卷 · 包饭类创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#2d6a4f,#1b4d3a);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#2d6a4f;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #2d6a4f;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#2d6a4f;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#2d6a4f;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 01 Header -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍙 紫菜卷（原味/金枪鱼/肉松）</h1>
+  <div style="font-size:12px;color:#b5aaa0">韩式包饭 · 快手主食 · 野餐/外卖首选</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.8</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">紫菜卷是韩料中最易标准化、出餐最快的主食，适合外卖和野餐场景，复购率高。</div>
+  <div class="r-tags">
+    <span>🍙 包饭类</span>
+    <span>💰 投资3000+</span>
+    <span>👤 1人操作</span>
+    <span>🔄 复购高</span>
+  </div>
+</div>
+
+<!-- 02 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">较高</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★☆☆☆</div><div class="val">2000-4000</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div><div class="val">简单（卷制需练习）</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+  </div>
+</div>
+
+<!-- 03 适合谁 -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 外卖/预包装轻食摊位</div>
+      <div class="fit-item fit-yes">✅ 学校、写字楼、野餐场景</div>
+      <div class="fit-item fit-yes">✅ 想低投入快速上手的新手</div>
+      <div class="fit-item fit-yes">✅ 搭配韩式炸鸡/年糕的套餐</div>
+      <div class="fit-item fit-yes">✅ 一人食、儿童餐场景</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求现做堂食仪式感（紫菜卷更适合外带）</div>
+      <div class="fit-item fit-no">❌ 无法接受米饭制备和卷制人工</div>
+      <div class="fit-item fit-no">❌ 夏季高温无冷藏条件摊位</div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：便携主食 × 清爽不腻 × 口味多样 × 高颜值切面</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>原味紫菜卷（基础）</span><span class="v">毛利75%</span></div>
+    <div class="logic-item"><span>金枪鱼/肉松升级版</span><span class="v">毛利70%</span></div>
+    <div class="logic-item"><span>套餐（+饮料+小菜）</span><span class="v">客单价+8元</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>双拼/三拼组合盒</span><span class="v">+¥5</span></div>
+    <div class="logic-item"><span>加购芝士/蟹柳</span><span class="v">+¥3</span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>推出季节限定口味（泡菜/虾仁）</span><span class="v"></span></div>
+    <div class="logic-item"><span>集章卡：买5送1</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥800-1500</div><div class="m-sub">6h经营</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥6000-10000</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">5-7天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">*数据基于二线城市外卖+堂食实测（2025年）</div>
+</div>
+
+<!-- 05 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">紫菜卷成本低、出餐快（一卷3分钟），适合外卖平台</div>
+      <div class="t-item">食材简单（米饭、黄瓜、胡萝卜、蛋皮、火腿）</div>
+      <div class="t-item">可批量预制，冷藏保存4小时不影响口感</div>
+      <div class="t-item">金枪鱼/肉松等口味利润空间大</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">同质化严重，普通紫菜卷难以卖出高溢价</div>
+      <div class="t-item">紫菜受潮变软，不适合长期放置</div>
+      <div class="t-item">米饭温度要求高（太烫会软，太凉口感差）</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>便利店、韩料店都有紫菜卷，但专门做紫菜卷外带的摊位较少。属于“存量市场”但需求稳定。<br>
+    <strong>未来判断：</strong>2026年，高品质（料足、米好、酱特制）的紫菜卷仍有溢价空间。金枪鱼、肉松、芝士等升级版可拉开差距。<br>
+    <strong>是否值得进入：是</strong> —— 但建议走“品质升级+外卖专营”路线，不要与便利店低价竞争。
+  </div>
+</div>
+
+<!-- 06 项目评估 -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★★☆</div><div style="font-size:10px;color:#5a4f44">激烈（便利店）</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★☆☆☆</div><div style="font-size:10px;color:#5a4f44">1-3天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★☆</div><div style="font-size:10px;color:#5a4f44">较高</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥300以内试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th> </tr</thead>
+      <tbody>
+        <tr style="background:#e0f2e9"><td>🍙 紫菜卷（本卡）</th><td>★★</th><td>★★</th><td>★★★★★</th><td>★★★★</th><td>A-</th><td><a href="#" style="color:#2d6a4f">#ZS_004</a></th> </tr>
+        <tr><td>🍜 韩式炸酱面</th><td>★★★</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>B</th><td><a href="#">#ZS_001</a></th> </tr>
+        <tr style="background:#f8f4ef"><td>🍲 石锅拌饭</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★</th><td>B+</th><td><a href="#">#ZS_002</a></th> </tr>
+        <tr><td>🥗 日式饭团</th><td>★</th><td>★</th><td>★★★★</th><td>★★★</th><td>B+</th><td><a href="#">#ZS_005</a></th> </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- 07 30天验证路线 -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>试做原味紫菜卷，练习米饭调味和卷制手法，记录成功率</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20人试吃原味/金枪鱼/肉松三种口味，统计偏好</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备40条），测试定价¥12-18/条销量</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>推出双拼/三拼盒装，记录客单价变化</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘复购率、外卖打包损耗，决定是否增加新口味</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7能否卖出30条以上 ② 金枪鱼/肉松口味点单率＞40% ③ 复购率＞25%<br>
+    <strong>🚪 退出标准：</strong>连续3天销量＜15条 / 紫菜回软导致差评＞20% / 米饭调味失败率＞30%<br>
+    <strong>✅ 继续标准：</strong>日均销量稳定30条以上 / 毛利稳定在65%+ / 顾客主动询问新口味
+  </div>
+</div>
+
+<!-- 08 设备清单 -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：电饭煲/煮饭锅(¥200-400) · 竹帘卷帘×5(¥30-50) · 砧板(¥30-60) · 寿司刀/切片刀(¥50-100) · 不锈钢盆×4(¥60-100) · 电子秤(¥30-50) · 冷藏柜(¥600-1200) · 米饭搅拌铲(¥10)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：手推车/折叠桌(¥200-800) · 帐篷伞(¥150-300) · 招牌灯箱(¥80-150) · 保温箱(¥80-150) · 价格立牌(¥20-50) · 一次性手套/口罩(¥20)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：大米10kg(¥50) · 紫菜（大张）100张(¥40-60) · 黄瓜/胡萝卜/菠菜/鸡蛋(¥60) · 火腿/蟹柳(¥40) · 金枪鱼罐头3罐(¥45) · 肉松500g(¥30) · 芝麻油/盐/糖/醋(¥30) · 包装盒/袋500套(¥100-150)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥1,800-2,800</strong>（已有冰箱，手推车）</div>
+    <div><strong>💰 完整启动方案：¥3,500-5,500</strong>（含冷藏柜、保温箱、专业刀具）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案0-200元 · 办理时间2-5天 · 冷食类制售需注意备案范围</div>
+  </div>
+</div>
+
+<!-- 09 产品结构 -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">原味紫菜卷（火腿/黄瓜/蛋皮）</span><span class="t-price">¥12-15</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">金枪鱼紫菜卷 · 肉松紫菜卷</span><span class="t-price">¥16-22</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">双拼紫菜卷+小可乐+泡菜</span><span class="t-price">¥20-28</span></div>
+  </div>
+</div>
+
+<!-- 10 摆摊指数 -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🏠 社区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">📱 外卖</div><div class="stars">★★★★★</div></div>
+  </div>
+</div>
+
+<!-- 11 最大风险（6项） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>紫菜卷属于冷食类，部分城市要求冷食制售许可证，普通摊贩备案可能不覆盖。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季高温下米饭和馅料易变质，必须配备冷藏柜和保温箱，否则食安风险高。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>紫菜受潮——切好的紫菜卷放置30分钟以上，紫菜会吸收水分变软，影响口感。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>米饭调味失败——醋糖盐比例不对，米饭过酸或过甜，整批报废。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>卷制不紧——切的时候散开，卖相差，顾客觉得“不值”。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>同质化低价竞争——便利店紫菜卷只卖8-10元，如果品质拉不开差距，顾客会选便宜的。</div>
+</div>
+
+<!-- 12 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>紫菜卷是成本最低、出餐最快、最适合外卖的主食之一。食材成本仅4-6元/条，售价可达15-20元。可批量预制，每天备50-100条提前卷好冷藏，出餐只需切盒。金枪鱼、肉松等升级版利润更高。<br>
+      <strong>❌ 为什么不值得：</strong>竞争激烈，便利店、韩料店都有。如果没有特制米饭调味或馅料差异化，只能打价格战。夏季保鲜成本高。<br>
+      <strong>🔑 进入条件：</strong>① 能接受每天早上煮饭、调味、卷制的工作量 ② 有冷藏设备保证食材新鲜 ③ 愿意在米饭调味或酱料上做差异化 ④ 以外卖或学校周边为主。<br>
+      <strong>🚪 退出条件：</strong>连续2周日均销量＜20条 / 紫菜受潮差评率超过25% / 毛利低于50%。<br>
+      <strong>🎯 最终判断：可进</strong> —— 但必须走“品质升级+外卖专营”路线。推荐做法：用寿司米+自制香油芝麻饭，馅料比便利店多30%，包装精美，定价15-20元，主打“真材实料”。
+    </div>
+    <div class="j-tags"><span>#包饭类</span><span>#外卖神品</span><span>#冷食</span></div>
+  </div>
+</div>
+
+<!-- 13 核心工艺（带验证点） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">米饭调味：煮好的米饭趁热加入盐、糖、白醋、芝麻油，翻拌均匀，晾至手温。</span><div class="ps-verify">[验证点] 米饭粒粒分明，酸甜咸平衡，不粘手</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">馅料准备：黄瓜/胡萝卜切细条，菠菜焯水挤干，蛋皮切条，火腿/蟹柳切条。金枪鱼沥油加沙拉酱拌匀。</span><div class="ps-verify">[验证点] 各色馅料颜色鲜亮，口感脆爽；金枪鱼酱湿润不干</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">卷制：紫菜粗糙面朝上，铺薄层米饭（留边1cm），放馅料，用竹帘卷紧，压实。</span><div class="ps-verify">[验证点] 卷成圆柱形，两端不露馅，按压有弹性</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">切段与包装：刀沾水，切1.5cm厚段，每段保持形状不散。装入盒中，刷一层芝麻油提香。</span><div class="ps-verify">[验证点] 切面整齐，馅料分布均匀，紫菜无破裂</div></div>
+  </div>
+  <div class="badge">⚠️ 完整配方（米饭醋糖盐比例、金枪鱼沙拉配比、卷制手法）见下方付费区</div>
+</div>
+
+<!-- 14 成本利润（三种口味） -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">原味成本（米饭+紫菜+基础馅料）</span><span class="v">¥4.0</span></div>
+    <div class="recipe-line"><span class="k">金枪鱼版成本（+金枪鱼沙拉）</span><span class="v">¥5.5</span></div>
+    <div class="recipe-line"><span class="k">肉松版成本（+肉松+沙拉酱）</span><span class="v">¥5.0</span></div>
+    <div class="recipe-line"><span class="k">包装+燃料+损耗</span><span class="v">¥0.8</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">原味12-15，金枪鱼/肉松16-22</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">65%～75%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售40条（均价¥16）→ 日毛利¥368，月净利约¥6000（出摊22天）</span></div>
+  </div>
+</div>
+
+<!-- 15 完整出摊包（付费区） -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>🍙 紫菜卷（三口味）· 完整出摊包</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 批量SOP · 翻车处理 · 变体方案 · 保鲜方案 · 规模化方案</div>
+  <div class="price-tag">¥49 <small>母卡限时解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后获取米饭醋配方、金枪鱼沙拉配比、卷制防散技巧</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 米饭调味配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 商用米饭调味（每500g熟米饭）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>白醋（或苹果醋）</span><span>20g</span></div>
+      <div class="recipe-line"><span>白糖</span><span>15g</span></div>
+      <div class="recipe-line"><span>盐</span><span>5g</span></div>
+      <div class="recipe-line"><span>芝麻油</span><span>8g</span></div>
+    </div>
+
+    <!-- 2️⃣ 金枪鱼沙拉配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 金枪鱼沙拉（每罐油浸金枪鱼150g）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>金枪鱼罐头（沥油）</span><span>150g</span></div>
+      <div class="recipe-line"><span>蛋黄酱</span><span>40g</span></div>
+      <div class="recipe-line"><span>黑胡椒粉</span><span>1g</span></div>
+      <div class="recipe-line"><span>洋葱末（可选）</span><span>10g</span></div>
+    </div>
+
+    <!-- 3️⃣ 肉松紫菜卷技巧 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 肉松版制作要点</div>
+    <div class="recipe-box">
+      铺好米饭后，先抹一层薄薄的沙拉酱（防干），再撒上肉松，然后放黄瓜条和蛋皮。肉松吸湿，建议现卷现用。
+    </div>
+
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 批量预制方案（30条 / 60条）</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+      <div><strong>30条：</strong>煮2kg米，调味后分3盆（原味、金枪鱼、肉松）。馅料切好分装。卷制后整条冷藏，出餐时切盒。</div>
+      <div><strong>60条：</strong>分两批操作，使用大号电饭煲。卷好的紫菜卷用保鲜膜包裹，冷藏可保存6小时。</div>
+    </div>
+
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 翻车解决方案</div>
+    <div class="recipe-box">
+      <div><strong>卷不紧/切开散：</strong>米饭铺太厚或卷压力度不够 → 减少米饭量（薄铺），用竹帘用力压实。</div>
+      <div><strong>紫菜破裂：</strong>米饭太湿或紫菜受潮 → 米饭晾干水分，紫菜用烤箱略烤30秒。</div>
+      <div><strong>米饭过酸/甜：</strong>醋糖比例错误 → 按配方精确称量，宁少勿多。</div>
+    </div>
+
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 四款变体（可选）</div>
+    <div class="recipe-box">
+      <div><strong>🦐 鲜虾紫菜卷：</strong>熟虾仁切碎+沙拉酱+黄瓜。</div>
+      <div><strong>🧀 芝士紫菜卷：</strong>中间夹芝士片，微波加热10秒拉丝。</div>
+      <div><strong>🌶️ 泡菜紫菜卷：</strong>切碎韩式泡菜+芝麻油，酸辣开胃。</div>
+      <div><strong>🥑 牛油果紫菜卷：</strong>牛油果切片，搭配蟹柳，高端线。</div>
+    </div>
+
+    <!-- 7️⃣ 保鲜方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 外卖/冷藏保鲜技巧</div>
+    <div class="recipe-box">
+      • 卷好的紫菜卷用保鲜膜包紧，0-4°C冷藏可保存6小时（米饭不会硬）。<br>
+      • 出餐前切段，切面刷一层芝麻油防干。<br>
+      • 外卖配送时间超过30分钟，建议放冰袋保温袋（避免紫菜变软）。<br>
+      • 夏季高温，已切盒的紫菜卷必须在2小时内售完。
+    </div>
+
+    <!-- 8️⃣ 实战备注 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">8️⃣ 沧林实战备注</div>
+    <div class="recipe-box" style="border-left-color:#2d6a4f">
+      • 米饭用越光米或东北大米，不要用糯米。煮饭水比平时少10%，粒粒分明。<br>
+      • 拌饭醋的黄金比例：糖:醋:盐 = 3:4:1（克）。<br>
+      • 紫菜选择：大张的韩式烤紫菜（不要用寿司紫菜，太薄）。<br>
+      • 卷制时戴一次性手套，防粘且卫生。<br>
+      • 定价技巧：原味做引流（12元），金枪鱼/肉松做利润（18元），双拼盒22元。<br>
+      • 外卖包装：用分隔盒，每段之间隔开，配独立小包酱油/芥末，提升价值感。<br>
+      • 学校摊位：可做小份装（半条）卖6-8元，适合学生。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 16 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🍗</span><span class="r-name">原味黄金炸鸡（母卡 HZ_001）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥕</span><span class="r-name">韩式酸甜脆萝卜（配菜 PC_001）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍚</span><span class="r-name">韩式饭团（包饭类变体）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- 17 咨询入口 -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>米饭调味比例 · 卷制手法视频 · 外卖保鲜方案</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1配方调整 · 批量预制优化 · 包装选型</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“紫菜卷卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 母卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整出摊包' : '点击解锁全部内容 →';
+  });
+</script>
+</body>
+</html>

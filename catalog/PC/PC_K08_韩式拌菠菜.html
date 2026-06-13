@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PC_K08 韩式拌菠菜 — 韩式小菜母卡</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+.card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+.header { background: linear-gradient(135deg, #3d6b2e 0%, #5a8f44 50%, #78b058 100%); padding: 32px 24px 24px; color: #fff; }
+.header-badge { display: inline-block; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; line-height: 1.6; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { background: rgba(255,255,255,0.25); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+.section { padding: 20px 24px; border-bottom: 1px solid #e0e8d0; }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 13px; font-weight: 600; color: #3d6b2e; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: #d0dcc0; }
+.value-stmt { background: #eaf3e2; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #3d6b2e; line-height: 1.7; text-align: center; }
+.bomb-box { display: flex; align-items: center; gap: 12px; background: #f2faec; border-radius: 12px; padding: 14px; border: 1px solid #c8dbb8; }
+.bomb-stars { font-size: 22px; letter-spacing: 2px; color: #c89020; flex-shrink: 0; }
+.bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+.radar { display: flex; flex-direction: column; gap: 10px; }
+.radar-item { display: flex; align-items: center; gap: 10px; }
+.radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.radar-item .bar-wrap { flex: 1; height: 10px; background: #dce8d0; border-radius: 10px; overflow: hidden; }
+.radar-item .bar { height: 100%; border-radius: 10px; }
+.radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #3d6b2e; }
+.bf5 { width: 100%; background: linear-gradient(90deg, #5a8f44, #78b058); }
+.bf4 { width: 80%; background: linear-gradient(90deg, #5a8f44, #78b058); }
+.bf3 { width: 60%; background: linear-gradient(90deg, #90b878, #a0c888); }
+.role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+.role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #dce8d0; color: #888; }
+.role-tag.active { background: #5a8f44; color: #fff; box-shadow: 0 2px 8px rgba(90,143,68,0.3); }
+.family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #eaf3e2; border-radius: 12px; }
+.family-tree .node { margin: 2px 0; }
+.family-tree .branch { color: #3d6b2e; font-weight: 600; }
+.family-tree .leaf { color: #666; padding-left: 24px; }
+.family-tree .highlight { color: #5a8f44; font-weight: 600; padding-left: 24px; }
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.market-item { background: #eaf3e2; border-radius: 10px; padding: 10px 12px; }
+.market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+.market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+.matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #d0dcc0; border-radius: 12px; margin-top: 8px; background: #f2f8ee; overflow: hidden; }
+.matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #c0ccb0; }
+.matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #c0ccb0; }
+.ql { position: absolute; font-size: 10px; color: #aaa; }
+.ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+.ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+.matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+.matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+.dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #78b058; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+.dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #3d6b2e; white-space: nowrap; transform: translateX(-50%); }
+.ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.ingredient-table th { background: #d0dcc0; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; color: #2c2c2c; }
+.ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #e0e8d0; font-size: 12px; }
+.ingredient-table .amt { text-align: right; font-weight: 600; color: #3d6b2e; font-size: 12px; }
+.steps { list-style: none; counter-reset: step; }
+.steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #d0dcc0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #3d6b2e; }
+.pitfall-box { background: #f2faec; border-left: 3px solid #b0c878; border-radius: 8px; padding: 12px; margin-top: 8px; }
+.pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #6a8030; margin-bottom: 2px; }
+.pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+.cost-box { background: #eaf3e2; border-radius: 12px; padding: 14px; }
+.cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.cost-row .cr-label { color: #555; }
+.cost-row .cr-value { font-weight: 600; color: #3d6b2e; }
+.cost-divider { border: none; border-top: 1px dashed #c0d0b0; margin: 6px 0; }
+.decision-box { background: #eaf3e2; border-radius: 12px; padding: 16px; }
+.decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+.decision-box p:last-child { margin-bottom: 0; }
+.trend-box { background: linear-gradient(135deg, #eaf3e2, #f2f8ee); border-radius: 12px; padding: 16px; }
+.trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trend-item:last-child { margin-bottom: 0; }
+.trend-year { font-size: 12px; font-weight: 700; color: #3d6b2e; width: 50px; flex-shrink: 0; }
+.trend-arrow { color: #bbb; }
+.trend-desc { font-size: 13px; color: #555; }
+.trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #d0dcc0; font-size: 14px; font-weight: 600; color: #3d6b2e; text-align: center; }
+.footer-brand { background: #3d6b2e; color: #fff; text-align: center; padding: 24px; }
+.footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+.footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+.footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">PC_K08 · 韩式小菜 · 小菜母卡</div>
+    <h1>韩式拌菠菜</h1>
+    <div class="subtitle">
+      经典韩式小菜 · 石锅拌饭七色配菜之一 · 卡售价¥9.9 · FoodIntel推荐：8.0/10
+    </div>
+    <div class="tags">
+      <span>🥬 시금치나물</span>
+      <span>🍚 石锅拌饭配菜</span>
+      <span>💰 成本~1.5元</span>
+      <span>🧊 冷藏2天</span>
+      <span>🌿 先油后盐</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      韩式小菜中唯一的绿色担当 · 石锅拌饭七色配菜核心 · <br>
+      成本~1.5元/份 · 调料5种 · 制作5分钟 · 当天出品
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★</div>
+      <div class="bomb-reason">
+        <strong>零维护的绿色小菜。</strong>毛利与标准化双满分——菠菜价格低廉、工艺固定克重，后厨任何人都能做。流量与传播性不高——食客不会专为拌菠菜而来，但缺少这一抹翠绿的韩式小菜拼盘视觉完整度大减。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf2"></div></div><span class="score">2</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf2"></div></div><span class="score">2</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">PC 韩式小菜体系</div>
+      <div class="node leaf">├─ PC_K01 韩式辣白菜系列（红·发酵）</div>
+      <div class="node leaf">├─ PC_K02 韩式牛副拌菜（褐·肉）</div>
+      <div class="node leaf">├─ PC_K03 韩式明太鱼系列（白·海鲜）</div>
+      <div class="node leaf">├─ PC_K04 韩式豆制品系列（黄·豆）</div>
+      <div class="node leaf">├─ PC_K05 韩式腌菜拌菜系列（杂·风味）</div>
+      <div class="node leaf">├─ PC_K06 韩式拌豆芽（白·脆）</div>
+      <div class="node leaf">├─ PC_K07 韩式炒鱼饼（黄·热食）</div>
+      <div class="node highlight">└─ PC_K08 韩式拌菠菜（绿·清爽）← 你在这里</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">8/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">8/10 · 家家都做</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">10/10 · 菠菜全国通行</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">1/10 · 极低</div></div>
+      <div class="market-item"><div class="m-value" style="color:#555;">创业门槛</div><div class="m-value">低 · 菠菜焯水即食</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 工艺配方</div>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：1份60-80g（标准小菜碟）· 批量口味稳定期2天
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#3d6b2e;margin-bottom:6px;">配方（批量10份基准）</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量</th><th>精选标准</th><th>备注</th></tr>
+      <tr><td>菠菜</td><td class="amt">1kg</td><td>小菠菜·嫩叶多·茎≤5mm</td><td>去根·老叶弃用</td></tr>
+      <tr><td>香油（참기름）</td><td class="amt">35g</td><td>韩国进口香油</td><td>先放·护色防出水</td></tr>
+      <tr><td>蒜末</td><td class="amt">25g</td><td>现剁·不用瓶装蒜泥</td><td>去生辣味</td></tr>
+      <tr><td>酿造酱油（국간장）</td><td class="amt">15g</td><td>韩式汤酱油/淡色酱油</td><td>不可用老抽·色太深</td></tr>
+      <tr><td>海盐</td><td class="amt">4g</td><td>研磨细盐</td><td>最后放·试味后微调</td></tr>
+      <tr><td>熟白芝麻</td><td class="amt">20g</td><td>一半碾碎·一半整粒</td><td>碎芝麻出香·整粒增口感</td></tr>
+      <tr><td>昆布粉/味精</td><td class="amt">2g</td><td>可选</td><td>提底鲜·不用也无妨</td></tr>
+    </table>
+
+    <h4 style="font-size:13px;font-weight:600;color:#3d6b2e;margin:12px 0 6px;">标准化SOP流程</h4>
+    <ol class="steps">
+      <li><strong>菠菜前处理：</strong>切根→逐根展开冲洗（泥沙藏在根部与叶褶之间）→沥水篮控水3min</li>
+      <li><strong>焯水准备：</strong>深口锅加2L水→加盐5g+植物油5g（护色）→大火烧至剧烈沸腾</li>
+      <li><strong>焯水操作：</strong>菠菜全部入水→用长筷翻动使其均匀受热→计时20-25秒→菠菜变深绿软榻立即捞出</li>
+      <li><strong>冰浴急冷：</strong>捞出直接投入2L冰水（或常流水）中→搅散→完全冷却（约20秒）</li>
+      <li><strong>挤水（关键工序）：</strong>双手持菠菜团→用力挤压→换手再挤一次→挤至无水滴落→展开成松散菜松状</li>
+      <li><strong>切段：</strong>切成5-6cm长段·切后再次轻挤多余水分</li>
+      <li><strong>调味顺序（不可逆）：</strong>①先加香油拌匀→②加蒜末+酱油拌匀→③加芝麻→④试味后加盐</li>
+      <li><strong>静置融合：</strong>调味后冷藏静置15-20min→上碟前再次轻拌（底部汁液回裹）</li>
+    </ol>
+
+    <h4 style="font-size:13px;font-weight:600;color:#3d6b2e;margin:12px 0 6px;">🔬 核心原理·为什么先油后盐</h4>
+    <div style="font-size:12px;color:#3d6b2e;line-height:1.8;background:#dce8d0;border-radius:8px;padding:14px;margin-bottom:10px;border:1px solid #b8d0a8;">
+      <strong>韩式拌菠菜与中式凉拌菠菜的核心区别在此：</strong><br><br>
+      菠菜经焯水与挤水后，细胞壁破损。<br><br>
+      <strong>先放香油：</strong>油脂先一步覆盖菠菜表面，形成疏水屏障 → 锁住菠菜自身水分与翠绿色素 → 阻止菠菜与盐直接接触 → 不出水、不蔫叶、不变黄。<br><br>
+      <strong>后放盐：</strong>盐通过油脂隔层缓慢渗入 → 入味均匀却不会立刻破坏细胞渗透压 → 成品放置2小时依然干爽翠绿。<br><br>
+      <strong>错误顺序的后果：</strong>先放盐→盐直接接触菠菜细胞→渗透压差导致水分急速外渗→10分钟后菠菜变出水、颜色发暗发黄→30分钟后成"泡水菠菜"。<br><br>
+      ⏱ 此原理适用于所有叶菜类韩式拌菜（拌菠菜/拌茼蒿/拌芝麻叶）。
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#3d6b2e;margin:12px 0 6px;">菠菜选品标准与季节性替换方案</h4>
+    <table class="ingredient-table">
+      <tr><th>季节</th><th>推荐品种</th><th>选购要点</th><th>替代方案</th></tr>
+      <tr><td>春（3-5月）</td><td>春菠菜</td><td>叶片肥厚·茎短·口感最嫩</td><td>无替代·此季菠菜最佳</td></tr>
+      <tr><td>夏（6-8月）</td><td>夏菠菜/根达菜</td><td>易抽薹变老·选小棵入货</td><td>换拌茼蒿或拌芝麻叶</td></tr>
+      <tr><td>秋（9-11月）</td><td>秋菠菜</td><td>品质回升·茎稍粗可切短</td><td>拌西兰花碎（焯水处理）</td></tr>
+      <tr><td>冬（12-2月）</td><td>大棚菠菜</td><td>叶色偏淡·需更长冰浴</td><td>菠菜品质稳定·可正常供应</td></tr>
+    </table>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（8条）</div>
+      <div class="p-desc">
+        ① 挤水是成败分水岭——挤出最后一滴水之前都不要停止，后厨偷懒不挤干的出品一律作废<br>
+        ② 焯水计时不能靠感觉——20-25秒必须用计时器，菠菜变软立即捞出，超过40秒成烂菜叶<br>
+        ③ 冰浴水温必须低于10℃——冰量不够的浴水没用，菠菜余温会让绿色褪成黄绿<br>
+        ④ 先油后盐是铁律——油先入、盐后入、顺序不可逆，先放盐的菠菜当天打烊前必出水<br>
+        ⑤ 菠菜不是越贵越好——选小菠菜不要选大叶厚茎的，大叶菠菜口感粗糙、拌后偏苦<br>
+        ⑥ 季节性停售优于劣质替代——夏季菠菜抽薹变老时强行上架反而拉低整桌小菜印象，宁可换品<br>
+        ⑦ 冷藏隔夜必须中间翻拌一次——冷藏放久了底部汁液积存，不翻拌上层会偏干<br>
+        ⑧ 酱油宁少勿多——韩式拌菠菜只求"吃出淡淡酱香和香油香"，酱油多了颜色发黑、味道偏咸
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 商业决策</div>
+    <div class="cost-box" style="margin-bottom:14px;">
+      <div class="cost-row"><span class="cr-label">菠菜原料</span><span class="cr-value">0.8-1.2元/份</span></div>
+      <div class="cost-row"><span class="cr-label">香油+芝麻+调料</span><span class="cr-value">~0.5元/份</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label">总成本</span><span class="cr-value">~1.3-1.7元/份</span></div>
+      <div class="cost-row"><span class="cr-label" style="font-weight:700;">定价模式</span><span class="cr-value" style="font-weight:800;color:#3d6b2e;">赠送/套餐内含</span></div>
+      <div class="cost-row"><span class="cr-label">单点参考价</span><span class="cr-value">8-12元/份</span></div>
+      <div class="cost-row"><span class="cr-label">制作时长</span><span class="cr-value">5分钟/批（10份量）</span></div>
+    </div>
+    <div class="decision-box">
+      <p><strong>✅ 适合场景：</strong>①韩式烤肉店赠送小菜拼盘——拌菠菜是绿碟担当，与辣白菜（红）、拌豆芽（白）、炒鱼饼（黄）形成四色拼盘，视觉完成度差异显著。②石锅拌饭配菜——韩式石锅拌饭标准七色配菜中绿色来自菠菜或茼蒿。③韩式定食/盒饭套餐——在单一米饭上加一小撮拌菠菜立刻提升20%的视觉价值。</p>
+      <p><strong>📌 出品建议：</strong>①赠送用小碟60g，堆成小山状撒芝麻尖顶。②石锅拌饭用40g，放在配菜圈中与其他颜色间隔排列。③如果单点售卖，建议改良为"蒜香拌菠菜"加炸蒜片提升价值感，定价可翻倍。④外卖套餐中单独用小圆盒封装拌菠菜，避免与其他菜串味。</p>
+      <p><strong>⚠️ 三大风险：</strong>①季节性——夏季菠菜品质断崖式下跌，建议5-9月换拌茼蒿或芝麻叶，不要硬上劣质菠菜。②操作标准化——挤水工序后厨最容易偷懒，建议在操作台贴"挤水标准：双手挤至无滴水"并定期抽查。③保质期短——当天出品隔夜后口感变差、颜色变深，必须每日新鲜制作，废弃率约5%。</p>
+      <p><strong>🎯 精简化方案：</strong>可在门店流程中直接使用"焯水菠菜半成品"——大批量焯水挤水后真空冷藏（保质期2天），每餐取用调味即可，晨间备货效率提升3倍。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑦ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">免费小菜拼盘中的固定成员，食客不选但缺了会觉得少</span></div>
+      <div class="trend-item"><span class="trend-year">2023</span><span class="trend-arrow">→</span><span class="trend-desc">轻食风崛起——韩式拌菠菜从"赠品小菜"升级为独立健康沙拉选项</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">韩式拌菠菜与藜麦、鸡胸肉等组合成健身餐中的"韩式能量碗"</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">即食包装韩式拌菠菜进便利店冷柜——开袋即食的绿色健康零食</span></div>
+      <div class="trend-verdict">拌菠菜永远不会成为爆品——但它消失时，所有人才发现小菜拼盘少了一种颜色</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div>
+    <div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links">
+      <span>📢 公众号：沧林食品技术</span>
+      <span>💬 微信：canglin1985</span>
+    </div>
+    <div class="fb-series">韩式小菜 · PC_K08 韩式拌菠菜</div>
+  </div>
+
+</div>
+</body>
+</html>

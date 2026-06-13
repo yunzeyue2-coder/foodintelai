@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>黑胡椒撒粉 · 炸鸡撒粉专卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.variant-bar{background:linear-gradient(90deg,#E8652D,#C0392B);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#C0392B;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#E8652D}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+tr:last-child td{border-bottom:none}
+.sauce-compare{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.sauce-item{padding:10px 12px;border-radius:10px;font-size:12px;display:flex;align-items:center;gap:8px}
+.sauce-item .s-icon{font-size:16px}
+.sauce-item .s-name{flex:1;font-weight:600;color:#3a322a}
+.sauce-item .s-ratio{color:#b5aaa0;font-size:10px}
+.sauce-main{background:#fef2ee;border:1px solid #fdd}
+.sauce-other{background:#f8f4ef}
+.crowd-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.crowd-card{padding:10px;border-radius:10px;text-align:center}
+.crowd-card .c-icon{font-size:20px;margin-bottom:2px}
+.crowd-card .c-name{font-size:11px;font-weight:600;color:#3a322a;margin-bottom:2px}
+.crowd-card .c-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.crowd-card .c-bar .fill{height:100%;border-radius:2px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#4a3f35;line-height:1.6}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:18px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer;border:none;width:100%}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #C0392B}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;margin-bottom:6px}
+.rel-item:active{background:#e8dfd5}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 子卡提示条 ===== -->
+<div class="variant-bar">
+  <span class="v-label">⚫ 撒粉子卡 · ¥19</span>
+  <a class="v-link" href="#">← 母卡：原味黄金炸鸡（HZ_001）</a>
+</div>
+
+<!-- ===== 产品头部 ===== -->
+<div class="meta">
+  <h1>⚫ 黑胡椒撒粉</h1>
+  <div class="sub">辛香浓郁 · 颗粒感十足 · 牛排/炸鸡/薯条万能撒粉</div>
+  <span class="price-tag">¥19 完整配方包</span>
+</div>
+
+<!-- ===== 与母卡差异总览 ===== -->
+<div class="section">
+  <div class="s-title">🔄 与母卡（HZ_001）差异总览</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">HZ_001 母卡（¥69）</div>
+      <div>完整韩式炸鸡项目体系：设备·成本·30天验证·赛道判断·核心工艺</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">FL_003 子卡（¥19）</div>
+      <div>黑胡椒撒粉：干粉状·辛香微辣·颗粒口感·西式/台式炸鸡首选<br>其余通用数据参照母卡</div>
+    </div>
+  </div>
+  <div class="badge">💡 本卡不含摆摊设备、验证路线等，请结合母卡使用。黑胡椒撒粉适合搭配炸鸡、牛排、薯条等。</div>
+</div>
+
+<!-- ===== 撒粉定位 ===== -->
+<div class="section">
+  <div class="s-title">🎯 撒粉定位</div>
+  <div style="background:#f0f6ec;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;border-left:3px solid #5a8f3c">
+    <strong>为什么需要黑胡椒撒粉？</strong><br>
+    • 黑胡椒是国际通用调味，辛香微辣，不挑客群，接受度极高<br>
+    • 颗粒感强，入口有明显的胡椒颗粒爆香，比粉状更高级<br>
+    • 一粉多用：炸鸡、牛排、薯条、意面、炒饭、沙拉均可使用<br>
+    • 成本极低，制作简单（混合即可），且耐储存，不占冷藏空间<br>
+    <strong>推荐组合：</strong>原味炸鸡 + 黑胡椒撒粉 + 孜然撒粉 —— 覆盖中西式口味，男性/女性通吃
+  </div>
+</div>
+
+<!-- ===== 与主流撒粉对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 主流撒粉对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:400px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>撒粉</th><th>辛香浓度</th><th>颗粒感</th><th>百搭程度</th><th>成本/份</th><th>制作难度</th>   </tr</thead>
+      <tbody>
+        <tr><td>⚫ 黑胡椒撒粉（本卡）</td><td>★★★★☆</td><td>★★★★★</td><td>★★★★★</td><td>¥0.3-0.5</td><td>★☆☆☆☆</td>
+        </tr>
+        <tr style="background:#f8f4ef"><td>🌿 孜然撒粉</td><td>★★★★★</td><td>★★★☆☆</td><td>★★★☆☆</td><td>¥0.3-0.5</td><td>★☆☆☆☆</td></tr>
+        <tr><td>🌶️ 红辣椒撒粉</td><td>★★★☆☆</td><td>★★☆☆☆</td><td>★★☆☆☆</td><td>¥0.3-0.5</td><td>★☆☆☆☆</td></tr>
+        <tr style="background:#f8f4ef"><td>🧀 芝士撒粉</td><td>☆☆☆☆☆</td><td>★★☆☆☆</td><td>★★★☆☆</td><td>¥0.8-1.2</td><td>★☆☆☆☆</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">✨ 黑胡椒撒粉是“最不挑人”的撒粉，适合所有客群，且能增加高级感。</div>
+</div>
+
+<!-- ===== 适合谁 / 不适合谁 ===== -->
+<div class="section">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#3a6b2e;margin-bottom:6px">🎯 适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 任何炸鸡摊、牛排摊、薯条摊（百搭）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 西式/台式炸鸡店（黑胡椒是标配）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 外卖场景（干粉不降质）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 想增加一款“高级感”撒粉但不想增加成本</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px">✅ 零经验新手（混合即用）</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#b53b3b;margin-bottom:6px">❌ 不适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 主攻甜味炸鸡（巧克力、草莓等）的摊位</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 无法接受黑胡椒的辛香（极少数人）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px">❌ 追求纯韩式甜辣风味的摊位（可能会觉得不搭）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 客群画像 ===== -->
+<div class="section">
+  <div class="s-title">👥 核心客群</div>
+  <div class="crowd-grid">
+    <div class="crowd-card" style="background:#fef2ee"><div class="c-icon">👨</div><div class="c-name">成年男性</div><div class="c-bar"><div class="fill" style="width:90%;background:#E8652D"></div></div><div style="font-size:9px">偏爱辛香</div></div>
+    <div class="crowd-card" style="background:#fef6ec"><div class="c-icon">🍟</div><div class="c-name">快餐爱好者</div><div class="c-bar"><div class="fill" style="width:88%;background:#D4A574"></div></div><div style="font-size:9px">熟悉味道</div></div>
+    <div class="crowd-card" style="background:#f0f6ec"><div class="c-icon">🥩</div><div class="c-name">牛排/铁板类顾客</div><div class="c-bar"><div class="fill" style="width:95%;background:#5a8f3c"></div></div><div style="font-size:9px">黑胡椒标配</div></div>
+    <div class="crowd-card" style="background:#eef2ff"><div class="c-icon">🌍</div><div class="c-name">西式简餐消费者</div><div class="c-bar"><div class="fill" style="width:85%;background:#4f6ef7"></div></div><div style="font-size:9px">高级感</div></div>
+  </div>
+</div>
+
+<!-- ===== 赚钱逻辑（撒粉维度） ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>每份撒粉成本（自制）</span><span class="v">¥0.3-0.5</span></div>
+    <div class="logic-item"><span>每份撒粉成本（市售成品黑胡椒撒粉）</span><span class="v">¥0.8-1.2</span></div>
+    <div class="logic-item"><span>自制每份节省</span><span class="v">¥0.5-0.7</span></div>
+    <div class="logic-item"><span>日售50份 · 月省利润</span><span class="v">¥750-1050</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>黑胡椒炸鸡 + ¥1（风味升级）</span><span class="v"></span></div>
+    <div class="logic-item"><span>黑胡椒+海盐双拼撒粉 +¥1.5</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>买炸鸡送黑胡椒撒粉小包，养成蘸粉习惯</span><span class="v"></span></div>
+    <div class="logic-item"><span>推出“黑胡椒脆皮炸鸡”作为主打口味</span><span class="v"></span></div>
+  </div>
+</div>
+
+<!-- ===== 专属风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 黑胡椒撒粉专属风险</div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">1️⃣</span><span>黑胡椒品质差异大 — 劣质黑胡椒辛辣味刺鼻，有木屑味</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">2️⃣</span><span>颗粒粗细不均 — 太细没口感，太粗硌牙</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">3️⃣</span><span>盐分比例失调 — 过咸或过淡影响整体风味</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">4️⃣</span><span>受潮结块 — 南方回南天易结块，撒不均匀</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">5️⃣</span><span>部分顾客怕辣（黑胡椒微辣），儿童可能抵触</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;font-size:12px"><span style="font-size:14px">6️⃣</span><span>外卖配送后易洒出，需独立小包装</span></div>
+</div>
+
+<!-- ===== 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>黑胡椒撒粉是炸鸡摊位“最低成本提升高级感”的方式。自制成本极低（每份不到0.5元），制作简单，受众极广。与孜然、辣椒形成基础撒粉矩阵，覆盖90%以上口味需求。<br>
+      <strong>❌ 为什么不值得做：</strong>如果摊位主打甜味或芝士口味，黑胡椒可能不搭。且需要额外采购整粒黑胡椒（自己打粉）才能保证品质，小批量可能不划算。<br>
+      <strong>🔑 进入条件：</strong>① 任何炸鸡摊都可上，无门槛 ② 能采购到高品质黑胡椒粒（推荐：越南/印度产） ③ 有研磨机或打粉机 ④ 愿意每周混合一次小批量。<br>
+      <strong>🚪 退出条件：</strong>连续2周黑胡椒口味销量占比＜5% / 顾客反馈“太辣/有怪味”超过10% / 黑胡椒原料大幅涨价。<br>
+      <strong>🎯 最终判断：可进</strong> —— 强烈建议作为基础撒粉之一，与孜然、辣椒粉并列。几乎零风险，成本极低，能显著提升产品价值感。
+    </div>
+    <div class="j-tags"><span>#黑胡椒撒粉</span><span>#西式风味</span><span>#百搭撒粉</span><span>#低成本</span></div>
+  </div>
+</div>
+
+<!-- ===== 付费区：完整配方包（19元） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>黑胡椒撒粉 · 完整配方包</h3>
+  <div class="p-sub">定价 ¥19 · 永久解锁 · 包含以下全部数据</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span>商用黑胡椒撒粉标准配方（500g成品·精确到克）</div>
+    <div class="p-item"><span class="p-icon">✅</span>黑胡椒品种推荐（越南/印度/印尼）及打粉粒度控制</div>
+    <div class="p-item"><span class="p-icon">✅</span>盐和糖比例调节（太咸/太淡/太冲改法）</div>
+    <div class="p-item"><span class="p-icon">✅</span>黑胡椒蒜香版 / 黑胡椒海盐版变体</div>
+    <div class="p-item"><span class="p-icon">✅</span>防结块方案（加米粉/干燥剂）</div>
+    <div class="p-item"><span class="p-icon">✅</span>批量混合SOP（1kg/5kg）及密封保存方法</div>
+    <div class="p-item"><span class="p-icon">✅</span>每份炸鸡/薯条撒粉用量对照表（2g/4g/6g）</div>
+    <div class="p-item"><span class="p-icon">✅</span>外卖专用小包装方案（独立小包/撒粉瓶）</div>
+    <div class="p-item"><span class="p-icon">✅</span>翻车修正表（太冲/太淡/结块/颗粒不均）</div>
+    <div class="p-item"><span class="p-icon">✅</span>成本利润测算表（自制vs市售）</div>
+  </div>
+  <div class="price-tag">¥19 <small>子卡 · 一次解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后发编号给客服，秒发完整版 / 或直接在此展开</div>
+
+  <!-- 解锁后显示内容 -->
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 标准配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 商用标准配方（每500g成品）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span class="k">黑胡椒颗粒（现磨粗粉）</span><span class="v">150g</span></div>
+      <div class="recipe-line"><span class="k">味精</span><span class="v">20g</span></div>
+      <div class="recipe-line"><span class="k">细盐</span><span class="v">8g</span></div>
+      <div class="recipe-line"><span class="k">白砂糖</span><span class="v">80g</span></div>
+      <div class="recipe-line"><span class="k">黑胡椒粉（细粉）</span><span class="v">70g</span></div>
+      <div class="recipe-line"><span class="k">蒜粉</span><span class="v">2g</span></div>
+      <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;font-size:11px">🔹 黑胡椒颗粒+细粉双重复合，香气层次丰富，微甜微辛。<br>🔹 每500g可撒约120-180份炸鸡（每份2.5-4g）。</div>
+    </div>
+
+    <!-- 2️⃣ 黑胡椒品种与打粉 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 黑胡椒选择与粒度控制</div>
+    <div class="recipe-box" style="border-left-color:#D4A574">
+      <strong>品种推荐：</strong><br>
+      • 越南黑胡椒（辛辣味足，性价比高）<br>
+      • 印度马拉巴尔（香气优雅，高级感强）<br>
+      • 印尼黑胡椒（中辣，木香重）<br>
+      <strong>粒度：</strong>粗颗粒约20目（像芝麻大小），细粉约60目。<br>
+      <strong>打粉方法：</strong>黑胡椒粒干锅小火炒2分钟出香，冷却后用研磨机打10秒（保留部分颗粒），过筛分离粗粉和细粉，按比例混合。
+    </div>
+
+    <!-- 3️⃣ 咸甜调节 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 咸甜/辛度调节表（每500g）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>太咸</span><span class="v">加白砂糖20g 或 黑胡椒细粉30g</span></div>
+      <div class="recipe-line"><span>太淡</span><span class="v">加盐8g 或 味精5g</span></div>
+      <div class="recipe-line"><span>黑胡椒味太冲</span><span class="v">减粗颗粒至100g，加细粉至120g</span></div>
+      <div class="recipe-line"><span>不够香</span><span class="v">增加黑胡椒粗颗粒比例，减少细粉</span></div>
+    </div>
+
+    <!-- 4️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 热门变体配方</div>
+    <div class="recipe-box" style="border-left-color:#E8652D">
+      <strong>🧄 黑胡椒蒜香粉：</strong>基础配方+蒜粉10g+洋葱粉5g，适合炸鸡。<br>
+      <strong>🧂 黑胡椒海盐粉：</strong>基础配方中去掉糖和味精，盐增至25g+海盐15g，适合牛排。<br>
+      <strong>🌶️ 黑胡椒辣味粉：</strong>基础配方+辣椒粉15g，增加辣感。
+    </div>
+
+    <!-- 5️⃣ 防结块 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 防结块与保存</div>
+    <div class="recipe-box">
+      • 混合前所有粉料过筛（40目）。<br>
+      • 添加5g炒熟的米粉或玉米淀粉作为抗结剂。<br>
+      • 密封罐中放入食品级干燥剂（硅胶包）。<br>
+      • 常温避光保存，开封后1个月内用完。
+    </div>
+
+    <!-- 6️⃣ 每份用量 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 每份撒粉用量对照表</div>
+    <div style="background:#f8f4ef;border-radius:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr;padding:6px 10px;background:#3a322a;color:#fff;font-size:10px"><span>份量</span><span>撒粉用量（g）</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>小份炸鸡（200g）</span><span>2.5g</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb"><span>中份炸鸡（300g）</span><span>4g</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 10px"><span>大份炸鸡（500g）</span><span>6g</span></div>
+    </div>
+
+    <!-- 7️⃣ 外卖小包装 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 外卖配送包装</div>
+    <div class="recipe-box" style="border-left-color:#5a8f3c">
+      • 使用2g/4g独立小包装防潮袋（铝箔材质）。<br>
+      • 或使用带盖撒粉瓶（顾客可重复使用）。<br>
+      • 撒粉必须独立包装，不可直接撒在炸鸡上配送（会受潮）。
+    </div>
+
+    <!-- 8️⃣ 批量预制SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">8️⃣ 批量预制（1kg/5kg）及保质期</div>
+    <div class="recipe-box">
+      <div><strong>1kg成品撒粉（约250份中份）</strong></div>
+      <div class="recipe-line"><span>黑胡椒粗颗粒300g · 黑胡椒细粉140g · 味精40g · 盐16g · 白砂糖160g · 蒜粉4g</span></div>
+      <div style="margin-top:6px"><strong>操作：</strong>所有粉料过筛混合，装入密封罐或铝箔袋。<br>
+      <strong>常温保质期：</strong>6个月（密封避光）。<br>
+      <strong>开封后：</strong>建议1个月内用完，防潮结块。</div>
+    </div>
+
+    <!-- 9️⃣ 翻车修正表 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">9️⃣ 翻车修正表（每500g）</div>
+    <div style="background:#f8f4ef;border-radius:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:6px 10px;background:#3a322a;color:#fff;font-size:10px"><span>问题</span><span>修正方法</span><span>用量</span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>太冲（辛辣感过强）</span><span>加白砂糖40g + 细黑胡椒粉30g</span><span></span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb"><span>结块</span><span>过筛后加干燥剂，下次减少混合湿度</span><span></span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>颗粒感不足</span><span>增加粗颗粒比例至200g，减少细粉</span><span></span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px"><span>太咸</span><span>加糖30g + 细黑胡椒粉20g</span><span></span></div>
+    </div>
+
+    <!-- 🔟 成本利润 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">🔟 成本利润测算（每份中份炸鸡）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>撒粉成本（自制）</span><span class="v">¥0.35</span></div>
+      <div class="recipe-line"><span>撒粉成本（市售成品）</span><span class="v">¥0.8-1.2</span></div>
+      <div class="recipe-line"><span>每份节省</span><span class="v">¥0.45-0.85</span></div>
+      <div class="recipe-line"><span>日售50份，月省利润</span><span class="v">¥675-1275</span></div>
+      <div class="recipe-line"><span>售价溢价（升级黑胡椒口味）</span><span class="v">+¥1</span></div>
+      <div class="recipe-line"><span>月增利润（升级费）</span><span class="v">¥1500（50份×¥1×30天）</span></div>
+      <div class="badge" style="margin-top:6px">💡 黑胡椒撒粉是提升炸鸡价值感的最低成本方案，强烈建议作为标配。</div>
+    </div>
+
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <a class="rel-item" href="#"><span class="r-emoji">🍗</span><span class="r-name">原味黄金炸鸡（母卡·完整项目）</span><span class="r-arrow">→</span></a>
+  <a class="rel-item" href="#"><span class="r-emoji">🌿</span><span class="r-name">孜然撒粉（FL_002）</span><span class="r-arrow">→</span></a>
+  <a class="rel-item" href="#"><span class="r-emoji">🍠</span><span class="r-name">甘梅地瓜条（小吃）</span><span class="r-arrow">→</span></a>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 子卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+</script>
+
+
+<!-- ===== 咨询入口 ===== -->
+<div class="section">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center;font-size:12px;color:#5a4f44">
+    <div><strong>📌 咨询场景：</strong>摆摊选址评估 · 成本优化 · 翻车远程诊断</div>
+    <div style="margin-top:6px"><strong>📱 联系方式：</strong>微信 canglin1985（备注卡号）</div>
+    <a style="display:inline-block;margin-top:8px;padding:8px 20px;background:#3a322a;color:#fff;border-radius:8px;text-decoration:none;font-size:12px" href="javascript:void(0)" onclick="copyWx()">📲 加微信咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 决策先于工艺 · 沧林食品工作站</div>
+</div>
+
+<script>
+document.getElementById('unlockBtn')&&document.getElementById('unlockBtn').addEventListener('click',function(){var e=document.getElementById('payContent');e&&(e.classList.toggle('show'),this.textContent=this.textContent.indexOf('点击解锁')>=0?'收起完整出摊包':'点击解锁全部内容')});
+function copyWx(){var e=document.createElement('textarea');e.value='canglin1985';document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e);alert('✅ 微信号已复制：canglin1985');}
+</script>
+
+</body>
+</html>

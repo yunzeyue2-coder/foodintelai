@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KF_004 嫩豆腐汤 — 韩式美食</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+  .card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+  .header { background: linear-gradient(135deg, #6a9a7a 0%, #8aba9a 50%, #a8d4b8 100%); padding: 32px 24px 24px; color: #fff; }
+  .header-badge { display: inline-block; background: rgba(255,255,255,0.25); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { background: rgba(255,255,255,0.25); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+  .section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+  .section-title { font-size: 13px; font-weight: 600; color: #4a8a5a; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+  .value-stmt { background: #eef7f0; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #4a8a5a; line-height: 1.7; text-align: center; }
+  .radar { display: flex; flex-direction: column; gap: 10px; }
+  .radar-item { display: flex; align-items: center; gap: 10px; }
+  .radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+  .radar-item .bar { height: 100%; border-radius: 10px; }
+  .radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #4a8a5a; }
+  .bf5 { width: 100%; background: linear-gradient(90deg, #6a9a7a, #8aba9a); }
+  .bf4 { width: 80%; background: linear-gradient(90deg, #6a9a7a, #8aba9a); }
+  .bf3 { width: 60%; background: linear-gradient(90deg, #8abaa0, #a8d4b8); }
+  .bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+  .bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; flex-shrink: 0; }
+  .bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+  .role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+  .role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+  .role-tag.active { background: #6a9a7a; color: #fff; box-shadow: 0 2px 8px rgba(106,154,122,0.3); }
+  .family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #eef7f0; border-radius: 12px; }
+  .family-tree .node { margin: 2px 0; }
+  .family-tree .branch { color: #4a8a5a; font-weight: 600; }
+  .family-tree .leaf { color: #666; padding-left: 24px; }
+  .family-tree .highlight { color: #6a9a7a; font-weight: 600; padding-left: 24px; }
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .market-item { background: #eef7f0; border-radius: 10px; padding: 10px 12px; }
+  .market-item .m-label { font-size: 11px; color: #999; }
+  .market-item .m-value { font-size: 14px; font-weight: 600; }
+  .matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+  .matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+  .matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+  .ql { position: absolute; font-size: 10px; color: #aaa; }
+  .ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+  .ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+  .matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+  .matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+  .dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #8aba9a; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+  .dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #4a8a5a; white-space: nowrap; transform: translateX(-50%); }
+  .ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .ingredient-table th { background: #e8f0ea; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+  .ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+  .ingredient-table .amt { text-align: right; font-weight: 600; color: #4a8a5a; }
+  .steps { list-style: none; counter-reset: step; }
+  .steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+  .steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #e8ddd0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #4a8a5a; }
+  .pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin-top: 8px; }
+  .pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; }
+  .pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+
+  .recipe-block { background: #eef7f0; border-radius: 10px; padding: 14px; margin: 12px 0; }
+  .recipe-block .rb-title { font-size: 14px; font-weight: 700; color: #4a8a5a; margin-bottom: 8px; }
+  .recipe-block table { width: 100%; font-size: 11px; border-collapse: collapse; }
+  .recipe-block td { padding: 3px 6px; border-bottom: 1px solid #d8e8dc; font-size: 11px; color: #555; }
+  .recipe-block .amt { text-align: right; font-weight: 600; color: #4a8a5a; }
+
+  .customer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .customer-item { background: #eef7f0; border-radius: 10px; padding: 12px; }
+  .customer-item .c-icon { font-size: 20px; }
+  .customer-item .c-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .customer-item .c-desc { font-size: 11px; color: #888; line-height: 1.5; }
+
+  .cost-box { background: #eef7f0; border-radius: 12px; padding: 14px; }
+  .cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .cost-row .cr-label { color: #555; }
+  .cost-row .cr-value { font-weight: 600; color: #4a8a5a; }
+  .cost-divider { border: none; border-top: 1px dashed #c8dccc; margin: 6px 0; }
+
+  .decision-box { background: #eef7f0; border-radius: 12px; padding: 16px; }
+  .decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+  .decision-box p:last-child { margin-bottom: 0; }
+
+  .trend-box { background: linear-gradient(135deg, #eef7f0, #f8f4ef); border-radius: 12px; padding: 16px; }
+  .trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .trend-item:last-child { margin-bottom: 0; }
+  .trend-year { font-size: 12px; font-weight: 700; color: #4a8a5a; width: 50px; }
+  .trend-arrow { color: #bbb; }
+  .trend-desc { font-size: 13px; color: #555; }
+  .trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #4a8a5a; text-align: center; }
+
+  .footer-brand { background: #4a8a5a; color: #fff; text-align: center; padding: 24px; }
+  .footer-brand .fb-name { font-size: 18px; font-weight: 700; }
+  .footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+  .footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+  .footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">KF_004 · 韩式美食 · 汤品母卡</div>
+    <h1>嫩豆腐汤</h1>
+    <div class="subtitle">清淡健康 · 女性客群最爱 · 和烤肉形成"重+轻"搭配</div>
+    <div class="tags">
+      <span>🥣 嫩豆腐汤</span>
+      <span>🦐 虾仁花蛤</span>
+      <span>🥚 流心蛋黄</span>
+      <span>🌿 清淡健康</span>
+      <span>💰 毛利率85%</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      韩式汤品中的"清淡担当" · 女性客群最爱 · 和烤肉互补<br>
+      嫩豆腐入口即化 · 虾仁花蛤提鲜 · 蛋黄增色
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★☆☆</div>
+      <div class="bomb-reason">
+        <strong>清淡款。</strong>嫩豆腐汤的流量和传播性不如大酱汤，但在女性客群中复购率极高（4★）。标准化4★——工艺简单但豆腐易碎，出餐时要注意。毛利率85%+，成本控制优秀。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf2"></div></div><span class="score">2</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KF 韩式美食体系</div>
+      <div class="node leaf">├─ KF_001 石锅拌饭</div>
+      <div class="node leaf">├─ KF_002 冷面</div>
+      <div class="node leaf">├─ KF_003 大酱汤</div>
+      <div class="node highlight">├─ KF_004 嫩豆腐汤 ← 你在这里</div>
+      <div class="node leaf">├─ KF_005 肥牛拌饭</div>
+      <div class="node leaf">├─ KF_006 辣白菜炒饭</div>
+      <div class="node leaf">├─ KF_007 海鲜葱饼</div>
+      <div class="node leaf">└─ KF_008 辣炒年糕</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟品类</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">7/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">5/10 · 中</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">9/10 · 通吃</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">3/10 · 低</div></div>
+      <div class="market-item"><div class="m-label">创业门槛</div><div class="m-value">低</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div><div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div><div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div><div class="y-label">传播性 →</div>
+      <div class="dot" style="left:40%;top:50%;"></div>
+      <div class="dot-label" style="left:40%;top:43%;">嫩豆腐汤（正中偏左·清淡款）</div>
+      <div class="dot" style="left:55%;top:65%;background:#ddd;width:10px;height:10px;"></div>
+      <div class="dot-label" style="left:55%;top:58%;color:#bbb;font-size:10px;">大酱汤（正中·浓郁款）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>嫩豆腐汤偏左中——复购中，传播弱。和大酱汤形成"浓淡搭配"。<br>
+      两汤并列时建议菜单标注：大酱汤（浓郁）·嫩豆腐汤（清淡），让客人按口味自选。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方</div>
+
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：石锅出品 · 约500ml/份<br>
+      <strong>主料</strong>：盒豆腐0.5个 + 金针菇15g + 鸡蛋黄1个 + 虾仁2个 + 花蛤2个 + 白洋葱丝10g
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#4a8a5a;margin-bottom:6px;">出品流程</h4>
+    <ol class="steps">
+      <li>石锅加红油烧热，下洋葱丝+泡菜炒香</li>
+      <li>加牛骨汤或清水（约400ml），大火烧开</li>
+      <li>加豆腐酱75g搅匀化开，加鸡精+盐调味</li>
+      <li>放入嫩豆腐（用勺子挖成大块放入，不要切碎）</li>
+      <li>放虾仁+花蛤+金针菇，改小火煮5-6分钟</li>
+      <li>最后放鸡蛋黄（保持流心），撒葱花出餐</li>
+    </ol>
+
+    <div class="recipe-block">
+      <div class="rb-title">🥣 豆腐酱替代方案</div>
+      <p style="font-size:12px;color:#555;line-height:1.7;">
+        嫩豆腐汤的豆腐酱如无成品料，可用以下替代：<br>
+        <strong>韩式大酱30g + 辣椒酱15g + 蒜泥10g + 牛肉粉5g + 水100g</strong> → 搅匀化开即用。<br>
+        如果想做海鲜风味：加一小勺鱼露或虾酱（提鲜关键）。<br>
+        如果想做纯素版：去掉虾仁花蛤，加西葫芦+香菇，用昆布高汤替代牛骨汤。
+      </p>
+    </div>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（5条）</div>
+      <div class="p-desc">
+        ① 嫩豆腐必须最后放且用勺子挖——用刀切豆腐会碎成渣，勺子挖成大块煮出来完整好看<br>
+        ② 小火煮5-6分钟足够——大火煮久了豆腐会起孔变老<br>
+        ③ 鸡蛋黄保持流心——全熟的蛋黄沉底，流心蛋黄浮在汤面，颜值提升50%<br>
+        ④ 花蛤提前吐沙2小时——带沙的花蛤毁了整锅汤，客人一咬满嘴沙直接差评<br>
+        ⑤ 牛骨汤底可共用大酱汤的海鲜水——备一种汤底出两种汤
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 商业决策</div>
+    <div class="decision-box">
+      <p><strong>💰 成本利润：</strong>嫩豆腐~1元 + 海鲜~2元 + 汤底调料~1元 = <strong>~4元/份</strong> · 建议售价22-28元 · 毛利率83-85% · 日均15-20份 · 月毛利贡献~1万元。</p>
+      <p><strong>✅ 适合场景：</strong>嫩豆腐汤最适合开在女性客群多的商圈（商场店、写字楼店）。和烤肉形成"重+轻"搭配——客人吃烤肉后喝一碗清淡的豆腐汤，满足感强且不腻。</p>
+      <p><strong>🎯 地摊版：</strong>⭐⭐ 不太适合地摊——嫩豆腐易碎，不适合打包外带。但如果用地摊版纸碗出餐，注意用宽口碗不要用深碗，避免豆腐在碗底碎掉。</p>
+      <p><strong>⚠️ 风险：</strong>嫩豆腐汤最大的风险是"寡淡无味"——清淡不等于没味道。虾仁和花蛤的鲜味是汤的灵魂，不要减量。如果成本压力大可以用蛤蜊汤粉替代部分花蛤。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">传统嫩豆腐汤 · 海鲜底</span></div>
+      <div class="trend-item"><span class="trend-year">2023</span><span class="trend-arrow">→</span><span class="trend-desc">素菜豆腐汤出现 · 轻食化</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">豆腐汤底预包装 · 门店只加豆腐和青菜</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">嫩豆腐汤+杂粮饭=健康简餐 · 独立开店赛道</span></div>
+      <div class="trend-verdict">嫩豆腐汤最有想象力的方向是"健康简餐化"——豆腐汤+杂粮饭，可能跑出独立连锁</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div><div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links"><span>📢 公众号：沧林食品技术</span><span>💬 微信：canglin1985</span></div>
+    <div class="fb-series">韩式美食 · KF_004 嫩豆腐汤</div>
+  </div>
+
+</div>
+</body>
+</html>

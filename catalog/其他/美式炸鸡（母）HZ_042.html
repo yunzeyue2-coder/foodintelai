@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>美式炸鸡 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#1e3a5f,#0f2a4a);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#1e3a5f;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #1e3a5f;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#1e3a5f;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#1e3a5f;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 01 Header -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍗 美式炸鸡</h1>
+  <div style="font-size:12px;color:#b5aaa0">KFC风格 · 鳞片脆皮 · 奶香腌制</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.6</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">全球认知度最高的炸鸡风格，鳞片脆皮是其核心竞争力，奶香腌料是关键。</div>
+  <div class="r-tags">
+    <span>🐔 KFC风格</span>
+    <span>💰 投资3500+</span>
+    <span>👤 1-2人</span>
+    <span>🔄 复购高</span>
+  </div>
+</div>
+
+<!-- 02 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">3000-4500</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等（鳞片手法）</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+  </div>
+</div>
+
+<!-- 03 适合谁 -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 所有炸鸡新手（认知度高）</div>
+      <div class="fit-item fit-yes">✅ 想做鳞片脆皮差异化</div>
+      <div class="fit-item fit-yes">✅ 家庭/儿童客群为主</div>
+      <div class="fit-item fit-yes">✅ 外卖+堂食兼顾</div>
+      <div class="fit-item fit-yes">✅ 已有炸锅设备升级</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求极简操作（鳞片需练习）</div>
+      <div class="fit-item fit-no">❌ 不想用牛奶腌制（增加成本）</div>
+      <div class="fit-item fit-no">❌ 主要做裹酱鸡块（酱会掩盖鳞片）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：鳞片脆皮 × 奶香肉质 × 吮指原味 × 儿时记忆</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>原味美式炸鸡（引流）</span><span class="v">毛利65%</span></div>
+    <div class="logic-item"><span>撒粉/蘸酱升级（+¥2-3）</span><span class="v">毛利85%</span></div>
+    <div class="logic-item"><span>套餐组合（加薯条/可乐）</span><span class="v">客单价+6元</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>双拼炸鸡桶（鸡腿+鸡翅+鸡块）</span><span class="v">¥35-45</span></div>
+    <div class="logic-item"><span>加购小食（薯条/洋葱圈）</span><span class="v">+¥4</span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>每月限定撒粉（芝士/海苔/辣味）</span><span class="v"></span></div>
+    <div class="logic-item"><span>集章卡：买5送1</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥800-1400</div><div class="m-sub">5h出摊</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥6500-10000</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">5-7天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">*数据基于地级市夜市实测（2025年）</div>
+</div>
+
+<!-- 05 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">美式炸鸡是全球认知度最高的炸鸡类型，无需教育</div>
+      <div class="t-item">鳞片脆皮视觉冲击强，容易形成排队效应</div>
+      <div class="t-item">牛奶腌制可使肉质更嫩，差异化明显</div>
+      <div class="t-item">可走“原味”路线，避免酱料同质化</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">鳞片工艺不稳定，新手容易炸成光滑皮</div>
+      <div class="t-item">同质化严重，普通美式炸鸡难溢价</div>
+      <div class="t-item">牛奶腌制增加成本（约0.5元/份）</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>美式炸鸡摊位极多，但大多数是“普通炸鸡”，真正做出KFC风格鳞片脆皮的很少。<br>
+    <strong>未来判断：</strong>2026-2027年，能够稳定做出鳞片脆皮+奶香腌料的摊主有溢价空间。普通美式炸鸡利润会被压缩。<br>
+    <strong>是否值得进入：是</strong> —— 前提是掌握粉-水-粉鳞片工艺和牛奶腌制法，否则不要跟普通炸鸡摊位竞争。
+  </div>
+</div>
+
+<!-- 06 项目评估 -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★★☆</div><div style="font-size:10px;color:#5a4f44">激烈需差异化</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">5-7天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">控温/鳞片关键</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥400以内试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th> </tr</thead>
+      <tbody>
+        <tr style="background:#e3f0fc"><td>🍗 美式炸鸡</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★★</th><td>A-</th><td><a href="#" style="color:#1e3a5f">#XC_027</a></th> </tr>
+        <tr><td>🍗 原味黄金炸鸡</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★★</th><td>A-</th><td><a href="#">#HZ_001</a></th> </tr>
+        <tr style="background:#f8f4ef"><td>🍗 香辣黄金鸡腿</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★</th><td>A-</th><td><a href="#">#HZ_038</a></th> </tr>
+        <tr><td>🍗 韩式无骨炸鸡</td><td>★★★</td><td>★★</td><td>★★★★★</td><td>★★★★★</td><td>B+</td><td><a href="#">#HZ_002</a></td> </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- 07 30天验证路线 -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>试做粉-水-粉工艺，记录鳞片出现率，调整裹粉手法</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>牛奶腌制对比：原味vs牛奶版，邀请10人盲测</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备40份），测试定价¥15-18区间销量</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加撒粉口味（芝士/辣味），记录客单价变化</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘鳞片成品率、复购率，决定是否长期经营</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7能否卖出30份以上 ② 鳞片成品率＞70% ③ Day15复购率＞20%<br>
+    <strong>🚪 退出标准：</strong>连续3天销量＜20份 / 鳞片失败率＞50% / 顾客反馈“不脆”占比＞30%<br>
+    <strong>✅ 继续标准：</strong>日均销量稳定40份以上 / 鳞片成品率＞80% / 毛利率稳定在55%+
+  </div>
+</div>
+
+<!-- 08 设备清单 -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：单缸/双缸炸锅(¥400-800) · 油温探针(¥20-40) · 不锈钢操作台(¥200-400) · 炸篮×3(¥60-120) · 不锈钢盆×6(¥80-150) · 电子秤(¥30-50) · 冷藏箱(¥150-300)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：三轮车/手推车(¥600-1800) · 折叠桌(¥100-200) · 帐篷伞(¥150-300) · 招牌灯箱(¥80-180) · 价格立牌(¥20-50) · 撒粉瓶×3(¥15)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：鸡腿/鸡翅/鸡块10kg(¥200-300) · 全脂牛奶4L(¥40-60) · 裹粉5kg(¥40-70) · 炸油15L(¥100-150) · 包装纸盒/纸袋500套(¥120-180) · 撒粉料(¥30)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥1,800-2,500</strong>（已有手推车）</div>
+    <div><strong>💰 完整启动方案：¥3,500-5,500</strong>（含三轮车+帐篷+双缸炸锅）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案0-200元 · 办理时间2-5天 · 需确认摊位是否允许油炸</div>
+  </div>
+</div>
+
+<!-- 09 产品结构 -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">原味美式炸鸡（鸡腿/鸡翅）</span><span class="t-price">¥12-15</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">芝士粉/辣味撒粉 · 蘸酱版</span><span class="t-price">¥16-20</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">炸鸡桶（2腿+2翅+小薯+可乐）</span><span class="t-price">¥28-35</span></div>
+  </div>
+</div>
+
+<!-- 10 摆摊指数 -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">📱 外卖</div><div class="stars">★★★★☆</div></div>
+  </div>
+</div>
+
+<!-- 11 最大风险（6项） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>部分区域对油炸摊位油烟管控严，安装净化器成本+¥2000。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夜市摊位费年涨幅10-20%，雨季/冬季客流量腰斩。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>鳞片不稳定——粉-水-粉工艺对水温、抖动频率敏感，新手期翻车率高。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>牛奶腌制成本高——每份牛奶成本约0.5元，如果涨价顾客不买账。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>同质化严重——如果只做普通美式炸鸡，周边竞品价格战会压死你。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>外卖变软——鳞片脆皮在外送20分钟后明显变软，差评率高于堂食。</div>
+</div>
+
+<!-- 12 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>美式炸鸡认知度最高，无需市场教育。鳞片脆皮+牛奶腌制能做出差异化，比普通炸鸡更有记忆点。验证成本低（400元可试做），出餐快，适合夜市走量。<br>
+      <strong>❌ 为什么不值得：</strong>如果只卖普通炸鸡（无鳞片、无奶香），只能陷入价格战。鳞片手法需要练习，不是所有新手都能快速掌握。<br>
+      <strong>🔑 进入条件：</strong>① 愿意花3-5天专门练习粉-水-粉工艺 ② 能接受牛奶腌制增加成本 ③ 摊位位于年轻人/家庭客群多的位置 ④ 有冷藏设备。<br>
+      <strong>🚪 退出条件：</strong>连续2周日均销量＜25份 / 鳞片成品率长期低于60% / 顾客反馈“没有KFC好吃”超过30%。<br>
+      <strong>🎯 最终判断：可进</strong> —— 但必须走“鳞片脆皮+奶香腌制”路线，不建议做普通美式炸鸡。同时需要搭配至少2款特色撒粉（如芝士粉、辣味粉）增加溢价。
+    </div>
+    <div class="j-tags"><span>#鳞片脆皮</span><span>#牛奶腌制</span><span>#KFC风格</span></div>
+  </div>
+</div>
+
+<!-- 13 核心工艺（带验证点） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">牛奶腌制：鸡肉用全脂牛奶浸泡30-60分钟（去腥增嫩），捞出沥干。</span><div class="ps-verify">[验证点] 腌制后鸡肉表面发白，闻不到腥味，肉质弹性增加</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">粉-水-粉裹鳞片：先沾一层干粉（面粉+淀粉+调料），再浸冰水，最后再裹一层干粉并抖动。</span><div class="ps-verify">[验证点] 二次裹粉后轻抖，表面出现不规则鳞片状凸起，高度约2-3mm</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">170-175°C油炸：下锅后不要翻动，定型1分钟后翻面，炸至金黄（鸡腿约8-10分钟）。</span><div class="ps-verify">[验证点] 炸鸡浮起，外壳金黄酥脆，牙签扎最厚处无血水</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">撒料或蘸酱：趁热撒调味粉（原味/辣味/芝士），或搭配蘸酱。</span><div class="ps-verify">[验证点] 撒粉均匀附着，摇晃不掉；蘸酱后风味提升</div></div>
+  </div>
+  <div class="badge">⚠️ 完整配方（裹粉配比、鳞片手法细节、牛奶腌制时间）见下方付费区</div>
+</div>
+
+<!-- 14 成本利润 -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">鸡肉（鸡腿/鸡翅）</span><span class="v">¥4.0/份</span></div>
+    <div class="recipe-line"><span class="k">牛奶腌制成本</span><span class="v">¥0.5</span></div>
+    <div class="recipe-line"><span class="k">裹粉+调料</span><span class="v">¥0.8</span></div>
+    <div class="recipe-line"><span class="k">油+燃气</span><span class="v">¥0.7</span></div>
+    <div class="recipe-line"><span class="k">包装+撒粉/酱料</span><span class="v">¥0.5</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥6.5</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥15～¥20</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">57%～68%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售50份（均价¥17）→ 日毛利¥525，月净利约¥8600（出摊22天）</span></div>
+  </div>
+</div>
+
+<!-- 15 完整出摊包（付费区） -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>🍗 美式炸鸡 · 完整出摊包</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥59 <small>母卡限时解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后获取鳞片裹粉配方、牛奶腌制比例、三款撒粉配方</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 裹粉配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 鳞片专用裹粉配方（每500g）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>中筋面粉</span><span>250g</span></div>
+      <div class="recipe-line"><span>玉米淀粉</span><span>150g</span></div>
+      <div class="recipe-line"><span>土豆淀粉</span><span>80g</span></div>
+      <div class="recipe-line"><span>小苏打</span><span>4g</span></div>
+      <div class="recipe-line"><span>泡打粉</span><span>3g</span></div>
+      <div class="recipe-line"><span>盐</span><span>8g</span></div>
+      <div class="recipe-line"><span>蒜粉</span><span>5g</span></div>
+      <div class="recipe-line"><span>洋葱粉</span><span>4g</span></div>
+      <div class="recipe-line"><span>白胡椒粉</span><span>3g</span></div>
+    </div>
+
+    <!-- 2️⃣ 牛奶腌制比例 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 牛奶腌制（每500g鸡肉）</div>
+    <div class="recipe-box">
+      全脂牛奶200g + 盐3g + 白胡椒粉1g。鸡肉浸泡30-60分钟（不超过2小时），捞出后不要冲洗，直接裹粉。
+    </div>
+
+    <!-- 3️⃣ 三款撒粉 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 商用撒粉配方</div>
+    <div class="recipe-box">
+      <div><strong>🧀 芝士粉：</strong>卡夫芝士粉100g + 奶粉20g + 糖粉5g</div>
+      <div><strong>🌶️ 香辣粉：</strong>辣椒粉30g + 花椒粉5g + 五香粉3g + 盐5g + 糖3g</div>
+      <div><strong>🧂 原味椒盐：</strong>盐50g + 白胡椒粉10g + 蒜粉5g + 味精3g</div>
+    </div>
+
+    <!-- 4️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 批量炸制温度曲线（每锅6只腿）</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+      <div class="recipe-line"><span>第1锅：170°C下锅，定型1分钟→转155°C炸7分钟</span><span>总8分钟</span></div>
+      <div class="recipe-line"><span>第2锅：油温回升至170°C，同参数</span><span>回升50秒</span></div>
+      <div class="recipe-line"><span>第3锅后油温低于160°C：需升温或换油</span><span>注意</span></div>
+    </div>
+
+    <!-- 5️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 批量预制SOP（30份/60份）</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+      <div><strong>30份（约2.5kg鸡肉）：</strong>牛奶腌制30分钟，裹粉按需现裹。</div>
+      <div><strong>60份（5kg）：</strong>分两桶腌制，使用两个炸锅同时操作。</div>
+    </div>
+
+    <!-- 6️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 鳞片翻车解决方案</div>
+    <div class="recipe-box">
+      <div><strong>无鳞片：</strong>第一次裹粉后按压不足 → 加重按压3次；浸水时间过长 → 浸水后甩干；二次裹粉未抖动 → 左右翻动8-10次。</div>
+      <div><strong>炸后发黑：</strong>油温过高 → 控制油温≤175°C。</div>
+      <div><strong>脱皮：</strong>鸡肉回温时间不够 → 腌制后室温放置15分钟再裹粉。</div>
+    </div>
+
+    <!-- 7️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 三款变体</div>
+    <div class="recipe-box">
+      <div><strong>🍯 蜂蜜黄油版：</strong>炸好后刷蜂蜜黄油酱（蜂蜜+黄油1:1）。</div>
+      <div><strong>🧄 蒜香版：</strong>裹粉中加入蒜粉8g，出锅撒蒜香粉。</div>
+      <div><strong>🌶️ 辣味版：</strong>腌料中加入辣椒粉5g，裹粉中加入辣椒粉10g。</div>
+    </div>
+
+    <!-- 8️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">8️⃣ 规模化方案</div>
+    <div class="recipe-box">
+      当日销量＞120份时：增加第二口炸锅，使用真空滚揉机批量腌制，采用预裹粉半成品（裹粉后冷冻保存）。可转型为“美式炸鸡专门店”。
+    </div>
+
+    <!-- 9️⃣ 实战备注 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">9️⃣ 沧林实战备注</div>
+    <div class="recipe-box" style="border-left-color:#1e3a5f">
+      • 牛奶腌制必须用全脂牛奶，脱脂牛奶效果差。<br>
+      • 第一次裹粉后一定要按压，让粉粘牢；浸水时间不超过2秒。<br>
+      • 炸鸡出锅后放在网架上晾1分钟再装盒，否则热气会闷软鳞片。<br>
+      • 外卖建议：使用带透气孔的纸盒，不要密封，并告知顾客“收到后开盖散热”。<br>
+      • 定价参考：单腿6元，双腿10元，鸡翅3只8元。套餐更划算引导消费。<br>
+      • 建议与薯条、洋葱圈组成“美式炸鸡桶”，提高客单价。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 16 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🍟</span><span class="r-name">美式炸薯条（小食 XC_024）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🧅</span><span class="r-name">黄金洋葱圈（小食 XC_022）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥛</span><span class="r-name">奶香芝士酱（酱料专卡）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- 17 咨询入口 -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>鳞片手法远程指导 · 牛奶腌制比例 · 外卖防软方案</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1视频指导 · 成本优化 · 撒粉配方调整</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“美式炸鸡卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 母卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整出摊包' : '点击解锁全部内容 →';
+  });
+</script>
+</body>
+</html>

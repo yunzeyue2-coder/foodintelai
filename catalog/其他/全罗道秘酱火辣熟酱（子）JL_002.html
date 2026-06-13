@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>秘酱火辣 · 重辣酱料变体卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.variant-bar{background:linear-gradient(90deg,#E8652D,#C0392B);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#C0392B;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#E8652D}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;border:none;cursor:pointer}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 变体提示 -->
+<div class="variant-bar">
+  <span class="v-label">🧬 热制酱料子卡 · ¥19</span>
+  <a class="v-link" href="HZ_001.html">← 母卡：原味黄金炸鸡</a>
+</div>
+
+<!-- 产品头部 -->
+<div class="meta">
+  <h1>🌶️ 秘酱火辣（重辣风味酱）</h1>
+  <div class="sub">韩式重辣酱 · 嗜辣专供 · 甜辣比 2:8</div>
+  <span class="price-tag">¥19 完整酱料包</span>
+</div>
+
+<!-- 与母卡差异总览 -->
+<div class="section">
+  <div class="s-title">🔄 与HZ_001差异总览</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">HZ_001 母卡（¥68）</div>
+      <div>完整韩式炸鸡项目体系：设备·成本·30天验证·赛道判断·核心工艺</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">JL_002 子卡（¥19）</div>
+      <div>秘酱火辣重辣酱完整配方·熬制工艺·批量数据·翻车修正·辣度调节</div>
+    </div>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 本卡不含设备清单、验证路线等通用部分，请购买母卡获取完整项目框架</div>
+</div>
+
+<!-- 母卡 vs 变体对比 -->
+<div class="section">
+  <div class="s-title">📊 母卡 vs 变体</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:300px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>维度</th><th>原味黄金炸鸡</th><th style="color:#E8652D">秘酱火辣鸡块</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:600">目标客群</td><td>全客群</td><td style="color:#E8652D;font-weight:700">重度辣味爱好者、年轻男性、夜宵党</td></tr>
+        <tr style="background:#f8f4ef"><td>辣度等级</td><td>微辣/不辣</td><td style="color:#C0392B;font-weight:700">重辣（含液体辣椒素）</td></tr>
+        <tr><td>客单价提升</td><td>基础款¥15-25</td><td style="color:#5a8f3c">+¥4-6（高溢价酱料）</td></tr>
+        <tr style="background:#f8f4ef"><td>复购驱动</td><td>原味撒粉</td><td style="color:#5a8f3c">辣味成瘾性，高复购但疲劳快</td></tr>
+        <tr><td>利润贡献</td><td>毛利55%</td><td style="color:#5a8f3c">酱料毛利80%+，但保质期短(5-7天)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 02 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">较高（区域差异大）</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div><div class="val">中等（辣味易腻）</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">极低</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等（辣椒素控制难）</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+  </div>
+</div>
+
+<!-- 03 适合谁 -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 夜市/大排档，年轻男性客流为主</div>
+      <div class="fit-item fit-yes">✅ 已有一款甜味酱，需要辣味反差互补</div>
+      <div class="fit-item fit-yes">✅ 能接受5-7天短保质期的摊位</div>
+      <div class="fit-item fit-yes">✅ 想做“挑战辣度”营销活动的商户</div>
+      <div class="fit-item fit-yes">✅ 外卖重辣专区，吸引嗜辣用户</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 女性/儿童/家庭消费为主</div>
+      <div class="fit-item fit-no">❌ 不了解辣椒素用量，容易翻车</div>
+      <div class="fit-item fit-no">❌ 无冷藏条件（酱料必须2-4℃保存）</div>
+      <div class="fit-item fit-no">❌ 出摊频率低（一周少于3天）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买秘酱火辣</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：挑战性 × 痛感快感 × 重口解馋</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>原味炸鸡 → 升级秘酱火辣</span><span class="v">加价4-6元，成本仅1.0元</span></div>
+    <div class="logic-item"><span>"辣度挑战"加价（加双倍辣椒素）</span><span class="v">额外+2元</span></div>
+    <div class="logic-item"><span>套餐组合（火辣鸡+冰啤酒/冰可乐）</span><span class="v">客单价提升50%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>"辣度分级"：微辣/中辣/火辣/变态辣（不同加价）</span></div>
+    <div class="logic-item"><span>搭配解腻酸奶酱或酸萝卜，组合定价</span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>每月一次"火辣挑战赛"，赢免单/折扣</span></div>
+    <div class="logic-item"><span>辣度积分卡：累计5次送解辣饮料</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">酱料日营收(加酱)</div><div class="m-val">¥80-200</div><div class="m-sub">按60份/天，10-15%加酱率</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净增利润</div><div class="m-val">¥1000-2500</div><div class="m-sub">新增成本低</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">1天</div><div class="m-sub">仅原料成本</div></div>
+  </div>
+</div>
+
+<!-- 05 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">重辣酱竞争相对较小，多数摊位只有甜辣</div>
+      <div class="t-item">辣味成瘾性强，能锁住特定客群</div>
+      <div class="t-item">附加价值高，加价空间大于甜味酱</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">辣度受众窄，不适合家庭/清淡口味区域</div>
+      <div class="t-item">辣椒素用量极敏感，多1g就劝退</div>
+      <div class="t-item">保质期仅5-7天，备货风险高</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>韩式炸鸡甜辣为主，真正“重辣”很少。多数摊位辣椒粉用量不足，辣度仅微微辣。<br>
+    <strong>未来判断：</strong>2026年辣味竞争会从“有辣”转向“多辣度选择”，秘酱火辣适合作为“挑战款”存在，不是主力但能制造话题。<br>
+    <strong>是否值得进入：是</strong>（前提：周边有稳定年轻嗜辣客群，且你能精准控制辣椒素）
+  </div>
+</div>
+
+<!-- 06 项目评估（V5.1维度） -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★☆☆☆</div><div style="font-size:10px">低竞争，但客群窄</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★☆☆</div><div style="font-size:10px">需多次试错调辣度</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★☆☆☆</div><div style="font-size:10px">辣椒素翻车直接废酱</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px">¥40试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;justify-content:space-between"><span style="font-size:12px;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">B+</span></div>
+</div>
+
+<!-- 07 30天验证路线（酱料专版） -->
+<div class="section">
+  <div class="s-title">🗓️ 30天酱料验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购原料，按配方试做500g秘酱，先不加辣椒素，单独测试基础风味</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>分5个梯度加入辣椒素（0.5g/1g/1.5g/2g/2.5g每500g），请重度辣爱好者盲测</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>在摊位推出“+4元换秘酱火辣”，统计点单率，重点记录复购</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>根据反馈调整甜/辣比和辣椒素用量，优化挂酱量</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>计算增量利润，决定是否作为长期固定口味</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7加酱点单率＞8% ② Day15嗜辣客群好评率＞70% ③ Day30月增量利润＞¥800<br>
+    <strong>🚪 退出标准：</strong>加酱点单率连续10天＜5% / 顾客反馈“太辣吃不了”＞40% / 酱料因保质期过短浪费超过30%<br>
+    <strong>✅ 继续标准：</strong>有忠实顾客每周必点 / 辣度挑战活动能带来社交传播 / 毛利率＞70%
+  </div>
+</div>
+
+<!-- 08 设备清单（酱料专用） -->
+<div class="section">
+  <div class="s-title">🛠️ 酱料专用设备</div>
+  <div><strong>🔸 固定设备</strong>：不锈钢熬酱锅 · 长柄木铲 · 电子秤(精确到0.1g用于辣椒素) · 温度计 · 密封桶/挤酱瓶</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：挤酱瓶(200ml) · 拌酱不锈钢盆 · 小份酱料杯(外卖)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：白糖稀2kg · 白葡萄酒500g · 番茄酱800g · 赤砂糖500g · 浓香酿造酱油120g · 韩产细辣椒面60g · 韩产牛肉粉40g · 液体辣椒素30g · 蒜泥200g · 洋葱泥300g · 黑胡椒粉20g · 桂皮粉2g · 盐20g</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低试做成本：¥40-60</strong>（500g酱原料，不含辣椒素）</div>
+    <div><strong>💰 完整投产（5kg批次）：¥200-300</strong></div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>与母卡共用，无需额外证件，食品摊贩备案已覆盖</div>
+  </div>
+</div>
+
+<!-- 09 产品结构 -->
+<div class="section">
+  <div class="s-title">📦 产品结构（以炸鸡摊为例）</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">原味炸鸡（不酱）</span><span class="t-price">¥15-20</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">秘酱火辣炸鸡（本酱）</span><span class="t-price">+¥4-6</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">火辣挑战套餐（鸡块+冰可乐+解腻酸萝卜）</span><span class="t-price">¥35-45</span></div>
+  </div>
+</div>
+
+<!-- 10 摆摊指数（依附炸鸡摊） -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数（以炸鸡摊为载体）</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏫 学校</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★☆☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">📱 外卖</div><div class="stars">★★★★☆</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">📌 外卖需标注辣度等级，避免差评</div>
+</div>
+
+<!-- 11 最大风险（6项） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>液体辣椒素属于高浓度添加剂，需在合规渠道采购，保留票据。部分地区对“变态辣”有限制性规定。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>重辣酱冬季销量高于夏季，且必须2-4℃冷藏，无冰箱摊位禁止售卖。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>辣椒素用量极敏感：500g酱多1g辣椒素会从“爽辣”变“火烧胃”，导致大量差评。必须使用精确到0.1g的电子秤。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>保质期极短（5-7天），备货量难预估。卖不完即报废，成本损失高于甜味酱。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>白葡萄酒和蒜泥洋葱泥未长时间熬煮，易变质。必须严格冷藏且5天内用完。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>复购疲劳：辣味比甜味腻得快，一般吃3-4次就会转其他口味，无法作为唯一酱料。</div>
+</div>
+
+<!-- 12 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>重辣酱差异化强，加价空间大。能吸引特定嗜辣客群，制造话题（挑战辣度）。竞争对手少。<br>
+      <strong>❌ 为什么不值得做：</strong>客群窄，管理难度高（保质期短、辣椒素敏感）。如果摊位以家庭/女性为主，不建议上。<br>
+      <strong>🔑 进入条件：</strong>① 周边有成熟夜宵/大排档环境，男性客流＞60% ② 能购买到精确电子秤（0.1g） ③ 有冷藏柜 ④ 愿意花3天调辣度。<br>
+      <strong>🚪 退出条件：</strong>① 加酱点单率连续2周＜5% ② 每月因过期废弃超过30% ③ 顾客辣度投诉率＞15%。<br>
+      <strong>🎯 最终判断：可进</strong> —— 但只建议作为“第二或第三口味”补充，不建议当作主力。必须配合解腻产品（酸奶酱/酸萝卜）一起卖。
+    </div>
+  </div>
+</div>
+
+<!-- 13 核心工艺（带验证点） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（热制，必须熬透）</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">所有原料（除辣椒素）入锅，搅拌至干粉无结块</span><div class="ps-verify">[验证点] 锅底无辣椒面干粉，糖稀完全化开</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">中火烧开，不断搅拌，避免糊底</span><div class="ps-verify">[验证点] 看到锅边开始冒密集大泡即可关火，不需要长时间熬煮</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">关火后立即加入液体辣椒素，快速搅匀</span><div class="ps-verify">[验证点] 辣椒素不可高温久煮，否则辣味挥发且产生苦味</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">自然冷却，密封后2-4℃冷藏发酵3小时以上</span><div class="ps-verify">[验证点] 发酵后辣味更融合，甜味更柔和，整体不呛喉</div></div>
+  </div>
+  <div class="badge">⚠️ 完整精确克数、温度曲线、翻车修正见付费区</div>
+</div>
+
+<!-- 14 成本利润（每份用量90g） -->
+<div class="section">
+  <div class="s-title">📐 成本利润（每份秘酱火辣用量）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本（90g/份）</span><span class="v">¥0.95</span></div>
+    <div class="recipe-line"><span class="k">包装成本（酱料杯/淋酱袋）</span><span class="v">¥0.15</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（保鲜）</span><span class="v">¥0.05</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥1.15</span></div>
+    <div class="recipe-line"><span class="k">加酱售价</span><span class="v">¥4～¥6</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">71%～81%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售60份炸鸡，15%加酱=9份，日毛利¥30-45，月净增¥800-1200</span></div>
+  </div>
+</div>
+
+<!-- 15 完整出摊包（付费区） -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 秘酱火辣 · 完整出摊包</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥19 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后查看所有配方、辣度对照表及翻车修正</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方（5kg批次） -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">1️⃣ 商用标准配方（5kg成品）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>白糖稀</span><span>2.0kg</span></div>
+      <div class="recipe-line"><span>白葡萄酒</span><span>500g</span></div>
+      <div class="recipe-line"><span>韩产细辣椒面</span><span>60g</span></div>
+      <div class="recipe-line"><span>韩产牛肉粉(다시다)</span><span>40g</span></div>
+      <div class="recipe-line"><span>液体辣椒素</span><span>30g（核心）</span></div>
+      <div class="recipe-line"><span>番茄酱（国产大包）</span><span>800g</span></div>
+      <div class="recipe-line"><span>赤砂糖</span><span>500g</span></div>
+      <div class="recipe-line"><span>浓香酿造酱油</span><span>120g</span></div>
+      <div class="recipe-line"><span>细盐</span><span>20g</span></div>
+      <div class="recipe-line"><span>黑胡椒粉</span><span>20g</span></div>
+      <div class="recipe-line"><span>桂皮粉</span><span>2g</span></div>
+      <div class="recipe-line"><span>蒜泥</span><span>200g</span></div>
+      <div class="recipe-line"><span>洋葱泥</span><span>300g</span></div>
+    </div>
+
+    <!-- 2️⃣ 小批量验证配方（500g成品） -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 小批量验证配方（500g）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>白糖稀200g</span><span>白葡萄酒50g</span></div>
+      <div class="recipe-line"><span>细辣椒面6g</span><span>牛肉粉4g</span></div>
+      <div class="recipe-line"><span>液体辣椒素3g（基准）</span><span>番茄酱80g</span></div>
+      <div class="recipe-line"><span>赤砂糖50g</span><span>酱油12g</span></div>
+      <div class="recipe-line"><span>盐2g</span><span>黑胡椒粉2g</span></div>
+      <div class="recipe-line"><span>桂皮粉0.2g</span><span>蒜泥20g</span></div>
+      <div class="recipe-line"><span>洋葱泥30g</span><span></span></div>
+    </div>
+
+    <!-- 3️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 熬制温度曲线</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>中火烧开阶段</span><span>约90-100°C（开始冒泡）</span></div>
+      <div class="recipe-line"><span>密集大泡出现</span><span>100-105°C，此时立即关火</span></div>
+      <div class="recipe-line"><span>关火后加辣椒素</span><span>余温80°C以下（不可再加热）</span></div>
+      <div class="recipe-line"><span>自然冷却</span><span>室温放置40-60分钟</span></div>
+    </div>
+
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 批量SOP（5kg / 20kg）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>5kg熬制时间</span><span>约20分钟（含准备）</span></div>
+      <div class="recipe-line"><span>20kg熬制时间</span><span>约40分钟（需夹层锅）</span></div>
+      <div class="recipe-line"><span>冷藏发酵</span><span>2-4℃ / 3小时以上，保质期5-7天</span></div>
+    </div>
+
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车修正表</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>太辣（辣椒素过量）</span><span>加白糖稀50g+番茄酱30g/500g，无法完全补救，建议废弃重做</span></div>
+      <div class="recipe-line"><span>不辣（辣椒素不足）</span><span>补加辣椒素0.5g/500g并充分搅匀</span></div>
+      <div class="recipe-line"><span>太甜</span><span>加白醋5g+辣椒面2g</span></div>
+      <div class="recipe-line"><span>有糊味</span><span>整锅废弃（预防：全程搅拌）</span></div>
+      <div class="recipe-line"><span>太稀</span><span>回锅小火熬煮3-5分钟蒸发水分</span></div>
+      <div class="recipe-line"><span>分层或出水</span><span>废弃（已变质）</span></div>
+    </div>
+
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款辣度变体方案（每500g酱）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🌶️ 微辣版：</strong>辣椒素1.5g + 辣椒面4g → 辣度约韩式辣酱2倍</div>
+      <div><strong>🔥 火辣版（标准）：</strong>辣椒素3g + 辣椒面6g → 辣度明显，大众极限</div>
+      <div><strong>☠️ 变态辣版：</strong>辣椒素5g + 辣椒面10g + 加鬼椒粉1g → 挑战专用，需签免责</div>
+    </div>
+
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案（日销＞100份加酱）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      使用20L夹层锅，一次熬制20kg。分装成1kg/袋真空冷藏，但必须5天内用完。不建议大规模预制，因为保质期短。零售装：100g瓶装“秘酱火辣”定价¥8-10，需标注辣度等级和保质期。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整内容，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 16 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="HZ_001.html"><span style="font-size:16px">🍗</span><span style="flex:1">原味黄金炸鸡（母卡·完整项目）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="#"><span style="font-size:16px">🌶️</span><span style="flex:1">经典甜辣炸鸡酱（JL_001）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="#"><span style="font-size:16px">🥛</span><span style="flex:1">酸奶酱（JL_003）解腻搭档</span><span>→</span></a>
+  </div>
+</div>
+
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整出摊包 ↑' : '点击解锁全部内容 →';
+  });
+
+</div>
+
+<div class="cf-tagline">决策先于工艺 · 看见水面之下的力量</div>
+  <div class="cf-contact">微信 canglin1985 · <a href="https://foodintelai.com">foodintelai.com</a></div>
+</div>
+
+<script>
+
+
+<!-- ===== 咨询入口 ===== -->
+<div class="section">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center;font-size:12px;color:#5a4f44">
+    <div><strong>📌 咨询场景：</strong>摆摊选址评估 · 成本优化 · 翻车远程诊断</div>
+    <div style="margin-top:6px"><strong>📱 联系方式：</strong>微信 canglin1985（备注卡号）</div>
+    <a style="display:inline-block;margin-top:8px;padding:8px 20px;background:#3a322a;color:#fff;border-radius:8px;text-decoration:none;font-size:12px" href="javascript:void(0)" onclick="copyWx()">📲 加微信咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 决策先于工艺 · 沧林食品工作站</div>
+</div>
+
+<script>
+document.getElementById('unlockBtn')&&document.getElementById('unlockBtn').addEventListener('click',function(){var e=document.getElementById('payContent');e&&(e.classList.toggle('show'),this.textContent=this.textContent.indexOf('点击解锁')>=0?'收起完整出摊包':'点击解锁全部内容')});
+function copyWx(){var e=document.createElement('textarea');e.value='canglin1985';document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e);alert('✅ 微信号已复制：canglin1985');}
+</script>
+
+</body>

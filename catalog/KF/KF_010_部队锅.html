@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KF_010 部队锅 — 韩式美食·汤类母卡</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+.card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+.header { background: linear-gradient(135deg, #b85a30 0%, #d07040 50%, #e89060 100%); padding: 32px 24px 24px; color: #fff; }
+.header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; line-height: 1.6; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+.section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 13px; font-weight: 600; color: #b85a30; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+.value-stmt { background: #fdf0e8; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #b85a30; line-height: 1.7; text-align: center; }
+.bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+.bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; flex-shrink: 0; }
+.bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+.radar { display: flex; flex-direction: column; gap: 10px; }
+.radar-item { display: flex; align-items: center; gap: 10px; }
+.radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+.radar-item .bar { height: 100%; border-radius: 10px; }
+.radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #b85a30; }
+.bf5 { width: 100%; background: linear-gradient(90deg, #d07040, #e89060); }
+.bf4 { width: 80%; background: linear-gradient(90deg, #d07040, #e89060); }
+.bf3 { width: 60%; background: linear-gradient(90deg, #d8a080, #e8b898); }
+.role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+.role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+.role-tag.active { background: #d07040; color: #fff; box-shadow: 0 2px 8px rgba(208,112,64,0.3); }
+.family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #faf4ee; border-radius: 12px; }
+.family-tree .node { margin: 2px 0; }
+.family-tree .branch { color: #b85a30; font-weight: 600; }
+.family-tree .leaf { color: #666; padding-left: 24px; }
+.family-tree .highlight { color: #d07040; font-weight: 600; padding-left: 24px; }
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.market-item { background: #fdf0e8; border-radius: 10px; padding: 10px 12px; }
+.market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+.market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+.matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+.matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+.matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+.ql { position: absolute; font-size: 10px; color: #aaa; }
+.ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+.ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+.matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+.matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+.dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #e89060; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+.dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #b85a30; white-space: nowrap; transform: translateX(-50%); }
+.ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.ingredient-table th { background: #f0e0d0; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+.ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+.ingredient-table .amt { text-align: right; font-weight: 600; color: #b85a30; font-size: 12px; }
+.steps { list-style: none; counter-reset: step; }
+.steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #e8ddd0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #b85a30; }
+.pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin-top: 8px; }
+.pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; margin-bottom: 2px; }
+.pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+.cost-box { background: #fdf0e8; border-radius: 12px; padding: 14px; }
+.cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.cost-row .cr-label { color: #555; }
+.cost-row .cr-value { font-weight: 600; color: #b85a30; }
+.cost-divider { border: none; border-top: 1px dashed #e8d0c0; margin: 6px 0; }
+.decision-box { background: #faf4ee; border-radius: 12px; padding: 16px; }
+.decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+.decision-box p:last-child { margin-bottom: 0; }
+.trend-box { background: linear-gradient(135deg, #fdf0e8, #f8f4ef); border-radius: 12px; padding: 16px; }
+.trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trend-item:last-child { margin-bottom: 0; }
+.trend-year { font-size: 12px; font-weight: 700; color: #b85a30; width: 50px; flex-shrink: 0; }
+.trend-arrow { color: #bbb; }
+.trend-desc { font-size: 13px; color: #555; }
+.trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #b85a30; text-align: center; }
+.footer-brand { background: #b85a30; color: #fff; text-align: center; padding: 24px; }
+.footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+.footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+.footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">KF_010 · 韩式美食 · 汤类母卡</div>
+    <h1>部队锅</h1>
+    <div class="subtitle">
+      年轻群体社交爆款 · 形式感极强的聚餐首选 · 卡售价¥29.9 · FoodIntel推荐：8.8/10
+    </div>
+    <div class="tags">
+      <span>🍲 部队锅</span>
+      <span>🧀 拉丝芝士</span>
+      <span>🍜 拉面</span>
+      <span>🥫 午餐肉</span>
+      <span>📸 打卡神器</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      韩式社交传播之王 · 一锅满足2-3人 · 上桌形式感极强 · <br>
+      成本~25元/份 · 毛利率60-70% · 小红书打卡率最高单品
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★★</div>
+      <div class="bomb-reason">
+        <strong>社交传播之王。</strong>流量和传播性双5★——部队锅是小绿书/点评上出镜率最高的韩式单品之一，五颜六色的食材码在锅里特别上相。标准化4★——食材配比固定、摆盘有模板。毛利率偏低——因为食材种类多（午餐肉/香肠/年糕/拉面/芝士/蔬菜），控制成本是关键。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag active">引流产品</span>
+      <span class="role-tag">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag active">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KF 韩式美食体系</div>
+      <div class="node leaf">├─ KF_001~008 主食系列</div>
+      <div class="node leaf">├─ KF_009 泡菜汤</div>
+      <div class="node highlight">├─ KF_010 部队锅 ← 你在这里</div>
+      <div class="node leaf">├─ KF_011 参鸡汤</div>
+      <div class="node leaf">└─ KF_012 排骨汤</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟 · 持续火爆</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">10/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">8/10 · 高</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">10/10 · 通吃</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">3/10 · 低</div></div>
+      <div class="market-item"><div class="m-value" style="color:#555;">创业门槛</div><div class="m-value">低 · 备好食材就能做</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div>
+      <div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div>
+      <div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div>
+      <div class="y-label">传播性 →</div>
+      <div class="dot" style="left:60%;top:10%;"></div>
+      <div class="dot-label" style="left:60%;top:3%;">部队锅（中高复购·高传播·社交之王）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>部队锅位于左上偏右——传播性极高（社交平台出镜率最高的韩式单品），复购率中上（年轻人聚餐场景反复点）。部队锅的核心价值不是利润，是流量和传播——它把客人引进来。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方</div>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：2-3人份 · 锅直径22-26cm
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b85a30;margin-bottom:6px;">食材清单（1份）</h4>
+    <table class="ingredient-table">
+      <tr><th>食材</th><th>用量</th><th>备注</th></tr>
+      <tr><td>午餐肉</td><td class="amt">100g</td><td>切0.5cm厚片·推荐SPAM</td></tr>
+      <tr><td>烤肠/火腿肠</td><td class="amt">2根</td><td>斜切厚片</td></tr>
+      <tr><td>韩式年糕</td><td class="amt">150g</td><td>条状或片状均可</td></tr>
+      <tr><td>泡菜</td><td class="amt">100g</td><td>酸泡菜最佳</td></tr>
+      <tr><td>拉面（辛拉面）</td><td class="amt">1块</td><td>不能用普通方便面·口感不同</td></tr>
+      <tr><td>芝士片</td><td class="amt">2片</td><td>灵魂·拉丝效果</td></tr>
+      <tr><td>金针菇</td><td class="amt">80g</td><td>去根洗净</td></tr>
+      <tr><td>洋葱</td><td class="amt">60g</td><td>切丝</td></tr>
+      <tr><td>大葱</td><td class="amt">30g</td><td>切圈</td></tr>
+      <tr><td>豆腐</td><td class="amt">100g</td><td>切厚片·可选</td></tr>
+      <tr><td>辣椒（青红）</td><td class="amt">各1根</td><td>切圈·装饰</td></tr>
+    </table>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b85a30;margin:12px 0 6px;">灵魂酱汁配方</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+      <tr><td>韩式辣椒酱（고추장）</td><td class="amt">3大勺</td><td>清净园CJ品牌为佳</td></tr>
+      <tr><td>辣椒粉（细）</td><td class="amt">1大勺</td><td>增色增辣</td></tr>
+      <tr><td>酱油</td><td class="amt">1大勺</td><td></td></tr>
+      <tr><td>蒜末</td><td class="amt">1大勺</td><td></td></tr>
+      <tr><td>清酒/料酒</td><td class="amt">1大勺</td><td></td></tr>
+      <tr><td>白糖</td><td class="amt">1小勺</td><td></td></tr>
+      <tr><td>昆布高汤/清水</td><td class="amt">400ml</td><td>昆布+小鱼干熬15min最佳</td></tr>
+    </table>
+    <div style="font-size:11px;color:#999;margin-top:4px;margin-bottom:10px;">💡 大批量酱汁调配方案见 JL_022 韩式辣椒酱卡片工业调配标准。高汤批量方案见 KF_003 大酱汤的昆布高汤做法。</div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b85a30;margin:12px 0 6px;">出餐流程</h4>
+    <ol class="steps">
+      <li>部队锅专用锅底铺洋葱丝+泡菜——防粘+增底味</li>
+      <li>按颜色搭配码放食材——午餐肉·香肠·年糕·金针菇·豆腐分区摆放</li>
+      <li>中间放酱汁——堆成一坨，不要散开铺（煮的时候自己化开）</li>
+      <li>沿锅边倒入高汤——不要倒在酱上，保持摆盘美感</li>
+      <li>上桌开火，大火煮开</li>
+      <li>煮开后放入拉面+芝士片，转中火煮3-4min</li>
+      <li>撒葱圈+辣椒圈，上桌</li>
+    </ol>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b85a30;margin:12px 0 6px;">利润放大技巧</h4>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fdf0e8;border-radius:8px;padding:12px;margin-bottom:10px;">
+      <strong>部队锅毛利率低（60-70%）</strong>，但可以通过以下方式放大利润：<br><br>
+      ① <strong>加料增收：</strong>提供额外加料选项（加芝士+5元/拉面+3元/年糕+5元/午餐肉+8元），80%的客人会加1-2样，毛利率直接拉升到75%+<br>
+      ② <strong>套餐化：</strong>部队锅+主食（拌饭/拉面）组合套餐，定价提升20元但成本只增加3元<br>
+      ③ <strong>锅底高汤用昆布+小鱼干自制：</strong>成本不到1元/锅，比用浓汤宝好5倍<br>
+      ④ <strong>辛拉面是部队锅的灵魂：</strong>不要省这个钱换成便宜的方便面，客人吃得出来
+    </div>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（7条）</div>
+      <div class="p-desc">
+        ① 食材码放必须好看——部队锅是"形式大于内容"的产品，摆盘丑直接负分，必须分区码好再上桌<br>
+        ② 拉面必须最后放——提前放拉面煮太烂失去口感，客人拍照的时候面已经糊了<br>
+        ③ 芝士不能太早放——全程煮完再放芝士焖30秒拉丝效果最佳，太早放芝士化没了<br>
+        ④ 酱汁不能散开铺——堆在中间，拍照好看、煮的时候自动化开，视觉效果好<br>
+        ⑤ 高汤不能用浓汤宝——昆布+小鱼干熬的高汤是部队锅的灵魂，不能用超市浓汤宝替代<br>
+        ⑥ 小心锅柄烫手——部队锅煮完锅柄温度极高，上桌时一定要垫防烫垫+提醒客人<br>
+        ⑦ 辣椒酱品牌别乱换——不同品牌的辣酱颜色和辣度不同，换品牌后面貌全非
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 商业决策</div>
+    <div class="cost-box" style="margin-bottom:14px;">
+      <div class="cost-row"><span class="cr-label">食材成本</span><span class="cr-value">~20-22元</span></div>
+      <div class="cost-row"><span class="cr-label">高汤+酱汁</span><span class="cr-value">~3元</span></div>
+      <div class="cost-row"><span class="cr-label">燃气+餐具</span><span class="cr-value">~2元</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label">总成本</span><span class="cr-value">~25-27元/份</span></div>
+      <div class="cost-row"><span class="cr-label" style="font-weight:700;">建议售价</span><span class="cr-value" style="font-weight:800;font-size:16px;">68-98元/份</span></div>
+      <div class="cost-row"><span class="cr-label">毛利率</span><span class="cr-value" style="color:#2d8a40;">60-70%</span></div>
+      <div class="cost-row"><span class="cr-label">日均销量</span><span class="cr-value">8-15份</span></div>
+      <div class="cost-row"><span class="cr-label">月毛利贡献</span><span class="cr-value" style="font-size:16px;">~1.5-2.5万元</span></div>
+      <div class="cost-row"><span class="cr-label" style="color:#b85a30;">+加料增收</span><span class="cr-value">毛利率可提升至75%+</span></div>
+    </div>
+    <div class="decision-box">
+      <p><strong>✅ 适合场景：</strong>韩式烤肉店+部队锅组合是最佳搭配——烤肉配部队锅是韩国本土标配。适合2-4人聚餐场景，晚上9点后酒过三巡点一个部队锅收尾。也是韩式火锅专门店的核心产品。</p>
+      <p><strong>📌 菜单位置：</strong>放在"招牌推荐"区，配一张煮开后咕嘟冒泡的动图。套餐组合："招牌部队锅+辛拉面+饮料=88-128元"，比单点便宜10-15元，提高客单价。</p>
+      <p><strong>⚠️ 风险：</strong>毛利率偏低是最大问题——部队锅看起来量大，实际食材成本不低。必须通过加料选项和套餐组合拉升利润。另一个风险是食材损耗——年糕开封后保质期短，午餐肉开封后2天内用完。</p>
+      <p><strong>🎯 地摊版：</strong>部队锅形式感太强、需要专用锅具和明火煮，不适合地摊。可以做简化版"部队锅小份"——用普通碗装、微波炉加热，卖28-38元/份。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">传统部队锅——午餐肉+泡菜+拉面标准三件套</span></div>
+      <div class="trend-item"><span class="trend-year">2023</span><span class="trend-arrow">→</span><span class="trend-desc">加料升级——芝士部队锅/海鲜部队锅/牛肉部队锅等变体</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">一人食部队锅——小份量低价位，外卖场景</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">预制部队锅食材包+锅具套装，家庭场景</span></div>
+      <div class="trend-verdict">部队锅的核心竞争力不是味道——是五颜六色码好食材端上桌那一刻的仪式感</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div>
+    <div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links">
+      <span>📢 公众号：沧林食品技术</span>
+      <span>💬 微信：canglin1985</span>
+    </div>
+    <div class="fb-series">韩式美食 · KF_010 部队锅</div>
+  </div>
+
+</div>
+</body>
+</html>

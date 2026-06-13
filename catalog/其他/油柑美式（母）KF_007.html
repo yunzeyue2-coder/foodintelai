@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>KF_007 油柑美式 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 顶部评级 ===== */
+.rating-bar{background:linear-gradient(135deg,#2d6a4f,#1b4d3e);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+/* 付费锁定区 */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🫒 油柑美式 · 回甘炸弹</h1>
+  <div style="font-size:12px;color:#b5aaa0">新式特调咖啡 · 网红爆款逻辑</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.0</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">B级项目</span>
+  </div>
+  <div class="r-tagline">油柑+美式=话题性单品，但供应链和酸涩平衡是最大门槛。</div>
+  <div class="r-tags">
+    <span>🔥 热度中等</span>
+    <span>💰 投资3500+</span>
+    <span>👤 1人可做</span>
+    <span>🔄 复购两极</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★☆☆</div><div class="val">网红退潮期</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★☆☆☆</div><div class="val">依赖口味适应</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">3500+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★★☆</div><div class="val">油柑处理复杂</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">70%+</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 咖啡摊差异化的第二/三款特调</div>
+      <div class="fit-item fit-yes">✅ 南方城市（油柑认知度高）</div>
+      <div class="fit-item fit-yes">✅ 年轻/猎奇客群集中的夜市</div>
+      <div class="fit-item fit-yes">✅ 已经有稳定美式基础</div>
+      <div class="fit-item fit-yes">✅ 擅长社交媒体打卡传播</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 初次摆摊/新手</div>
+      <div class="fit-item fit-no">❌ 北方小城市（油柑难买）</div>
+      <div class="fit-item fit-no">❌ 无法接受酸涩回甘人群</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：猎奇打卡 × 回甘体验 × 清爽解腻（搭配夜市重口味）</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>油柑美式（基础款）</span><span class="v">毛利68%</span></div>
+    <div class="logic-item"><span>加海盐奶盖 +¥4</span><span class="v">毛利82%</span></div>
+    <div class="logic-item"><span>油柑气泡美式（加苏打水）</span><span class="v">毛利75%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>推出“油柑双萃”（双份浓缩） +¥5</span><span class="v"></span></div>
+    <div class="logic-item"><span>搭配烤串/炸鸡套餐（解腻组合）</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>推出“微糖/正常糖”选项，降低酸涩门槛</span><span class="v"></span></div>
+    <div class="logic-item"><span>季节限定“青提油柑美式”保持新鲜感</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥450-800</div><div class="m-sub">油柑占比20%</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥3000-5500</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">15-25天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">📌 数据基于广深地区夜市咖啡车实测（2025年秋季），油柑美式占咖啡总销量15-25%，但复购率低于拿铁。</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">差异化极强，整个夜市可能只有你卖油柑美式，避免内卷</div>
+      <div class="t-item">毛利率高（油柑汁成本可控，单杯油柑成本约1.5-2元）</div>
+      <div class="t-item">自带话题性，适合小红书/抖音打卡传播</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">油柑季节性明显（秋冬品质下降，价格上涨）</div>
+      <div class="t-item">酸涩感劝退40%以上首次尝试者，复购率低</div>
+      <div class="t-item">鲜榨油柑需要专用设备（压榨机/破壁机），增加摊位复杂度</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>油柑美式在2022-2023年经历爆发，2025年热度回落，但仍有固定粉丝群。目前一线城市咖啡摊已较少作为主推，二线城市还有红利。<br>
+    <strong>未来判断：</strong>不适合作为主力产品，但可以作为“引流猎奇款”或季节限定（夏季）。如果能搭配“海盐奶盖”降低酸涩，有机会成为利润补充。<br>
+    <strong>是否值得进入：可进</strong>（前提：南方城市+已有美式基础+愿意处理鲜油柑）。
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">差异化赛道</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★★☆</div><div style="font-size:10px;color:#5a4f44">油柑去涩较难</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">酸涩难补救</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">¥150买油柑试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">B</span></div>
+</div>
+
+<!-- ===== 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th></tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🫒 油柑美式(本卡)</td><td>★★★</span><td>★★★★</span><td>★★★★</span><td>★★★</span><td>B</span><td>#KF_007</span></tr>
+        <tr><td>☕ 美式咖啡</span><td>★★★★</span><td>★★★</span><td>★★★★</span><td>★★★</span><td>B+</span><td><a href="#" style="color:#E8652D">#KF_001</a></span></tr>
+        <tr style="background:#f8f4ef"><td>🍋 柠檬美式</span><td>★★★★</span><td>★★</span><td>★★★★</span><td>★★★★</span><td>A-</span><td><a href="#" style="color:#5a8f3c">#KF_006</a></span></tr>
+        <tr><td style="border-radius:0 0 0 6px">🧊 椰青美式</span><td>★★★</span><td>★★★</span><td>★★★★</span><td>★★★</span><td>A-</span><td style="border-radius:0 0 6px 0"><a href="#">#KF_012</a></span></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡（模拟跳转）</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购新鲜油柑，手动压榨测试糖酸比，调整油柑:水:糖比例</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>制作5版油柑基底，邀请15人盲测（原味vs加海盐），确定配方</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次试卖（夜市/创意市集），预备20杯油柑美式，观察点单率</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加海盐奶盖/气泡选项，统计复购和客单价提升</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>核算油柑损耗率和净利润，决定是否继续保留该SKU</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7能否卖出10杯以上 ② 首次试喝好评率＞60% ③ 油柑损耗率低于15%<br>
+    <strong>🚪 退出标准：</strong>连续2周日均销量＜5杯 / 油柑采购价波动超过30% / 顾客反馈“太涩/太酸”超过50%<br>
+    <strong>✅ 继续标准：</strong>复购率＞15% / 油柑美式占咖啡总销量＞10% / 有顾客主动询问油柑品种
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（含证照成本） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：意式咖啡机 · 电动磨豆机 · 电子秤 · 压粉锤 · 榨汁机/原汁机(油柑专用) · 细滤网 · 玻璃密封罐(储存油柑汁)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠操作台 · 户外电源(600W+) · 车载冰箱(保存油柑汁) · 冰桶 · 招牌灯箱 · 酱料挤压瓶(用于糖浆/海盐)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：咖啡豆2kg · 新鲜油柑5kg · 冰糖/蔗糖1kg · 一次性杯(12oz)150套 · 海盐/芝士粉(奶盖用) · 苏打水(气泡版)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,800-3,800</strong>（手压意式机+手摇磨+手动榨汁器+冰桶）</div>
+    <div><strong>💰 完整启动方案：¥5,500-8,500</strong>（意式机+电动磨豆机+电动原汁机+户外电源+冷藏箱）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案¥0-100。注意：鲜榨果汁类在某些城市需要额外的“现制现售”许可，建议提前咨询。办理时间2-5天。</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">经典油柑美式（冰）</span><span class="t-price">¥16-20</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">海盐奶盖油柑美式 · 油柑气泡美式</span><span class="t-price">¥20-26</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">油柑美式+炸鸡/烤串解腻套餐</span><span class="t-price">¥30-38</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏫 学校</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★☆☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏔️ 景区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★☆☆☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项含政策/场地） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>鲜榨油柑汁属于“现制果蔬汁”，部分城市要求专区操作、当日废弃记录，未达标可能被停业整顿。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>油柑秋冬产量少、酸涩加重，价格从夏天5元/斤涨至15元/斤，品质不稳定；夏季油柑易氧化变色。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>酸涩平衡极难控制：同一批油柑，酸度差异大，导致每杯口感不一致，客诉率高。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>供应链脆弱：非油柑主产区城市，鲜果依赖外地冷链，断货风险高。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>消费者接受度低：第一次尝试的顾客中约40%表示“太涩/像喝中药”，影响摊位口碑。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>制作耗时：鲜榨油柑需要去核、压榨、过滤，单杯多出1-2分钟人工，高峰期容易积压订单。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>油柑美式是咖啡摊中极具差异化的单品，能吸引猎奇顾客，且毛利率高。在南方夜市搭配重口味小吃（烤串/炸鸡），“解腻”卖点明确，容易形成爆款记忆点。<br>
+      <strong>❌ 为什么不值得做：</strong>鲜果供应链不稳定，酸涩口感劝退半数新客，复购率远低于拿铁。如果摊位没有足够人流支撑尝试性消费，油柑美式会成为库存损耗大户。<br>
+      <strong>🔑 进入条件：</strong>① 位于南方城市，能稳定采购新鲜油柑 ② 已有美式咖啡基础，且愿意多花时间处理鲜果 ③ 预算中能接受15%以内的油柑损耗率 ④ 准备至少1款“低酸涩版本”（如加海盐奶盖）。<br>
+      <strong>🚪 退出条件：</strong>① 连续1周日销量＜8杯 ② 油柑采购价超过10元/斤且品质下降 ③ 顾客“太涩”差评超过40% ④ 因榨汁设备故障影响其他产品出杯。<br>
+      <strong>🎯 最终判断：可进</strong> —— 但建议作为“季节限定+补充SKU”，不作为核心产品。夏天可主推，秋冬果断下架。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">油柑预处理（去核+榨汁）</span><div class="ps-verify">[验证点] 新鲜油柑对半切开去核，榨汁后过滤2次，汁液呈淡黄绿色，无残渣；尝一口有明显的“先酸涩后回甘”</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc】调糖酸平衡（油柑汁:冰糖浆:水 = 3:1:1）</span><div class="ps-verify">[验证点] 糖浆用量以“入口不皱眉，3秒后有回甘”为标准；每批次油柑需单独测试，记录糖浆克数</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">萃取浓缩（18g粉，36g液）并冷却</span><div class="ps-verify">[验证点] 浓缩液降温至室温（可加冰块快速降温），避免热浓缩破坏油柑风味</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">组装：杯底加油柑汁+糖浆+冰块，淋入浓缩，加饮用水至满杯</span><div class="ps-verify">[验证点] 出品前用长吧勺从底部向上提拉3次，使咖啡与油柑充分混合，液体呈琥珀色，入口酸苦迅速转为回甘</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整防氧化配方、奶盖稳定方案、不同油柑品种对照见付费区</div>
+</div>
+
+<!-- ===== 14 成本利润（完整7项） ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本(豆+油柑汁+糖)</span><span class="v">¥4.3/杯</span></div>
+    <div class="recipe-line"><span class="k">包装成本（杯+盖+杯套）</span><span class="v">¥0.9/杯</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（冰块/滤网/清洁）</span><span class="v">¥0.5/杯</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥5.7/杯</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥16～¥26</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">64%～78%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售20杯（均价¥19）→日毛利约¥266，月净利¥3,800（出摊22天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区，7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 油柑美式商用方案</h3>
+  <div class="p-sub">7大模块：精确配方 · 油柑品种对照 · 防氧化曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥49 <small>永久解锁（特调专卡）</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后获得商用油柑汁配比、去涩技巧、奶盖配方等</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用油柑美式配方(12oz)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>鲜榨油柑汁90ml</span><span>冰糖浆25g（可按甜度增减）</span></div>
+      <div class="recipe-line"><span>浓缩液36g</span><span>冰块150g</span></div>
+      <div class="recipe-line"><span>饮用水补至满杯</span><span>海盐奶盖：淡奶油50g+海盐0.5g+糖5g打发</span></div>
+    </div>
+    <!-- 2️⃣ 油柑品种与去涩方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 油柑品种推荐与去涩技巧</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>✅ 推荐：野生油柑（回甘强） / 甜种油柑（涩度低）</div>
+      <div>去涩方法：油柑汁中加入0.1%食用小苏打（每500ml汁加0.5g），中和部分单宁酸；或者加少许柠檬汁提亮回甘。</div>
+      <div>⚠️ 切忌高温处理，会加重苦涩。</div>
+    </div>
+    <!-- 3️⃣ 防氧化曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 油柑汁防氧化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>鲜榨油柑汁在空气中30分钟开始氧化变褐。商用方案：榨汁后立即加入0.02%维生素C粉（约每升加0.2g），并密封冷藏4°C，可保持4小时色泽不暗。出摊时少量多次制作。</div>
+    </div>
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 批量预制流程</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>出摊前2小时：清洗油柑5kg，去核榨汁，过滤后按比例加入冰糖浆和维C粉，装入挤压瓶冷藏。每瓶可做15-20杯，出杯时直接挤油柑基底+浓缩+冰块加水，速度提升至40秒/杯。</div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>太涩难入口：</strong>补加5-10g冰糖浆搅拌，或者加一片柠檬掩苦涩；仍不行则报废重做。</div>
+      <div><strong>油柑汁氧化变色：</strong>丢弃不用，不能卖给顾客；后续增加维C粉用量或减少提前预制时间。</div>
+      <div><strong>口感分层（咖啡浮在油柑上）：</strong>出品前必须用吧勺提拉混合，或者改用雪克壶摇匀。</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款爆款变体</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>🧂 海盐奶盖油柑美式：基础油柑美式顶部加2cm奶盖，撒海盐</div>
+      <div>🫧 油柑气泡美式：用苏打水代替饮用水，增加清爽感</div>
+      <div>🍇 青提油柑美式：加入青提汁20ml+青提果肉，减糖10g</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 多摊位扩张/供应链优化</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      当日销油柑美式超过40杯时：① 寻找本地油柑种植园直采，降低成本至3元/斤 ② 使用商用全自动油柑榨汁机（约¥2000） ③ 开发冷冻油柑原浆（可保存1个月），规避季节性断货 ④ 制作油柑浓缩液标准化配方，确保每个摊位口味一致。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品（同赛道+内部跳转） ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">☕</span><span class="r-name">美式咖啡 KF_001（基底必备）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍋</span><span class="r-name">柠檬美式 KF_006（更普适的特调）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🧂</span><span class="r-name">海盐奶盖专卡（适配油柑）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>油柑供应链·去涩技术·特调配方调整·摊位视觉设计</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1油柑美式升级方案·防氧化实战·季节性菜单替换</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“油柑KF_007”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺 · KF_007 油柑美式</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

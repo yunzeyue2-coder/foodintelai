@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>黄金洋葱圈 · 炸鸡搭配小食卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.variant-bar{background:linear-gradient(90deg,#D4A574,#b57a3c);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#D4A574;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#D4A574}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#D4A574}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#4a3f35;line-height:1.6}
+.pay-area .p-item .p-icon{color:#D4A574;font-weight:700;flex-shrink:0;width:18px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#D4A574;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#D4A574;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #D4A574}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px}
+.radar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.radar-item{background:#f8f4ef;border-radius:10px;text-align:center;padding:8px}
+.radar-item .label{font-size:9px;color:#7a7269}
+.radar-item .stars{font-size:12px;letter-spacing:1px}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:12px}
+.logic-item{display:flex;justify-content:space-between;padding:4px 0;font-size:12px}
+.metric-row{display:flex;gap:6px;margin-top:8px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center}
+.risk-item{display:flex;gap:8px;padding:6px 0;font-size:12px;border-bottom:1px solid #f0ece6}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#D4A574;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 变体提示 -->
+<div class="variant-bar">
+  <span class="v-label">🧅 小食搭售卡 · ¥9</span>
+  <a class="v-link" href="#">← 母卡：原味黄金炸鸡(HZ_001)</a>
+</div>
+
+<!-- 产品头部 -->
+<div class="meta">
+  <h1>🧅 黄金洋葱圈</h1>
+  <div class="sub">经典炸物小食 · 香甜酥脆 · 美式/韩式炸鸡标配</div>
+  <span class="price-tag">¥9 完整配方包</span>
+</div>
+
+<!-- 与母卡差异总览 -->
+<div class="section">
+  <div class="s-title">🔄 小食定位说明</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">母卡（HZ_001 炸鸡项目）</div>
+      <div>主产品：炸鸡类 · 设备清单 · 30天验证路线 · 全商业模型</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">XC_022 黄金洋葱圈（小食）</div>
+      <div>炸鸡经典搭售 · 自带甘甜 · 外酥内软 · 视觉摆盘神器</div>
+    </div>
+  </div>
+  <div class="badge">💡 本卡不含主设备、验证路线等，通用数据参照母卡。本卡仅提供黄金洋葱圈的商业逻辑和配方。</div>
+</div>
+
+<!-- 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★☆☆☆☆</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div></div>
+    <div class="radar-item"><div class="label">📈 利润</div><div class="stars">★★★★★</div></div>
+  </div>
+</div>
+
+<!-- 适合谁 -->
+<div class="section">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#3a6b2e;margin-bottom:6px">🎯 适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 所有炸鸡/炸物摊位（经典搭配）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 想增加素食选项且接受度高</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 需要低成本高利润小食</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px">✅ 外卖也能保持一定脆度</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#b53b3b;margin-bottom:6px">❌ 不适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 讨厌洋葱味的人群</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 不能接受切洋葱流泪</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px">❌ 追求极致低油（洋葱圈吸油中等）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title" style="font-size:12px;font-weight:700;margin-bottom:6px">🧠 顾客为什么买</div>
+    <div style="font-size:12px;margin-bottom:10px">买的是：香甜酥脆 × 环形趣味 × 经典美式风味 × 低单价解馋</div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin-bottom:6px">📈 利润从哪里来</div>
+    <div class="logic-item"><span>黄金洋葱圈（小份）</span><span class="v">毛利78%</span></div>
+    <div class="logic-item"><span>炸鸡+洋葱圈套餐</span><span class="v">客单价+5-8元</span></div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin:6px 0">📈 如何提高客单价</div>
+    <div class="logic-item"><span>洋葱圈+薯条拼盘</span><span class="v">+¥4</span></div>
+    <div class="logic-item"><span>大份分享装（约15个）</span><span class="v">¥18-22</span></div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin:6px 0">🔄 如何提高复购</div>
+    <div style="font-size:12px">洋葱圈自带甜味，蘸番茄酱或蜂蜜芥末酱，儿童和女性复购率极高。</div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card" style="background:#fdf2ee"><div class="m-label">日售量</div><div class="m-val">30-80份</div><div class="m-sub">走量型小食</div></div>
+    <div class="metric-card" style="background:#fef6ec"><div class="m-label">月净利</div><div class="m-val">¥1200-2500</div><div class="m-sub">高毛利</div></div>
+    <div class="metric-card" style="background:#f0f6ec"><div class="m-label">回本周期</div><div class="m-val">1天</div><div class="m-sub">几乎无投入</div></div>
+  </div>
+</div>
+
+<!-- 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 小食赛道判断</div>
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;font-size:12px;line-height:1.7">
+    <strong>优势：</strong>洋葱圈是炸鸡店全球通行的经典小食，无需教育市场。洋葱价格低廉（约1.5-2元/斤），面糊成本低，毛利极高。洋葱的天然甜味在油炸后更突出，接受度广。<br>
+    <strong>劣势：</strong>切洋葱辣眼睛，批量备料麻烦；面糊脱落率高；外卖配送后外壳变软明显。<br>
+    <strong>市场现状：</strong>大部分炸鸡摊只卖薯条，洋葱圈属于“被忽略的经典”，有差异化空间。<br>
+    <strong>是否值得进入：是</strong> —— 强烈推荐作为薯条之外的第二个炸物小食，搭配番茄酱或蜂蜜芥末酱，形成“薯条+洋葱圈”双拼组合。
+  </div>
+</div>
+
+<!-- 项目评估 -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>市场竞争</div><div style="font-size:16px">★★★☆☆</div><div>中等（有但不多）</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>学习周期</div><div style="font-size:16px">★★☆☆☆</div><div>1-2天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>操作容错度</div><div style="font-size:16px">★★★☆☆</div><div>面糊是关键</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>最低验证资金</div><div style="font-size:16px">★★★★★</div><div>¥30以内</div></div>
+  </div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:360px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>小食类型</th><th>成本/份</th><th>毛利</th><th>制作难度</th><th>外卖脆度保持</th></tr></thead>
+      <tbody>
+        <tr style="background:#feefe5"><td>🧅 黄金洋葱圈</th><td>¥1.5</th><td>78%</th><td>★★</th><td>★★★☆</th></tr>
+        <tr><td>🍟 炸薯条</th><td>¥1.2</th><td>72%</th><td>★</th><td>★★☆</th></tr>
+        <tr style="background:#f8f4ef"><td>🍘 脆皮年糕</th><td>¥1.5</th><td>75%</th><td>★</th><td>★★☆</th></tr>
+        <tr><td>🧀 芝士球</th><td>¥2.8</th><td>65%</th><td>★★★</th><td>★★</th></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 最大风险（6项） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>面糊脱落：</strong>洋葱圈表面光滑，挂糊不牢，下锅后面糊与洋葱分离，变成“裸炸洋葱”。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>切洋葱流泪：</strong>批量切洋葱非常刺激眼睛，影响备餐效率。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><strong>炸制时间难控：</strong>圈圈大小不一，细的炸焦了厚的还没熟。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><strong>回软快：</strong>洋葱圈外壳比薯条更容易回软，出锅5分钟就变软塌。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><strong>油温下降：</strong>洋葱圈含水量高，下锅后油温骤降，导致吸油。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><strong>同质化严重：</strong>如果只卖普通洋葱圈，顾客觉得“哪里都能吃到”，没有记忆点。</div>
+</div>
+
+<!-- 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>洋葱圈是炸鸡摊的“现金牛”小食，成本低（每份约1.5元），售价8-12元，毛利近80%。顾客认知度高，点单率稳定。可作为套餐搭售项，有效拉高客单价。<br>
+      <strong>❌ 为什么不值得：</strong>切洋葱费人工且辣眼睛；面糊脱落问题需要专门练习；外卖软化快，不适合外送为主摊位。<br>
+      <strong>🔑 进入条件：</strong>① 堂食为主 ② 愿意练习“三明治裹粉法” ③ 能接受洋葱的气味。<br>
+      <strong>🚪 退出条件：</strong>面糊脱落率超过30% / 顾客反馈“太油”/ 洋葱圈销量长期低于10份/天。<br>
+      <strong>🎯 最终判断：可进</strong> —— 作为薯条之外的第二个标准小食。建议搭配番茄酱或蜂蜜芥末酱，并推出“薯条+洋葱圈”双拼套餐，定价比单点便宜2元，鼓励顾客尝试。
+    </div>
+    <div class="j-tags"><span>#经典小食</span><span>#高毛利</span><span>#搭售神器</span></div>
+  </div>
+</div>
+
+<!-- 核心工艺（带验证点） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">洋葱处理：选黄洋葱（甜度高），切1cm厚圈，分成单个圈圈，泡冰水10分钟去辣味。</span><div class="ps-verify">[验证点] 泡后洋葱圈变透明，辣味明显减轻，咬一口微甜不冲</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">裹粉三步骤（关键）：先裹干粉（面粉+淀粉），再蘸面糊（浆状），最后再裹一层面包糠或干粉。</span><div class="ps-verify">[验证点] 裹粉后的洋葱圈表面有均匀颗粒状，轻抖不掉粉</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">175°C油炸：下锅后炸1分30秒-2分钟，至金黄浮起，捞出沥油。</span><div class="ps-verify">[验证点] 外壳金黄酥脆，洋葱圈内部微软但不夹生，咬开洋葱甜味明显</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">撒料与出餐：趁热撒少许盐或椒盐，搭配番茄酱/蜂蜜芥末酱。</span><div class="ps-verify">[验证点] 撒盐后咸甜平衡，蘸酱后风味提升</div></div>
+  </div>
+  <div class="badge">⚠️ 完整配方（裹粉比例、防脱落技巧、批量备料）见下方付费区</div>
+</div>
+
+<!-- 成本利润 -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span>黄洋葱（约80g/份）</span><span>¥0.3</span></div>
+    <div class="recipe-line"><span>裹粉+面糊（面粉/淀粉/面包糠）</span><span>¥0.5</span></div>
+    <div class="recipe-line"><span>鸡蛋（可选，部分配方）</span><span>¥0.2</span></div>
+    <div class="recipe-line"><span>油+燃气成本</span><span>¥0.4</span></div>
+    <div class="recipe-line"><span>包装（纸袋/小盒）</span><span>¥0.1</span></div>
+    <div class="recipe-line"><span>单份总成本</span><span>¥1.5</span></div>
+    <div class="recipe-line"><span>售价区间</span><span>¥8～¥12</span></div>
+    <div class="recipe-line"><span>毛利区间</span><span>75%～85%</span></div>
+    <div class="recipe-line"><span>示例：日售50份（均价¥10）</span><span>日毛利¥425，月净利约¥9350（出摊22天）</span></div>
+  </div>
+</div>
+
+<!-- 完整配方包 付费区 -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>🧅 黄金洋葱圈 · 完整配方包</h3>
+  <div class="p-sub">定价 ¥9 · 永久解锁 · 包含以下全部数据</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span>商用裹粉三步骤精确配比（干粉+面糊+面包糠）</div>
+    <div class="p-item"><span class="p-icon">✅</span>防面糊脱落核心技术（拍粉→蘸浆→再拍粉）</div>
+    <div class="p-item"><span class="p-icon">✅</span>洋葱圈厚度与炸制时间对照表</div>
+    <div class="p-item"><span class="p-icon">✅</span>批量备料方案（切洋葱不流泪技巧）</div>
+    <div class="p-item"><span class="p-icon">✅</span>两种面糊版本：脆皮版/蓬松版</div>
+    <div class="p-item"><span class="p-icon">✅</span>外卖防软包装方案（透气+干燥剂）</div>
+    <div class="p-item"><span class="p-icon">✅</span>三款蘸酱配方：经典番茄/蜂蜜芥末/酸奶黄瓜</div>
+  </div>
+  <div class="price-tag">¥9 <small>小食卡 · 一次解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后发编号给客服，秒发完整版 / 或直接在此展开</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 裹粉配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 商用裹粉三步骤配方（以1kg洋葱圈计）</div>
+    <div class="recipe-box">
+      <div><strong>① 干粉（第一层）：</strong>中筋面粉100g + 玉米淀粉50g + 盐2g + 白胡椒粉1g</div>
+      <div><strong>② 面糊（第二层）：</strong>中筋面粉80g + 玉米淀粉40g + 泡打粉2g + 鸡蛋1个 + 冰水120g + 盐1g</div>
+      <div><strong>③ 面包糠（第三层）：</strong>黄色面包糠（细粒）150g</div>
+    </div>
+
+    <!-- 2️⃣ 防脱落核心 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 防面糊脱落三步法</div>
+    <div class="recipe-box" style="border-left-color:#E8652D">
+      • 步骤A：洋葱圈先用厨房纸吸干表面水分（水分是脱落主因）。<br>
+      • 步骤B：先薄薄拍一层干粉（不要厚），确保每个角落都沾到。<br>
+      • 步骤C：蘸面糊后，提起沥3秒，再放入面包糠中轻压，不要搓揉。<br>
+      • ⚠️ 下锅时油温必须达到175°C，低温会导致面糊滑脱。
+    </div>
+
+    <!-- 3️⃣ 厚度与时间 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 洋葱圈厚度与炸制时间</div>
+    <div style="background:#f8f4ef;border-radius:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:6px 10px;background:#3a322a;color:#fff;font-size:10px"><span>洋葱圈厚度</span><span>175°C炸制时间</span><span>口感</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>0.8cm（薄）</span><span>1分15秒</span><span>偏脆，洋葱味淡</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb"><span>1.0cm（推荐）</span><span>1分40秒</span><span>外酥内软，最佳</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px"><span>1.2cm（厚）</span><span>2分10秒</span><span>内部偏生风险</span></div>
+    </div>
+
+    <!-- 4️⃣ 批量备料（切洋葱防泪） -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 批量备料方案（防流泪）</div>
+    <div class="recipe-box">
+      • 洋葱提前冰箱冷藏2小时，低温减少刺激性气体挥发。<br>
+      • 切洋葱时旁边放一盆水，或戴护目镜/游泳镜。<br>
+      • 使用切洋葱器（手动按压式）一次性切多个，效率高且不辣眼。<br>
+      • 切好的洋葱圈泡冰水（可保存4小时），捞出后吸干水分再裹粉。
+    </div>
+
+    <!-- 5️⃣ 两款面糊变体 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 两款面糊变体</div>
+    <div class="recipe-box" style="border-left-color:#6b8c42">
+      <div><strong>🔹 脆皮版（KFC风格）：</strong>面糊中多加10g玉米淀粉，少加鸡蛋，炸出鳞片状脆皮。</div>
+      <div style="margin-top:8px"><strong>🔸 蓬松版（日式风格）：</strong>面糊中用苏打水代替冰水，加2g泡打粉，炸出轻盈蓬松外壳。</div>
+    </div>
+
+    <!-- 6️⃣ 外卖防软方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 外卖专用防软方案</div>
+    <div class="recipe-box">
+      • 洋葱圈炸好后放在网架上晾2分钟，让水汽散出。<br>
+      • 装入带透气孔的纸盒（不密封），切勿用塑料袋。<br>
+      • 外卖袋内放入食品干燥剂（硅胶包）。<br>
+      • 撒盐和调料要在炸后立即完成，不要提前撒。<br>
+      • 告知顾客：收到后如果变软，可用空气炸锅180°C复热2分钟。
+    </div>
+
+    <!-- 7️⃣ 实战备注 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 沧林实战备注</div>
+    <div class="recipe-box" style="border-left-color:#D4A574">
+      • 洋葱选择：黄洋葱（甜度高）优于紫洋葱（辣味重）。不要用白洋葱（水分大）。<br>
+      • 面糊稠度：用筷子蘸面糊，滴落速度约为1滴/秒，太稠则外壳厚且硬。<br>
+      • 油温管理：每炸2锅要检查油温，洋葱圈水分大会快速拉低油温。<br>
+      • 定价参考：小份（6个）卖8元，大份（12个）卖15元，双拼（薯条+洋葱圈）卖12元。<br>
+      • 蘸酱推荐：经典番茄酱（成本最低）、蜂蜜芥末酱（女性最爱）、酸奶黄瓜酱（清新）。<br>
+      • 摆盘：洋葱圈竖着插在薯条中间，视觉冲击强，适合拍照。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整小食包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" href="#"><span>🍗</span><span style="flex:1">原味黄金炸鸡（母卡·完整项目）</span><span>→</span></a>
+    <a class="rel-item" href="#"><span>🍟</span><span style="flex:1">美式炸薯条（小食）</span><span>→</span></a>
+    <a class="rel-item" href="#"><span>🧀</span><span style="flex:1">奶香芝士酱（酱料专卡）</span><span>→</span></a>
+  </div>
+</div>
+
+<!-- 咨询入口 -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>面糊脱落诊断 · 切洋葱效率提升 · 外卖防软方案</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1裹粉指导 · 成本优化 · 酱料搭配</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“洋葱圈卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a;width:auto;padding:8px 20px">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 小食搭售卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+</script>
+</body>
+</html>

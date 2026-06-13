@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PC_K06 韩式拌豆芽 — 韩式小菜母卡</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+.card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+.header { background: linear-gradient(135deg, #5a7a3a 0%, #7a9a4a 50%, #9aba5a 100%); padding: 32px 24px 24px; color: #fff; }
+.header-badge { display: inline-block; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; line-height: 1.6; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+.section { padding: 20px 24px; border-bottom: 1px solid #e8e8d0; }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 13px; font-weight: 600; color: #5a7a3a; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: #d8e0c8; }
+.value-stmt { background: #edf5e4; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #5a7a3a; line-height: 1.7; text-align: center; }
+.bomb-box { display: flex; align-items: center; gap: 12px; background: #fafff0; border-radius: 12px; padding: 14px; border: 1px solid #d8e8c8; }
+.bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; flex-shrink: 0; }
+.bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+.radar { display: flex; flex-direction: column; gap: 10px; }
+.radar-item { display: flex; align-items: center; gap: 10px; }
+.radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.radar-item .bar-wrap { flex: 1; height: 10px; background: #e0e8d0; border-radius: 10px; overflow: hidden; }
+.radar-item .bar { height: 100%; border-radius: 10px; }
+.radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #5a7a3a; }
+.bf5 { width: 100%; background: linear-gradient(90deg, #7a9a4a, #9aba5a); }
+.bf4 { width: 80%; background: linear-gradient(90deg, #7a9a4a, #9aba5a); }
+.bf3 { width: 60%; background: linear-gradient(90deg, #a0b888, #b0c898); }
+.role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+.role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #e8e8d0; color: #888; }
+.role-tag.active { background: #7a9a4a; color: #fff; box-shadow: 0 2px 8px rgba(122,154,74,0.3); }
+.family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #f2f8ea; border-radius: 12px; }
+.family-tree .node { margin: 2px 0; }
+.family-tree .branch { color: #5a7a3a; font-weight: 600; }
+.family-tree .leaf { color: #666; padding-left: 24px; }
+.family-tree .highlight { color: #7a9a4a; font-weight: 600; padding-left: 24px; }
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.market-item { background: #edf5e4; border-radius: 10px; padding: 10px 12px; }
+.market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+.market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+.matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #d8e0c8; border-radius: 12px; margin-top: 8px; background: #f8faf2; overflow: hidden; }
+.matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #c8d0b8; }
+.matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #c8d0b8; }
+.ql { position: absolute; font-size: 10px; color: #aaa; }
+.ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+.ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+.matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+.matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+.dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #9aba5a; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+.dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #5a7a3a; white-space: nowrap; transform: translateX(-50%); }
+.ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.ingredient-table th { background: #d8e0c8; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+.ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #e8e8d0; font-size: 12px; }
+.ingredient-table .amt { text-align: right; font-weight: 600; color: #5a7a3a; font-size: 12px; }
+.steps { list-style: none; counter-reset: step; }
+.steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #d8e0c8; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #5a7a3a; }
+.pitfall-box { background: #f2fcea; border-left: 3px solid #b8c878; border-radius: 8px; padding: 12px; margin-top: 8px; }
+.pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #7a8840; margin-bottom: 2px; }
+.pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+.cost-box { background: #edf5e4; border-radius: 12px; padding: 14px; }
+.cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.cost-row .cr-label { color: #555; }
+.cost-row .cr-value { font-weight: 600; color: #5a7a3a; }
+.cost-divider { border: none; border-top: 1px dashed #c8d8b8; margin: 6px 0; }
+.decision-box { background: #f2f8ea; border-radius: 12px; padding: 16px; }
+.decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+.decision-box p:last-child { margin-bottom: 0; }
+.trend-box { background: linear-gradient(135deg, #edf5e4, #f8faf2); border-radius: 12px; padding: 16px; }
+.trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trend-item:last-child { margin-bottom: 0; }
+.trend-year { font-size: 12px; font-weight: 700; color: #5a7a3a; width: 50px; flex-shrink: 0; }
+.trend-arrow { color: #bbb; }
+.trend-desc { font-size: 13px; color: #555; }
+.trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #d8e0c8; font-size: 14px; font-weight: 600; color: #5a7a3a; text-align: center; }
+.footer-brand { background: #5a7a3a; color: #fff; text-align: center; padding: 24px; }
+.footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+.footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+.footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">PC_K06 · 韩式小菜 · 小菜母卡</div>
+    <h1>韩式拌豆芽</h1>
+    <div class="subtitle">
+      韩餐小菜标配 · 每桌必有 · 清爽解腻 · 卡售价¥9.9 · FoodIntel推荐：8.5/10
+    </div>
+    <div class="tags">
+      <span>🥬 콩나물무침</span>
+      <span>🔥 每桌标配</span>
+      <span>💰 成本~2元</span>
+      <span>🧊 冷藏3天</span>
+      <span>🔄 批量易做</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      韩餐小菜中最百搭的选手 · 清脆爽口 · 成本~2元/份 · <br>
+      批量备货 · 冰箱冷藏可放3天 · 烤肉店解腻神器
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★</div>
+      <div class="bomb-reason">
+        <strong>小菜之王。</strong>毛利和标准化双5★——成本极低、做法固定。复购5★——每桌小菜必须出，不可或缺。流量和传播性低——没人专门为了拌豆芽来一家店，但拌豆芽好不好吃会影响客人对整桌小菜的印象。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf2"></div></div><span class="score">2</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf2"></div></div><span class="score">2</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">PC 韩式小菜体系</div>
+      <div class="node leaf">├─ PC_K01~K05 韩式辣白菜/牛副/明太鱼/豆制品/腌菜系列</div>
+      <div class="node highlight">├─ PC_K06 韩式拌豆芽 ← 你在这里</div>
+      <div class="node leaf">├─ PC_K07 韩式炒鱼饼</div>
+      <div class="node leaf">└─ PC_K08 韩式拌菠菜</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">10/10 · 标配</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">10/10 · 家家都有</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">10/10 · 通吃</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">1/10 · 极低</div></div>
+      <div class="market-item"><div class="m-value" style="color:#555;">创业门槛</div><div class="m-value">低 · 有手就能做</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 工艺配方</div>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：1份约80-100g（小菜碟量）
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#5a7a3a;margin-bottom:6px;">配方（批量10份）</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+      <tr><td>黄豆芽</td><td class="amt">1kg</td><td>选粗壮·新鲜·无黑根</td></tr>
+      <tr><td>香油</td><td class="amt">40g</td><td>增香关键</td></tr>
+      <tr><td>蒜末</td><td class="amt">30g</td><td>新鲜剁碎</td></tr>
+      <tr><td>大葱（切末）</td><td class="amt">30g</td><td></td></tr>
+      <tr><td>盐</td><td class="amt">10g</td><td>根据口味调整</td></tr>
+      <tr><td>熟白芝麻</td><td class="amt">15g</td><td>碾碎一半·保留一半整粒</td></tr>
+      <tr><td>味精/昆布粉</td><td class="amt">3g</td><td>提鲜·可选</td></tr>
+    </table>
+
+    <h4 style="font-size:13px;font-weight:600;color:#5a7a3a;margin:12px 0 6px;">出餐流程</h4>
+    <ol class="steps">
+      <li>豆芽清洗干净，掐去根部（嫌麻烦可买去根豆芽）</li>
+      <li>烧一大锅水（水量要足够多），水开后下豆芽</li>
+      <li>焯水30-40秒——不要超过1分钟，保持脆度</li>
+      <li>捞出立即放入冰水——瞬间降温锁住清脆口感</li>
+      <li>充分沥干水分（用力压干——水分越多味道越淡）</li>
+      <li>加入香油+蒜末+葱末+盐+芝麻+味精，拌匀</li>
+      <li>冷藏30min后食用——入味更好</li>
+    </ol>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（6条）</div>
+      <div class="p-desc">
+        ① 焯水时间决定一切——30-40秒刚刚好，超过1分钟豆芽变软失去口感<br>
+        ② 冰水激凉不能省——不过冰水的豆芽颜色发黄、口感不脆<br>
+        ③ 水分必须挤干——豆芽含水量高，不挤干拌出来水汪汪的、味道淡<br>
+        ④ 不要用醋——韩式拌豆芽不加醋，加醋就变成中式凉菜了<br>
+        ⑤ 当天做当天吃最好——冷藏过夜口感会变软一些，风味不变但口感打折<br>
+        ⑥ 批量做容易出水——大批量拌好后分层出水是正常的，吃之前再拌一次就好
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 商业决策</div>
+    <div class="cost-box" style="margin-bottom:14px;">
+      <div class="cost-row"><span class="cr-label">豆芽成本</span><span class="cr-value">~1元/份</span></div>
+      <div class="cost-row"><span class="cr-label">调料</span><span class="cr-value">~0.5元/份</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label">总成本</span><span class="cr-value">~1.5-2元/份</span></div>
+      <div class="cost-row"><span class="cr-label" style="font-weight:700;">小菜定价</span><span class="cr-value" style="font-weight:800;">小菜赠送/套餐内含</span></div>
+      <div class="cost-row"><span class="cr-label">备货周期</span><span class="cr-value">每天新鲜制作</span></div>
+    </div>
+    <div class="decision-box">
+      <p><strong>✅ 适合场景：</strong>所有韩式餐厅。拌豆芽是韩式小菜拼盘的基础款，通常和辣白菜一起作为赠送小菜上台。也有专门做拌豆芽的韩式小菜店。</p>
+      <p><strong>📌 出品方式：</strong>推荐用小陶瓷碟（直径8-10cm），每份80g左右。作为赠送小菜时放在小菜拼盘中央，颜色对比出来好看（白豆芽+绿葱+黑芝麻）。</p>
+      <p><strong>⚠️ 风险：</strong>豆芽品质不稳定——夏季豆芽容易发蔫变黄。建议固定供应商，每日进货。另一个风险是"平平无奇"——如果拌豆芽和其他家没区别，就不会被记住。可以在上面加一点辣椒丝或松子碎增加记忆点。</p>
+      <p><strong>🎯 地摊版：</strong>拌豆芽可以直接作为韩式烤肉地摊的小菜赠送，成本极低（2元/份），但能大幅提升套餐价值感。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑦ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">传统韩式小菜——免费赠送、不限量续</span></div>
+      <div class="trend-item"><span class="trend-arrow">→</span><span class="trend-desc">小菜升级——品质好的小菜开始收费单点</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">\"小菜专门店\"出现——拌豆芽/拌菠菜/炒鱼饼可单独购买</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">预制韩式小菜零售化——便利店即食装</span></div>
+      <div class="trend-verdict">小菜的成本最低——但客人对小菜的印象决定了这家店60%的回头率</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div>
+    <div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links">
+      <span>📢 公众号：沧林食品技术</span>
+      <span>💬 微信：canglin1985</span>
+    </div>
+    <div class="fb-series">韩式小菜 · PC_K06 韩式拌豆芽</div>
+  </div>
+
+</div>
+</body>
+</html>

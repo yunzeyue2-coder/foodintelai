@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>MP_004 灌汤包 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#e8dfd5;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#1e3a2f,#2d4e3f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥟 灌汤包</h1>
+  <div style="font-size:12px;color:#b5aaa0">小笼包 · 汤包 · 烫面/半发面工艺</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.2</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">核心壁垒是皮冻，不是包子皮。技术门槛高，但复购同样高。</div>
+  <div class="r-tags">
+    <span>🔥 热度高</span>
+    <span>💰 投资3000+</span>
+    <span>👤 1-2人可做</span>
+    <span>🔄 复购高</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">江浙沪爆品</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">汤汁记忆点强</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">3000+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★★☆</div><div class="val">皮冻+捏褶</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高毛利</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 有餐饮经验新手</div>
+      <div class="fit-item fit-yes">✅ 夜市/美食城档口</div>
+      <div class="fit-item fit-yes">✅ 外卖专门店</div>
+      <div class="fit-item fit-yes">✅ 夫妻档</div>
+      <div class="fit-item fit-yes">✅ 技术流派创业者</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 完全不进厨房</div>
+      <div class="fit-item fit-no">❌ 追求极简出餐</div>
+      <div class="fit-item fit-no">❌ 不想学皮冻工艺</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：一口爆汁 × 鲜肉原汤 × 薄皮晶莹</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>灌汤包（鲜肉/蟹黄）</span><span class="v">毛利65-70%</span></div>
+    <div class="logic-item"><span>蟹黄汤包（高客单价）</span><span class="v">毛利70%+</span></div>
+    <div class="logic-item"><span>套餐（+小馄饨/鸭血粉丝）</span><span class="v">客单价提升30%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>推“全家福”汤包拼盘（蟹黄+鲜肉+虾仁）</span><span class="v"></span></div>
+    <div class="logic-item"><span>加一碗鸡汁豆腐脑/鸭血粉丝汤</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>每月一款限定口味（如：虾仁灌汤/菌菇）</span><span class="v"></span></div>
+    <div class="logic-item"><span>会员储值：充100送3笼</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥1000-1800</div><div class="m-sub">5-8h出餐</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥9000-15000</div><div class="m-sub">出摊25天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">7-12天</div><div class="m-sub">含设备</div></div>
+  </div>
+</div>
+
+<!-- ===== 05 赛道判断（≥150字） ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">江浙沪/一线城市汤包属于“精致小吃”，客单价高（15-30元/笼）</div>
+      <div class="t-item">皮冻技术形成天然壁垒，普通早餐摊做不了</div>
+      <div class="t-item">外卖平台汤包分类独立，搜索流量稳定</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">出餐速度慢（现包/现蒸6-8分钟），高峰期压单严重</div>
+      <div class="t-item">技术难度大，新手需练7-15天才能出品稳定</div>
+      <div class="t-item">皮冻熬制费时（4-6小时），冷藏占用冰柜空间</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>汤包赛道两极分化：低端速冻包（¥8-12/笼）和现包手作（¥18-35/笼）。现包手作在中高端夜市/美食城仍有较大空缺。<br>
+    <strong>未来判断：</strong>2026年消费者对“预制菜疲劳度”上升，现包汤包的“手工感+汤汁爆浆”体验无法被机器替代。适合走品质路线。<br>
+    <strong>是否值得进入：是</strong>（前提：掌握商用皮冻配方+熟练包制工）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★★☆</div><div style="font-size:10px;color:#5a4f44">中等偏激烈</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★★☆</div><div style="font-size:10px;color:#5a4f44">7-20天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">皮冻/收褶关键</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★☆</div><div style="font-size:10px;color:#5a4f44">¥500试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- ===== 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th></tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🥟 灌汤包</td><td>★★★</td><td>★★★★</td><td>★★★★</td><td>★★★★</td><td>A-</td><td><a href="#" style="color:#E8652D">#MP_004</a></td></tr>
+        <tr><td>🥟 梅菜扣肉包</td><td>★★★</td><td>★★★★</td><td>★★★</td><td>★★★★</td><td>B+</td><td><a href="#" style="color:#D4A574">#MP_002</a></td></tr>
+        <tr style="background:#f8f4ef"><td>🥟 鲜肉大包</td><td>★★</td><td>★★★</td><td>★★★</td><td>★★★★★</td><td>B</td><td><a href="#" style="color:#5a8f3c">#MP_001</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为已发布FoodIntelAI标准卡</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>熬制皮冻（猪皮4小时）→和面（烫面）→试包10个，测试不破皮</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20人试吃核心“汤汁量”和“咸淡”，调整皮冻/肉馅比例</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊/外卖试运营（预备40笼），测试出餐速度与复购</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加限定口味（虾仁/蟹黄），推“全家福拼盘”拉高客单价</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘：日均笼数、汤汁好评率、外卖差评原因，决定扩品或收缩</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7首日能否卖出25+笼 ② Day15复购率是否＞20% ③ Day30净利润是否≥¥7000<br>
+    <strong>🚪 退出标准：</strong>连续5天＜15笼 / 汤汁好评率＜40% / 包制速度＜8个/分钟无法应对高峰<br>
+    <strong>✅ 继续标准：</strong>复购率＞25% / 皮冻一次成功无破皮 / 外卖评分稳定4.7+
+  </div>
+</div>
+
+<!-- ===== 08 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：不锈钢操作台(¥300-500) · 冰柜/冰箱(¥800-1500) · 蒸笼8-10层(¥200-400) · 蒸包炉(¥400-800) · 绞肉机(¥300-600) · 和面机(¥500-1000) · 电子秤(¥30-50) · 温度计(¥20-40)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：三轮车/餐车(¥800-2000) · 折叠操作台(¥200-400) · 帐篷伞(¥150-300) · 招牌灯箱(¥100-200) · 保温展示柜(¥300-600)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：高筋面粉20kg(¥60-80) · 猪皮5kg(¥40-60) · 猪前腿肉10kg(¥200-280) · 皮冻辅料(¥20-30) · 蒸笼纸500张(¥30-50) · 打包盒/醋包(¥100-150)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,500-3,500</strong>（已有三轮车，二手冰柜）</div>
+    <div><strong>💰 完整启动方案：¥4,500-6,500</strong>（含和面机+全新设备）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案¥0-200 · 办理时间1-3天 · 流动摊无需营业执照但需办小摊贩登记卡</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">原味鲜肉灌汤包</span><span class="t-price">¥15-18/笼（6个）</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">蟹黄灌汤包 · 虾仁灌汤包</span><span class="t-price">¥28-48/笼</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">单人餐（灌汤包+鸭血粉丝）· 全家福拼盘</span><span class="t-price">¥25-58</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★★☆☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>汤包对卫生要求高，若未办理食品摊贩证且被查出使用生鲜肉馅，可能面临高额罚款。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季高温皮冻易化、汤汁变少；冬季需保温出餐，夜市客流下降明显。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>技术翻车——皮冻比例不对则包子没有汤；收褶不严则蒸制过程漏汤，顾客差评率暴增。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>外卖口感崩塌——配送超15分钟皮会变硬、汤汁被面皮吸收，体验远不如堂食。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>出餐效率瓶颈——现包现蒸至少6分钟，高峰期排队流失客流，且包制工难招。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>竞品速冻包低价冲击——速冻灌汤包成本¥3-5/笼，零售价¥8-10，手工现包很难打到这个价。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>技术门槛形成护城河，普通早餐摊做不了。客单价高（15-30元），毛利65%+，且江浙沪以外地区仍有增量市场。<br>
+      <strong>❌ 为什么不值得做：</strong>如果只想赚快钱，学习皮冻+练包褶子至少要投入2周无产出。外卖占比过高（>50%）不建议做，口感折损严重。<br>
+      <strong>🔑 进入条件：</strong>① 愿意花2周练皮冻和收褶 ② 摊位在夜市/美食城，堂食占比＞60% ③ 能找到稳定猪皮供应商 ④ 一笼售价能卖到15元以上。<br>
+      <strong>🚪 退出条件：</strong>① 连续10天单日＜20笼 ② 顾客反馈“没有汤/皮太厚”占比＞30% ③ 包制速度始终＜6个/分钟。<br>
+      <strong>🎯 最终判断：可进</strong> —— 属于“慢工出细活”的长期项目，不适合赚快钱，但一旦站稳，复购和口碑非常稳。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点·源自27种灌汤包文件） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">熬制皮冻：猪皮去油焯水→加葱姜料酒小火熬4小时→过滤冷藏成冻</span><div class="ps-verify">[验证点] 皮冻切块，手指按压Q弹不散，入口即化；每500g皮出2500g冻（肉:冻=3:7）</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">调馅打水：肉馅+皮冻碎+姜汁+生抽+糖+胡椒粉，顺时针搅打至起胶</span><div class="ps-verify">[验证点] 调好的馅料挖一勺倒扣不脱落，冷藏30分钟后再包（汤汁不泄）</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">烫面/半发面：高筋粉+80°C热水烫面（或半发面：加酵母醒发20分钟）</span><div class="ps-verify">[验证点] 面皮擀至“中间厚四周薄”，直径8cm，拿在手上透光但不破</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">包制蒸制：皮重10g+馅料18g → 捏褶18-24道 → 收口留孔 → 旺火蒸6-8分钟</span><div class="ps-verify">[验证点] 蒸熟后包子呈“鯽鱼嘴”状，筷子戳破汤汁瞬间流出，不浑汤</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整商用配比（精确到克）及变体方案见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本（皮+馅）</span><span class="v">¥4.2-5.5/笼（6个）</span></div>
+    <div class="recipe-line"><span class="k">包装成本</span><span class="v">¥0.8-1.2/笼（外卖盒+醋包）</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（燃料/蒸笼纸）</span><span class="v">¥0.5-0.8/笼</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥5.5-7.5/笼</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥15～¥48/笼</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">50%～75%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售60笼（均价¥22）→ 日毛利约¥870，月净利约¥13,000（出摊25天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区·7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥88 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看商用皮冻配比、5款地域版汤包配方、实战翻车数据库</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 · 商用标准 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用皮冻配方 (出20kg冻)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>新鲜猪皮5kg</span><span>清水15kg</span></div>
+      <div class="recipe-line"><span>生姜片200g</span><span>葱段150g</span></div>
+      <div class="recipe-line"><span>料酒150g</span><span>白胡椒粉10g</span></div>
+      <div class="recipe-line"><span>🔹 熬制：去油焯水后小火熬4h，过滤冷藏</span><span>皮冻:肉馅=3:7</span></div>
+    </div>
+    <!-- 2️⃣ 精确克数 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 鲜肉灌汤馅 (每1000g)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>猪前腿肉糜600g</span><span>皮冻碎300g</span></div>
+      <div class="recipe-line"><span>姜汁20g · 生抽30g</span><span>糖12g · 盐8g</span></div>
+      <div class="recipe-line"><span>白胡椒粉3g</span><span>芝麻油10g</span></div>
+    </div>
+    <!-- 3️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 面团水温/蒸制温度</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>烫面：80-85°C热水</span><span>半发面：35°C温水+2%酵母</span></div>
+      <div class="recipe-line"><span>蒸制：上汽后旺火6-8分钟</span><span>速冻生坯：10-12分钟</span></div>
+    </div>
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 批量SOP (100笼/300笼)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>100笼：肉馅12kg · 皮冻5kg · 面皮6kg · 耗时3-4h (2人)</span></div>
+      <div class="recipe-line"><span>300笼：肉馅36kg · 皮冻15kg · 面皮18kg · 耗时7-8h (3人)</span></div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案（来自27种灌汤包实战）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>没有汤：</strong>皮冻太少→每斤馅至少加150g皮冻；皮冻熬太稀→猪皮:水=1:3小火熬出胶</div>
+      <div><strong>漏汤/破皮：</strong>收褶不严→包好最后捏紧“鯽鱼嘴”；面皮太软→改用高筋粉+减水5%</div>
+      <div><strong>汤汁浑浊：</strong>皮冻未过滤→熬好必须用细筛过滤2遍；肉馅打水过度→顺一个方向搅5分钟即停</div>
+      <div><strong>蒸后塌陷：</strong>火候不足→全程保持大汽旺火，中途不开盖</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 5款变体 (源自27种灌汤包文件)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🦀 蟹黄灌汤包：</strong>肉馅+蟹黄酱30g/100g，猪油炒蟹黄提香，售价翻倍</div>
+      <div><strong>🍤 虾仁灌汤包：</strong>每个包入1颗整虾仁，肉馅减10%，虾仁提鲜</div>
+      <div><strong>🍄 菌菇灌汤包：</strong>香菇+杏鲍菇切粒替代30%肉馅，成本降15%，毛利更高</div>
+      <div><strong>🌶️ 藤椒灌汤包：</strong>藤椒油5g+青花椒粉2g，麻辣鲜香（适配川渝市场）</div>
+      <div><strong>🥬 素灌汤包：</strong>琼脂代替皮冻，香菇豆腐馅，素食专供</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      当单日销量＞200笼时：建议配置真空和面机+压面机，皮冻用商用夹层锅熬制；改用速冻生坯技术（-35°C急冻），可提前3天备货，出餐效率提升2倍。亦可转型“汤包+馄饨”双品类店，复制加盟。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🥟</span><span class="r-name">鲜肉小馄饨·汤包搭售方案</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍲</span><span class="r-name">鸭血粉丝汤·黄金搭档</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥟</span><span class="r-name">蟹黄汤包·高客单价变体</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>皮冻熬制失败诊断 · 包制手法远程指导 · 外卖平台汤包类目运营</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1技术答疑 · 本地化口味调整 · 出摊效率优化</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

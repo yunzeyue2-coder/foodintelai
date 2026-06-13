@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>辣拌海螺 · 小菜配菜卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.variant-bar{background:linear-gradient(90deg,#C0392B,#a52a1a);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#C0392B;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#C0392B}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+.pick-compare{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.pick-item{padding:10px 12px;border-radius:10px;font-size:12px;display:flex;align-items:center;gap:8px}
+.pick-item .p-icon{font-size:16px}
+.pick-item .p-name{flex:1;font-weight:600;color:#3a322a}
+.pick-item .p-feature{color:#b5aaa0;font-size:10px}
+.pick-main{background:#feefe8;border:1px solid #fcc}
+.pick-other{background:#f8f4ef}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#4a3f35;line-height:1.6}
+.pay-area .p-item .p-icon{color:#C0392B;font-weight:700;flex-shrink:0;width:18px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #C0392B}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px}
+.radar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.radar-item{background:#f8f4ef;border-radius:10px;text-align:center;padding:8px}
+.radar-item .label{font-size:9px;color:#7a7269}
+.radar-item .stars{font-size:12px;letter-spacing:1px}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:12px}
+.logic-item{display:flex;justify-content:space-between;padding:4px 0;font-size:12px}
+.metric-row{display:flex;gap:6px;margin-top:8px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center}
+.risk-item{display:flex;gap:8px;padding:6px 0;font-size:12px;border-bottom:1px solid #f0ece6}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 变体提示 -->
+<div class="variant-bar">
+  <span class="v-label">🐚 小菜配菜卡 · ¥12</span>
+  <a class="v-link" href="#">← 母卡：原味黄金炸鸡(HZ_001)</a>
+</div>
+
+<!-- 产品头部 -->
+<div class="meta">
+  <h1>🐚 辣拌海螺</h1>
+  <div class="sub">韩式辣拌海鲜 · 下酒神器 · 高溢价小菜</div>
+  <span class="price-tag">¥12 完整配方包</span>
+</div>
+
+<!-- 与母卡差异总览 -->
+<div class="section">
+  <div class="s-title">🔄 小菜定位说明</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">母卡（HZ_001 炸鸡项目）</div>
+      <div>主产品：炸鸡类 · 设备清单 · 30天验证路线 · 全商业模型</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">PC_004 辣拌海螺（配菜）</div>
+      <div>高端海鲜小菜 · 适合搭配啤酒/炸鸡 · 高客单价 · 利润高但成本也高</div>
+    </div>
+  </div>
+  <div class="badge">💡 本卡不含主设备、验证路线等，通用数据参照母卡。本卡仅提供辣拌海螺的商业逻辑和配方。</div>
+</div>
+
+<!-- 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★☆☆</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★☆☆☆</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div></div>
+    <div class="radar-item"><div class="label">📈 利润</div><div class="stars">★★★★☆</div></div>
+  </div>
+</div>
+
+<!-- 适合谁 -->
+<div class="section">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#3a6b2e;margin-bottom:6px">🎯 适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 有酒水销售的夜市/居酒屋摊位</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 客单价25元以上的炸鸡/韩料摊</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 想用高端小菜拉开差异化</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px">✅ 有冷藏设备，能保证海鲜新鲜</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#b53b3b;margin-bottom:6px">❌ 不适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 低价走量夜市（成本过高）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 无海鲜处理经验的店主</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px">❌ 对海螺过敏或不习惯海鲜腥味的区域</div>
+    </div>
+  </div>
+</div>
+
+<!-- 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title" style="font-size:12px;font-weight:700;margin-bottom:6px">🧠 顾客为什么买</div>
+    <div style="font-size:12px;margin-bottom:10px">买的是：辣爽开胃 × 海鲜高级感 × 下酒绝配</div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin-bottom:6px">📈 利润从哪里来</div>
+    <div class="logic-item"><span>辣拌海螺（小份）</span><span class="v" style="color:#C0392B">毛利62%</span></div>
+    <div class="logic-item"><span>与啤酒/炸鸡组成套餐</span><span class="v">客单价+15元</span></div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin:6px 0">📈 如何提高客单价</div>
+    <div class="logic-item"><span>炸鸡+海螺+啤酒套餐</span><span class="v">定价¥45-58</span></div>
+    <div class="logic-item"><span>大份海螺（多人分享）</span><span class="v">+¥10</span></div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin:6px 0">🔄 如何提高复购</div>
+    <div style="font-size:12px">辣味海鲜一旦上瘾复购率高，可推出“辣度分级”（微辣/中辣/火辣）。</div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card" style="background:#fdf2ee"><div class="m-label">日售量</div><div class="m-val">10-25份</div><div class="m-sub">非主力走量</div></div>
+    <div class="metric-card" style="background:#fef6ec"><div class="m-label">月净利</div><div class="m-val">¥800-2000</div><div class="m-sub">搭配销售</div></div>
+    <div class="metric-card" style="background:#f0f6ec"><div class="m-label">回本周期</div><div class="m-val">2-3天</div><div class="m-sub">低投入</div></div>
+  </div>
+</div>
+
+<!-- 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 小菜赛道判断</div>
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;font-size:12px;line-height:1.7">
+    <strong>优势：</strong>辣拌海螺在韩式炸鸡店是经典高端小菜，售价高（20-35元），利润可观。麻辣鲜香口味迎合年轻人，与炸鸡、啤酒形成强关联。<br>
+    <strong>劣势：</strong>海螺成本高（每斤约25-40元），处理麻烦（去内脏、切片），保鲜期短。不是所有地区都能接受海螺的腥味。<br>
+    <strong>市场现状：</strong>夜市摊点极少卖辣拌海螺（怕麻烦+成本高），属于蓝海但门槛较高。<br>
+    <strong>是否值得进入：可进</strong> —— 作为进阶型小菜，适合已有固定客群、想提高客单价的摊位。不建议新手作为起步产品。
+  </div>
+</div>
+
+<!-- 项目评估 -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>市场竞争</div><div style="font-size:16px">★★☆☆☆</div><div>低（供给少）</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>学习周期</div><div style="font-size:16px">★★★☆☆</div><div>3-5天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>操作容错度</div><div style="font-size:16px">★★☆☆☆</div><div>低（腥味难去除）</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>最低验证资金</div><div style="font-size:16px">★★☆☆☆</div><div>¥200-300</div></div>
+  </div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:360px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>小菜类型</th><th>成本/份</th><th>毛利</th><th>制作难度</th><th>复购拉力</th></tr></thead>
+      <tbody>
+        <tr style="background:#feefe8"><td>🐚 辣拌海螺</th><td>¥8-12</td><td>60%</td><td>★★★★</td><td>★★★★</td></tr>
+        <tr><td>🥕 酸辣白萝卜</td><td>¥0.30</td><td>85%</td><td>★</td><td>★★★★</td></tr>
+        <tr style="background:#f8f4ef"><td>🥗 卷心菜沙拉</td><td>¥0.55</td><td>76%</td><td>★</td><td>★★★</td></tr>
+        <tr><td>🦑 辣拌鱿鱼丝</td><td>¥5-8</td><td>65%</td><td>★★★</td><td>★★★</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 最大风险（6项） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>海鲜类需办理食品经营许可证（含生食/冷食类），普通摊贩备案可能不涵盖，检查时容易被罚。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季高温下海螺极易变质，若无专业冷藏设备，2小时就可能发臭。冬季销量下降。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>腥味处理不当——海螺内脏没去干净或腌制时间不够，腥味会让顾客直接呕吐感。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>原料成本波动——海螺价格季节性变化大，夏天便宜冬天贵，成本难控。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>口感发硬——煮过火或切片太厚，海螺肉会像橡皮筋，咬不动。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>辣度接受度窄——如果做太辣，流失非吃辣客群；不够辣又失去特色。</div>
+</div>
+
+<!-- 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>辣拌海螺是炸鸡摊位中最具差异化、最能拉升档次的小菜之一。一份卖25-35元，成本仅10元左右，毛利高且顾客“觉得值”。尤其适合配啤酒，能带动酒水销售。<br>
+      <strong>❌ 为什么不值得：</strong>处理麻烦、风险高（变质/腥味）、投入成本是普通小菜的20倍。如果销量不足，原料损耗会吃掉利润。<br>
+      <strong>🔑 进入条件：</strong>① 有冷藏展示柜或冰箱 ② 能找到稳定供应、价格合理的冷冻海螺肉（比鲜货安全） ③ 愿意花时间练习去腥流程 ④ 摊位有酒水销售资质。<br>
+      <strong>🚪 退出条件：</strong>连续2周日均销量＜5份 / 顾客反馈“腥味”超过30% / 海螺成本上涨导致毛利低于50%。<br>
+      <strong>🎯 最终判断：选择性进入</strong> —— 适合中等规模以上的炸鸡夜市摊，作为“招牌高级小菜”限量供应。不建议每天大量备货，可做“限量10份”饥饿营销。
+    </div>
+    <div class="j-tags"><span>#辣拌海鲜</span><span>#下酒菜</span><span>#高客单价</span><span>#韩式</span></div>
+  </div>
+</div>
+
+<!-- 核心工艺（带验证点） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div style="margin-bottom:10px"><strong>步骤1 海螺预处理（去腥关键）</strong> —— 鲜活海螺取肉或冷冻螺肉解冻，加盐和面粉反复搓洗，去除黏液和内脏。<br><span style="font-size:10px;color:#7a7269">[验证点] 搓洗后水变浑浊，螺肉表面不再滑腻，闻起来无腥臭味</span></div>
+    <div style="margin-bottom:10px"><strong>步骤2 汆烫切片</strong> —— 沸水中加姜片、料酒，下螺肉煮1-2分钟（视大小），捞出冰水冷却，切薄片（约2-3mm）。<br><span style="font-size:10px;color:#7a7269">[验证点] 切片后螺肉呈淡黄色，弹牙不硬，咬断无纤维感</span></div>
+    <div style="margin-bottom:10px"><strong>步骤3 调制辣拌酱</strong> —— 韩式辣酱、辣椒粉、蒜泥、糖稀、醋、芝麻油、酱油混合。<br><span style="font-size:10px;color:#7a7269">[验证点] 酱料红亮，甜辣平衡，蒜香浓郁</span></div>
+    <div><strong>步骤4 拌制与腌制</strong> —— 螺肉片、洋葱丝、黄瓜丝、青椒圈与酱料拌匀，冷藏腌制30分钟以上。<br><span style="font-size:10px;color:#7a7269">[验证点] 腌制后螺肉充分挂酱，入口先甜后辣，无生腥味</span></div>
+  </div>
+  <div class="badge">⚠️ 完整配方（酱料配比、烫煮时间、批量预制）见下方付费区</div>
+</div>
+
+<!-- 成本利润 -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span>冷冻海螺肉（70g/份）</span><span>¥6.5</span></div>
+    <div class="recipe-line"><span>配菜（洋葱/黄瓜/青椒）</span><span>¥0.8</span></div>
+    <div class="recipe-line"><span>酱料（韩式辣酱+辣椒粉等）</span><span>¥1.2</span></div>
+    <div class="recipe-line"><span>包装盒</span><span>¥0.6</span></div>
+    <div class="recipe-line"><span>单份总成本</span><span>¥9.1</span></div>
+    <div class="recipe-line"><span>售价区间</span><span>¥22～¥35</span></div>
+    <div class="recipe-line"><span>毛利区间</span><span>58%～74%</span></div>
+    <div class="recipe-line"><span>示例：日售12份（均价¥28）</span><span>日毛利¥227，月净利约¥5000（出摊22天）</span></div>
+  </div>
+</div>
+
+<!-- 完整配方包 付费区（7模块） -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>🐚 辣拌海螺 · 完整配方包</h3>
+  <div class="p-sub">定价 ¥12 · 永久解锁 · 包含以下全部数据</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span>商用辣拌酱精确配比（500g基准）</div>
+    <div class="p-item"><span class="p-icon">✅</span>海螺去腥四步法（搓洗+汆烫+冰镇+腌料）</div>
+    <div class="p-item"><span class="p-icon">✅</span>烫煮时间表（不同大小海螺的秒数）</div>
+    <div class="p-item"><span class="p-icon">✅</span>批量制作公式（2kg/5kg海螺肉）</div>
+    <div class="p-item"><span class="p-icon">✅</span>变体：辣拌章鱼/辣拌花蛤配方</div>
+    <div class="p-item"><span class="p-icon">✅</span>保鲜方案（真空冷藏保质期测试）</div>
+    <div class="p-item"><span class="p-icon">✅</span>摆摊搭售话术与定价策略</div>
+  </div>
+  <div class="price-tag">¥12 <small>配菜卡 · 一次解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后发编号给客服，秒发完整版 / 或直接在此展开</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 辣拌酱精确配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 商用辣拌酱配方（每500g海螺肉用量）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>韩式辣椒酱</span><span>80g</span></div>
+      <div class="recipe-line"><span>韩式辣椒粉（粗粒）</span><span>30g</span></div>
+      <div class="recipe-line"><span>蒜泥</span><span>25g</span></div>
+      <div class="recipe-line"><span>水饴（或玉米糖浆）</span><span>40g</span></div>
+      <div class="recipe-line"><span>白醋</span><span>15g</span></div>
+      <div class="recipe-line"><span>芝麻油</span><span>10g</span></div>
+      <div class="recipe-line"><span>酱油（生抽）</span><span>8g</span></div>
+      <div class="recipe-line"><span>白糖</span><span>12g</span></div>
+      <div class="recipe-line"><span>熟白芝麻</span><span>10g</span></div>
+    </div>
+
+    <!-- 2️⃣ 去腥四步法 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 去腥四步法（核心技术）</div>
+    <div class="recipe-box" style="border-left-color:#E8652D">
+      <div><strong>① 搓洗：</strong>螺肉加一勺盐和一勺面粉，用力抓揉2分钟，清水冲净（重复2次）。</div>
+      <div><strong>② 汆烫：</strong>沸水中加姜片5片+料酒20g，下螺肉煮1分15秒（中等大小），捞出。</div>
+      <div><strong>③ 冰镇：</strong>立即投入冰水（含柠檬片）浸泡5分钟，让螺肉收紧。</div>
+      <div><strong>④ 腌制：</strong>酱料中额外加1g姜泥和少许柠檬汁，与螺肉拌匀后冷藏1小时。</div>
+      <div style="margin-top:6px;font-size:11px">⚠️ 此流程可去除90%海螺腥味，且保持脆度。</div>
+    </div>
+
+    <!-- 3️⃣ 烫煮时间表 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 烫煮时间（不同大小海螺肉）</div>
+    <div style="background:#f8f4ef;border-radius:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:6px 10px;background:#3a322a;color:#fff;font-size:10px"><span>螺肉大小</span><span>沸水煮时间</span><span>口感</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>小号（约20g/只）</span><span>50秒</span><span>最弹牙</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb"><span>中号（约35g/只）</span><span>1分15秒</span><span>标准</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px"><span>大号（约50g/只）</span><span>1分45秒</span><span>稍软但入味</span></div>
+    </div>
+
+    <!-- 4️⃣ 批量公式 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 批量制作（2kg / 5kg海螺肉）</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+      <div><strong>2kg海螺肉：</strong>酱料按配方×4，配菜：洋葱丝300g、黄瓜丝200g、青椒圈150g。可分装约28份（70g/份）。</div>
+      <div style="margin-top:6px"><strong>5kg海螺肉：</strong>酱料×10，配菜翻倍，建议分2桶腌制。注意分批次烫煮，避免水温下降。</div>
+    </div>
+
+    <!-- 5️⃣ 变体配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 两款变体（辣拌章鱼 / 辣拌花蛤）</div>
+    <div class="recipe-box" style="border-left-color:#6b8c42">
+      <div><strong>🐙 辣拌章鱼：</strong>章鱼足切片，汆烫时间缩短至30秒，酱料中增加1g山葵膏（提鲜）。</div>
+      <div style="margin-top:8px"><strong>🐚 辣拌花蛤：</strong>花蛤吐沙后沸水煮至开口（约1分钟），取肉，酱料中多加5g柠檬汁去腥。</div>
+    </div>
+
+    <!-- 6️⃣ 保鲜方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 保鲜与保质期</div>
+    <div class="recipe-box">
+      • 成品必须0-4°C冷藏，加盖密封。<br>
+      • 最佳赏味期：腌制后4-24小时（最入味）。<br>
+      • 安全保质期：48小时（超过后可能有异味）。<br>
+      • 出摊时：使用保温箱+冰袋，分装后4小时内售完。未售完的必须废弃，不可隔夜。<br>
+      • ⚠️ 因涉及海鲜，强烈建议“当日制、当日售”，不要备超过预估销量30%的货。
+    </div>
+
+    <!-- 7️⃣ 实战备注 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 沧林实战备注（定价/话术/风险）</div>
+    <div class="recipe-box" style="border-left-color:#C0392B">
+      • 海螺采购：推荐使用冷冻海螺肉（-18°C），比鲜活海螺更安全、去腥更简单。品牌推荐“獐子岛”或“国联”。<br>
+      • 定价策略：小份（70g）¥22-25，大份（120g）¥35-38。搭配炸鸡+啤酒套餐可做到¥48-58。<br>
+      • 话术：“我们的海螺是韩式秘制辣酱拌的，下酒神器，每天只做10份卖完就没了。”制造稀缺感。<br>
+      • 出摊准备：用小号透明圆碗分装，顶部撒白芝麻和葱花，颜值高。<br>
+      • 如果顾客怕腥，可以在酱料中多加1g柠檬汁或紫苏叶丝。<br>
+      • 节假日备货量可翻倍，但注意天气热时缩短展示时间。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整小菜包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" href="#"><span>🍗</span><span style="flex:1">原味黄金炸鸡（母卡·完整项目）</span><span>→</span></a>
+    <a class="rel-item" href="#"><span>🍺</span><span style="flex:1">啤酒/烧酒（酒水搭售）</span><span>→</span></a>
+    <a class="rel-item" href="#"><span>🥕</span><span style="flex:1">韩式酸甜脆白萝卜（配菜 PC_001）</span><span>→</span></a>
+  </div>
+</div>
+
+<!-- 咨询入口 -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>海鲜采购渠道 · 去腥细节 · 冷食许可证办理</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>酱料定制 · 成本优化 · 套餐设计</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“辣拌海螺”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a;width:auto;padding:8px 20px">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 小菜配菜卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+</script>
+</body>
+</html>

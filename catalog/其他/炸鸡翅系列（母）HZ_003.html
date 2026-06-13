@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>炸鸡翅系列 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800}
+.rating-bar .r-label{font-size:10px;opacity:.6}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;background:rgba(255,255,255,.08);border-radius:3px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269}
+.radar-item .stars{font-size:13px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer;border:none}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #C0392B}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍗 炸鸡翅系列</h1>
+  <div style="font-size:12px;color:#b5aaa0">鸡全翅 · 翅中 · 翅根 | 薄浆/酱裹两用</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score"><span class="r-num">8.5</span><span class="r-label">FoodIntelAI评分</span></div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">鸡翅是炸鸡里的“硬通货”——没人拒绝一个外酥里嫩的鸡翅。</div>
+  <div class="r-tags">
+    <span>🔥 热度 A</span><span>💰 投资¥2800+</span><span>👤 1人可做</span><span>🔄 复购中高</span><span>🍗 全翅最畅销</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">2800+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 任何炸鸡摊位（鸡翅是必加SKU）</div>
+      <div class="fit-item fit-yes">✅ 外卖专营（鸡翅配送口感好）</div>
+      <div class="fit-item fit-yes">✅ 夜市/烧烤摊增加品类</div>
+      <div class="fit-item fit-yes">✅ 1人小档口</div>
+      <div class="fit-item fit-yes">✅ 儿童/家庭客群</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 只卖鸡腿/鸡块，不愿加新SKU</div>
+      <div class="fit-item fit-no">❌ 追求极致低价的原材料</div>
+      <div class="fit-item fit-no">❌ 无法控制油温（鸡翅容易炸老）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;margin-bottom:8px">买的是：鸡翅的嫩滑口感 × 一口一个方便吃 × 经典记忆</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>原味炸鸡翅（引流）</span><span class="v">毛利60%</span></div>
+    <div class="logic-item"><span>酱裹鸡翅（蜜汁/甜辣）</span><span class="v">毛利70%</span></div>
+    <div class="logic-item"><span>翅根+翅中套餐</span><span class="v">客单价+30%</span></div>
+    <div class="l-title">📈 如何提高客单价</div>
+    <div class="logic-item"><span>“双拼口味鸡翅”（原味+酱裹）→ +¥5</span><span></span></div>
+    <div class="logic-item"><span>加小食（年糕/薯条）→ +¥6</span><span></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>每周特价日（周一翅根特价）</span><span></span></div>
+    <div class="logic-item"><span>集点卡：买5翅送1翅</span><span></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥700-1100</div><div class="m-sub">4-6h出摊</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥5500-8500</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">6-9天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">📊 数据来源：本地夜市炸鸡翅摊均值</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">鸡翅认知度高，无需教育市场，老少皆宜</div>
+      <div class="t-item">进货成本稳定，冷冻鸡翅供应链成熟</div>
+      <div class="t-item">出餐快，单份3-4个翅，3分钟炸好</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">利润比鸡腿/鸡块略低（翅中成本高）</div>
+      <div class="t-item">油温控制要求高，炸过头口感发干</div>
+      <div class="t-item">同质化严重，到处都是炸鸡翅</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>炸鸡翅是每个炸鸡摊位的“底座产品”，不属于爆款但流量稳定。<br>
+    <strong>未来判断：</strong>不会过时，但需要靠口味或尺寸差异（巨大鸡翅/薄浆脆皮）突围。<br>
+    <strong>是否值得进入：是</strong>（作为摊位基础SKU，不建议单独只卖鸡翅）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估（V5.1） ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★★☆</div><div style="font-size:10px">非常激烈</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★☆☆☆</div><div style="font-size:10px">3-5天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px">油温敏感</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px">¥150试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;justify-content:space-between"><span style="font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- ===== 同赛道对比（链接） ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th> </tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🍗 炸鸡翅系列</td><td>★★★</td><td>★★★</td><td>★★★★</td><td>★★★★</td><td>A-</td><td><a href="#" style="color:#E8652D">#HZ_003</a></td></tr>
+        <tr><td>🍗 原味黄金炸鸡</td><td>★★★</td><td>★★★</td><td>★★★★</td><td>★★★★</td><td>A-</td><td><a href="HZ_001.html">#HZ_001</a></td></tr>
+        <tr style="background:#f8f4ef"><td>🍗 蜜汁酱裹鸡块</td><td>★★★</td><td>★★★</td><td>★★★★</td><td>★★★</td><td>A</td><td><a href="HZ_002.html">#HZ_002</a></td></tr>
+      </tbody>
+     </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为已发布FoodIntelAI标准卡</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>解冻鸡翅，试做3种裹粉（干粉/浆粉/混合），选出脆皮效果最好的</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请15人盲测原味/辣味/蜜汁，记录最受欢迎口味</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备100个翅），观察哪个部位卖最快</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>根据销量调整产品结构，加大翅中比例，砍掉滞销口味</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>核算利润率，决定是否长期经营或增加酱裹系列</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7 翅中销量占比＞40%  ② Day15 复购率＞15%  ③ Day30 单份利润＞¥6<br>
+    <strong>🚪 退出标准：</strong>连续7天日均卖不出50个翅 / 原材料涨价后毛利＜40% / 顾客反馈“太干/不脆”＞20%<br>
+    <strong>✅ 继续标准：</strong>翅中利润稳定在¥2/个以上 / 有回头客指定购买 / 可自然叠加酱料变体
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（含证照） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：单缸炸锅(¥350) · 操作台(¥250) · 冰柜（存放冷冻翅）(¥600-900) · 油温计(¥20) · 不锈钢盆×3(¥40) · 漏勺/炸篮(¥30) · 电子秤(¥30)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位配套</strong>：二手三轮车(¥800-1500) · 折叠操作台(¥200) · 帐篷伞(¥150) · 招牌灯箱(¥80) · 价格牌(¥20) · 保温展示柜(¥300)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：冷冻鸡翅中/翅根 15kg(¥250-350) · 裹粉(面粉/淀粉)8kg(¥60) · 炸油15L(¥120) · 调味料(盐/蒜粉/辣椒粉等)(¥60) · 打包盒/纸袋500套(¥150) · 一次性手套(¥20)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,000-2,600</strong>（已有冰柜/三轮车）</div>
+    <div><strong>💰 完整启动方案：¥3,200-4,500</strong>（含冰柜+车+全部设备）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80 · 食品摊贩备案¥0-100 · 建议咨询当地市场监督管理局</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">原味炸鸡翅（3个翅根）</span><span class="t-price">¥10-12</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">辣味/蜜汁/蒜香 酱裹鸡翅（4个翅中）</span><span class="t-price">¥18-25</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">鸡翅全家桶（6翅根+6翅中+可乐）</span><span class="t-price">¥35-45</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🏠 社区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">📱 外卖</div><div class="stars">★★★★☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>冷冻鸡翅需要冷链运输和储存，部分夜市无冰箱条件</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季高温鸡翅容易变质，需要冰柜或频繁补货</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>同质化严重：几乎所有炸鸡摊都有翅，不打价格战只能靠口味差异</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>油温控制失败：炸太久肉质发柴，炸不透骨头带血，客诉高</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>原材料价格波动：冷冻翅中价格浮动大（旺季涨30%）</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>裹粉脱落：鸡翅表面不平，裹粉容易掉，影响卖相</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>鸡翅是炸鸡摊的“流量稳定器”，几乎不需要教育成本。出餐快，客群广。<br>
+      <strong>❌ 为什么不值得做：</strong>如果当地炸鸡翅价格卷到¥1/个以下，不如换成鸡块或鸡腿。<br>
+      <strong>🔑 进入条件：</strong>① 能拿到稳定冷冻翅中供应链（价格低于市场价5%） ② 有冰柜储存 ③ 愿意加酱料口味做差异化 ④ 学校/夜市周边无强对手。<br>
+      <strong>🚪 退出条件：</strong>① 翅中成本占比超过35% ② 连续两周翅中销量占比＜20% ③ 差评“太干/不脆”超过15%。<br>
+      <strong>🎯 最终判断：可进</strong> —— 建议作为摊位的基础SKU，搭配1-2款酱裹变体，不要只卖原味。
+    </div>
+    <div class="j-tags"><span>#炸鸡翅</span><span>#鸡翅中</span><span>#摆摊必加</span><span>#流量产品</span></div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">鸡翅完全解冻（冷藏12小时或流水30分钟）</span><div class="ps-verify">[验证点] 按压无硬芯，表面不结冰</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">牛奶/盐水浸泡去腥（可选）</span><div class="ps-verify">[验证点] 沥干后无明显血水味</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">裹粉（干粉为主：面粉+玉米淀粉+泡打粉）</span><div class="ps-verify">[验证点] 轻抖后表面有鳞片状</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">170°C炸5-6分钟（翅中时间略短）</span><div class="ps-verify">[验证点] 翅根最厚处切开无血水，外壳金黄</div></div>
+    <div class="process-step"><span class="ps-num">5</span><span class="ps-desc">沥油2分钟，撒料或裹酱</span><div class="ps-verify">[验证点] 撒料均匀，酱裹不滴落</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整裹粉配比及酱料配方见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span>核心原料成本（翅中/翅根+裹粉）</span><span>¥0.9-1.2/个</span></div>
+    <div class="recipe-line"><span>酱料成本（如裹酱）</span><span>¥0.5-0.8/份</span></div>
+    <div class="recipe-line"><span>包装成本</span><span>¥0.6/份</span></div>
+    <div class="recipe-line"><span>耗材（油/燃气）</span><span>¥0.4/份</span></div>
+    <div class="recipe-line"><span>单份总成本（4个翅中）</span><span>¥5.0-6.0/份</span></div>
+    <div class="recipe-line"><span>售价区间</span><span>¥12～¥25</span></div>
+    <div class="recipe-line"><span>毛利区间</span><span>50%～70%</span></div>
+    <div class="recipe-line"><span>示例利润模型</span><span>日售80份（4个翅中/份，均价¥15）→ 日毛利¥720，月净赚¥10,800（出摊25天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区，¥69） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 炸鸡翅系列</h3>
+  <div class="p-sub">7大模块：精确配方 · 克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥69 <small>母卡 · 永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后查看精确裹粉配比、油温曲线、酱料配方及坑点</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 炸鸡翅裹粉配比（干粉）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>中筋面粉</span><span>500g</span></div>
+      <div class="recipe-line"><span>玉米淀粉</span><span>250g</span></div>
+      <div class="recipe-line"><span>土豆淀粉</span><span>150g</span></div>
+      <div class="recipe-line"><span>泡打粉</span><span>10g</span></div>
+      <div class="recipe-line"><span>小苏打</span><span>4g</span></div>
+      <div class="recipe-line"><span>盐</span><span>12g</span></div>
+      <div class="recipe-line"><span>白胡椒粉</span><span>6g</span></div>
+      <div class="recipe-line"><span>蒜粉</span><span>8g</span></div>
+      <div>每500g鸡翅约用裹粉60g</div>
+    </div>
+    <!-- 2️⃣ 精确克数撒料 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 撒料配比（每50g，约可撒40个翅）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>辣椒粉</span><span>15g</span></div>
+      <div class="recipe-line"><span>孜然粉</span><span>12g</span></div>
+      <div class="recipe-line"><span>五香粉</span><span>5g</span></div>
+      <div class="recipe-line"><span>白砂糖</span><span>8g</span></div>
+      <div class="recipe-line"><span>盐</span><span>5g</span></div>
+      <div class="recipe-line"><span>味精</span><span>3g</span></div>
+      <div class="recipe-line"><span>熟芝麻</span><span>2g</span></div>
+    </div>
+    <!-- 3️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 炸制温度及时间对照</div>
+    <div class="recipe-box">
+      <div>翅根: 170°C下锅 → 炸6分钟 → 中心温度≥75°C</div>
+      <div>翅中: 170°C下锅 → 炸5分钟 → 表面金黄</div>
+      <div>复炸（要更脆）: 180°C炸30秒</div>
+      <div>酱裹: 炸好后1分钟内裹酱，保证附着力</div>
+    </div>
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 批量SOP（20kg鸡翅）</div>
+    <div class="recipe-box">
+      解冻→腌制（可选）→裹粉→炸制→撒料/裹酱。总耗时约2.5小时，裹粉用量约2.4kg。
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 翻车解决方案</div>
+    <div class="recipe-box">
+      <strong>鸡翅炸不脆：</strong>油温过低或裹粉回潮。解决：油温升到170°C再下，裹粉后立刻炸。<br>
+      <strong>骨头带血：</strong>炸制时间不足，翅根需多炸1分钟。<br>
+      <strong>裹粉脱落：</strong>鸡翅表面太湿，裹粉前用厨房纸吸干表面水分。<br>
+      <strong>酱裹后皮软：</strong>酱汁太稀或裹太多，减少酱量或增加淀粉增稠。
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 三款变体方案</div>
+    <div class="recipe-box">
+      <strong>🍯 蜂蜜黄油翅：</strong>炸后刷蜂蜜黄油酱（蜂蜜:黄油=2:1）<br>
+      <strong>🌶️ 川香辣翅：</strong>撒料加花椒粉+辣椒王粉<br>
+      <strong>🧀 芝士粉翅：</strong>炸后撒芝士粉+海苔碎
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 规模化方案</div>
+    <div class="recipe-box">
+      日销＞200个翅：改用双缸炸锅，提前批量裹粉冷藏（不超过2小时），或租赁中央厨房统一腌制配送。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="HZ_001.html"><span>🍗</span><span style="flex:1">原味黄金炸鸡（薄浆脆皮）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="HZ_002.html"><span>🍯</span><span style="flex:1">蜜汁/酱裹鸡块（酱裹专精）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="#"><span>🍟</span><span style="flex:1">韩式年糕（搭售小食）</span><span>→</span></a>
+  </div>
+</div>
+
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+
+</div>
+
+<div class="cf-tagline">决策先于工艺 · 看见水面之下的力量</div>
+  <div class="cf-contact">微信 canglin1985 · <a href="https://foodintelai.com">foodintelai.com</a></div>
+</div>
+
+<script>
+
+
+<!-- ===== 咨询入口 ===== -->
+<div class="section">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center;font-size:12px;color:#5a4f44">
+    <div><strong>📌 咨询场景：</strong>摆摊选址评估 · 成本优化 · 翻车远程诊断</div>
+    <div style="margin-top:6px"><strong>📱 联系方式：</strong>微信 canglin1985（备注卡号）</div>
+    <a style="display:inline-block;margin-top:8px;padding:8px 20px;background:#3a322a;color:#fff;border-radius:8px;text-decoration:none;font-size:12px" href="javascript:void(0)" onclick="copyWx()">📲 加微信咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 决策先于工艺 · 沧林食品工作站</div>
+</div>
+
+<script>
+document.getElementById('unlockBtn')&&document.getElementById('unlockBtn').addEventListener('click',function(){var e=document.getElementById('payContent');e&&(e.classList.toggle('show'),this.textContent=this.textContent.indexOf('点击解锁')>=0?'收起完整出摊包':'点击解锁全部内容')});
+function copyWx(){var e=document.createElement('textarea');e.value='canglin1985';document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e);alert('✅ 微信号已复制：canglin1985');}
+</script>
+
+</body>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>韩式炒年糕 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#c0392b,#a02020);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#c0392b;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #c0392b;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#c0392b;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#c0392b;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 01 Header -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍡 韩式炒年糕</h1>
+  <div style="font-size:12px;color:#b5aaa0">辣炒年糕 · 韩式街头经典 · 甜辣酱汁</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.7</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">韩式炒年糕是夜市/小吃街认知度最高的韩料单品，复购率高，出餐快。</div>
+  <div class="r-tags">
+    <span>🍡 街头爆品</span>
+    <span>💰 投资3500+</span>
+    <span>👤 1人操作</span>
+    <span>🔄 复购高</span>
+  </div>
+</div>
+
+<!-- 02 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">3000-4500</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div><div class="val">简单</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+  </div>
+</div>
+
+<!-- 03 适合谁 -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 夜市/小吃街/学校周边摊位</div>
+      <div class="fit-item fit-yes">✅ 韩料集合店（搭配炸鸡、紫菜卷）</div>
+      <div class="fit-item fit-yes">✅ 想吃辣但怕油腻的客群（年糕不吸油）</div>
+      <div class="fit-item fit-yes">✅ 出餐快、备料简单的新手</div>
+      <div class="fit-item fit-yes">✅ 成本低、毛利高的走量产品</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 不喜甜辣口味的区域</div>
+      <div class="fit-item fit-no">❌ 追求无糖/低卡饮食的客群</div>
+      <div class="fit-item fit-no">❌ 无法保证年糕新鲜度（冷冻年糕煮久了发软）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：红亮酱汁 × 软糯Q弹 × 甜辣开胃 × 韩剧同款</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>基础炒年糕（小份）</span><span class="v">毛利72%</span></div>
+    <div class="logic-item"><span>加鱼饼/拉面/芝士</span><span class="v">毛利65%但客单价+5-8元</span></div>
+    <div class="logic-item"><span>套餐（+紫菜卷+饮料）</span><span class="v">客单价+10元</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>加购芝士碎/拉面/鱼饼</span><span class="v">+¥3～5</span></div>
+    <div class="logic-item"><span>年糕+炸鸡双拼杯</span><span class="v">+¥8</span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>推出不同辣度（微辣/中辣/特辣）</span><span class="v"></span></div>
+    <div class="logic-item"><span>集章卡/学生优惠</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥800-1500</div><div class="m-sub">5-7h经营</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥6000-10000</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">5-7天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">*数据基于二线夜市实测（2025年）</div>
+</div>
+
+<!-- 05 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">韩式炒年糕认知度极高，无需市场教育</div>
+      <div class="t-item">出餐快（3-5分钟），适合走量</div>
+      <div class="t-item">年糕成本低，酱料可批量预制</div>
+      <div class="t-item">可搭配多种食材（鱼饼、拉面、芝士）做溢价</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">同质化严重，大部分摊位酱料味道雷同</div>
+      <div class="t-item">年糕煮久会软烂，外卖配送口感下降</div>
+      <div class="t-item">夏季热食需求略降</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>韩式炒年糕摊位极多，竞争饱和，但大多数使用批发成品酱料，口味无差异。<br>
+    <strong>未来判断：</strong>2026-2027年，能够做出“特制辣酱”“芝士年糕”“拉面炒年糕”等差异化产品的摊位有溢价空间。<br>
+    <strong>是否值得进入：是</strong> —— 但必须走“酱料自制+升级配料”路线，不要卖普通酱料年糕。
+  </div>
+</div>
+
+<!-- 06 项目评估 -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★★★</div><div style="font-size:10px;color:#5a4f44">极高</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★☆☆☆☆</div><div style="font-size:10px;color:#5a4f44">1天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★★☆</div><div style="font-size:10px;color:#5a4f44">高</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥200以内</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th> </tr</thead>
+      <tbody>
+        <tr style="background:#fceae8"><td>🍡 韩式炒年糕</th><td>★★</th><td>★</th><td>★★★★</th><td>★★★★★</th><td>A-</th><td><a href="#" style="color:#c0392b">#ZS_008</a></th> </tr>
+        <tr><td>🍗 韩式炸鸡</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★★★</th><td>A-</th><td><a href="#">#HZ_001</a></th> </tr>
+        <tr style="background:#f8f4ef"><td>🍙 紫菜卷</th><td>★★</th><td>★★</th><td>★★★★★</th><td>★★★★</th><td>A-</th><td><a href="#">#ZS_004</a></th> </tr>
+        <tr><td>🍲 鱼饼汤</th><td>★</th><td>★</th><td>★★★★</th><td>★★</th><td>B+</th><td><a href="#">#ZS_009</a></th> </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- 07 30天验证路线 -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>试做韩式辣酱（自制或调成品），煮年糕测试软硬度</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20人试吃，收集甜/辣度反馈，调整酱料比例</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备30份），测试定价¥10-15区间销量</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加加鱼饼/拉面/芝士选项，记录客单价变化</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘复购率、外卖占比，决定是否增加年糕串等变体</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7能否卖出25份以上 ② 顾客主动评价“酱好吃”比例＞50% ③ 复购率＞20%<br>
+    <strong>🚪 退出标准：</strong>连续3天销量＜15份 / 顾客反馈“太甜/太辣/酱一般”超过30% / 年糕软烂被投诉<br>
+    <strong>✅ 继续标准：</strong>日均销量稳定30份以上 / 酱料好评率＞70% / 毛利稳定在65%+
+  </div>
+</div>
+
+<!-- 08 设备清单 -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：电磁炉/燃气灶(¥200-500) · 炒锅/不粘锅(¥80-150) · 不锈钢盆×3(¥50-80) · 电子秤(¥30-50) · 酱料桶/储存盒(¥20) · 冷藏柜(¥600-1200) · 保温展示柜(¥300-600) · 一次性碗筷(备货)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：三轮车/手推车(¥600-1800) · 折叠桌(¥100-200) · 帐篷伞(¥150-300) · 招牌灯箱(¥80-180) · 价格立牌(¥20-50) · 保温桶(¥50-100) · 大号捞勺(¥20)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：年糕条5kg(¥30-50) · 鱼饼1kg(¥15-25) · 韩式辣酱/辣椒粉/糖稀(¥50) · 洋葱/大葱/包菜(¥20) · 一次性纸碗/勺500套(¥100-150) · 拉面/芝士(¥40)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥1,800-2,800</strong>（已有手推车，用电磁炉）</div>
+    <div><strong>💰 完整启动方案：¥3,500-5,500</strong>（含冷藏柜、保温展示柜）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案0-200元 · 办理时间2-5天 · 一般允许热食制售</div>
+  </div>
+</div>
+
+<!-- 09 产品结构 -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">基础韩式炒年糕（小份）</span><span class="t-price">¥10-12</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">加鱼饼/拉面/年糕串 · 芝士年糕</span><span class="t-price">¥15-22</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">年糕+紫菜卷+小可乐</span><span class="t-price">¥20-25</span></div>
+  </div>
+</div>
+
+<!-- 10 摆摊指数 -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">📱 外卖</div><div class="stars">★★★☆☆</div></div>
+  </div>
+</div>
+
+<!-- 11 最大风险（6项） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>一般热食制售允许，但部分夜市对酱料存放有卫生要求，需办理食品经营备案。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季热食需求下降，客流量可能减少20-30%；雨天影响显著。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>同质化价格战——大多数摊位酱料雷同，只能拼价格，利润被压缩。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>年糕口感不稳定——冷冻年糕煮久了会软烂，煮不够则硬心，需精确计时。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>外卖配送后口感下降——年糕在餐盒中继续吸水变软，差评率高于堂食。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>酱料成本波动——韩式辣酱、辣椒粉、糖稀依赖进口，价格上涨时毛利受压缩。</div>
+</div>
+
+<!-- 12 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>韩式炒年糕是夜市最走量的单品之一，出餐快，成本低，毛利高。顾客认知度高，复购稳定。通过自制酱料、加料升级（芝士、拉面）可形成差异化，避开价格战。<br>
+      <strong>❌ 为什么不值得：</strong>竞争饱和，如果只会用成品酱料，只能卖低价。外卖口感差，不适合纯外卖摊。夏季销量下滑。<br>
+      <strong>🔑 进入条件：</strong>① 能自制酱料或找到非通货酱料 ② 摊位位于夜市/学校周边 ③ 愿意做加料升级（芝士、拉面）提高客单价。<br>
+      <strong>🚪 退出条件：</strong>连续2周日均销量＜20份 / 酱料被顾客认为“和别家一样”超过50% / 毛利低于50%。<br>
+      <strong>🎯 最终判断：可进</strong> —— 但必须走“酱料自制+升级配料”路线。建议同时推出年糕串、鱼饼汤等关联产品，提高客单价。
+    </div>
+    <div class="j-tags"><span>#街头爆品</span><span>#酱料决胜</span><span>#高复购</span></div>
+  </div>
+</div>
+
+<!-- 13 核心工艺（带验证点） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">酱料调制：韩式辣椒酱+辣椒粉+糖稀（或白糖）+酱油+蒜泥+水，搅拌均匀。</span><div class="ps-verify">[验证点] 酱料红亮，甜辣平衡，无结块</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">年糕预处理：冷冻年糕条冷水浸泡10分钟（或沸水焯1分钟），沥干。</span><div class="ps-verify">[验证点] 年糕变软有弹性，表面不黏连</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">炒制：锅热加少许油，下洋葱/大葱爆香，加酱料和水煮开，放年糕、鱼饼，中火煮3-5分钟至汤汁浓稠。</span><div class="ps-verify">[验证点] 年糕软糯Q弹，酱汁挂勺，汤汁浓稠不稀</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">装盘与点缀：出锅撒白芝麻、葱花，可按需加芝士或拉面。</span><div class="ps-verify">[验证点] 色泽红亮，热气腾腾，诱人食欲</div></div>
+  </div>
+  <div class="badge">⚠️ 完整配方（酱料精确克数、糖稀比例、年糕煮制时间）见下方付费区</div>
+</div>
+
+<!-- 14 成本利润 -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">年糕（200g）</span><span class="v">¥1.5</span></div>
+    <div class="recipe-line"><span class="k">酱料+辣椒粉+糖稀</span><span class="v">¥1.0</span></div>
+    <div class="recipe-line"><span class="k">配菜（洋葱/鱼饼）</span><span class="v">¥0.8</span></div>
+    <div class="recipe-line"><span class="k">燃料+包装+水电</span><span class="v">¥0.7</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥4.0</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥10～¥15</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">60%～73%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售50份（均价¥12）→ 日毛利¥400，月净利约¥6600（出摊22天）</span></div>
+  </div>
+  <div class="badge" style="margin-top:6px">※ 加料版成本增加1-3元，售价增加5-8元，毛利更高。</div>
+</div>
+
+<!-- 15 完整出摊包（付费区） -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>🍡 韩式炒年糕 · 完整出摊包</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥49 <small>母卡限时解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后获取韩式辣酱自配方、年糕软硬度控制、加料升级方案</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 酱料配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 商用韩式炒年糕酱（每500g年糕量）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>韩式辣椒酱</span><span>45g</span></div>
+      <div class="recipe-line"><span>韩式辣椒粉（细）</span><span>15g</span></div>
+      <div class="recipe-line"><span>糖稀/玉米糖浆</span><span>30g</span></div>
+      <div class="recipe-line"><span>白糖</span><span>10g</span></div>
+      <div class="recipe-line"><span>酱油</span><span>10g</span></div>
+      <div class="recipe-line"><span>蒜泥</span><span>10g</span></div>
+      <div class="recipe-line"><span>水</span><span>150g</span></div>
+    </div>
+
+    <!-- 2️⃣ 年糕处理技巧 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 年糕口感控制（软糯不烂）</div>
+    <div class="recipe-box" style="border-left-color:#E8652D">
+      • 冷冻年糕提前冷水浸泡10分钟，或沸水焯1分钟后过冷水。<br>
+      • 煮制时间：中火煮3-4分钟，年糕变软有弹性即关火（不要久煮）。<br>
+      • 若用新鲜年糕（冷藏），直接下锅煮2分钟即可。<br>
+      • 年糕煮好后不要久泡在汤汁中，会越变越软。
+    </div>
+
+    <!-- 3️⃣ 加料升级方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 热门加料及其成本/售价</div>
+    <div style="background:#f8f4ef;border-radius:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:6px 10px;background:#3a322a;color:#fff;font-size:10px"><span>加料</span><span>成本增量</span><span>建议加价</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>鱼饼（30g）</span><span>¥0.5</span><span>+¥2</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb"><span>拉面（半块）</span><span>¥0.8</span><span>+¥3</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>芝士碎（15g）</span><span>¥1.5</span><span>+¥4</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px"><span>年糕串（竹签串）</span><span>¥1.0</span><span>+¥3</span></div>
+    </div>
+
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 批量预制方案（20份/50份）</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+      <div><strong>20份：</strong>酱料按配方×20调好，年糕提前泡好，出餐时每份单独炒（也可大锅炒后分装）。</div>
+      <div><strong>50份：</strong>建议分两锅炒，使用大号炒锅，每锅一次性炒25份，分装保温。</div>
+    </div>
+
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 翻车解决方案</div>
+    <div class="recipe-box">
+      <div><strong>酱太甜/太辣：</strong>糖稀和辣椒粉比例失衡 → 按配方精确称量，试味后微调。</div>
+      <div><strong>年糕太硬：</strong>浸泡时间不够或煮制不足 → 延长浸泡至15分钟，煮制时间增加1分钟。</div>
+      <div><strong>年糕太烂：</strong>煮过久或煮好后久泡 → 严格控制煮制时间，出锅后立即装碗。</div>
+    </div>
+
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 三款变体</div>
+    <div class="recipe-box">
+      <div><strong>🧀 芝士年糕：</strong>出锅后撒马苏里拉芝士，喷枪烤化或微波10秒。</div>
+      <div><strong>🍜 拉面炒年糕：</strong>加入半块方便面一起煮，汤汁收浓，拉面入味。</div>
+      <div><strong>🍢 年糕串：</strong>年糕条串在竹签上，刷酱烤或炸，外脆里糯。</div>
+    </div>
+
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 规模化方案</div>
+    <div class="recipe-box">
+      当日销量＞100份时：使用商用大锅（一次炒30-40份），酱料按比例放大批量预制。可增加年糕串、鱼饼汤等产品线，提高客单价。
+    </div>
+
+    <!-- 8️⃣ 实战备注 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">8️⃣ 沧林实战备注</div>
+    <div class="recipe-box" style="border-left-color:#c0392b">
+      • 酱料可批量熬制冷藏保存1周，出餐时直接取用，节省时间。<br>
+      • 糖稀是关键，不能用普通白糖替代（否则不亮不稠）。<br>
+      • 如果顾客不能吃辣，可做“奶油年糕”（加牛奶和奶油，不加辣椒粉）。<br>
+      • 外卖建议：年糕和汤汁分装，让顾客自己拌，减少变软。<br>
+      • 定价策略：小份10元（基础），大份15元（加鱼饼），芝士年糕18元。<br>
+      • 摆盘用锡纸碗+竹签，韩式街头感强，适合拍照传播。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 16 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🍗</span><span class="r-name">原味黄金炸鸡（母卡 HZ_001）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍙</span><span class="r-name">紫菜卷（母卡 ZS_004）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥕</span><span class="r-name">韩式酸甜脆萝卜（配菜 PC_001）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- 17 咨询入口 -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>酱料定制 · 年糕口感问题 · 外卖包装防软</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1配方调整 · 成本优化 · 加料升级方案</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“炒年糕卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 母卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整出摊包' : '点击解锁全部内容 →';
+  });
+</script>
+</body>
+</html>

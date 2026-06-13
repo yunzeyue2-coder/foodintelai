@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>KF_002 经典拿铁 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 顶部评级 ===== */
+.rating-bar{background:linear-gradient(135deg,#4f3b2c,#362618);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+/* 付费锁定区 */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥛 经典拿铁 · 奶香醇厚</h1>
+  <div style="font-size:12px;color:#b5aaa0">意式咖啡 · 国民接受度最高的奶咖</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.5</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">拿铁是咖啡摊位的销量王，牛奶成本是核心，但复购远高于美式。</div>
+  <div class="r-tags">
+    <span>🔥 热度极高</span>
+    <span>💰 投资3500+</span>
+    <span>👤 1人可做</span>
+    <span>🔄 高复购</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">国民饮品</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">极高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">3500+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">奶泡较关键</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">65%+</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 不爱苦咖啡的大众客群</div>
+      <div class="fit-item fit-yes">✅ 写字楼/商圈早高峰</div>
+      <div class="fit-item fit-yes">✅ 搭配甜品/烘焙摊位</div>
+      <div class="fit-item fit-yes">✅ 已有美式咖啡基础</div>
+      <div class="fit-item fit-yes">✅ 女性客群为主</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 无法冷藏保存牛奶</div>
+      <div class="fit-item fit-no">❌ 追求极致低成本的</div>
+      <div class="fit-item fit-no">❌ 乡镇低价市场</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：顺滑奶香 × 咖啡因提神 × 性价比高于星巴克</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>经典拿铁（销量主力）</span><span class="v">毛利62%</span></div>
+    <div class="logic-item"><span>风味拿铁（榛果/香草/焦糖）</span><span class="v">毛利72%</span></div>
+    <div class="logic-item"><span>换燕麦奶/厚椰乳（+¥5）</span><span class="v">毛利80%</span></div>
+    <div class="logic-item"><span>双份浓缩 +¥4</span><span class="v">纯利增加</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>组合套餐：拿铁+可颂/贝果 ¥22.9</span><span class="v"></span></div>
+    <div class="logic-item"><span>大杯化（12oz→16oz+¥5）</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>会员积分每杯1积分，10积分换一杯</span><span class="v"></span></div>
+    <div class="logic-item"><span>每周限定“隐藏菜单”（如桂花拿铁）</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥600-1100</div><div class="m-sub">4-6h</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥4500-7500</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">12-20天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">📌 数据基于二线城市写字楼/夜市混合场景预估，参考了同类移动咖啡车2025年冬季实测。</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">拿铁是咖啡入门首选，客群比美式宽3-5倍</div>
+      <div class="t-item">复购率高，“每天一杯”习惯养成容易</div>
+      <div class="t-item">可做热/冰，全年无淡季（冬季热拿铁销量反增）</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">牛奶成本占售价20-25%，鲜奶保存需要冰箱/冰桶</div>
+      <div class="t-item">奶泡技术需要练习，不稳定影响出品</div>
+      <div class="t-item">同质化严重，没有特色容易被连锁品牌碾压</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>拿铁占据咖啡馆销量40%以上，移动咖啡摊位拿铁也是主力。但很多摊位用植脂末或常温奶，口感差。2026年消费者对“真鲜奶”敏感度上升。<br>
+    <strong>未来判断：</strong>摆摊拿铁必须做到“鲜奶+可接受价格”，避免和瑞幸9.9元直接竞争，可在夜市/景区做15-18元价格带，配合拉花/高颜值杯具。<br>
+    <strong>是否值得进入：是</strong>（但必须解决鲜奶冷链，且具备奶泡打发能力）。
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★★☆</div><div style="font-size:10px;color:#5a4f44">激烈需差异化</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">5-10天(奶泡)</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">奶泡厚度影响口感</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★☆</div><div style="font-size:10px;color:#5a4f44">¥500以内手打奶泡测试</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- ===== 同赛道对比（带内部链接标识） ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th></tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🥛 经典拿铁(本卡)</td><td>★★★</span><td>★★★</span><td>★★★★</span><td>★★★★</span><td>A-</span><td>#KF_002</span></tr>
+        <tr><td>☕ 美式咖啡</span><td>★★★★</span><td>★★★</span><td>★★★★</span><td>★★★</span><td>B+</span><td><a href="#" style="color:#E8652D">#KF_001</a></span></tr>
+        <tr style="background:#f8f4ef"><td>🍵 燕麦拿铁(植物基)</span><td>★★★</span><td>★★★</span><td>★★★★★</span><td>★★</span><td>B+</span><td><a href="#" style="color:#5a8f3c">#KF_005</a></span></tr>
+        <tr><td style="border-radius:0 0 0 6px">🍫 摩卡咖啡</span><td>★★★</span><td>★★★</span><td>★★★★</span><td>★★★</span><td>B</span><td style="border-radius:0 0 6px 0"><a href="#">#KF_008</a></span></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡（模拟跳转）</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购意式豆、鲜牛奶，用法压壶/摩卡壶制作第一杯拿铁，测试奶咖比</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>练习手动奶泡（法压壶拉花缸），邀请10人盲测，调整牛奶品牌</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次试摆（早高峰地铁口/写字楼），主推热拿铁，目标20杯</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加风味糖浆和冰拿铁，记录复购率，优化牛奶保温方案</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>算总账，决定是否增加第二台咖啡机或升级奶泡设备</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7能否卖出20杯以上 ② 复购率是否＞25% ③ 牛奶损耗率＜5%<br>
+    <strong>🚪 退出标准：</strong>连续1周日营收＜¥400 / 牛奶因保存不当变质超过2次 / 顾客“奶泡太厚/太稀”差评＞30%<br>
+    <strong>✅ 继续标准：</strong>周复购＞20% / 毛利润＞60% / 有顾客主动询问风味拿铁
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（含证照成本） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：意式咖啡机（入门级¥800-1500）· 电动磨豆机 · 电子秤(0.1g) · 压粉锤 · 拉花缸(350ml) · 温度计 · 奶泡温度计</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠操作台 · 户外电源(500W以上) · 车载冰箱/保温冰桶(保存鲜奶) · 招牌灯箱 · 杯架 · 垃圾桶</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：咖啡豆2kg(中深烘) · 鲜牛奶20L(全脂) · 糖浆3种(香草/焦糖/榛果) · 一次性咖啡杯(12oz/16oz)200套 · 杯盖+防烫套 · 清洁刷/抹布</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,200-3,000</strong>（手压意式机+手摇磨豆机+保温箱，奶泡用法压壶）</div>
+    <div><strong>💰 完整启动方案：¥4,500-7,000</strong>（家用意式机+电动磨豆机+户外电源+冰柜）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案¥0-100+部分城市需要“现制现售乳制品”附加许可（咨询当地市监局）办理时间2-5天。</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">经典热/冰拿铁</span><span class="t-price">¥12-16</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">香草/榛果/焦糖拿铁 · 燕麦拿铁</span><span class="t-price">¥16-22</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">拿铁+手工曲奇 · 拿铁+可颂</span><span class="t-price">¥20-28</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">📱 外卖</div><div class="stars">★★★★☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项含政策/场地） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>部分城市对“含乳饮品”摊位要求冷藏设备和食品经营许可证，违规可能被没收牛奶。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季鲜奶保质期极短（室外2小时变质），无冰柜则无法出摊；冬季奶泡变硬快，影响口感。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>牛奶成本波动：鲜奶每升涨价1元，单杯成本增加0.5元，毛利下降5%。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>奶泡技术不稳定：新手打的奶泡厚度不均，拿铁变成“牛奶咖啡”，复购率腰斩。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>同质化价格战：竞争对手用植脂末或复原乳卖¥9.9，拉低消费者对鲜奶拿铁的价值感。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>咖啡机故障：摆摊中磨豆机卡豆或水泵故障，导致无法出杯，当日营收归零。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>拿铁是咖啡摊位的“销量冠军”，客群比美式宽3倍，复购稳定。只要奶泡打得好，顾客黏性极高，且风味糖浆升级能拉高客单价。<br>
+      <strong>❌ 为什么不值得做：</strong>如果无法保证鲜奶冷链（冰柜/车载冰箱），夏天2小时牛奶变质，风险极大。另外，没有咖啡机维护能力，故障一次损失几天利润。<br>
+      <strong>🔑 进入条件：</strong>① 有稳定电源和车载冰箱/冰桶 ② 愿意花5天专门练奶泡（每天打10杯） ③ 拿铁定价能覆盖牛奶成本且仍有60%毛利 ④ 摊位周边有500+白领/学生客流。<br>
+      <strong>🚪 退出条件：</strong>① 连续10天拿铁销量＜美式 ② 牛奶损耗率超过10% ③ 因奶泡问题收到3条以上差评 ④ 隔壁摊位卖¥9.9拿铁且抢走客户。<br>
+      <strong>🎯 最终判断：可进</strong> —— 但必须优先解决鲜奶冷藏，且主打“鲜奶+可打卡”包装，不建议低价竞争。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">萃取浓缩（18g粉，36g液，25-30秒）</span><div class="ps-verify">[验证点] 流速似蜂蜜，液体表面油脂金黄且厚度均匀；流速过快或过慢都需调整研磨度</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">冷藏全脂牛奶打发奶泡（6-8°C）</span><div class="ps-verify">[验证点] 蒸汽棒插入液面1cm，发出“呲呲”进气声持续4-6秒，最终奶泡温度60-65°C，表面光亮无粗泡</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">融合与拉花（先融合再推花）</span><div class="ps-verify">[验证点] 奶缸离杯口5cm注入浓缩，液面变白后压低缸嘴，摇晃出简单爱心或树叶纹路</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">出品温度控制（最佳饮用55-60°C）</span><div class="ps-verify">[验证点] 手持杯壁烫手但能捏住3秒，此时温度约55°C；过热则破坏乳糖甜感</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整奶泡温度曲线、不同牛奶品牌测试数据见付费区</div>
+</div>
+
+<!-- ===== 14 成本利润（完整7项） ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本(豆+牛奶)</span><span class="v">¥4.2/杯</span></div>
+    <div class="recipe-line"><span class="k">包装成本（杯+盖+杯套）</span><span class="v">¥1.0/杯</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（糖浆/清洁/滤纸）</span><span class="v">¥0.6/杯</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥5.8/杯</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥12～¥22</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">52%～73%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售50杯（均价¥16）→日毛利¥510，月净利¥6,600（出摊22天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区，7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 经典拿铁商用方案</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 奶泡温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥49 <small>永久解锁（奶咖专卡）</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后获得商用拿铁比例、不同牛奶品牌对比、打奶泡视频指导文字版等</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用配方(12oz/16oz)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>12oz热拿铁：浓缩36g + 牛奶250ml + 奶泡30g</span></div>
+      <div class="recipe-line"><span>16oz冰拿铁：浓缩36g + 牛奶300ml + 冰块130g</span></div>
+      <div class="recipe-line"><span>风味拿铁：加糖浆12g（香草/焦糖/榛果）</span></div>
+    </div>
+    <!-- 2️⃣ 精确克数（不同牛奶品牌适配） -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 牛奶蛋白质要求</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>蛋白质≥3.2g/100ml，脂肪≥3.5%；推荐品牌：味全鲜奶、光明优倍、朝日唯品</div>
+      <div>植物奶：燕麦奶推荐Oatly咖啡大师版，打发温度50-55°C</div>
+    </div>
+    <!-- 3️⃣ 奶泡温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 奶泡温度与打发曲线</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>起始温度4°C → 进气期4-6秒(产生60%泡沫) → 打绵期至55-60°C(漩涡卷走粗泡) → 停止温度65°C前关蒸汽</div>
+      <div>每杯耗时约20秒，连续出杯3杯需擦拭蒸汽棒并空喷</div>
+    </div>
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 高峰期快速出品方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>预称单份粉碗，连续萃取双份浓缩（每份36g）备用不超过10分钟。牛奶提前倒入奶缸冷藏，随取随打。</div>
+      <div>出杯效率：熟练可达30杯/小时；若日销超80杯建议增加第二台磨豆机。</div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>奶泡太厚(像奶油)：</strong>进气时间缩短至2-3秒，打绵时间延长</div>
+      <div><strong>奶泡太稀(像水)：</strong>增加进气时间，蒸汽棒插入深度减少至0.5cm</div>
+      <div><strong>拿铁分离/口感苦：</strong>萃取时间过长或水温过高，调粗研磨或降低萃取温度</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款爆款变体</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>🍂 桂花拿铁：糖桂花酱10g杯底+拿铁</div>
+      <div>🥥 生椰拿铁：厚椰乳60ml代替部分牛奶</div>
+      <div>🍫 摩卡拿铁：巧克力酱15g+拿铁+奶油顶</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 两摊位/咖啡车升级</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      日销＞120杯时：① 升级双头商用咖啡机 ② 雇佣兼职咖啡师并制作SOP视频 ③ 与本地牛奶供应商签订日配协议降低成本 ④ 开发小程序预点单减少排队。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品（同赛道+内部跳转） ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">☕</span><span class="r-name">美式咖啡 KF_001（低成本引流）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥥</span><span class="r-name">生椰拿铁（植物基变体）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍪</span><span class="r-name">手工饼干/咖啡搭售方案</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>牛奶供应链·奶泡技术诊断·咖啡摊位选址·设备故障远程支援</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1拿铁出品优化·本地化口味调整·外卖平台运营</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“拿铁KF_002”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺 · KF_002 经典拿铁</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

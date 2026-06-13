@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VC_K003 韩式猪羊特色系列 — 五花肉·羊肉·猪梅肉·特色辅线</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+  .card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+  .header { background: linear-gradient(135deg, #8a5a2a 0%, #b0783a 50%, #d09850 100%); padding: 32px 24px 24px; color: #fff; }
+  .header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+
+  .section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+  .section:last-child { border-bottom: none; }
+  .section-title { font-size: 13px; font-weight: 600; color: #8a5a2a; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+
+  .value-stmt { background: #f7f2ec; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #8a5a2a; line-height: 1.7; text-align: center; }
+
+  .radar { display: flex; flex-direction: column; gap: 10px; }
+  .radar-item { display: flex; align-items: center; gap: 10px; }
+  .radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+  .radar-item .bar { height: 100%; border-radius: 10px; }
+  .radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #8a5a2a; }
+  .bf5 { width: 100%; background: linear-gradient(90deg, #b0783a, #d09850); }
+  .bf4 { width: 80%; background: linear-gradient(90deg, #b0783a, #d09850); }
+  .bf3 { width: 60%; background: linear-gradient(90deg, #c8a070, #d8b890); }
+  .bf2 { width: 40%; background: linear-gradient(90deg, #d8c0a0, #e0d0b8); }
+
+  .bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+  .bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; flex-shrink: 0; }
+  .bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+
+  .role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+  .role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+  .role-tag.active { background: #b0783a; color: #fff; box-shadow: 0 2px 8px rgba(176,120,58,0.3); }
+
+  .family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #f8f4ef; border-radius: 12px; }
+  .family-tree .node { margin: 2px 0; }
+  .family-tree .branch { color: #8a5a2a; font-weight: 600; }
+  .family-tree .leaf { color: #666; padding-left: 24px; }
+  .family-tree .highlight { color: #b0783a; font-weight: 600; padding-left: 24px; }
+  .family-tree .leaf span { background: #f0ece4; padding: 1px 8px; border-radius: 8px; margin-right: 4px; font-size: 11px; color: #888; }
+
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .market-item { background: #f8f2ec; border-radius: 10px; padding: 10px 12px; }
+  .market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+  .market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+
+  .matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+  .matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+  .matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+  .ql { position: absolute; font-size: 10px; color: #aaa; }
+  .ql-tr { top: 22px; right: 20px; text-align: right; }
+  .ql-tl { top: 22px; left: 50px; }
+  .ql-br { bottom: 32px; right: 20px; text-align: right; }
+  .ql-bl { bottom: 32px; left: 50px; }
+  .matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+  .matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+  .dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #d09850; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+  .dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #8a5a2a; white-space: nowrap; transform: translateX(-50%); }
+
+  .product-card { border: 1px solid #e8ddd0; border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+  .product-card .pc-header { padding: 10px 14px; font-weight: 700; font-size: 14px; }
+  .product-card .pc-body { padding: 10px 14px 14px; font-size: 13px; line-height: 1.7; color: #555; }
+  .product-card .pc-body table { width: 100%; font-size: 12px; border-collapse: collapse; }
+  .product-card .pc-body td { padding: 3px 6px; border-bottom: 1px solid #f0e8e0; }
+  .product-card .pc-body td:first-child { font-weight: 500; color: #333; width: 80px; }
+
+  .ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .ingredient-table th { background: #f0e8e0; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+  .ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+  .ingredient-table .amt { text-align: right; font-weight: 600; color: #8a5a2a; font-size: 12px; }
+
+  .pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin: 6px 0; }
+  .pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; margin-bottom: 2px; }
+  .pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+
+  .cost-box { background: #f7f2ec; border-radius: 12px; padding: 14px; }
+  .cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .cost-row .cr-label { color: #555; }
+  .cost-row .cr-value { font-weight: 600; color: #8a5a2a; }
+  .cost-divider { border: none; border-top: 1px dashed #d8c8b0; margin: 6px 0; }
+
+  .sub-series { margin-top: 12px; }
+  .sub-title { font-size: 13px; font-weight: 600; color: #8a5a2a; margin-bottom: 6px; }
+  .sub-card { background: #f8f2ec; border-radius: 10px; padding: 10px 14px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+  .sub-card:last-child { margin-bottom: 0; }
+  .sub-card .sc-name { font-size: 13px; font-weight: 500; }
+  .sub-card .sc-spec { font-size: 11px; color: #888; }
+  .sub-card .sc-link { font-size: 11px; color: #b0783a; font-weight: 600; text-decoration: none; }
+
+  .decision-box { background: #f8f2ec; border-radius: 12px; padding: 16px; }
+  .decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+  .decision-box p:last-child { margin-bottom: 0; }
+
+  .trend-box { background: linear-gradient(135deg, #f7f2ec, #f8f4ef); border-radius: 12px; padding: 16px; }
+  .trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .trend-item:last-child { margin-bottom: 0; }
+  .trend-year { font-size: 12px; font-weight: 700; color: #8a5a2a; width: 50px; flex-shrink: 0; }
+  .trend-arrow { color: #bbb; }
+  .trend-desc { font-size: 13px; color: #555; }
+  .trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #8a5a2a; text-align: center; }
+
+  .footer-brand { background: #8a5a2a; color: #fff; text-align: center; padding: 24px; }
+  .footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+  .footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+  .footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- ============ HEADER ============ -->
+  <div class="header">
+    <div class="header-badge">VC_K003 · 韩式融合烤肉</div>
+    <h1>韩式猪羊特色系列</h1>
+    <div class="subtitle">五花肉 · 羊肉 · 猪梅肉 · 特色辅线</div>
+    <div class="tags">
+      <span>🐷 四色五花肉</span>
+      <span>🌿 山蒜叶厚切</span>
+      <span>🥬 酸菜五花肉</span>
+      <span>🌶️ 辣味五花肉</span>
+      <span>🐑 鲜羊肉/羊腰</span>
+      <span>🥩 秘制猪梅肉</span>
+      <span>🦐 特色辅线6款</span>
+      <span>💰 毛利72-88%</span>
+    </div>
+  </div>
+
+  <!-- ============ ① ============ -->
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      猪肉走利润 · 羊肉做差异 · 辅线补单量<br>
+      覆盖3张VC · 11款产品 · 打通韩式猪羊全品类<br>
+      门店价15-68元 · 综合毛利率78-88%
+    </div>
+  </div>
+
+  <!-- ============ ② ============ -->
+  <div class="section">
+    <div class="section-title">② 爆品雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★☆</div>
+      <div class="bomb-reason">
+        <strong>利润压舱石。</strong>猪羊系列毛利率是韩式烤肉三个系列中最高的（五花肉85-88%），羊肉做差异化引流，特色辅线以极低成本拉高客单价。不做主力推，做"每桌必加一道"的利润补充。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+    </div>
+  </div>
+
+  <!-- ============ ③ ============ -->
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 家族树</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KR 韩式融合烤肉</div>
+      <div class="node leaf">├─ KR_01 韩式肥牛系列（流量母卡）</div>
+      <div class="node leaf">├─ KR_02 韩式厚切系列（招牌母卡）</div>
+      <div class="node highlight">└─ KR_03 韩式猪羊特色系列</div>
+      <div class="node leaf">&nbsp;&nbsp;├─ VC_K003 五花肉 · 四色/厚切/酸菜/辣味 <span>核心利润</span></div>
+      <div class="node leaf">&nbsp;&nbsp;├─ VC_K003 羊肉+猪梅肉 · 鲜羊肉/羊腰/猪梅肉 <span>差异化</span></div>
+      <div class="node leaf">&nbsp;&nbsp;└─ VC_K003 特色辅线 · 大肠/鸡胗/鱿鱼/虾滑/风干肠/鸡翅 <span>搭配出单</span></div>
+    </div>
+  </div>
+
+  <!-- ============ ④ ============ -->
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟品类</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">8/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">6/10 · 中</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">9/10 · 通吃</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">3/10 · 低</div></div>
+      <div class="market-item"><div class="m-label">创业门槛</div><div class="m-value">低 · 有供应链即开</div></div>
+    </div>
+  </div>
+
+  <!-- ============ ⑤ ============ -->
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div><div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div><div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div><div class="y-label">毛利率 →</div>
+      <div class="dot" style="left:65%;top:85%;"></div>
+      <div class="dot-label" style="left:65%;top:78%;color:#b0783a;">五花肉系列（利润压舱石）</div>
+      <div class="dot" style="left:35%;top:20%;background:#c8a070;width:12px;height:12px;"></div>
+      <div class="dot-label" style="left:35%;top:13%;color:#8a5a2a;font-size:10px;">羊腰子（差异化）</div>
+      <div class="dot" style="left:75%;top:50%;background:#c8a070;width:12px;height:12px;"></div>
+      <div class="dot-label" style="left:75%;top:43%;color:#8a5a2a;font-size:10px;">猪梅肉（高复购）</div>
+      <div class="dot" style="left:50%;top:75%;background:#d8b890;width:10px;height:10px;"></div>
+      <div class="dot-label" style="left:50%;top:68%;color:#999;font-size:10px;">特色辅线（搭配出单）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">横轴复购率 · 纵轴毛利率。猪羊系列整体偏右下，利润补充而非流量入口。</p>
+  </div>
+
+  <!-- ============ ⑥ ============ -->
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方 · 产品详解</div>
+
+    <!-- ===== 主推：五花肉系列（四个变形体） ===== -->
+    <div style="margin-bottom:16px;">
+      <div style="background:linear-gradient(90deg,#8a5a2a,#d09850);border-radius:8px;padding:8px 14px;color:#fff;font-size:14px;font-weight:700;margin-bottom:12px;">🐷 主推 · 五花肉系列（VC_K031）— 4款变形体</div>
+
+      <div class="product-card" style="border-color:#d09850;">
+        <div class="pc-header" style="background:#f7f2ec;color:#8a5a2a;">🎨 四色五花肉</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>原料</td><td>剔骨五花肉200g</td></tr>
+            <tr><td>四味</td><td>香辣（拌肉料+红油）· 黑椒（黑椒酱）· 酸甜（特味酱）· 浇汁（鲜肉汁）</td></tr>
+            <tr><td>工艺</td><td>五花肉切片，每味50g，分别用对应酱料拌制，拼盘出餐</td></tr>
+            <tr><td>售价/毛利</td><td>38-48元 · 毛利83-87%</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">四种酱料用小碟分装标注口味——客人吃混了会问"哪个是哪个" · 香辣味用红油不要用辣椒粉——红油挂色好看，辣椒粉烤后发黑</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#c09060;">
+        <div class="pc-header" style="background:#f5f0ea;color:#7a5030;">🌿 山蒜叶厚切猪五花</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>原料</td><td>猪五花麻冻后刨片机切厚片</td></tr>
+            <tr><td>改刀</td><td>太阳花刀（表面划菱形纹）</td></tr>
+            <tr><td>搭配</td><td>山蒜叶包裹 · 竹帘垫底</td></tr>
+            <tr><td>每份</td><td>180g</td></tr>
+            <tr><td>售价/毛利</td><td>38-58元 · 毛利85-88%（最高）</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">太阳花刀深度切到肉一半——太浅烤后纹路消失，太深肉会散 · 山蒜叶可用生菜替代（成本更低），但名字要改</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#a08050;">
+        <div class="pc-header" style="background:#f0ece4;color:#6a5030;">🥬 酸菜五花肉</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>原料</td><td>剔骨五花肉原味切片 + 自制酸菜</td></tr>
+            <tr><td>摆盘</td><td>圆盘中间放酸菜，五花肉卷着放一圈，撒葱花</td></tr>
+            <tr><td>每份</td><td>180g</td></tr>
+            <tr><td>售价/毛利</td><td>35-48元 · 毛利83-85%</td></tr>
+          </table>
+          <div style="background:#fff8f0;border-radius:8px;padding:10px;margin-top:8px;border:1px solid #f0e0c8;">
+            <div style="font-size:12px;font-weight:600;color:#8a5a2a;margin-bottom:6px;">📋 酸菜腌制配方（20斤量）</div>
+            <table class="ingredient-table">
+              <tr><th>原料</th><th>用量</th></tr>
+              <tr><td>酸菜（冲洗后握干）</td><td class="amt">20斤</td></tr>
+              <tr><td>葱末</td><td class="amt">2根量</td></tr>
+              <tr><td>姜末</td><td class="amt">1小块</td></tr>
+              <tr><td>一品鲜</td><td class="amt">200g</td></tr>
+              <tr><td>海鲜酱油</td><td class="amt">200g</td></tr>
+              <tr><td>十三香</td><td class="amt">半袋</td></tr>
+              <tr><td>牛肉粉</td><td class="amt">75g</td></tr>
+              <tr><td>鸡精/味精</td><td class="amt">各40g</td></tr>
+              <tr><td>白糖/白胡椒粉</td><td class="amt">40g+10g</td></tr>
+              <tr><td>熟豆油（烧热浇上）</td><td class="amt">6勺</td></tr>
+            </table>
+          </div>
+          <div class="pitfall-box" style="margin-top:8px;"><div class="p-label">⚠️ 防错</div><div class="p-desc">酸菜必须冲洗再握干——不洗直接拌会过咸 · 豆油一定要烧热浇上去——生豆油有豆腥味 · 腌好的酸菜冷藏可保存5天，建议2天内用完风味最佳</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#b08040;">
+        <div class="pc-header" style="background:#f5eee4;color:#8a5a2a;">🌶️ 辣味五花肉</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>原料</td><td>五花肉200g</td></tr>
+            <tr><td>调料</td><td>红油+拌肉料+香辣料</td></tr>
+            <tr><td>香辣料配比</td><td>麻椒碎50g + 川椒碎90g + 孜然30g + 芝麻20g（批量混合）</td></tr>
+            <tr><td>售价/毛利</td><td>35-45元 · 毛利84-87%</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">辣味五花肉不要提前拌——走菜前才拌，提前拌肉会出水 · 川椒碎用二荆条——香而不辣，太辣的朝天椒会劝退客人</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 变形体扩展：羊肉+猪梅肉 ===== -->
+    <div style="margin-bottom:16px;">
+      <div style="background:linear-gradient(90deg,#7a5540,#b08060);border-radius:8px;padding:8px 14px;color:#fff;font-size:14px;font-weight:700;margin-bottom:12px;">🐑 变形体扩展 · 羊肉+猪梅肉（VC_K032）— 3款</div>
+
+      <div class="product-card" style="border-color:#b08060;">
+        <div class="pc-header" style="background:#f5eee4;color:#7a5540;">🔥 碳烤鲜羊肉</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>原料</td><td>羊里脊/后腿180-200g</td></tr>
+            <tr><td>拌料</td><td>拌肉料 + 洋葱丝 + 豆油</td></tr>
+            <tr><td>卖点</td><td>北方烤肉必点 · 鲜羊肉不膻</td></tr>
+            <tr><td>售价/毛利</td><td>48-68元 · 毛利75-78%</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">选羊里脊或后腿——羊腿肉偏瘦需加豆油锁水 · 羊肉不要切太薄——烤完口感干柴，建议8mm-1cm厚片</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#9a7050;">
+        <div class="pc-header" style="background:#f0e8e0;color:#6a4530;">🍖 羊腰子</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>原料</td><td>包油羊腰子2-3颗</td></tr>
+            <tr><td>改刀</td><td>切两半，保留外包油</td></tr>
+            <tr><td>调味</td><td>撒海盐+孜然+芝麻</td></tr>
+            <tr><td>卖点</td><td>男性客群最爱 · 烧烤灵魂</td></tr>
+            <tr><td>售价/毛利</td><td>38-58元 · 毛利78-80%</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">外包油一定保留——去掉包油烤完腰子又干又硬 · 海盐要粗粒——细盐融化太快，烤完没咸味 · 羊腰冷冻品即可，不必鲜品</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#b08860;">
+        <div class="pc-header" style="background:#f5eee4;color:#8a6040;">🥩 秘制猪梅肉</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>原料</td><td>猪梅肉200g</td></tr>
+            <tr><td>工艺</td><td>冻上缓化切片 · 用牛排汁浸泡</td></tr>
+            <tr><td>卖点</td><td>猪身上最嫩部位 · 口感接近牛肉</td></tr>
+            <tr><td>售价/毛利</td><td>32-48元 · 毛利85-88%</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">缓化切片——半冻状态切最薄，全化了切会散 · 牛排汁浸泡至少30分钟——时间太短不入味 · 猪梅肉肥瘦相间部分最美——纯瘦肉太柴</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 变形体扩展：特色辅线 ===== -->
+    <div>
+      <div style="background:linear-gradient(90deg,#6a7050,#a0a070);border-radius:8px;padding:8px 14px;color:#fff;font-size:14px;font-weight:700;margin-bottom:12px;">🦐 变形体扩展 · 特色辅线（VC_K033）— 6款</div>
+
+      <div class="product-card" style="border-color:#a0a070;">
+        <div class="pc-header" style="background:#f4f0e8;color:#6a7050;">🥓 烤猪大肠/心管</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>预处理</td><td>先煮1小时（葱姜八角老抽）→ 捞出</td></tr>
+            <tr><td>拌料</td><td>拌肉料 + 豆油</td></tr>
+            <tr><td>每份</td><td>150g</td></tr>
+            <tr><td>售价/毛利</td><td>28-38元 · 毛利78-82%</td></tr>
+            <tr><td>卖点</td><td>下酒菜热门 · 解腻必点</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">猪大肠煮前要翻洗去油——太油烤完腻 · 煮的时候老抽多放——上色好看 · 煮好晾凉再拌——热着拌拌肉料挂不住</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#b0a080;">
+        <div class="pc-header" style="background:#f2eee8;color:#7a6840;">🐔 烤鸡胗/鸡脆骨</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>配方（2斤量）</td><td>鸡粉10g+味精8g+白胡椒粉8g+孜然半碎12g+辣椒粉6g+红油100g</td></tr>
+            <tr><td>每份</td><td>190g</td></tr>
+            <tr><td>售价/毛利</td><td>22-28元 · 毛利80-82%</td></tr>
+            <tr><td>卖点</td><td>成本低 · 口感脆 · 女性客群爱点</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">鸡胗切薄片（3mm）——太厚咬不动 · 鸡脆骨解冻后控干水分——水分太多变煮不是烤 · 孜然用半碎——整粒孜然容易烤焦变苦</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#c0a870;">
+        <div class="pc-header" style="background:#f4eee4;color:#8a7040;">🍗 奥尔良鸡翅</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>配方（3斤量）</td><td>奥尔良腌料70g+鸡粉20g+胡椒粉10g+料酒100g</td></tr>
+            <tr><td>腌制</td><td>6小时以上</td></tr>
+            <tr><td>每份</td><td>5-6个</td></tr>
+            <tr><td>售价/毛利</td><td>18-28元 · 毛利72-75%</td></tr>
+            <tr><td>卖点</td><td>家庭客群 · 孩子最爱</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">鸡翅背面划两刀帮助入味 · 腌制时间不足会腥——建议前一天腌好 · 烤的时候勤翻面——奥尔良腌料含糖，容易烤糊</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#909070;">
+        <div class="pc-header" style="background:#f0eee8;color:#606050;">🦑 烤墨斗鱿鱼</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>预处理</td><td>清理内脏</td></tr>
+            <tr><td>配方（每斤）</td><td>白胡椒粉4g+大喜大海鲜粉5g+味精5g</td></tr>
+            <tr><td>每份</td><td>190g</td></tr>
+            <tr><td>售价/毛利</td><td>18-25元 · 毛利80-85%</td></tr>
+            <tr><td>卖点</td><td>成本极低 · 海鲜差异化</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">清理内脏时注意撕去外膜——外膜烤后嚼不动 · 鱿鱼不要切太小——烤完缩水严重，看着量少客人会有意见 · 大喜大海鲜粉不可替换其他牌——风味差距大</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#b89860;">
+        <div class="pc-header" style="background:#f4ece0;color:#8a6a30;">🌭 烤风干肠</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>品牌</td><td>基雄牌成品 · 开袋即出</td></tr>
+            <tr><td>工艺</td><td>无需任何处理，直接上烤盘</td></tr>
+            <tr><td>售价/毛利</td><td>15-22元 · 毛利85-87%（最高）</td></tr>
+            <tr><td>卖点</td><td>操作零门槛 · 利润最高</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">不要改刀不要腌——成品本身就是调好味的 · 烤到表皮微焦起泡即好——烤太久会爆裂 · 上桌配芥末酱或甜辣酱蘸食</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#a0a888;">
+        <div class="pc-header" style="background:#f0f0ea;color:#606840;">🦐 锡纸虾滑</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>原料</td><td>香煎虾滑冻品10个</td></tr>
+            <tr><td>佐料</td><td>蒜蓉酱 + 葱花米椒</td></tr>
+            <tr><td>容器</td><td>锡纸碗</td></tr>
+            <tr><td>售价/毛利</td><td>22-28元 · 毛利78-80%</td></tr>
+            <tr><td>卖点</td><td>女生最爱 · 呈现高级</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">虾滑直接冷冻品上锡纸碗——不用解冻，烤到表面微焦 · 蒜蓉酱要多——虾滑本身味淡，全靠蒜蓉酱提味 · 锡纸碗底部刷一层油防粘</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 烤肉撒料与蘸料 ===== -->
+    <div style="margin-top:16px;">
+      <div style="background:linear-gradient(90deg,#8a5030,#c08050);border-radius:8px;padding:8px 14px;color:#fff;font-size:14px;font-weight:700;margin-bottom:12px;">🧂 烤肉撒料与蘸料配方</div>
+
+      <div class="product-card" style="border-color:#c08050;">
+        <div class="pc-header" style="background:#f7f2ec;color:#8a5a2a;">🧂 韩式烤肉干料（通用配方·批量250份）</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>配方</td><td>十三香1包 + 麻辣鲜1包 + 孜然粉500g（半碎） + 黄豆粉500g + 细辣椒面500g + 芝麻粉250g（半碎）</td></tr>
+            <tr><td>工艺</td><td>所有原料混合均匀，密封保存30天风味融合后使用</td></tr>
+            <tr><td>每份</td><td>5-8g</td></tr>
+            <tr><td>适用</td><td>五花肉、羊肉、大肠、鸡胗、鱿鱼等所有烤肉</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">💡 要点</div><div class="p-desc">孜然和芝麻半碎口感最佳——太细无咀嚼感，太整烤后易焦 · 密封30天是熟成过程，新拌的直接用风味差一个档次</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#b08060;">
+        <div class="pc-header" style="background:#f5eee4;color:#7a5540;">🥜 麻酱蘸料（经典韩式）</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>单人份</td><td>芝麻酱20g + 香油5g + 盐1g + 韭菜花2g + 腐乳汁2g + 白糖1g</td></tr>
+            <tr><td>工艺</td><td>油澥法：芝麻酱先用香油澥开（分次加香油搅匀至顺滑），再加入其余调料调匀</td></tr>
+            <tr><td>适用</td><td>五花肉蘸食（解腻）、大肠蘸食</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">油澥法是关键——用水澥会澥不开且口感发涩 · 韭菜花和腐乳汁自带咸味，盐要少放 · 批量可预调，冷藏保存3天</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#a88060;">
+        <div class="pc-header" style="background:#f2ece4;color:#6a5030;">🦐 海鲜汁（批量）</div>
+        <div class="pc-body">
+          <table>
+            <tr><td>配方</td><td>酿造酱油2500g + 白砂糖2500g + 清酒800g + 味精150g</td></tr>
+            <tr><td>工艺</td><td>所有原料混合搅拌至砂糖完全融化即可</td></tr>
+            <tr><td>适用</td><td>猪梅肉蘸食（清淡提鲜）、酸菜五花肉搭配</td></tr>
+          </table>
+          <div class="pitfall-box"><div class="p-label">💡 要点</div><div class="p-desc">酿造酱油确保氨基酸态氮≥0.8g/100ml · 清酒可用普通料酒替代但风味略降 · 糖量大，冷藏密封可保存30天</div></div>
+        </div>
+      </div>
+
+      <div class="product-card" style="border-color:#a09070;">
+        <div class="pc-header" style="background:#f0ece4;color:#6a6840;">🌶️ 猪羊特色蘸料搭配建议</div>
+        <div class="pc-body">
+          <div style="background:#f8f4ef;border-radius:8px;padding:10px;border:1px solid #e8ddd0;">
+            <div style="font-size:12px;line-height:2;color:#555;">
+              <strong style="color:#8a5a2a;">🐷 五花肉</strong> → 干料 + 麻酱（解腻）<br>
+              <strong style="color:#8a5a2a;">🥬 酸菜五花肉</strong> → 干料 + 海鲜汁（酸菜已解腻）<br>
+              <strong style="color:#8a5a2a;">🐑 羊肉</strong> → 干料（孜然味配羊肉经典）<br>
+              <strong style="color:#8a5a2a;">🥩 猪梅肉</strong> → 海鲜汁（清淡提鲜）<br>
+              <strong style="color:#8a5a2a;">🦐 特色辅线</strong> → 干料（大肠/鸡胗/鱿鱼都适合干料）
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ⑦ ============ -->
+  <div class="section">
+    <div class="section-title">⑦ 商业决策</div>
+    <div class="decision-box">
+      <p><strong>✅ 适合场景：</strong>所有烤肉店必备。牛肉负责流量和招牌，猪羊系列负责利润和差异化。五花肉全国通吃，羊肉在北方市场尤其强势，特色辅线提升客单价。</p>
+      <p><strong>📌 菜单策略：</strong>猪羊系列不放第一屏，作为"加单区"在菜单中部。五花肉标"每桌必点"，羊肉标"冬日限定"提高冲动。特色辅线放在菜单末尾作为"加点"推荐——客人感觉"来都来了加一份大肠/风干肠也不贵"。</p>
+      <p><strong>🎯 套餐组合推荐：</strong>四色五花肉(48元)+碳烤鲜羊肉(58元)+烤大肠(38元)+墨斗鱿鱼(25元)=169元，毛利率约85%。适合作为"加菜推荐"给点了牛肉的客人。</p>
+      <p><strong>⚠️ 风险提示：</strong>猪肉价格波动不大但品质差异大——建议用品牌五花肉(双汇/雨润)，散装五花肉肥瘦比例不稳定。冬季羊肉价格涨30-50%，建议夏季锁价备货。酸菜需提前腌制1天——新店容易断供。</p>
+      <p><strong>💡 地摊适配：</strong>酸菜五花肉特别适合地摊——成本极低，客人觉得"划算"。风干肠和鸡胗适合做夜市快烤——操作简单，出餐快，翻台率高。</p>
+    </div>
+  </div>
+
+  <!-- ============ ⑧ ============ -->
+  <div class="section">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">猪肉便宜但不上台面 · 羊肉有膻味不想做</span></div>
+      <div class="trend-item"><span class="trend-year">2023</span><span class="trend-arrow">→</span><span class="trend-desc">山蒜叶厚切五花成网红 · 酸菜搭配解腻成标配</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">伊比利亚黑猪进口 · 和牛价格飙升推动猪肉升级</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">猪肉部位细分 · 国产黑猪冷鲜化 · 羊肉一年四季化 · 辅线产品预制化占比提升至60%</span></div>
+      <div class="trend-verdict">猪羊最大的机会是「牛肉太贵」——好五花和鲜羊肉是天然的替代方案。辅线产品越简单越赚钱，风干肠/虾滑这类开袋即出的产品将是未来利润引擎</div>
+    </div>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div>
+    <div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links">
+      <span>📢 公众号：沧林食品技术</span>
+      <span>💬 微信：canglin1985</span>
+    </div>
+    <div class="fb-series">韩式融合烤肉 · VC_K003 · 五花肉·羊肉·猪梅肉·特色辅线</div>
+  </div>
+
+</div>
+</body>
+</html>

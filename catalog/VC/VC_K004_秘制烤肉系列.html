@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VC_K004 韩式秘制烤肉系列 — 合并母卡</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+.card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+.header { background: linear-gradient(135deg, #8a2d5a 0%, #a04070 50%, #c06090 100%); padding: 32px 24px 24px; color: #fff; }
+.header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+.header h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { font-size: 13px; opacity: 0.85; margin-bottom: 14px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+.section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+.section-title { font-size: 13px; font-weight: 600; color: #8a2d5a; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+.parent-link { font-size: 12px; color: #888; margin-bottom: 12px; }
+.parent-link a { color: #c06090; font-weight: 600; text-decoration: none; }
+.value-stmt { background: #fcf0f5; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #8a2d5a; line-height: 1.7; text-align: center; }
+.radar { display: flex; flex-direction: column; gap: 10px; }
+.radar-item { display: flex; align-items: center; gap: 10px; }
+.radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+.radar-item .bar { height: 100%; border-radius: 10px; }
+.radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #8a2d5a; }
+.bf5 { width: 100%; background: linear-gradient(90deg, #c06090, #e080a8); }
+.bf4 { width: 80%; background: linear-gradient(90deg, #c06090, #e080a8); }
+.bf3 { width: 60%; background: linear-gradient(90deg, #d8a0b0, #e8b8c8); }
+.bomb-box { display: flex; align-items: center; gap: 12px; background: #fcf0f5; border-radius: 12px; padding: 14px; border: 1px solid #f0d0dc; }
+.bomb-stars { font-size: 22px; letter-spacing: 2px; color: #c06090; flex-shrink: 0; }
+.bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+.role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+.role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+.role-tag.active { background: #c06090; color: #fff; box-shadow: 0 2px 8px rgba(192,96,144,0.3); }
+.family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #faf4ee; border-radius: 12px; }
+.family-tree .node { margin: 2px 0; }
+.family-tree .branch { color: #8a2d5a; font-weight: 600; }
+.family-tree .leaf { color: #666; padding-left: 24px; }
+.family-tree .highlight { color: #c06090; font-weight: 600; padding-left: 24px; }
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.market-item { background: #fcf0f5; border-radius: 10px; padding: 10px 12px; }
+.market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+.market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+.matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+.matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+.matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+.ql { position: absolute; font-size: 10px; color: #aaa; }
+.ql-tr { top: 22px; right: 20px; text-align: right; }
+.ql-tl { top: 22px; left: 50px; }
+.ql-br { bottom: 32px; right: 20px; text-align: right; }
+.ql-bl { bottom: 32px; left: 50px; }
+.matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+.matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+.dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #c06090; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+.dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #8a2d5a; white-space: nowrap; transform: translateX(-50%); }
+
+.product-card { border: 1px solid #e8ddd0; border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+.product-card .pc-header { padding: 10px 14px; font-weight: 700; font-size: 14px; }
+.product-card .pc-body { padding: 10px 14px 14px; font-size: 13px; line-height: 1.7; color: #555; }
+.product-card .pc-body table { width: 100%; font-size: 12px; border-collapse: collapse; }
+.product-card .pc-body td { padding: 3px 6px; border-bottom: 1px solid #f0e8e0; }
+.product-card .pc-body td:first-child { font-weight: 500; color: #333; width: 80px; }
+
+.ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.ingredient-table th { background: #f0e8e0; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+.ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+.ingredient-table .amt { text-align: right; font-weight: 600; color: #8a2d5a; font-size: 12px; }
+
+.pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin: 6px 0; }
+.pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; margin-bottom: 2px; }
+.pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+
+.cost-box { background: #fcf0f5; border-radius: 12px; padding: 14px; }
+.cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.cost-row .cr-label { color: #555; }
+.cost-row .cr-value { font-weight: 600; color: #8a2d5a; }
+.cost-divider { border: none; border-top: 1px dashed #d8c0c8; margin: 6px 0; }
+
+.decision-box { background: #faf4ee; border-radius: 12px; padding: 16px; }
+.decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+.decision-box p:last-child { margin-bottom: 0; }
+
+.trend-box { background: linear-gradient(135deg, #fcf0f5, #f8f4ef); border-radius: 12px; padding: 16px; }
+.trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trend-item:last-child { margin-bottom: 0; }
+.trend-year { font-size: 12px; font-weight: 700; color: #8a2d5a; width: 50px; flex-shrink: 0; }
+.trend-arrow { color: #bbb; }
+.trend-desc { font-size: 13px; color: #555; }
+.trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #8a2d5a; text-align: center; }
+
+.footer-brand { background: #8a2d5a; color: #fff; text-align: center; padding: 24px; }
+.footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+.footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+.footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">VC_K004 · 韩式融合烤肉</div>
+    <h1>韩式秘制烤肉系列</h1>
+    <div class="subtitle">特色肥瘦肉 · 横膈膜 · 雪花牛大力 · 卷牛肋排 · 猪颈肉</div>
+    <div class="tags">
+      <span>🥩 特色肥瘦肉</span>
+      <span>🔥 浇汁横膈膜</span>
+      <span>❄️ 雪花牛大力</span>
+      <span>🥢 秘制卷牛肋排</span>
+      <span>🐷 秘制猪颈肉</span>
+    </div>
+  </div>
+
+  <div class="section" style="padding:14px 24px;background:#fafafc;">
+    <div class="parent-link">← 合并母卡（VC_K041 + K042 + K043 + K044 + K045）</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      秘制烤肉五连发 · 一卡覆盖全价位段<br>
+      特色肥瘦肉（爆款引流）→ 横膈膜/牛大力（中高端利润）→ 猪颈肉（高毛利压舱）<br>
+      共用腌料体系 · 差异化工艺 · 毛利率68-87%
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品雷达 · 五维指数</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★½</div>
+      <div class="bomb-reason">
+        <strong>秘制烤肉品类冠军团队。</strong>特色肥瘦肉流量与复购双5★，招牌必点；横膈膜和牛大力传播性4★，稀有部位自带话题；猪颈肉毛利5★，低成本高产出。标准化3★——腌料共通但工艺细节多，需严格培训。整体4.5★级别产品线。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 家族树</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag active">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag active">招牌产品</span>
+      <span class="role-tag active">社交产品</span>
+      <span class="role-tag">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KR 韩式融合烤肉体系</div>
+      <div class="node leaf">├─ KR_01 韩式肥牛系列</div>
+      <div class="node leaf">│  └─ VC_K001 牛肉调味系列（刷酱/泡汁/浇汁）</div>
+      <div class="node leaf">├─ KR_02 韩式厚切系列</div>
+      <div class="node leaf">│  └─ VC_K002 原味牛肉系列（拌肉/原味/拼盘/精品）</div>
+      <div class="node leaf">├─ KR_03 韩式猪羊特色系列</div>
+      <div class="node leaf">│  └─ VC_K003 猪羊特色系列（五花肉/羊肉/辅线）</div>
+      <div class="node highlight">└─ KR_04 韩式秘制烤肉系列 ← 你在这里</div>
+      <div class="node leaf">&nbsp;&nbsp;├─ 特色肥瘦肉（肥瘦/肥牛/瘦牛）</div>
+      <div class="node leaf">&nbsp;&nbsp;├─ 浇汁横膈膜（稀有部位）</div>
+      <div class="node leaf">&nbsp;&nbsp;├─ 雪花牛大力（蜜汁浇淋）</div>
+      <div class="node leaf">&nbsp;&nbsp;├─ 秘制卷牛肋排（卷制工艺）</div>
+      <div class="node leaf">&nbsp;&nbsp;└─ 秘制猪颈肉（松板肉）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>角色分工：</strong>特色肥瘦肉=引流主力（高流量+高毛利）· 横膈膜&牛大力=利润担当（稀有部位定高价）· 卷牛肋排=工艺招牌（卷制有看点）· 猪颈肉=毛利压舱石（成本最低毛利最高）
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟细分 · 秘制流派</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">8/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">7/10 · 中等</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">8/10 · 东北为主全国可打</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">5/10 · 中</div></div>
+      <div class="market-item"><div class="m-label">创业门槛</div><div class="m-value">中 · 需腌料体系和切肉技术</div></div>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:#555;line-height:1.7;padding:10px 14px;background:#f5f0f3;border-radius:10px;">
+      <p><strong>📌 产品角色分析：</strong>本系列五款产品覆盖了烤肉店从"引流"到"利润"到"面子"三个层级。<strong>特色肥瘦肉</strong>是刚需流量款——客单价最低但桌桌必点，承担拉新和复购任务。<strong>浇汁横膈膜 &amp; 雪花牛大力</strong>是中高端利润款——利用稀有部位制造稀缺感和价值锚点，拉升整体客单价。<strong>秘制卷牛肋排</strong>是工艺展示款——卷制摆盘自带传播属性，强化"手工感"品牌印象。<strong>秘制猪颈肉</strong>是毛利压舱石——成本最低（5-8元）、毛利最高（82-85%），走量养店。</p>
+      <p style="margin-top:6px;"><strong>🔍 竞争分析：</strong>韩式秘制烤肉赛道目前呈现"一超多强"格局——老牌韩式烤肉品牌效应强，但全国化程度低。本系列的核心竞争优势在于<strong>腌料通用化</strong>（五款产品共用一套腌料，降低备货复杂度和培训成本）+ <strong>部位全覆盖</strong>（从肥瘦肉到稀有部位，满足全价格带需求）+ <strong>蘸料体系完整</strong>（干料·麻酱·海鲜汁·辣汁四套蘸料，提升客单感知）。劣势在于稀有部位（横膈膜/牛大力）供应链不稳定，连锁扩张时需提前锁定货源。</p>
+      <p style="margin-top:6px;"><strong>🎯 差异化策略：</strong>对标日式烤肉（高客单低翻台）和传统中式烤肉（低客单无特色），秘制烤肉走"中间路线"——价位比日式低30-40%、比中式高20-30%，用"老式肥牛腌料"的独特甜辣口感和"部位细分"的策略形成记忆点，避免陷入同质化价格战。</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div><div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div><div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div><div class="y-label">传播性 →</div>
+      <div class="dot" style="left:78%;top:25%;"></div>
+      <div class="dot-label" style="left:78%;top:18%;">特色肥瘦肉（右上·高流量高复购）</div>
+      <div class="dot" style="left:55%;top:40%;background:#c08090;width:12px;height:12px;"></div>
+      <div class="dot-label" style="left:55%;top:33%;color:#8a2d5a;font-size:10px;">横膈膜·牛大力（中复购中传播）</div>
+      <div class="dot" style="left:45%;top:70%;background:#c08090;width:12px;height:12px;"></div>
+      <div class="dot-label" style="left:45%;top:63%;color:#8a2d5a;font-size:10px;">卷牛肋排（中复购·工艺型）</div>
+      <div class="dot" style="left:70%;top:60%;background:#d0a0b0;width:10px;height:10px;"></div>
+      <div class="dot-label" style="left:70%;top:53%;color:#8a2d5a;font-size:10px;">猪颈肉（高复购·性价比）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>特色肥瘦肉位于右上象限（高复购高传播）——流量入口，招牌必点。<br>
+      横膈膜&牛大力居中偏上（中复购中传播）——稀有部位做中高端差异化。<br>
+      猪颈肉右下偏右（高复购中低传播）——毛利最高，走量压舱石。<br>
+      卷牛肋排左下偏左（中复购低传播）——工艺型产品，专供老客尝鲜。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方 · 五款详解</div>
+
+    <div style="font-size:12px;color:#666;line-height:1.6;margin-bottom:12px;padding:10px 14px;background:#f5f0f3;border-radius:10px;">
+      <strong>🔥 核心共通：</strong>五款产品共用同一套腌料体系（老式肥牛腌料），差异化体现在<b>原料部位、切割规格、出品前调味和摆盘方式</b>。
+    </div>
+
+    <div class="product-card" style="border-color:#c06090;">
+      <div class="pc-header" style="background:#fcf0f5;color:#8a2d5a;">🥩 VC_K041 特色肥瘦肉 · 三变形体</div>
+      <div class="pc-body">
+        <table>
+          <tr><td>规格</td><td>150g/份 · 500g肉+95.5g味肉汁+10g姜片+30g洋葱汁→腌制3小时</td></tr>
+          <tr><td>三款</td><td><strong>特色肥瘦</strong>（肥瘦相间·豆油50g/1000g肉）· <strong>特色肥牛</strong>（偏肥·豆油70g）· <strong>特色瘦牛</strong>（偏瘦·豆油60g）</td></tr>
+          <tr><td>出品前</td><td>生豆油：肥瘦50g / 肥牛70g / 瘦牛60g（每1000g肉）</td></tr>
+          <tr><td>腌料</td><td>老式肥牛腌料（10斤肉）：盐50g+味精50g+白糖150g+二锅头50g+牛肉粉40g+黑胡椒粉10g+细辣椒面10g+鸡蛋4个+姜50g+白圆葱150g+梨1个+菠萝50g+雪碧1.5斤→打汁过滤</td></tr>
+          <tr><td>成本·售价</td><td>成本6-8元 · 售价38-58元 · 毛利率82-87%</td></tr>
+        </table>
+        <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">• 腌制至少3小时——不足2小时味没进去 • 出品前才加豆油——腌的时候加豆油味发闷 • 三款豆油量不同：50/70/60g，称好别混 • 菠萝用罐头菠萝——新鲜菠萝酵素太强，腌久了肉会烂</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" style="border-color:#a05080;">
+      <div class="pc-header" style="background:#f8eef2;color:#7a3060;">🔥 VC_K042 浇汁横膈膜</div>
+      <div class="pc-body">
+        <table>
+          <tr><td>原料</td><td>牛横膈膜（护心肉周边）· 每头牛仅1块 · 稀有部位</td></tr>
+          <tr><td>规格</td><td>200g/份 · 宽4cm·厚6mm·长8-10cm · 粽叶竹帘摆盘</td></tr>
+          <tr><td>工艺</td><td>喷小排干料15g→喷小排汁5g→淋香油3g</td></tr>
+          <tr><td>储存</td><td>0至-3度 · 腌好不得超8小时</td></tr>
+          <tr><td>配汁</td><td>前厅汁 + 辣汁</td></tr>
+          <tr><td>成本·售价</td><td>成本10-15元 · 售价48-68元 · 毛利率75-80%</td></tr>
+        </table>
+        <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">• 横膈膜切3mm厚度最佳——太薄烤后收缩严重 • 雪花纹理面朝上摆盘 • 腌好不超8h，超时口感下降 • 配前厅汁和辣汁两种蘸料提升层次感</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" style="border-color:#905070;">
+      <div class="pc-header" style="background:#f5ecf0;color:#6b2d5a;">❄️ VC_K043 雪花牛大力</div>
+      <div class="pc-body">
+        <table>
+          <tr><td>原料</td><td>雪花部位（牛肩胛附近）· 油花纹路明显</td></tr>
+          <tr><td>规格</td><td>150g/份 · 厚度2-3mm · 粽叶竹帘摆盘</td></tr>
+          <tr><td>工艺</td><td>牛腩汁（果酱1:自用汁4比例）勾兑，出品前均匀淋在表面</td></tr>
+          <tr><td>储存</td><td>零下3至6度保存</td></tr>
+          <tr><td>配汁</td><td>辣汁</td></tr>
+          <tr><td>成本·售价</td><td>成本15-20元 · 售价58-78元 · 毛利率68-74%</td></tr>
+        </table>
+        <div style="margin-top:8px;padding:8px 12px;background:#f0ecf5;border-radius:8px;font-size:12px;color:#555;line-height:1.6;">
+          <strong>📋 工艺详解：</strong>雪花牛大力选用牛肩胛附近雪花纹理丰富的部位（又称"牛小排肩"或"羽下肉"），油花分布均匀如大理石纹，是烤肉中的"颜值担当"。加工流程：①原料解冻至中心温度-2至0℃（半解冻状态便于切片）；②沿肌纤维走向逆纹切2-3mm薄片（太厚口感偏硬，太薄易碎）；③按150g/份摆盘，每片略微错开以显雪花纹理；④粽叶垫底+竹帘托盘的组合摆盘，凸显品质感；⑤出品前将牛腩汁（果酱1:自用汁4比例勾兑）烧开放凉，用毛刷均匀淋在肉表面，每份约15-20g；⑥搭配辣汁上桌。<strong>关键控制点：</strong>牛腩汁必须烧开放凉后方可使用（热汁会烫熟表面影响口感）；出餐前才淋汁不可提前腌制；零下3至6度冷藏保存，建议48小时内用完。
+        </div>
+        <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">• 蜜汁/牛腩汁要烧开放凉后再用——热汁淋肉会表面熟化 • 出餐前均匀淋在表面即可，不要提前腌制 • 批量调制后可冷藏保存7天</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" style="border-color:#a06080;">
+      <div class="pc-header" style="background:#f7eef2;color:#7a3560;">🥢 VC_K044 秘制卷牛肋排</div>
+      <div class="pc-body">
+        <table>
+          <tr><td>原料</td><td>牛排肉卷制成卷状切厚片</td></tr>
+          <tr><td>规格</td><td>200g/份 · 粽叶竹帘 · 法香装饰</td></tr>
+          <tr><td>工艺</td><td>秘制汁（刷酱） + 喷小排汁 · 双面调味</td></tr>
+          <tr><td>摆盘</td><td>竹帘 · 粽叶 · 法香 · 切面朝上显纹理</td></tr>
+          <tr><td>配汁</td><td>辣汁 + 海鲜汁</td></tr>
+          <tr><td>成本·售价</td><td>成本12-18元 · 售价58-78元 · 毛利率72-78%</td></tr>
+        </table>
+        <div style="margin-top:8px;padding:8px 12px;background:#f0ecf5;border-radius:8px;font-size:12px;color:#555;line-height:1.6;">
+          <strong>📋 工艺详解：</strong>秘制卷牛肋排是本系列中工艺最复杂的单品，核心在于"卷制"二字。加工流程：①原料选用牛肋排部位的整块去骨牛排肉（筋膜修净）；②将牛排肉平铺，用肉锤拍打至均匀厚度约5mm；③在肉表面均匀刷一层秘制汁（以酱油+糖+蒜泥+梨汁为主体的甜咸酱），腌制约15分钟；④将腌制好的肉片紧密卷成圆柱状，用保鲜膜包裹紧实，冷藏定型2小时以上；⑤出品时切3cm厚片，每份约5-6片（总重200g）；⑥每片两面再喷少量喷小排汁（约5g/面）增香；⑦粽叶垫底+竹帘托盘+法香点缀，切面朝上以显示漂亮的螺旋纹理。<strong>关键控制点：</strong>肉卷必须冷藏定型2h以上（定型不足切开易散）；切片厚度3cm为最佳（太薄烤后收缩、太厚内部难熟）；双面调味但不过量，以突出牛肉本味为主。
+        </div>
+        <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">• 牛肋排卷制时肉片要薄而均匀——太厚卷不紧烤时会散 • 肉卷切厚片约3cm，烤时四面受热均匀 • 摆盘时切面朝上显示雪花纹理</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" style="border-color:#b07090;">
+      <div class="pc-header" style="background:#f8f0f4;color:#8a2d5a;">🐷 VC_K045 秘制猪颈肉</div>
+      <div class="pc-body">
+        <table>
+          <tr><td>原料</td><td>猪颈肉（松板肉）· 一只猪只有两块 · 嫩滑如牛肉</td></tr>
+          <tr><td>规格</td><td>200g/份 · 粽叶竹帘摆盘</td></tr>
+          <tr><td>腌料</td><td>老式肥牛腌料（同VC_K041配方）</td></tr>
+          <tr><td>烤制</td><td>两面各烤3-4分钟至微焦出油</td></tr>
+          <tr><td>配汁</td><td>辣汁 + 海鲜汁</td></tr>
+          <tr><td>成本·售价</td><td>成本5-8元 · 售价38-48元 · 毛利率82-85%</td></tr>
+        </table>
+        <div style="margin-top:8px;padding:8px 12px;background:#f0ecf5;border-radius:8px;font-size:12px;color:#555;line-height:1.6;">
+          <strong>📋 独立配方说明：</strong>秘制猪颈肉使用老式肥牛腌料，与VC_K041共用腌料体系，但在腌制细节上有独立调整。<strong>推荐腌料配比（每500g猪颈肉）：</strong>盐3g + 味精3g + 白糖8g + 二锅头3g + 牛肉粉2g + 黑胡椒粉0.5g + 细辣椒面0.5g + 鸡蛋1个 + 姜片3g + 圆葱碎8g + 梨茸5g + 菠萝茸3g + 雪碧75g → 打汁过滤后浸泡腌制。<strong>加工流程：</strong>①猪颈肉切5-8mm厚片（顺纹切保持口感）；②腌料打汁过滤后倒入肉片中抓匀，腌制3小时（不可过夜）；③出品前将肉片单层展开摆盘（粽叶垫底竹帘托）；④每份200g，搭配辣汁和海鲜汁双蘸碟上桌。<strong>独特性：</strong>猪颈肉虽用同一套腌料，但因其肉质特点（脂肪含量高、纤维短），腌制时间比牛肉短1-2小时，避免过咸；烤制时油脂逼出形成外焦里嫩效果，是系列中毛利最高（82-85%）的走量压舱产品。
+        </div>
+        <div class="pitfall-box"><div class="p-label">⚠️ 防错</div><div class="p-desc">• 猪颈肉切5-8mm厚片——太薄像猪排没口感，外焦里嫩是灵魂 • 腌制3小时足够，不要过夜——猪颈肉腌太久会咸 • 烤至微焦出油即最佳状态，过火会老</div></div>
+      </div>
+    </div>
+
+    <!-- ===== 烤肉撒料与蘸料体系（新增子章节） ===== -->
+    <div style="margin-top:18px;padding:14px;background:#fcf8f0;border:1px solid #e8dcc8;border-radius:12px;">
+      <div style="font-size:13px;font-weight:700;color:#7a6020;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+        🌶️ 烤肉撒料与蘸料体系
+      </div>
+      <div style="font-size:12px;color:#666;line-height:1.7;">
+
+        <p><strong>❶ 韩式烤肉干料（通用撒料）</strong></p>
+        <p style="padding-left:12px;margin:4px 0;">十三香 1包 + 麻辣鲜 1包 + 孜然粉 500g + 黄豆粉 500g + 细辣椒面 500g + 芝麻粉 250g → 全部混合均匀</p>
+        <p style="padding-left:12px;margin:4px 0;color:#999;font-size:11px;">适用：所有烤肉品种出品前撒面或配碟蘸食 · 批量预混可常温密封保存30天 · 每份用量约8-10g</p>
+
+        <p style="margin-top:10px;"><strong>❷ 麻酱蘸料（油澥法 · 每份份量）</strong></p>
+        <p style="padding-left:12px;margin:4px 0;">芝麻酱 20g + 香油 5g + 盐 1g + 韭菜花 2g + 腐乳汁 2g + 白糖 1g</p>
+        <p style="padding-left:12px;margin:4px 0;color:#999;font-size:11px;">工艺：芝麻酱先用香油澥开（朝同一方向搅至顺滑），再加入其余调料搅匀 · 澥好的麻酱冷藏可存3天，用前需回温搅拌</p>
+
+        <p style="margin-top:10px;"><strong>❸ 海鲜汁（150份批量）</strong></p>
+        <p style="padding-left:12px;margin:4px 0;">酿造酱油 2500g + 白砂糖 2500g + 清酒 800g + 味精 150g → 搅至糖化即可</p>
+        <p style="padding-left:12px;margin:4px 0;color:#999;font-size:11px;">适用：卷牛肋排、猪颈肉等蘸食 · 批量调好后常温保存7天 · 每份出餐约35-40g</p>
+
+        <p style="margin-top:10px;"><strong>❹ 喷小排干料配方（喷料型）</strong></p>
+        <p style="padding-left:12px;margin:4px 0;">盐 30% + 味精 20% + 白糖 15% + 孜然粉 15% + 辣椒面 10% + 五香粉 5% + 花椒粉 5% → 打碎混合</p>
+        <p style="padding-left:12px;margin:4px 0;color:#999;font-size:11px;">用量：每份肉喷撒 15g · 适用横膈膜、卷牛肋排的出品前调味 · 打碎后密封防潮可存60天</p>
+
+        <p style="margin-top:10px;"><strong>❺ 前厅汁（辣汁 · 批量配方）</strong></p>
+        <p style="padding-left:12px;margin:4px 0;">韩式辣酱 500g + 雪碧 300g + 白糖 100g + 蒜泥 50g + 醋精 30g + 芝麻 20g → 搅匀即可</p>
+        <p style="padding-left:12px;margin:4px 0;color:#999;font-size:11px;">适用：蘸食横膈膜、牛大力、肥瘦肉等所有烤肉 · 冷藏保存7天 · 出餐前常温回温口感更佳</p>
+
+        <div style="margin-top:12px;padding:8px 12px;background:#efe8d8;border-radius:8px;font-size:11px;color:#665530;">
+          <strong>💡 蘸料搭配方案：</strong>
+          肥瘦肉 → 干料/麻酱 · 横膈膜 → 干料+前厅汁 · 牛大力 → 前厅汁（辣汁）· 卷牛肋排 → 海鲜汁+干料 · 猪颈肉 → 海鲜汁+前厅汁
+        </div>
+      </div>
+    </div>
+    <!-- ===== 蘸料体系结束 ===== -->
+
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 商业决策 · 成本利润对比</div>
+    <div class="cost-box">
+      <div class="cost-row" style="font-size:11px;color:#999;border-bottom:1px solid #e0d0d8;padding-bottom:6px;margin-bottom:4px;"><span class="cr-label">产品</span><span>成本</span><span>售价</span><span>毛利率</span></div>
+      <div class="cost-row"><span class="cr-label"><strong>🥩 特色肥瘦肉</strong></span><span class="cr-value">6-8元</span><span class="cr-value">38-58元</span><span class="cr-value">82-87%</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label"><strong>🔥 浇汁横膈膜</strong></span><span class="cr-value">10-15元</span><span class="cr-value">48-68元</span><span class="cr-value">75-80%</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label"><strong>❄️ 雪花牛大力</strong></span><span class="cr-value">15-20元</span><span class="cr-value">58-78元</span><span class="cr-value">68-74%</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label"><strong>🥢 秘制卷牛肋排</strong></span><span class="cr-value">12-18元</span><span class="cr-value">58-78元</span><span class="cr-value">72-78%</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label"><strong>🐷 秘制猪颈肉</strong></span><span class="cr-value">5-8元</span><span class="cr-value">38-48元</span><span class="cr-value">82-85%</span></div>
+    </div>
+
+    <div class="decision-box" style="margin-top:14px;">
+      <p><strong>💰 利润分层：</strong>猪颈肉（82-85%）> 特色肥瘦肉（82-87%）> 横膈膜（75-80%）> 卷牛肋排（72-78%）> 牛大力（68-74%）。<strong>猪颈肉毛利最高但售价低</strong>，属于走量款；<strong>牛大力毛利最低但售价最高</strong>，属于"面子款"拉高客单价。</p>
+      <p><strong>📌 菜单策略：</strong>建议上3-4款即可，不必五款全上。推荐组合：特色肥瘦肉（必上/引流） + 横膈膜（招牌） + 猪颈肉（走量） + 牛大力或卷牛肋排任选一（做差异化）。五款全上容易造成选择困难，且牛大力和横膈膜价位重叠。</p>
+      <p><strong>🎯 地摊/外卖适配：</strong>特色肥瘦肉和猪颈肉最适合外卖——腌制后真空包装可冷藏3天，客人自烤。横膈膜和牛大力适合堂食——对烤制温度和手法有要求，外卖易翻车。</p>
+      <p><strong>⚠️ 风险：</strong>横膈膜和牛大力货源不稳定——都是稀有部位，量大时需提前锁定供应商。建议核心店签约锁定月供量。猪颈肉虽然是猪部位但"一只猪两块"，连锁扩张时同样面临供应瓶颈。</p>
+      <p><strong>✅ 最稳路线：</strong>新店开业先上特色肥瘦肉+猪颈肉两款（腌料通用备货简单），跑通后再加横膈膜和牛大力做升级——先用低毛利高流量款养客，再用高毛利稀有部位提利润。</p>
+    </div>
+
+    <!-- ===== 客群画像四格表（新增） ===== -->
+    <div style="margin-top:18px;padding:14px;background:#f5f8fc;border:1px solid #c8d8e8;border-radius:12px;">
+      <div style="font-size:13px;font-weight:700;color:#2a5a8a;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+        👥 客群画像四格表
+      </div>
+      <table style="width:100%;font-size:12px;border-collapse:collapse;">
+        <tr style="background:#e0e8f0;">
+          <th style="padding:6px 8px;text-align:center;border:1px solid #c8d8e8;width:25%;">象限</th>
+          <th style="padding:6px 8px;text-align:left;border:1px solid #c8d8e8;">客群特征</th>
+          <th style="padding:6px 8px;text-align:left;border:1px solid #c8d8e8;">偏好的产品</th>
+          <th style="padding:6px 8px;text-align:left;border:1px solid #c8d8e8;">运营策略</th>
+        </tr>
+        <tr>
+          <td style="padding:6px 8px;text-align:center;border:1px solid #c8d8e8;font-weight:600;background:#fcf0f5;">🟢<br>A区·年轻人<br>（Z世代·尝鲜型）</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">18-28岁·小红书种草·追求拍照打卡·低客单价试错</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">特色肥瘦肉（价格友好）+ 浇汁横膈膜（稀有部位·拍照出片）</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">套餐引流、抖音/小红书投流、开放单人套餐降低决策门槛</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 8px;text-align:center;border:1px solid #c8d8e8;font-weight:600;background:#f0f5fc;">🔵<br>B区·家庭客<br>（复购主力·中客单）</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">30-45岁·2-4人家庭聚餐·重视性价比和肉质·复购驱动力强</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">特色肥瘦肉（人人爱）+ 猪颈肉（高性价比走量）+ 卷牛肋排（丰富感）</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">家庭套餐组合、储值卡锁客、午市折扣拉动复购</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 8px;text-align:center;border:1px solid #c8d8e8;font-weight:600;background:#fcf8f0;">🟡<br>C区·商务宴请<br>（高客单·面子消费）</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">35-55岁·商务/高端社交·注重环境和服务·对价格不敏感</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">雪花牛大力（最高价最稀有）+ 浇汁横膈膜（限定感）</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">定制套餐、精致摆盘、酒水搭售、包厢专属菜单</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 8px;text-align:center;border:1px solid #c8d8e8;font-weight:600;background:#f0fcf0;">🟠<br>D区·外卖客<br>（方便型·增量市场）</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">25-40岁·家庭/独居·买半成品回家自烤·注重便利性</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">特色肥瘦肉（腌好真空装）+ 猪颈肉（简单易烤）</td>
+          <td style="padding:6px 8px;border:1px solid #c8d8e8;">真空包装化、附赠蘸料小包、到家自烤教程卡、冷链配送</td>
+        </tr>
+      </table>
+      <div style="margin-top:8px;font-size:11px;color:#888;line-height:1.5;">
+        <strong>📊 占比预估：</strong>A区年轻尝鲜 35% · B区家庭复购 30% · C区商务宴请 15% · D区外卖增量 20%。<br>
+        <strong>建议：</strong>新店前期重点打A+B两区（占65%客流），稳定后再拓展C区（拉高客单价）和D区（做增量营收）。
+      </div>
+    </div>
+    <!-- ===== 客群画像结束 ===== -->
+
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">传统韩式烤肉·老式肥牛腌料为主·大份肉拼盘·无蘸料体系·以量取胜</span></div>
+      <div class="trend-item"><span class="trend-year">2021</span><span class="trend-arrow">→</span><span class="trend-desc">社交媒体助推·韩式烤肉开始出圈·东北烤肉成为网红打卡地·烤肉店数量激增</span></div>
+      <div class="trend-item"><span class="trend-year">2022</span><span class="trend-arrow">→</span><span class="trend-desc">部位精细化初见端倪·横膈膜、牛舌等单品开始走红·单价从30元跳至50-60元档</span></div>
+      <div class="trend-item"><span class="trend-year">2023</span><span class="trend-arrow">→</span><span class="trend-desc">部位细分爆发·横膈膜/牛大力兴起·稀有部位+高价策略成为主流·门店毛利结构改善</span></div>
+      <div class="trend-item"><span class="trend-year">2024</span><span class="trend-arrow">→</span><span class="trend-desc">腌料通用化趋势萌芽·一料多用降本·五款产品共用腌料体系成为效率关键</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">腌料通用化成熟·一料多用降低备货难度·摆盘精致化·蘸料体系独立成亮点</span></div>
+      <div class="trend-item"><span class="trend-year">2026</span><span class="trend-arrow">→</span><span class="trend-desc">预制菜/半成品零售化启动·韩式腌肉真空包进入商超渠道·C端调味料上市</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">预包装零售化全面铺开·腌肉真空包+C端蘸料组合进盒马/山姆·韩式风味出圈全国</span></div>
+      <div class="trend-item"><span class="trend-year">2028</span><span class="trend-arrow">→</span><span class="trend-desc">连锁化加盟高潮·标准化腌料包+培训体系输出·韩式烤肉从东北走向华东华南</span></div>
+      <div class="trend-item"><span class="trend-year">2030+</span><span class="trend-arrow">→</span><span class="trend-desc">AI智能配比·大数据选品·韩式风味全国化·国际市场输出（日韩/东南亚）</span></div>
+      <div class="trend-verdict">韩式烤肉从"东北地方特色"走向全国——腌料通用化是扩张关键，稀有部位是利润天花板，零售化是规模倍增器</div>
+      <div style="margin-top:12px;padding:10px 14px;background:#f0e0dc;border-radius:8px;font-size:12px;color:#7a3a3a;line-height:1.6;">
+        <strong>🔮 趋势研判：</strong>未来3年韩式烤肉赛道将经历"标准化→零售化→全国化"三级跳。门店端腌料通用化让单店效率提升30%+，供应链端真空包装技术成熟让外卖占比从15%升至40%+，品牌端蘸料零售化（瓶装海鲜汁/韩式辣酱）开辟第二增长曲线。<br>
+        <strong>⚠️ 关键节点：</strong>2027年零售化能否跑通决定了赛道天花板。参考重庆火锅底料（市场规模超500亿），韩式蘸料和腌料包有潜力复制这一路径——从"卖肉"升级为"卖风味解决方案"。
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div><div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links"><span>📢 公众号：沧林食品技术</span><span>💬 微信：canglin1985</span></div>
+    <div class="fb-series">韩式融合烤肉 · VC_K004 韩式秘制烤肉系列 · 合并母卡</div>
+  </div>
+
+</div>
+</body>
+</html>

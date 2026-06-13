@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>红豆小汤圆 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#b5651e,#8b4513);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+h1{font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.header-sub{font-size:12px;color:#b5aaa0}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1>🍡 红豆小汤圆</h1>
+  <div class="header-sub">经典糖水 · 秋冬爆款 · 高复购暖饮</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.7</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">女性客群最爱，复购率天然高于绿豆汤，但季节性更强。</div>
+  <div class="r-tags">
+    <span>🔥 热度稳定</span>
+    <span>💰 投资1000+</span>
+    <span>👤 1人可做</span>
+    <span>🔄 高复购</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">中高</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★☆</div><div class="val">低</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★★☆</div><div class="val">中等</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 已有夏季糖水摊，需冬季转型</div>
+      <div class="fit-item fit-yes">✅ 女性客群为主的夜市/商场</div>
+      <div class="fit-item fit-yes">✅ 学校周边（女生多）</div>
+      <div class="fit-item fit-yes">✅ 社区老年客群（养生暖饮）</div>
+      <div class="fit-item fit-yes">✅ 搭配炸鸡/烧烤摊做解腻搭售</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 夏季主力（销量只有绿豆汤1/3）</div>
+      <div class="fit-item fit-no">❌ 男性客群为主的工地/夜市</div>
+      <div class="fit-item fit-no">❌ 追求极简操作（煮小汤圆需练手）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：暖身 × 甜糯口感 × 怀旧情怀 × 比奶茶更健康的心理暗示</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>红豆汤底（基础走量）</span><span class="v">毛利78%</span></div>
+    <div class="logic-item"><span>加小汤圆（+¥2）</span><span class="v">毛利85%</span></div>
+    <div class="logic-item"><span>加芋圆/珍珠/年糕（+¥1-3）</span><span class="v">毛利80%</span></div>
+    <div class="logic-item"><span>升级大杯（+¥2）</span><span class="v">几乎0成本</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>“全家福”加3种小料，售价15-18元</span><span class="v"></span></div>
+    <div class="logic-item"><span>红豆汤+炸鸡套餐立减2元（解腻组合）</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>冬季暖心卡：买5送1（锁定回头客）</span><span class="v"></span></div>
+    <div class="logic-item"><span>免费加桂花/红枣碎（提升价值感）</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥500-900</div><div class="m-sub">5-6h出摊(秋冬)</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥4,000-6,000</div><div class="m-sub">出摊20天(预估)</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">5-10天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:8px">💡 数据来源：参考三线城市秋冬糖水摊实测数据，及社区店外卖平台平均值。</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">女性客群粘性高，复购率天然高于绿豆汤</div>
+      <div class="t-item">秋冬刚需暖饮，与夏季糖水摊形成互补</div>
+      <div class="t-item">小汤圆口感独特，其他摊位较少专门做</div>
+      <div class="t-item">客单价可做到10-15元，利润空间足</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">小汤圆煮制有技巧（火候/时间/过凉）</div>
+      <div class="t-item">季节性极强，夏季销量断崖式下跌</div>
+      <div class="t-item">红豆熬煮耗时较长（需提前准备）</div>
+      <div class="t-item">冷冻小汤圆品质参差，自制汤圆门槛高</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>秋冬糖水摊的“标配”，但多数摊位只用超市速冻小汤圆，品质一般。专门做红豆沙+手作小汤圆的摊位较少，有差异化空间。<br>
+    <strong>未来判断：</strong>2026年秋冬仍会是热门品类。竞争点不在于“有没有”，而在于“红豆沙是否绵密、小汤圆是否Q弹”。建议搭配芋圆、年糕、桂花等形成产品矩阵。<br>
+    <strong>是否值得进入：是</strong>（前提：作为秋冬补充产品，或专门做女性社区摊位。）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估（V5.1维度） ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">中等，品质分化大</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">3-5天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">小汤圆易煮烂</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥400以内试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购红豆、糯米粉（或速冻小汤圆），按配方试煮红豆汤底。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>练习煮小汤圆：不同火候、时间，找到“浮起即熟、过凉防粘”的最佳节奏。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>邀请20人试吃（免费），收集甜度、红豆沙绵密度、小汤圆Q弹度反馈。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>第一次摆摊（预备50杯），测试女性客流集中位置和价格接受度。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘日均销量、复购率、净利润，决定是否加入芋圆/年糕等升级版。</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7试吃好评率能否＞70%（重点在小汤圆口感）② Day15首日能否卖出35杯以上 ③ Day30女性复购率是否＞25%。<br>
+    <strong>🚪 退出标准：</strong>连续3天营收＜200元 / 小汤圆煮烂率＞30% / 顾客反馈“红豆不烂/汤圆夹生”比例高。<br>
+    <strong>✅ 继续标准：</strong>日均销量稳定在50杯以上 / 加小料后客单价提升超2元 / 出现5个以上主动问“有没有芋圆”的顾客。
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（≥15项+证照） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：40L保温桶(¥120-180) · 30L煮锅(¥80-120) · 商用封口机(¥150-250) · 电子秤(¥30-50) · 长柄勺(¥10) · 小汤圆煮锅(¥50-80) · 漏勺(¥15) · 大号冰桶/保温箱(¥80-150) · 塑料量杯(¥10) · 食品级滤网(¥15)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠桌(¥60-120) · 桌布(¥15) · 招牌灯箱(¥80-150) · 价格牌(¥20) · 椅子(¥30) · 收款码牌(¥5) · 暖手宝/保温展示柜(可选¥200-400)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：红豆20斤(¥100-140) · 冰糖8斤(¥40-60) · 速冻小汤圆10斤(¥50-80) · 糯米粉5斤(¥30) · 500ml奶茶杯300套(¥60-80) · 吸管300根(¥8) · 打包袋150个(¥15) · 桂花干/红枣碎(¥20)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥850-1,200</strong>（已有保温桶，使用家中锅具，速冻小汤圆）</div>
+    <div><strong>💰 完整启动方案：¥1,500-2,300</strong>（含保温展示柜、手作汤圆工具等）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本及时间：</strong>健康证¥80（1-3天）；食品摊贩备案¥0-50（咨询街道城管）；部分夜市摊位费¥300-800/月。建议额外办理“餐饮小餐饮备案”若涉及现场煮制。合计最低¥80，完整合规约¥400-900。</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">经典红豆汤（无小汤圆）</span><span class="t-price">¥6-8（500ml）</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">红豆小汤圆 · 红豆芋圆</span><span class="t-price">¥10-13</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">全家福（红豆+小汤圆+芋圆+年糕）· 双人分享桶</span><span class="t-price">¥15-22</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★★☆☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项，含政策/场地） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>秋冬城管对“热食摊”检查更严，尤其学校周边，无备案可能被驱赶。现场煮小汤圆需注意燃气罐安全，部分地区禁用明火。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>季节性极强，冬季（12-2月）销量是其他季节2倍，但开春后迅速下降。若摊位全年签约，需搭配夏季糖水（如绿豆汤）分摊成本。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>小汤圆品质风险：速冻小汤圆煮后易发硬或煮烂；自制汤圆需练习，时间成本高。口感不稳定会导致复购崩盘。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>红豆熬煮耗时：传统熬煮需2-3小时，若预估销量不准，大量剩余红豆汤隔夜变酸，造成浪费。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>竞品模仿：门槛不高，一旦生意好，周边摊位立刻跟卖，价格战从10元压到6元。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>外卖适配差：小汤圆配送30分钟后口感明显下降（变硬或泡烂），差评风险高，建议主攻堂食/自提。</div>
+</div>
+
+<!-- ===== 12 最终决策判断（原沧林判断） ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>女性客群复购率极高，秋冬刚需，客单价能做到12元以上。品质好的红豆沙+Q弹小汤圆很容易形成口碑，差异化空间大。<br>
+      <strong>❌ 为什么不值得做：</strong>季节性太强，一年只有4-5个月旺季。小汤圆煮制有技巧，新手容易翻车。如果所在区域老年男性为主，基本卖不动。<br>
+      <strong>🔑 进入条件（满足任意3条）：</strong>① 摊位位于学校/女性社区/商场周边 ② 能接受前两周练习煮小汤圆（每天练10份）③ 已有夏季糖水摊需要冬季转型 ④ 能自制小汤圆或找到高品质速冻供货 ⑤ 愿意加入芋圆、年糕等高价值小料提升客单。<br>
+      <strong>🚪 退出条件：</strong>① 连续两周日均利润＜150元 ② 小汤圆复购率低于15% ③ 开春后连续10天气温高于20°C销量腰斩 ④ 无法解决外卖口感问题。<br>
+      <strong>🎯 最终判断：可进</strong> —— 非常适合作为冬季糖水摊的主力产品，或与绿豆汤形成“夏冬互补”产品组合。不建议单独作为全年唯一产品。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">红豆预处理（去涩提速）</span><div class="ps-verify">[验证点] 红豆洗净后，沸水下锅煮3分钟捞出，水变红褐色。此步去掉豆腥味，同时缩短后续熬煮时间30%。</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">高压焖煮出沙（商用省时）</span><div class="ps-verify">[验证点] 红豆:水=1:5，高压锅上汽后压25分钟。开盖后豆子应能用勺子轻轻碾碎，约70%出沙。</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">加糖调味+勾芡（挂壁感）</span><div class="ps-verify">[验证点] 开盖后加入冰糖（红豆:冰糖=10:1），小火煮5分钟。取一勺观察，汤汁应微稠能挂住勺背，若太稀则加少量水淀粉。</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">小汤圆煮制（关键技）</span><div class="ps-verify">[验证点] 水烧开后下冷冻小汤圆，大火煮至全部浮起（约2-3分钟），立即捞出过冰水10秒，再沥干。过冰水后汤圆应Q弹不粘牙。</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整商用配比（精确到克）、高压锅时间表、自制汤圆配方见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润（完整7项） ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本（红豆+冰糖+小汤圆）</span><span class="v">¥2.2/500ml杯</span></div>
+    <div class="recipe-line"><span class="k">包装成本（杯+盖+吸管+袋）</span><span class="v">¥0.55/套</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（燃料+水）</span><span class="v">¥0.25/杯</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥3.0/杯（基础红豆小汤圆）</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥10～¥18（加料升级）</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">70%～83%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售65杯（均价¥12）→ 日毛利¥585，月净利¥7,800（出摊20天，扣除杂费）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费锁定区，V5.1要求7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥29 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看高压锅时间表、自制Q弹小汤圆配方、秋冬保温方案</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用精确配方 (10升红豆汤底 · 约20杯)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>干红豆</span><span>1000g（推荐东北珍珠红）</span></div>
+      <div class="recipe-line"><span>清水</span><span>5000g（高压锅用）</span></div>
+      <div class="recipe-line"><span>冰糖</span><span>100g（可按试喝反馈调整）</span></div>
+      <div class="recipe-line"><span>水淀粉（勾芡用）</span><span>玉米淀粉20g+水30g调匀</span></div>
+      <div class="recipe-line"><span>速冻小汤圆</span><span>每杯30g（约12-15颗）</span></div>
+      <div class="recipe-line"><span>干桂花（点缀）</span><span>0.5g/杯</span></div>
+    </div>
+    <!-- 2️⃣ 精确克数小料成本 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 加料成本对照表（每杯）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>芋圆30g（煮好）</span><span>¥0.8成本 → 售价+¥3</span></div>
+      <div class="recipe-line"><span>年糕片30g（煮好）</span><span>¥0.6成本 → 售价+¥2.5</span></div>
+      <div class="recipe-line"><span>珍珠30g（煮好）</span><span>¥0.5成本 → 售价+¥2</span></div>
+      <div class="recipe-line"><span>红枣碎+枸杞</span><span>¥0.4成本 → 售价+¥2</span></div>
+      <div class="recipe-line"><span>全家福（4种小料）</span><span>¥2.0成本 → 售价+¥8</span></div>
+    </div>
+    <!-- 3️⃣ 温度曲线 / 时间表 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 高压锅时间表（红豆）</div>
+    <div style="background:#fff;border-radius:10px;padding:0 12px;margin-bottom:12px">
+      <div class="recipe-line"><span>普通红豆（未浸泡）</span><span>高压25分钟 → 关火焖15分钟</span></div>
+      <div class="recipe-line"><span>浸泡4小时红豆</span><span>高压15分钟 → 关火焖10分钟</span></div>
+      <div class="recipe-line"><span>红豆+少量小苏打（2g）</span><span>高压20分钟 → 更易出沙</span></div>
+      <div class="recipe-line"><span>售卖保温温度</span><span>65-70°C（烫嘴但暖身）</span></div>
+    </div>
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 批量SOP (20升/50升/100升)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>20升(40杯): 红豆2kg · 水10kg · 高压2锅 · 耗时1.5h（含煮小汤圆）</span></div>
+      <div class="recipe-line"><span>50升(100杯): 红豆5kg · 水25kg · 高压5锅 · 耗时2.5h</span></div>
+      <div class="recipe-line"><span>100升(200杯): 红豆10kg · 水50kg · 商用蒸汽锅 · 耗时4h</span></div>
+      <div class="recipe-line"><span>📌 小汤圆煮制批量：一次最多煮2斤（约200颗），超量会粘连。</span></div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>红豆不出沙（豆硬）</strong>→ 加少许小苏打再压10分钟，或改用高压锅延长至35分钟。</div>
+      <div><strong>小汤圆煮烂/露馅</strong>→ 水温不够高或煮太久。正确：水必须沸腾再下，浮起即捞不超过3分钟。</div>
+      <div><strong>汤圆变硬（过凉不彻底）</strong>→ 捞出后必须过冰水10秒，且沥干后拌少量食用油防粘。</div>
+      <div><strong>红豆汤太甜/太淡</strong>→ 太甜加开水；太淡补加冰糖水（冰糖100g+水200g煮化）。</div>
+      <div><strong>有酸味（变质）</strong>→ 整锅废弃！隔夜红豆汤必须0-4°C冷藏，次日重新煮沸。</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款高利润变体</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🍡 芋圆红豆汤（年轻女性最爱）</strong>：红豆汤底+自制三色芋圆（紫薯/南瓜/芋头）。成本+1.2元，售价15-18元。</div>
+      <div><strong>🥛 红豆牛奶汤（高客单价）</strong>：一半红豆汤+一半热牛奶，不加小汤圆。成本+1元，售价12-15元，奶香浓郁。</div>
+      <div><strong>🌰 桂花酒酿红豆小汤圆（差异化）</strong>：加入甜酒酿30g + 干桂花。成本+0.8元，售价+3元，秋冬暖身滋补款。</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      当单日销量＞150杯时：建议① 采购商用燃气高压锅（约3000元，一次出50升）；② 与本地豆腐坊合作，批量采购现做小汤圆/芋圆；③ 开设冬季快闪摊位，只做11-2月旺季，降低全年租金成本；④ 开发“红豆汤底浓缩包”，分装冷藏，出摊时加开水稀释+煮小汤圆，出餐速度提升50%；⑤ 外卖专用：将小汤圆单独包装，顾客自行加入热汤中，避免配送口感下降。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品（同赛道+内部跳转） ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🥤</span><span class="r-name">绿豆冰糖水（夏季互补·母卡）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍠</span><span class="r-name">手工芋圆（加料专卡）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍗</span><span class="r-name">原味黄金炸鸡（解腻搭售）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡，可点击跳转</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>秋冬摊位选址评估 · 自制小汤圆工艺指导 · 外卖口感方案</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1出摊包答疑 · 红豆沙批量熬煮技巧 · 芋圆配方定制</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“红豆卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

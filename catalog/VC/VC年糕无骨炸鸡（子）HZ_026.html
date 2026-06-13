@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>VC年糕无骨炸鸡 · 组合变体卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.variant-bar{background:linear-gradient(90deg,#E8652D,#C0392B);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#C0392B;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#E8652D}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+tr:last-child td{border-bottom:none}
+.sauce-compare{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.sauce-item{padding:10px 12px;border-radius:10px;font-size:12px;display:flex;align-items:center;gap:8px}
+.sauce-item .s-icon{font-size:16px}
+.sauce-item .s-name{flex:1;font-weight:600;color:#3a322a}
+.sauce-item .s-ratio{color:#b5aaa0;font-size:10px}
+.sauce-main{background:#fef2ee;border:1px solid #fdd}
+.sauce-other{background:#f8f4ef}
+.crowd-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.crowd-card{padding:10px;border-radius:10px;text-align:center}
+.crowd-card .c-icon{font-size:20px;margin-bottom:2px}
+.crowd-card .c-name{font-size:11px;font-weight:600;color:#3a322a;margin-bottom:2px}
+.crowd-card .c-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.crowd-card .c-bar .fill{height:100%;border-radius:2px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#4a3f35;line-height:1.6}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:18px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #C0392B}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 变体提示 ===== -->
+<div class="variant-bar">
+  <span class="v-label">🧬 变体卡 · ¥19</span>
+  <a class="v-link" href="HZ_001.html">← 母卡：原味黄金炸鸡</a>
+</div>
+
+<!-- ===== 产品头部 ===== -->
+<div class="meta">
+  <h1>🍊 VC年糕无骨炸鸡</h1>
+  <div class="sub">韩式炸鸡组合 · 鸡块+年糕 · 柑橘果香蜜汁</div>
+  <span class="price-tag">¥19 完整配方包</span>
+</div>
+
+<!-- ===== 🔄 与母卡差异总览 ===== -->
+<div class="section">
+  <div class="s-title">🔄 与HZ_001 / HZ_023 / HZ_024差异总览</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">HZ_001 母卡（¥69）</div>
+      <div>完整韩式炸鸡项目体系：设备·成本·30天验证·纯鸡块工艺</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">HZ_026 变体（¥19）</div>
+      <div>VC年糕无骨炸鸡·鸡块+年糕双拼·VC蜜汁酱（橙/柠檬基底）·果香酸甜</div>
+    </div>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 本卡不含设备清单、验证路线等，这些请购买母卡</div>
+</div>
+
+<!-- ===== 📊 年糕炸鸡四口味对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 年糕炸鸡口味矩阵</div>
+  <div style="overflow-x:auto">
+    <table>
+      <thead><tr style="background:#3a322a;color:#fff"><th>维度</th><th>原味年糕</th><th>蜜汁年糕</th><th>香辣年糕</th><th>VC年糕(本卡)</th>}</thead>
+      <tbody>
+        <tr><td style="font-weight:600">酱料风格</td><td>任意</td><td>糖醋/蜂蜜</td><td>香辣蜜汁</td><td style="color:#E8652D">VC柑橘蜜汁</td></tr>
+        <tr style="background:#f8f4ef"><td>酸度</td><td>-</td><td>低</td><td>低</td><td style="color:#5a8f3c">中高（果酸开胃）</td></tr>
+        <tr><td>甜度</td><td>-</td><td>高</td><td>中</td><td style="color:#E8652D">中（天然果糖）</td></tr>
+        <tr style="background:#f8f4ef"><td>记忆点</td><td>经典</td><td>甜香</td><td>甜辣上瘾</td><td style="color:#5a8f3c">果香清爽·解腻</td></tr>
+        <tr><td>适配季节</td><td>全年</td><td>秋冬</td><td>全年</td><td style="color:#E8652D">春夏/解暑</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== 🎯 为什么加VC年糕炸鸡 ===== -->
+<div class="section">
+  <div class="s-title">🎯 为什么加VC年糕炸鸡</div>
+  <div style="background:#f0f6ec;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;border-left:3px solid #5a8f3c">
+    <strong>VC蜜汁是炸鸡中的“清爽解腻神器”</strong>——天然柑橘果香代替醋精的酸味，更柔和自然，且自带“维C”健康概念。年糕吸汁能力强，裹上VC蜜汁后酸甜Q弹，与炸鸡的酥脆形成绝妙反差。尤其在春夏季节，顾客对油腻食物的接受度降低，VC年糕炸鸡能有效刺激食欲，减少“腻”的反馈。与普通蜜汁相比，VC版果香更高级，适合作为季节性限定或女性/健康客群的主推款。<br><br>
+    <strong>定位：</strong>季节限定/女性友好款，与香辣、蜜汁形成酸甜辣全覆盖，提升产品矩阵完整性。
+  </div>
+  <div style="margin-top:8px;background:#fef6ec;border-radius:10px;padding:12px;font-size:11px;border:1px dashed #ddd4ca">
+    <strong>💡 推荐组合：</strong><br>
+    🍊 <strong style="color:#E8652D">VC年糕炸鸡</strong> + 原味鸡块 + 柠檬水 = 夏日解暑套餐<br>
+    🍯 + 🌶️ + 🍊 = 甜、辣、酸三拼年糕炸鸡桶
+  </div>
+</div>
+
+<!-- ===== 🧪 VC蜜汁酱构成 ===== -->
+<div class="section">
+  <div class="s-title">🧪 VC蜜汁酱（果香型）</div>
+  <div class="sauce-compare">
+    <div class="sauce-item sauce-main">
+      <span class="s-icon">🍊</span>
+      <span class="s-name">橙香VC版（推荐）</span>
+      <span class="s-ratio">橙汁+柠檬汁+蜂蜜</span>
+    </div>
+    <div class="sauce-item sauce-other">
+      <span class="s-icon">🍋</span>
+      <span class="s-name">柠檬百香果版</span>
+      <span class="s-ratio">百香果+柠檬，热带酸爽</span>
+    </div>
+  </div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;font-size:11px;color:#5a4f44">
+    📌 核心门槛：果汁高温易发苦，必须后下或低温熬制。本卡提供防苦技巧和浓缩果汁替代方案，成本可控。
+  </div>
+</div>
+
+<!-- ===== 👥 客群画像 ===== -->
+<div class="section">
+  <div class="s-title">👥 客群画像</div>
+  <div class="crowd-grid">
+    <div class="crowd-card" style="background:#fef2ee"><div class="c-icon">👩</div><div class="c-name">18-35岁女性</div><div class="c-bar"><div class="fill" style="width:85%;background:#E8652D"></div></div></div>
+    <div class="crowd-card" style="background:#fef6ec"><div class="c-icon">🌿</div><div class="c-name">健康/轻食概念者</div><div class="c-bar"><div class="fill" style="width:75%;background:#D4A574"></div></div></div>
+    <div class="crowd-card" style="background:#f0f6ec"><div class="c-icon">☀️</div><div class="c-name">夏季解腻需求</div><div class="c-bar"><div class="fill" style="width:90%;background:#5a8f3c"></div></div></div>
+    <div class="crowd-card" style="background:#eef2ff"><div class="c-icon">🧃</div><div class="c-name">不爱吃醋的酸甜口人群</div><div class="c-bar"><div class="fill" style="width:70%;background:#4f6ef7"></div></div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">✨ VC年糕炸鸡在夏季销量可超过蜜汁版和香辣版，成为单品冠军。</div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#3a6b2e;margin-bottom:6px">🎯 适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 夏季主打清爽口味的摊位</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 女性客群占比高（果香吸引）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 已有甜辣/蜜汁，需增加果味SKU</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px">✅ 能稳定采购冷冻浓缩果汁</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#b53b3b;margin-bottom:6px">❌ 不适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 冬季为主的市场（季节性明显）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 不接受水果风味炸鸡</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px">❌ 不愿增加果汁类原料（保质期短）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ⚠️ 专属风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ VC年糕炸鸡专属风险</div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">1️⃣</span><span>果汁高温发苦——橙汁/柠檬汁加热超过85°C会产生苦味，需后下</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">2️⃣</span><span>颜色氧化——VC酱汁暴露空气中2小时后颜色变暗，影响卖相</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">3️⃣</span><span>成本高于普通蜜汁（使用浓缩果汁约¥1.2/份 vs 糖醋¥0.8）</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;font-size:12px"><span style="font-size:14px">4️⃣</span><span>年糕裹VC酱后颜色发黄，不如红色酱汁诱人，需搭配装饰</span></div>
+</div>
+
+<!-- ===== 🧠 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得加：</strong>VC年糕炸鸡是差异化的果味炸鸡，市场上竞品极少。天然果香概念能支撑更高定价（比蜜汁版高2-3元），且适合夏季推广。与甜辣、蜜汁形成完整产品线，能满足“想吃酸甜但不想吃醋”的客群。<br>
+      <strong>❌ 为什么不值得：</strong>季节性明显，秋冬销量可能下降30%以上。果汁类原料保质期短，备货风险高。制作工艺比普通蜜汁更复杂（防苦、防氧化），新手翻车率高。<br>
+      <strong>🔑 进入条件：</strong>① 摊位位于夏季炎热地区或有降温设备 ② 能找到稳定的冷冻浓缩果汁（橙/柠檬） ③ 愿意做季节性菜单切换 ④ 能接受略高的酱料成本。<br>
+      <strong>🚪 退出条件：</strong>试卖1周后日均销量低于蜜汁年糕炸鸡40% / 果汁氧化导致差评>10% / 夏季过后销量腰斩。<br>
+      <strong>🎯 最终判断：谨慎可进，作为夏季限定</strong> —— 建议5-9月主推，其余月份下架或保留小份。与柠檬水/冰茶组成套餐，强化“清爽”概念。
+    </div>
+    <div class="j-tags"><span>#VC年糕炸鸡</span><span>#果香炸鸡</span><span>#夏季限定</span><span>#维C概念</span></div>
+  </div>
+</div>
+
+<!-- ===== 💎 付费区：完整配方包（19元） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>VC年糕无骨炸鸡 · 完整配方包</h3>
+  <div class="p-sub">定价 ¥19 · 永久解锁 · 包含以下全部数据</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span>橙香VC蜜汁酱配方（500g·精确到克）</div>
+    <div class="p-item"><span class="p-icon">✅</span>柠檬百香果VC酱配方（热带版）</div>
+    <div class="p-item"><span class="p-icon">✅</span>浓缩果汁替代方案（成本降40%）</div>
+    <div class="p-item"><span class="p-icon">✅</span>防苦技巧（后下果汁、控温）</div>
+    <div class="p-item"><span class="p-icon">✅</span>防氧化与颜色保鲜方法</div>
+    <div class="p-item"><span class="p-icon">✅</span>年糕预处理（同HZ_023）</div>
+    <div class="p-item"><span class="p-icon">✅</span>鸡块与年糕炸制参数（防焦）</div>
+    <div class="p-item"><span class="p-icon">✅</span>VC酱裹附与出餐注意事项</div>
+    <div class="p-item"><span class="p-icon">✅</span>成本利润分析（VC版 vs 蜜汁版）</div>
+    <div class="p-item"><span class="p-icon">✅</span>3款变体：西柚VC/青柠VC/芒果VC</div>
+    <div class="p-item"><span class="p-icon">✅</span>夏季限定营销话术与套餐设计</div>
+    <div class="p-item"><span class="p-icon">✅</span>沧林实战备注（果汁品牌、氧化控制、季节性切换）</div>
+  </div>
+  <div class="price-tag">¥19 <small>变体卡 · 一次解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后发编号给客服，秒发完整版 / 或直接在此展开</div>
+
+  <!-- 解锁后显示的内容（完整数据） -->
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 橙香VC蜜汁酱配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 橙香VC蜜汁酱（500g，基础版）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>橙汁（鲜榨或浓缩还原）</span><span>200g</span></div>
+      <div class="recipe-line"><span>柠檬汁</span><span>25g</span></div>
+      <div class="recipe-line"><span>白砂糖</span><span>60g</span></div>
+      <div class="recipe-line"><span>蜂蜜</span><span>30g</span></div>
+      <div class="recipe-line"><span>水</span><span>120g</span></div>
+      <div class="recipe-line"><span>玉米淀粉</span><span>8g（勾芡）</span></div>
+      <div class="recipe-line"><span>盐</span><span>1g</span></div>
+    </div>
+    <div style="background:#fff9f0;padding:8px;margin-top:6px;font-size:11px;border-left:2px solid #E8652D">
+      ⚠️ 熬制：水+糖+橙汁煮至微冒泡（80°C）→勾芡→关火稍降温后加柠檬汁和蜂蜜。全程不超过85°C，避免苦味。
+    </div>
+
+    <!-- 2️⃣ 浓缩果汁替代方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 浓缩果汁替代（成本优化）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>冷冻浓缩橙汁（10倍浓缩）</span><span>20g</span></div>
+      <div class="recipe-line"><span>水</span><span>180g（还原成200g橙汁）</span></div>
+      <div class="recipe-line"><span>柠檬汁仍用鲜榨或瓶装</span><span>25g</span></div>
+      <div style="margin-top:6px;font-size:11px">成本从鲜榨¥3.5/份降至¥1.0/份，苦味更可控。推荐品牌“韩国乐天”或“安德利”。</div>
+    </div>
+
+    <!-- 3️⃣ 防苦与防氧化 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 关键技巧：防苦 & 防氧化</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>防苦</span><span>所有果汁类原料（柠檬汁、橙汁）在关火后加入，利用余温融合</span></div>
+      <div class="recipe-line"><span>防氧化</span><span>酱汁表面覆盖一层保鲜膜（贴合液面），或滴几滴柠檬汁增亮</span></div>
+      <div class="recipe-line"><span>每日新鲜熬制</span><span>VC酱冷藏不超过24小时，否则果香流失、颜色变暗</span></div>
+    </div>
+
+    <!-- 4️⃣ 炸制与裹酱（VC版特殊注意） -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 炸制与裹酱参数</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>鸡块炸制</span><span>170°C，2分10秒+复炸30秒</span></div>
+      <div class="recipe-line"><span>年糕炸制</span><span>170°C，1分钟（单独炸）</span></div>
+      <div class="recipe-line"><span>裹酱温度</span><span>炸物出锅控油10秒后立即裹VC酱（无需等待降温）</span></div>
+      <div class="recipe-line"><span>不可再次加热</span><span>裹酱后直接出餐，酱汁二次加热会酸败</span></div>
+    </div>
+
+    <!-- 5️⃣ 成本利润 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 成本利润（中份：鸡块200g+年糕80g+VC酱80g）</div>
+    <div style="background:#f8f4ef;border-radius:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:6px 10px;background:#3a322a;color:#fff;font-size:10px"><span>项目</span><span>糖醋蜜汁版</span><span>橙香VC版</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px"><span>鸡块+年糕</span><span>2.9</span><span>2.9</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;background:#f5f0eb"><span>裹粉+油</span><span>1.5</span><span>1.5</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px"><span>酱汁80g</span><span>0.8</span><span>1.0（浓缩汁）</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;background:#f5f0eb"><span>包装</span><span>0.5</span><span>0.5</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px"><span>总成本</span><span>5.7</span><span>5.9</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;background:#f5f0eb"><span>建议售价</span><span>18-25</span><span>20-28</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px"><span>毛利</span><span>68-77%</span><span>70-79%</span></div>
+    </div>
+    <div class="badge" style="margin-top:4px">💡 VC版成本略高，但顾客愿意为“天然维C”概念支付2-3元溢价。</div>
+
+    <!-- 6️⃣ 变体配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 三款果味变体</div>
+    <div style="background:#f0f6ec;border-radius:10px;padding:12px;margin-bottom:8px"><strong>🍊 西柚VC年糕：</strong>西柚汁200g+蜂蜜40g，苦中回甘，高级感</div>
+    <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-bottom:8px"><strong>🍋 青柠VC年糕：</strong>青柠汁30g+橙汁170g，更清爽，适合重油解腻</div>
+    <div style="background:#fef2ee;border-radius:10px;padding:12px"><strong>🥭 芒果VC年糕：</strong>芒果泥100g+橙汁100g，热带香甜，适合儿童</div>
+
+    <!-- 7️⃣ 夏季限定套餐 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 夏日清爽套餐设计</div>
+    <div class="recipe-box" style="border-left-color:#D4A574">
+      • 单人解暑餐：VC年糕炸鸡（小份）+ 手打柠檬茶 = ¥25-30<br>
+      • 双人分享：VC年糕炸鸡（中份）+ 原味鸡块（小份）+ 冰柠可乐×2 = ¥45-50<br>
+      • 营销话术：“维C满满，夏日不腻”，配合绿色/橙色视觉元素。
+    </div>
+
+    <!-- 8️⃣ 外卖与保存 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">8️⃣ 外卖包装建议</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>酱汁分离</span><span>VC酱单独装盒，顾客自裹，防止氧化变色</span></div>
+      <div class="recipe-line"><span>配冰袋</span><span>夏季高温配送时附小冰袋，保持酱汁风味</span></div>
+      <div class="recipe-line"><span>贴纸提示</span><span>“建议冷藏保存，24小时内食用”</span></div>
+    </div>
+
+    <!-- 9️⃣ 实战备注 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">9️⃣ 沧林实战备注</div>
+    <div class="recipe-box" style="border-left-color:#C0392B">
+      • 浓缩橙汁推荐“安德利”或“韩国乐天”，品质稳定，酸度适中。<br>
+      • 柠檬汁建议用瓶装黄柠檬汁（如“宝蓝”），比鲜榨更稳定。<br>
+      • VC酱出锅后颜色应为明亮的橙黄色，如果发暗说明氧化或熬煮过久。<br>
+      • 出餐时可撒少量橙皮屑（用盐搓洗过的橙皮），提升颜值和果香。<br>
+      • 季节性切换：5-9月主推VC年糕，10月后换回蜜汁或香辣版。<br>
+      • 如果顾客反馈“不够甜”，可在出餐前额外淋一小勺蜂蜜；如果“太酸”，增加糖量即可。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="HZ_001.html"><span style="font-size:16px">🍗</span><span style="flex:1">原味黄金炸鸡（母卡·鸡块）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="HZ_023.html"><span style="font-size:16px">🍘</span><span style="flex:1">年糕无骨炸鸡（HZ_023）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="HZ_009.html"><span style="font-size:16px">🍊</span><span style="flex:1">VC蜜汁鸡块（酱料变体）</span><span>→</span></a>
+  </div>
+</div>
+
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+
+</div>
+
+<div class="cf-tagline">决策先于工艺 · 看见水面之下的力量</div>
+  <div class="cf-contact">微信 canglin1985 · <a href="https://foodintelai.com">foodintelai.com</a></div>
+</div>
+
+<script>
+
+
+<!-- ===== 咨询入口 ===== -->
+<div class="section">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center;font-size:12px;color:#5a4f44">
+    <div><strong>📌 咨询场景：</strong>摆摊选址评估 · 成本优化 · 翻车远程诊断</div>
+    <div style="margin-top:6px"><strong>📱 联系方式：</strong>微信 canglin1985（备注卡号）</div>
+    <a style="display:inline-block;margin-top:8px;padding:8px 20px;background:#3a322a;color:#fff;border-radius:8px;text-decoration:none;font-size:12px" href="javascript:void(0)" onclick="copyWx()">📲 加微信咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 决策先于工艺 · 沧林食品工作站</div>
+</div>
+
+<script>
+document.getElementById('unlockBtn')&&document.getElementById('unlockBtn').addEventListener('click',function(){var e=document.getElementById('payContent');e&&(e.classList.toggle('show'),this.textContent=this.textContent.indexOf('点击解锁')>=0?'收起完整出摊包':'点击解锁全部内容')});
+function copyWx(){var e=document.createElement('textarea');e.value='canglin1985';document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e);alert('✅ 微信号已复制：canglin1985');}
+</script>
+
+</body>

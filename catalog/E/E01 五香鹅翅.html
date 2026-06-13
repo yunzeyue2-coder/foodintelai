@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>鹅产品卡 · E01 五香鹅翅 | FoodIntelAI 国标V5.1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #2c2418; /* 深底色衬托 */
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', sans-serif;
+            line-height: 1.45;
+            padding: 2rem 1rem;
+            color: #2c2a28;
+        }
+
+        /* 主卡片容器 — 深棕系国标V5.1模板 */
+        .product-card {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: #faf8f5;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 1px solid #e2d9cf;
+        }
+
+        /* 头部装饰条 */
+        .hero-pattern {
+            height: 8px;
+            background: linear-gradient(90deg, #b87c4f, #e0aa7a, #c28552, #9b5e2c);
+        }
+
+        /* 模块通用间距 */
+        .module {
+            padding: 1.8rem 2.2rem;
+            border-bottom: 1px solid #ece3d9;
+        }
+        .module:last-child {
+            border-bottom: none;
+        }
+
+        /* 标题风格 */
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #3a2a1a;
+            border-left: 6px solid #c28552;
+            padding-left: 1rem;
+            margin-bottom: 1.3rem;
+            letter-spacing: -0.2px;
+        }
+        .sub-title {
+            font-weight: 600;
+            color: #5f4a2e;
+            margin: 1rem 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        /* 评分栏 五角星+高亮 */
+        .rating-bar {
+            background: #f2ebe2;
+            border-radius: 40px;
+            padding: 1rem 1.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .rating-item {
+            background: white;
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-weight: 500;
+        }
+        .rating-stars {
+            color: #e4a022;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* 速览网格 */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+        }
+        .info-chip {
+            background: #ffffffd9;
+            border-radius: 20px;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid #ede3d6;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .chip-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #8b765c;
+            letter-spacing: 0.5px;
+        }
+        .chip-value {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #3a2a1a;
+            margin-top: 0.3rem;
+        }
+
+        .cost-highlight {
+            background: #fff1e0;
+            border-left: 4px solid #c28552;
+            padding: 0.9rem;
+            border-radius: 16px;
+        }
+
+        /* 列表样式 */
+        .custom-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .custom-list li {
+            padding-left: 1.4rem;
+            position: relative;
+            margin-bottom: 0.55rem;
+        }
+        .custom-list li::before {
+            content: "•";
+            color: #c28552;
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 表格风格 */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffffcc;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e7ddd0;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        .data-table th {
+            background: #efe4d8;
+            font-weight: 600;
+            color: #3a2a1a;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e7d9cc;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+
+        .footnote {
+            border-top: 1px dashed #dacdbd;
+            margin-top: 1.2rem;
+            padding-top: 1rem;
+            font-size: 0.8rem;
+            color: #7b6b58;
+            text-align: center;
+        }
+
+        @media (max-width: 680px) {
+            .module {
+                padding: 1.2rem 1.2rem;
+            }
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+            .rating-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .wechat-link {
+            background: #3a2a1a;
+            color: #faf8f5;
+            border-radius: 60px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .wechat-link:hover {
+            background: #5f3f24;
+        }
+    </style>
+</head>
+<body>
+<div class="product-card">
+    <div class="hero-pattern"></div>
+
+    <!-- 模块1：产品名头 -->
+    <div class="module">
+        <h1 style="font-size: 2.2rem; font-weight: 800; color: #2f2419; margin-bottom: 0.25rem;">🦢 五香鹅翅 · E01</h1>
+        <p style="color: #6b5a48; font-size: 1rem;">胶质丰盈 · 五香透骨 | 三分卤七分泡 · 鹅味醇厚</p>
+        <div style="margin-top: 0.8rem;"><span class="badge">国标V5.1</span><span class="badge">鹅品类E系列</span><span class="badge">本地审核版</span></div>
+    </div>
+
+    <!-- 模块2：评分栏 -->
+    <div class="module">
+        <div class="rating-bar">
+            <div class="rating-item">🍖 口味浓郁度 <span class="rating-stars">★★★★★</span> 5.0</div>
+            <div class="rating-item">💰 毛利潜力 <span class="rating-stars">★★★★☆</span> 4.5</div>
+            <div class="rating-item">⏱️ 出餐效率 <span class="rating-stars">★★★☆☆</span> 3.8</div>
+            <div class="rating-item">🔄 复购粘性 <span class="rating-stars">★★★★☆</span> 4.6</div>
+            <div class="rating-item">🔥 摆摊友好度 <span class="rating-stars">★★★★☆</span> 4.2</div>
+        </div>
+    </div>
+
+    <!-- 模块3：项目速览 -->
+    <div class="module">
+        <div class="section-title">📋 项目速览</div>
+        <div class="grid-2col">
+            <div class="info-chip"><div class="chip-label">产品定位</div><div class="chip-value">佐餐硬通货·卤味下酒菜</div></div>
+            <div class="info-chip"><div class="chip-label">核心工艺</div><div class="chip-value">焯水→卤制→3.5h浸泡</div></div>
+            <div class="info-chip"><div class="chip-label">卤水类型</div><div class="chip-value">老卤（五香鹅卤水）</div></div>
+            <div class="info-chip"><div class="chip-label">建议售卖价</div><div class="chip-value">38~46元/斤（视城市浮动）</div></div>
+        </div>
+    </div>
+
+    <!-- 模块4：适合谁 -->
+    <div class="module">
+        <div class="section-title">👥 适合谁</div>
+        <ul class="custom-list">
+            <li>熟食/卤味创业者、夜市摆摊新手、社区档口升级</li>
+            <li>已有鸭货卤味店增加“鹅系列”打出差异化</li>
+            <li>外卖卤味专营店 · 私房卤味社群主理人</li>
+            <li>注重胶质口感和传统五香风味的食客群体</li>
+        </ul>
+    </div>
+
+    <!-- 模块5：赚钱逻辑 -->
+    <div class="module">
+        <div class="section-title">💰 赚钱逻辑</div>
+        <div class="grid-2col">
+            <div class="cost-highlight">
+                <div style="font-weight:800;">📦 单斤成本卡</div>
+                <div style="margin-top:8px;">鹅翅进价 <strong>18元/斤</strong>（2026.6冻品）<br>出品率 ≈ 70%<br>熟成本 ≈ <strong style="font-size:1.3rem;">25.7元/斤</strong></div>
+                <div style="margin-top:6px; font-size:0.85rem;">✅ 售价38~42元/斤 → 毛利约 <strong>32%~39%</strong>（不含卤料人工）</div>
+            </div>
+            <div class="cost-highlight">
+                <div style="font-weight:800;">🧂 卤水复用逻辑</div>
+                <div>鹅翅胶质丰富，卤水越卤越稠，每天撇去鹅油防酸，老卤增值明显。每斤鹅翅卤料分摊≈1.2元，批量生产后利润更优。</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模块6：赛道判断 -->
+    <div class="module">
+        <div class="section-title">🏁 赛道判断</div>
+        <p><strong>五香卤鹅翅：卤味红海中高价值突破点</strong> — 鸭翅内卷严重，鹅翅肉感厚实、骨架大、胶质浓郁，客单价天然高出25%以上。因鹅原料成本高于鸭，但消费者愿意为“大块满足感”买单。线下现卤现捞配合陈列，差异化突围。</p>
+    </div>
+
+    <!-- 模块7：项目评估 -->
+    <div class="module">
+        <div class="section-title">📊 项目评估 (五星制)</div>
+        <div class="grid-2col">
+            <div class="info-chip">🔧 技术门槛 ★★★☆☆ — 掌握“三分卤七分泡”及去腥撇油</div>
+            <div class="info-chip">💵 启动资金 ★★☆☆☆ — 3~5㎡操作区，卤水桶即可起步</div>
+            <div class="info-chip">📈 流量潜力 ★★★★☆ — 鹅翅自带网红气质，拼盘引流强</div>
+            <div class="info-chip">⚙️ 供应链稳定 ★★★★☆ — 冻品鹅翅货源充足（山东/江苏）</div>
+        </div>
+    </div>
+
+    <!-- 模块8：30天落地路线图 -->
+    <div class="module">
+        <div class="section-title">🗓️ 30天落地路线</div>
+        <ul class="custom-list">
+            <li><strong>第1-3天</strong> ｜ 找稳定供货商（鹅翅整箱18元/斤左右，签订冻品协议）</li>
+            <li><strong>第4-7天</strong> ｜ 卤水调制（50L五香卤水按1%干料比例，试卤10斤鹅翅记录时间/口感）</li>
+            <li><strong>第8-12天</strong> ｜ 口感优化、浸泡测试、测算实际出品率及成本表</li>
+            <li><strong>第13-18天</strong> ｜ 试卖阶段（社群/地推/夜市小份试吃）收集反馈</li>
+            <li><strong>第19-25天</strong> ｜ 固定操作sop（焯水时间、卤制火候、撇油频率）</li>
+            <li><strong>第26-30天</strong> ｜ 宣传物料 + 定价策略 + 摆摊/外卖上架</li>
+        </ul>
+    </div>
+
+    <!-- 模块9：设备清单 -->
+    <div class="module">
+        <div class="section-title">⚙️ 核心设备清单</div>
+        <div class="grid-2col">
+            <div><span class="badge">🔪</span> 不锈钢卤水桶（50L以上）</div>
+            <div><span class="badge">🔥</span> 猛火灶/商用电磁炉</div>
+            <div><span class="badge">🥣</span> 捞篱+长筷子+温度计</div>
+            <div><span class="badge">🧊</span> 熟食冷藏展示柜</div>
+            <div><span class="badge">🧴</span> 鹅油撇油勺/卤水保鲜桶</div>
+            <div><span class="badge">⚖️</span> 电子秤/真空包装机（可选）</div>
+        </div>
+    </div>
+
+    <!-- 模块10：产品结构（产品线组合建议） -->
+    <div class="module">
+        <div class="section-title">🍱 产品结构建议</div>
+        <p>E01鹅翅为核心引流爆品，搭配E02鹅掌、E03鹅头形成“鹅三拼”，拉升客单价。鹅肠（E04）作为限量快卤款，增强稀缺性。可另搭卤藕、豆干等素菜提升连带率。</p>
+        <div class="info-chip" style="margin-top:0.8rem;">📌 建议定价策略：鹅翅42元/斤，套餐（半斤鹅翅+2只鹅掌+卤花生） 35元，满足一人食与聚餐场景</div>
+    </div>
+
+    <!-- 模块11：摆摊指数 -->
+    <div class="module">
+        <div class="section-title">🚚 摆摊指数</div>
+        <div class="rating-bar" style="background:#ede3d6;">
+            <span>✅ 出摊准备时间：45分钟（卤锅加热+切配）</span>
+            <span>✅ 单次备货100斤鹅翅，回本周期约5~7个高峰日</span>
+            <span>🔥 夜市爆品指数：9/10</span>
+        </div>
+        <p style="margin-top:12px;">鹅翅外形饱满，色泽红亮（红曲米+栀子自然色），视觉冲击力强，适合现捞热卤展示。建议搭配保温柜及试吃牙签。</p>
+    </div>
+
+    <!-- 模块12：最大风险及风控 -->
+    <div class="module">
+        <div class="section-title">⚠️ 最大风险与风控</div>
+        <ul class="custom-list">
+            <li><strong>鹅油发酵风险</strong> → 卤水每天必须彻底撇净上层浮油，夏季每日烧开1次，存放时冷藏或隔夜烧开，卤水桶留透气孔。</li>
+            <li><strong>肉质纤维粗老</strong> → 严格控制卤制时间（鹅翅比鸭翅多卤30~50%），卤制50分钟+焖泡3小时，不可大火催熟。</li>
+            <li><strong>出品率波动</strong> → 冻品解冻后充分沥水，焯水去浮沫，卤前称重确保标准化。</li>
+        </ul>
+    </div>
+
+    <!-- 模块13：核心工艺（含鹅翅专项） -->
+    <div class="module">
+        <div class="section-title">🧪 核心工艺 · E01五香鹅翅</div>
+        <div style="background:#fff6ef; border-radius: 24px; padding: 1.2rem 1.5rem;">
+            <p><strong>📌 统一五香卤水配方（50L基准，干料=水重1%）</strong><br>
+            八角60g · 桂皮50g · 花椒40g · 草果50g · 白芷50g · 陈皮50g · 甘草30g · 丁香8g · 小茴香30g · 肉豆蔻20g<br>
+            盐1500g · 生抽1500ml · 白糖1000g · 姜200g · 葱200g · 红曲米+栀子水调色。</p>
+            <p><strong>🦢 鹅翅工艺路线</strong><br>
+            ① 解冻浸泡（冰水去血）→ ② 沸水焯水3分钟（加姜片料酒）→ ③ 卤水烧开放入鹅翅，大火10分钟转小火卤制<strong>50~55分钟</strong>（鹅翅纤维粗，时间比鸭翅多40%）→ ④ 关火焖泡<strong>3.5~4小时</strong>（三分卤七分泡）→ ⑤ 捞出自然晾凉，表面刷一层卤油锁水。</p>
+            <p><strong>⚠️ 鹅与鸭核心差异：</strong>鹅肉纤维更粗，卤制时间延长；鹅油极重，卤水必须每天撇油；鹅翅胶质高，卤完卤水变稠，需补新水香料。</p>
+            <div class="badge">泡至少3h保证入味</div> <div class="badge">盐度2.8~3.2%之间</div> <div class="badge">鹅肉·卤水=1:1.8</div>
+        </div>
+    </div>
+
+    <!-- 模块14：成本利润精算表（基于2026年6月数据） -->
+    <div class="module">
+        <div class="section-title">📐 成本利润精算表（单斤/批量）</div>
+        <table class="data-table">
+            <thead>
+                <tr><th>项目</th><th>单价/说明</th><th>单斤分摊(元)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>鹅翅原料(冻品)</td><td>进价18元/斤，出品率70%</td><td><strong>25.71</strong></td></tr>
+                <tr><td>香料+调味料</td><td>每斤鹅翅卤料消耗≈1.5元（按老卤循环）</td><td>1.20</td></tr>
+                <tr><td>燃气/水电</td><td>批量卤制摊分</td><td>0.60</td></tr>
+                <tr><td>包装/人工(预估)</td><td>摆摊或外卖盒+简易人工</td><td>1.80</td></tr>
+                <tr><td><strong>总成本(熟成)</strong></td><td></td><td><strong>≈29.31元/斤</strong></td></tr>
+                <tr><td>建议零售价</td><td>市集/外卖参考价</td><td>39~45元/斤</td></tr>
+                <tr><td>预估毛利</td><td>（零售价-总成本）/零售价</td><td>25%~35%</td></tr>
+            </tbody>
+        </table>
+        <div class="footnote">※ 出品率70%基于去骨边角实际可售部分，批量运作后人工成本可摊薄，老卤循环香料成本递减。</div>
+    </div>
+
+    <!-- 模块15：出摊包（摆摊物料清单） -->
+    <div class="module">
+        <div class="section-title">🎒 出摊必备包（移动卤味车/夜市）</div>
+        <div class="grid-2col">
+            <div>
+                <ul class="custom-list">
+                    <li>保温卤桶或电热汤桶</li>
+                    <li>食品级托盘 + 防蝇罩</li>
+                    <li>夹子/剪刀/一次性手套</li>
+                    <li>价格牌+试吃牙签盒</li>
+                </ul>
+            </div>
+            <div>
+                <ul class="custom-list">
+                    <li>电子秤(防作弊款)</li>
+                    <li>打包盒/袋/湿纸巾</li>
+                    <li>移动电源/照明灯</li>
+                    <li>微信/支付宝收款码</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模块16：关联产品（搭售推荐） -->
+    <div class="module">
+        <div class="section-title">🧩 关联产品推荐</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+            <span class="badge" style="background:#d9cbbe;">🍺 五香鹅掌(E02)</span>
+            <span class="badge" style="background:#d9cbbe;">🧠 五香鹅头(E03)</span>
+            <span class="badge" style="background:#d9cbbe;">🥢 脆卤鹅肠(E04·一次性卤水)</span>
+            <span class="badge" style="background:#d9cbbe;">🥔 卤土豆/腐竹/海带结</span>
+            <span class="badge" style="background:#d9cbbe;">🫘 五香花生米</span>
+        </div>
+        <p style="margin-top: 12px;">⭐ 鹅肠因出品率约40%（进价13~15元/斤，熟成本≈37元/斤），建议按小份18元/100g售卖，强调“脆嫩现卤”。</p>
+    </div>
+
+    <!-- 模块17：咨询入口 及 最终数据锁定声明 -->
+    <div class="module">
+        <div class="section-title">📞 技术咨询 & 供应链支持</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>📱 卤水调配/出品率优化 一对一指导<br>🔍 微信号：<strong style="font-size:1.2rem; background:#f0e2d4; padding:0.2rem 0.8rem; border-radius: 40px;">canglin1985</strong></div>
+            <a href="#" class="wechat-link" style="pointer-events: none;">💬 复制微信号 添加咨询</a>
+        </div>
+        <div class="footnote" style="margin-top: 1.5rem;">
+            🧾 本地审核版 · 数据全展开 · 上线时锁定付费区<br>
+            数据基准日：2026年6月（杂交鹅/泰州/三花冻品批发价） | 鹅翅进价参考江苏/山东主流冻库 16~19元/斤区间取中值18元<br>
+            本卡片遵循国标V5.1鹅产品卡规范，所有工艺参数均经FoodIntelAI验证。
+        </div>
+    </div>
+    <!-- end 17模块 -->
+</div>
+</body>
+</html>

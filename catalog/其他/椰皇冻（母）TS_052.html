@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>TS_052 椰皇冻 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥥 椰皇冻</h1>
+  <div style="font-size:12px;color:#b5aaa0">天然椰壳容器 · 椰奶冻+椰子水冻 · 网红甜品</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.6</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A级项目</span>
+  </div>
+  <div class="r-tagline">天然容器自带高级感，原材料复用率高，毛利空间大。</div>
+  <div class="r-tags">
+    <span>🔥 热度高</span>
+    <span>💰 投资3000+</span>
+    <span>👤 1-2人可做</span>
+    <span>🔄 复购中高</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">网红甜品持续升温</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">甜品属性复购良好</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">3000-5000元</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">吉利丁比例关键</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">60-70%</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 中高端夜市/商圈摆摊</div>
+      <div class="fit-item fit-yes">✅ 甜品店增加引流单品</div>
+      <div class="fit-item fit-yes">✅ 外卖/堂食兼顾</div>
+      <div class="fit-item fit-yes">✅ 想打造高颜值网红产品</div>
+      <div class="fit-item fit-yes">✅ 椰子系列专门店基础款</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 低端价格战夜市（客群接受不了20+定价）</div>
+      <div class="fit-item fit-no">❌ 完全无法接受椰子原料成本</div>
+      <div class="fit-item fit-no">❌ 追求极致出餐速度（开椰壳费时）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：天然椰壳容器的高级感 + 双重口感（椰奶冻+椰子水冻）+ 可食用椰肉。</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>经典原味椰皇冻（引流）</span><span class="v">毛利65%</span></div>
+    <div class="logic-item"><span>椰皇冻水果杯（升级款）</span><span class="v">毛利70%</span></div>
+    <div class="logic-item"><span>椰青水单独售卖</span><span class="v">毛利85%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>+¥5加芒果/草莓/脆波波</span><span class="v"></span></div>
+    <div class="logic-item"><span>椰皇冻+椰子水套餐</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>推出季节限定水果椰皇冻（草莓季/芒果季）</span><span class="v"></span></div>
+    <div class="logic-item"><span>集章卡：买5送1</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥700-1300</div><div class="m-sub">4-5h出摊 · 预估</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥6000-9500</div><div class="m-sub">出摊22天 · 预估</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">6-10天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">📌 量化数据来源：基于2025年广深椰皇冻摊位实测及椰子批发市场行情测算。</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">天然椰壳容器形成视觉差异化，易拍照传播，自带网红属性。</div>
+      <div class="t-item">原材料复用率高：椰子水做冻、椰肉可刮出做小料或椰蓉。</div>
+      <div class="t-item">毛利空间大（60-70%），客单价可做到20-35元。</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">椰子运输成本高、占地方，且开椰壳费人工（熟练工一个约2分钟）。</div>
+      <div class="t-item">季节性较明显，冬季销量比夏季下降30%左右。</div>
+      <div class="t-item">市面上竞品增多，价格开始内卷（有摊位卖15元但品质差）。</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>椰皇冻2022-2023年起源于广深，目前已扩散至二三线城市，属于甜品赛道中快速增长的细分品类。竞争尚未饱和，但需注意品质差异化。<br>
+    <strong>未来判断：</strong>未来两年会从“网红单品”向“常规甜品”过渡，窗口期仍在。建议做“椰皇冻+”模式，结合水果/冰淇淋提升复购。<br>
+    <strong>是否值得进入：是</strong>（前提：能找到稳定便宜的椰青供应，且摊位形象中高端）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估（V5.1维度） ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">区域竞争中等</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★☆</div><div style="font-size:10px;color:#5a4f44">3-5天掌握</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">吉利丁比例/冷藏时间</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★☆</div><div style="font-size:10px;color:#5a4f44">¥300-500试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A</span></div>
+</div>
+
+<!-- ===== 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th></tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🥥 椰皇冻</th><td>★★★</td><td>★★★</td><td>★★★★</td><td>★★★</td><td>A</td><td><a href="#" style="color:#E8652D">#TS_052</a></td></tr>
+        <tr><td>🥭 芒果糯米饭杯</td><td>★★</td><td>★★★</td><td>★★★★</td><td>★★★</td><td>A-</td><td><a href="#" style="color:#D4A574">#TS_048</a></td></tr>
+        <tr style="background:#f8f4ef"><td>🍮 厚椰冻冻</td><td>★★★</td><td>★★</td><td>★★★★</td><td>★★</td><td>B+</td><td><a href="#" style="color:#5a8f3c">#TS_022</a></td></tr>
+        <tr><td>🥥 椰青水+椰肉杯</td><td>★★</td><td>★</td><td>★★★</td><td>★★★★</td><td>B</td><td><a href="#">#TS_023</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 对比卡片均为FoodIntelAI已发布标准卡，可点击跳转。</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购椰青5个，试做椰奶冻+椰子水冻，测试吉利丁比例和冷藏时间。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20人试吃，收集对甜度/口感/椰香浓度的反馈。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>首次摆摊预备25个，测试中高端夜市/商圈接受度与定价。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>根据数据增加水果顶配料（芒果/草莓），优化出品视觉。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘利润，确定是否增加预制冷冻椰皇冻半成品加速出餐。</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① 试吃好评率＞75% ② Day7首日销量≥20个 ③ 复购顾客主动问“能不能预订”<br>
+    <strong>🚪 退出标准：</strong>连续5天日销＜10个 / 顾客反馈“太甜/没椰味/口感像果冻”差评＞30% / 椰子损耗率＞15%<br>
+    <strong>✅ 继续标准：</strong>日销稳定20个以上 / 外卖好评图出现“椰壳好看”关键词 / 水果顶配料销量占比超30%
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（含证照成本） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：开椰器/砍椰刀(¥50-100) · 不锈钢盆(¥40) · 电子秤(¥30) · 量杯(¥15) · 冰箱/冷藏柜(¥800-1500二手) · 封口机(可选，¥200) · 小奶锅(¥50)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠操作台(¥150) · 招牌灯箱(¥100-200) · 保温箱/冰桶(¥80) · 价格牌(¥20) · 试吃小碟(¥30) · 展示冰柜(¥400-800)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：椰青50个(¥250-400) · 淡奶油/椰浆(¥80) · 吉利丁片/粉(¥30) · 白砂糖(¥15) · 芒果/草莓(¥60) · 勺子/吸管/包装袋(¥50)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,500-3,500</strong>（借用家用冰箱+少量椰子）</div>
+    <div><strong>💰 完整启动方案：¥4,000-6,000</strong>（含商用冷藏展示柜+全套开椰工具）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥70-90 · 食品摊贩备案¥0-200，办理时间1-3天。部分城市需预包装食品备案。</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">经典原味椰皇冻</span><span class="t-price">¥18-22</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">椰皇冻水果杯（芒果/草莓/榴莲）</span><span class="t-price">¥25-35</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">椰皇冻+椰子水+脆波波</span><span class="t-price">¥32-40</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">📱 外卖</div><div class="stars">★★★★☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项，含政策/场地） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>现制甜品在部分城市需要小餐饮许可证，仅摊贩备案可能不被允许。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>椰子冬季销量明显下降；下雨天客流减少；摊位费上涨压缩利润。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>椰子品质不稳定——同一批椰青甜度/水量差异大，顾客吃到不甜的会差评。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>开椰壳费人工且危险——高峰时段容易切到手，且每人每小时最多开30个。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>吉利丁比例翻车——太硬像胶皮，太软不成型，新手容易失败。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>竞品价格战——部分摊位用劣质椰浆粉+模具椰壳冒充，卖15元扰乱市场。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>颜值高、毛利高，天然椰壳容器形成差异化壁垒，容易在社交媒体传播；原材料可复用，损耗可控。<br>
+      <strong>❌ 为什么不值得做：</strong>如果拿不到低价椰青（批发价>6元/个）或摊位位于低消费区域，很难做出利润；开椰壳效率低，高峰期压单。<br>
+      <strong>🔑 进入条件：</strong>① 能找到椰青批发价≤5元/个的渠道 ② 摊位位于中高端夜市/商圈 ③ 愿意花3天练习开椰壳和吉利丁比例 ④ 配备冷藏展示柜提升颜值。<br>
+      <strong>🚪 退出条件：</strong>试卖2周日均销量＜12个 / 椰子损耗率＞20% / 连续3天营收＜¥400。<br>
+      <strong>🎯 最终判断：可进</strong> —— 建议以“椰皇冻+水果顶”组合切入，避开低价竞争，主打品质和颜值。
+    </div>
+    <div class="j-tags"><span>#椰皇冻</span><span>#天然容器</span><span>#高颜值甜品</span><span>#中高端定位</span></div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">开椰壳取水：用开椰器或刀开孔，倒出椰子水备用</span><div class="ps-verify">[验证点] 椰子水清澈无杂质，尝一口甜度自然，若发酸则椰青已坏</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">制作椰奶冻液：椰浆+淡奶油+糖+泡软的吉利丁，小火加热至融化</span><div class="ps-verify">[验证点] 液体温度不超过60°C，吉利丁完全融化无颗粒；滴一滴在冷盘上，10秒内凝固不流动即为合格</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">制作椰子水冻：椰子水+糖+吉利丁，同样低温融化</span><div class="ps-verify">[验证点] 椰子水冻液呈透明淡黄色，无气泡；有气泡需静置消泡再灌</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">分层灌装冷藏：先倒入椰奶冻液至1/2，冷藏2小时凝固后，再倒入椰子水冻液，冷藏4小时以上</span><div class="ps-verify">[验证点] 第二层倒入时第一层已完全凝固，不会混合；成品切开有明显分层界线</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整吉利丁比例、水果顶料工艺、批量制作方案见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润（完整7项） ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本</span><span class="v">¥6.5/个（椰青+椰浆+淡奶+吉利丁+糖）</span></div>
+    <div class="recipe-line"><span class="k">包装成本</span><span class="v">¥1.2/个（勺子+吸管+外袋）</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（水电+冰）</span><span class="v">¥0.5/个</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥8.2/个（基础原味）</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥18～¥35</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">54%～76%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售35个（均价¥22）→ 日毛利¥483，月净利¥6,800（出摊22天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费锁定区，7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥49 <small>母卡 · 永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看椰奶冻+椰子水冻精确比例、水果顶料配方、预制冷藏方案</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 精确配方（单个椰皇冻·克数）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>椰青（取壳+水）</span><span>1个（约300-400g水）</span></div>
+      <div class="recipe-line"><span>椰浆</span><span>100g</span></div>
+      <div class="recipe-line"><span>淡奶油</span><span>30g</span></div>
+      <div class="recipe-line"><span>白砂糖（椰奶层）</span><span>18g</span></div>
+      <div class="recipe-line"><span>吉利丁片（椰奶层）</span><span>5g</span></div>
+      <div class="recipe-line"><span>椰子水（取自椰青）</span><span>180g</span></div>
+      <div class="recipe-line"><span>白砂糖（椰子水层）</span><span>8g</span></div>
+      <div class="recipe-line"><span>吉利丁片（椰子水层）</span><span>4g</span></div>
+    </div>
+    <!-- 2️⃣ 精确克数+吉利丁比例 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 吉利丁比例对照表（每500ml液体）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>软嫩口感（入口即化）</span><span>吉利丁6g</span></div>
+      <div class="recipe-line"><span>标准口感（推荐）</span><span>吉利丁8g</span></div>
+      <div class="recipe-line"><span>Q弹口感（适合外带）</span><span>吉利丁10g</span></div>
+    </div>
+    <!-- 3️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 温度&冷藏曲线</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>吉利丁泡软用水</span><span>冰水（0-4°C），泡10分钟</span></div>
+      <div class="recipe-line"><span>加热温度</span><span>50-60°C，不可超过70°C（吉利丁失效）</span></div>
+      <div class="recipe-line"><span>第一层凝固</span><span>2-4°C冷藏2小时</span></div>
+      <div class="recipe-line"><span>第二层凝固</span><span>2-4°C冷藏4小时以上</span></div>
+      <div class="recipe-line"><span>成品保质期</span><span>2-4°C冷藏48小时</span></div>
+    </div>
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 批量SOP（10个/30个）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>10个椰奶层液总量</span><span>椰浆1000g+淡奶油300g+糖180g+吉利丁50g</span></div>
+      <div class="recipe-line"><span>10个椰子水层总量</span><span>椰子水1800g+糖80g+吉利丁40g</span></div>
+      <div class="recipe-line"><span>30个按3倍乘</span><span>注意吉利丁需分次融化</span></div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>不成型：</strong>吉利丁失效（温度太高）或比例不对 → 重新融化补加吉利丁。</div>
+      <div><strong>口感太硬：</strong>吉利丁过多 → 加液体稀释后重新冷藏。</div>
+      <div><strong>椰奶层有颗粒：</strong>吉利丁未完全融化 → 过滤后再灌装。</div>
+      <div><strong>两层混合：</strong>第一层未完全凝固就倒第二层 → 必须凝固超过2小时。</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款变体（水果顶/冰淇淋/烤椰皇）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🥭 芒果椰皇冻：</strong>凝固后顶部铺芒果丁50g，淋一勺芒果酱。</div>
+      <div><strong>🍨 冰淇淋椰皇冻：</strong>加一球香草冰淇淋（+¥5），撒椰子脆片。</div>
+      <div><strong>🔥 烤椰皇冻：</strong>表面撒糖后用喷枪烤出焦糖层（堂食专属）。</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      当日销量＞60个时：改用预制椰奶冻和椰子水冻，批量灌装后统一冷藏。增加一名专门开椰壳的员工，改用电动开椰器（¥300-500）。可供应给周边甜品店/咖啡店，批发价¥14-16/个。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品（同赛道+内部跳转） ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🥥</span><span class="r-name">椰皇冻水果杯（变体卡）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍮</span><span class="r-name">厚椰冻冻（平价替代）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥭</span><span class="r-name">芒果糯米饭杯（甜品搭售）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 以上均为FoodIntelAI已发布标准卡，搜索编号即可跳转。</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>椰青供应链 · 吉利丁比例调试 · 摆摊选址评估 · 外卖防化冻包装</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1出摊包答疑 · 水果顶料成本优化 · 冷藏展示柜推荐</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“椰皇冻卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

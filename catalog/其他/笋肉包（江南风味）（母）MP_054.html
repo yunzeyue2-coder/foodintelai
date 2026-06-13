@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>MP_054 笋肉包（江南风味） · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#e8dfd5;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#1e3a2f,#2d4e3f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🎋 笋肉包（江南风味）</h1>
+  <div style="font-size:12px;color:#b5aaa0">鲜笋/笋干 · 猪肉 · 咸鲜微甜</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.2</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">江南春季限定风味，核心壁垒是笋的脆嫩与肉汁的融合。</div>
+  <div class="r-tags">
+    <span>🔥 热度中高</span>
+    <span>💰 投资2800+</span>
+    <span>👤 1-2人可做</span>
+    <span>🔄 复购高</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">时令爆款</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">笋鲜回味</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">2800+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">笋处理+馅料</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">毛利60%+</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 有包子基础的新手</div>
+      <div class="fit-item fit-yes">✅ 江浙沪地区早餐/点心摊</div>
+      <div class="fit-item fit-yes">✅ 春季限定特色经营</div>
+      <div class="fit-item fit-yes">✅ 夫妻档</div>
+      <div class="fit-item fit-yes">✅ 想引入时令爆品</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 笋过敏</div>
+      <div class="fit-item fit-no">❌ 不愿意处理笋（焯水去涩）</div>
+      <div class="fit-item fit-no">❌ 追求全年稳定供应（笋有季节性）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：笋的脆嫩 + 肉馅鲜甜 + 时令限定感</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>笋肉包（利润款）</span><span class="v">毛利60-65%</span></div>
+    <div class="logic-item"><span>鲜肉包/豆沙包（引流款）</span><span class="v">毛利55-60%</span></div>
+    <div class="logic-item"><span>套餐（+豆浆+茶叶蛋）</span><span class="v">客单价拉高25%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>推“春季限定套餐”：笋肉包+马兰头香干</span><span class="v"></span></div>
+    <div class="logic-item"><span>加购青团/绿豆汤</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>强调“现剥现做”新鲜感</span><span class="v"></span></div>
+    <div class="logic-item"><span>笋季结束后推速冻版或笋干版</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥700-1300</div><div class="m-sub">4-6h出摊</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥6000-9000</div><div class="m-sub">出摊25天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">6-12天</div><div class="m-sub">含设备</div></div>
+  </div>
+</div>
+
+<!-- ===== 05 赛道判断（≥150字） ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">笋肉包是江南春季代表点心，消费者有“时令尝鲜”心理，客单价可高于普通肉包</div>
+      <div class="t-item">笋的脆感与猪肉的鲜甜搭配，口感差异化明显</div>
+      <div class="t-item">鲜笋上市期（1-4月）需求旺盛，可做短期集中盈利</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">鲜笋季节性极强，非笋季只能用水煮笋或笋干，口感下降</div>
+      <div class="t-item">笋需要焯水去涩，处理比普通肉包麻烦</div>
+      <div class="t-item">成本比纯肉包高（笋价波动大）</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>江浙沪包子摊在春季几乎都会推出笋肉包，但大部分用的是水煮笋罐头或切丝不均，笋的脆感差。能吃到新鲜春笋脆嫩口感的很少。<br>
+    <strong>未来判断：</strong>消费者对“真材实料”追求上升，用鲜笋现剥现焯水做馅，能形成品质差异。非笋季可用笋干代替（需充分泡发），做成常规款。<br>
+    <strong>是否值得进入：是</strong>（前提：掌握鲜笋去涩处理、肉馅打水、笋丁与肉的比例）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">春季略多</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">3-7天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">笋处理/调馅</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥250试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- ===== 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th>}</thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🎋 笋肉包</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★</th><td>A-</th><td><a href="#" style="color:#E8652D">#MP_054</a>}</tr>
+        <tr><td>🍄 香菇鸡肉包</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★</th><td>B+</th><td><a href="#" style="color:#D4A574">#MP_017</a>}</td>
+        <tr style="background:#f8f4ef"><td>🧅 大葱肉包</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★★★</th><td>B+</th><td><a href="#" style="color:#5a8f3c">#MP_019</a>}</td>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为已发布FoodIntelAI标准卡</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>鲜笋去壳焯水去涩，切丁，调肉馅，试包10个</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>调整笋丁大小（建议0.8cm）和肉笋比例（肉:笋=2:1），试蒸</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>邀请20人试吃，重点收集“笋脆度/咸甜/肉汁”反馈</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>第一次摆摊（预备60个），测试与鲜肉包销量对比</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘：日均销量、笋脆反馈、复购率，是否推广笋干版</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7笋脆好评率＞80% ② Day15首日能否卖出30+个 ③ Day30复购率＞18%<br>
+    <strong>🚪 退出标准：</strong>连续5天日均＜20个 / 笋发苦或软烂反馈＞30% / 成本高于鲜肉包太多<br>
+    <strong>✅ 继续标准：</strong>复购率＞20% / 有人专门来买笋肉包 / 春季订单占比高
+  </div>
+</div>
+
+<!-- ===== 08 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：和面盆×2(¥50-100) · 蒸笼8-10层(¥200-400) · 蒸包炉(¥400-800) · 冰柜(¥800-1500) · 绞肉机(¥300-600) · 操作台/面板(¥150-300) · 电子秤(¥30-50) · 切菜砧板(¥30-50)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：三轮车/早餐车(¥500-1500) · 折叠操作台(¥200-400) · 帐篷伞(¥150-300) · 招牌灯箱(¥80-150) · 保温展示柜(¥300-500) · 价格牌(¥20-50)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：鲜春笋5kg(¥40-80) · 猪前腿肉10kg(¥200-300) · 中筋面粉15kg(¥40-50) · 酵母/泡打粉(¥20-30) · 调味料(¥30-40) · 包装袋500个(¥30-50) · 笋干（非季备用）(¥50-80)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,500-3,500</strong>（已有三轮车，二手设备）</div>
+    <div><strong>💰 完整启动方案：¥4,000-6,000</strong>（含冰柜+绞肉机+全新设备）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案¥0-200 · 办理时间1-3天</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">鲜肉包 · 豆沙包</span><span class="t-price">¥2-3/个</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">笋肉包（鲜笋/笋干）</span><span class="t-price">¥3-4.5/个</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">笋肉包+豆浆+时令小菜</span><span class="t-price">¥6-10</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★★★☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>流动摊位需办理小摊贩登记；笋类加工需注意食品安全。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>鲜笋供应期仅2-3个月，非季只能用笋干，口感下降。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>笋的苦涩未去尽——焯水时间不足或未用淘米水/盐水浸泡，顾客吃出苦味。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>笋丁太老或切太大——影响口感，脆感变硬柴。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>肉馅不融合——肉和笋没有充分混合，蒸后分离。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>成本高于普通肉包——春季笋价高时毛利被压缩。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>笋肉包是江南春季爆款，消费者尝鲜意愿强，可溢价1-1.5元/个。口味独特，能带动其他包子销量。<br>
+      <strong>❌ 为什么不值得做：</strong>鲜笋季节性太强，非季品质下降。笋处理比普通肉包麻烦，需要额外工时。如果只做常规包子摊，可以不增加这个单品。<br>
+      <strong>🔑 进入条件：</strong>① 掌握鲜笋去涩技巧（焯水+盐水浸泡） ② 肉笋比例2:1，笋丁切0.8cm小丁 ③ 摊位在江浙沪或对笋有认知的地区 ④ 能在笋季集中推广。<br>
+      <strong>🚪 退出条件：</strong>① 连续2周日均＜20个 ② 笋苦涩反馈＞20% ③ 笋季结束且笋干版销量差。<br>
+      <strong>🎯 最终判断：可进（作为时令产品）</strong> —— 适合江浙沪包子摊在1-4月春季作为利润款推出。非笋季可改用笋干，但口感略降。建议限量供应，强调“新鲜手剥”，制造稀缺感。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">笋处理：鲜笋去壳，切去老根，冷水下锅煮15分钟，捞出过凉，切0.8cm小丁，挤干水分</span><div class="ps-verify">[验证点] 笋丁尝无苦涩味，脆嫩不柴；挤干后不滴水</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">肉馅打水：猪肉糜+葱姜水顺时针搅打至起胶，加调味料、笋丁拌匀，冷藏30分钟</span><div class="ps-verify">[验证点] 每500g肉打水120g，肉馅粘稠，笋丁分布均匀</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">发面包制：面粉+酵母+温水醒发至2倍大，每个剂子35g，包入30g馅，收口</span><div class="ps-verify">[验证点] 包子收口紧实，蒸后不裂，笋丁不戳破面皮</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">蒸制：二次醒发15分钟，旺火蒸12分钟，焖3分钟开盖</span><div class="ps-verify">[验证点] 包子皮松软，掰开馅料中笋丁颗粒分明，入口脆嫩</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整商用配方（精确克数、笋干处理方法）见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">鲜笋成本（每个约15g）</span><span class="v">¥0.3-0.6（笋季波动）</span></div>
+    <div class="recipe-line"><span class="k">猪肉馅成本（每个15g）</span><span class="v">¥0.5-0.7</span></div>
+    <div class="recipe-line"><span class="k">面皮成本</span><span class="v">¥0.4-0.5</span></div>
+    <div class="recipe-line"><span class="k">调味料+油</span><span class="v">¥0.1-0.2</span></div>
+    <div class="recipe-line"><span class="k">包装成本</span><span class="v">¥0.1-0.2</span></div>
+    <div class="recipe-line"><span class="k">燃料/耗材</span><span class="v">¥0.1-0.15</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥1.5-2.35/个</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥3～¥4.5/个</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">50%～60%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售80个（均价¥3.5）→ 日毛利约¥120，月净利约¥2,500（搭售效果更好）</span></div>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 笋肉包毛利略低于鲜肉包，但作为特色款可带动客流量</div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区·7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥58 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看鲜笋去涩技巧、笋干泡发方案、肉笋比例</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 · 鲜笋馅 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用鲜笋馅配方 (出50个)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>鲜春笋（去壳后）750g</span><span>猪前腿肉糜1000g</span></div>
+      <div class="recipe-line"><span>葱姜水300g</span><span>生抽40g · 老抽10g</span></div>
+      <div class="recipe-line"><span>蚝油20g · 白糖15g</span><span>盐8g · 白胡椒粉5g</span></div>
+    </div>
+    <!-- 2️⃣ 笋干馅配方（非季） -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 笋干馅配方 (出50个)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>笋干200g（泡发后约600g）</span><span>猪前腿肉糜1000g</span></div>
+      <div class="recipe-line"><span>笋干需提前浸泡24小时，换水3次</span><span>切丁后高压锅煮20分钟</span></div>
+    </div>
+    <!-- 3️⃣ 发面配方 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 发面配方 (50个皮)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>中筋面粉1000g</span><span>酵母10g · 泡打粉6g</span></div>
+      <div class="recipe-line"><span>白糖15g</span><span>温水550g（35°C）</span></div>
+      <div class="recipe-line"><span>醒发60-90分钟至2倍大</span><span>每个剂子35g</span></div>
+    </div>
+    <!-- 4️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 蒸制温度</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>醒发温度：30-35°C（蒸锅温水）</span><span>醒发时间50-70分钟</span></div>
+      <div class="recipe-line"><span>蒸制：上汽后大火12分钟</span><span>关火焖3分钟开盖</span></div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>笋发苦：</strong>焯水不足或未去老根→冷水下锅煮15分钟，加少许盐或淘米水浸泡</div>
+      <div><strong>笋太老/柴：</strong>选嫩春笋（根部指甲能掐动），老根切除2cm以上</div>
+      <div><strong>肉馅分离：</strong>笋丁没挤干水分或肉馅打水不足→笋丁挤干再拌，肉馅打至起胶</div>
+      <div><strong>包子塌陷：</strong>二次醒发不足→包好后二次醒发15分钟再蒸</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 2款变体</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🌶️ 辣味笋肉包：</strong>馅料中加入剁椒20g，适合嗜辣区域</div>
+      <div><strong>🦐 笋丁虾仁包：</strong>肉馅中加虾仁丁，海鲜+笋鲜，售价+2元</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      当单日销量＞100个笋肉包时：建议使用和面机、绞肉机，笋可批量焯水切丁冷冻（存1个月）。非笋季改用优质笋干，提前泡发高压锅压软。可制作冷冻生坯（-18°C），出餐前直接蒸（时间延长3-5分钟）。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🧅</span><span class="r-name">大葱肉包·经典对比</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍄</span><span class="r-name">香菇鸡肉包·低脂替代</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥛</span><span class="r-name">现磨豆浆·早餐搭售</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>笋去涩技巧 · 肉笋比例 · 时令推广</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1配方答疑 · 笋干选购 · 季节性运营</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

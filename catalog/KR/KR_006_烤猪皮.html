@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KR_006 烤猪皮 — 韩式烤肉差异化单品母卡</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f5f0eb;
+  color: #2c2c2c;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+.card {
+  max-width: 540px;
+  width: 100%;
+  background: #fffcf8;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+.header {
+  background: linear-gradient(135deg, #b06040 0%, #d08050 50%, #e8a060 100%);
+  padding: 32px 24px 24px;
+  color: #fff;
+}
+.header-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; line-height: 1.6; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+.section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 13px; font-weight: 600; color: #b06040; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+.value-stmt { background: #fdf5ee; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #b06040; line-height: 1.7; text-align: center; }
+.bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+.bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; flex-shrink: 0; }
+.bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+.radar { display: flex; flex-direction: column; gap: 10px; }
+.radar-item { display: flex; align-items: center; gap: 10px; }
+.radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+.radar-item .bar { height: 100%; border-radius: 10px; }
+.radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #b06040; }
+.bf5 { width: 100%; background: linear-gradient(90deg, #d08050, #e8a060); }
+.bf4 { width: 80%; background: linear-gradient(90deg, #d08050, #e8a060); }
+.bf3 { width: 60%; background: linear-gradient(90deg, #e0a880, #e8c0a0); }
+.bf2 { width: 40%; background: linear-gradient(90deg, #e0a880, #e8c0a0); }
+.role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+.role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+.role-tag.active { background: #d08050; color: #fff; box-shadow: 0 2px 8px rgba(208,128,80,0.3); }
+.family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #faf4ee; border-radius: 12px; }
+.family-tree .node { margin: 2px 0; }
+.family-tree .branch { color: #b06040; font-weight: 600; }
+.family-tree .leaf { color: #666; padding-left: 24px; }
+.family-tree .highlight { color: #d08050; font-weight: 600; padding-left: 24px; }
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.market-item { background: #fdf5ee; border-radius: 10px; padding: 10px 12px; }
+.market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+.market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+.matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+.matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+.matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+.ql { position: absolute; font-size: 10px; color: #aaa; }
+.ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+.ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+.matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+.matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+.dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #e8a060; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+.dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #b06040; white-space: nowrap; transform: translateX(-50%); }
+.ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.ingredient-table th { background: #f0e0d0; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+.ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+.ingredient-table .amt { text-align: right; font-weight: 600; color: #b06040; font-size: 12px; }
+.steps { list-style: none; counter-reset: step; }
+.steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #e8ddd0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #b06040; }
+.pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin-top: 8px; }
+.pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; margin-bottom: 2px; }
+.pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+.cost-box { background: #fdf5ee; border-radius: 12px; padding: 14px; }
+.cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.cost-row .cr-label { color: #555; }
+.cost-row .cr-value { font-weight: 600; color: #b06040; }
+.cost-divider { border: none; border-top: 1px dashed #e8d0c0; margin: 6px 0; }
+.decision-box { background: #faf4ee; border-radius: 12px; padding: 16px; }
+.decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+.decision-box p:last-child { margin-bottom: 0; }
+.trend-box { background: linear-gradient(135deg, #fdf5ee, #f8f4ef); border-radius: 12px; padding: 16px; }
+.trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trend-item:last-child { margin-bottom: 0; }
+.trend-year { font-size: 12px; font-weight: 700; color: #b06040; width: 50px; flex-shrink: 0; }
+.trend-arrow { color: #bbb; }
+.trend-desc { font-size: 13px; color: #555; }
+.trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #b06040; text-align: center; }
+.footer-brand { background: #b06040; color: #fff; text-align: center; padding: 24px; }
+.footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+.footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+.footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">KR_006 · 韩式烤肉 · 差异化单品母卡</div>
+    <h1>烤猪皮</h1>
+    <div class="subtitle">
+      韩国本土下酒菜单品TOP3 · 成本极低利润极高 · 配烧酒绝配 · 卡售价¥29.9 · FoodIntel推荐：7.5/10
+    </div>
+    <div class="tags">
+      <span>🥩 돼지껍데기</span>
+      <span>💰 毛利85%+</span>
+      <span>🍺 下酒绝配</span>
+      <span>🔥 起泡判定</span>
+      <span>🧊 批量冷冻备货</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      全店毛利率最高的单品 · 原料极便宜 · 韩国本土点单率极高的下酒菜 · <br>
+      定价38-58元/份 · 毛利率85-90% · 出餐5分钟 · 批量备货冷冻
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★</div>
+      <div class="bomb-reason">
+        <strong>高毛利下酒菜。</strong>毛利5★——原料极便宜，卖一份赚一份。流量和传播性偏中低——猪皮不像大肠/护心肉那样有稀缺话题。标准化4★——工艺固定、流程清晰、可批量备货。复购率中等——客人偶尔想喝酒时会点，但不是每桌必点。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KR 韩式烤肉体系</div>
+      <div class="node leaf">├─ KR_001 秘制大块肉（流量母卡）</div>
+      <div class="node leaf">├─ KR_002 厚切五花肉（灵魂单品）</div>
+      <div class="node leaf">├─ KR_003 LA牛排（高客单价担当）</div>
+      <div class="node leaf">├─ KR_004 烤护心肉（稀缺利润单品）</div>
+      <div class="node leaf">├─ KR_005 烤大肠（社交爆款）</div>
+      <div class="node highlight">├─ KR_006 烤猪皮 ← 你在这里</div>
+      <div class="node leaf">├─ KR_01~03 系列流量母卡</div>
+      <div class="node leaf">└─ VC_K001~K004 变体卡系</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成熟</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">6/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">4/10 · 低</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">7/10 · 下酒菜场景</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">3/10 · 低</div></div>
+      <div class="market-item"><div class="m-value" style="color:#555;">创业门槛</div><div class="m-value">低 · 去毛是唯一门槛</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div>
+      <div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div>
+      <div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div>
+      <div class="y-label">传播性 →</div>
+      <div class="dot" style="left:40%;top:55%;"></div>
+      <div class="dot-label" style="left:40%;top:48%;">烤猪皮（中复购·中传播）</div>
+      <div class="dot" style="left:75%;top:60%;background:#ddd;width:10px;height:10px;"></div>
+      <div class="dot-label" style="left:75%;top:53%;color:#bbb;font-size:10px;">厚切五花肉（高复购·中传播·流量王者）</div>
+      <div class="dot" style="left:55%;top:35%;background:#ddd;width:10px;height:10px;"></div>
+      <div class="dot-label" style="left:55%;top:28%;color:#bbb;font-size:10px;">烤大肠（中复购·高传播）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>烤猪皮位于矩阵中下方——复购率中等（特定人群会反复点），传播性中下（不如大肠和护心肉有话题性）。它的核心价值在利润——不是流量入口，但每一份的净利润率是全场最高。<br>
+      适合放在菜单的"下酒菜"分区，配烧酒标注。对毛利率敏感的店应该上。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方</div>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：200-250g/份 · 切1cm宽条状 · 约15-20条
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b06040;margin-bottom:6px;">前处理流程</h4>
+    <ol class="steps">
+      <li>猪皮选购——选厚度均匀的背部猪皮（腹部猪皮太薄，烤完就干掉）</li>
+      <li>去毛——喷枪烧表面至微焦，刮去焦黑部分（这一步不能省，残留毛根是最大败笔）</li>
+      <li>煮制——冷水下锅+姜片+葱段+料酒，大火煮开后转中火煮25-30min，至筷子能轻松扎透</li>
+      <li>冰水过凉——捞出立即放入冰水，使猪皮变脆、方便去脂肪</li>
+      <li>去脂肪层——平铺案板，用刀斜着刮去猪皮内侧的白色脂肪层，留薄薄一层即可</li>
+      <li>切条——切成1cm宽、5-6cm长的条状</li>
+    </ol>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b06040;margin:12px 0 6px;">🧂 腌制方案（3选1）</h4>
+    <table class="ingredient-table">
+      <tr><th>方案</th><th>配方（500g猪皮）</th><th>说明</th></tr>
+      <tr><td>🌶 韩式辣酱版</td><td>辣椒酱60g+辣椒粉15g+蒜末30g+清酒20g+蜂蜜15g+香油10g</td><td>韩式烤肉店标配</td></tr>
+      <tr><td>🧂 盐烤原味版</td><td>粗盐5g+白胡椒粉3g+蒜粉5g+料酒10g</td><td>蘸쌈장吃·原味突出</td></tr>
+      <tr><td>🍯 酱油蜜汁版</td><td>酱油30g+蜂蜜20g+蒜末20g+姜末5g+香油10g</td><td>中国客人接受度最高</td></tr>
+    </table>
+    <div style="font-size:12px;color:#888;margin-top:4px;margin-bottom:10px;">💡 腌制时间：20-30min。盐烤版不需要长时间腌制，拌均匀即可烤。</div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b06040;margin-bottom:6px;">🌶️ 烧烤撒料（简易小批量配方）</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量（500g）</th><th>备注</th></tr>
+      <tr><td>粗辣椒粉（中粗）</td><td class="amt">200g</td><td>提香不抢味</td></tr>
+      <tr><td>熟芝麻（整粒）</td><td class="amt">120g</td><td></td></tr>
+      <tr><td>孜然粉</td><td class="amt">60g</td><td>韩式少用·但中国顾客喜欢</td></tr>
+      <tr><td>苏子粉（깻잎가루）</td><td class="amt">40g</td><td>韩式特有香料·可选</td></tr>
+      <tr><td>蒜粉</td><td class="amt">30g</td><td></td></tr>
+      <tr><td>洋葱粉</td><td class="amt">20g</td><td></td></tr>
+      <tr><td>白糖</td><td class="amt">15g</td><td></td></tr>
+      <tr><td>味精/昆布粉</td><td class="amt">10g</td><td>提鲜</td></tr>
+      <tr><td>白胡椒粉</td><td class="amt">5g</td><td></td></tr>
+    </table>
+    <div style="font-size:11px;color:#999;margin-top:4px;margin-bottom:10px;">💡 全部混合后直接撒烤好的猪皮上。大批量生产方案见 JL系列 酱料卡工业调配标准。</div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b06040;margin:12px 0 6px;">出餐流程</h4>
+    <ol class="steps">
+      <li>腌制好的猪皮条沥干表面水分（水分太多烤不出脆皮）</li>
+      <li>烤盘大火预热（220℃），刷薄油</li>
+      <li>猪皮条平铺，不要堆叠——每根之间留间距</li>
+      <li>中高火烤3-4min，翻面，再烤2-3min</li>
+      <li>关键判断——猪皮表面起泡鼓起、边缘微焦即为最佳状态</li>
+      <li>趁热上桌，配쌈장蘸酱或撒料一起吃</li>
+    </ol>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（7条）</div>
+      <div class="p-desc">
+        ① 毛根是最大败笔——喷枪去毛后仔细检查，用手摸一遍，有刺手感就是毛没去干净<br>
+        ② 脂肪要去但别去光——脂肪层太厚烤出来腻，去光了变橡皮筋，留薄薄一层最佳<br>
+        ③ 煮制时间宁多勿少——没煮透的猪皮烤出来嚼不动，煮到筷子轻松扎透为标准<br>
+        ④ 烤制要大火快烤——小火慢烤猪皮会变干硬，大火才能外脆里糯<br>
+        ⑤ 表面水分必须擦干——水分太多不上色、不起泡，入烤盘前用厨房纸吸一遍<br>
+        ⑥ 批量备货——处理好的猪皮可以冷冻保存（煮后未腌状态），急用时提前半天解冻即可<br>
+        ⑦ 配烧酒是黄金组合——菜单上标注 "猪皮+烧酒 特惠套餐"，客单价翻倍
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 商业决策</div>
+    <div class="cost-box" style="margin-bottom:14px;">
+      <div class="cost-row"><span class="cr-label">原料成本（猪皮）</span><span class="cr-value">~3-5元/份</span></div>
+      <div class="cost-row"><span class="cr-label">腌料+撒料</span><span class="cr-value">~1元/份</span></div>
+      <div class="cost-row"><span class="cr-label">人工</span><span class="cr-value">~1元/份（批量备货摊薄）</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label">总成本</span><span class="cr-value">~5-7元/份</span></div>
+      <div class="cost-row"><span class="cr-label" style="font-weight:700;">建议售价</span><span class="cr-value" style="font-weight:800;font-size:16px;">38-58元/份</span></div>
+      <div class="cost-row"><span class="cr-label">毛利率</span><span class="cr-value" style="color:#2d8a40;">85-90%</span></div>
+      <div class="cost-row"><span class="cr-label">日均销量</span><span class="cr-value">10-15份</span></div>
+      <div class="cost-row"><span class="cr-label">月毛利贡献</span><span class="cr-value" style="font-size:16px;">~1.2-2万元</span></div>
+    </div>
+    <div class="decision-box">
+      <p><strong>✅ 适合场景：</strong>所有韩式烤肉店、大排档、下酒菜专门店。适合搭配烧酒/啤酒组合销售。地摊烧烤场景尤其适合——操作简单、成本极低、利润超高。</p>
+      <p><strong>📌 菜单位置：</strong>放在"下酒菜/小吃"分区，不要和其他烤肉混在一起。配一张烤猪皮起泡鼓起的特写图。"下酒菜"定位比"烤肉"定位更精准，客人看到就会自然想到点酒。</p>
+      <p><strong>⚠️ 风险：</strong>猪皮在部分食客中有"廉价感"的固有印象——需要用好的呈现方式（精致摆盘+好的蘸酱）来提升感知价值。另一个风险是毛根处理——出品前必须专人检查。</p>
+      <p><strong>🎯 地摊版：</strong>猪皮是地摊烤串的绝佳选择。竹签串好，按串卖（3-5元/串），10串起卖。成本~0.5元/串，毛利率90%+。备货方式：处理好的猪皮冷冻保存，出摊前腌制约20min即可。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">猪皮只是边角料，除了东北烧烤外很少专门做</span></div>
+      <div class="trend-item"><span class="trend-year">2023</span><span class="trend-arrow">→</span><span class="trend-desc">韩式烤猪皮在年轻群体中走红——\"胶原蛋白\"概念加值</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">预包装韩式烤猪皮产品出现，便利店即食场景</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">\"美肤食材\"概念成熟——猪皮从边角料变成功能性食材</span></div>
+      <div class="trend-verdict">猪皮最大的价值不是好吃——是极低的原料成本撑起了全场最高的毛利率</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div>
+    <div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links">
+      <span>📢 公众号：沧林食品技术</span>
+      <span>💬 微信：canglin1985</span>
+    </div>
+    <div class="fb-series">韩式烤肉 · KR_006 烤猪皮</div>
+  </div>
+
+</div>
+</body>
+</html>

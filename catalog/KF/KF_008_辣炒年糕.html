@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KF_008 辣炒年糕 — 韩式美食</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+  .card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+  .header { background: linear-gradient(135deg, #b84030 0%, #d06040 50%, #e88060 100%); padding: 32px 24px 24px; color: #fff; }
+  .header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+  .section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+  .section-title { font-size: 13px; font-weight: 600; color: #b84030; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+  .value-stmt { background: #fdf0ec; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #b84030; line-height: 1.7; text-align: center; }
+  .radar { display: flex; flex-direction: column; gap: 10px; }
+  .radar-item { display: flex; align-items: center; gap: 10px; }
+  .radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+  .radar-item .bar { height: 100%; border-radius: 10px; }
+  .radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #b84030; }
+  .bf5 { width: 100%; background: linear-gradient(90deg, #d06040, #e88060); }
+  .bf4 { width: 80%; background: linear-gradient(90deg, #d06040, #e88060); }
+  .bf3 { width: 60%; background: linear-gradient(90deg, #d8a090, #e8bab0); }
+  .bf2 { width: 40%; background: linear-gradient(90deg, #d8a090, #e8bab0); }
+  .bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+  .bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; }
+  .bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+  .role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+  .role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+  .role-tag.active { background: #d06040; color: #fff; box-shadow: 0 2px 8px rgba(208,96,64,0.3); }
+  .family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #fdf0ec; border-radius: 12px; }
+  .family-tree .node { margin: 2px 0; }
+  .family-tree .branch { color: #b84030; font-weight: 600; }
+  .family-tree .leaf { color: #666; padding-left: 24px; }
+  .family-tree .highlight { color: #d06040; font-weight: 600; padding-left: 24px; }
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .market-item { background: #fdf0ec; border-radius: 10px; padding: 10px 12px; }
+  .market-item .m-label { font-size: 11px; color: #999; }
+  .market-item .m-value { font-size: 14px; font-weight: 600; }
+  .matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+  .matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+  .matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+  .ql { position: absolute; font-size: 10px; color: #aaa; }
+  .ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+  .ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+  .matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+  .matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+  .dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #e88060; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+  .dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #b84030; white-space: nowrap; transform: translateX(-50%); }
+  .ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .ingredient-table th { background: #f0e4de; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+  .ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+  .ingredient-table .amt { text-align: right; font-weight: 600; color: #b84030; }
+  .steps { list-style: none; counter-reset: step; }
+  .steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+  .steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #e8ddd0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #b84030; }
+  .pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin-top: 8px; }
+  .pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; }
+  .pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+  .recipe-block { background: #fdf0ec; border-radius: 10px; padding: 14px; margin: 12px 0; }
+  .recipe-block .rb-title { font-size: 14px; font-weight: 700; color: #b84030; margin-bottom: 8px; }
+  .recipe-block table { width: 100%; font-size: 11px; border-collapse: collapse; }
+  .recipe-block td { padding: 3px 6px; border-bottom: 1px solid #e8d8d0; font-size: 11px; color: #555; }
+  .recipe-block .amt { text-align: right; font-weight: 600; color: #b84030; }
+  .customer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .customer-item { background: #fdf0ec; border-radius: 10px; padding: 12px; }
+  .customer-item .c-icon { font-size: 20px; }
+  .customer-item .c-name { font-size: 13px; font-weight: 600; }
+  .customer-item .c-desc { font-size: 11px; color: #888; line-height: 1.5; }
+  .cost-box { background: #fdf0ec; border-radius: 12px; padding: 14px; }
+  .cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .cost-row .cr-label { color: #555; }
+  .cost-row .cr-value { font-weight: 600; color: #b84030; }
+  .cost-divider { border: none; border-top: 1px dashed #e8d0c8; margin: 6px 0; }
+  .decision-box { background: #fdf0ec; border-radius: 12px; padding: 16px; }
+  .decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+  .decision-box p:last-child { margin-bottom: 0; }
+  .trend-box { background: linear-gradient(135deg, #fdf0ec, #f8f4ef); border-radius: 12px; padding: 16px; }
+  .trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .trend-item:last-child { margin-bottom: 0; }
+  .trend-year { font-size: 12px; font-weight: 700; color: #b84030; width: 50px; }
+  .trend-arrow { color: #bbb; }
+  .trend-desc { font-size: 13px; color: #555; }
+  .trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #b84030; text-align: center; }
+  .footer-brand { background: #b84030; color: #fff; text-align: center; padding: 24px; }
+  .footer-brand .fb-name { font-size: 18px; font-weight: 700; }
+  .footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+  .footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+  .footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">KF_008 · 韩式美食</div>
+    <h1>辣炒年糕</h1>
+    <div class="subtitle">韩式街头传奇·年轻人必点·出餐10分钟·毛利76%</div>
+    <div class="tags">
+      <span>🍡 米条煮软透</span>
+      <span>🥚 鹌鹑蛋/鱼饼标配</span>
+      <span>🌶️ 年糕酱收汁工艺</span>
+      <span>🧀 芝士版网红化</span>
+      <span>📱 年轻人传播性强</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      韩式美食里年轻人粘性最强的单品·米条软糯+酱汁浓郁+咸辣甜复合调味<br>
+      西塔标准版：米条搭配鹌鹑蛋鱼饼蔬菜 · 年糕酱慢火入味 · 小火入味大火收汁
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★☆</div>
+      <div class="bomb-reason">
+        <strong>年轻人中粘性强但出品慢。</strong>辣炒年糕是韩式美食里年轻人粘性最高的单品——几乎没有中年人点它，但20-30岁女生几乎桌桌必点。酱汁的辣甜复合味让人停不下来。<br>
+        <strong>⚠️ 硬伤：</strong>出餐10分钟（煮米条→炒配菜→收汁），高峰时段容易堵。而且「煮米条」这一步如果没煮透，出品会夹生发硬。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag">引流产品</span>
+      <span class="role-tag">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag active">社交产品</span>
+      <span class="role-tag">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KF 韩式美食体系</div>
+      <div class="node leaf">├─ KF_001 石锅拌饭</div>
+      <div class="node leaf">├─ KF_002 冷面</div>
+      <div class="node leaf">├─ KF_003 大酱汤</div>
+      <div class="node leaf">├─ KF_004 嫩豆腐汤</div>
+      <div class="node leaf">├─ KF_005 肥牛拌饭</div>
+      <div class="node leaf">├─ KF_006 辣白菜炒饭</div>
+      <div class="node leaf">├─ KF_007 海鲜葱饼</div>
+      <div class="node highlight">├─ KF_008 辣炒年糕 ← 你在这里</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">超级成熟品类</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">8/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">7/10 · 高</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">8/10</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">3/10 · 低</div></div>
+      <div class="market-item"><div class="m-label">食材可得性</div><div class="m-value">⭐⭐⭐⭐</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div><div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div><div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div><div class="y-label">传播性 →</div>
+      <div class="dot" style="left:35%;top:40%;"></div>
+      <div class="dot-label" style="left:35%;top:32%;">辣炒年糕（左上·传播高但复购低）</div>
+      <div class="dot" style="left:70%;top:30%;background:#ddd;width:10px;height:10px;"></div>
+      <div class="dot-label" style="left:70%;top:23%;color:#bbb;font-size:10px;">石锅拌饭（右上·口碑传播型）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>辣炒年糕偏左上——传播性高（年轻人拍照发圈的意愿强）但个人复购率偏低（吃一次要隔一阵子才想吃第二次）。它的价值在<strong>拉新和品牌热场</strong>，不是稳客单价的角色。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方 · 辣炒年糕（西塔标准版）</div>
+
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：米条15根 + 鹌鹑蛋4个 + 鱼饼6片（菱形片）+ 配菜150g（香菇/绿尖椒/红尖椒/胡萝卜/西葫芦/圆白菜）<br>
+      <strong>调味</strong>：年糕酱100g（约1炒菜勺）· 香油5g · 蒜末7g · 撒黑白芝麻<br>
+      <strong>出品形式</strong>：整份小锅或碗装 · 适合1-2人份
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b84030;margin-bottom:6px;">🫘 年糕酱配方（可批量）</h4>
+    <div class="recipe-block">
+      <div class="rb-title">年糕酱（商用批量）</div>
+      <table>
+        <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+        <tr><td>细辣椒面</td><td class="amt">1000g</td><td>颜色+辣味基底</td></tr>
+        <tr><td>雪碧</td><td class="amt">1瓶</td><td>提鲜去辣燥</td></tr>
+        <tr><td>蜂蜜</td><td class="amt">700g</td><td>甜味+光泽</td></tr>
+        <tr><td>白糖</td><td class="amt">1000g</td><td>甜度基础</td></tr>
+        <tr><td>糖稀</td><td class="amt">1000g</td><td>浓稠度+挂汁</td></tr>
+        <tr><td>味精</td><td class="amt">200g</td><td></td></tr>
+        <tr><td>盐</td><td class="amt">200g</td><td>底味</td></tr>
+        <tr><td>牛肉粉</td><td class="amt">400g</td><td>鲜味核心</td></tr>
+        <tr><td>二锅头</td><td class="amt">150g</td><td>增香去酱味</td></tr>
+      </table>
+      <div style="font-size:11px;color:#777;margin-top:6px;">
+        <strong>做法：</strong>所有料混合搅匀，密封冷藏发酵24小时后再用（风味更融合）。每份取100g。<br>
+        <strong>替代方案：</strong>买现成韩式年糕酱（清净园或进口商超），口感接近但成本比自制高约30%。<br>
+        <strong>🔑 关键：</strong>二锅头是西塔版区别于市面辣炒年糕的核心——去酱料生味+增复合香气。没有二锅头用清酒替代。<br>
+        <strong>小批量：</strong>家庭/小店版可按比例缩至1/10（辣椒面100g+雪碧半瓶+蜂蜜70g+白糖100g+糖稀100g+味精20g+盐20g+牛肉粉40g+二锅头15g）。
+      </div>
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b84030;margin-bottom:6px;">🍡 米条标准</h4>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:12px;background:#fdf0ec;border-radius:8px;padding:10px;">
+      <strong>选材：</strong>韩式米条（圆条形，非火锅年糕片）——长条形对半切或3-4cm段。不要用火锅年糕（太厚不入味）。<br>
+      <strong>预处理：</strong>水烧开后下米条，煮至浮起后继续煮2-3分钟 → 米条变软、半透明、筷子能轻松夹断 → 捞出过凉水沥干（过冷水防止粘连）。<br>
+      <strong>鉴别标准：</strong>"一定煮软煮透"——夹生发硬的年糕进了酱汁也吸不进味。新手最容易犯的错就是"看着觉得差不多了"就捞出来。<br>
+      <strong>鹌鹑蛋：</strong>先煮透（水开煮4-5分钟）——"煮透不然里面还是凉的"（西塔原话）。和米条、鱼饼一起煮节约时间。<br>
+      <strong>鱼饼：</strong>菱形片（斜刀切菱形，好看且挂汁均匀）。和米条一起烫熟即可。
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b84030;margin-bottom:6px;">出品流程</h4>
+    <ol class="steps">
+      <li>煮水：水烧开，下米条15根+鹌鹑蛋4个+鱼饼6片 → 煮至米条软透、鹌鹑蛋熟透（约5分钟）</li>
+      <li>捞出食材，沥干——煮食材的水不要倒掉，留一点炒酱时用（含淀粉，可以帮助酱汁浓稠）</li>
+      <li>同锅下配菜150g（香菇片/尖椒圈/胡萝卜片/西葫芦片/圆白菜块）快速焯烫至断生捞出</li>
+      <li>炒锅加底油（色拉油20g），大火烧热</li>
+      <li>下所有煮好的食材（米条/鹌鹑蛋/鱼饼/配菜）→ 大火翻炒至"出锅气"（约30秒）</li>
+      <li>加年糕酱100g → 翻炒均匀 → 加煮食材的水多半勺（约80-100ml）</li>
+      <li><strong>转小火慢入味</strong>（约2-3分钟）——让米条充分吸收酱汁的味道</li>
+      <li><strong>转大火收汁</strong>至酱汁浓稠、能挂住米条和鱼饼（约1分钟）</li>
+      <li>加香油5g + 蒜末7g → 翻炒均匀</li>
+      <li>出锅撒黑白芝麻 → 出品</li>
+    </ol>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（7条）</div>
+      <div class="p-desc">
+        ① 米条必须煮透——煮到半透明、筷子能轻松夹断。夹生生糕＝废品<br>
+        ② 鹌鹑蛋必须煮透——冷心鹌鹑蛋放进热酱汁里也热不透<br>
+        ③ 三步控火不能错：先大火炒出锅气→小火慢入酱味→大火收汁至浓稠。全程大火=酱汁蒸发太快，米条没入味<br>
+        ④ 年糕酱用量固定100g/份——酱少了没味道，酱多了过甜腻<br>
+        ⑤ 加煮食材的水煮酱——含米条淀粉，比加白水更容易收出浓稠度<br>
+        ⑥ 香油蒜末最后放——放早了香气挥发，出锅前才有锅气复合香<br>
+        ⑦ 配菜不要煮过——焯烫断生即可，后续炒+炖还会加热，煮过了配菜软烂没口感
+      </div>
+    </div>
+
+    <h4 style="font-size:14px;font-weight:600;color:#b84030;margin:20px 0 10px;display:flex;align-items:center;gap:6px;">🧀&nbsp;变形体扩展 · 同一模式两种变形</h4>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fdf0ec;border-radius:8px;padding:10px;margin-bottom:14px;">
+      <strong>共同标准：</strong>米条15根 · 鹌鹑蛋4个 · 鱼饼6片 · 年糕酱100g · 小火入味→大火收汁→出锅撒黑白芝麻。以下变形体在<strong>topping/芝士</strong>上做变化。
+    </div>
+
+    <h5 style="font-size:13px;font-weight:600;color:#b84030;margin:12px 0 6px;">变形体一 · 芝士炒年糕（年轻客群·网红款）</h5>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fff8f0;border-left:3px solid #e8a030;border-radius:8px;padding:10px;margin-bottom:10px;">
+      <strong>出品规格：</strong>基础辣炒年糕配方 + 马苏里拉芝士50g（铺面）<br>
+      <strong>做法：</strong>辣炒年糕按标准流程收汁后 → 一半芝士40g拌入锅中翻炒均匀 → 出锅装碗 → 表面再撒一层芝士10g → 入烤箱（上火200°C/下火150°C）烤至表面金黄微焦（约3-5分钟）→ 撒黑白芝麻出品。没有烤箱可用喷枪烤化。<br>
+      <strong>🔑 关键：</strong>芝士分两次加——第一次拌入入味，第二次铺面烤出焦色才有"瀑布芝士"的视觉效果。芝士烤到金黄微焦最好，别烤糊。<br>
+      <strong>💰 成本：</strong>~7元/份 · 建议售价28-35元 · 毛利率75-80%<br>
+      <strong>适用场景：</strong>年轻人的第一选择。芝士+辣年糕的搭配在抖音/小红书上传播力极强。堂食优先——芝士凉了拉不了丝。<br>
+      <strong>⚠️ 注：</strong>芝士炒年糕不是"加芝士就完事"——西塔标准做法是烤过的，不是微波炉加热的。烤过的芝士表面微焦有焦香，微波炉热的芝士水塌塌。
+    </div>
+
+    <h5 style="font-size:13px;font-weight:600;color:#b84030;margin:12px 0 6px;">变形体二 · 泡菜炒年糕（低成本爽口版）</h5>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fff8f0;border-left:3px solid #e8a030;border-radius:8px;padding:10px;margin-bottom:10px;">
+      <strong>出品规格：</strong>米条15根 + 泡菜100g（切段）+ 洋葱丝50g + 配菜100g · 不放鹌鹑蛋鱼饼<br>
+      <strong>调味：</strong>年糕酱60g（比标准版少40——因为泡菜自带咸辣味）+ 泡菜汁20g<br>
+      <strong>做法：</strong>米条煮软 → 炒锅加油 → 下洋葱丝和泡菜炒香 → 加米条翻炒 → 加年糕酱60g+泡菜汁20g+煮米条水 -> 小火入味大火收汁 → 淋香油 → 撒芝麻<br>
+      <strong>💰 成本：</strong>~3.5元/份 · 建议售价18-25元 · 毛利率83-85%<br>
+      <strong>适用场景：</strong>去库存（泡菜快过期时做炒年糕消耗）、素食客群、外卖成本控制。
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 商业决策</div>
+    <div class="decision-box">
+      <p><strong>💰 成本利润：</strong>辣炒年糕~5.5元/份 · 售价22-30元 · 毛利率76-80%。<br>
+      芝士版~7元/份 · 售价28-35元 · 毛利率75-80%。泡菜版~3.5元/份 · 售价18-25元 · 毛利率83-85%。<br>
+      <strong>怎么选：</strong>标准辣炒年糕是菜单常驻品，芝士版适合年轻客群多的门店（拉新+传播），泡菜版适合外卖成本控制和素食客群。<br>
+      <strong>⚠️ 注意：</strong>辣炒年糕的制作工序虽不复杂但步骤多（煮料→炒料→入味→收汁），新手后厨容易做出口感不一致的出品。年糕酱的甜辣平衡度是口味差异最大的变量。</p>
+      <p><strong>✅ 供应链优势：</strong>米条、鱼饼、鹌鹑蛋都是长保质期冷冻/冷藏品——米条冷冻存3个月、鱼饼冷冻半年、鹌鹑蛋冷藏1个月。年糕酱可批量预制1-2周用量。<br>
+      <strong>🎯 地摊版：</strong>⭐⭐⭐⭐ 适合但不极致。小车出餐10分钟/份，高峰时一锅只能做3-4份。地摊版只做标准辣炒年糕（不加芝士），卖15-20元/份，成本5.5元，利润空间还行。<br>
+      <strong>💡 高峰优化：</strong>米条和鹌鹑蛋可以提前批量煮好冷藏（当天用完），出餐时直接炒酱收汁，缩短到5分钟。</p>
+      <p><strong>👥 客群画像：</strong></p>
+      <div class="customer-grid">
+        <div class="customer-item"><div class="c-icon">👩‍🎤</div><div class="c-name">年轻女生（核心）</div><div class="c-desc">辣炒年糕是"和小姐妹一起吃"的社交食物，发朋友圈/小红书</div></div>
+        <div class="customer-item"><div class="c-icon">👫</div><div class="c-name">学生情侣</div><div class="c-desc">一份芝士炒年糕两人分，不贵但满足感强</div></div>
+        <div class="customer-item"><div class="c-icon">🎮</div><div class="c-name">二次元/韩流粉丝</div><div class="c-desc">看韩剧/追星的年轻人，辣炒年糕=韩式符号</div></div>
+        <div class="customer-item"><div class="c-icon">🧑‍💼</div><div class="c-name">工作餐</div><div class="c-desc">一个人点一份辣炒年糕+小菜，20出头搞定午餐</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2018</span><span class="trend-arrow">→</span><span class="trend-desc">辣炒年糕是韩式小吃摊顶流·街头文化代表</span></div>
+      <div class="trend-item"><span class="trend-year">2021</span><span class="trend-arrow">→</span><span class="trend-desc">芝士炒年糕爆发·社交平台上传播破圈</span></div>
+      <div class="trend-item"><span class="trend-year">2024</span><span class="trend-arrow">→</span><span class="trend-desc">年糕进入便利店鲜食柜·预包装即食加热·工业化</span></div>
+      <div class="trend-item"><span class="trend-year">2026</span><span class="trend-arrow">→</span><span class="trend-desc">辣炒年糕外卖专门店出现·年糕酱+料包标准件配送</span></div>
+      <div class="trend-verdict">辣炒年糕的终局不是"餐厅主食"而是"国民级小吃"——预包装化+便利店化是必然。餐厅的竞争壁垒不在年糕酱（已经极度标准化了）而在"搭配什么吃"——比如配炸鸡、配紫菜包饭、配鱼饼汤的套餐组合。</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div><div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links"><span>📢 公众号：沧林食品技术</span><span>💬 微信：canglin1985</span></div>
+    <div class="fb-series">韩式美食 · KF_008 辣炒年糕</div>
+  </div>
+
+</div>
+</body>
+</html>

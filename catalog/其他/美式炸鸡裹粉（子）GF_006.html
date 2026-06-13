@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>美式炸鸡裹粉 · 裹粉专卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.variant-bar{background:linear-gradient(90deg,#E8652D,#C0392B);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#C0392B;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#E8652D}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+tr:last-child td{border-bottom:none}
+.sauce-compare{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.sauce-item{padding:10px 12px;border-radius:10px;font-size:12px;display:flex;align-items:center;gap:8px}
+.sauce-item .s-icon{font-size:16px}
+.sauce-item .s-name{flex:1;font-weight:600;color:#3a322a}
+.sauce-item .s-ratio{color:#b5aaa0;font-size:10px}
+.sauce-main{background:#fef2ee;border:1px solid #fdd}
+.sauce-other{background:#f8f4ef}
+.crowd-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.crowd-card{padding:10px;border-radius:10px;text-align:center}
+.crowd-card .c-icon{font-size:20px;margin-bottom:2px}
+.crowd-card .c-name{font-size:11px;font-weight:600;color:#3a322a;margin-bottom:2px}
+.crowd-card .c-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.crowd-card .c-bar .fill{height:100%;border-radius:2px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#4a3f35;line-height:1.6}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:18px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer;border:none;width:100%}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #C0392B}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;margin-bottom:6px}
+.rel-item:active{background:#e8dfd5}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 子卡提示条 ===== -->
+<div class="variant-bar">
+  <span class="v-label">🍗 裹粉子卡 · ¥19</span>
+  <a class="v-link" href="#">← 母卡：原味黄金炸鸡（HZ_001）</a>
+</div>
+
+<!-- ===== 产品头部 ===== -->
+<div class="meta">
+  <h1>🍗 美式炸鸡裹粉</h1>
+  <div class="sub">粉-水-粉工艺专用 · 鳞片脆皮 · 肯德基风格</div>
+  <span class="price-tag">¥19 完整配方包</span>
+</div>
+
+<!-- ===== 与母卡差异总览 ===== -->
+<div class="section">
+  <div class="s-title">🔄 与母卡（HZ_001）差异总览</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">HZ_001 母卡（¥69）</div>
+      <div>完整韩式炸鸡项目体系：设备·成本·30天验证·赛道判断·核心工艺</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">GF_003 子卡（¥19）</div>
+      <div>美式炸鸡裹粉：粉水粉工艺专用·5种基础粉料·无调味·极致脆度<br>其余通用数据参照母卡</div>
+    </div>
+  </div>
+  <div class="badge">💡 本卡不含摆摊设备、验证路线等，请结合母卡使用。此粉专为粉-水-粉鳞片工艺设计，是美式炸鸡核心。</div>
+</div>
+
+<!-- ===== 粉料定位 ===== -->
+<div class="section">
+  <div class="s-title">🎯 粉料定位</div>
+  <div style="background:#f0f6ec;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;border-left:3px solid #5a8f3c">
+    <strong>为什么需要专用美式炸鸡裹粉？</strong><br>
+    • 美式炸鸡的标志性鳞片必须用“粉-水-粉”工艺，对粉料配比要求极高<br>
+    • 本配方无蒜粉、洋葱粉等调味，纯净脆皮，靠腌料和撒粉赋味<br>
+    • 自制成本仅为市售成品粉的40%（每份节省0.8-1.2元）<br>
+    • 脆度、鳞片均匀度可通过调整小苏打和淀粉比例精准控制<br>
+    <strong>推荐组合：</strong>此裹粉 + 香辣腌料 + 原味炸鸡 = 经典美式炸鸡
+  </div>
+</div>
+
+<!-- ===== 与市售炸粉对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 市售炸粉对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:400px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>类型</th><th>鳞片效果</th><th>脆度</th><th>调味</th><th>成本/份</th><th>工艺适配</th> </tr</thead>
+      <tbody>
+        <tr><td>🍗 美式炸鸡裹粉（本卡）</td>。——★★★★★。——★★★★★。——无。——¥0.50。——粉水粉<br>专用 </tr
+        <tr style="background:#f8f4ef"><td>市售美式炸鸡粉。——★★★★☆。——★★★★☆。——有。——¥1.2-1.8。——通用 </tr
+        <tr>
+            
+            
+            韩式核心炸粉。——★★★☆☆。——★★★★★。——无。——¥0.45。——韩式浆粉 </tr
+        <tr style="background:#f8f4ef"><td>普通面粉+淀粉。——★☆☆☆☆。——★★☆☆☆。——无。——¥0.35。——不推荐 </tr
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">✨ 此配方为纯脆皮基底，不含任何调味，让腌料和撒粉成为绝对主角。</div>
+</div>
+
+<!-- ===== 适合谁 / 不适合谁 ===== -->
+<div class="section">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#3a6b2e;margin-bottom:6px">🎯 适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 做美式鳞片炸鸡（鸡腿、翅中、整鸡）的摊位</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 追求极致脆度和鳞片效果的店主</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 想用腌料和撒粉控制风味的店主（粉不抢味）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 外卖为主（通过调整淀粉比例延长脆度）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px">✅ 有密封容器保存粉料的摊主</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#b53b3b;margin-bottom:6px">❌ 不适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 只做韩式浆粉炸鸡（无鳞片）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 不愿练习粉-水-粉裹粉手法（需要按压、抖动）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px">❌ 日销量＜20份（自制省下的钱不明显）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 客群画像 ===== -->
+<div class="section">
+  <div class="s-title">👥 核心使用者</div>
+  <div class="crowd-grid">
+    <div class="crowd-card" style="background:#fef2ee"><div class="c-icon">🍗</div><div class="c-name">美式炸鸡店主</div><div class="c-bar"><div class="fill" style="width:96%;background:#E8652D"></div></div><div style="font-size:9px">鳞片刚需</div></div>
+    <div class="crowd-card" style="background:#fef6ec"><div class="c-icon">🔧</div><div class="c-name">技术控</div><div class="c-bar"><div class="fill" style="width:90%;background:#D4A574"></div></div><div style="font-size:9px">追求完美</div></div>
+    <div class="crowd-card" style="background:#f0f6ec"><div class="c-icon">💰</div><div class="c-name">成本敏感型</div><div class="c-bar"><div class="fill" style="width:92%;background:#5a8f3c"></div></div><div style="font-size:9px">降本增效</div></div>
+    <div class="crowd-card" style="background:#eef2ff"><div class="c-icon">📦</div><div class="c-name">外卖店主</div><div class="c-bar"><div class="fill" style="width:85%;background:#4f6ef7"></div></div><div style="font-size:9px">脆度即评分</div></div>
+  </div>
+</div>
+
+<!-- ===== 赚钱逻辑（粉料维度） ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>每份炸鸡裹粉成本（自制）</span><span class="v">¥0.50</span></div>
+    <div class="logic-item"><span>每份炸鸡裹粉成本（市售同类）</span><span class="v">¥1.2-1.8</span></div>
+    <div class="logic-item"><span>每份节省</span><span class="v">¥0.7-1.3</span></div>
+    <div class="logic-item"><span>日售40份 · 月省利润</span><span class="v">¥840-1560</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高价值</div>
+    <div class="logic-item"><span>鳞片炸鸡比普通炸鸡溢价2-3元，复购率提升30%+</span><span class="v"></span></div>
+    <div class="logic-item"><span>外卖增强版可减少“不脆”差评，提升平台评分</span><span class="v"></span></div>
+  </div>
+</div>
+
+<!-- ===== 专属风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 美式炸鸡裹粉专属风险</div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">1️⃣</span><span>小苏打过量 — 会有碱味，且炸鸡颜色发暗发黄</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">2️⃣</span><span>粉料未过筛 — 裹粉有疙瘩，鳞片大小不均</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">3️⃣</span><span>吸潮结块 — 淀粉类易吸湿，南方回南天必须密封+干燥剂</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">4️⃣</span><span>面粉蛋白质含量不达标 — 低于13%中筋粉会导致不脆</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px"><span style="font-size:14px">5️⃣</span><span>粉水粉手法不对 — 按压、抖动次数不足，鳞片出不来</span></div>
+  <div style="display:flex;gap:8px;padding:8px 0;font-size:12px"><span style="font-size:14px">6️⃣</span><span>油温控制不当 — 温度过高鳞片焦黑，过低吸油不脆</span></div>
+</div>
+
+<!-- ===== 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>美式炸鸡裹粉是鳞片脆皮的核心，自制成本仅为市售的一半。配方纯净，让腌料和撒粉做主味，灵活性高。掌握粉-水-粉工艺后，炸鸡品质稳定，顾客感知明显，复购率高。<br>
+      <strong>❌ 为什么不值得做：</strong>需要练习裹粉手法（按压、抖动），新手期失败率高。如果只做韩式无鳞片炸鸡，此配方不如韩式核心炸粉经济。日销量＜20份时，省下的钱不明显。<br>
+      <strong>🔑 进入条件：</strong>① 愿意花2-3天练习粉-水-粉工艺 ② 日销量≥30份 ③ 能采购到13%以上蛋白质中筋面粉 ④ 有密封容器防潮 ⑤ 油温计精准控温。<br>
+      <strong>🚪 退出条件：</strong>连续1周鳞片成功率＜50% / 顾客反馈“有碱味”超过10% / 粉料结块严重 / 油温无法稳定。<br>
+      <strong>🎯 最终判断：可进</strong> —— 强烈推荐给做美式炸鸡的摊位。自制裹粉不仅能省钱，更是做出“鳞片”的前提。市售粉大多无法达到理想效果。
+    </div>
+    <div class="j-tags"><span>#美式炸鸡裹粉</span><span>#粉水粉工艺</span><span>#鳞片脆皮</span><span>#纯脆皮基底</span></div>
+  </div>
+</div>
+
+<!-- ===== 付费区：完整配方包（19元） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>美式炸鸡裹粉 · 完整配方包</h3>
+  <div class="p-sub">定价 ¥19 · 永久解锁 · 包含以下全部数据</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span>商用美式炸鸡裹粉标准配方（500g/1kg/5kg·精确到克）</div>
+    <div class="p-item"><span class="p-icon">✅</span>5种粉料配比原理（中筋粉、玉米淀粉、土豆淀粉、小苏打、盐）</div>
+    <div class="p-item"><span class="p-icon">✅</span>小苏打精准控制（防碱味、调颜色、调脆度）</div>
+    <div class="p-item"><span class="p-icon">✅</span>外卖增强版（增加土豆淀粉，延长脆度至40分钟）</div>
+    <div class="p-item"><span class="p-icon">✅</span>粉-水-粉完整操作SOP（按压3次、翻动8-10次，重复3遍）</div>
+    <div class="p-item"><span class="p-icon">✅</span>冰水温度与鳞片关系（0-4°C最佳）</div>
+    <div class="p-item"><span class="p-icon">✅</span>批量混合SOP及密封保存（防潮、防虫）</div>
+    <div class="p-item"><span class="p-icon">✅</span>每份炸鸡裹粉用量（翅中/翅根/琵琶腿/整鸡）</div>
+    <div class="p-item"><span class="p-icon">✅</span>变体方案：无小苏打版（不追求鳞片）、加蒜粉版</div>
+    <div class="p-item"><span class="p-icon">✅</span>翻车修正表（碱味/无鳞片/鳞片脱落/颜色发黑）</div>
+    <div class="p-item"><span class="p-icon">✅</span>成本利润测算表（自制vs市售）</div>
+  </div>
+  <div class="price-tag">¥19 <small>子卡 · 一次解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后发编号给客服，秒发完整版 / 或直接在此展开</div>
+
+  <!-- 解锁后显示内容 -->
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 标准配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 商用标准配方（每500g）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span class="k">中筋面粉（蛋白质13-15%）</span><span class="v">300g</span></div>
+      <div class="recipe-line"><span class="k">玉米淀粉</span><span class="v">100g</span></div>
+      <div class="recipe-line"><span class="k">土豆淀粉</span><span class="v">80g</span></div>
+      <div class="recipe-line"><span class="k">小苏打</span><span class="v">5g</span></div>
+      <div class="recipe-line"><span class="k">细盐</span><span class="v">15g</span></div>
+      <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;font-size:11px">🔹 此为纯脆皮基底，无蒜粉、洋葱粉等调味。<br>🔹 每500g粉可裹约12-15kg鸡翅（粉水粉工艺）。</div>
+    </div>
+
+    <!-- 2️⃣ 外卖增强版 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 外卖专用增强版（每500g）</div>
+    <div class="recipe-box" style="border-left-color:#E8652D">
+      <div class="recipe-line"><span>玉米淀粉</span><span>100g → 减至80g</span></div>
+      <div class="recipe-line"><span>土豆淀粉</span><span>80g → 增至100g</span></div>
+      <div class="recipe-line"><span>小苏打</span><span>5g → 增至6g</span></div>
+      <div class="recipe-line"><span>其他不变</span><span></span></div>
+      <div style="margin-top:6px;font-size:11px">🔹 土豆淀粉增加可延长脆度保持时间至40分钟。</div>
+    </div>
+
+    <!-- 3️⃣ 小苏打控制 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 小苏打精准控制</div>
+    <div class="recipe-box" style="border-left-color:#D4A574">
+      • 小苏打作用：产生气泡，形成鳞片，增加脆度。<br>
+      • 推荐比例：面粉总量的1.2-1.8%（本配方约1.7%）。<br>
+      • 碱味测试：取10g粉+12g水调糊，尝一下。若有明显碱味，减至3g。<br>
+      • 颜色影响：小苏打越多，炸鸡颜色越金黄（超过2%会发暗）。<br>
+      • 建议：第一次按5g做，根据成品颜色和味道微调。
+    </div>
+
+    <!-- 4️⃣ 粉-水-粉操作SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 粉-水-粉完整步骤</div>
+    <div class="recipe-box" style="border-left-color:#C0392B">
+      <strong>第一次裹粉：</strong>腌制好的鸡块放入裹粉中，轻轻按压3次，从两侧翻动8-10次，重复3遍。过筛抖去浮粉。<br>
+      <strong>沾水：</strong>将鸡块浸入冰水（0-4°C）中3-5秒，捞出沥2秒。<br>
+      <strong>第二次裹粉：</strong>再次放入裹粉中，按压3次，翻动10-12次，重复3遍。过筛后立即下锅。<br>
+      ⚠️ 关键：翻动时手不要直接接触鸡块，用粉隔离。油温175-180°C。
+    </div>
+
+    <!-- 5️⃣ 每份用量 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 每份炸鸡裹粉用量（粉水粉工艺）</div>
+    <div style="background:#f8f4ef;border-radius:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:6px 10px;background:#3a322a;color:#fff;font-size:10px"><span>部位</span><span>重量（g）</span><span>裹粉用量（g）</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>翅根（5只）</span><span>约200g</span><span>30-35g</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb"><span>翅中（5只）</span><span>约250g</span><span>35-40g</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>琵琶腿（2只）</span><span>约300g</span><span>45-50g</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;padding:8px 10px"><span>整鸡（1只）</span><span>约800g</span><span>120-150g</span></div>
+    </div>
+
+    <!-- 6️⃣ 批量混合SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 批量预制（1kg/5kg）及保存</div>
+    <div class="recipe-box">
+      <div><strong>5kg成品粉（约可裹150-200kg鸡翅）</strong></div>
+      <div class="recipe-line"><span>中筋面粉3kg · 玉米淀粉1kg · 土豆淀粉0.8kg · 小苏打50g · 盐150g</span></div>
+      <div style="margin-top:6px"><strong>操作：</strong>所有粉料过筛（40目）后，放入大密封袋或桶中，摇晃混合均匀。<br>
+      <strong>常温保质期：</strong>3个月（密封避光防潮）。<br>
+      <strong>建议：</strong>分装成500g小包，用完一包再开，减少受潮。</div>
+    </div>
+
+    <!-- 7️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 变体方案</div>
+    <div class="recipe-box" style="border-left-color:#5a8f3c">
+      <strong>无小苏打版：</strong>去掉小苏打，鳞片减少，脆度下降30%，适合追求自然口感。<br>
+      <strong>蒜香裹粉：</strong>加入蒜粉15g、洋葱粉10g，增加底味。<br>
+      <strong>辣味裹粉：</strong>加入辣椒粉20g，适合辣味炸鸡专门店。<br>
+      <strong>无盐版：</strong>去掉盐，适合与极咸腌料搭配。
+    </div>
+
+    <!-- 8️⃣ 翻车修正表 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">8️⃣ 翻车修正表（每500g）</div>
+    <div style="background:#f8f4ef;border-radius:10px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:6px 10px;background:#3a322a;color:#fff;font-size:10px"><span>问题</span><span>修正方法</span><span>用量</span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>有碱味</span><span>减小苏打至3g，加玉米淀粉2g</span><span></span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb"><span>无鳞片</span><span>增加按压次数（5次），翻动次数（15次）</span><span></span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>鳞片脱落</span><span>沾水时间减至2秒，二次裹粉前不甩干</span><span></span></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;padding:8px 10px"><span>炸后发黑</span><span>油温过高，控制175°C；减小苏打至4g</span><span></span></div>
+    </div>
+
+    <!-- 9️⃣ 成本利润 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">9️⃣ 成本利润测算（每份中份翅根·5只）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>裹粉成本（自制）</span><span class="v">¥0.50</span></div>
+      <div class="recipe-line"><span>裹粉成本（市售美式炸鸡粉）</span><span class="v">¥1.2-1.8</span></div>
+      <div class="recipe-line"><span>每份节省</span><span class="v">¥0.7-1.3</span></div>
+      <div class="recipe-line"><span>日售40份，月省利润</span><span class="v">¥840-1560</span></div>
+      <div class="recipe-line"><span>年省（按300天）</span><span class="v">¥10080-18720</span></div>
+      <div class="badge" style="margin-top:6px">💡 自制美式炸鸡裹粉是降本增效最直接的环节，同时能做出市售粉无法复刻的鳞片效果。</div>
+    </div>
+
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <a class="rel-item" href="#"><span class="r-emoji">🍗</span><span class="r-name">原味黄金炸鸡（母卡·完整项目）</span><span class="r-arrow">→</span></a>
+  <a class="rel-item" href="#"><span class="r-emoji">🧂</span><span class="r-name">香辣腌料（GF_004）</span><span class="r-arrow">→</span></a>
+  <a class="rel-item" href="#"><span class="r-emoji">🍚</span><span class="r-name">韩式核心炸粉（GF_001）</span><span class="r-arrow">→</span></a>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 子卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>圆白菜丝+紫甘蓝丝 · 小菜配菜卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.variant-bar{background:linear-gradient(90deg,#7a5b8c,#5a3a6c);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#7a5b8c;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#7a5b8c}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+.pick-compare{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.pick-item{padding:10px 12px;border-radius:10px;font-size:12px;display:flex;align-items:center;gap:8px}
+.pick-item .p-icon{font-size:16px}
+.pick-item .p-name{flex:1;font-weight:600;color:#3a322a}
+.pick-item .p-feature{color:#b5aaa0;font-size:10px}
+.pick-main{background:#f2ecf5;border:1px solid #e0d0e8}
+.pick-other{background:#f8f4ef}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#7a5b8c}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#4a3f35;line-height:1.6}
+.pay-area .p-item .p-icon{color:#7a5b8c;font-weight:700;flex-shrink:0;width:18px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#7a5b8c;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#7a5b8c;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #7a5b8c}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px}
+.radar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.radar-item{background:#f8f4ef;border-radius:10px;text-align:center;padding:8px}
+.radar-item .label{font-size:9px;color:#7a7269}
+.radar-item .stars{font-size:12px;letter-spacing:1px}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:12px}
+.logic-item{display:flex;justify-content:space-between;padding:4px 0;font-size:12px}
+.metric-row{display:flex;gap:6px;margin-top:8px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center}
+.risk-item{display:flex;gap:8px;padding:6px 0;font-size:12px;border-bottom:1px solid #f0ece6}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 变体提示 -->
+<div class="variant-bar">
+  <span class="v-label">🥬 配菜基底卡 · ¥7</span>
+  <a class="v-link" href="#">← 母卡：原味黄金炸鸡(HZ_001)</a>
+</div>
+
+<!-- 产品头部 -->
+<div class="meta">
+  <h1>🥬 圆白菜丝 + 紫甘蓝丝</h1>
+  <div class="sub">双色蔬菜丝 · 日式炸鸡/猪排垫底 · 颜值与功能兼备</div>
+  <span class="price-tag">¥7 完整配方包</span>
+</div>
+
+<!-- 与母卡差异总览 -->
+<div class="section">
+  <div class="s-title">🔄 配菜定位说明</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">母卡（HZ_001 炸鸡项目）</div>
+      <div>主产品：炸鸡类 · 设备清单 · 30天验证路线 · 全商业模型</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">PC_005 双色菜丝（配菜基底）</div>
+      <div>垫底/伴碟用蔬菜丝 · 提升摆盘专业度 · 解腻 · 极低成本</div>
+    </div>
+  </div>
+  <div class="badge">💡 本卡不含主设备、验证路线等，通用数据参照母卡。本卡仅提供圆白菜+紫甘蓝丝的商业逻辑和操作要点。</div>
+</div>
+
+<!-- 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★☆☆☆</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★☆☆☆☆</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★☆☆☆☆</div></div>
+    <div class="radar-item"><div class="label">📈 利润</div><div class="stars">★★★★☆</div></div>
+  </div>
+</div>
+
+<!-- 适合谁 -->
+<div class="section">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#3a6b2e;margin-bottom:6px">🎯 适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 日式/韩式炸鸡、炸猪排、天妇罗摊</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 注重摆盘美感的摊位</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 堂食为主（垫纸/垫盘）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px">✅ 需要低成本增加“看起来丰富”的店主</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#b53b3b;margin-bottom:6px">❌ 不适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 纯外卖（顾客不关注垫底蔬菜）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 不愿意每天切丝备料的摊主</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px">❌ 追求极致省事（直接不用垫菜）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title" style="font-size:12px;font-weight:700;margin-bottom:6px">🧠 为什么放这个配菜</div>
+    <div style="font-size:12px;margin-bottom:10px">顾客并不直接为菜丝付费，但它让炸鸡看起来更“高级”、更“值这个价”，从而支撑更高定价。</div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin-bottom:6px">📈 利润从哪里来</div>
+    <div class="logic-item"><span>垫底菜丝（成本极低）</span><span class="v">≈ ¥0.15/份</span></div>
+    <div class="logic-item"><span>提升整体套餐价值感</span><span class="v">客单价可+2-3元</span></div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin:6px 0">📈 如何提高客单价</div>
+    <div class="logic-item"><span>与卷心菜沙拉类似，可作为沙拉基底</span><span class="v">加酱汁后单独卖¥5-8</span></div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin:6px 0">🔄 如何提高复购</div>
+    <div style="font-size:12px">顾客不会因为菜丝而复购，但会因为“这家炸鸡摆盘干净、配菜新鲜”而有更好印象。</div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card" style="background:#fdf2ee"><div class="m-label">日用量</div><div class="m-val">50-100份</div><div class="m-sub">视炸鸡销量</div></div>
+    <div class="metric-card" style="background:#fef6ec"><div class="m-label">月成本</div><div class="m-val">¥100-200</div><div class="m-sub">几乎忽略不计</div></div>
+    <div class="metric-card" style="background:#f0f6ec"><div class="m-label">回本周期</div><div class="m-val">1天</div><div class="m-sub">极低投入</div></div>
+  </div>
+</div>
+
+<!-- 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 配菜赛道判断</div>
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;font-size:12px;line-height:1.7">
+    <strong>优势：</strong>圆白菜和紫甘蓝都是最便宜的蔬菜（圆白菜约0.5元/斤，紫甘蓝约1.2元/斤），切丝后体积膨胀，垫在炸鸡下面能吸收多余油脂，提升顾客体验。紫甘蓝提供天然紫色，摆盘瞬间提升档次。<br>
+    <strong>劣势：</strong>切丝费人工，紫甘蓝容易染色（染到炸鸡或餐盒），且放久会出水变软。<br>
+    <strong>市场现状：</strong>日式炸猪排店是标配，但夜市炸鸡摊绝大多数不用。这是容易被忽视的细节差异化。<br>
+    <strong>是否值得进入：是</strong> —— 强烈推荐堂食为主的摊位使用。成本极低，但能明显提升“精致感”。
+  </div>
+</div>
+
+<!-- 项目评估 -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>市场竞争</div><div style="font-size:16px">★★☆☆☆</div><div>低（很少摊位用）</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>学习周期</div><div style="font-size:16px">★☆☆☆☆</div><div>10分钟</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>操作容错度</div><div style="font-size:16px">★★★★☆</div><div>高</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div>最低验证资金</div><div style="font-size:16px">★★★★★</div><div>¥20以内</div></div>
+  </div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:360px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>垫底菜/配菜</th><th>成本/份</th><th>视觉提升</th><th>解腻效果</th><th>备餐难度</th></tr></thead>
+      <tbody>
+        <tr style="background:#f2ecf5"><td>🥬 圆白菜+紫甘蓝丝</th><td>¥0.15</th><td>★★★★★</th><td>★★★☆☆</th><td>★★★</th></tr>
+        <tr><td>🥗 卷心菜沙拉</th><td>¥0.55</th><td>★★★★</th><td>★★★★</th><td>★★</th></tr>
+        <tr style="background:#f8f4ef"><td>🥕 酸辣白萝卜</th><td>¥0.30</th><td>★★★</th><td>★★★★★</th><td>★</th></tr>
+        <tr><td>生菜叶垫底</th><td>¥0.10</th><td>★★</th><td>★★</th><td>★</th></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 最大风险（6项） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>出水变软：</strong>圆白菜切丝后放置超过2小时会出水，垫在炸鸡下面会泡软炸鸡底部。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>紫甘蓝染色：</strong>紫甘蓝花青素遇水或油会渗出紫色，染到炸鸡或白色餐盒上影响卖相。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><strong>卫生隐患：</strong>生蔬菜丝若清洗不彻底，可能残留农药或细菌，引起腹泻。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><strong>顾客不吃浪费：</strong>多数顾客不吃垫底菜丝，直接扔掉，造成隐性浪费。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><strong>切丝费时：</strong>手工切丝慢，使用刨丝器又容易切太碎，需要平衡效率与品相。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><strong>外卖不适合：</strong>外卖配送过程中，菜丝出水+染色问题更严重，且顾客不重视。</div>
+</div>
+
+<!-- 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>成本极低（每份不到0.2元），却能瞬间提升摆盘的专业感。堂食顾客对“有配菜垫底”的炸鸡接受度更高，愿意多付2-3元。<br>
+      <strong>❌ 为什么不值得：</strong>纯外卖摊位完全无意义。如果出餐量大，切丝会成为额外负担，且菜丝浪费率高。<br>
+      <strong>🔑 进入条件：</strong>① 堂食为主 ② 能接受每天花15分钟切丝备料 ③ 有冷藏空间保存切好的菜丝。<br>
+      <strong>🚪 退出条件：</strong>顾客反馈“菜丝发黄/出水” / 发现染色问题无法解决 / 切丝人工成本超过收益。<br>
+      <strong>🎯 最终判断：可进</strong> —— 仅推荐堂食摊位使用。外卖不建议加。关键技巧：现切现用，紫甘蓝比例不超过30%，且用冰水浸泡后沥干。
+    </div>
+    <div class="j-tags"><span>#摆盘神器</span><span>#低成本提升</span><span>#堂食专用</span></div>
+  </div>
+</div>
+
+<!-- 核心工艺（带验证点） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div style="margin-bottom:10px"><strong>步骤1 选菜与清洗</strong> —— 圆白菜选紧实、叶薄品种；紫甘蓝选深紫色。剥去外叶，用流水冲洗，再泡淡盐水10分钟。<br><span style="font-size:10px;color:#7a7269">[验证点] 洗净后甩干水分，叶片无泥沙</span></div>
+    <div style="margin-bottom:10px"><strong>步骤2 切丝（关键）</strong> —— 去硬芯，将叶片叠放卷起，用锋利菜刀切成2mm宽细丝。紫甘蓝单独切，避免染色。<br><span style="font-size:10px;color:#7a7269">[验证点] 菜丝均匀，长度5-8cm，无粗梗</span></div>
+    <div style="margin-bottom:10px"><strong>步骤3 冰水浸泡（增脆去色）</strong> —— 圆白菜丝和紫甘蓝丝分别泡冰水10分钟（紫甘蓝单独泡，可加少许白醋固色）。<br><span style="font-size:10px;color:#7a7269">[验证点] 泡后菜丝变硬挺，圆白菜半透明，紫甘蓝水不变深紫</span></div>
+    <div><strong>步骤4 沥干与混合</strong> —— 用蔬菜脱水器或纱布挤干水分，按圆白菜:紫甘蓝=7:3比例混合，放入冷藏备用。<br><span style="font-size:10px;color:#7a7269">[验证点] 用手握一把菜丝，掌心无水渍；混合后颜色淡紫白相间</span></div>
+  </div>
+  <div class="badge">⚠️ 完整配比及防染色技巧见下方付费区</div>
+</div>
+
+<!-- 成本利润 -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span>圆白菜（约30g/份）</span><span>¥0.03</span></div>
+    <div class="recipe-line"><span>紫甘蓝（约10g/份）</span><span>¥0.02</span></div>
+    <div class="recipe-line"><span>损耗/水/电</span><span>¥0.02</span></div>
+    <div class="recipe-line"><span>包装（垫纸或直接放盒内）</span><span>¥0.05</span></div>
+    <div class="recipe-line"><span>单份总成本</span><span>¥0.12</span></div>
+    <div class="recipe-line"><span>作为垫底菜（不单独收费）</span><span>成本极低</span></div>
+    <div class="recipe-line"><span>若升级为沙拉（加酱汁）</span><span>售价¥5-8，成本¥0.8</span></div>
+  </div>
+</div>
+
+<!-- 完整配方包 付费区 -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>🥬 双色菜丝 · 完整配方包</h3>
+  <div class="p-sub">定价 ¥7 · 永久解锁 · 包含以下全部数据</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span>最佳切丝厚度与刀工技巧</div>
+    <div class="p-item"><span class="p-icon">✅</span>紫甘蓝防染色核心技术（加醋冰水浸泡）</div>
+    <div class="p-item"><span class="p-icon">✅</span>蔬菜脱水器选择与使用要点</div>
+    <div class="p-item"><span class="p-icon">✅</span>批量预制与冷藏保存（保质期24小时）</div>
+    <div class="p-item"><span class="p-icon">✅</span>变体：加胡萝卜丝/黄瓜丝的三色沙拉</div>
+    <div class="p-item"><span class="p-icon">✅</span>堂食摆盘技巧（堆叠高度、位置）</div>
+    <div class="p-item"><span class="p-icon">✅</span>外卖替代方案（干燥蔬菜丝或省略）</div>
+  </div>
+  <div class="price-tag">¥7 <small>配菜卡 · 一次解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后发编号给客服，秒发完整版 / 或直接在此展开</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 切丝标准 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 切丝标准与工具</div>
+    <div class="recipe-box">
+      • 厚度：2mm（约一枚硬币厚度），太细易软，太粗口感差。<br>
+      • 长度：5-8cm，方便夹取。<br>
+      • 工具推荐：曼陀林刨丝器（可调厚度），效率是手工的5倍。品牌：下村、贝印。<br>
+      • 手工刀切技巧：圆白菜去芯后卷紧，用锋利的主厨刀快速切。
+    </div>
+
+    <!-- 2️⃣ 防染色核心技术 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 紫甘蓝防染色方案</div>
+    <div class="recipe-box" style="border-left-color:#E8652D">
+      • 紫甘蓝切丝后，立即投入冰水中，并加入白醋（每升水加10g白醋），浸泡5分钟。<br>
+      • 捞出后沥干，再与圆白菜丝混合。<br>
+      • 注意：紫甘蓝比例不要超过总菜量的30%，否则整体颜色过深。<br>
+      • 混合后如需保存，不要提前混合，分开放置，出摊前再混合。
+    </div>
+
+    <!-- 3️⃣ 批量预制与保存 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 批量预制（5kg蔬菜）</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+      <div>① 圆白菜3.5kg + 紫甘蓝1.5kg，分别处理。</div>
+      <div>② 切丝后分别冰水浸泡，脱水沥干。</div>
+      <div>③ 分别装入密封袋/盒，0-4°C冷藏，可保存24小时。</div>
+      <div>④ 出摊前，按7:3比例混合，取用后立即封口。</div>
+      <div>⚠️ 切丝后超过24小时会出水变软，建议每日现切。</div>
+    </div>
+
+    <!-- 4️⃣ 脱水技巧 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 蔬菜脱水技巧</div>
+    <div class="recipe-box">
+      • 推荐使用手动旋转式蔬菜脱水器（约40元），一次可脱500g。<br>
+      • 没有脱水器：用纱布包裹菜丝，用力拧干（效率低）。<br>
+      • 脱水标准：抓一把菜丝用力握，掌心无水渍；若滴水则还需脱水。
+    </div>
+
+    <!-- 5️⃣ 变体：三色沙拉 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 变体：三色沙拉（加胡萝卜丝）</div>
+    <div class="recipe-box">
+      圆白菜丝50% + 紫甘蓝丝25% + 胡萝卜丝25%。胡萝卜去皮切细丝，同样冰水浸泡。此搭配颜色更鲜艳，适合作为单独售卖的沙拉基底（搭配油醋汁或芝麻酱）。
+    </div>
+
+    <!-- 6️⃣ 堂食摆盘 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 堂食摆盘技巧</div>
+    <div class="recipe-box">
+      • 将菜丝堆成小山坡状（约30g），放在餐盒中央或一侧。<br>
+      • 炸鸡放在菜丝上方，让菜丝略微露出边缘。<br>
+      • 可选：在菜丝上撒少许白芝麻或七味粉增加颜色。<br>
+      • 注意：炸鸡出锅后稍微冷却再放，避免热气闷软菜丝。
+    </div>
+
+    <!-- 7️⃣ 实战备注 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 沧林实战备注</div>
+    <div class="recipe-box" style="border-left-color:#7a5b8c">
+      • 圆白菜不要买“牛心菜”（太硬），买普通扁圆形卷心菜即可。<br>
+      • 紫甘蓝选外面几层深紫色的，内部颜色浅的不要用。<br>
+      • 如果觉得切丝太麻烦，可以购买现成的沙拉菜丝（冷冻或鲜切），但成本会翻3-5倍。<br>
+      • 外卖场景：不要放生菜丝，因为配送20分钟后会出水软烂，且顾客不领情。外卖可改为生菜叶垫底（干爽）。<br>
+      • 夏天菜丝容易变质，出摊超过4小时未用完的建议废弃。<br>
+      • 如果你卖的是“炸鸡套餐”，加上这一小撮菜丝，顾客拍照发朋友圈的概率增加30%。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整配菜包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" href="#"><span>🍗</span><span style="flex:1">原味黄金炸鸡（母卡·完整项目）</span><span>→</span></a>
+    <a class="rel-item" href="#"><span>🥗</span><span style="flex:1">卷心菜沙拉（配菜 PC_003）</span><span>→</span></a>
+    <a class="rel-item" href="#"><span>🥕</span><span style="flex:1">酸辣白萝卜（配菜 PC_002）</span><span>→</span></a>
+  </div>
+</div>
+
+<!-- 咨询入口 -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>切丝效率提升 · 防染色问题 · 摆盘指导</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>工具推荐 · 批量备料 · 成本优化</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“双色菜丝”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a;width:auto;padding:8px 20px">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 小菜配菜卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>金桂藕粉 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#F4C542,#E6A817);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+h1{font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.header-sub{font-size:12px;color:#b5aaa0}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1>🌸 金桂藕粉</h1>
+  <div class="header-sub">手冲藕粉 · 桂花飘香 · 透明拉丝高颜值</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.6</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">藕粉不是速溶粉，是看得见的拉丝。核心竞争力是冲调手法和桂花香气。</div>
+  <div class="r-tags">
+    <span>🔥 热度中高</span>
+    <span>💰 投资800+</span>
+    <span>👤 1人可做</span>
+    <span>🔄 复购中高</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★☆</div><div class="val">低</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 女性/儿童/老年养生客群</div>
+      <div class="fit-item fit-yes">✅ 学校/社区/景区摊位</div>
+      <div class="fit-item fit-yes">✅ 追求高颜值、透明拉丝视觉效果</div>
+      <div class="fit-item fit-yes">✅ 四季皆宜（夏季冰镇藕粉羹，冬季热饮）</div>
+      <div class="fit-item fit-yes">✅ 出餐快，批量预制藕粉糊</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求极低成本（纯藕粉较贵，便宜藕粉是假的）</div>
+      <div class="fit-item fit-no">❌ 冲调手法不熟练（容易冲不熟、结块）</div>
+      <div class="fit-item fit-no">❌ 夏季主推冰饮（藕粉热食口感最佳）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：透明拉丝的治愈感 × 桂花香气 × 无添加的健康感</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>经典金桂藕粉（引流）</span><span class="v">毛利68%</span></div>
+    <div class="logic-item"><span>加料区（葡萄干/山楂碎/芝麻/花生碎+¥1-2）</span><span class="v">毛利75%</span></div>
+    <div class="logic-item"><span>升级大碗/加藕粉圆子（+¥2-3）</span><span class="v">毛利80%</span></div>
+    <div class="logic-item"><span>搭售桂花糕/藕粉糕</span><span class="v">客单价拉高30%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>“金玉满堂”：藕粉+酒酿+小圆子+桂花，售价12元</span><span class="v"></span></div>
+    <div class="logic-item"><span>套餐：藕粉+桂花糕立减1元</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>冬季热藕粉暖胃，夏季冰藕粉清凉，四季可做</span><span class="v"></span></div>
+    <div class="logic-item"><span>集章卡：买5送1</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥500-900</div><div class="m-sub">4-6h出摊</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥4,500-6,500</div><div class="m-sub">出摊20天(预估)</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">5-10天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:8px">💡 数据来源：参考景区桂花藕粉摊实测数据，纯藕粉成本约0.8-1.2元/碗，加料后售价8-12元。</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">藕粉天然健康概念，女性/养生客群认可度高</div>
+      <div class="t-item">透明拉丝视觉效果独特，拍照传播力强</div>
+      <div class="t-item">出餐快（熟练后30秒一碗），适合景区/夜市走量</div>
+      <div class="t-item">原料成本可控（藕粉批发20-30元/斤，冲15-20碗）</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">纯藕粉价格波动大，便宜藕粉多为木薯粉掺假</div>
+      <div class="t-item">冲调需技巧，水温必须90°C以上，否则结块或不熟</div>
+      <div class="t-item">夏季需求低于冬季（热藕粉更好吃）</div>
+      <div class="t-item">市面上廉价速溶藕粉（加麦芽糊精）低价冲击</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>桂花藕粉在景区常见，其他地方糖水摊较少。多数摊位用速溶藕粉粉包冲泡，无拉丝效果。纯藕粉现冲的摊位极少，有差异化空间。<br>
+    <strong>未来判断：</strong>2026年消费者对“无添加”越来越敏感，纯藕粉现冲的产品会受欢迎。核心竞争力在于冲调手法（透明拉丝）和桂花蜜的品质。建议在景区、学校周边作为特色品。<br>
+    <strong>是否值得进入：是</strong>（前提：能采购到纯藕粉（非木薯粉掺假），且愿意练习冲调技巧。）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估（V5.1维度） ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">中等，品质分化大</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">2-3天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">水温过高过低都失败</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★★☆</div><div style="font-size:10px;color:#5a4f44">¥400以内试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购纯藕粉、干桂花/桂花蜜，练习冲调，记录水温、粉水比例对拉丝效果的影响。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20人试喝，收集甜度、桂花香气、拉丝视觉效果反馈。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备60碗），测试景区/学校对6元定价的接受度。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>根据数据调整甜度，推出加料版（葡萄干/山楂碎/芝麻）。</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘日均销量、复购率、冲调成功率，决定长期经营。</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7首日能否卖出50碗以上 ② Day15顾客对“拉丝”效果主动拍照比例＞20% ③ Day30藕粉冲调失败率＜10%。<br>
+    <strong>🚪 退出标准：</strong>连续3天营收＜250元 / 顾客反馈“像浆糊/没冲熟”比例＞20% / 纯藕粉采购困难或价格过高。<br>
+    <strong>✅ 继续标准：</strong>日均销量稳定在50碗以上 / 主动问“能不能加酒酿”比例＞15% / 回头客比例＞30%。
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（≥15项+证照） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：电热水壶/恒温热水桶(¥80-150) · 藕粉专用碗/杯(¥100-200) · 电子秤(¥30-50) · 长柄勺(¥10) · 打蛋器/搅拌棒(¥20) · 储物罐(5个,¥50) · 量杯(¥10) · 封口机(可选¥150-250) · 保温桶(¥120-180) · 小料分装盒(5个,¥30)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠桌(¥60-120) · 桌布(¥15) · 招牌灯箱(¥80-150) · 价格牌(¥20) · 椅子(¥30) · 收款码牌(¥5) · 宣传板（展示拉丝藕粉照片）(¥20)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：纯藕粉5斤(¥100-150) · 干桂花/桂花蜜(¥50) · 冰糖/糖粉(¥20) · 葡萄干/山楂碎/芝麻/花生碎各1斤(¥40-60) · 一次性碗/杯300套(¥80-100) · 勺子300个(¥20) · 打包袋150个(¥15)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥700-1,100</strong>（已有热水壶，用家用碗）</div>
+    <div><strong>💰 完整启动方案：¥1,200-1,800</strong>（含恒温热水桶+封口机+招牌）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本及时间：</strong>健康证¥80（1-3天）；食品摊贩备案¥0-50；部分夜市摊位费¥300-800/月。藕粉开封后需防潮。合计最低¥80，完整合规约¥400-900。</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">金桂藕粉（纯藕粉+桂花蜜）</span><span class="t-price">¥5-7（300ml）</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">加料版（葡萄干/山楂碎/芝麻/花生碎）</span><span class="t-price">¥7-10</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">藕粉+桂花糕套餐 · 藕粉+酒酿小圆子</span><span class="t-price">¥8-12</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏔️ 景区</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★☆☆☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项，含政策/场地） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>藕粉属于淀粉类食品，需注意防潮防虫。冲调用热水需保证水源安全。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>热藕粉冬季受欢迎，夏季可做冰藕粉羹，但口感不如热食。景区四季皆宜。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>藕粉真假问题：市面大量“速溶藕粉”掺木薯粉、麦芽糊精，冲不出拉丝。需要采购纯藕粉（包装标注100%纯藕粉）。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>冲调失败率高：水温低于90°C会结块或不熟，水温过高（沸水直接冲）也会结块。需要恒温热水桶+练习手法。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>单价低利润薄：每碗净利约3-4元，需要走量。景区人流大适合，普通夜市可能不够。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>同质化竞争：景区桂花藕粉摊位多，价格从5元到15元不等，顾客容易比价。</div>
+</div>
+
+<!-- ===== 12 最终决策判断（原沧林判断） ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>纯藕粉健康概念强，透明拉丝视觉效果独特，天然适合景区、学校等拍照场景。出餐快，熟练后30秒一碗。成本可控，毛利可观。四季可做（夏季冰藕粉羹）。<br>
+      <strong>❌ 为什么不值得做：</strong>冲调手法需要练习，新手失败率高。纯藕粉成本高于速溶粉，低价竞争吃亏。景区摊位竞争激烈，普通夜市需求量小。<br>
+      <strong>🔑 进入条件（满足任意3条）：</strong>① 摊位位于景区/学校/社区（人流量大）② 能采购到纯藕粉（非木薯粉掺假）③ 愿意花2天练习冲调手法 ④ 有恒温热水桶保持90°C水温 ⑤ 可以搭配桂花糕、小圆子等提高客单价。<br>
+      <strong>🚪 退出条件：</strong>① 连续两周日均利润＜150元 ② 藕粉冲调失败率＞20% ③ 顾客反馈“像胶水/没冲熟”比例＞30% ④ 纯藕粉价格上涨超50元/斤。<br>
+      <strong>🎯 最终判断：可进</strong> —— 推荐作为景区摊位的特色爆款，或社区养生糖水摊的补充产品。不建议在竞争激烈的普通夜市作为主力。新手必须先练好冲调手法再出摊。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">藕粉预调（防结块）</span><div class="ps-verify">[验证点] 藕粉15g+凉水20ml，搅拌成均匀粉浆，无干粉颗粒。粉浆应为乳白色糊状。</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">沸水冲调（关键）</span><div class="ps-verify">[验证点] 一边搅拌粉浆，一边快速冲入95°C以上沸水200ml，继续搅拌至透明糊状。成功的藕粉应为透明浅褐色，拉丝顺滑，无结块。</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">调味加料</span><div class="ps-verify">[验证点] 加入桂花蜜/糖10g，撒上干桂花、葡萄干、山楂碎等。桂花香气应明显，甜度适中。</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">冰藕粉（夏季）</span><div class="ps-verify">[验证点] 冲好的藕粉自然冷却，冷藏2小时后变成果冻状。食用时加冰镇桂花蜜水，口感滑嫩。冷藏后不会结块，仍保持拉丝感。</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整商用配比、冲调手法视频教学、纯藕粉辨别方法见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润（完整7项） ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本（纯藕粉+桂花蜜+糖）</span><span class="v">¥1.4/300ml碗</span></div>
+    <div class="recipe-line"><span class="k">包装成本（碗+勺+袋）</span><span class="v">¥0.50/套</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（热水+电）</span><span class="v">¥0.15/碗</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥2.05/碗（基础款）</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥5～¥10（加料）</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">59%～79%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售70碗（均价¥7）→ 日毛利¥346，月净利¥4,600（出摊20天，扣除杂费）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费锁定区，V5.1要求7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 冲调手法 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥19 <small>永久解锁（母卡特惠）</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看纯藕粉辨别方法、冲调失败补救、冰藕粉配方</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用精确配方 (单碗·300ml)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>纯藕粉（无添加）</span><span>15g</span></div>
+      <div class="recipe-line"><span>凉水（化粉）</span><span>20ml</span></div>
+      <div class="recipe-line"><span>沸水（95°C以上）</span><span>200ml</span></div>
+      <div class="recipe-line"><span>桂花蜜/冰糖</span><span>10g</span></div>
+      <div class="recipe-line"><span>干桂花</span><span>0.5g（点缀）</span></div>
+    </div>
+    <!-- 2️⃣ 纯藕粉辨别 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 纯藕粉 vs 速溶藕粉辨别</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>纯藕粉</span><span>成分表仅“莲藕”，冲后透明拉丝，口感顺滑</span></div>
+      <div class="recipe-line"><span>速溶藕粉</span><span>成分含木薯淀粉、麦芽糊精，冲后白色糊状，无拉丝</span></div>
+      <div class="recipe-line"><span>推荐品牌</span><span>杭州三家村、桂林纯藕粉、天目湖（注意看配料表）</span></div>
+    </div>
+    <!-- 3️⃣ 冲调手法详解 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 冲调黄金标准</div>
+    <div style="background:#fff;border-radius:10px;padding:0 12px;margin-bottom:12px">
+      <div class="recipe-line"><span>水温</span><span>必须95°C以上（恒温热水桶设定95-100°C）</span></div>
+      <div class="recipe-line"><span>动作</span><span>一边快速搅拌粉浆，一边猛冲沸水，不停搅拌至透明</span></div>
+      <div class="recipe-line"><span>失败补救</span><span>结块可过筛，未熟可微波炉加热30秒</span></div>
+    </div>
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 批量SOP (30碗/60碗/100碗)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>30碗: 藕粉450g · 桂花蜜300g · 耗时0.5h（单碗冲）</span></div>
+      <div class="recipe-line"><span>60碗: 藕粉900g · 桂花蜜600g · 耗时1h</span></div>
+      <div class="recipe-line"><span>100碗: 藕粉1.5kg · 桂花蜜1kg · 耗时1.5h（2人配合）</span></div>
+      <div class="recipe-line"><span>📌 关键: 藕粉不能批量预冲，必须现冲现卖，否则会凝固结块。</span></div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>冲出来是白色糊状（没熟/非纯藕粉）</strong>→ 水温不够或藕粉掺假。水温问题：再冲一次沸水；掺假：换藕粉。</div>
+      <div><strong>结块/颗粒</strong>→ 粉浆没搅匀或冲水太慢。补救：过筛去掉结块，或重新加热水搅拌。</div>
+      <div><strong>太稀（像水）</strong>→ 粉太少或水太多。补救：再调一份粉浆加入。</div>
+      <div><strong>太稠（搅不动）</strong>→ 粉太多或水太少。加开水稀释。</div>
+      <div><strong>桂花香太淡</strong>→ 桂花蜜放得少，再加5g。</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款高利润变体</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🍯 酒酿桂花藕粉</strong>：加酒酿30g+小圆子5颗，成本+0.8元，售价+3元，冬季爆款。</div>
+      <div><strong>🧊 冰镇桂花藕粉羹</strong>：冲好冷藏2小时，加冰镇桂花蜜水，成本+0.3元，售价+2元，夏季限。</div>
+      <div><strong>🌰 坚果藕粉</strong>：加核桃碎+杏仁片+黑芝麻，成本+0.6元，售价+2元，养生款。</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      当单日销量＞150碗时：建议① 采购商用恒温热水桶（约500元，自动保持95°C）；② 与藕粉厂家签订年单，价格降至20元/斤以下；③ 开发“藕粉预拌粉”：提前将藕粉+糖+干桂花混合装袋，每袋15g，出摊时直接加水冲，出餐速度提升至15秒/碗；④ 推出“藕粉自助台”：顾客自选加料（葡萄干/山楂/芝麻），增加互动；⑤ 景区摊位可做“藕粉杯”便携款，方便游客边走边吃。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品（同赛道+内部跳转） ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">⚫</span><span class="r-name">现打芝麻糊（谷物养生系）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🌼</span><span class="r-name">桂花马蹄爽（桂花系列）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍯</span><span class="r-name">红枣银耳（养生糖水）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡，可点击跳转</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>藕粉真假辨别 · 冲调手法教学 · 景区摊位策略</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1出摊包答疑 · 纯藕粉供应商推荐 · 夏季冰藕粉配方</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“藕粉卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

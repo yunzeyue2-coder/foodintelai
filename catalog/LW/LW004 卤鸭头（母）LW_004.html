@@ -1,0 +1,375 @@
+     1|<!DOCTYPE html>
+     2|<html lang="zh-CN">
+     3|<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes"><title>LW_004 卤鸭头 · 创业项目测评 V5.1</title><style>
+     4|*{margin:0;padding:0;box-sizing:border-box}
+     5|body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+     6|.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+     7|.rating-bar{background:linear-gradient(135deg,#3a2a1a,#2a1a0a);padding:16px 18px;color:#fff}
+     8|.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+     9|.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+    10|.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+    11|.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+    12|.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+    13|.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+    14|.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+    15|.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+    16|.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+    17|.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    18|.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    19|.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+    20|.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+    21|.radar-item .stars{font-size:13px;letter-spacing:0px}
+    22|.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+    23|.radar-item.high{background:#fef2ee}.radar-item.high .stars{color:#E8652D}
+    24|.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    25|.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+    26|.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+    27|.fit-yes{background:#f0f6ec;color:#3a6b2e}.fit-no{background:#fef2f2;color:#b53b3b}
+    28|.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+    29|.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+    30|.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+    31|.logic-item:last-child{border-bottom:none}.logic-item .v{font-weight:700;color:#C0392B}
+    32|.metric-row{display:flex;gap:6px;margin-top:6px}
+    33|.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+    34|.metric-card .m-label{font-size:9px;color:#7a7269}
+    35|.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+    36|.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+    37|.mc-orange{background:#fdf2ee}.mc-orange .m-val{color:#E8652D}
+    38|.mc-gold{background:#fef6ec}.mc-gold .m-val{color:#D4A574}
+    39|.mc-green{background:#f0f6ec}.mc-green .m-val{color:#5a8f3c}
+    40|.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    41|.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+    42|.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+    43|.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+    44|.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+    45|.track-good .t-h{color:#5a8f3c}.track-bad .t-h{color:#C0392B}
+    46|.prod-struct{display:flex;flex-direction:column;gap:8px}
+    47|.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+    48|.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+    49|.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+    50|.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+    51|.tier-lead{background:#fef6ec}.tier-lead .t-badge{background:#E8652D;color:#fff}
+    52|.tier-profit{background:#f0f6ec}.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+    53|.tier-set{background:#eef2ff}.tier-set .t-badge{background:#4f6ef7;color:#fff}
+    54|.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    55|.stall-item{padding:10px;border-radius:10px;text-align:center}
+    56|.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+    57|.stall-item .stars{font-size:12px;letter-spacing:1px}
+    58|.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+    59|.risk-item:last-child{border-bottom:none}
+    60|.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+    61|.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+    62|.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+    63|.judge-box .j-text strong{color:#C0392B}
+    64|.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+    65|.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+    66|.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+    67|.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+    68|.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    69|.process-step .ps-desc{flex:1}
+    70|.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+    71|.rel-grid{display:flex;flex-direction:column;gap:6px}
+    72|.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+    73|.rel-item:visited{color:#3a322a}.rel-item:hover{background:#efe8df}
+    74|.rel-item .r-emoji{font-size:16px}.rel-item .r-name{flex:1;font-weight:600}
+    75|.rel-item .r-arrow{color:#b5aaa0;font-size:11px}
+    76|.consult-box{background:#f8f4ef;border-radius:12px;padding:16px;margin:0 18px 16px;border:1px solid #eee5d8}
+    77|.consult-box .c-head{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+    78|.consult-box .c-desc{font-size:11px;color:#7a7269;margin-bottom:10px}
+    79|.consult-box .c-wx{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-radius:8px;font-size:12px;font-weight:600;color:#3a322a;cursor:pointer;justify-content:center;border:1px solid #D4A574}
+    80|.consult-box .c-copy{font-size:9px;color:#b5aaa0;text-align:center;margin-top:4px}
+    81|.pay-area{padding:20px 18px;background:linear-gradient(180deg,#faf8f5,#f5ede5);text-align:center;border-top:2px dashed #ddd4ca}
+    82|.pay-area .lock-icon{font-size:28px;margin-bottom:4px}
+    83|.pay-area h3{font-size:15px;color:#3a322a;margin-bottom:4px}
+    84|.pay-area .p-sub{font-size:11px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+    85|.pay-area .p-list{text-align:left;margin:0 auto 10px;max-width:360px}
+    86|.pay-area .p-item{display:flex;align-items:flex-start;gap:6px;font-size:13px;line-height:1.6;padding:5px 0;color:#3a322a}
+    87|.pay-area .p-item .p-icon{flex-shrink:0;color:#5a8f3c}
+    88|.pay-area .price-tag{font-size:24px;font-weight:800;color:#C0392B;margin-bottom:8px}
+    89|.pay-area .price-tag small{font-size:12px;font-weight:400;color:#7a7269}
+    90|.pay-area .btn{display:inline-block;padding:12px 40px;background:#C0392B;color:#fff;border-radius:8px;text-decoration:none;font-size:14px;font-weight:700;transition:.15s}
+    91|.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:6px}
+    92|.pay-content{display:none;padding:16px 18px;background:#fdfcf9}
+    93|.pay-content.show{display:block}
+    94|.pay-content .pc-title{font-size:15px;font-weight:700;color:#3a322a;margin-bottom:12px;text-align:center;border-bottom:2px dashed #ddd4ca;padding-bottom:10px}
+    95|.recipe-box{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px}
+    96|.recipe-box .rb-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+    97|.recipe-line{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+    98|.recipe-line:last-child{border-bottom:none}.recipe-line .rl-val{font-weight:600;color:#3a322a}
+    99|.ftr{padding:16px 18px;text-align:center;background:#3a322a;color:#b5aaa0;font-size:11px;line-height:1.8}
+   100|.ftr .f-brand{font-size:12px;font-weight:700;color:#e0d5ca;margin-bottom:2px}
+   101|.ftr .f-tagline{font-size:10px;color:#988d80;margin-bottom:6px}
+   102|.ftr .f-links{display:flex;justify-content:center;gap:12px;font-size:10px}
+   103|.ftr .f-links a{color:#D4A574;text-decoration:none}
+   104|</style></head><body><div class="card">
+   105|
+   106|<div class="rating-bar">
+   107|  <div class="r-top"><div class="r-score"><span class="r-num">8.5</span><span class="r-label">综合评分</span></div><span class="r-grade">A级项目</span></div>
+   108|  <div class="r-tagline">下酒刚需单品，鸭头顾客忠诚度极高</div>
+   109|  <div class="r-tags"><span>🔥 热度高</span><span>💰 投资 3000~5500元</span><span>👥 1人起摊</span><span>🔄 复购强</span></div>
+   110|</div>
+   111|
+   112|<div class="section">
+   113|  <div class="s-title">📊 项目速览</div>
+   114|  <div class="radar-grid">
+   115|    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">地区差异大</div></div>
+   116|    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="val">死忠粉多</div></div>
+   117|    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">本小</div></div>
+   118|    <div class="radar-item"><div class="label">📚 难度</div><div class="stars">★★★★☆</div><div class="val">入门中低</div></div>
+   119|    <div class="radar-item high"><div class="label">💵 利润</div><div class="stars">★★★★☆</div><div class="val">中高</div></div>
+   120|    <div class="radar-item"><div class="label">📈 空间</div><div class="stars">★★★☆☆</div><div class="val">有限</div></div>
+   121|  </div>
+   122|</div>
+   123|
+   124|<div class="section">
+   125|  <div class="s-title">🎯 适合谁</div>
+   126|  <div class="fit-wrap"><div class="fit-col"><div class="f-head">✅ 适合（5条）</div>
+   127|    <div class="fit-item">已有卤味摊位想补充SKU</div>
+   128|    <div class="fit-item">摊位附近有夜市/大排档（配酒客群）</div>
+   129|    <div class="fit-item">能处理鸭头清洗工序的人</div>
+   130|    <div class="fit-item">南方城市（鸭头接受度更高）</div>
+   131|    <div class="fit-item">想培养死忠回头客的摊主</div>
+   132|  </div><div class="fit-col"><div class="f-head">❌ 不适合（3条）</div>
+   133|    <div class="fit-item">北方部分城市鸭头接受度偏低的地区</div>
+   134|    <div class="fit-item">不能接受清洗鸭头（口腔/喉管处理）的人</div>
+   135|    <div class="fit-item">只想做大众品不碰小众细分的人</div>
+   136|  </div></div>
+   137|</div>
+   138|
+   139|<div class="section">
+   140|  <div class="s-title">💰 赚钱逻辑</div>
+   141|  <div class="logic-box">
+   142|    <div class="l-title">顾客为什么买</div>
+   143|    <div style="font-size:12px;color:#5a4f44;margin-bottom:10px">吃鸭头是一种「上瘾体验」——掰开找鸭舌和脑花的仪式感，配酒的满足感。鸭头客群的忠诚度是所有卤味中最高的。</div>
+   144|    <div class="l-title">利润来源</div>
+   145|    <div class="logic-item"><span>鸭头进货成本</span><span class="v">0.8~0.9元/个</span></div>
+   146|    <div class="logic-item"><span>成品售价</span><span class="v">3~5元/个</span></div>
+   147|    <div class="logic-item"><span>毛利区间</span><span class="v">70%~82%</span></div>
+   148|    <div class="l-title">量化三件套</div>
+   149|    <div class="metric-row">
+   150|      <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">150~400</div><div class="m-sub">元/日（预估）</div></div>
+   151|      <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">2500~6000</div><div class="m-sub">元/月（预估）</div></div>
+   152|      <div class="metric-card mc-green"><div class="m-label">回本</div><div class="m-val">7~15</div><div class="m-sub">天（预估）</div></div>
+   153|    </div>
+   154|  </div>
+   155|</div>
+   156|
+   157|<div class="section">
+   158|  <div class="s-title">📈 赛道判断</div>
+   159|  <div style="font-size:12px;color:#5a4f44;line-height:1.8">
+   160|    <p><strong>优势：</strong>鸭头消费者忠诚度极高——爱吃鸭头的人会重复购买，且愿意为品质付溢价。鸭舌和脑花两个部位是核心吸引力。卤制共用鸭脖卤水。</p>
+   161|    <p style="margin-top:6px"><strong>劣势：</strong>全国范围内鸭头的接受度低于鸭脖鸭翅，南方城市高于北方。清洗处理工序复杂（需处理口腔、喉管和腺体）。</p>
+   162|    <p style="margin-top:6px"><strong>市场现状：</strong>品牌卤味店鸭头是标配，但价格偏高（8~12元）。摊位5~7元的价格带能吸引价格敏感客群。</p>
+   163|    <p style="margin-top:6px"><strong>未来判断：</strong>鸭头不会成为普及型爆品，但作为卤味摊的「死忠粉单品」有稳定的市场需求。做好的话能培养一批固定回头客。</p>
+   164|    <p style="margin-top:6px"><strong>是否值得进入：</strong>是。但前提是摊位已有鸭脖鸭翅做基础流量，用鸭头做利润补充。</p>
+   165|  </div>
+   166|</div>
+   167|
+   168|<div class="section">
+   169|  <div class="s-title">🚦 项目评估</div>
+   170|  <div class="radar-grid" style="grid-template-columns:1fr 1fr;">
+   171|    <div class="radar-item"><div class="label">市场竞争</div><div class="stars">★★★☆☆</div></div>
+   172|    <div class="radar-item"><div class="label">学习周期</div><div class="stars">★★★★☆</div></div>
+   173|    <div class="radar-item high"><div class="label">操作容错度</div><div class="stars">★★★★☆</div></div>
+   174|    <div class="radar-item high"><div class="label">最低验证资金</div><div class="stars">★★★★★</div></div>
+   175|  </div>
+   176|  <div style="text-align:center;margin-top:8px"><span style="font-size:11px;color:#7a7269">推荐等级 </span><span style="font-size:16px;font-weight:800;color:#E8652D">A-</span></div>
+   177|  <div style="font-size:9px;color:#b5aaa0;text-align:center;margin-top:4px">投资回报30% · 执行难度20% · 市场竞争20% · 复购能力20% · 扩展空间10%</div>
+   178|</div>
+   179|
+   180|<div class="section">
+   181|  <div class="s-title">🗓️ 30天验证路线</div>
+   182|  <div class="track-grid">
+   183|    <div class="track-box"><div class="t-h">Day1-3</div><div class="t-item">试做鸭头，确认清洗标准</div><div class="t-item">对比整鸭头和切半鸭头哪个好卖</div></div>
+   184|    <div class="track-box"><div class="t-h">Day4-7</div><div class="t-item">内部试吃，确定定价</div></div>
+   185|    <div class="track-box"><div class="t-h">Day8-15</div><div class="t-item">搭配出摊，观察顾客反应</div></div>
+   186|    <div class="track-box"><div class="t-h">Day16-30</div><div class="t-item">培养回头客，记录复购率</div></div>
+   187|  </div>
+   188|  <div style="margin-top:8px">
+   189|    <div class="track-box track-good" style="margin-bottom:4px"><div class="t-h">✅ 继续标准</div><div class="t-item">日均销20个以上</div><div class="t-item">有顾客每周固定来买鸭头</div></div>
+   190|    <div class="track-box track-bad"><div class="t-h">❌ 退出标准</div><div class="t-item">日均销持续低于10个</div><div class="t-item">清洗处理太费时影响效率</div></div>
+   191|  </div>
+   192|</div>
+   193|
+   194|<div class="section">
+   195|  <div class="s-title">🛠️ 设备清单</div>
+   196|  <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:8px">
+   197|    <strong>固定设备：</strong>不锈钢卤桶/卡式炉/电子秤（与鸭脖共用）<br>
+   198|    <strong>摊位设备：</strong>折叠桌/托盘/手套口罩/收款码/灯箱/保温箱<br>
+   199|    <strong>新增耗材：</strong>鸭头冻品5kg（40~50元）/剪刀（清理喉管用）
+   200|  </div>
+   201|  <div style="padding:8px;background:#f0f6ec;border-radius:8px;font-size:11px">
+   202|    总投入约2500~5000元，共用设备
+   203|  </div>
+   204|</div>
+   205|
+   206|<div class="section">
+   207|  <div class="s-title">📦 产品结构</div>
+   208|  <div class="prod-struct">
+   209|    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">卤鸭头（单个）</span><span class="t-price">5~8元</span></div>
+   210|    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">卤鸭头（2个装）</span><span class="t-price">9~14元</span></div>
+   211|    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">鸭头2个+鸭脖1根+鸭翅3个</span><span class="t-price">18~25元</span></div>
+   212|  </div>
+   213|</div>
+   214|
+   215|<div class="section">
+   216|  <div class="s-title">🔥 摆摊指数</div>
+   217|  <div class="stall-grid">
+   218|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🌃 夜市</div><div class="stars">★★★★★</div></div>
+   219|    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🏫 学校</div><div class="stars">★★★☆☆</div></div>
+   220|    <div class="stall-item" style="background:#fdf2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+   221|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🏘️ 社区</div><div class="stars">★★★☆☆</div></div>
+   222|    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+   223|    <div class="stall-item" style="background:#eef2ff"><div class="s-name">📱 外卖</div><div class="stars">★★☆☆☆</div></div>
+   224|  </div>
+   225|</div>
+   226|
+   227|<div class="section">
+   228|  <div class="s-title">⚠️ 最大风险</div>
+   229|  <div class="risk-item"><span class="r-icon">🏛️</span><span><strong>政策与证照风险：</strong>同鸭脖，部分地区对鸭头销售有额外卫生要求。</span></div>
+   230|  <div class="risk-item"><span class="r-icon">🌤️</span><span><strong>场地与季节风险：</strong>鸭头冷吃为主，冬季销量降幅明显。</span></div>
+   231|  <div class="risk-item"><span class="r-icon">🗣️</span><span><strong>区域性接受度：</strong>部分地区消费者不接受鸭头，需提前评估当地饮食习惯。</span></div>
+   232|  <div class="risk-item"><span class="r-icon">🧼</span><span><strong>清洗要求高：</strong>口腔、喉管、腺体清理不到位会严重影响口感和口碑。</span></div>
+   233|  <div class="risk-item"><span class="r-icon">📉</span><span><strong>走量有限：</strong>鸭头客群窄，很难成为走量主力品。</span></div>
+   234|  <div class="risk-item"><span class="r-icon">💪</span><span><strong>处理耗时长：</strong>单个鸭头的清洗时间比鸭脖鸭翅长得多。</span></div>
+   235|</div>
+   236|
+   237|<div class="section">
+   238|  <div class="s-title">🧠 最终决策判断</div>
+   239|  <div class="judge-box"><div class="j-text">
+   240|    <strong>为什么值得做：</strong>鸭头顾客忠诚度极高，一旦认准你的口味就会反复购买。共用鸭脖卤水，边际成本低。可以培养摊位口碑和话题性。<br><br>
+   241|    <strong>为什么不值得做：</strong>清洗工序繁琐耗时长，日产量有限。客群面窄，无法成为主力产品。<br><br>
+   242|    <strong>进入条件：</strong>①摊位所在城市/区域鸭头有消费基础；②已有卤味底摊需要补充SKU；③能接受鸭头处理工序。<br><br>
+   243|    <strong>退出条件：</strong>①日均销量持续低于10个；②顾客反馈清洗不干净。<br><br>
+   244|    <strong>最终判断：可进。</strong>作为综合卤味摊的利润补充品，不做主打。
+   245|  </div><div class="j-tags"><span>#死忠粉单品</span><span>#下酒刚需</span><span>#区域差异大</span><span>#共用卤水</span></div></div>
+   246|</div>
+   247|
+   248|<div class="section">
+   249|  <div class="s-title">🔪 核心工艺</div>
+   250|  <div class="process-flow">
+   251|    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc"><strong>解冻+清洗：</strong>鸭头解冻后，清理口腔残留、喉管、鸭舌根部腺体，冲净血水</span><span class="ps-verify">[验证点：口腔无粘液，喉管完整去除，闻起来无腥味]</span></div>
+   252|    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc"><strong>焯水：</strong>冷水下锅加姜片料酒，沸前打浮沫，捞出冲凉</span><span class="ps-verify">[验证点：沸水清澈无浑浊物，鸭头表皮不破]</span></div>
+   253|    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc"><strong>卤制：</strong>鸭头入卤水火卤制约25~30分钟</span><span class="ps-verify">[验证点：掰开鸭头骨肉能分离，脑花完整不散]</span></div>
+   254|    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc"><strong>焖泡晾凉：</strong>关火焖泡20~30分钟，捞出晾凉（可切半出售）</span><span class="ps-verify">[验证点：鸭舌部位有弹性不硬，脑花入味]</span></div>
+   255|  </div>
+   256|</div>
+   257|
+   258|<div class="section">
+   259|  <div class="s-title">📊 成本利润</div>
+   260|  <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+   261|    <div class="recipe-line"><span>核心原料成本（鸭头）</span><span class="rl-val">0.8~0.9元/个</span></div>
+   262|    <div class="recipe-line"><span>卤料分摊</span><span class="rl-val">0.2~0.4元/个</span></div>
+   263|    <div class="recipe-line"><span>包装成本</span><span class="rl-val">0.2~0.3元/个</span></div>
+   <div class="recipe-line"><span>单份总成本</span><span class="rl-val">0.8~1.0元/个</span></div>
+       <div class="recipe-line"><span>售价区间</span><span class="rl-val">3~5元/个</span></div>
+       <div class="recipe-line"><span>毛利区间</span><span class="rl-val">65%~78%</span></div>
+     </div>
+     <div style="margin-top:6px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#5a4f44">
+       <strong>示例利润模型：</strong>日售30个×均价4元=日营收120元，日毛利约85元。</div>
+
+   <div class="section">
+     <div class="s-title">🔗 关联产品</div>
+     <div class="rel-grid">
+       <a class="rel-item" href="#"><span class="r-emoji">🦆</span><span class="r-name">LW001 卤鸭脖</span><span class="r-arrow">→</span></a>
+       <a class="rel-item" href="#"><span class="r-emoji">🦆</span><span class="r-name">LW002 卤鸭翅</span><span class="r-arrow">→</span></a>
+       <a class="rel-item" href="#"><span class="r-emoji">🦆</span><span class="r-name">LW003 卤鸭掌</span><span class="r-arrow">→</span></a>
+     </div>
+   </div>
+
+   <div class="consult-box">
+     <div class="c-head">📱 还有疑问？</div>
+     <div class="c-desc">拿不准这个项目适不适合你，直接问沧林</div>
+     <div class="c-wx" onclick="copyWx()"><span>📋</span> 复制微信号：canglin1985</div>
+     <div class="c-copy" id="toast-msg">点击复制，去微信搜索添加</div>
+   </div>
+
+   <div class="pay-area">
+     <div class="lock-icon">🔒</div>
+     <h3>完整出摊包</h3>
+     <div class="p-sub">你买的不是一个配方。<br>是一套经过验证的出摊方案。</div>
+     <div class="p-list">
+       <div class="p-item"><span class="p-icon">✅</span><span>精确配方 — 卤水香料配比精确到g</span></div>
+       <div class="p-item"><span class="p-icon">✅</span><span>鸭头清洗标准流程</span></div>
+       <div class="p-item"><span class="p-icon">✅</span><span>翻车解决方案</span></div>
+     </div>
+     <div class="price-tag">¥29 <small>一次解锁</small></div>
+     <a class="btn" href="#" onclick="togglePay();return false;">立即解锁 →</a>
+     <div class="note">解锁后发编号给客服，秒发完整版</div>
+   </div>
+
+   <div class="pay-content show" id="payContent">
+     <div class="pc-title">💎 完整出摊包 · 数据全开</div>
+     <div class="recipe-box">
+       <div class="rb-title">📐 基础卤水配方（同LW001共用）</div>
+       <div class="recipe-line"><span>卤水10L配方</span><span class="rl-val">同LW001标准卤水</span></div>
+       <div class="recipe-line"><span>鸭头专属卤制时间</span><span class="rl-val">25~30分钟中小火</span></div>
+       <div class="recipe-line"><span>焖泡时间</span><span class="rl-val">关火焖20~30分钟</span></div>
+       <div class="recipe-line"><span>出品率</span><span class="rl-val">生鸭头约55%~60%→卤后</span></div>
+     </div>
+   269|</div>
+   270|
+   271|<div class="section">
+   272|  <div class="s-title">🔗 关联产品</div>
+   273|  <div class="rel-grid">
+   274|    <a class="rel-item" href="#"><span class="r-emoji">🦆</span><span class="r-name">LW001 卤鸭脖</span><span class="r-arrow">→</span></a>
+   275|    <a class="rel-item" href="#"><span class="r-emoji">🦆</span><span class="r-name">LW002 卤鸭翅</span><span class="r-arrow">→</span></a>
+   276|    <a class="rel-item" href="#"><span class="r-emoji">🦆</span><span class="r-name">LW003 卤鸭掌</span><span class="r-arrow">→</span></a>
+   277|  </div>
+   278|</div>
+   279|
+   280|<div class="consult-box">
+   281|  <div class="c-head">📱 还有疑问？</div>
+   282|  <div class="c-desc">拿不准这个项目适不适合你，直接问沧林</div>
+   283|  <div class="c-wx" onclick="copyWx()"><span>📋</span> 复制微信号：canglin1985</div>
+   284|  <div class="c-copy" id="toast-msg">点击复制，去微信搜索添加</div>
+   285|</div>
+   286|
+   287|<div class="pay-area">
+   288|  <div class="lock-icon">🔒</div>
+   289|  <h3>完整出摊包</h3>
+   290|  <div class="p-sub">你买的不是一个配方。<br>是一套经过验证的出摊方案。</div>
+   291|  <div class="p-list">
+   292|    <div class="p-item"><span class="p-icon">✅</span><span>精确配方 — 卤水香料配比</span></div>
+   293|    <div class="p-item"><span class="p-icon">✅</span><span>鸭头清洗标准流程</span></div>
+   294|    <div class="p-item"><span class="p-icon">✅</span><span>翻车解决方案</span></div>
+   295|  </div>
+   296|  <div class="price-tag">¥29 <small>一次解锁</small></div>
+   297|  <a class="btn" href="#" onclick="togglePay();return false;">立即解锁 →</a>
+   298|  <div class="note">解锁后发编号给客服，秒发完整版</div>
+   299|</div>
+   300|
+   301|<div class="pay-content show" id="payContent">
+   302|  <div class="pc-title">💎 完整出摊包 · 数据全开</div>
+   303|  <div class="recipe-box">
+   304|    <div class="rb-title">📐 基础卤水配方（同LW001共用）</div>
+   305|    <div class="recipe-line"><span>卤水10L配方</span><span class="rl-val">同LW001标准卤水</span></div>
+   306|    <div class="recipe-line"><span>鸭头专属卤制时间</span><span class="rl-val">25~30分钟中小火</span></div>
+   307|    <div class="recipe-line"><span>焖泡时间</span><span class="rl-val">关火焖20~30分钟</span></div>
+   308|    <div class="recipe-line"><span>出品率</span><span class="rl-val">生鸭头约55%~60%→卤后</span></div>
+   309|  </div>
+   310|  <div class="recipe-box">
+   311|    <div class="rb-title">📋 鸭头清洗标准</div>
+   312|    <div style="font-size:11px;color:#5a4f44;line-height:1.7;padding:4px 0">
+   313|      1. 剪开鸭嘴，清理口腔内残留物和粘液<br>
+   314|      2. 去除喉管和腺体（鸭头根部两侧黄色腺体）<br>
+   315|      3. 流动水冲洗3遍至水清<br>
+   316|      4. 剪刀剪去鸭喙尖端（更卫生）<br>
+   317|      5. 浸泡淡盐水10分钟去腥
+   318|    </div>
+   319|  </div>
+   320|</div>
+   321|
+   322|<div class="ftr">
+   323|  <div class="f-brand">🦆 FoodIntelAI · 创业决策数据库</div>
+   324|  <div class="f-tagline">不卖配方 · 帮你看清一个项目值不值得干</div>
+   325|  <div class="f-links"><a href="https://foodintelai.com">官网</a><a href="https://foodintelai.com/kb">知识库</a><a>微信：canglin1985</a></div>
+   326|</div>
+   327|
+   328|</div>
+   329|<script>
+   330|function togglePay(){var el=document.getElementById('payContent');el.classList.toggle('show');var btn=document.querySelector('.btn');btn.textContent=el.classList.contains('show')?'收起内容 ↑':'立即解锁 →';}
+   331|function copyWx(){var w='canglin1985';if(navigator.clipboard)navigator.clipboard.writeText(w);else{var t=document.createElement('textarea');t.value=w;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}var t=document.getElementById('toast-msg');t.textContent='✅ 已复制：canglin1985，去微信添加吧';t.style.display='block';setTimeout(function(){t.style.display='none';},3000);}
+   332|</script>
+   333|</body></html>
+   334|

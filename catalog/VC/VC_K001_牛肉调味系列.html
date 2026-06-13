@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VC_K001 韩式牛肉调味系列 — 韩式融合烤肉母卡</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f0f5eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+  .card { max-width: 540px; width: 100%; background: #fafff8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+  .header { background: linear-gradient(135deg, #1a5c3a 0%, #3a8a5e 50%, #4aad75 100%); padding: 32px 24px 24px; color: #fff; }
+  .header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+  .section { padding: 20px 24px; border-bottom: 1px solid #e0f0e0; }
+  .section-title { font-size: 13px; font-weight: 600; color: #1a5c3a; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #c8e0d0; }
+  .value-stmt { background: #e8f5ec; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #1a5c3a; line-height: 1.7; text-align: center; }
+  .radar { display: flex; flex-direction: column; gap: 10px; }
+  .radar-item { display: flex; align-items: center; gap: 10px; }
+  .radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .radar-item .bar-wrap { flex: 1; height: 10px; background: #e0f0e0; border-radius: 10px; overflow: hidden; }
+  .radar-item .bar { height: 100%; border-radius: 10px; }
+  .radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #1a5c3a; }
+  .bf5 { width: 100%; background: linear-gradient(90deg, #3a8a5e, #4aad75); }
+  .bf4 { width: 80%; background: linear-gradient(90deg, #3a8a5e, #4aad75); }
+  .bf3 { width: 60%; background: linear-gradient(90deg, #80b898, #90c8a8); }
+  .bomb-box { display: flex; align-items: center; gap: 12px; background: #f0faf2; border-radius: 12px; padding: 14px; border: 1px solid #c8e0d0; }
+  .bomb-stars { font-size: 22px; letter-spacing: 2px; color: #4aad75; flex-shrink: 0; }
+  .bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+  .role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+  .role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #e0f0e0; color: #888; }
+  .role-tag.active { background: #3a8a5e; color: #fff; box-shadow: 0 2px 8px rgba(58,138,94,0.3); }
+  .family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #f0faf4; border-radius: 12px; }
+  .family-tree .node { margin: 2px 0; }
+  .family-tree .branch { color: #1a5c3a; font-weight: 600; }
+  .family-tree .leaf { color: #666; padding-left: 24px; }
+  .family-tree .highlight { color: #3a8a5e; font-weight: 600; padding-left: 24px; }
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .market-item { background: #e8f5ec; border-radius: 10px; padding: 10px 12px; }
+  .market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+  .market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+  .matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #c8e0d0; border-radius: 12px; margin-top: 8px; background: #f5fcf8; overflow: hidden; }
+  .matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #c0d8c8; }
+  .matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #c0d8c8; }
+  .ql { position: absolute; font-size: 10px; color: #aaa; }
+  .ql-tr { top: 22px; right: 20px; text-align: right; }
+  .ql-tl { top: 22px; left: 50px; }
+  .ql-br { bottom: 32px; right: 20px; text-align: right; }
+  .ql-bl { bottom: 32px; left: 50px; }
+  .matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+  .matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+  .dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #4aad75; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+  .dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #1a5c3a; white-space: nowrap; transform: translateX(-50%); }
+
+  .ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .ingredient-table th { background: #e0f0e0; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; color: #1a5c3a; }
+  .ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #e0f0e0; font-size: 12px; }
+  .ingredient-table .amt { text-align: right; font-weight: 600; color: #1a5c3a; font-size: 12px; }
+
+  .steps { list-style: none; counter-reset: step; }
+  .steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+  .steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #c8e0d0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #1a5c3a; }
+
+  .pitfall-box { background: #f2fcf5; border-left: 3px solid #4aad75; border-radius: 8px; padding: 12px; margin-top: 8px; }
+  .pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #2a7a4a; margin-bottom: 2px; }
+  .pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+
+  .variant-box { background: #f0faf4; border-radius: 12px; padding: 14px; margin-top: 12px; border: 1px solid #c8e0d0; }
+  .variant-box .v-title { font-size: 13px; font-weight: 600; color: #1a5c3a; margin-bottom: 6px; }
+  .variant-box .v-desc { font-size: 12px; color: #555; line-height: 1.7; }
+
+  .cost-box { background: #e8f5ec; border-radius: 12px; padding: 14px; }
+  .cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .cost-row .cr-label { color: #555; }
+  .cost-row .cr-value { font-weight: 600; color: #1a5c3a; }
+  .cost-divider { border: none; border-top: 1px dashed #c0d8c8; margin: 6px 0; }
+
+  .decision-box { background: #f0faf4; border-radius: 12px; padding: 16px; }
+  .decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+  .decision-box p:last-child { margin-bottom: 0; }
+
+  .trend-box { background: linear-gradient(135deg, #e8f5ec, #f0fcf5); border-radius: 12px; padding: 16px; }
+  .trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .trend-item:last-child { margin-bottom: 0; }
+  .trend-year { font-size: 12px; font-weight: 700; color: #1a5c3a; width: 50px; flex-shrink: 0; }
+  .trend-arrow { color: #bbb; }
+  .trend-desc { font-size: 13px; color: #555; }
+  .trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #c8e0d0; font-size: 14px; font-weight: 600; color: #1a5c3a; text-align: center; }
+
+  .footer-brand { background: #1a5c3a; color: #fff; text-align: center; padding: 24px; }
+  .footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+  .footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+  .footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+
+  .sub-header { font-size: 14px; font-weight: 600; color: #1a5c3a; margin: 12px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #c8e0d0; }
+  .sub-sub-header { font-size: 13px; font-weight: 600; color: #3a8a5e; margin: 10px 0 6px; }
+  .note { font-size: 11px; color: #999; line-height: 1.5; margin-top: 4px; }
+  .highlight-text { color: #1a5c3a; font-weight: 600; }
+  .daily-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .daily-item { text-align: center; background: #e8f5ec; border-radius: 8px; padding: 8px 4px; }
+  .daily-item .d-label { font-size: 10px; color: #999; }
+  .daily-item .d-value { font-size: 13px; font-weight: 600; color: #1a5c3a; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">VC_K001 · 韩式融合烤肉</div>
+    <h1>韩式牛肉调味系列</h1>
+    <div class="subtitle">刷酱·泡汁·浇汁三款调味法 · 一套肥牛备货</div>
+    <div class="tags">
+      <span>🥩 刷酱型</span>
+      <span>🧊 泡汁型</span>
+      <span>💦 浇汁型</span>
+      <span>📦 共用美肥9268</span>
+      <span>🔄 出餐30秒</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      三款调味方法共用一套美肥9268备货 · 刷酱型30秒出餐 · 泡汁型30分钟入味 · 浇汁型现浇现食<br>
+      <span style="font-size:13px;">一牛三吃，后厨效率最大化</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★</div>
+      <div class="bomb-reason">
+        <strong>高效率标准化之王。</strong>三款调味共用一套肥牛备货，标准化5★满分——刷酱、泡汁、浇汁仅是酱汁不同，肉的处理完全一致。流量4★（刷酱型日走30-50份），毛利4★（78-83%），复购4★（三种口味轮换不腻）。传播性3★，视觉冲击力不如带石锅的拌饭类。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag active">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KR 韩式融合烤肉体系</div>
+      <div class="node branch">├─ KR_01 韩式肥牛系列</div>
+      <div class="node highlight">│  ├─ VC_K001 韩式牛肉调味系列 ← 你在这里</div>
+      <div class="node leaf">│  │  ├─ 刷酱型（特味/黑椒/蒜香）</div>
+      <div class="node leaf">│  │  ├─ 泡汁型（秘制肥牛）</div>
+      <div class="node leaf">│  │  └─ 浇汁型（浇汁肥牛）</div>
+      <div class="node leaf">├─ KR_02 韩式厚切系列</div>
+      <div class="node leaf">├─ KR_03 韩式猪羊特色系列</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">差异化竞争期</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">7/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">5/10 · 中等</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">8/10 · 南北通吃</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">3/10 · 低</div></div>
+      <div class="market-item"><div class="m-label">创业门槛</div><div class="m-value">低 · 有烤盘就能做</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div><div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div><div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div><div class="y-label">传播性 →</div>
+      <div class="dot" style="left:75%;top:50%;"></div>
+      <div class="dot-label" style="left:75%;top:43%;">刷酱型（高复购·中传播·日销40份）</div>
+      <div class="dot" style="left:70%;top:65%;background:#80b898;width:12px;height:12px;"></div>
+      <div class="dot-label" style="left:70%;top:58%;color:#3a8a5e;font-size:10px;">泡汁型（中高复购·低传播·提升客单价）</div>
+      <div class="dot" style="left:55%;top:58%;background:#80b898;width:12px;height:12px;"></div>
+      <div class="dot-label" style="left:55%;top:51%;color:#3a8a5e;font-size:10px;">浇汁型（午市补充·中复购）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>刷酱型位于右上偏中（高复购中传播）——每日走量主力30-50份，特味/黑椒/蒜香三味轮换维持新鲜感。<br>
+      泡汁型偏右中（中高复购低传播）——浸泡入味型，客单价最高33-38元，适合提升利润结构。<br>
+      浇汁型居中（中复购低传播）——午市补充款，走菜现浇汁，出餐最快。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方</div>
+
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>共用基础规格</strong>：美肥9268 · 2mm薄切 · 180g/份
+    </div>
+
+    <!-- ======== 主推：刷酱型 ======== -->
+    <div class="sub-header">🥩 主推 · 刷酱型（特味/黑椒/蒜香肥牛）</div>
+
+    <p style="font-size:12px;color:#555;line-height:1.7;margin-bottom:6px;">
+      <strong>定位：</strong>走量主力 · 日均30-50份 · 出餐30秒 · 毛利率78-83% · 售价28-35元<br>
+      <strong>载具标准：</strong>铁板/烤盘直接刷酱烤制，无需额外容器<br>
+      <strong>米饭标准：</strong>白米饭210g配餐，出餐时肥牛铺在米饭旁或上方
+    </p>
+
+    <div class="sub-sub-header">出品流程</div>
+    <ol class="steps">
+      <li>取出美肥9268薄切180g，自然解冻至可分离状态</li>
+      <li>铁板/烤盘预热至180°C，无需额外刷油（肥牛自带油脂）</li>
+      <li>肥牛平铺上盘，单面烤5秒 → 翻面</li>
+      <li>刷酱型酱料30g均匀刷在肥牛表面</li>
+      <li>再烤5秒至酱料微微焦香即可出餐</li>
+      <li>撒熟芝麻/葱花装饰，配米饭上桌</li>
+    </ol>
+
+    <div class="sub-sub-header">三款刷酱配方</div>
+
+    <p style="font-size:12px;font-weight:600;color:#3a8a5e;margin:8px 0 4px;">① 特味酱（招牌款·走量最猛）</p>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+      <tr><td>白糖</td><td class="amt">1000g</td><td>甜味基底</td></tr>
+      <tr><td>蒙古酱油</td><td class="amt">350g</td><td>咸鲜来源</td></tr>
+      <tr><td>辣椒粉</td><td class="amt">150g</td><td></td></tr>
+      <tr><td>粗辣椒面</td><td class="amt">170g</td><td>增色增辣</td></tr>
+      <tr><td>二锅头</td><td class="amt">85g</td><td>去腥增香</td></tr>
+      <tr><td>文泽醋精</td><td class="amt">350g</td><td>酸味灵魂</td></tr>
+      <tr><td>麦芽糖</td><td class="amt">350g</td><td>光泽和黏度</td></tr>
+      <tr><td>生抽</td><td class="amt">350g</td><td>提鲜</td></tr>
+      <tr><td>蒜末</td><td class="amt">500g</td><td></td></tr>
+      <tr><td>熟芝麻</td><td class="amt">35g</td><td></td></tr>
+      <tr><td>牛肉粉</td><td class="amt">30g</td><td></td></tr>
+      <tr><td>雪碧</td><td class="amt">200g</td><td>中和辣味</td></tr>
+      <tr><td>小苏打</td><td class="amt">5g</td><td>嫩肉</td></tr>
+      <tr><td>精盐</td><td class="amt">50g</td><td></td></tr>
+      <tr><td>黑胡椒粉</td><td class="amt">7g</td><td></td></tr>
+      <tr><td>水</td><td class="amt">400g</td><td>稀释</td></tr>
+      <tr><td>洋葱+姜</td><td class="amt">360g+150g</td><td>榨汁不过滤入酱</td></tr>
+    </table>
+
+    <p style="font-size:12px;font-weight:600;color:#3a8a5e;margin:10px 0 4px;">② 黑胡椒酱（西式融合款）</p>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+      <tr><td>黑胡椒碎</td><td class="amt">100g</td><td>现磨更香</td></tr>
+      <tr><td>熟芝麻</td><td class="amt">50g</td><td></td></tr>
+      <tr><td>二锅头</td><td class="amt">40g</td><td></td></tr>
+      <tr><td>牛排酱</td><td class="amt">2瓶</td><td>风味核心</td></tr>
+      <tr><td>黑胡椒汁</td><td class="amt">300g</td><td></td></tr>
+      <tr><td>肉宝王</td><td class="amt">2g</td><td>增肉感</td></tr>
+      <tr><td>牛肉粉</td><td class="amt">20g</td><td></td></tr>
+      <tr><td>辣椒面</td><td class="amt">40g</td><td>微辣提味</td></tr>
+      <tr><td>雪碧</td><td class="amt">500g</td><td></td></tr>
+      <tr><td>蒜+姜+洋葱</td><td class="amt">100g+60g+250g</td><td>榨汁不过滤入酱</td></tr>
+    </table>
+
+    <p style="font-size:12px;font-weight:600;color:#3a8a5e;margin:10px 0 4px;">③ 蒜香肥牛酱（蒜香控必点）</p>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+      <tr><td>蒜末</td><td class="amt">1500g</td><td>洗净黏液后使用</td></tr>
+      <tr><td>海鲜酱油</td><td class="amt">50g</td><td></td></tr>
+      <tr><td>蒸鱼豉油</td><td class="amt">65g</td><td></td></tr>
+      <tr><td>蚝油</td><td class="amt">150g</td><td></td></tr>
+      <tr><td>鸡汁</td><td class="amt">125g</td><td></td></tr>
+      <tr><td>鲍鱼汁</td><td class="amt">100g</td><td>提鲜关键</td></tr>
+      <tr><td>芝麻</td><td class="amt">75g</td><td></td></tr>
+      <tr><td>色拉油</td><td class="amt">1500g</td><td>炸蒜基底</td></tr>
+      <tr><td>辣椒面</td><td class="amt">150g</td><td></td></tr>
+    </table>
+    <p style="font-size:11px;color:#888;margin-top:2px;"><strong>关键工艺：</strong>蒜末洗去黏液→五成油温小火炸至微黄→关火加其余调料</p>
+
+    <div class="pitfall-box" style="margin-top:10px;">
+      <div class="p-label">⚠️ 刷酱型防错防呆（5条）</div>
+      <div class="p-desc">
+        ① 肥牛必须薄切2mm——厚了烤不透，刷酱不入味，出餐超30秒<br>
+        ② 特味酱中洋葱姜榨汁不过滤——纤维带入口感更丰富，过滤后风味减半<br>
+        ③ 蒜香酱蒜末必须洗黏液，否则炸后发苦；五成油温小火炸，大火直接焦<br>
+        ④ 刷酱30g/份为标准，多了过咸少了无味——酱料勺统一容量<br>
+        ⑤ 雪碧不可省略——碳酸和糖中和辣度的同时美拉德反应更充分
+      </div>
+    </div>
+
+    <!-- ======== 烤肉撒料与蘸料 ======== -->
+    <div class="sub-header" style="margin-top:18px;">🔥 烤肉撒料与蘸料</div>
+
+    <p style="font-size:12px;color:#888;margin-bottom:8px;">
+      <strong>适用场景：</strong>以下撒料与蘸料适用于店内所有烤肉出品——原味烤肥牛、烤五花肉、烤牛肉等，顾客可自行蘸食或由后厨撒在烤肉表面出餐。
+    </p>
+
+    <div class="variant-box">
+      <div class="v-title">🧂 韩式烤肉干料（通用配方·批量250份）</div>
+      <div class="v-desc">
+        · 十三香1包（45g装）<br>
+        · 麻辣鲜1包（46g装）<br>
+        · 孜然粉500g（半碎最好——太细没口感）<br>
+        · 黄豆粉500g（炒熟打粉·增香增稠·让干料能挂住肉）<br>
+        · 细辣椒面500g（颜色+辣度·用二荆条或秦椒）<br>
+        · 芝麻粉250g（熟芝麻打半碎——全碎出油变腻）<br>
+        · 全部混合搅匀，密封防潮保存，30天内用完<br>
+        · 用法：每份肉配5-8g干料，可单独小碟蘸食或烤后撒在肉上<br>
+        · ⚠️ 注意：干料不要提前撒在生肉上——孜然和辣椒面烤久了会发苦
+      </div>
+    </div>
+
+    <div class="variant-box" style="margin-top:8px;">
+      <div class="v-title">🥜 麻酱蘸料（经典韩式·单份30g）</div>
+      <div class="v-desc">
+        · 芝麻酱20g + 香油5g + 盐1g + 韭菜花2g + 腐乳汁2g + 白糖1g<br>
+        · 芝麻酱先用香油澥开（少量多次搅），加其他料调匀<br>
+        · ⚠️ 关键：不要用水澥芝麻酱——水澥的麻酱稀而淡，油澥的浓而香
+      </div>
+    </div>
+
+    <div class="variant-box" style="margin-top:8px;">
+      <div class="v-title">🦐 海鲜汁（批量蘸料·150份量）</div>
+      <div class="v-desc">
+        · 酿造酱油2500g + 白砂糖2500g + 清酒800g + 味精150g<br>
+        · 所有料混合搅匀至糖化，冷藏保存<br>
+        · 用法：每份配30g小碟，蘸食原味烤肉
+      </div>
+    </div>
+
+    <!-- ======== 变形体扩展 ======== -->
+    <div class="sub-header" style="margin-top:18px;">🧊 变形体扩展 · 泡汁型 &amp; 浇汁型</div>
+
+    <p style="font-size:12px;color:#888;margin-bottom:8px;">
+      <strong>共用肥牛底：</strong>以下两款与刷酱型共用美肥9268·2mm薄切·180g/份肥牛备货，仅在加工方式和酱汁上不同。
+    </p>
+
+    <div class="variant-box">
+      <div class="v-title">🧊 泡汁型 · 秘制肥牛</div>
+      <div class="v-desc">
+        <strong>定位：</strong>提升客单价 · 日均15-25份 · 售价33-38元 · 毛利率80-83%<br>
+        <strong>差异：</strong>肥牛不直接烤制，而是放入牛排汁中浸泡30分钟（最佳6h），汁没肉，充分入味后再烤。<br>
+        <strong>牛排汁配方（批量24斤水基数）：</strong>水24斤+生抽4斤+白糖1000g+麦芽糖750g+牛排酱840g+二锅头200g+韩国老抽150g+牛肉粉150g+味精150g+胡椒粉60g+熟芝麻60g+香油1斤。榨汁材料（梨5个+洋葱2个+姜250g+水500g榨汁滤入） +（猕猴桃3个+葱末1斤榨汁不过滤入）+ 蒜末1斤直接入。<br>
+        <strong>成本：</strong>~6.5元/份，略高于刷酱型，但售价更高利润空间更大。<br>
+        <strong>防错：</strong>浸泡时间不足30分钟不入味；超过12小时肉质变散。
+      </div>
+    </div>
+
+    <div class="variant-box" style="margin-top:8px;">
+      <div class="v-title">💦 浇汁型 · 浇汁肥牛</div>
+      <div class="v-desc">
+        <strong>定位：</strong>午市补充 · 日均15-20份 · 售价28-32元 · 毛利率78-81%<br>
+        <strong>差异：</strong>肥牛烤制后浇汁上桌，走菜现混合。鲜肉汁与果酱以3:1比例混合，每份浇30g。<br>
+        <strong>鲜肉汁配方：</strong>生抽1900g+水1900g+白糖500g+红糖稀170g+二锅头125g+味香170g+香油150g+白芝麻碎50g<br>
+        <strong>果酱配方：</strong>大蒜1把+洋葱1个+苹果1个+猕猴桃1个打泥<br>
+        <strong>关键工艺：</strong>汁3:酱1现混现浇——提前混合果香会挥发，风味大打折扣。<br>
+        <strong>防错：</strong>浇汁不可提前混合超过2小时；每份30g需用标准量勺控制。
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 商业决策</div>
+    <div class="decision-box">
+
+      <p><strong>💰 成本利润对比：</strong></p>
+      <div style="font-size:12px;margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;padding:3px 0;"><span>刷酱型（特味/黑椒/蒜香）</span><span style="font-weight:600;color:#1a5c3a;">~6元/份 · 售价28-35元 · 毛利率78-83%</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;"><span>泡汁型（秘制肥牛）</span><span style="font-weight:600;color:#1a5c3a;">~6.5元/份 · 售价33-38元 · 毛利率80-83%</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;"><span>浇汁型（浇汁肥牛）</span><span style="font-weight:600;color:#1a5c3a;">~6元/份 · 售价28-32元 · 毛利率78-81%</span></div>
+      </div>
+
+      <p><strong>📊 日均销量策略：</strong></p>
+      <div class="daily-grid" style="margin-bottom:10px;">
+        <div class="daily-item"><div class="d-label">刷酱型</div><div class="d-value">30-50份</div><div class="d-label" style="font-size:9px;color:#999;">走量主力</div></div>
+        <div class="daily-item"><div class="d-label">泡汁型</div><div class="d-value">15-25份</div><div class="d-label" style="font-size:9px;color:#999;">提升客单价</div></div>
+        <div class="daily-item"><div class="d-label">浇汁型</div><div class="d-value">15-20份</div><div class="d-label" style="font-size:9px;color:#999;">午市补充</div></div>
+      </div>
+
+      <p><strong>✅ 适合场景：</strong>韩式烤肉店、铁板烧门店、拌饭快餐店。一份肥牛备货衍生三种出品方式，后厨空间和备货成本大幅降低。</p>
+      <p><strong>📌 菜单策略：</strong>刷酱型放菜单首位（流量款），泡汁型加价标推荐（利润款），浇汁型做午市套餐搭配。特味/黑椒/蒜香三款刷酱可轮换主推，周循环避免口味疲劳。</p>
+      <p><strong>⚠️ 风险：</strong>泡汁型必须控制浸泡时间（30min-6h为佳），过长肉质散；浇汁型酱汁不可预混；刷酱型蒜香酱蒜末清洗不净会发苦。</p>
+      <p><strong>🎯 场景拓展：</strong>刷酱型可做盖饭（肥牛铺饭上+酱汁）；泡汁型可做拌饭（泡好的肥牛切碎拌饭）；浇汁型可做丼物（米饭+肥牛+浇汁+溏心蛋）。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2022</span><span class="trend-arrow">→</span><span class="trend-desc">单一口味肥牛刷酱 · 一店一酱</span></div>
+      <div class="trend-item"><span class="trend-year">2024</span><span class="trend-arrow">→</span><span class="trend-desc">肥牛三吃 · 刷酱/泡汁/浇汁分化 · 一套备货多种出品</span></div>
+      <div class="trend-item"><span class="trend-year">2026</span><span class="trend-arrow">→</span><span class="trend-desc">标准化程度极致 · 预制酱包+中央厨房肥牛 · 小白也能操作</span></div>
+      <div class="trend-item"><span class="trend-year">2028</span><span class="trend-arrow">→</span><span class="trend-desc">肥牛预调味包 · 零售化 · 家庭场景切入</span></div>
+      <div class="trend-verdict">"一牛三吃"是后厨效率最优解——一套备货三款出品，成本最低、效率最高、消费者选择最多</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div><div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links"><span>📢 公众号：沧林食品技术</span><span>💬 微信：canglin1985</span></div>
+    <div class="fb-series">韩式融合烤肉 · VC_K001 韩式牛肉调味系列</div>
+  </div>
+
+</div>
+</body>
+</html>

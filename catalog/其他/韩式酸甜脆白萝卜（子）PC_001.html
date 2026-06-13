@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>韩式脆萝卜 · 解腻配菜子卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.variant-bar{background:linear-gradient(90deg,#E8652D,#C0392B);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#C0392B;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#E8652D}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;border:none;cursor:pointer}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 变体提示 -->
+<div class="variant-bar">
+  <span class="v-label">🧬 解腻配菜子卡 · ¥19</span>
+  <a class="v-link" href="HZ_001.html">← 母卡：原味黄金炸鸡</a>
+</div>
+
+<!-- 产品头部 -->
+<div class="meta">
+  <h1>🥕 韩式脆萝卜</h1>
+  <div class="sub">热冲糖醋渍物 · 栀子天然上色 · 解腻配菜</div>
+  <span class="price-tag">¥19 完整配方包</span>
+</div>
+
+<!-- 与母卡差异总览 -->
+<div class="section">
+  <div class="s-title">🔄 与HZ_001差异总览</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">HZ_001 母卡（¥68）</div>
+      <div>完整韩式炸鸡项目体系：设备·成本·30天验证·赛道判断·核心工艺</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">PC_001 子卡（¥19）</div>
+      <div>韩式脆萝卜完整配方·热冲发酵工艺·批量数据·解腻配菜搭售模型</div>
+    </div>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 本卡不含设备清单、验证路线等通用部分，请购买母卡获取完整项目框架</div>
+</div>
+
+<!-- 母卡 vs 变体对比 -->
+<div class="section">
+  <div class="s-title">📊 母卡 vs 变体</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:300px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>维度</th><th>原味黄金炸鸡</th><th style="color:#E8652D">韩式脆萝卜（配菜）</th>}</thead>
+      <tbody>
+        <tr><td style="font-weight:600">核心价值</td><td>主餐/饱腹</td><td style="color:#E8652D">解腻/搭配/提升客单价</td></tr>
+        <tr style="background:#f8f4ef"><td>客单价提升</td><td>基础款¥15-25</td><td style="color:#5a8f3c">+¥3-5（小份配菜）</td></tr>
+        <tr><td>解腻效果</td><td>★★☆☆☆</td><td style="color:#5a8f3c">★★★★★（核心功能）</td></tr>
+        <tr style="background:#f8f4ef"><td>利润贡献</td><td>毛利55%</td><td style="color:#5a8f3c">毛利70%+（成本极低）</td></tr>
+        <tr><td>保质期</td><td>现炸现吃</td><td style="color:#5a8f3c">冷藏30天，可批量预制</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 02 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">较高</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="val">极高（清爽上瘾）</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">极低</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★☆☆☆☆</div><div class="val">极简单</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+  </div>
+</div>
+
+<!-- 03 适合谁 -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 炸鸡/烤肉/油炸食品摊位，需要解腻配菜</div>
+      <div class="fit-item fit-yes">✅ 想提升客单价的商户（小份加购）</div>
+      <div class="fit-item fit-yes">✅ 韩式料理店、外卖商家</div>
+      <div class="fit-item fit-yes">✅ 想要低成本高毛利附加产品</div>
+      <div class="fit-item fit-yes">✅ 可批量预制，一次做20斤冷藏30天</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 顾客群完全不喜欢酸甜口味</div>
+      <div class="fit-item fit-no">❌ 无冷藏设备（必须2-4℃保存）</div>
+      <div class="fit-item fit-no">❌ 摊位只卖单品不卖任何配菜</div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买脆萝卜</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：清爽解腻 × 酸甜脆口 × 缓解炸鸡油腻感</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>小份配菜（50g）加购</span><span class="v">售价3-5元，成本0.5元</span></div>
+    <div class="logic-item"><span>套餐组合（炸鸡+萝卜+饮料）</span><span class="v">客单价提升40%</span></div>
+    <div class="logic-item"><span>单独瓶装零售（家庭装）</span><span class="v">200g/瓶售价8-10元</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>“解腻三件套”：萝卜+酸黄瓜+泡菜组合</span></div>
+    <div class="logic-item"><span>大份炸鸡免费送小份萝卜，引导下次复购</span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>脆萝卜单独包装，顾客可带回家当小菜</span></div>
+    <div class="logic-item"><span>夏季推出“冰镇脆萝卜”，口感更爽脆</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">配菜日营收(加购)</div><div class="m-val">¥60-200</div><div class="m-sub">按60份/天，20-30%加购率</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净增利润</div><div class="m-val">¥1000-3000</div><div class="m-sub">成本极低</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">1天</div><div class="m-sub">仅原料成本</div></div>
+  </div>
+</div>
+
+<!-- 05 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">制作极其简单，热冲+冷藏发酵，几乎零失败</div>
+      <div class="t-item">栀子天然上色，无人工色素，健康卖点</div>
+      <div class="t-item">批量预制可保存30天，备货无压力</div>
+      <div class="t-item">解腻功能是炸鸡/油炸类刚需，复购极高</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">市面已有大量同类产品，无差异化易被替代</div>
+      <div class="t-item">需要72小时发酵，无法当天做当天卖</div>
+      <div class="t-item">白萝卜价格季节性波动大（冬季便宜夏季贵）</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>几乎所有韩式炸鸡店都有黄萝卜，但大部分用的是工业腌萝卜（添加柠檬黄）。天然栀子着色的不多。<br>
+    <strong>未来判断：</strong>脆萝卜不会成为核心竞争力，但作为解腻搭售产品，几乎家家都需要。2026年天然无添加的腌菜会有溢价空间。<br>
+    <strong>是否值得进入：是</strong>（前提：能做出区别于工业品的天然颜色和爽脆口感）
+  </div>
+</div>
+
+<!-- 06 项目评估（V5.1维度） -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★☆☆</div><div style="font-size:10px">中等，好产品稀缺</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★☆☆☆☆</div><div style="font-size:10px">1小时掌握</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px">极高，不易失败</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px">¥30试做2斤</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;justify-content:space-between"><span style="font-size:12px;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- 07 30天验证路线（配菜专版） -->
+<div class="section">
+  <div class="s-title">🗓️ 30天配菜验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购白萝卜，按配方试做2kg，记录热冲和发酵过程</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day4</span><span>72小时后开罐试吃，邀请10人对比市售黄萝卜，记录脆度/酸甜度</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>在摊位推出“+3元加购小份脆萝卜”，统计点单率</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>根据反馈调整糖醋比和发酵时间，优化脆度</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>计算增量利润，决定是否扩大批量（20kg/次）</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7加购率＞15% ② Day15好评率＞80% ③ Day30毛利＞70%<br>
+    <strong>🚪 退出标准：</strong>加购率连续10天＜8% / 萝卜不脆或变质 / 顾客反馈“不如隔壁”＞30%<br>
+    <strong>✅ 继续标准：</strong>加购率＞20% / 有顾客专门为了脆萝卜来消费 / 保质期稳定30天
+  </div>
+</div>
+
+<!-- 08 设备清单（配菜专用） -->
+<div class="section">
+  <div class="s-title">🛠️ 配菜专用设备</div>
+  <div><strong>🔸 固定设备</strong>：不锈钢锅(熬糖醋汁) · 电子秤(1g精度) · 切菜刀 · 砧板 · 带盖密封桶/食品级塑料罐(10L以上) · 冰箱(2-4℃)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：小份塑料盒(30ml/50ml) · 食品夹 · 分装盆</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：白萝卜10kg · 白砂糖3kg · 大麦醋3kg · 大粒盐200g · 商业酸黄瓜料50g · 天然栀子30g · 小米辣200g · 小葱500g</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低试做成本：¥30-40</strong>（2kg萝卜）</div>
+    <div><strong>💰 完整投产（10kg批次）：¥80-120</strong></div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>与母卡共用，无需额外证件，食品摊贩备案已覆盖</div>
+  </div>
+</div>
+
+<!-- 09 产品结构 -->
+<div class="section">
+  <div class="s-title">📦 产品结构（以炸鸡摊为例）</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">原味炸鸡（不酱）</span><span class="t-price">¥15-20</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">韩式脆萝卜（小份加购）</span><span class="t-price">+¥3-5</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">解腻全家桶（炸鸡+脆萝卜+酸黄瓜+可乐）</span><span class="t-price">¥35-45</span></div>
+  </div>
+</div>
+
+<!-- 10 摆摊指数（依附炸鸡摊） -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数（以炸鸡摊为载体）</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">📱 外卖</div><div class="stars">★★★★★</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">📌 脆萝卜外卖配送稳定，不易变质</div>
+</div>
+
+<!-- 11 最大风险（6项） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>腌菜类自制食品，部分地区要求预包装标签，但现制现售一般合规。批量瓶装需标注生产日期和保质期。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季高温，发酵速度加快，需严格控制冷藏；没有冰箱的摊位无法保存。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>萝卜选材错误：用老萝卜或糠心萝卜，口感不脆，失去核心卖点。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>糖醋比例失衡：太酸倒牙，太甜发腻，必须严格按照配比。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>发酵不足或过度：不足72小时风味不够；超过7天萝卜变软，失去脆度。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>栀子用量过多导致苦涩，颜色过深（深黄色），影响卖相。</div>
+</div>
+
+<!-- 12 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>极低成本，极高毛利，制作简单，可批量预制保存30天。解腻功能是炸鸡摊刚需，能明显提升客单价和复购率。<br>
+      <strong>❌ 为什么不值得做：</strong>如果周边夜市已有非常成熟的脆萝卜供应商且价格极低（1元/份），自己做反而没优势。另外需要72小时发酵，无法当天备货。<br>
+      <strong>🔑 进入条件：</strong>① 已有炸鸡摊位 ② 有冷藏柜 ③ 愿意一次做10kg以上批量（节省人工）。<br>
+      <strong>🚪 退出条件：</strong>① 加购率连续2周＜10% ② 萝卜变质率超过20% ③ 顾客反馈“不脆/太酸”超过30%。<br>
+      <strong>🎯 最终判断：可进</strong> —— 强烈建议作为炸鸡/油炸类摊位的标配配菜，天然栀子色是差异化卖点。
+    </div>
+  </div>
+</div>
+
+<!-- 13 核心工艺（带验证点） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（热冲发酵）</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">白萝卜去皮切1cm方块，小米辣切圈，小葱切10cm段，栀子敲碎</span><div class="ps-verify">[验证点] 萝卜块大小均匀，1cm见方过大不入味，过小不脆</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">熬糖醋汁：水+白砂糖+大麦醋+大粒盐大火烧开至糖盐完全溶化</span><div class="ps-verify">[验证点] 糖盐完全融化，无颗粒，酸度闻起来刺鼻但不冲</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">热冲：将萝卜块、小米辣、小葱、酸黄瓜料、栀子放入耐热容器，趁热倒入沸腾的糖醋汁</span><div class="ps-verify">[验证点] 糖醋汁必须沸腾状态下倒入，利用高温瞬间杀青，保持萝卜脆度</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">自然冷却后加盖密封，2-4℃冷藏发酵72小时</span><div class="ps-verify">[验证点] 发酵后萝卜颜色由白变淡黄，汤汁呈栀子黄色，口感酸甜脆爽</div></div>
+  </div>
+  <div class="badge">⚠️ 完整精确克数、批量SOP、翻车修正见付费区</div>
+</div>
+
+<!-- 14 成本利润（每份小份50g） -->
+<div class="section">
+  <div class="s-title">📐 成本利润（每份50g脆萝卜）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本（50g/份）</span><span class="v">¥0.45</span></div>
+    <div class="recipe-line"><span class="k">包装成本（小份盒）</span><span class="v">¥0.12</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（保鲜）</span><span class="v">¥0.03</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥0.60</span></div>
+    <div class="recipe-line"><span class="k">加购售价</span><span class="v">¥3～¥5</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">80%～88%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售60份炸鸡，30%加购=18份，日毛利¥43-79，月净增¥1200-2000</span></div>
+  </div>
+</div>
+
+<!-- 15 完整出摊包（付费区） -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 韩式脆萝卜 · 完整出摊包</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线（热冲） · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥19 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后查看所有配方、批量表及翻车修正</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方（10kg白萝卜） -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">1️⃣ 商用标准配方（10kg白萝卜成品）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>白萝卜（去皮切块）</span><span>10kg</span></div>
+      <div class="recipe-line"><span>小米辣（切圈）</span><span>200g</span></div>
+      <div class="recipe-line"><span>小葱（切10cm段）</span><span>500g</span></div>
+      <div class="recipe-line"><span>饮用水</span><span>8kg</span></div>
+      <div class="recipe-line"><span>白砂糖</span><span>3kg</span></div>
+      <div class="recipe-line"><span>大麦醋（或同等酸度米醋）</span><span>3kg</span></div>
+      <div class="recipe-line"><span>大粒盐</span><span>200g</span></div>
+      <div class="recipe-line"><span>商业酸黄瓜料（提味用）</span><span>50g</span></div>
+      <div class="recipe-line"><span>天然栀子（敲碎）</span><span>30g</span></div>
+    </div>
+
+    <!-- 2️⃣ 小批量验证配方（2kg白萝卜） -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 小批量验证配方（2kg萝卜）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>白萝卜块</span><span>2kg</span></div>
+      <div class="recipe-line"><span>小米辣</span><span>40g</span></div>
+      <div class="recipe-line"><span>小葱</span><span>100g</span></div>
+      <div class="recipe-line"><span>水</span><span>1.6kg</span></div>
+      <div class="recipe-line"><span>白砂糖</span><span>600g</span></div>
+      <div class="recipe-line"><span>大麦醋</span><span>600g</span></div>
+      <div class="recipe-line"><span>大粒盐</span><span>40g</span></div>
+      <div class="recipe-line"><span>酸黄瓜料</span><span>10g</span></div>
+      <div class="recipe-line"><span>栀子</span><span>6g</span></div>
+    </div>
+
+    <!-- 3️⃣ 热冲温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 热冲温度曲线</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>糖醋汁烧开温度</span><span>100-102°C（沸腾状态）</span></div>
+      <div class="recipe-line"><span>热冲时环境要求</span><span>无特殊，耐热容器即可</span></div>
+      <div class="recipe-line"><span>自然冷却时间</span><span>约2-3小时（至室温）</span></div>
+      <div class="recipe-line"><span>冷藏发酵温度</span><span>2-4℃，72小时</span></div>
+    </div>
+
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 批量SOP（10kg / 50kg）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>10kg制作时间</span><span>约40分钟（切萝卜+熬汁+热冲）</span></div>
+      <div class="recipe-line"><span>50kg制作时间</span><span>约1.5小时（需大桶+大锅）</span></div>
+      <div class="recipe-line"><span>发酵后分装</span><span>2.5kg/桶或小份盒分装</span></div>
+    </div>
+
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车修正表</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>太酸</span><span>加白砂糖100g/10kg汁，搅匀后浸泡2小时</span></div>
+      <div class="recipe-line"><span>太甜</span><span>加白醋50g+盐10g</span></div>
+      <div class="recipe-line"><span>萝卜不脆</span><span>热冲时糖醋汁必须完全沸腾；或发酵时间过长（减少至48小时）</span></div>
+      <div class="recipe-line"><span>颜色太深/苦涩</span><span>栀子减少至20g/10kg，或热冲后1小时捞出栀子</span></div>
+      <div class="recipe-line"><span>变质/长膜</span><span>整桶废弃，预防：容器和手必须无油无水</span></div>
+      <div class="recipe-line"><span>酸黄瓜料结块</span><span>先用少量温水化开再加入</span></div>
+    </div>
+
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款变体方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🌶️ 辣味脆萝卜：</strong>小米辣加倍至400g，再加粗辣椒粉20g → 酸甜辣三层口感</div>
+      <div><strong>🍏 果香脆萝卜：</strong>加苹果片300g（与萝卜同泡），减糖200g → 天然果香</div>
+      <div><strong>🧄 蒜香脆萝卜：</strong>加蒜泥100g+蒜片100g → 蒜香浓郁，适合配烤肉</div>
+    </div>
+
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案（日销＞100份加购）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      使用50L食品级塑料桶，一次制作50kg萝卜。分装成2.5kg/袋真空冷藏，保质期30天。可提前2周预制。开发200g瓶装零售（定价¥8-10），上架外卖平台“解腻小菜”专区。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整内容，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 16 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="HZ_001.html"><span style="font-size:16px">🍗</span><span style="flex:1">原味黄金炸鸡（母卡·完整项目）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="#"><span style="font-size:16px">🌶️</span><span style="flex:1">经典甜辣炸鸡酱（JL_001）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="#"><span style="font-size:16px">🥛</span><span style="flex:1">酸奶酱（JL_003）解腻搭档</span><span>→</span></a>
+  </div>
+</div>
+
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整出摊包 ↑' : '点击解锁全部内容 →';
+  });
+
+</div>
+
+<div class="cf-tagline">决策先于工艺 · 看见水面之下的力量</div>
+  <div class="cf-contact">微信 canglin1985 · <a href="https://foodintelai.com">foodintelai.com</a></div>
+</div>
+
+<script>
+
+
+<!-- ===== 咨询入口 ===== -->
+<div class="section">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center;font-size:12px;color:#5a4f44">
+    <div><strong>📌 咨询场景：</strong>摆摊选址评估 · 成本优化 · 翻车远程诊断</div>
+    <div style="margin-top:6px"><strong>📱 联系方式：</strong>微信 canglin1985（备注卡号）</div>
+    <a style="display:inline-block;margin-top:8px;padding:8px 20px;background:#3a322a;color:#fff;border-radius:8px;text-decoration:none;font-size:12px" href="javascript:void(0)" onclick="copyWx()">📲 加微信咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 决策先于工艺 · 沧林食品工作站</div>
+</div>
+
+<script>
+document.getElementById('unlockBtn')&&document.getElementById('unlockBtn').addEventListener('click',function(){var e=document.getElementById('payContent');e&&(e.classList.toggle('show'),this.textContent=this.textContent.indexOf('点击解锁')>=0?'收起完整出摊包':'点击解锁全部内容')});
+function copyWx(){var e=document.createElement('textarea');e.value='canglin1985';document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e);alert('✅ 微信号已复制：canglin1985');}
+</script>
+
+</body>

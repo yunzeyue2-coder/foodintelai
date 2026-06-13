@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>TS_074 蓝莓酸奶杯 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#3A6B8F,#2C4E6E);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:12px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#3A6B8F}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-blue{background:#e6f0f5}
+.mc-blue .m-val{color:#2C4E6E}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#3A6B8F}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#3A6B8F;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#3A6B8F;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#3A6B8F;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#3A6B8F;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🫐 蓝莓酸奶杯</h1>
+  <div style="font-size:12px;color:#b5aaa0">抗氧蓝莓 · 希腊酸奶 · 健康甜品</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.6</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A级项目</span>
+  </div>
+  <div class="r-tagline">健康甜品赛道黑马，复购高、颜值高、标准化强，女性及健身客群最爱。</div>
+  <div class="r-tags">
+    <span>🫐 抗氧概念</span>
+    <span>💰 投资2800+</span>
+    <span>👤 1人可做</span>
+    <span>🔄 高复购</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">较高（健康趋势）</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★☆</div><div class="val">2800-4500</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div><div class="val">简单</div></div>
+    <div class="radar-item"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">65-72%</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 健康轻食创业者</div>
+      <div class="fit-item fit-yes">✅ 女性/健身人群周边摊位</div>
+      <div class="fit-item fit-yes">✅ 外卖/堂食双渠道（杯装方便）</div>
+      <div class="fit-item fit-yes">✅ 水果店/轻食店增加甜品线</div>
+      <div class="fit-item fit-yes">✅ 新手创业（无需复杂设备）</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求极低原料成本（蓝莓贵）</div>
+      <div class="fit-item fit-no">❌ 无法接受果酸口感</div>
+      <div class="fit-item fit-no">❌ 无冷藏设备（酸奶易变质）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：抗氧化健康概念 + 酸甜适中口感 + 高颜值拍照分享。</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>经典蓝莓酸奶杯（基础款）</span><span class="v">毛利68%</span></div>
+    <div class="logic-item"><span>加格兰诺拉/坚果/蜂蜜</span><span class="v">毛利70%+</span></div>
+    <div class="logic-item"><span>套餐化（酸奶杯+冷压果汁）</span><span class="v">客单价提升30%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>升级为“蓝莓爆珠/蓝莓酱” +3元</span><span class="v"></span></div>
+    <div class="logic-item"><span>加奇亚籽或蛋白粉 +2-3元</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>推出“每周限定口味”（如蓝莓椰香/蓝莓可可）</span><span class="v"></span></div>
+    <div class="logic-item"><span>集点卡：买5送1，微信群专属折扣</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-blue"><div class="m-label">日营收</div><div class="m-val">¥800-1300</div><div class="m-sub">4-6h出摊</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥6000-9000</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">8-12天</div><div class="m-sub">含设备原料</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px;font-size:9px">📌 数据来源：一二线轻食摊位及相似项目（2025）倒推</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">健康趋势明确，蓝莓“抗氧”认知度高，教育成本低</div>
+      <div class="t-item">复购率高（酸甜适口，不腻）</div>
+      <div class="t-item">标准化强，出餐快，一人可操作</div>
+      <div class="t-item">杯装设计方便外带和外卖，适用场景广</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">蓝莓价格波动大（国产/进口价差明显）</div>
+      <div class="t-item">竞争来自酸奶水果捞、鲜榨果汁等替代品</div>
+      <div class="t-item">消费者对“酸奶+蓝莓”组合审美疲劳？需创新</div>
+      <div class="t-item">冬季冷饮需求下降，需推热酸奶杯</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>蓝莓酸奶杯在健康食品圈已经成熟，但尚未像奶茶那样饱和。一二线城市接受度高，下沉市场仍有空间。2025-2026年健康饮食持续增长，蓝莓作为超级水果有稳定客群。<br>
+    <strong>未来判断：</strong>适合作为轻食摊位的利润款，核心壁垒是蓝莓品质和酸奶口感。2026年仍可进入，但需要搭配其他水果或功能性配料（如奇亚籽、胶原蛋白）增加差异化。<br>
+    <strong>是否值得进入：是</strong>（前提：能稳定采购性价比高的蓝莓，且能做出比超市成品更优的口感）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">中等，有差异化空间</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★☆☆☆☆</div><div style="font-size:10px;color:#5a4f44">1天可上手</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★★☆</div><div style="font-size:10px;color:#5a4f44">容错高</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥300试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#3A6B8F">A</span></div>
+</div>
+
+<!-- ===== 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th></tr></thead>
+      <tbody>
+        <tr style="background:#e6f0f5"><td>🫐 蓝莓酸奶杯</th><td>★★★★</th><td style="background:#f8f4ef">★★</th><td style="background:#f8f4ef">★★★★</th><td style="background:#f8f4ef">★★★</th><td style="background:#f8f4ef">A</th><td>#TS_074</td></tr>
+        <tr style="background:#f8f4ef"><td>🥭 芒果酸奶杯</th><td>★★★★</th><td>★★</th><td>★★★★</th><td>★★★★</th><td>B+</th><td><a href="#" style="color:#D4A574">#TS_048</a></td></tr>
+        <tr style="background:#f8f4ef"><td>🍓 草莓酸奶杯</th><td>★★★</th><td>★★</th><td>★★★★</th><td>★★★</th><td>A-</th><td><a href="#" style="color:#5a8f3c">#TS_070</a></td></tr>
+        <tr style="background:#f8f4ef"><td>🥥 巴西莓碗</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★</th><td>A-</th><td><a href="#">#TS_047</a></td></tr>
+      </tbody>
+    瞄
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为已发布FoodIntelAI标准卡，可点击跳转</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#e6f0f5;border-radius:8px"><span style="background:#3A6B8F;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购希腊酸奶、蓝莓、格兰诺拉，试做3款配比，测试甜酸度</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20位目标客群（女性/健身人群）试吃，收集口感反馈</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次出摊（预备35杯），测试定价、人群接受度、杯装颜值</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加“蓝莓酱+奇亚籽”升级版，核算利润，建立私域群</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>盘点复购率、损耗率、社交曝光，决定持续或调整</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7试卖能否售出30+杯 ② Day15复购率是否＞25% ③ Day30蓝莓损耗率是否＜15%<br>
+    <strong>🚪 退出标准：</strong>连续5天日均营收＜¥500 / 蓝莓坏果率＞25% / 顾客反馈“太酸/太稀”比例＞30%<br>
+    <strong>✅ 继续标准：</strong>周复购率＞25% / 毛利率稳定在65%以上 / 出现顾客主动拍照发社交媒体
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（含证照成本） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：冷藏柜/保鲜柜(¥800-1500) · 电子秤(¥30) · 不锈钢操作台(¥200-500) · 搅拌盆/量杯(¥50) · 分装勺/冰淇淋勺(¥20) · 封口机(¥200-400)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠操作台(¥150-300) · 便携式冷藏箱(¥200-400) · 菜单灯箱(¥80) · 透明展示杯架(¥40) · 一次性手套/口罩(¥30)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：希腊酸奶5kg(¥80) · 新鲜蓝莓5盒(¥50-80) · 格兰诺拉麦片(¥40) · 蜂蜜/奇亚籽(¥50) · 可降解杯+勺300套(¥80) · 蓝莓果酱(¥30)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,200-3,000</strong>（家用冰箱+基础工具，已有冷藏设备）</div>
+    <div><strong>💰 完整启动方案：¥3,500-5,000</strong>（商用冷藏柜、封口机、全套摊位装饰）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案¥0-200 · 办理时间1-3天 · 注意现制酸奶须有冷藏设备，部分地区要求“现制饮品”许可</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">经典蓝莓酸奶杯（蓝莓+希腊酸奶+蜂蜜）</span><span class="t-price">¥15-18</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">蓝莓奇亚籽杯 · 蓝莓格兰诺拉杯 · 双莓（蓝莓+草莓）</span><span class="t-price">¥20-28</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">轻食套餐（酸奶杯+冷压果汁）</span><span class="t-price">¥28-35</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★★★☆</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 最佳组合：商圈/写字楼+外卖+社群复购，夏季加冰沙底更受欢迎。</div>
+</div>
+
+<!-- ===== 11 最大风险（6项） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>现制酸奶类保质期短，若无冷藏展示柜或冷链配送，易被查处；部分夜市限制非预包装乳制品。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季高温酸奶易变质，冬季冷饮销量下降，摊位费上涨。雨季影响人流。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>蓝莓品质波动——进口蓝莓价格高，国产蓝莓酸度不一，坏果率高，影响口感和成本。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>酸奶基底同质化——市售希腊酸奶大同小异，若无独特调味，难以留住顾客。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>外卖颜值下降——配送过程中酸奶晃动会破坏分层摆盘，影响顾客体验。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>果酱替代风险——若使用蓝莓酱代替鲜果，顾客会觉得“不值”，差评率高。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>健康概念深入人心，蓝莓“抗氧”卖点自然吸引女性及健身人群。出餐快、标准化强，毛利高，复购稳定。杯装设计适合外带和外卖，场景适应性强。<br>
+      <strong>❌ 为什么不值得：</strong>蓝莓原料成本高，若无法批量采购，利润被压缩。冬季冷饮需求下降，需开发热饮版本。若周边已有多个酸奶水果捞摊位，竞争激烈。<br>
+      <strong>🔑 进入条件（满足任意3条）：</strong>① 能稳定采购性价比高的蓝莓（建议批发市场或产地直发） ② 摊位位于女性/健身人群集中区 ③ 有冷藏展示柜 ④ 愿意做社群运营提升复购 ⑤ 可接受冬季产品微调。<br>
+      <strong>🚪 退出条件：</strong>① 连续2周日均营收＜¥500 ② 蓝莓坏果率持续＞30% ③ 顾客“不值/酸”差评率＞35% ④ 周边新增3家同类竞争。<br>
+      <strong>🎯 最终判断：可进</strong> —— 作为健康甜品赛道的高毛利单品，建议搭配其他水果酸奶或热饮，形成产品矩阵。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">蓝莓预处理：挑选无坏果，用淡盐水浸泡5分钟，沥干</span><div class="ps-verify">[验证点] 蓝莓表面无水珠，不软烂</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">酸奶调味：希腊酸奶+蜂蜜/炼乳+少许香草精，顺滑搅拌</span><div class="ps-verify">[验证点] 酸奶提起能拉丝，甜度适中不腻</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">组装：杯底铺一层酸奶，放蓝莓，再铺酸奶，顶层装饰蓝莓和格兰诺拉</span><div class="ps-verify">[验证点] 分层清晰，蓝莓颗粒完整不沉底</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">点缀：淋一圈蜂蜜或蓝莓酱，撒椰丝或薄荷叶</span><div class="ps-verify">[验证点] 淋面有光泽，不流淌</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整配比（精确到克）及蓝莓酱制作见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润（完整7项） ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span>希腊酸奶（120g）</span><span>¥2.5-3.0</span></div>
+    <div class="recipe-line"><span>新鲜蓝莓（50g）</span><span>¥2.0-3.0（季节波动）</span></div>
+    <div class="recipe-line"><span>格兰诺拉/坚果</span><span>¥0.8</span></div>
+    <div class="recipe-line"><span>蜂蜜/奇亚籽等配料</span><span>¥0.5</span></div>
+    <div class="recipe-line"><span>包装成本（杯+勺+盖）</span><span>¥1.0</span></div>
+    <div class="recipe-line"><span>单份总成本（基础款）</span><span>¥6.8-8.3</span></div>
+    <div class="recipe-line"><span>售价区间</span><span>¥15～¥28</span></div>
+    <div class="recipe-line"><span>毛利区间</span><span>60%～72%</span></div>
+    <div class="recipe-line"><span>示例利润模型</span><span>日售45杯（均价¥18）→ 日毛利¥500，月净利¥7,200（出摊22天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 蓝莓酱自制 · 批量SOP · 翻车处理 · 变体方案 · 热饮方案</div>
+  <div class="price-tag">¥68 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看所有配方、蓝莓酱做法、变体和冬季热酸奶方案</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 精确配方（500ml杯·基础款）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>希腊酸奶（无糖或低糖）</span><span>150g</span></div>
+      <div class="recipe-line"><span>新鲜蓝莓</span><span>50g</span></div>
+      <div class="recipe-line"><span>蜂蜜或枫糖浆</span><span>12g</span></div>
+      <div class="recipe-line"><span>格兰诺拉麦片</span><span>15g</span></div>
+      <div class="recipe-line"><span>奇亚籽（可选）</span><span>5g</span></div>
+      <div class="recipe-line"><span>柠檬汁（防氧化）</span><span>2滴</span></div>
+    </div>
+    <!-- 2️⃣ 蓝莓酱自制（降低成本） -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 蓝莓酱配方（替代鲜果）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>冷冻蓝莓200g + 白砂糖40g + 柠檬汁5g，小火熬煮至浓稠，冷藏保存。每杯用量15g，成本约¥0.6。</div>
+    </div>
+    <!-- 3️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 批量预处理（20杯量）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>酸奶+蜂蜜混合均匀，分装挤酱瓶。蓝莓洗净沥干，称重分装。组装时先铺酸奶，再放蓝莓，顶层加格兰诺拉。</div>
+    </div>
+    <!-- 4️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>酸奶太稀：</strong>用纱布过滤脱水4小时，或加奶粉增稠。</div>
+      <div><strong>蓝莓太酸：</strong>加蜂蜜拌匀，或与香蕉泥混合。</div>
+      <div><strong>分层不明显：</strong>酸奶冷藏后更浓稠，组装时动作轻。</div>
+      <div><strong>格兰诺拉不脆：</strong>出餐前再撒，避免久置吸水。</div>
+    </div>
+    <!-- 5️⃣ 变体方案（利润款） -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 4款变体</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🫐 双莓酸奶：</strong>蓝莓+草莓各25g → 颜值更高</div>
+      <div><strong>🥥 椰香蓝莓：</strong>酸奶中加入椰浆10ml，撒椰丝</div>
+      <div><strong>🍫 可可蓝莓：</strong>撒生可可碎+巧克力酱</div>
+      <div><strong>🌱 能量碗版：</strong>增加奇亚籽+坚果+蛋白粉</div>
+    </div>
+    <!-- 6️⃣ 热饮方案（冬季） -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 热蓝莓酸奶</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>酸奶隔水加热至40°C（不超50°C，否则蛋白质变性），加入蓝莓酱，撒少许肉桂粉。适合冬季温热吃。</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      当单日销量＞80杯时：添置第二台冷藏柜，使用商用酸奶发酵机制作希腊酸奶（成本降低30%），与蓝莓基地签订直供协议。可转型为“酸奶轻食店”，增加能量碗、思慕雪等产品。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🥭</span><span class="r-name">芒果酸奶杯（TS_048）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍓</span><span class="r-name">草莓酸奶杯（TS_070）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥥</span><span class="r-name">巴西莓碗（TS_047）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>蓝莓批量采购 · 希腊酸奶自制 · 社群运营</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1出摊包答疑 · 本地化口味调整 · 外卖包装优化</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“蓝莓酸奶杯卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 母卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

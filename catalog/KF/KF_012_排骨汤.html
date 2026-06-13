@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KF_012 排骨汤 — 韩式美食·汤类母卡</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+.card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+.header { background: linear-gradient(135deg, #b85a30 0%, #d07040 50%, #e89060 100%); padding: 32px 24px 24px; color: #fff; }
+.header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; line-height: 1.6; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+.section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 13px; font-weight: 600; color: #b85a30; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+.value-stmt { background: #fdf0e8; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #b85a30; line-height: 1.7; text-align: center; }
+.bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+.bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; flex-shrink: 0; }
+.bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+.radar { display: flex; flex-direction: column; gap: 10px; }
+.radar-item { display: flex; align-items: center; gap: 10px; }
+.radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+.radar-item .bar { height: 100%; border-radius: 10px; }
+.radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #b85a30; }
+.bf5 { width: 100%; background: linear-gradient(90deg, #d07040, #e89060); }
+.bf4 { width: 80%; background: linear-gradient(90deg, #d07040, #e89060); }
+.bf3 { width: 60%; background: linear-gradient(90deg, #d8a080, #e8b898); }
+.role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+.role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+.role-tag.active { background: #d07040; color: #fff; box-shadow: 0 2px 8px rgba(208,112,64,0.3); }
+.family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #faf4ee; border-radius: 12px; }
+.family-tree .node { margin: 2px 0; }
+.family-tree .branch { color: #b85a30; font-weight: 600; }
+.family-tree .leaf { color: #666; padding-left: 24px; }
+.family-tree .highlight { color: #d07040; font-weight: 600; padding-left: 24px; }
+.market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.market-item { background: #fdf0e8; border-radius: 10px; padding: 10px 12px; }
+.market-item .m-label { font-size: 11px; color: #999; margin-bottom: 2px; }
+.market-item .m-value { font-size: 14px; font-weight: 600; color: #2c2c2c; }
+.matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+.matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+.matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+.ql { position: absolute; font-size: 10px; color: #aaa; }
+.ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+.ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+.matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+.matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+.dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #e89060; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+.dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #b85a30; white-space: nowrap; transform: translateX(-50%); }
+.ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+.ingredient-table th { background: #f0e0d0; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+.ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+.ingredient-table .amt { text-align: right; font-weight: 600; color: #b85a30; font-size: 12px; }
+.steps { list-style: none; counter-reset: step; }
+.steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #e8ddd0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #b85a30; }
+.pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin-top: 8px; }
+.pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; margin-bottom: 2px; }
+.pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+.cost-box { background: #fdf0e8; border-radius: 12px; padding: 14px; }
+.cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.cost-row .cr-label { color: #555; }
+.cost-row .cr-value { font-weight: 600; color: #b85a30; }
+.cost-divider { border: none; border-top: 1px dashed #e8d0c0; margin: 6px 0; }
+.decision-box { background: #faf4ee; border-radius: 12px; padding: 16px; }
+.decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+.decision-box p:last-child { margin-bottom: 0; }
+.trend-box { background: linear-gradient(135deg, #fdf0e8, #f8f4ef); border-radius: 12px; padding: 16px; }
+.trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.trend-item:last-child { margin-bottom: 0; }
+.trend-year { font-size: 12px; font-weight: 700; color: #b85a30; width: 50px; flex-shrink: 0; }
+.trend-arrow { color: #bbb; }
+.trend-desc { font-size: 13px; color: #555; }
+.trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #b85a30; text-align: center; }
+.footer-brand { background: #b85a30; color: #fff; text-align: center; padding: 24px; }
+.footer-brand .fb-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+.footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+.footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">KF_012 · 韩式美食 · 汤类母卡</div>
+    <h1>排骨汤</h1>
+    <div class="subtitle">
+      韩式감자탕风格 · 大排炖至脱骨 · 聚餐食肉首选 · 卡售价¥29.9 · FoodIntel推荐：8.2/10
+    </div>
+    <div class="tags">
+      <span>🥩 猪脊骨</span>
+      <span>🥔 土豆</span>
+      <span>🌿 苏子叶</span>
+      <span>🔥 炖至脱骨</span>
+      <span>🍺 聚餐场景</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      韩式汤品中的硬菜 · 肉食者天堂 · 软烂脱骨的大满足 · <br>
+      成本~18元/份 · 毛利率65-75% · 适合2-3人分食
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★★</div>
+      <div class="bomb-reason">
+        <strong>食肉系硬汤。</strong>流量4★——감자탕在中国韩餐圈子认知度不低，"能大口吃肉的汤"是核心卖点。毛利4★——排骨成本偏高但售价也高。复购4★——肉食爱好者会反复点。标准化3★——排骨大小不同、炖煮时间需灵活调整。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag active">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KF 韩式美食体系</div>
+      <div class="node leaf">├─ KF_001~008 主食系列</div>
+      <div class="node leaf">├─ KF_009 泡菜汤</div>
+      <div class="node leaf">├─ KF_010 部队锅</div>
+      <div class="node leaf">├─ KF_011 参鸡汤</div>
+      <div class="node highlight">└─ KF_012 排骨汤 ← 你在这里</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">成长</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">7/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">5/10 · 中低</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">9/10 · 排骨通吃</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">5/10 · 炖煮时长</div></div>
+      <div class="market-item"><div class="m-value" style="color:#555;">创业门槛</div><div class="m-value">中 · 需要大锅炖煮</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div>
+      <div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div>
+      <div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div>
+      <div class="y-label">传播性 →</div>
+      <div class="dot" style="left:65%;top:35%;"></div>
+      <div class="dot-label" style="left:65%;top:28%;">排骨汤（中高复购·中传播·食肉硬汤）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>排骨汤位于右上偏下——食肉爱好者会反复点（复购率高），传播性中等（不像部队锅那样有视觉冲击力）。排骨汤的核心竞争力是"大口吃肉"的满足感——在韩式汤品中，它是唯一能让人吃到撑的。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方</div>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：1锅（2-3人份）· 猪脊骨500-600g · 配米饭
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b85a30;margin-bottom:6px;">配方（1份）</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+      <tr><td>猪脊骨/猪排骨</td><td class="amt">500-600g</td><td>选带肉的脊骨·切大块</td></tr>
+      <tr><td>土豆</td><td class="amt">2个（约200g）</td><td>切大块·后期放</td></tr>
+      <tr><td>干白菜（시래기）</td><td class="amt">50g</td><td>提前泡发·韩式特有</td></tr>
+      <tr><td>苏子叶（깻잎）</td><td class="amt">5-6片</td><td>切丝·增香关键</td></tr>
+      <tr><td>大葱</td><td class="amt">1根</td><td>切圈</td></tr>
+      <tr><td>蒜末</td><td class="amt">30g</td><td></td></tr>
+      <tr><td>青红辣椒</td><td class="amt">各1根</td><td>切圈</td></tr>
+      <tr><td>清水</td><td class="amt">1.5L</td><td>没过排骨</td></tr>
+    </table>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b85a30;margin:12px 0 6px;">灵魂调味酱</h4>
+    <table class="ingredient-table">
+      <tr><th>原料</th><th>用量</th><th>备注</th></tr>
+      <tr><td>韩式大酱（된장）</td><td class="amt">2大勺</td><td>基底·见JL_021</td></tr>
+      <tr><td>韩式辣椒酱（고추장）</td><td class="amt">2大勺</td><td>辣味·见JL_022</td></tr>
+      <tr><td>辣椒粉</td><td class="amt">1大勺</td><td>增色</td></tr>
+      <tr><td>酱油</td><td class="amt">2大勺</td><td></td></tr>
+      <tr><td>蒜末</td><td class="amt">1大勺</td><td></td></tr>
+      <tr><td>清酒</td><td class="amt">1大勺</td><td></td></tr>
+      <tr><td>苏子粉（깻잎가루）</td><td class="amt">1大勺</td><td>特有香气·画龙点睛</td></tr>
+      <tr><td>白糖</td><td class="amt">1小勺</td><td></td></tr>
+    </table>
+    <div style="font-size:11px;color:#999;margin-top:4px;margin-bottom:10px;">💡 调味酱的基底见 JL_021大酱和JL_022辣椒酱。大批量调配时参考工业标准比例。</div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b85a30;margin:12px 0 6px;">出餐流程</h4>
+    <ol class="steps">
+      <li>排骨泡冷水1小时去血水（中途换1-2次水）</li>
+      <li>冷水下锅+姜片+葱段+料酒，大火煮开后撇浮沫，煮5min捞出</li>
+      <li>用温水冲洗排骨表面的杂质和浮沫</li>
+      <li>排骨放入大锅+清水1.5L+调味酱，大火煮开</li>
+      <li>转中小火，炖1-1.5h至排骨肉能用筷子轻松戳穿</li>
+      <li>加入泡发好的干白菜，再煮15min</li>
+      <li>加入土豆块，再煮10-15min至土豆软而不烂</li>
+      <li>加入苏子叶丝+葱圈+辣椒圈，关火焖2min</li>
+      <li>上桌，配米饭+泡菜</li>
+    </ol>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b85a30;margin:12px 0 6px;">🔥 排骨汤的吃法（教客人）</h4>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fdf0e8;border-radius:8px;padding:12px;margin-bottom:10px;">
+      韩式감자탕的正确吃法不止是喝汤——<br><br>
+      ① <strong>先吃肉：</strong>排骨捞出，蘸盐+胡椒粉或蘸쌈장吃<br>
+      ② <strong>再吃菜：</strong>土豆蘸酱吃，干白菜配汤吃<br>
+      ③ <strong>最后收尾：</strong>汤底剩三分之一，加米饭+海苔碎+香油，拌成"排骨汤泡饭"<br>
+      💡 建议菜单上标注吃法指引——很多客人不知道감자탕可以这样吃，体验感翻倍
+    </div>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（7条）</div>
+      <div class="p-desc">
+        ① 排骨必须泡血水——不泡直接煮的汤浑浊发黑，泡1小时以上汤色才清亮<br>
+        ② 炖煮中途不要加冷水——要加水也加热水，冷水会让肉质收紧变老<br>
+        ③ 土豆绝对不能早放——排骨炖软了再放土豆，放早了煮化变成糊<br>
+        ④ 干白菜是灵魂——没有干白菜的排骨汤就不是감자탕，不能用普通白菜替代<br>
+        ⑤ 苏子叶最后放——放早了香气挥发殆尽，关火前放最香<br>
+        ⑥ 大酱和辣椒酱的比例决定口味——大酱多则醇厚、辣椒酱多则爽辣，根据店铺定位固定比例<br>
+        ⑦ 排骨大小影响时间——大块排骨炖1.5h，小块1h即可，灵活判断
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 商业决策</div>
+    <div class="cost-box" style="margin-bottom:14px;">
+      <div class="cost-row"><span class="cr-label">排骨（猪脊骨）</span><span class="cr-value">~12-15元/份</span></div>
+      <div class="cost-row"><span class="cr-label">配菜+酱料</span><span class="cr-value">~4元/份</span></div>
+      <div class="cost-row"><span class="cr-label">燃气+餐具</span><span class="cr-value">~2元/份</span></div>
+      <hr class="cost-divider">
+      <div class="cost-row"><span class="cr-label">总成本</span><span class="cr-value">~18-21元/份</span></div>
+      <div class="cost-row"><span class="cr-label" style="font-weight:700;">建议售价</span><span class="cr-value" style="font-weight:800;font-size:16px;">48-68元/份</span></div>
+      <div class="cost-row"><span class="cr-label">毛利率</span><span class="cr-value" style="color:#2d8a40;">65-75%</span></div>
+      <div class="cost-row"><span class="cr-label">日均销量</span><span class="cr-value">8-15份</span></div>
+      <div class="cost-row"><span class="cr-label">月毛利贡献</span><span class="cr-value" style="font-size:16px;">~1-1.8万元</span></div>
+    </div>
+    <div class="decision-box">
+      <p><strong>✅ 适合场景：</strong>韩式烤肉店+排骨汤是肉类爱好者套餐的灵魂搭配——"烤肉+排骨汤"双肉组合。也适合감자탕专门店（韩国本土这种店很多，中国还不多，蓝海市场）。</p>
+      <p><strong>📌 菜单位置：</strong>放在"汤类/锅类"分区，建议标注"감자탕（韩式排骨汤）"双语名称增加正宗感。配一张排骨脱骨特写图——筷子夹起一根排骨、肉从骨头上脱落那种画面。</p>
+      <p><strong>⚠️ 风险：</strong>排骨价格波动大——猪价上涨时毛利率可能降到55%以下。建议和供应商锁定月度价格。另一个风险是认知度——在中国감자탕的知名度不如泡菜汤和部队锅，需要做引导式文案。</p>
+      <p><strong>🎯 地摊版：</strong>排骨汤不适合地摊——需要长时间炖煮。可用"韩式排骨盖饭"替代——排骨炖好拆肉、配酱汁浇在饭上，地摊卖25-35元/份，出餐快。</p>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2020</span><span class="trend-arrow">→</span><span class="trend-desc">감자탕在中国韩餐圈属于小众产品，只有韩裔聚集区有</span></div>
+      <div class="trend-item"><span class="trend-year">2023</span><span class="trend-arrow">→</span><span class="trend-desc">短视频传播——\"能大口吃肉的韩式汤\"概念出圈</span></div>
+      <div class="trend-item"><span class="trend-year">2025</span><span class="trend-arrow">→</span><span class="trend-desc">二线城市韩式烤肉店开始标配排骨汤</span></div>
+      <div class="trend-item"><span class="trend-year">2027</span><span class="trend-arrow">→</span><span class="trend-desc">감자탕专门店在中国一二线城市兴起</span></div>
+      <div class="trend-verdict">排骨汤不需要教育所有人——只需要让吃肉的人知道这里有肉可以啃</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div>
+    <div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links">
+      <span>📢 公众号：沧林食品技术</span>
+      <span>💬 微信：canglin1985</span>
+    </div>
+    <div class="fb-series">韩式美食 · KF_012 排骨汤</div>
+  </div>
+
+</div>
+</body>
+</html>

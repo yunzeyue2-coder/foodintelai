@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>鸡腿堡（起鳞粉做法） · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍔 鸡腿堡（起鳞粉做法）</h1>
+  <div style="font-size:12px;color:#b5aaa0">鳞片脆皮鸡腿堡 · 美式炸鸡工艺</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">9.1</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A级项目</span>
+  </div>
+  <div class="r-tagline">汉堡赛道中的高利润单品，起鳞粉工艺带来酥脆爆汁口感，外卖&堂食双适配。</div>
+  <div class="r-tags">
+    <span>🔥 热度高</span>
+    <span>💰 投资3500+</span>
+    <span>👤 1-2人可做</span>
+    <span>🔄 复购高</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">3500-5000</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等（鳞片技巧）</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 想做汉堡但不想加盟连锁店</div>
+      <div class="fit-item fit-yes">✅ 已会炸鸡，增加汉堡品类提升客单价</div>
+      <div class="fit-item fit-yes">✅ 外卖为主、兼顾堂食的档口</div>
+      <div class="fit-item fit-yes">✅ 夜市、大学城、商圈美食街</div>
+      <div class="fit-item fit-yes">✅ 追求鳞片脆皮口感的品质摊主</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 完全不想练习裹粉技巧</div>
+      <div class="fit-item fit-no">❌ 只卖低价产品（成本决定售价不能低于¥12）</div>
+      <div class="fit-item fit-no">❌ 无法每天采购新鲜汉堡胚/生菜</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：酥脆鳞片鸡腿排 × 爆汁鸡肉 × 自制酱料 × 完整汉堡体验</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>单层鸡腿堡（爆款）</span><span class="v">毛利63%</span></div>
+    <div class="logic-item"><span>双层鸡腿堡 / 加芝士片</span><span class="v">客单价+6-8元</span></div>
+    <div class="logic-item"><span>套餐：汉堡+可乐+薯条/鸡块</span><span class="v">毛利提升至70%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>加料区：加芝士+2元 / 加培根+3元 / 加煎蛋+2元</span><span class="v"></span></div>
+    <div class="logic-item"><span>双拼套餐：两个不同口味汉堡+饮料</span><span class="v">+15元</span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>每周限定酱料（蜂蜜芥末/黑椒/酸奶）</span><span class="v"></span></div>
+    <div class="logic-item"><span>积分卡：买5送1个原味汉堡</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥1100-1700</div><div class="m-sub">5-6h出摊</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥8000-12000</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">6-9天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">*数据基于二线城市外卖&夜市实测（2025年）</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">汉堡品类认知度高，学生&白领刚需，无需教育市场</div>
+      <div class="t-item">起鳞粉做法形成差异化（普通炸鸡汉堡无鳞片）</div>
+      <div class="t-item">外卖平台“手作汉堡”搜索量年增35%，溢价空间大</div>
+      <div class="t-item">可搭配炸鸡、薯条、可乐套餐，拉高客单价</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">汉堡胚、生菜、酱料等物料多，备货复杂</div>
+      <div class="t-item">鳞片工艺不稳定，新手容易炸成“光板”鸡排</div>
+      <div class="t-item">配送时间超过20分钟，脆皮明显变软，影响口碑</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>夜市汉堡以“牛肉堡”“虾堡”居多，鸡腿堡多为普通炸鸡排夹面包。起鳞粉脆皮鸡腿堡尚属蓝海，竞争小。<br>
+    <strong>未来判断：</strong>2026-2027年，具备鳞片脆皮+自制酱料的汉堡摊将逐步替代普通炸鸡汉堡，成为升级品类。<br>
+    <strong>是否值得进入：是</strong> —— 但必须保证鳞片成功率和酱料独特性，否则难以与肯德基/麦当劳竞争。
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">中等（鳞片差异化）</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">5-8天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">控温/抖粉要练习</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥500以内试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A</span></div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th>  </tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🍔 鸡腿堡（起鳞粉）</td><td>★★★</td><td>★★★</td><td>★★★★★</td><td>★★★</td><td>A</td><td><a href="#" style="color:#E8652D">#HZ_041</a></td></tr>
+        <tr><td>🍔 普通炸鸡汉堡</td><td>★★★</td><td>★★</td><td>★★★★</td><td>★★★★</td><td>B+</td><td><a href="#">#HZ_042</a></td></tr>
+        <tr style="background:#f8f4ef"><td>🥩 牛肉汉堡</td><td>★★★★</td><td>★★★</td><td>★★★★</td><td>★★</td><td>A-</td><td><a href="#">#HZ_043</a></td></tr>
+        <tr><td>🌯 手撕鸡卷饼</td><td>★★</td><td>★★</td><td>★★★</td><td>★★★</td><td>B</td><td><a href="#">#HZ_044</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购去骨鸡腿肉，练习起鳞粉工艺（粉-水-粉）至少10次</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>试做5个汉堡（配生菜、酱料、面包胚），邀请15人盲测</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备40个汉堡），定价¥15-18，测试销量</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>上线外卖平台，推出“加料区”和套餐，记录客单价变化</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘鳞片成功率、复购率、差评原因，决定是否长期经营</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7单日销量能否突破30个 ② 鳞片成品率≥75% ③ 外卖平台“汉堡”关键词排名前10<br>
+    <strong>🚪 退出标准：</strong>连续7天日均销量＜15个 / 鳞片失败率＞50% / 顾客差评“不脆”超过30%<br>
+    <strong>✅ 继续标准：</strong>周销量稳定在200个以上 / 堂食&外卖毛利均≥60% / 主动加料（加芝士/培根）占比＞25%
+  </div>
+</div>
+
+<!-- ===== 08 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：单缸炸锅(¥350-550) · 油温探针(¥20-40) · 不锈钢操作台(¥200-400) · 炸篮×2(¥40-80) · 冷藏展示柜(¥500-1000) · 保温柜/面包加热机(¥150-300) · 电子秤(¥30-50)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：三轮车/手推车(¥600-1800) · 折叠桌(¥100-200) · 帐篷伞(¥150-300) · 招牌灯箱(¥80-180) · 价格牌(¥20-50) · 酱料挤压瓶×4(¥20) · 汉堡包装纸/盒(¥30)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：去骨鸡腿肉10kg(¥220-300) · 起鳞粉（炸鸡粉）5kg(¥40-70) · 汉堡胚100个(¥60-80) · 生菜/番茄/洋葱(¥40) · 芝士片100片(¥35-50) · 沙拉酱/番茄酱/蜂蜜芥末酱(¥60) · 炸油15L(¥100-150) · 打包纸袋/汉堡盒500套(¥120-180)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,200-3,000</strong>（已有手推车+家用小炸锅）</div>
+    <div><strong>💰 完整启动方案：¥3,800-5,500</strong>（含商用炸锅+冷藏柜+全套摊位设备）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案0-200元 · 办理时间2-5天 · 油炸类需确认摊位允许（部分夜市禁止油炸）</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">经典香辣鸡腿堡</span><span class="t-price">¥12-15</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">双层芝士鸡腿堡 · 蜂蜜芥末鸡腿堡</span><span class="t-price">¥20-28</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">单人餐（汉堡+小薯+可乐） · 双人桶（2堡+鸡块+2可乐）</span><span class="t-price">¥28-45</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">📱 外卖</div><div class="stars">★★★★★</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>部分夜市禁止明火油炸或要求安装油烟净化器（成本+2000元），未办证可能被扣车。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季高温，鸡腿肉易变质必须使用冷藏柜；梅雨季/冬季订单下降40%，需准备室内备选场地。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>鳞片成功率低——粉-水-粉工艺对手法要求高，新手前50个汉堡可能鳞片不均匀，影响卖相。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>汉堡胚供应链不稳定——面包店供货可能断货或品质波动，自备冷冻胚又需解冻。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>外卖配送导致脆皮变软——超过20分钟送达，鳞片脆皮软化率80%，需配合防潮包装和复热说明。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>酱料同质化——只用市售沙拉酱/番茄酱无法形成记忆点，顾客会与肯德基对比。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>汉堡品类刚需且高频，起鳞粉鸡腿堡具备极强的视觉和口感差异化，利润空间大（单汉堡毛利可超10元）。外卖平台“脆皮鸡腿堡”关键词竞争低，容易获客。<br>
+      <strong>❌ 为什么不值得做：</strong>如果无法攻克鳞片工艺，产品与普通炸鸡汉堡无区别，只能打价格战。而且备货物料多（面包、生菜、酱料、芝士），损耗控制难度高于纯炸鸡摊。<br>
+      <strong>🔑 进入条件：</strong>① 愿意花3-5天专门练习起鳞粉工艺（成功率＞80%） ② 能找到稳定的汉堡胚供应商（日供至少100个，单价≤0.8元） ③ 摊位周边有大量学生或办公人群 ④ 能接受做外卖（堂食流量可能不足） ⑤ 自研或采购一款特色酱料（非通货）。<br>
+      <strong>🚪 退出条件：</strong>① 连续2周日均销量＜20个 ② 鳞片成功率长期低于60% ③ 汉堡胚/生菜损耗率超过15% ④ 外卖差评“软塌/不脆”超过25% ⑤ 月净利＜4000元。<br>
+      <strong>🎯 最终判断：可进</strong> —— 强烈建议与炸鸡或小食搭配销售，降低单品风险。如果摆摊地点周边已有肯德基/麦当劳，必须用更低价格+特色酱料+更大份量形成错位竞争。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（起鳞粉做法） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（起鳞粉）</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">鸡腿排腌制（原味腌料：肉:腌料:水=100:4:12，冷藏6h以上）</span><div class="ps-verify">[验证点] 腌制后鸡排表面有黏性，闻不到生腥，肉质变紧实</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">第一次裹粉：鸡排均匀按压裹粉，轻抖多余粉，浸泡冰水3-5秒</span><div class="ps-verify">[验证点] 沾水后表面粉层溶胀，形成初始糊化层，这是鳞片关键</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">第二次裹粉：再次放入裹粉中，用双手从两侧反复翻压8-10次，使粉层形成不规则凸起</span><div class="ps-verify">[验证点] 抖粉后鸡排表面出现明显颗粒状鳞片，无光滑平面</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">175°C油炸：下锅后先不翻动，定型40秒，再轻轻翻动，炸4分30秒至金黄</span><div class="ps-verify">[验证点] 鸡排浮起，鳞片呈金黄色，用探针中心温度＞80°C，切开肉汁透明</div></div>
+    <div class="process-step"><span class="ps-num">5</span><span class="ps-desc">汉堡组装：面包胚加热→抹酱→放生菜→放鸡腿排→盖顶包</span><div class="ps-verify">[验证点] 组装后汉堡高度＞6cm，鸡腿排完全覆盖面包，酱料不外溢</div></div>
+  </div>
+  <div class="badge">⚠️ 完整配比（精确到克）及鳞片手法视频说明见付费区</div>
+</div>
+
+<!-- ===== 14 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">核心原料成本（鸡腿排120g+裹粉）</span><span class="v">¥3.6/个</span></div>
+    <div class="recipe-line"><span class="k">汉堡胚+生菜+酱料+芝士片</span><span class="v">¥1.9/个</span></div>
+    <div class="recipe-line"><span class="k">包装成本（纸盒+防油纸）</span><span class="v">¥0.7/个</span></div>
+    <div class="recipe-line"><span class="k">耗材成本（油+燃气）</span><span class="v">¥0.9/个</span></div>
+    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥7.1/个</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥15～¥25</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">52%～72%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售50个（均价¥18）→ 日毛利¥545，月净利¥9,800（出摊22天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥59 <small>母卡限时解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后获取鳞片炸鸡粉配比、腌制料配方、汉堡组装SOP、外卖防潮方案</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">1️⃣ 起鳞粉配方（每500g）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>中筋面粉250g</span><span>玉米淀粉120g</span></div>
+      <div class="recipe-line"><span>土豆淀粉80g</span><span>泡打粉8g · 小苏打4g</span></div>
+      <div class="recipe-line"><span>盐5g · 白胡椒粉3g</span><span>蒜粉5g · 洋葱粉5g</span></div>
+    </div>
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">原味腌料配方（每1000g鸡腿排）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>盐12g · 白砂糖18g</span><span>大蒜粉8g · 洋葱粉6g</span></div>
+      <div class="recipe-line"><span>白胡椒粉8g · 黑胡椒粉4g</span><span>姜黄粉3g · 鸡粉6g</span></div>
+      <div class="recipe-line"><span>嫩肉粉4g（可选）</span><span>清水120g（分次加入）</span></div>
+    </div>
+    <!-- 2️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 批量炸制温度曲线（每锅4块鸡腿排）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>第1锅：175°C下锅，定型40秒→转160°C炸4分钟</span><span>总4分40秒</span></div>
+      <div class="recipe-line"><span>第2锅：油温回升至175°C，同参数，时间不变</span><span>回升45秒</span></div>
+      <div class="recipe-line"><span>第3锅：油温168°C下锅，炸制时间延长30秒</span><span>总5分10秒</span></div>
+      <div class="recipe-line"><span>第5锅后低于160°C需升温或换油</span><span>建议过滤</span></div>
+    </div>
+    <!-- 3️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 批量预制SOP（30个/60个）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>30个鸡腿排：腌料总量450g · 起鳞粉2.5kg · 腌制6h</span></div>
+      <div class="recipe-line"><span>60个鸡腿排：腌料900g · 起鳞粉5kg · 分两盆腌制</span></div>
+      <div class="recipe-line"><span>预制提醒：裹粉后不可存放超过30分钟，否则炸不出鳞片</span></div>
+    </div>
+    <!-- 4️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 鳞片翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>无鳞片/光滑：</strong>① 第一次裹粉后按压不足→加重按压3次 ② 沾水时间过长→浸水后立刻甩干 ③ 二次裹粉未翻压→左右翻动8-10次 ④ 油温过高→控制175°C以下</div>
+      <div><strong>鳞片脱落：</strong>鸡排表面水分过多→裹粉前用厨房纸吸干；油温过低导致吸油→升温至175°C再下锅</div>
+      <div><strong>炸后发黑：</strong>油温过高或腌料糖分太多→降温至170°C，腌料减糖20%</div>
+    </div>
+    <!-- 5️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 3款变体汉堡</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🧀 芝士双层堡：</strong>加两片芝士+双层鸡腿排，售价¥22-28</div>
+      <div><strong>🌶️ 辣味堡：</strong>腌料中加入辣椒粉5g+韩式辣酱10g，炸好后再抹辣酱</div>
+      <div><strong>🍯 蜂蜜芥末堡：</strong>使用蜂蜜芥末酱代替沙拉酱，搭配培根片</div>
+    </div>
+    <!-- 6️⃣ 外卖防潮方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 外卖专用防潮包装</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div>· 使用带透气孔的纸盒（避免水汽滞留）</div>
+      <div>· 鸡腿排下方垫吸油纸+干燥剂（食品级）</div>
+      <div>· 酱料单独分装（顾客收到后再淋）</div>
+      <div>· 外卖备注建议：收到后用空气炸锅180°C加热2分钟恢复脆度</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化（日销150+个）</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      增加第二口炸锅，使用商用真空滚揉机腌制（15分钟等效手腌2小时）。预裹粉半成品（裹粉后冷藏30分钟内炸）可提前准备。与本地面包厂签订长期供货协议（汉堡胚成本降至0.6元/个）。搭建简单外卖厨房，减少等餐时间。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🍗</span><span class="r-name">原味黄金炸鸡（母卡·引流款）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍟</span><span class="r-name">脆皮薯条 · 汉堡搭售</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🧀</span><span class="r-name">蜂蜜芥末酱（酱料专卡）</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+
+
+<!-- ===== 咨询入口 ===== -->
+<div class="section">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center;font-size:12px;color:#5a4f44">
+    <div><strong>📌 咨询场景：</strong>摆摊选址评估 · 成本优化 · 翻车远程诊断</div>
+    <div style="margin-top:6px"><strong>📱 联系方式：</strong>微信 canglin1985（备注卡号）</div>
+    <a style="display:inline-block;margin-top:8px;padding:8px 20px;background:#3a322a;color:#fff;border-radius:8px;text-decoration:none;font-size:12px" href="javascript:void(0)" onclick="copyWx()">📲 加微信咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 决策先于工艺 · 沧林食品工作站</div>
+</div>
+
+<script>
+document.getElementById('unlockBtn')&&document.getElementById('unlockBtn').addEventListener('click',function(){var e=document.getElementById('payContent');e&&(e.classList.toggle('show'),this.textContent=this.textContent.indexOf('点击解锁')>=0?'收起完整出摊包':'点击解锁全部内容')});
+function copyWx(){var e=document.createElement('textarea');e.value='canglin1985';document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e);alert('✅ 微信号已复制：canglin1985');}
+</script>
+
+</body>

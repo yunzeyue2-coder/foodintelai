@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>卷心菜沙拉 · 小菜配菜卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.variant-bar{background:linear-gradient(90deg,#6b8c42,#4a6a2c);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#6b8c42;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#6b8c42}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px;display:inline-block}
+.pick-compare{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.pick-item{padding:10px 12px;border-radius:10px;font-size:12px;display:flex;align-items:center;gap:8px}
+.pick-item .p-icon{font-size:16px}
+.pick-item .p-name{flex:1;font-weight:600;color:#3a322a}
+.pick-item .p-feature{color:#b5aaa0;font-size:10px}
+.pick-main{background:#ebf5e6;border:1px solid #cde}
+.pick-other{background:#f8f4ef}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#6b8c42}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#4a3f35;line-height:1.6}
+.pay-area .p-item .p-icon{color:#6b8c42;font-weight:700;flex-shrink:0;width:18px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#6b8c42;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#6b8c42;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #6b8c42}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px}
+.radar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.radar-item{background:#f8f4ef;border-radius:10px;text-align:center;padding:8px}
+.radar-item .label{font-size:9px;color:#7a7269}
+.radar-item .stars{font-size:12px;letter-spacing:1px}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:12px}
+.logic-item{display:flex;justify-content:space-between;padding:4px 0;font-size:12px}
+.metric-row{display:flex;gap:6px;margin-top:8px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center}
+.risk-item{display:flex;gap:8px;padding:6px 0;font-size:12px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 变体提示 -->
+<div class="variant-bar">
+  <span class="v-label">🥗 小菜配菜卡 · ¥9</span>
+  <a class="v-link" href="#">← 母卡：原味黄金炸鸡(HZ_001)</a>
+</div>
+
+<!-- 产品头部 -->
+<div class="meta">
+  <h1>🥗 卷心菜沙拉</h1>
+  <div class="sub">日式/韩式炸鸡标配 · 清爽解腻 · 低成本高价值感</div>
+  <span class="price-tag">¥9 完整配方包</span>
+</div>
+
+<!-- 与母卡差异总览 -->
+<div class="section">
+  <div class="s-title">🔄 小菜定位说明</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">母卡（HZ_001 炸鸡项目）</div>
+      <div>主产品：炸鸡类 · 设备清单 · 30天验证路线 · 全商业模型</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">PC_003 卷心菜沙拉（配菜）</div>
+      <div>炸鸡搭售沙拉 · 提升客单价 · 视觉丰富度 · 日本/韩国炸鸡店标配</div>
+    </div>
+  </div>
+  <div class="badge">💡 本卡不含主设备、验证路线等，通用数据参照母卡。本卡仅提供卷心菜沙拉的商业逻辑和配方。</div>
+</div>
+
+<!-- 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★☆☆</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★☆☆☆☆</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★☆☆☆☆</div></div>
+    <div class="radar-item"><div class="label">📈 利润</div><div class="stars">★★★★★</div></div>
+  </div>
+</div>
+
+<!-- 适合谁 -->
+<div class="section">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#3a6b2e;margin-bottom:6px">🎯 适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 日式/韩式炸鸡、炸猪排、烤串摊位</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 想用低成本提高摆盘颜值的店主</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px;margin-bottom:3px">✅ 外卖需要配菜丰富度的场景</div>
+      <div style="font-size:11px;padding:5px 8px;background:#f0f6ec;border-radius:6px">✅ 有冷藏条件的任何炸鸡摊</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#b53b3b;margin-bottom:6px">❌ 不适合谁</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 主产品为汤面/粥类（不搭）</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px;margin-bottom:3px">❌ 无冷藏设备的纯露天摊</div>
+      <div style="font-size:11px;padding:5px 8px;background:#fef2f2;border-radius:6px">❌ 追求极致低成本的摊位（比酸萝卜成本稍高）</div>
+    </div>
+  </div>
+</div>
+
+<!-- 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title" style="font-size:12px;font-weight:700;margin-bottom:6px">🧠 顾客为什么买</div>
+    <div style="font-size:12px;margin-bottom:10px">买的是：清爽解腻 × 摆盘高级感 × 健康假象（蔬菜）</div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin-bottom:6px">📈 利润从哪里来</div>
+    <div class="logic-item"><span>卷心菜沙拉（搭售/套餐）</span><span class="v" style="color:#C0392B">毛利78%</span></div>
+    <div class="logic-item"><span>升级为“特调芝麻沙拉酱”版</span><span class="v">+¥2</span></div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin:6px 0">📈 如何提高客单价</div>
+    <div class="logic-item"><span>炸鸡+卷心菜沙拉套餐（+¥3-5）</span><span class="v">转化率35%</span></div>
+    <div class="logic-item"><span>大份沙拉单独售卖</span><span class="v">¥6-9/份</span></div>
+    <div class="l-title" style="font-size:12px;font-weight:700;margin:6px 0">🔄 如何提高复购</div>
+    <div style="font-size:12px">免费赠送小份沙拉作为配菜，提升整体用餐体验，让顾客觉得“划算”。</div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card" style="background:#fdf2ee"><div class="m-label" style="font-size:9px">日搭售量</div><div class="m-val" style="font-size:15px;font-weight:700">30-60份</div><div class="m-sub" style="font-size:8px">参考炸鸡销量</div></div>
+    <div class="metric-card" style="background:#fef6ec"><div class="m-label" style="font-size:9px">月净增利</div><div class="m-val" style="font-size:15px;font-weight:700">¥500-1200</div><div class="m-sub" style="font-size:8px">搭售模式</div></div>
+    <div class="metric-card" style="background:#f0f6ec"><div class="m-label" style="font-size:9px">回本周期</div><div class="m-val" style="font-size:15px;font-weight:700">1天</div><div class="m-sub" style="font-size:8px">成本极低</div></div>
+  </div>
+</div>
+
+<!-- 赛道判断（简写） -->
+<div class="section">
+  <div class="s-title">📈 小菜赛道判断</div>
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;font-size:12px;line-height:1.7">
+    <strong>优势：</strong>卷心菜价格低廉（约0.5-0.8元/斤），切丝后体积膨胀，视觉份量足。日式/韩式炸鸡店标配，顾客认知度高。沙拉酱成本可控，整体毛利75%以上。<br>
+    <strong>劣势：</strong>需要冷藏保鲜，切丝费时（可用刨丝器），酱汁容易泄水影响口感。<br>
+    <strong>市场现状：</strong>多数炸鸡摊位忽略这道小菜，但正是差异化机会。提供新鲜沙拉会让摊位看起来更“干净卫生”。<br>
+    <strong>是否值得进入：是</strong> —— 建议作为套餐搭售或免费小份赠送，提升价值感。
+  </div>
+</div>
+
+<!-- 项目评估 -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div style="font-size:9px">市场竞争</div><div style="font-size:16px">★★★☆☆</div><div style="font-size:10px">中等（有认知但少供给）</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div style="font-size:9px">学习周期</div><div style="font-size:16px">★☆☆☆☆</div><div style="font-size:10px">1小时</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div style="font-size:9px">操作容错度</div><div style="font-size:16px">★★★★☆</div><div style="font-size:10px">较高（注意酱汁比例）</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:8px;text-align:center"><div style="font-size:9px">最低验证资金</div><div style="font-size:16px">★★★★★</div><div style="font-size:10px">¥30以内</div></div>
+  </div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:360px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>小菜类型</th><th>成本/份</th><th>毛利</th><th>视觉份量</th><th>保鲜难度</th></tr></thead>
+      <tbody>
+        <tr style="background:#ebf5e6"><td>🥗 卷心菜沙拉</td><td>¥0.55</td><td>76%</td><td>★★★★★</td><td>★★★</td></tr>
+        <tr><td>🥕 酸辣白萝卜</td><td>¥0.30</td><td>85%</td><td>★★★</td><td>★★</td></tr>
+        <tr style="background:#f8f4ef"><td>🥬 韩式泡菜</td><td>¥0.80</td><td>70%</td><td>★★</td><td>★★</td></tr>
+        <tr><td>🥒 腌黄瓜</td><td>¥0.50</td><td>75%</td><td>★★</td><td>★★★</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 最大风险 -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>出水变软：</strong>卷心菜切丝后遇盐或沙拉酱会大量出水，几分钟就塌陷，影响口感。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>变质风险：</strong>沙拉酱（含蛋黄）在常温下2小时可能变质，夏季更危险。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><strong>酱汁比例失调：</strong>酱太多会腻，酱太少则干涩，新手不好掌握。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><strong>刀工要求：</strong>切丝需均匀细薄，否则口感差；可用刨丝器但容易出水。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><strong>成本高于酸萝卜：</strong>沙拉酱比白醋贵，每份成本约0.55元 vs 酸萝卜0.3元。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><strong>单独售卖意愿低：</strong>顾客习惯免费沙拉，收费后可能不买。</div>
+</div>
+
+<!-- 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>卷心菜沙拉能极大提升炸鸡套餐的“价值感”，成本仅0.55元却让顾客感觉值5元。尤其适合外卖场景，让餐盒看起来更丰富。<br>
+      <strong>❌ 为什么不值得：</strong>如果没有冷藏条件，夏季无法售卖；切丝费人工；沙拉酱出水问题处理不好会变成“泡菜汤”。<br>
+      <strong>🔑 进入条件：</strong>① 配备冰箱或保温箱+冰袋 ② 能接受每天现切（或批量切好冷藏） ③ 主产品为炸鸡/炸猪排等油腻食物。<br>
+      <strong>🚪 退出条件：</strong>顾客频繁反馈“沙拉出水”或“酱太腻” / 变质投诉 / 成本失控。<br>
+      <strong>🎯 最终判断：可进</strong> —— 但必须注意出水问题，推荐“吃前再拌酱”或使用沥水篮。免费小份赠送效果最佳。
+    </div>
+    <div class="j-tags"><span>#清爽解腻</span><span>#日式标配</span><span>#视觉增量</span></div>
+  </div>
+</div>
+
+<!-- 核心工艺 -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div style="margin-bottom:10px"><strong>步骤1 卷心菜处理</strong> —— 整颗卷心菜洗净，去硬芯，切成细丝（约2mm宽），放入冰水浸泡10分钟。<br><span style="font-size:10px;color:#7a7269">[验证点] 浸泡后菜丝卷曲变脆，沥干水分后口感爽脆</span></div>
+    <div style="margin-bottom:10px"><strong>步骤2 脱水（关键）</strong> —— 捞出菜丝用蔬菜脱水器或纱布挤干水分，越干越好。<br><span style="font-size:10px;color:#7a7269">[验证点] 用力握菜丝，掌心无水滴下；若有水则后续会出水</span></div>
+    <div style="margin-bottom:10px"><strong>步骤3 调制沙拉酱</strong> —— 蛋黄酱、米醋、糖、少许盐、白芝麻混合均匀。<br><span style="font-size:10px;color:#7a7269">[验证点] 酱汁呈乳白色，酸甜适口，不油腻</span></div>
+    <div><strong>步骤4 出餐前拌合</strong> —— 将酱汁与菜丝拌匀（不要提前拌，否则5分钟后出水）。<br><span style="font-size:10px;color:#7a7269">[验证点] 拌匀后立即出餐，餐盒底部无积水</span></div>
+  </div>
+  <div class="badge" style="margin-top:6px">⚠️ 完整配方及防出水技巧见下方付费区</div>
+</div>
+
+<!-- 成本利润 -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span>卷心菜丝（约60g/份）</span><span>¥0.20</span></div>
+    <div class="recipe-line"><span>蛋黄酱（约15g）</span><span>¥0.25</span></div>
+    <div class="recipe-line"><span>糖/醋/芝麻</span><span>¥0.05</span></div>
+    <div class="recipe-line"><span>包装盒（小号）</span><span>¥0.12</span></div>
+    <div class="recipe-line"><span>单份总成本</span><span>¥0.62</span></div>
+    <div class="recipe-line"><span>搭售套餐加价</span><span>¥3-5</span></div>
+    <div class="recipe-line"><span>单独售价</span><span>¥6-9</span></div>
+    <div class="recipe-line"><span>示例：日赠40份</span><span>月成本¥744，预估增收¥1500-2000</span></div>
+  </div>
+</div>
+
+<!-- 完整配方包 -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>🥗 卷心菜沙拉 · 完整配方包</h3>
+  <div class="p-sub">定价 ¥9 · 永久解锁 · 包含以下全部数据</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span>商用精确配方（500g卷心菜基准）</div>
+    <div class="p-item"><span class="p-icon">✅</span>特调沙拉酱配比（日式/美式两种风格）</div>
+    <div class="p-item"><span class="p-icon">✅</span>防出水核心技术（冰水浸泡+脱水+后拌）</div>
+    <div class="p-item"><span class="p-icon">✅</span>批量预制方案（10kg卷心菜）</div>
+    <div class="p-item"><span class="p-icon">✅</span>外卖专用防软包装方案</div>
+    <div class="p-item"><span class="p-icon">✅</span>变体：和风芝麻酱版/千岛酱版</div>
+    <div class="p-item"><span class="p-icon">✅</span>摆盘美感提升技巧</div>
+  </div>
+  <div class="price-tag">¥9 <small>配菜卡 · 一次解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后发编号给客服，秒发完整版 / 或直接在此展开</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 商用标准配方（每500g卷心菜丝）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>卷心菜丝（沥干后）</span><span>500g</span></div>
+      <div class="recipe-line"><span>蛋黄酱（丘比/好乐门）</span><span>120g</span></div>
+      <div class="recipe-line"><span>米醋</span><span>15g</span></div>
+      <div class="recipe-line"><span>白砂糖</span><span>12g</span></div>
+      <div class="recipe-line"><span>盐</span><span>2g</span></div>
+      <div class="recipe-line"><span>白芝麻（炒香）</span><span>5g</span></div>
+      <div style="margin-top:6px;font-size:11px">📌 此配方可分出约8-10份（每份50-60g）。甜酸比≈糖:醋=1:1.25。</div>
+    </div>
+
+    <!-- 2️⃣ 酱料变体 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 两种酱料变体</div>
+    <div class="recipe-box" style="border-left-color:#E8652D">
+      <div><strong>🟫 和风芝麻酱版：</strong>蛋黄酱80g + 日式芝麻酱40g + 米醋10g + 糖8g → 更浓郁，适合配烤鸡。</div>
+      <div style="margin-top:8px"><strong>🍅 千岛酱版：</strong>蛋黄酱100g + 番茄酱25g + 酸黄瓜碎10g + 辣椒粉少许 → 美式风味。</div>
+    </div>
+
+    <!-- 3️⃣ 防出水核心 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 防出水核心技术</div>
+    <div class="recipe-box">
+      • 步骤A：切丝后立即放入冰水（0-4°C）浸泡10分钟，可增加脆度并洗去多余汁液。<br>
+      • 步骤B：使用蔬菜脱水器（手动旋转式）甩干，替代纱布挤压（更高效）。<br>
+      • 步骤C：出摊前将酱汁和菜丝分开放置，顾客点单后再拌匀（外卖则单独包装酱包）。<br>
+      • 步骤D：酱汁中可以加入1g玉米淀粉增稠，减少出水。
+    </div>
+
+    <!-- 4️⃣ 批量预制 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 批量预制方案（10kg卷心菜）</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:12px">
+      <div>① 卷心菜去芯，用切菜机或刨丝器切丝（10kg需30分钟）。</div>
+      <div>② 投入冰水浸泡10分钟，捞出甩干（分批次脱水）。</div>
+      <div>③ 沥干后的菜丝装入密封袋，冷藏可保存24小时。</div>
+      <div>④ 酱汁提前调好冷藏，出摊时按每500g菜丝配120g酱汁现场拌。</div>
+    </div>
+
+    <!-- 5️⃣ 外卖包装 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 外卖专用方案</div>
+    <div class="recipe-box">
+      • 使用分隔式餐盒：一侧放炸鸡，另一侧放未拌酱的菜丝，附赠小包沙拉酱。<br>
+      • 酱包：用一次性酱料杯（20ml）分装，标注“吃前拌入”。<br>
+      • 此方法可避免配送过程中菜丝出水，顾客体验提升50%。
+    </div>
+
+    <!-- 6️⃣ 摆盘技巧 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 摆盘美感提升</div>
+    <div class="recipe-box">
+      • 堆成小山状，撒上白芝麻和少许黑芝麻点缀。<br>
+      • 搭配一小角柠檬，既美观又提供柠檬汁调味选项。<br>
+      • 与炸鸡放在同一餐盒时，用生菜叶隔开，防止酱汁污染炸鸡。
+    </div>
+
+    <!-- 7️⃣ 实战备注 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 沧林实战备注</div>
+    <div class="recipe-box" style="border-left-color:#6b8c42">
+      • 卷心菜要选“牛心菜”（圆锥形），比圆形卷心菜更甜更脆。<br>
+      • 蛋黄酱不要选脂肪低于60%的“低脂版”，否则出水更严重。<br>
+      • 出摊超过2小时未售完的沙拉必须废弃，不可隔夜。<br>
+      • 定价参考：免费赠送小份（30g）成本0.35元，搭售+3元大份（70g）净赚2.5元。<br>
+      • 如果嫌切丝麻烦，可购买现成卷心菜丝（冷冻半成品），但成本翻倍。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整小菜包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 关联产品 -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" href="#"><span style="font-size:16px">🍗</span><span style="flex:1">原味黄金炸鸡（母卡·完整项目）</span><span>→</span></a>
+    <a class="rel-item" href="#"><span style="font-size:16px">🥕</span><span style="flex:1">酸辣白萝卜（配菜 PC_002）</span><span>→</span></a>
+    <a class="rel-item" href="#"><span style="font-size:16px">🧀</span><span style="flex:1">奶香芝士酱（酱料专卡）</span><span>→</span></a>
+  </div>
+</div>
+
+<!-- 咨询入口 -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>沙拉保鲜方案 · 切丝效率提升 · 酱汁定制</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>成本优化 · 外卖包装 · 搭售策略</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“卷心菜卡”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a;width:auto;padding:8px 20px">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 小菜配菜卡 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+</script>
+</body>
+</html>

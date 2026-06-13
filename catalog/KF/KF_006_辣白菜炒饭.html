@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KF_006 辣白菜炒饭 — 韩式美食</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f0eb; color: #2c2c2c; display: flex; justify-content: center; padding: 40px 20px; }
+  .card { max-width: 540px; width: 100%; background: #fffcf8; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); overflow: hidden; }
+  .header { background: linear-gradient(135deg, #b84030 0%, #d06040 50%, #e88060 100%); padding: 32px 24px 24px; color: #fff; }
+  .header-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { background: rgba(255,255,255,0.2); border-radius: 12px; padding: 3px 10px; font-size: 11px; }
+  .section { padding: 20px 24px; border-bottom: 1px solid #f0e8e0; }
+  .section-title { font-size: 13px; font-weight: 600; color: #b84030; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #e8ddd0; }
+  .value-stmt { background: #fdf0ec; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 600; color: #b84030; line-height: 1.7; text-align: center; }
+  .radar { display: flex; flex-direction: column; gap: 10px; }
+  .radar-item { display: flex; align-items: center; gap: 10px; }
+  .radar-item .label { width: 70px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .radar-item .bar-wrap { flex: 1; height: 10px; background: #f0e8e0; border-radius: 10px; overflow: hidden; }
+  .radar-item .bar { height: 100%; border-radius: 10px; }
+  .radar-item .score { width: 28px; text-align: right; font-size: 13px; font-weight: 600; color: #b84030; }
+  .bf5 { width: 100%; background: linear-gradient(90deg, #d06040, #e88060); }
+  .bf4 { width: 80%; background: linear-gradient(90deg, #d06040, #e88060); }
+  .bf3 { width: 60%; background: linear-gradient(90deg, #d8a090, #e8bab0); }
+  .bomb-box { display: flex; align-items: center; gap: 12px; background: #fff8f0; border-radius: 12px; padding: 14px; border: 1px solid #f0e0c8; }
+  .bomb-stars { font-size: 22px; letter-spacing: 2px; color: #e8a030; }
+  .bomb-reason { font-size: 12px; color: #666; line-height: 1.6; }
+  .role-box { display: flex; gap: 8px; flex-wrap: wrap; }
+  .role-tag { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; background: #f0e8e0; color: #888; }
+  .role-tag.active { background: #d06040; color: #fff; box-shadow: 0 2px 8px rgba(208,96,64,0.3); }
+  .family-tree { font-size: 13px; line-height: 2; padding: 12px 16px; background: #fdf0ec; border-radius: 12px; }
+  .family-tree .node { margin: 2px 0; }
+  .family-tree .branch { color: #b84030; font-weight: 600; }
+  .family-tree .leaf { color: #666; padding-left: 24px; }
+  .family-tree .highlight { color: #d06040; font-weight: 600; padding-left: 24px; }
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .market-item { background: #fdf0ec; border-radius: 10px; padding: 10px 12px; }
+  .market-item .m-label { font-size: 11px; color: #999; }
+  .market-item .m-value { font-size: 14px; font-weight: 600; }
+  .matrix-box { position: relative; width: 100%; height: 200px; border: 1px solid #e8ddd0; border-radius: 12px; margin-top: 8px; background: #fdfaf7; overflow: hidden; }
+  .matrix-box .axis-x { position: absolute; bottom: 30px; left: 60px; right: 20px; height: 1px; background: #d8ccc0; }
+  .matrix-box .axis-y { position: absolute; left: 40px; top: 20px; bottom: 40px; width: 1px; background: #d8ccc0; }
+  .ql { position: absolute; font-size: 10px; color: #aaa; }
+  .ql-tr { top: 22px; right: 20px; } .ql-tl { top: 22px; left: 50px; }
+  .ql-br { bottom: 32px; right: 20px; } .ql-bl { bottom: 32px; left: 50px; }
+  .matrix-box .x-label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-size: 11px; color: #999; }
+  .matrix-box .y-label { position: absolute; top: 50%; left: 4px; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: #999; white-space: nowrap; }
+  .dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #e88060; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transform: translate(-50%, -50%); }
+  .dot-label { position: absolute; font-size: 11px; font-weight: 600; color: #b84030; white-space: nowrap; transform: translateX(-50%); }
+  .ingredient-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .ingredient-table th { background: #f0e4de; padding: 5px 8px; text-align: left; font-weight: 600; font-size: 11px; }
+  .ingredient-table td { padding: 4px 8px; border-bottom: 1px solid #f0e8e0; font-size: 12px; }
+  .ingredient-table .amt { text-align: right; font-weight: 600; color: #b84030; }
+  .steps { list-style: none; counter-reset: step; }
+  .steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; font-size: 13px; line-height: 1.6; }
+  .steps li::before { content: counter(step); position: absolute; left: 0; top: 5px; width: 20px; height: 20px; background: #e8ddd0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #b84030; }
+  .pitfall-box { background: #fff8f0; border-left: 3px solid #e8a030; border-radius: 8px; padding: 12px; margin-top: 8px; }
+  .pitfall-box .p-label { font-size: 11px; font-weight: 600; color: #a07020; }
+  .pitfall-box .p-desc { font-size: 12px; color: #666; line-height: 1.6; }
+  .recipe-block { background: #fdf0ec; border-radius: 10px; padding: 14px; margin: 12px 0; }
+  .recipe-block .rb-title { font-size: 14px; font-weight: 700; color: #b84030; margin-bottom: 8px; }
+  .recipe-block table { width: 100%; font-size: 11px; border-collapse: collapse; }
+  .recipe-block td { padding: 3px 6px; border-bottom: 1px solid #e8d8d0; font-size: 11px; color: #555; }
+  .recipe-block .amt { text-align: right; font-weight: 600; color: #b84030; }
+  .customer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .customer-item { background: #fdf0ec; border-radius: 10px; padding: 12px; }
+  .customer-item .c-icon { font-size: 20px; }
+  .customer-item .c-name { font-size: 13px; font-weight: 600; }
+  .customer-item .c-desc { font-size: 11px; color: #888; line-height: 1.5; }
+  .cost-box { background: #fdf0ec; border-radius: 12px; padding: 14px; }
+  .cost-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .cost-row .cr-label { color: #555; }
+  .cost-row .cr-value { font-weight: 600; color: #b84030; }
+  .cost-divider { border: none; border-top: 1px dashed #e8d0c8; margin: 6px 0; }
+  .decision-box { background: #fdf0ec; border-radius: 12px; padding: 16px; }
+  .decision-box p { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+  .decision-box p:last-child { margin-bottom: 0; }
+  .trend-box { background: linear-gradient(135deg, #fdf0ec, #f8f4ef); border-radius: 12px; padding: 16px; }
+  .trend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .trend-item:last-child { margin-bottom: 0; }
+  .trend-year { font-size: 12px; font-weight: 700; color: #b84030; width: 50px; }
+  .trend-arrow { color: #bbb; }
+  .trend-desc { font-size: 13px; color: #555; }
+  .trend-verdict { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0d8cc; font-size: 14px; font-weight: 600; color: #b84030; text-align: center; }
+  .footer-brand { background: #b84030; color: #fff; text-align: center; padding: 24px; }
+  .footer-brand .fb-name { font-size: 18px; font-weight: 700; }
+  .footer-brand .fb-tagline { font-size: 12px; opacity: 0.7; margin-bottom: 14px; }
+  .footer-brand .fb-links { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .footer-brand .fb-links span { background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 20px; font-size: 12px; }
+  .footer-brand .fb-series { font-size: 11px; opacity: 0.5; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-badge">KF_006 · 韩式美食</div>
+    <h1>辣白菜炒饭</h1>
+    <div class="subtitle">全系列成本最低·毛利最高·出餐2分钟·客单价18元起</div>
+    <div class="tags">
+      <span>🥬 辣白菜炒制工艺</span>
+      <span>🍳 煎蛋+海苔点缀</span>
+      <span>💰 毛利85%+</span>
+      <span>🏪 地摊王</span>
+      <span>📦 外卖不超过10分钟</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">① 产品定义 · 一句话价值</div>
+    <div class="value-stmt">
+      辣白菜炒饭是韩式美食里利润率最高的产品——出餐2分钟·成本~3元·全时段可卖<br>
+      原材料只需3样（辣白菜+米饭+鸡蛋）·后厨谁都会做·几乎没有技术门槛
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">② 爆品指数 · 五维雷达</div>
+    <div class="bomb-box" style="margin-bottom:14px;">
+      <div class="bomb-stars">★★★☆☆</div>
+      <div class="bomb-reason">
+        <strong>利润王但流量一般。</strong>辣白菜炒饭不是网红产品，几乎没有传播价值——没人会拍一碗辣白菜炒饭发朋友圈。它的价值在"吃完觉得值"——成本3元卖20元，客人不觉得贵。标准化5★，小学生都能炒。<br>
+        <strong>⚠️ 硬伤：</strong>辣白菜品质决定了产品的上限——你用散装辣白菜，出品就值10块。
+      </div>
+    </div>
+    <div class="radar">
+      <div class="radar-item"><span class="label">🔥 流量</span><div class="bar-wrap"><div class="bar bf3"></div></div><span class="score">3</span></div>
+      <div class="radar-item"><span class="label">💰 毛利</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">🔄 复购</span><div class="bar-wrap"><div class="bar bf4"></div></div><span class="score">4</span></div>
+      <div class="radar-item"><span class="label">📋 标准化</span><div class="bar-wrap"><div class="bar bf5"></div></div><span class="score">5</span></div>
+      <div class="radar-item"><span class="label">📸 传播性</span><div class="bar-wrap"><div class="bar bf1"></div></div><span class="score">1</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">③ 产品角色 · 产品家族</div>
+    <div class="role-box" style="margin-bottom:14px;">
+      <span class="role-tag active">引流产品</span>
+      <span class="role-tag active">利润产品</span>
+      <span class="role-tag">招牌产品</span>
+      <span class="role-tag">社交产品</span>
+      <span class="role-tag active">套餐产品</span>
+    </div>
+    <div class="family-tree">
+      <div class="node branch">KF 韩式美食体系</div>
+      <div class="node leaf">├─ KF_001 石锅拌饭</div>
+      <div class="node leaf">├─ KF_002 冷面</div>
+      <div class="node leaf">├─ KF_003 大酱汤</div>
+      <div class="node leaf">├─ KF_004 嫩豆腐汤</div>
+      <div class="node leaf">├─ KF_005 肥牛拌饭</div>
+      <div class="node highlight">├─ KF_006 辣白菜炒饭 ← 你在这里</div>
+      <div class="node leaf">├─ KF_007 海鲜葱饼</div>
+      <div class="node leaf">└─ KF_008 辣炒年糕</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">④ 市场定位</div>
+    <div class="market-grid">
+      <div class="market-item"><div class="m-label">市场阶段</div><div class="m-value">超级成熟品类</div></div>
+      <div class="market-item"><div class="m-label">热度指数</div><div class="m-value">7/10</div></div>
+      <div class="market-item"><div class="m-label">竞争强度</div><div class="m-value">8/10 · 高</div></div>
+      <div class="market-item"><div class="m-label">全国适配度</div><div class="m-value">10/10</div></div>
+      <div class="market-item"><div class="m-label">复制难度</div><div class="m-value">1/10 · 极低</div></div>
+      <div class="market-item"><div class="m-label">食材可得性</div><div class="m-value">⭐⭐⭐⭐⭐</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑤ 爆品矩阵</div>
+    <div class="matrix-box">
+      <div class="axis-x"></div><div class="axis-y"></div>
+      <div class="ql ql-tr">🔥 社交传播型</div><div class="ql ql-tl">口碑复购型</div>
+      <div class="ql ql-br">流量型</div><div class="ql ql-bl">基础型</div>
+      <div class="x-label">复购率 →</div><div class="y-label">传播性 →</div>
+      <div class="dot" style="left:50%;top:85%;"></div>
+      <div class="dot-label" style="left:50%;top:77%;">辣白菜炒饭（左下·高复购基础款）</div>
+      <div class="dot" style="left:70%;top:30%;background:#ddd;width:10px;height:10px;"></div>
+      <div class="dot-label" style="left:70%;top:23%;color:#bbb;font-size:10px;">石锅拌饭（右上·传播型）</div>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">
+      <strong>矩阵定位：</strong>辣白菜炒饭在"基础型"右下端——传播力低但复购率高。它的角色不是拉新，是<strong>稳客单价+拉复购</strong>。搭配一碗汤（大酱汤/嫩豆腐汤）组成午间套餐，是提升客单价的利器。
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑥ 工艺配方 · 辣白菜炒饭（西塔标准版）</div>
+
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:10px;">
+      <strong>出品规格</strong>：米饭150g + 辣白菜100g + 煎蛋1个 + 海苔碎3g + 白芝麻<br>
+      <strong>调味</strong>：白糖10g + 细辣椒面4g + 牛肉粉4g + 味精1.5g + 黑胡椒粉0.5g + 香油5g
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b84030;margin-bottom:6px;">🍚 米饭标准</h4>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:12px;background:#fdf0ec;border-radius:8px;padding:10px;">
+      <strong>用米：</strong>东北珍珠米（圆粒米，隔夜饭最佳）。辣白菜炒饭用隔夜饭（冰箱冷藏12小时以上）口感更好——隔夜饭水分少，炒出来粒粒分明。<br>
+      <strong>没有隔夜饭怎么办：</strong>新蒸米饭盛出后摊开放凉至室温，冷藏30分钟再用。热饭直接炒会粘锅成一坨。<br>
+      <strong>米水比：</strong>1:1.1（蒸饭柜），比拌饭少一点水——炒饭的米饭要偏干。<br>
+      <strong>每份：</strong>150g熟饭（注意！辣白菜炒饭比拌饭少60g——因为辣白菜本身就是配菜，不需要太多米饭）。<br>
+      <strong>保温：</strong>米饭提前分装好，炒饭前微波炉高火1分钟打热再炒——冷饭直接入锅升温慢。
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b84030;margin-bottom:6px;">🥬 辣白菜标准</h4>
+    <div style="font-size:12px;color:#555;line-height:1.8;margin-bottom:12px;background:#fdf0ec;border-radius:8px;padding:10px;">
+      <strong>推荐：</strong>延边辣白菜（宗家府或同类韩式辛奇），不要用国内超市的"辣白菜"——很多国产辣白菜是甜口的，炒出来没味道。<br>
+      <strong>预处理：</strong>辣白菜取出后简单挤掉多余汤汁再切——汤汁太多的辣白菜下锅会"煮饭"而不是"炒饭"。挤出的辣白菜汤汁别扔，炒饭时加进去调味。<br>
+      <strong>切法：</strong>粗切2-3cm见方，不要切太碎——太碎了吃不出辣白菜的口感。<br>
+      <strong>辣白菜根部较硬：</strong>斜刀切薄，否则炒不软影响口感。<br>
+      <strong>⚠️ 不同品牌的辣白菜咸度和酸度差异大：</strong>第一次做某个品牌时，少放盐炒完尝一下再补。<br>
+      <strong>储存：</strong>开封后冷藏保存，7天内用完。变酸了可以做泡菜汤不能用炒饭。
+    </div>
+
+    <h4 style="font-size:13px;font-weight:600;color:#b84030;margin-bottom:6px;">出品流程</h4>
+    <ol class="steps">
+      <li>炒锅大火烧热，加色拉油20g（约一勺半），烧至7成热</li>
+      <li>下辣白菜100g，中火煸炒——炒到辣白菜边缘微焦、多余汤汁收干、白菜叶变透（约1分钟）</li>
+      <li>加白糖10g + 细辣椒面4g + 牛肉粉4g + 味精1.5g + 黑胡椒粉0.5g，翻炒均匀</li>
+      <li>加米饭150g，转中小火——用锅铲把米饭打散压开，不要用勺背压（会把米粒压碎）</li>
+      <li>炒至米饭粒粒分明、辣白菜均匀裹在每粒米上（约2分钟）</li>
+      <li>沿锅边淋香油5g（锅边高温瞬间激发出香气）</li>
+      <li>大火快炒5秒，出锅装碗</li>
+      <li>码上煎蛋（单面煎·蛋黄流心→蛋白全熟）→撒海苔碎+白芝麻→出品</li>
+    </ol>
+
+    <div class="pitfall-box">
+      <div class="p-label">⚠️ 防错防呆（6条）</div>
+      <div class="p-desc">
+        ① 辣白菜一定要先炒干汤汁再下米饭——汤汁多的辣白菜炒出来的是"辣白菜泡饭"不是炒饭<br>
+        ② 米饭一定要用打散了的冷饭——整块冷饭下锅炒不匀，急用时用手抓散<br>
+        ③ 调味顺序很重要：先炒干辣白菜→调味→再下饭。顺序错了=辣白菜没味，菜是菜饭是饭<br>
+        ④ 香油必须出锅前淋——不要炒的时候放香油，会挥发。<span style="color:#d06040;font-weight:600;">沿锅边淋</span>，高温瞬间激香<br>
+        ⑤ 煎蛋要单面煎：蛋黄流心、蛋白全熟。双面煎蛋黄凝固了=丧失了拌饭吃时的口感变化<br>
+        ⑥ 不要加酱油（生抽/老抽）——辣白菜本身有咸味和颜色，加酱油会灰暗且过咸
+      </div>
+    </div>
+
+    <h4 style="font-size:14px;font-weight:600;color:#b84030;margin:20px 0 10px;display:flex;align-items:center;gap:6px;">🥓&nbsp;变形体扩展 · 同一模式两种变形</h4>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fdf0ec;border-radius:8px;padding:10px;margin-bottom:14px;">
+      <strong>共同标准：</strong>米饭150g（隔夜饭·粒粒分明） · 辣白菜100g（挤汁后切） · 煎蛋1个 + 海苔碎。以下变形体仅在<strong>浇头食材</strong>上做变化，炒饭底不变。
+    </div>
+
+    <h5 style="font-size:13px;font-weight:600;color:#b84030;margin:12px 0 6px;">变形体一 · 五花肉辣白菜炒饭（溢价款）</h5>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fff8f0;border-left:3px solid #e8a030;border-radius:8px;padding:10px;margin-bottom:10px;">
+      <strong>出品规格：</strong>米饭150g + 辣白菜100g + 五花肉薄片40g + 煎蛋1个 + 海苔碎<br>
+      <strong>做法：</strong>先下五花肉片煸炒出油（五花肉不用另加油）→ 炒至微焦卷曲 → 下辣白菜继续炒 → 调味 → 下米饭炒散 → 淋香油出锅<br>
+      <strong>🔑 关键：</strong>五花肉自带油，炒饭更香，而且肉香和辣白菜的酸辣形成经典搭配。五花肉切薄片（3mm），太厚了炒不熟出油不够。<br>
+      <strong>💰 成本：</strong>~4.5元/份 · 建议售价22-28元 · 毛利率83%<br>
+      <strong>适用场景：</strong>堂食+外卖通用。适合已有五花肉备货的烤肉店，零新增备货。
+    </div>
+
+    <h5 style="font-size:13px;font-weight:600;color:#b84030;margin:12px 0 6px;">变形体二 · 芝士辣白菜炒饭（年轻客群款）</h5>
+    <div style="font-size:12px;color:#555;line-height:1.8;background:#fff8f0;border-left:3px solid #e8a030;border-radius:8px;padding:10px;margin-bottom:10px;">
+      <strong>出品规格：</strong>米饭150g + 辣白菜100g + 马苏里拉芝士40g + 煎蛋1个<br>
+      <strong>做法：</strong>辣白菜炒饭按标准流程炒好 → 盛入可进烤箱的碗中 → 铺上芝士碎 → 烤箱180°C烤5分钟至芝士融化微焦 → 放煎蛋 → 撒海苔碎出品。也可用喷枪直接烤化芝士（更快）。<br>
+      <strong>🔑 关键：</strong>芝士铺满碗面不露米饭，烤出来才有"瀑布芝士"效果。用马苏里拉（拉丝效果好），不要用切达（容易焦）。<br>
+      <strong>💰 成本：</strong>~5.5元/份 · 建议售价25-32元 · 毛利率80%<br>
+      <strong>适用场景：</strong>堂食拍照引流款，适合年轻客群和网红店。外卖不适合（芝士凉了就不拉丝了）。
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">⑦ 商业决策</div>
+    <div class="decision-box">
+      <p><strong>💰 成本利润：</strong>辣白菜炒饭~3元/份 · 售价18-25元 · 毛利率87-90%（KF系列利润王）。<br>
+      变形体：五花肉炒饭~4.5元/份 · 售价22-28元 · 毛利率83%；芝士炒饭~5.5元/份 · 售价25-32元 · 毛利率80%。<br>
+      <strong>三款怎么选：</strong>基础版走量+地摊核心（成本最低），五花肉版走堂食客单价提升，芝士版走年轻客群+社交媒体。<br>
+      <strong>⚠️ 注意：</strong>因为利润太高很容易让人想"多加肉"——不要这么做。辣白菜炒饭的核心竞争力就是"便宜好吃"。一加肉就会变成辣白菜炒肉不是辣白菜炒饭，顾客会觉得贵。</p>
+      <p><strong>✅ 供应链优势：</strong>辣白菜批量采购可做到8-12元/kg（宗家府10kg商用装~100元），单份成本不到1元。米饭自己蒸，鸡蛋批量采购~0.6元/个。三样食材全国任何一个菜市场都能买到。<br>
+      <strong>🎯 地摊版：</strong>⭐⭐⭐⭐⭐ 极致适合地摊。出餐2分钟，成本~3元，地摊卖12-15元，客人觉得便宜又好吃。搭配一杯饮品或一碗汤变套餐，单份利润8-10元。</p>
+      <p><strong>👥 客群画像：</strong></p>
+      <div class="customer-grid">
+        <div class="customer-item"><div class="c-icon">💼</div><div class="c-name">上班族午餐</div><div class="c-desc">点一份套餐（炒饭+小菜+汤），25元以内，快速吃饱</div></div>
+        <div class="customer-item"><div class="c-icon">🎒</div><div class="c-name">学生党</div><div class="c-desc">纯炒饭18元/外卖+配送费，一个人吃刚好</div></div>
+        <div class="customer-item"><div class="c-icon">👨‍👩‍👧</div><div class="c-name">家庭餐桌</div><div class="c-desc">堂食点烤肉+主食，辣白菜炒饭当主食收尾</div></div>
+        <div class="customer-item"><div class="c-icon">🌙</div><div class="c-name">夜宵用户</div><div class="c-desc">地摊或外卖，晚上饿了点一份辣白菜炒饭当夜宵</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="border-bottom:none;">
+    <div class="section-title">⑧ 未来趋势</div>
+    <div class="trend-box">
+      <div class="trend-item"><span class="trend-year">2018</span><span class="trend-arrow">→</span><span class="trend-desc">辣白菜炒饭=韩国料理店配角，没人当正品卖</span></div>
+      <div class="trend-item"><span class="trend-year">2021</span><span class="trend-arrow">→</span><span class="trend-desc">外卖平台出现辣白菜炒饭专门店，流水线出餐</span></div>
+      <div class="trend-item"><span class="trend-year">2024</span><span class="trend-arrow">→</span><span class="trend-desc">辣白菜炒饭便利店化·预包装即热，便利店冰箱覆盖</span></div>
+      <div class="trend-item"><span class="trend-year">2026</span><span class="trend-arrow">→</span><span class="trend-desc">辣白菜炒饭预制菜+外卖专门店，配料包+酱包标准化</span></div>
+      <div class="trend-verdict">辣白菜炒饭的价值不在"卖得多贵"而在"卖得多稳"——最稳的主食没有之一。全国通吃、全时段可卖、全年龄层接受。它的终局是：变成像蛋炒饭一样的国民级快餐单品。</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <div class="fb-name">FoodIntelAI</div><div class="fb-tagline">食品创业决策数据库</div>
+    <div class="fb-links"><span>📢 公众号：沧林食品技术</span><span>💬 微信：canglin1985</span></div>
+    <div class="fb-series">韩式美食 · KF_006 辣白菜炒饭</div>
+  </div>
+
+</div>
+</body>
+</html>

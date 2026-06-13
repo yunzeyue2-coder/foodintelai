@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>JP_002 酱烧鸡腿串 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#1a1512;color:#e8e2da;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#2a241f;border-radius:28px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.5);border:1px solid #4a3e36}
+
+/* 日式暗色调 */
+.rating-bar{background:linear-gradient(135deg,#aa7a4c,#7a4a2a);padding:18px 20px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:32px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-grade{background:rgba(0,0,0,.3);padding:4px 12px;border-radius:30px;font-size:12px;font-weight:700}
+.rating-bar .r-tagline{font-size:14px;font-weight:500;margin-top:4px;opacity:.95}
+.rating-bar .r-tags{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.15)}
+
+.section{padding:18px 20px;border-bottom:1px solid #3e342c}
+.s-title{font-size:14px;font-weight:800;color:#e2b78d;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.radar-item{padding:10px 5px;background:#3a2e26;border-radius:14px;text-align:center}
+.radar-item .label{font-size:9px;color:#b59a7a;margin-bottom:3px}
+.radar-item .stars{font-size:13px}
+.radar-item.high .stars{color:#e2a76f}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fit-col .f-head{font-size:12px;font-weight:700;margin-bottom:8px}
+.fit-item{font-size:11px;padding:6px 10px;border-radius:10px;margin-bottom:5px}
+.fit-yes{background:#3e5a3a;color:#cfd8b0}
+.fit-no{background:#6a3a2a;color:#e8aa8a}
+
+.logic-box{background:#362c24;border-radius:18px;padding:14px;margin-bottom:8px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid #4e3e32}
+.metric-row{display:flex;gap:8px;margin-top:10px}
+.metric-card{flex:1;padding:10px 4px;border-radius:14px;text-align:center}
+.metric-card .m-val{font-size:16px;font-weight:800;margin:2px 0}
+.mc-fire{background:#5a3a2a}
+.mc-fire .m-val{color:#e2a76f}
+.mc-sand{background:#4e3a2e}
+.mc-sand .m-val{color:#d6aa7a}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.track-box{background:#362c24;border-radius:16px;padding:12px}
+.track-good .t-h{color:#aacf8a}
+.track-bad .t-h{color:#e2a07a}
+.track-verdict{margin-top:12px;padding:12px;background:#2e241e;border-radius:14px;font-size:12px;line-height:1.65}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:16px;font-size:12px}
+.tier-lead{background:#5a3a2a}
+.tier-lead .t-badge{background:#d68b3a;color:#000;padding:2px 8px;border-radius:20px}
+.tier-profit{background:#3e5a3a}
+.tier-profit .t-badge{background:#b5cf6a;color:#1a1a1a}
+.tier-set{background:#3a4a5a}
+.tier-set .t-badge{background:#7aaacf}
+
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stall-item{padding:10px;border-radius:14px;text-align:center;background:#362c24}
+.risk-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #4e3e32;font-size:12px}
+.process-step{background:#362c24;border-radius:16px;padding:12px;margin-bottom:10px}
+.process-step .ps-verify{font-size:10px;color:#b59a7a;margin-top:6px;padding-left:12px;border-left:2px solid #e2a76f}
+.judge-box{background:#2e241e;border-radius:18px;padding:16px;border:1px solid #5a4a3a}
+.pay-area{padding:22px 20px;background:#201a16;border-top:2px dashed #5a4a3a;text-align:center}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #4e3e32;padding-top:18px}
+.pay-content.show{display:block}
+.btn{background:#d68b3a;border:none;padding:10px 22px;border-radius:40px;color:#1a1512;font-weight:800;cursor:pointer;margin-top:8px}
+.recipe-line{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #5a4a3a}
+.rel-item{display:flex;align-items:center;gap:12px;padding:10px;background:#362c24;border-radius:14px;margin-bottom:6px;text-decoration:none;color:#e8d8c8}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 4px;text-align:left;border-bottom:1px solid #4e3e32}
+.badge{background:#4e3a2e;display:inline-block;padding:2px 8px;border-radius:12px;font-size:9px;color:#d6aa7a}
+.footnote{font-size:10px;color:#8e7a66;text-align:center;padding:14px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 01 Header -->
+<div style="padding:14px 20px 0px 20px;background:#2a241f">
+  <h1 style="font-size:24px;font-weight:800;color:#e2b78d;">🍢 酱烧鸡腿串</h1>
+  <div style="font-size:12px;color:#b59a7a;">日式烧鸟 · 酱烧核心利润款 | JP_001_02</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score"><span class="r-num">9.2</span><span class="r-label">FoodIntelAI评分</span></div>
+    <span class="r-grade">S级核心利润款</span>
+  </div>
+  <div class="r-tagline">甜咸焦香 · 酱汁挂壁 · 出餐快毛利高 · 夜市现金流之王</div>
+  <div class="r-tags"><span>🔥 热度极高</span><span>💰 投资低</span><span>👥 1人操作</span><span>🔄 复购强</span><span>🍗 酱烧灵魂</span></div>
+</div>
+
+<!-- 02 项目速览 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">爆款</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★☆</div><div class="val">低</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div><div class="val">易上手</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★★</div><div class="val">75%+</div></div>
+  </div>
+</div>
+
+<!-- 03 适合谁 -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#cfd8b0">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 夜市烧鸟摊 / 日式居酒屋</div>
+      <div class="fit-item fit-yes">✅ 轻餐饮档口（一人可操盘）</div>
+      <div class="fit-item fit-yes">✅ 炸鸡/烧烤店增加SKU</div>
+      <div class="fit-item fit-yes">✅ 供应链半成品预制</div>
+      <div class="fit-item fit-yes">✅ 外卖专门店（酱烧复热不降质）</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#e2a07a">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 纯素食摊位</div>
+      <div class="fit-item fit-no">❌ 无法控制焦糖化火候</div>
+      <div class="fit-item fit-no">❌ 没有炭烤/铁板设备</div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 赚钱逻辑 + 量化三件套 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="logic-item"><span>🧠 顾客为什么买</span><span>酱烧甜咸香＋焦糖黏唇感＋鸡腿肉多汁</span></div>
+    <div class="logic-item"><span>📈 利润来源</span><span>酱汁自制低成本，鸡腿肉供应链成熟，单串毛利超75%</span></div>
+    <div class="logic-item"><span>📊 提高客单价</span><span>推“烧鸟套餐”（3串+味增汤）＋¥12；加芝士烤串+¥5</span></div>
+    <div class="logic-item"><span>🔄 提高复购</span><span>集点卡买5送1，每周限定“柚子胡椒酱烧”口味</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-fire"><div class="m-val">¥1200~2000</div><div class="m-label">日营收区间*</div><div class="footnote" style="font-size:8px">夜市4h+外卖</div></div>
+    <div class="metric-card mc-sand"><div class="m-val">¥15000~25000</div><div class="m-label">月净赚区间*</div><div class="footnote" style="font-size:8px">出摊22天计</div></div>
+    <div class="metric-card mc-fire"><div class="m-val">5~8天</div><div class="m-label">回本周期</div></div>
+  </div>
+  <div class="badge" style="margin-top:8px">*基于2026年二线夜市烧鸟摊调研，单串均价¥10，日销130-200串</div>
+</div>
+
+<!-- 05 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div><div>1.酱烧味型大众接受度极高，甜咸口覆盖全年龄段；2.鸡腿肉成本低，出串快，毛利可达80%；3.炭烤/铁板皆可，摊位设备要求低；4.预制半成品空间大，可做供应链。</div></div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div><div>1.普通日式烧鸟摊位增多，同质化竞争；2.酱汁配方若不独特容易被模仿；3.烤制需注意焦糖化时间，新手易烤焦；4.夏季高温肉串保存需冷藏设备。</div></div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>2026年烧鸟已从高端居酒屋下沉至夜市，酱烧鸡腿串是最畅销单品，但大部分摊位使用成品酱汁，风味雷同。采用自制改良照烧酱（生抽+蜂蜜+蚝油）能建立记忆点。<br>
+    <strong>未来判断：</strong>未来两年酱烧鸡腿串会持续成为夜市肉类单品头部，但竞争加剧后利润会从75%降至60%左右。提前做“酱汁差异化+套餐组合”可维持高毛利。<br>
+    <strong>是否值得进入：是</strong> —— 现金流极稳，建议作为烧鸟摊的主打SKU，搭配盐烧、鸡皮串形成产品矩阵。
+  </div>
+</div>
+
+<!-- 06 项目评估 -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+    <div class="stall-item"><div>市场竞争</div><div class="stars">★★★☆☆</div><div>中等</div></div>
+    <div class="stall-item"><div>学习周期</div><div class="stars">★★☆☆☆</div><div>2天出师</div></div>
+    <div class="stall-item"><div>操作容错度</div><div class="stars">★★★☆☆</div><div>刷酱时机关键</div></div>
+    <div class="stall-item"><div>最低验证资金</div><div class="stars">★★★★★</div><div>¥200试做</div></div>
+  </div>
+  <div style="margin-top:12px;padding:10px 0;display:flex;justify-content:space-between"><span>推荐等级</span><span style="font-weight:800;color:#e2a76f;font-size:20px">S级（强烈推荐）</span></div>
+</div>
+
+<!-- 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:380px">
+      <thead><tr style="background:#d68b3a;color:#1a1512"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>复购</th><th>推荐</th><th>卡片</th> </tr</thead>
+      <tbody>
+        <tr style="background:#3a2e26"><td>🍢 酱烧鸡腿串</th><td>★☆☆☆☆</td><td>★★☆☆☆</td><td>★★★★★</td><td>★★★★★</td><td>S</td><td><a href="#" style="color:#e2a76f">JP_001_02</a></td></tr>
+        <tr style="background:#362c24"><td>🍗 盐烧鸡腿串</td><td>★☆☆☆☆</td><td>★☆☆☆☆</td><td>★★★★☆</td><td>★★★★☆</td><td>A</td><td><a href="#" style="color:#e2a76f">JP_001_01</a></td></tr>
+        <tr style="background:#3a2e26"><td>🐔 鸡皮串</td><td>★☆☆☆☆</td><td>★★★☆☆</td><td>★★★★★</td><td>★★★★☆</td><td>S</td><td><a href="#">JP_001_03</a></td></tr>
+        <tr style="background:#362c24"><td>🐷 五花肉串</td><td>★☆☆☆☆</td><td>★★☆☆☆</td><td>★★★★☆</td><td>★★★★☆</td><td>A-</td><td><a href="#">JP_001_05</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">所有卡片均为FoodIntelAI日式系列已发布</div>
+</div>
+
+<!-- 07 30天验证路线 -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <div style="background:#362c24;border-radius:12px;padding:8px 12px"><span style="font-weight:800">Day1</span> 采购鸡腿肉，按配方腌制+熬酱汁，试烤20串邀请路人盲测对比市面竞品。</div>
+    <div style="background:#362c24;border-radius:12px;padding:8px 12px"><span style="font-weight:800">Day3</span> 优化刷酱次数&烤制时间（每面刷2次，间隔20秒），确定成品色泽标准。</div>
+    <div style="background:#362c24;border-radius:12px;padding:8px 12px"><span style="font-weight:800">Day7</span> 正式夜市出摊，主推酱烧鸡腿串，测试日销量峰值和复购率。</div>
+    <div style="background:#362c24;border-radius:12px;padding:8px 12px"><span style="font-weight:800">Day15</span> 增加套餐（酱烧+盐烧+鸡皮组合），拉高客单价。</div>
+    <div style="background:#362c24;border-radius:12px;padding:8px 12px"><span style="font-weight:800">Day30</span> 核算酱汁成本占比&出餐节拍，决定是否批量预制半成品串。</div>
+  </div>
+  <div style="background:#2e241e;border-radius:14px;padding:12px;margin-top:10px">
+    <strong>🔑 关键验证节点：</strong>首周日均销量＞80串 / 酱汁复购意愿＞60% / 自然好评中“酱好吃”出现率＞30%<br>
+    <strong>🚪 退出标准：</strong>连续7天销量＜40串 / 鸡腿肉涨价超30%且无替代 / 顾客反馈“太甜/太咸”比例＞40%<br>
+    <strong>✅ 继续标准：</strong>周末排队超10分钟 / 外卖自然搜“酱烧鸡腿串”进店 / 回头客占比超35%
+  </div>
+</div>
+
+<!-- 08 设备清单（≥15项+证照） -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备：</strong>炭烤炉/电热烤串机· 铁板烧设备（备用）· 排烟风机· 雪平锅（熬酱）· 不锈钢冷藏柜· 电子秤· 温度计· 切肉砧板· 刀具组· 酱料缸×2</div>
+  <div style="margin-top:6px"><strong>🔸 摊位设备：</strong>折叠手推车· 灯箱招牌（和风）· 炭筐· 排烟管· 折叠桌椅· 保温箱· 收银码· 灭火器</div>
+  <div style="margin-top:6px"><strong>🔸 首批耗材：</strong>去骨鸡腿肉15kg· 竹签(20cm)1000根· 生抽/老抽/蚝油· 蜂蜜· 白糖· 白胡椒· 食用油· 一次性纸袋· 手套· 清洁用品</div>
+  <div style="margin-top:12px;background:#2e241e;padding:12px;border-radius:16px">
+    <div><strong>💰 最低启动方案：¥2500~4000</strong> (简易炭烤架+外购冰块+基础器具)</div>
+    <div><strong>💰 完整启动方案：¥6000~9000</strong> (商用烤串机+冷藏展示柜+品牌排烟+全套包装)</div>
+    <div><strong>📄 证照成本与时间：</strong>健康证¥80(1天) + 食品摊贩备案¥0~200(3天) + 环保排烟许可（部分地区需申报）押金¥500。建议使用环保炭，避免被投诉油烟。</div>
+  </div>
+</div>
+
+<!-- 09 产品结构 -->
+<div class="section">
+  <div class="s-title">📦 产品结构（烧鸟摊）</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">盐烧鸡腿串</span><span class="t-price">¥8/串</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润核心</span><span class="t-name">酱烧鸡腿串 · 鸡皮串</span><span class="t-price">¥10-12/串</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">五串盛合（酱烧×2+盐烧×2+鸡皮×1）</span><span class="t-price">¥45-55</span></div>
+  </div>
+</div>
+
+<!-- 10 摆摊指数 -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item"><div class="s-name">🌙 夜市</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item"><div class="s-name">🏪 商圈</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item"><div class="s-name">🏔️ 景区</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item"><div class="s-name">📱 外卖</div><div class="stars">★★★☆☆</div></div>
+  </div>
+</div>
+
+<!-- 11 最大风险（6项含政策/场地） -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><strong>1️⃣ 政策与证照风险：</strong>部分夜市禁止明火炭烤，改用铁板烧设备口感会下降；环保检查严查油烟，需安装净化器。</div>
+  <div class="risk-item"><strong>2️⃣ 场地与季节风险：</strong>夜市摊位费逐年上涨，下雨天销量直接腰斩；夏季高温肉串变质快，必须配备冷藏柜。</div>
+  <div class="risk-item"><strong>3️⃣ 酱汁稳定性：</strong>熬酱时间/火候不同导致批次风味差异，顾客反馈不稳定。建议每批酱汁测糖度（22-25 Brix）。</div>
+  <div class="risk-item"><strong>4️⃣ 烤制焦糊风险：</strong>新手容易刷酱后大火烧焦，产生苦味。必须控制最后收汁阶段10-15秒即离火。</div>
+  <div class="risk-item"><strong>5️⃣ 鸡肉供应链波动：</strong>去骨鸡腿肉价格夏季高，若改用冷冻鸡腿排口感稍差，需要调整腌制配方。</div>
+  <div class="risk-item"><strong>6️⃣ 同质化模仿：</strong>酱烧配方一旦泄露，隔壁摊位可以完全复制，需要不断微调口味（加蒜/蜂蜜比例）建立壁垒。</div>
+</div>
+
+<!-- 12 最终决策判断 -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div><strong>✅ 为什么值得做：</strong>酱烧鸡腿串是经过验证的现金流爆品，单串成本2.6元以内，售价10-12元，毛利高达75%以上。出餐速度快（5-6分钟/批，一次可烤8-10串），翻台率高。口味普适性极强，覆盖男女老少，回头客天然高。且可做半成品预制，降低现场操作难度。<br>
+    <strong>❌ 为什么不值得做：</strong>如果摊位无法使用炭烤（只能用铁板或电烤），成品焦糖感和烟熏香会损失30%以上，竞争力下降。或者所在夜市已有3家以上酱烧鸡腿串且价格打到8元以下，利润被严重压缩。另外，新手没有耐心练习刷酱节奏和火候，很容易烤焦口碑崩塌。<br>
+    <strong>🔑 进入条件：</strong>①摊位允许炭烤或高性能电烤炉（温度可达220℃以上）②能稳定采购去骨鸡腿肉价格≤18元/公斤③愿意花2天时间死磕刷酱-收汁的节奏④准备至少2款自制酱汁（标准+辣味）做差异化。<br>
+    <strong>🚪 退出条件：</strong>连续2周日均销量＜50串 / 鸡腿肉进货价超过25元/公斤持续1个月 / 周边出现4家同质竞品且价格战 / 被顾客连续差评“太苦”超过5次。<br>
+    <strong>🎯 最终判断：可进（S级推荐）</strong> —— 建议作为烧鸟摊的绝对主力，搭配鸡皮串和盐烧串构成铁三角。前期靠酱烧鸡腿串打口碑和现金流，后期可衍生出芝士酱烧、辣酱烧等变体拉高客单价。
+    </div>
+  </div>
+</div>
+
+<!-- 13 核心工艺 + 验证点（落地SOP） -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺 · 落地SOP</div>
+  <div class="process-step"><strong>步骤1 鸡肉预处理</strong> — 去骨鸡腿肉切2.5cm块，去筋膜（否则烤后回缩变硬）。用盐0.3g/串、白胡椒0.1g、食用油2g抓拌2分钟，冷藏腌制30分钟-2小时。<div class="ps-verify">[验证点] 鸡肉表面有油光，无血水渗出，静置后没有腥味。</div></div>
+  <div class="process-step"><strong>步骤2 酱汁熬制（日式照烧改良）</strong> — 生抽30g+老抽5g+蚝油10g+白糖18g+蜂蜜10g+清水40g+蒜末5g，小火煮3分钟至浓稠挂勺。<div class="ps-verify">[验证点] 酱汁舀起能连续流下，滴入冷水不散开，糖度计测22-24Brix。</div></div>
+  <div class="process-step"><strong>步骤3 第一阶段烤制</strong> — 炭火/电烤炉180-220℃，鸡腿串每面45-60秒，烤至70%熟（约4分钟）。<div class="ps-verify">[验证点] 鸡肉表面微黄，按压有弹性，切开中心略粉红但不出血水。</div></div>
+  <div class="process-step"><strong>步骤4 刷酱与收汁（核心）</strong> — 每面刷酱2次，每次刷完等待20秒让酱汁附着。最后大火10-15秒使酱汁焦糖化。<div class="ps-verify">[验证点] 成品表面油亮有焦糖层，酱汁不滴落，闻有甜酱香无苦味。</div></div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整温度曲线、批量预制方案、变体酱汁见付费区</div>
+</div>
+
+<!-- 14 成本利润（7项） -->
+<div class="section">
+  <div class="s-title">📐 成本利润（单串）</div>
+  <div style="background:#362c24;border-radius:18px;padding:14px">
+    <div class="recipe-line"><span>去骨鸡腿肉 35g</span><span>¥1.6~2.2</span></div>
+    <div class="recipe-line"><span>调味料（盐/胡椒/油）</span><span>¥0.1</span></div>
+    <div class="recipe-line"><span>酱汁（自制照烧）</span><span>¥0.2</span></div>
+    <div class="recipe-line"><span>竹签+包装+损耗</span><span>¥0.3</span></div>
+    <div class="recipe-line"><span>单份总成本</span><span>¥2.2~2.8</span></div>
+    <div class="recipe-line"><span>售价区间</span><span>¥9~¥13</span></div>
+    <div class="recipe-line"><span>毛利区间</span><span>72%～78%</span></div>
+    <div class="recipe-line"><span>示例利润模型</span><span>日售180串（均价¥10.5）→ 日毛利¥1386，月净利¥2.3w（出摊22天）</span></div>
+  </div>
+</div>
+
+<!-- 15 完整出摊包 付费区（7模块） -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 酱烧鸡腿串S级专供</h3>
+  <div class="p-sub">7大模块：精确克数·温度曲线·批量酱汁·半成品预制·翻车急救·变体酱汁·档口流水线</div>
+  <div class="price-tag" style="font-size:20px;font-weight:800;color:#e2a76f">¥59 <small style="font-size:12px">永久解锁 · 含日式大师笔记</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后获取商用SOP数据包+酱汁保质期方案</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确克数/配方 -->
+    <div style="font-weight:800;margin:12px 0 4px">1️⃣ 商用精确配方（10串基准）</div>
+    <div style="background:#3a2e26;border-radius:14px;padding:12px;margin-bottom:10px">
+      <div class="recipe-line"><span>去骨鸡腿肉</span><span>350g</span></div>
+      <div class="recipe-line"><span>腌制盐</span><span>3g · 白胡椒1g · 食用油20ml</span></div>
+      <div class="recipe-line"><span>酱汁: 生抽300g, 老抽50g, 蚝油100g, 白糖180g, 蜂蜜100g, 清水400g, 蒜末50g</span></div>
+    </div>
+    <!-- 2️⃣ 批量酱汁&保存 -->
+    <div style="font-weight:800;margin:12px 0 4px">2️⃣ 批量酱汁工艺（5L商用版）</div>
+    <div style="background:#3a2e26;border-radius:14px;padding:12px;margin-bottom:10px">按比例放大10倍，不锈钢锅中小火煮至冒泡后转最小火熬8分钟，浓稠后关火。冷藏可保存7天，冷冻保存30天。使用前回温并补10g蜂蜜恢复光泽。</div>
+    <!-- 3️⃣ 温度曲线表 -->
+    <div style="font-weight:800;margin:12px 0 4px">3️⃣ 炭烤/电烤温度曲线</div>
+    <div style="background:#3a2e26;border-radius:14px;padding:12px;margin-bottom:10px">炭温区间: 180-220℃；每批次8串，翻面3-4次。电烤炉设置200℃，每面2分钟，刷酱后转230℃收汁15秒。</div>
+    <!-- 4️⃣ 半成品预制方案 -->
+    <div style="font-weight:800;margin:12px 0 4px">4️⃣ 半成品预制（供给多摊位/外卖）</div>
+    <div style="background:#3a2e26;border-radius:14px;padding:12px;margin-bottom:10px">鸡肉腌制后串好，真空包装冷藏保存2天；冷冻保存15天。出摊前解冻30分钟，烤制时间增加30秒。酱汁可单独袋装，顾客自己刷或烤完再刷。</div>
+    <!-- 5️⃣ 翻车急救 -->
+    <div style="font-weight:800;margin:12px 0 4px">5️⃣ 翻车急救方案</div>
+    <div style="background:#3a2e26;border-radius:14px;padding:12px;margin-bottom:10px"><strong>烤焦变苦</strong> → 剪掉焦黑部分，重新刷酱快速烤10秒；<strong>太干柴</strong> → 刷油+5ml水再回炉15秒；<strong>酱汁不挂串</strong> → 酱汁太稀，重新熬煮加5g玉米淀粉；<strong>鸡肉收缩严重</strong> → 筋膜未去净，下次改刀时剔除。</div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-weight:800;margin:12px 0 4px">6️⃣ 三款高利润变体</div>
+    <div style="background:#3a2e26;border-radius:14px;padding:12px;margin-bottom:10px"><strong>🌶️ 辣味酱烧：</strong>基础酱+韩式辣酱15g+辣椒粉5g；<strong>🧀 芝士烧鸟：</strong>最后30秒撒马苏里拉芝士，焗至融化；<strong>🍊 柚子胡椒酱烧：</strong>酱汁完成后拌入柚子胡椒酱20g（微辣柑橘香）。</div>
+    <!-- 7️⃣ 档口流水线设计 -->
+    <div style="font-weight:800;margin:12px 0 4px">7️⃣ 从地摊到档口（日销600串）</div>
+    <div style="background:#3a2e26;border-radius:14px;padding:12px">增加双头烤炉，一人专门串肉（可外包），一人负责烤制+刷酱。预酱汁泵定量刷，出餐节拍提升至每小时150串。增加接单屏和叫号系统，避免错单。</div>
+    <div class="badge" style="margin-top:12px">以上为付费完整出摊包，禁止免费传播</div>
+  </div>
+</div>
+
+<!-- 16 关联产品（≥3个内部跳转） -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <a class="rel-item" href="#"><span>🍢</span><span>盐烧鸡腿串（基础流量款）</span><span>→</span></a>
+  <a class="rel-item" href="#"><span>🐔</span><span>鸡皮串（暴利高复购）</span><span>→</span></a>
+  <a class="rel-item" href="#"><span>🍚</span><span>日式牛丼（主食搭配）</span><span>→</span></a>
+  <div class="badge">FoodIntelAI日式轻餐饮系列 · 原料复用率超60%</div>
+</div>
+
+<!-- 17 咨询入口 -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#362c24;border-radius:20px;padding:16px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>炭烤设备选型 · 酱汁本地化调整 · 摊位排烟合规指导</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1出摊包答疑 · 半成品供应链对接 · 菜单定价策略</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 foodintel_jp001（备注“酱烧鸡腿”）</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:12px;background:#d68b3a;color:#1a1512">📲 立即咨询</a>
+  </div>
+</div>
+<div class="footnote">FoodIntelAI V5.1 · 日式落地SOP系统 · 酱烧鸡腿串母卡 · 数据基于2026年夜市实测</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>

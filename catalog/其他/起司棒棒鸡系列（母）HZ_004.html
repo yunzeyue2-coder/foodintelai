@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>起司棒棒鸡系列 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800}
+.rating-bar .r-label{font-size:10px;opacity:.6}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;background:rgba(255,255,255,.08);border-radius:3px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269}
+.radar-item .stars{font-size:13px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7}
+.track-verdict strong{color:#E8652D}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;cursor:pointer;border:none}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #C0392B}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #eee5d8}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🧀 起司棒棒鸡系列</h1>
+  <div style="font-size:12px;color:#b5aaa0">芝士拉丝 · 鸡棒裹粉 · 网红小吃</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score"><span class="r-num">8.2</span><span class="r-label">FoodIntelAI评分</span></div>
+    <span class="r-grade">B+级项目</span>
+  </div>
+  <div class="r-tagline">颜值高、拉丝效果好，但受众偏女性/儿童，复购率中等。</div>
+  <div class="r-tags">
+    <span>🔥 热度 A</span><span>💰 投资¥3000+</span><span>👤 1人可做</span><span>🔄 复购中</span><span>🧀 芝士控最爱</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">网红感强</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">3000+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★★☆</div><div class="val">稍复杂</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 女性/儿童客流为主的摊位</div>
+      <div class="fit-item fit-yes">✅ 网红夜市/美食广场</div>
+      <div class="fit-item fit-yes">✅ 已有炸鸡摊位想增加颜值单品</div>
+      <div class="fit-item fit-yes">✅ 外卖专营（搭配酱料）</div>
+      <div class="fit-item fit-yes">✅ 喜欢做芝士类小吃</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 纯男性客群摊位（不太买账）</div>
+      <div class="fit-item fit-no">❌ 追求极致出餐速度</div>
+      <div class="fit-item fit-no">❌ 不愿意花时间整形鸡棒</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;margin-bottom:8px">买的是：芝士拉丝 × 手持棒状方便吃 × 拍照好看</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>原味起司棒棒鸡（引流）</span><span class="v">毛利55%</span></div>
+    <div class="logic-item"><span>双倍芝士/马苏里拉增量（+¥5）</span><span class="v">毛利80%</span></div>
+    <div class="logic-item"><span>套餐搭配酱料+薯角</span><span class="v">客单价+40%</span></div>
+    <div class="l-title">📈 如何提高客单价</div>
+    <div class="logic-item"><span>“爆浆升级”（芝士中心注入）→ +¥4</span><span></span></div>
+    <div class="logic-item"><span>加蘸酱（蜂蜜芥末/番茄）→ +¥2</span><span></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>每周一款限定沾粉（海苔/芝士粉/辣椒脆）</span><span></span></div>
+    <div class="logic-item"><span>集点卡：买5送1</span><span></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥600-1000</div><div class="m-sub">4-6h出摊</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥5000-8000</div><div class="m-sub">出摊22天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">8-12天</div><div class="m-sub">含设备</div></div>
+  </div>
+  <div class="badge" style="margin-top:6px">📊 数据来自夜市芝士棒摊位调研</div>
+</div>
+
+<!-- ===== 05 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">视觉冲击强，适合短视频传播，容易成为排队单品</div>
+      <div class="t-item">芝士拉丝体验感强，客单价高（单根¥12-15）</div>
+      <div class="t-item">差异化明显，比普通炸鸡更吸睛</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">制作工序多（需整形鸡棒、串签、裹粉、炸制）</div>
+      <div class="t-item">芝士凉了就不拉丝，出餐后需快速食用</div>
+      <div class="t-item">成本较高，马苏里拉芝士价格不低</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>起司棒棒鸡属于“网红小吃”类，已过爆发期，但在女性/儿童客流大的区域仍有生命力。<br>
+    <strong>未来判断：</strong>适合作为摊位差异化单品，不建议作为唯一主力，搭配其他炸鸡类产品更稳妥。<br>
+    <strong>是否值得进入：是</strong>（作为颜值担当，但需要配套引流产品）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估（V5.1） ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★☆☆</div><div style="font-size:10px">中等</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★★☆</div><div style="font-size:10px">7-12天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px">芝士易漏</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★☆☆</div><div style="font-size:10px">¥300试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;justify-content:space-between"><span style="font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">B+</span></div>
+</div>
+
+<!-- ===== 同赛道对比（链接） ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th> </tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🧀 起司棒棒鸡</td><td>★★★</td><td>★★★★</td><td>★★★★</td><td>★★★</td><td>B+</td><td><a href="#" style="color:#E8652D">#HZ_004</a></td></tr>
+        <tr><td>🍗 原味黄金炸鸡</td><td>★★★</td><td>★★★</td><td>★★★★</td><td>★★★★</td><td>A-</td><td><a href="HZ_001.html">#HZ_001</a></td></tr>
+        <tr style="background:#f8f4ef"><td>🍗 蜜汁酱裹鸡块</td><td>★★★</td><td>★★★</td><td>★★★★</td><td>★★★</td><td>A</td><td><a href="HZ_002.html">#HZ_002</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为已发布FoodIntelAI标准卡</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>试做10根起司棒棒鸡，测试芝士包裹和拉丝效果</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请15人试吃（重点女性/儿童），记录拉丝满意度和甜咸度</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备50根），观察女性客群购买比例</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>根据反馈调整芝士用量，增加1款蘸酱</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>核算单根利润，决定是否长期经营或作为引流款搭配</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7女性购买占比＞60%  ② Day15复购率＞10%  ③ Day30单根毛利＞¥5<br>
+    <strong>🚪 退出标准：</strong>连续7天日均卖不出30根 / 芝士成本占比＞35% / 顾客反馈“不拉丝/芝士硬”＞20%<br>
+    <strong>✅ 继续标准：</strong>拉丝满意度＞80% / 顾客主动拍照发朋友圈 / 可自然搭售其他炸鸡
+  </div>
+</div>
+
+<!-- ===== 08 设备清单（含证照） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：单缸炸锅(¥350) · 操作台(¥250) · 冰柜(¥600) · 油温计(¥20) · 竹签/木签(¥20/1000根) · 不锈钢盆×4(¥50) · 电子秤(¥30)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位配套</strong>：二手三轮车(¥800-1500) · 折叠操作台(¥200) · 帐篷伞(¥150) · 招牌灯箱(¥80) · 价格牌(¥20) · 保温展示柜(¥300)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：鸡胸肉/鸡腿肉10kg(¥120-180) · 马苏里拉芝士5kg(¥150-200) · 裹粉(面粉/淀粉)8kg(¥60) · 炸油15L(¥120) · 调味料(盐/蒜粉/辣椒粉)(¥50) · 打包盒/纸袋500套(¥150) · 竹签500根(¥10)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥2,200-2,800</strong>（已有冰柜/三轮车）</div>
+    <div><strong>💰 完整启动方案：¥3,300-4,500</strong>（含冰柜+车+全部设备）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80 · 食品摊贩备案¥0-100</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">原味起司棒棒鸡（1根）</span><span class="t-price">¥10-12</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">双倍芝士/辣味起司棒棒鸡</span><span class="t-price">¥15-18</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">棒棒鸡双拼+蜂蜜芥末酱+可乐</span><span class="t-price">¥28-35</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">📱 外卖</div><div class="stars">★★★★☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险（6项） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>芝士类产品需要冷藏储存，部分夜市无电源冰柜</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季芝士容易融化，冬季拉丝效果下降</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>芝士漏出/爆浆失败：封口不严炸制时芝士流出，影响卖相</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>成本高且波动：马苏里拉芝士价格受进口影响波动大（±20%）</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>出餐慢：每根需要手工包裹，高峰时段可能积压订单</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>复购依赖网红效应：新鲜感过后销量下滑，需要持续出新口味</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>高颜值、高毛利、差异化明显，适合吸引女性/儿童客群，容易在社交媒体传播。<br>
+      <strong>❌ 为什么不值得做：</strong>制作工序多，出餐慢，芝士成本高，而且单纯卖棒棒鸡很难撑起一个摊位。<br>
+      <strong>🔑 进入条件：</strong>① 客流以年轻女性为主 ② 有冰柜保存芝士 ③ 愿意投入时间练包裹技术 ④ 至少搭配2-3款其他炸鸡产品。<br>
+      <strong>🚪 退出条件：</strong>① 单根芝士成本超过¥3.5 ② 连续两周日均销量＜25根 ③ 顾客投诉“不拉丝”超过15%。<br>
+      <strong>🎯 最终判断：可进</strong> —— 建议作为摊位的“网红引流款”，配合原味炸鸡/酱裹鸡块一起卖，不要孤军奋战。
+    </div>
+    <div class="j-tags"><span>#起司棒棒鸡</span><span>#芝士拉丝</span><span>#网红小吃</span><span>#女性客群</span></div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">鸡胸肉去筋膜，锤打成薄片</span><div class="ps-verify">[验证点] 厚度均匀约0.5cm，无硬块</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">马苏里拉芝士切条，卷入鸡片中央，竹签固定</span><div class="ps-verify">[验证点] 芝士完全被鸡肉包裹，无暴露</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">裹粉（面粉+淀粉+泡打粉+盐）</span><div class="ps-verify">[验证点] 表面均匀，无干粉堆积</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">170°C油炸4-5分钟，至金黄酥脆</span><div class="ps-verify">[验证点] 切开芝士完全融化且拉丝，鸡肉熟透</div></div>
+    <div class="process-step"><span class="ps-num">5</span><span class="ps-desc">沥油后撒芝士粉/辣椒粉，或蘸酱</span><div class="ps-verify">[验证点] 撒粉均匀，蘸酱不滴</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整配比（精确到克）及芝士包裹技巧见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span>核心原料成本（鸡肉+芝士+裹粉）</span><span>¥4.0-5.0/根</span></div>
+    <div class="recipe-line"><span>包装+竹签成本</span><span>¥0.5/根</span></div>
+    <div class="recipe-line"><span>耗材（油/燃气）</span><span>¥0.4/根</span></div>
+    <div class="recipe-line"><span>单根总成本</span><span>¥4.9-5.9/根</span></div>
+    <div class="recipe-line"><span>售价区间</span><span>¥10～¥18</span></div>
+    <div class="recipe-line"><span>毛利区间</span><span>45%～67%</span></div>
+    <div class="recipe-line"><span>示例利润模型</span><span>日售80根（均价¥14）→ 日毛利¥648，月净利¥9,720（出摊25天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区，¥69） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 起司棒棒鸡系列</h3>
+  <div class="p-sub">7大模块：精确配方 · 克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥69 <small>母卡 · 永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容 →</button>
+  <div class="note">解锁后查看鸡肉腌料、芝士包裹手法、油温曲线及变体配方</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">1️⃣ 鸡肉腌料配方（每500g鸡胸）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>盐</span><span>5g</span></div>
+      <div class="recipe-line"><span>白胡椒粉</span><span>3g</span></div>
+      <div class="recipe-line"><span>蒜粉</span><span>4g</span></div>
+      <div class="recipe-line"><span>洋葱粉</span><span>4g</span></div>
+      <div class="recipe-line"><span>料酒</span><span>10g</span></div>
+      <div class="recipe-line"><span>玉米淀粉</span><span>8g</span></div>
+      <div>抓匀腌制30分钟</div>
+    </div>
+    <!-- 2️⃣ 裹粉配比 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">2️⃣ 裹粉配比（干粉）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>中筋面粉</span><span>400g</span></div>
+      <div class="recipe-line"><span>玉米淀粉</span><span>200g</span></div>
+      <div class="recipe-line"><span>土豆淀粉</span><span>100g</span></div>
+      <div class="recipe-line"><span>泡打粉</span><span>8g</span></div>
+      <div class="recipe-line"><span>小苏打</span><span>3g</span></div>
+      <div class="recipe-line"><span>盐</span><span>6g</span></div>
+    </div>
+    <!-- 3️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">3️⃣ 油炸温度曲线</div>
+    <div class="recipe-box">
+      <div>170°C下锅 → 炸4-5分钟 → 捞出控油</div>
+      <div>需保持油温稳定，每批不超过6根，避免降温</div>
+    </div>
+    <!-- 4️⃣ 批量SOP -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">4️⃣ 批量SOP（100根）</div>
+    <div class="recipe-box">
+      鸡肉腌30分 → 卷芝士约1.5小时 → 裹粉10分钟 → 油炸分批约1小时。总耗时约3小时。
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">5️⃣ 翻车解决方案</div>
+    <div class="recipe-box">
+      <strong>芝士漏出：</strong>鸡肉片边缘没压紧，卷好后用肉锤轻拍边缘封口。<br>
+      <strong>不拉丝：</strong>芝士质量差或炸过头（超过5分钟），选用马苏里拉原制奶酪。<br>
+      <strong>炸后鸡肉干柴：</strong>腌制时加少量小苏打（0.5g/500g肉）嫩化。<br>
+      <strong>裹粉脱落：</strong>鸡肉表面太干，裹粉前喷一点水。
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">6️⃣ 三款变体方案</div>
+    <div class="recipe-box">
+      <strong>🌶️ 辣味起司棒：</strong>撒料加辣椒粉+花椒粉<br>
+      <strong>🧄 蒜香起司棒：</strong>裹粉前刷蒜油，撒蒜香粉<br>
+      <strong>🍯 蜂蜜黄油棒：</strong>炸后刷蜂蜜黄油混合液，撒少糖粉
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin:12px 0 4px">7️⃣ 规模化方案</div>
+    <div class="recipe-box">
+      日销＞200根：提前批量卷好芝士棒冷藏（不超过2小时），使用双炸锅，或转型为“芝士棒专门店”增加口味线。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="HZ_001.html"><span>🍗</span><span style="flex:1">原味黄金炸鸡（薄浆脆皮）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="HZ_002.html"><span>🍯</span><span style="flex:1">蜜汁/酱裹鸡块（酱裹专精）</span><span>→</span></a>
+    <a class="rel-item" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a" href="#"><span>🧀</span><span style="flex:1">芝士球（搭售小食）</span><span>→</span></a>
+  </div>
+</div>
+
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容 →' ? '收起完整数据 ↑' : '点击解锁全部内容 →';
+  });
+
+</div>
+
+<div class="cf-tagline">决策先于工艺 · 看见水面之下的力量</div>
+  <div class="cf-contact">微信 canglin1985 · <a href="https://foodintelai.com">foodintelai.com</a></div>
+</div>
+
+<script>
+
+
+<!-- ===== 咨询入口 ===== -->
+<div class="section">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center;font-size:12px;color:#5a4f44">
+    <div><strong>📌 咨询场景：</strong>摆摊选址评估 · 成本优化 · 翻车远程诊断</div>
+    <div style="margin-top:6px"><strong>📱 联系方式：</strong>微信 canglin1985（备注卡号）</div>
+    <a style="display:inline-block;margin-top:8px;padding:8px 20px;background:#3a322a;color:#fff;border-radius:8px;text-decoration:none;font-size:12px" href="javascript:void(0)" onclick="copyWx()">📲 加微信咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 决策先于工艺 · 沧林食品工作站</div>
+</div>
+
+<script>
+document.getElementById('unlockBtn')&&document.getElementById('unlockBtn').addEventListener('click',function(){var e=document.getElementById('payContent');e&&(e.classList.toggle('show'),this.textContent=this.textContent.indexOf('点击解锁')>=0?'收起完整出摊包':'点击解锁全部内容')});
+function copyWx(){var e=document.createElement('textarea');e.value='canglin1985';document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e);alert('✅ 微信号已复制：canglin1985');}
+</script>
+
+</body>

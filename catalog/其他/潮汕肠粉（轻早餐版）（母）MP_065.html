@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>MP_065 潮汕肠粉（轻早餐版） · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#e8dfd5;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#1e3a2f,#2d4e3f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍜 潮汕肠粉（轻早餐版）</h1>
+  <div style="font-size:12px;color:#b5aaa0">薄皮 · 卤汁 · 料足 · 潮汕风味</div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.6</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">潮汕早餐灵魂，核心壁垒是米浆薄度、卤汁咸香和配料丰富。</div>
+  <div class="r-tags">
+    <span>🔥 热度中高</span>
+    <span>💰 投资3500+</span>
+    <span>👤 1-2人可做</span>
+    <span>🔄 复购高</span>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">潮汕招牌</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">卤汁记忆点</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">3500+</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">米浆+卤汁</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">毛利65%+</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 有肠粉基础的新手</div>
+      <div class="fit-item fit-yes">✅ 华东地区早餐摊（差异化）</div>
+      <div class="fit-item fit-yes">✅ 外卖+堂食兼顾</div>
+      <div class="fit-item fit-yes">✅ 夫妻档</div>
+      <div class="fit-item fit-yes">✅ 想引入潮汕特色</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 不接受咸香卤汁</div>
+      <div class="fit-item fit-no">❌ 不愿意学习卤汁熬制</div>
+      <div class="fit-item fit-no">❌ 追求极简出餐（肠粉需现蒸）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么买</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：米皮薄滑 + 卤汁咸香 + 料足（肉/蛋/虾/生菜/豆芽）</div>
+    <div class="l-title">📈 利润从哪里来</div>
+    <div class="logic-item"><span>斋肠（基础款）</span><span class="v">毛利70%</span></div>
+    <div class="logic-item"><span>加料：猪肉/牛肉/虾仁/鸡蛋/豆芽/生菜</span><span class="v">毛利65-75%</span></div>
+    <div class="logic-item"><span>套餐（+炖汤/豆浆）</span><span class="v">客单价拉高35%</span></div>
+    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+    <div class="logic-item"><span>推“海鲜全家福”：虾仁+蚝仔+牛肉</span><span class="v">售价15-20元</span></div>
+    <div class="logic-item"><span>加购炖汤（茶树菇排骨汤）</span><span class="v"></span></div>
+    <div class="l-title">🔄 如何提高复购</div>
+    <div class="logic-item"><span>自制潮汕蒜头油/萝卜干（免费加）</span><span class="v"></span></div>
+    <div class="logic-item"><span>集章卡：买5送1</span><span class="v"></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥900-1700</div><div class="m-sub">5-7h早餐</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥8000-13000</div><div class="m-sub">出摊25天</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">7-14天</div><div class="m-sub">含设备</div></div>
+  </div>
+</div>
+
+<!-- ===== 05 赛道判断（≥150字） ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+      <div class="t-item">潮汕肠粉在华东地区有差异化优势，竞争对手少</div>
+      <div class="t-item">卤汁比广式酱油汁更香浓，符合华东偏咸口味</div>
+      <div class="t-item">配料丰富（可加豆芽、生菜、虾仁），顾客感知价值高</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+      <div class="t-item">米浆要求高（需调出薄、滑、韧的口感）</div>
+      <div class="t-item">卤汁熬制需耗时（香料+肉汤）</div>
+      <div class="t-item">外卖配送后米皮变硬、卤汁被吸收</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>华东地区广式肠粉常见，但正宗潮汕肠粉较少。消费者对“卤汁肠粉”认知度低，但尝过后复购率高。<br>
+    <strong>未来判断：</strong>地方特色小吃外溢是趋势，潮汕肠粉凭借卤汁和丰富配料，有机会在华东早餐市场开辟新品类。<br>
+    <strong>是否值得进入：是</strong>（前提：掌握潮汕肠粉米浆配比、卤汁熬制、配料处理）
+  </div>
+</div>
+
+<!-- ===== 06 项目评估 ===== -->
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">竞争较少</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">5-10天</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">米浆/卤汁</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★☆</div><div style="font-size:10px;color:#5a4f44">¥300试做</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+</div>
+
+<!-- ===== 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>投资</th><th>难度</th><th>利润</th><th>竞争</th><th>推荐</th><th>卡片</th>}</thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🍜 潮汕肠粉</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★</th><td>A-</th><td><a href="#" style="color:#E8652D">#MP_065</a>}</td>
+        <tr><td>🍜 广式肠粉</th><td>★★★</th><td>★★★</th><td>★★★★</th><td>★★★★★</th><td>A-</th><td><a href="#" style="color:#D4A574">#MP_056</a>}</td>
+        <tr style="background:#f8f4ef"><td>🍙 粢饭团</th><td>★★</th><td>★★</th><td>★★★★</th><td>★★★★</th><td>A-</th><td><a href="#" style="color:#5a8f3c">#MP_063</a>}</td>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为已发布FoodIntelAI标准卡</div>
+</div>
+
+<!-- ===== 07 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>泡米（陈米），调米浆（加澄面、淀粉），试蒸10份</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>熬制潮汕卤汁（生抽+老抽+冰糖+八角+桂皮+香菇水+肉汤）</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>邀请20人试吃，对比广式肠粉，收集“米皮/卤汁/配料”反馈</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>第一次摆摊（预备50份），测试定价和出餐速度</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘：日均销量、卤汁好评率、复购率，是否增加海鲜版</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+    <strong>🔑 关键验证节点：</strong>① Day7米皮滑嫩好评率＞80% ② Day15首日能否卖出30+份 ③ Day30复购率＞20%<br>
+    <strong>🚪 退出标准：</strong>连续5天日均＜20份 / 米皮发硬或破裂反馈＞30% / 卤汁太咸或太淡<br>
+    <strong>✅ 继续标准：</strong>复购率＞25% / 有人专门来买卤汁 / 海鲜版占比＞30%
+  </div>
+</div>
+
+<!-- ===== 08 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 固定设备</strong>：抽屉式肠粉机（3-5屉）(¥800-1500) · 磨浆机(¥500-1000) · 操作台(¥200-400) · 冰柜(¥800-1500) · 不锈钢盆×4(¥50-80) · 电子秤(¥30-50) · 刮板/刷子(¥20-40) · 卤汁保温桶(¥100-200)</div>
+  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：三轮车/早餐车(¥800-2000) · 折叠操作台(¥200-400) · 帐篷伞(¥150-300) · 招牌灯箱(¥100-200) · 调料台（蒜头油、萝卜干、辣椒酱）(¥50-100) · 价格牌(¥20-50)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：陈米20kg(¥60-80) · 澄面/玉米淀粉(¥30-50) · 猪肉末/牛肉/虾仁(¥300-500) · 鸡蛋100个(¥60-80) · 豆芽/生菜(¥50-80) · 生抽/老抽/冰糖/香料(¥80-120) · 一次性饭盒/筷子300套(¥80-100)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动方案：¥3,500-5,000</strong>（已有三轮车，二手肠粉机）</div>
+    <div><strong>💰 完整启动方案：¥7,000-10,000</strong>（含冰柜+磨浆机+全新肠粉机）</div>
+    <div style="margin-top:6px"><strong>📄 证照成本：</strong>健康证¥80+食品摊贩备案¥0-200 · 办理时间1-3天</div>
+  </div>
+</div>
+
+<!-- ===== 09 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">斋肠（素肠粉）</span><span class="t-price">¥4-5/份</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">鸡蛋肠 · 猪肉肠 · 牛肉肠 · 虾仁肠 · 海鲜全家福</span><span class="t-price">¥8-18/份</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">牛肉肠粉+炖汤+生菜</span><span class="t-price">¥15-22</span></div>
+  </div>
+</div>
+
+<!-- ===== 10 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★★☆☆</div></div>
+  </div>
+</div>
+
+<!-- ===== 11 最大风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>需办理小餐饮备案，肠粉机蒸汽大，摊位需有电源和排风。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>夏季米浆易发酵变酸；雨天客流下降。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span>米浆不稳定——陈米、水比例不对，米皮发硬或易破。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span>卤汁无特色——只用生抽+水，没有潮汕咸香回甘。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span>配料不新鲜——肉末、虾仁提前腌制不当或存放过久。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span>外卖后米皮变硬——卤汁被吸收，体验差。</div>
+</div>
+
+<!-- ===== 12 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 为什么值得做：</strong>潮汕肠粉在华东属于蓝海，差异化明显。卤汁咸香浓郁符合当地口味，配料丰富。出餐快，毛利高，适合早餐和夜宵。<br>
+      <strong>❌ 为什么不值得做：</strong>技术门槛高于广式肠粉（卤汁熬制、米浆薄度）。华东消费者认知度低，需试吃教育。外卖体验差。<br>
+      <strong>🔑 进入条件：</strong>① 掌握米浆配比（陈米+澄面+淀粉，1:3水） ② 能熬制正宗潮汕卤汁（用香菇水、肉汤、香料） ③ 准备免费小料（蒜头油、萝卜干） ④ 摊位在社区或学校附近。<br>
+      <strong>🚪 退出条件：</strong>① 连续2周日均＜20份 ② 米皮好评率＜60% ③ 卤汁偏咸或偏淡反馈多。<br>
+      <strong>🎯 最终判断：可进</strong> —— 适合华东地区做差异化早餐，建议搭配炖汤或豆浆。前期可免费试吃教育市场，重点突出“潮汕特色”和“现蒸卤汁”。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 13 核心工艺（带验证点） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">米浆调制：陈米浸泡4小时，加清水、澄面、玉米淀粉、盐、油，磨成浆</span><div class="ps-verify">[验证点] 米浆舀起倒下呈细线，稠度比广式略稠，能挂住蒸盘</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">卤汁熬制：肉汤+香菇水+生抽+老抽+冰糖+八角+桂皮+香叶，小火熬40分钟，勾薄芡</span><div class="ps-verify">[验证点] 卤汁咸中带甜，有复合香料味，挂勺不稀</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">蒸制：抽屉刷油，舀米浆摇匀，放肉末/鸡蛋/虾仁/豆芽/生菜，蒸50秒，刮板卷起</span><div class="ps-verify">[验证点] 米皮薄透可见馅料，卷起不裂，口感滑嫩</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">装盘淋卤：肠粉切段装盘，淋两勺卤汁，撒蒜头油、萝卜干、香菜</span><div class="ps-verify">[验证点] 卤汁均匀覆盖，肠粉入味不咸，配料丰富</div></div>
+  </div>
+  <div class="badge" style="margin-top:4px">⚠️ 完整商用配方（米浆黄金比例、卤汁香料配比）见下方付费区</div>
+</div>
+
+<!-- ===== 14 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">斋肠成本（米浆+油+卤汁）</span><span class="v">¥1.2-1.6</span></div>
+    <div class="recipe-line"><span class="k">鸡蛋肠成本（+1个蛋）</span><span class="v">¥1.8-2.3</span></div>
+    <div class="recipe-line"><span class="k">猪肉肠成本（+20g肉）</span><span class="v">¥2.0-2.6</span></div>
+    <div class="recipe-line"><span class="k">牛肉肠成本（+20g牛肉）</span><span class="v">¥2.5-3.2</span></div>
+    <div class="recipe-line"><span class="k">包装成本（饭盒+筷）</span><span class="v">¥0.5-0.8</span></div>
+    <div class="recipe-line"><span class="k">燃料/水电成本</span><span class="v">¥0.3-0.5</span></div>
+    <div class="recipe-line"><span class="k">单份总成本（鸡蛋肠）</span><span class="v">¥3.4-4.8/份</span></div>
+    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥8～¥18/份</span></div>
+    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">60%～68%</span></div>
+    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售60份（均价¥10）→ 日毛利约¥350，月净利约¥7,000（出摊25天）</span></div>
+  </div>
+</div>
+
+<!-- ===== 15 完整出摊包（付费区·7模块） ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥78 <small>永久解锁</small></div>
+  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
+  <div class="note">解锁后查看米浆配比、卤汁香料配方、蒜头油/萝卜干制作</div>
+
+  <div id="payContent" class="pay-content">
+    <!-- 1️⃣ 精确配方 · 米浆 -->
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用米浆配方 (出30份)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>陈米1000g（泡后）</span><span>清水1500g</span></div>
+      <div class="recipe-line"><span>澄面60g</span><span>玉米淀粉40g</span></div>
+      <div class="recipe-line"><span>盐8g</span><span>食用油20g</span></div>
+    </div>
+    <!-- 2️⃣ 潮汕卤汁 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 商用卤汁配方 (出2.5kg)</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>肉汤（猪骨/鸡架）1000g</span><span>香菇水500g</span></div>
+      <div class="recipe-line"><span>生抽200g · 老抽50g</span><span>冰糖80g</span></div>
+      <div class="recipe-line"><span>八角5g · 桂皮5g · 香叶3g</span><span>水500g</span></div>
+      <div class="recipe-line"><span>小火熬40分钟，勾芡（生粉30g+水）</span><span>过滤</span></div>
+    </div>
+    <!-- 3️⃣ 蒜头油/萝卜干 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 免费小料</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>蒜头油：蒜末100g+油150g炸至金黄</span><span>密封保存</span></div>
+      <div class="recipe-line"><span>萝卜干：潮汕萝卜干切丁，炒干</span><span>加少许糖</span></div>
+    </div>
+    <!-- 4️⃣ 温度曲线 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 蒸制温度</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div class="recipe-line"><span>蒸箱预热：大火至蒸汽充足</span><span>抽屉蒸50秒</span></div>
+      <div class="recipe-line"><span>米皮起泡即熟</span><span>时间过长则硬</span></div>
+    </div>
+    <!-- 5️⃣ 翻车处理 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>米皮发硬：</strong>米浆太稠或蒸太久→加水调稀，减少至40秒</div>
+      <div><strong>米皮易破：</strong>淀粉比例不足或没刷油→增加澄面淀粉，抽屉刷足油</div>
+      <div><strong>卤汁太咸：</strong>生抽过多或没加冰糖→增加水和冰糖</div>
+      <div><strong>卤汁不挂肠粉：</strong>太稀没勾芡→加生粉水勾薄芡</div>
+    </div>
+    <!-- 6️⃣ 变体方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款变体</div>
+    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+      <div><strong>🦐 海鲜全家福：</strong>虾仁+蚝仔+瘦肉，售价15-18元</div>
+      <div><strong>🥚 蛋肉肠：</strong>鸡蛋+猪肉末，最经典组合</div>
+      <div><strong>🌶️ 辣味肠粉：</strong>卤汁中加辣椒油，配潮汕辣椒酱</div>
+    </div>
+    <!-- 7️⃣ 规模化方案 -->
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
+    <div style="background:#fff;border-radius:10px;padding:12px">
+      当单日销量＞80份时：建议增加一台肠粉机，米浆一次性磨10kg米（冷藏4小时），卤汁一次熬5kg。可招募1名帮手负责加料和打包。若外卖占比高，需将卤汁和肠粉分开包装，顾客自行淋汁。
+    </div>
+    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+  </div>
+</div>
+
+<!-- ===== 16 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="#"><span class="r-emoji">🍜</span><span class="r-name">广式肠粉·风味对比</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🍲</span><span class="r-name">炖汤·肠粉搭档</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="#"><span class="r-emoji">🥛</span><span class="r-name">现磨豆浆·早餐搭售</span><span class="r-arrow">→</span></a>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡</div>
+</div>
+
+<!-- ===== 17 咨询入口 ===== -->
+<div class="section" style="border-bottom: none;">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>米浆调配 · 卤汁熬制 · 配料腌制</div>
+    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1配方答疑 · 潮汕小吃组合 · 外卖包装优化</div>
+    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985</div>
+    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+</div>
+
+<script>
+  document.getElementById('unlockBtn').addEventListener('click', function() {
+    document.getElementById('payContent').classList.toggle('show');
+    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+  });
+</script>
+</body>
+</html>
