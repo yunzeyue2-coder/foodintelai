@@ -53,9 +53,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   border-radius:var(--radius);
   box-shadow:0 2px 8px rgba(0,0,0,.04);
   overflow:hidden;
-  transition:.2s;
+  transition:box-shadow .3s;
 }
-.sys-card:active{transform:scale(.97)}
+.sys-card.expanded{box-shadow:0 4px 20px rgba(0,0,0,.08)}
 
 /* 卡片头部 */
 .sys-top{
@@ -65,7 +65,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   gap:10px;
   cursor:pointer;
   user-select:none;
+  transition:background .15s;
 }
+.sys-top:hover{background:#f8f2ee}
 .sys-top .sys-emoji{
   width:44px;height:44px;
   border-radius:12px;
@@ -74,32 +76,90 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   justify-content:center;
   font-size:22px;
   flex-shrink:0;
+  transition:transform .3s ease;
 }
+.sys-card.expanded .sys-emoji{transform:scale(1.05)}
 .sys-top .sys-text{flex:1;min-width:0}
 .sys-top .sys-name{font-size:14px;font-weight:700}
 .sys-top .sys-count{font-size:11px;color:var(--muted);margin-top:1px}
 
-/* 内容区（默认折叠） */
-.sys-body{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
-.sys-card.expanded .sys-body{display:block}
+/* ===== 心智图展开 ===== */
+.sys-body{
+  position:relative;
+  padding:0 14px 0 28px;
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.sys-card.expanded .sys-body{
+  max-height:800px;
+  border-top:1px solid var(--border);
+  padding-top:6px;
+  padding-bottom:14px;
+}
 
-/* 子卡列表 */
-.sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px}
-.sub-item{
+/* 树干竖线 */
+.sys-body::before{
+  content:'';
+  position:absolute;
+  left:14px;
+  top:12px;
+  bottom:14px;
+  width:2px;
+  background:linear-gradient(to bottom,var(--border),var(--accent-light));
+  border-radius:1px;
+}
+
+/* 树节点（每个分类区块） */
+.tree-node{
+  position:relative;
+  padding-left:16px;
+  margin-top:8px;
+  opacity:0;
+  transform:translateY(8px);
+  animation:treeFadeIn 0.4s ease forwards;
+}
+/* 横向连接线 */
+.tree-node::before{
+  content:'';
+  position:absolute;
+  left:-16px;
+  top:10px;
+  width:16px;
+  height:2px;
+  background:var(--border);
+  border-radius:1px;
+}
+.tree-node:first-child{margin-top:2px}
+
+.tree-label{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1px;
+  margin-bottom:3px;
   display:flex;
   align-items:center;
-  gap:6px;
-  padding:8px 10px;
-  background:var(--bg);
-  border-radius:8px;
-  text-decoration:none;
-  color:var(--text);
-  font-size:11.5px;
-  transition:.1s;
+  gap:4px;
 }
-.sub-item:active{background:var(--tag-bg);transform:scale(.97)}
-.sub-item .sub-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
-.sub-item .sub-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tree-label .tl-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+
+/* 树叶子 */
+.tree-leaf{
+  display:block;
+  padding:6px 10px;
+  font-size:11.5px;
+  color:var(--text);
+  text-decoration:none;
+  border-radius:6px;
+  transition:.15s;
+  margin-bottom:2px;
+}
+.tree-leaf:hover{background:var(--tag-bg);padding-left:14px}
+.tree-leaf .tl-arrow{color:var(--light);margin-left:4px;font-size:10px}
+
+@keyframes treeFadeIn{
+  to{opacity:1;transform:translateY(0)}
+}
 
 /* 咨询区 */
 .consult{margin-top:20px;padding:16px;background:linear-gradient(135deg,#fef2f2,#fce4e4);border-radius:var(--radius);text-align:center}
@@ -113,7 +173,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
 @media(max-width:400px){
   .sys-grid{grid-template-columns:1fr}
-  .sub-grid{grid-template-columns:1fr}
   .stats-row{gap:4px}
   .stat-block .num{font-size:18px}
 }
@@ -186,18 +245,18 @@ function render(){
     html+='<div class="sys-card"><div class="sys-top" onclick="toggleSys(this)"><div class="sys-emoji" style="background:'+bg+';color:'+c+'">'+s.e+'</div><div class="sys-text"><div class="sys-name">'+s.n+'</div><div class="sys-count">'+(s.c?s.c.length:0)+'张决策卡</div></div></div>';
     html+='<div class="sys-body">';
     if(textbook.length>0){
-      html+='<div style="font-size:10px;font-weight:700;color:#c49a3e;margin-top:8px;margin-bottom:2px">📋 总纲</div><div class="sub-grid">';
-      textbook.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:#c49a3e"></span><span class="sub-name">'+n+'</span></a>';});
+      html+='<div class="tree-node" style="animation-delay:0.05s"><div class="tree-label"><span class="tl-dot" style="background:#c49a3e"></span>总纲</div>';
+      textbook.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
       html+='</div>';
     }
     if(master.length>0){
-      html+='<div style="font-size:10px;font-weight:700;color:'+c+';margin-top:8px;margin-bottom:2px">📌 母卡</div><div class="sub-grid">';
-      master.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:'+c+'"></span><span class="sub-name">'+n+'</span></a>';});
+      html+='<div class="tree-node" style="animation-delay:0.1s"><div class="tree-label"><span class="tl-dot" style="background:'+c+'"></span>母卡</div>';
+      master.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
       html+='</div>';
     }
     if(vcards.length>0){
-      html+='<div style="font-size:10px;font-weight:700;color:var(--muted);margin-top:8px;margin-bottom:2px">🔧 VC子卡</div><div class="sub-grid">';
-      vcards.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:#E8652D"></span><span class="sub-name">'+n+'</span></a>';});
+      html+='<div class="tree-node" style="animation-delay:0.15s"><div class="tree-label"><span class="tl-dot" style="background:#E8652D"></span>VC子卡</div>';
+      vcards.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
       html+='</div>';
     }
     html+='</div></div>';
