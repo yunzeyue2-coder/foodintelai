@@ -58,7 +58,7 @@ const STALL_DATA = [
     {f:"catalog/其他/钵仔糕（母）XC_116.html",n:"钵仔糕（母）XC_116"},
     {f:"catalog/其他/烤玉米（母）XC_117.html",n:"烤玉米（母）XC_117"},
     {f:"catalog/其他/糖炒栗子（母）XC_118.html",n:"糖炒栗子（母）XC_118"},
-    {f:"catalog/其他/脆皮五花肉（母）XC_119.html",n:"脆皮五花肉（母）XC_119"}
+    {f:"catalog/其他/脆皮五花肉（母）XC_119.html",n:"脆皮五花肉（母）XC_119"},{f:"catalog/其他/腊汁肉夹馍XC_120.html",n:"腊汁肉夹馍XC_120"},{f:"catalog/其他/红油凉皮XC_121.html",n:"红油凉皮XC_121"},{f:"catalog/其他/信阳热干面XC_122.html",n:"信阳热干面XC_122"},{f:"catalog/其他/登封芝麻烧饼XC_123.html",n:"登封芝麻烧饼XC_123"},{f:"catalog/其他/洛阳涮牛肚XC_124.html",n:"洛阳涮牛肚XC_124"}
   ]},
   {p:"GF",n:"裹粉系列",e:"🌾",c:[{f:"catalog/其他/土豆炸鸡粉（子）GF_003.html",n:"土豆炸鸡粉（子）GF_003"},{f:"catalog/其他/炸鸡面糊·鸡蛋牛奶（子）GF_007.html",n:"炸鸡面糊·鸡蛋牛奶（子）GF_007"},{f:"catalog/其他/米粉炸鸡粉（子）GF_004.html",n:"米粉炸鸡粉（子）GF_004"},{f:"catalog/其他/美式炸鸡裹粉（子）GF_006.html",n:"美式炸鸡裹粉（子）GF_006"},{f:"catalog/其他/脆皮炸鸡粉（子）GF_002.html",n:"脆皮炸鸡粉（子）GF_002"},{f:"catalog/其他/韩式核心炸粉·阿嬷版（子）GF_005.html",n:"韩式核心炸粉·阿嬷版（子）GF_005"}]},
   {p:"FL",n:"粉料系列",e:"🌶️",c:[{f:"catalog/其他/初雪雪翼芝士粉（子）FL_001.html",n:"初雪雪翼芝士粉（子）FL_001"},{f:"catalog/其他/咖喱芝士粉（子）FL_002.html",n:"咖喱芝士粉（子）FL_002"},{f:"catalog/其他/孜然撒粉（子）FL_004.html",n:"孜然撒粉（子）FL_004"},{f:"catalog/其他/红辣椒撒粉（子）FL_003.html",n:"红辣椒撒粉（子）FL_003"},{f:"catalog/其他/黑胡椒撒粉（子）FL_005.html",n:"黑胡椒撒粉（子）FL_005"}]},
