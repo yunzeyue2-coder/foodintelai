@@ -10,6 +10,12 @@
   var MASTER_CODES = ['canglin2026', 'food2026', 'vip2026'];
 
   function init() {
+    // 总纲/教材卡免费开放
+    var title = document.title || '';
+    if (title.indexOf('总纲') >= 0 || title.indexOf('T01') >= 0 || title.indexOf('教材卡') >= 0 || title.indexOf('textbook') >= 0) {
+      return;
+    }
+
     var targets = document.querySelectorAll(
       '.fold-content, .recipe-box, .cost-grid, .pw-protect'
     );
