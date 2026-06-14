@@ -2,194 +2,271 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>门店决策 · 产品决策库</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>门店决策 · 开店模型 · 产品决策库</title>
 <link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-icon.png">
-<meta name="theme-color" content="#B82C1E">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#faf4f0;
-  --card:#ffffff;
+  --bg:#f0e9e2;
+  --card:#faf8f5;
   --text:#1a1a1a;
-  --muted:#7a6a62;
-  --light:#b5a098;
-  --accent:#B82C1E;
-  --border:#ded0c8;
-  --tag-bg:#e8ddd6;
-  --radius:16px;
+  --muted:#7a7269;
+  --light:#b5aaa0;
+  --accent:#C0392B;
+  --accent-light:#E8652D;
+  --green:#07C160;
+  --yellow:#f5a623;
+  --border:#ddd4ca;
+  --tag-bg:#e8dfd5;
+  --radius:14px;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;line-height:1.5;-webkit-font-smoothing:antialiased}
-.nav{position:sticky;top:0;z-index:50;background:rgba(250,244,240,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 16px}
-.nav-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:50px}
-.nav-brand{font-size:16px;font-weight:700;color:var(--accent);text-decoration:none}
-.nav-links{display:flex;gap:2px}
-.nav-links a{padding:6px 10px;font-size:12px;color:var(--muted);text-decoration:none;border-radius:6px;transition:.15s}
-.nav-links a:hover{background:var(--tag-bg)}
-.nav-links a.active{background:var(--accent);color:#fff;font-weight:600}
-.main{max-width:720px;margin:0 auto;padding:0 16px 40px}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(240,233,226,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 16px;
+}
+.nav-inner{
+  max-width:800px;margin:0 auto;
+  display:flex;align-items:center;
+  height:52px;gap:8px;
+}
+.nav-brand{font-size:18px;font-weight:700;color:var(--accent);text-decoration:none}
+.main{max-width:800px;margin:0 auto;padding:20px 16px 60px}
 
-/* Hero */
-.hero{text-align:center;padding:28px 0 12px}
-.hero h1{font-size:22px;font-weight:800}
-.hero p{font-size:13px;color:var(--muted);margin-top:4px}
+/* ===== 页面标题 ===== */
+.page-header{text-align:center;padding:28px 0 16px}
+.page-header h1{font-size:24px;font-weight:800}
+.page-header h1 .hl{color:var(--accent)}
+.page-header p{font-size:13px;color:var(--muted);margin-top:4px}
 
-/* 统计横条 */
-.stats-row{display:flex;gap:8px;margin-bottom:20px}
-.stat-block{flex:1;background:var(--card);border-radius:12px;padding:12px 8px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.stat-block .num{font-size:22px;font-weight:800;color:var(--accent)}
-.stat-block .lb{font-size:11px;color:var(--muted);margin-top:2px}
-
-/* ===== 体系卡片网格 ===== */
-.sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.sys-card{
+/* ===== ① 预算入口 ===== */
+.budget-section{
   background:var(--card);
   border-radius:var(--radius);
-  box-shadow:0 2px 8px rgba(0,0,0,.04);
-  overflow:hidden;
-  transition:box-shadow .3s;
+  padding:20px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  margin-bottom:16px;
 }
-.sys-card.expanded{box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.budget-label{font-size:13px;font-weight:700;margin-bottom:10px}
+.budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.budget-opt{
+  padding:12px;border:1.5px solid var(--border);
+  border-radius:10px;text-align:center;cursor:pointer;
+  transition:.2s;background:var(--card);user-select:none;
+  font-size:13px;
+}
+.budget-opt:hover{border-color:var(--accent);background:#fef9f8}
+.budget-opt.active{border-color:var(--accent);background:#fef2f2;font-weight:600}
+.budget-opt .bo-icon{font-size:20px;display:block;margin-bottom:2px}
+.budget-opt .bo-sub{font-size:10px;color:var(--muted);margin-top:2px}
 
-/* 卡片头部 */
-.sys-top{
-  padding:16px 14px 12px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  cursor:pointer;
-  user-select:none;
-  transition:background .15s;
+/* ===== ② 筛选 ===== */
+.filter-section{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:16px 20px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  margin-bottom:16px;
 }
-.sys-top:hover{background:#f8f2ee}
-.sys-top .sys-emoji{
-  width:44px;height:44px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  flex-shrink:0;
-  transition:transform .3s ease;
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.filter-row:last-child{margin-bottom:0}
+.filter-label{font-size:11px;font-weight:600;color:var(--muted);width:56px;flex-shrink:0;padding-top:6px}
+.filter-tags{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.filter-tag{
+  padding:4px 10px;font-size:11px;border-radius:6px;
+  background:var(--bg);color:var(--muted);cursor:pointer;
+  transition:.2s;border:1px solid transparent;
 }
-.sys-card.expanded .sys-emoji{transform:scale(1.05)}
-.sys-top .sys-text{flex:1;min-width:0}
-.sys-top .sys-name{font-size:14px;font-weight:700}
-.sys-top .sys-count{font-size:11px;color:var(--muted);margin-top:1px}
+.filter-tag:hover{border-color:var(--border);color:var(--text)}
+.filter-tag.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.result-bar{font-size:12px;color:var(--muted);padding:8px 0;display:flex;justify-content:space-between}
 
-/* ===== 心智图展开 ===== */
-.sys-body{
-  position:relative;
-  padding:0 14px 0 28px;
-  max-height:0;
-  overflow:hidden;
-  transition:max-height 0.45s ease;
+/* ===== ③ 门店模型卡 ===== */
+.model-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.model-card{
+  background:var(--card);border-radius:var(--radius);padding:18px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);border-left:4px solid var(--border);
+  transition:.2s;
 }
-.sys-card.expanded .sys-body{
-  max-height:1200px;
-  border-top:1px solid var(--border);
-  padding-top:6px;
-  padding-bottom:14px;
+.model-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.model-card.risk-green{border-left-color:var(--green)}
+.model-card.risk-yellow{border-left-color:var(--yellow)}
+.model-card.risk-red{border-left-color:var(--accent)}
+
+.m-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px}
+.m-name{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.m-tags{display:flex;gap:4px;margin-top:3px}
+.m-tag{font-size:9px;padding:2px 6px;border-radius:3px;background:var(--tag-bg);color:var(--muted);font-weight:600}
+
+.m-stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;
+  margin:8px 0;padding:8px 0;
+  border-top:1px solid var(--tag-bg);border-bottom:1px solid var(--tag-bg);
+  font-size:12px;color:var(--muted);
+}
+.m-stat{display:flex;align-items:center;gap:4px}
+.m-stat strong{color:var(--text)}
+
+.m-core{font-size:12px;color:var(--text);padding:6px 0;line-height:1.6}
+.m-risk-text{font-size:11px;color:var(--accent);margin:4px 0}
+.m-actions{display:flex;gap:6px;margin-top:8px}
+.m-actions a{
+  flex:1;text-align:center;padding:8px;
+  font-size:12px;font-weight:600;border-radius:8px;
+  text-decoration:none;transition:.2s;
+}
+.m-actions .detail{background:var(--tag-bg);color:var(--text)}
+.m-actions .detail:hover{background:#d5cbc0}
+.m-actions .buy{background:var(--accent);color:#fff}
+.m-actions .buy:hover{background:#a83228}
+
+/* ===== ④ 开店配方方案 ===== */
+.recipe-section{
+  background:var(--card);border-radius:var(--radius);
+  padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.04);
+  margin:16px 0;
+}
+.rs-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.rs-icon{font-size:24px}
+.rs-title{font-size:14px;font-weight:700}
+.rs-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.recipe-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+.recipe-card{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:12px 8px;background:var(--bg);border-radius:10px;
+  text-decoration:none;color:var(--text);transition:.2s;
+  border:1px solid transparent;
+}
+.recipe-card:hover{border-color:var(--accent);background:#fef9f8}
+.recipe-card .rc-icon{font-size:22px}
+.recipe-card .rc-name{font-size:11px;font-weight:600;text-align:center;line-height:1.3}
+.recipe-card .rc-badge{font-size:8px;color:var(--accent);background:#fef2ee;padding:1px 6px;border-radius:3px}
+.recipe-card .rc-price{font-size:12px;font-weight:700;color:var(--accent)}
+
+/* ===== ⑥ 选址测评 ===== */
+.location-section{
+  background:linear-gradient(135deg,#fef2f2,#fff);
+  border:1.5px solid var(--accent-light);
+  border-radius:var(--radius);
+  padding:20px;margin:16px 0;text-align:center;
+}
+.location-section .ls-icon{font-size:32px;margin-bottom:6px}
+.location-section h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.location-section p{font-size:12px;color:var(--muted);margin-bottom:10px}
+.location-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.location-item{font-size:11px;padding:8px;background:var(--card);border-radius:6px}
+
+/* ===== ⑦ 开店死因 ===== */
+.death-section{
+  background:var(--card);border-radius:var(--radius);
+  padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.04);margin:16px 0;
+}
+.death-section h3{font-size:15px;font-weight:700;margin-bottom:10px}
+.death-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.death-card{
+  padding:12px;border-radius:10px;border:1px solid var(--border);
+}
+.death-card .dc-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.death-card .dc-text{font-size:11px;color:var(--muted);line-height:1.6}
+
+/* ===== ⑧ 案例对比 ===== */
+.case-section{margin:16px 0}
+.case-section h3{font-size:15px;font-weight:700;margin-bottom:10px}
+.case-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.case-card{
+  background:var(--card);border-radius:var(--radius);
+  padding:14px;box-shadow:0 2px 12px rgba(0,0,0,.04);
+}
+.case-card .cc-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.case-card .cc-meta{font-size:11px;color:var(--muted);margin-bottom:4px}
+.case-card .cc-result{font-size:12px}
+.case-card .cc-result .good{color:var(--green);font-weight:700}
+.case-card .cc-result .bad{color:var(--accent);font-weight:700}
+.case-card .cc-reason{font-size:11px;color:var(--muted);margin-top:4px;padding-top:4px;border-top:1px solid var(--tag-bg)}
+
+/* ===== 空状态 ===== */
+.empty-state{text-align:center;padding:32px 0;color:var(--muted);font-size:13px}
+.empty-state .es-icon{font-size:36px;display:block;margin-bottom:8px}
+
+@media(min-width:500px){
+  .budget-grid{grid-template-columns:repeat(4,1fr)}
+  .model-grid{grid-template-columns:1fr 1fr}
+  .death-grid{grid-template-columns:1fr 1fr}
+  .case-grid{grid-template-columns:1fr 1fr}
 }
 
-/* 树干竖线 */
-.sys-body::before{
-  content:'';
-  position:absolute;
-  left:14px;
-  top:12px;
-  bottom:14px;
-  width:2px;
-  background:linear-gradient(to bottom,var(--border),var(--accent-light));
-  border-radius:1px;
+/* ===== ⑨ 开店准备时间轴 ===== */
+.timeline-section,.location-tool-section,.ops-section{
+  background:var(--card);border-radius:var(--radius);
+  margin:16px 0;box-shadow:0 2px 12px rgba(0,0,0,.04);overflow:hidden;
 }
-
-/* 树节点（每个分类区块） */
-.tree-node{
-  position:relative;
-  padding-left:16px;
-  margin-top:8px;
-  opacity:0;
-  transform:translateY(-6px);
-  animation:treeSlideIn 0.35s ease forwards;
+.ts-header{
+  display:flex;align-items:center;gap:10px;padding:16px 20px;
+  cursor:pointer;user-select:none;transition:.2s;
 }
-/* 横向连接线 */
-.tree-node::before{
-  content:'';
-  position:absolute;
-  left:-16px;
-  top:10px;
-  width:16px;
-  height:2px;
-  background:var(--border);
-  border-radius:1px;
-}
-.tree-node:first-child{margin-top:2px}
-.tree-node:nth-child(1){animation-delay:0.15s}
-.tree-node:nth-child(2){animation-delay:0.45s}
-.tree-node:nth-child(3){animation-delay:0.75s}
+.ts-header:hover{background:#f5f0eb}
+.ts-icon{font-size:22px}
+.ts-title{font-size:14px;font-weight:700}
+.ts-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.ts-toggle{font-size:11px;color:var(--accent);font-weight:600;margin-left:auto;white-space:nowrap}
+.ts-body{padding:0 20px 20px;display:none}
+.ts-body.open{display:block}
 
-.tree-label{
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:1px;
-  margin-bottom:3px;
-  display:flex;
-  align-items:center;
-  gap:4px;
-}
-.tree-label .tl-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+/* 时间轴 */
+.tl-phase{margin-bottom:18px}
+.tl-phase-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--tag-bg)}
+.tl-items{padding-left:8px}
+.tl-item{display:flex;gap:10px;margin-bottom:10px;position:relative}
+.tl-item:before{content:'';position:absolute;left:9px;top:16px;bottom:-12px;width:1px;background:var(--tag-bg)}
+.tl-item:last-child:before{display:none}
+.tl-dot{width:20px;height:20px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:2px}
+.tl-item-body{flex:1;font-size:12px;line-height:1.5}
+.tl-item-body strong{display:block;font-size:13px;margin-bottom:2px}
+.tl-item-desc{color:var(--muted);font-size:11px;margin-top:1px}
 
-/* 树节点内的叶子逐条滑入 */
-.tree-leaf{
-  display:block;
-  padding:6px 10px;
-  font-size:11.5px;
-  color:var(--text);
-  text-decoration:none;
-  border-radius:6px;
-  transition:.15s;
-  margin-bottom:2px;
-  opacity:0;
-  transform:translateX(-4px);
-  animation:leafFadeIn 0.3s ease forwards;
-}
-.tree-leaf:nth-child(2){animation-delay:0.08s}
-.tree-leaf:nth-child(3){animation-delay:0.16s}
-.tree-leaf:nth-child(4){animation-delay:0.24s}
-.tree-leaf:nth-child(5){animation-delay:0.32s}
-.tree-leaf:hover{background:var(--tag-bg);padding-left:14px}
-.tree-leaf .tl-arrow{color:var(--light);margin-left:4px;font-size:10px}
+/* 选址工具 */
+.loc-intro{font-size:12px;color:var(--muted);padding:12px;background:var(--bg);border-radius:8px;margin-bottom:14px;line-height:1.5}
+.loc-level{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--tag-bg)}
+.loc-level-title{font-size:13px;font-weight:700;margin-bottom:8px}
+.loc-criteria{display:grid;gap:6px}
+.loc-criterion{display:flex;align-items:flex-start;gap:8px;padding:6px 10px;background:var(--bg);border-radius:6px;font-size:11px}
+.lc-label{font-weight:600;white-space:nowrap;color:var(--text);min-width:70px}
+.lc-desc{color:var(--muted)}
+.loc-score-bar{display:flex;align-items:center;margin-top:6px;font-size:13px;font-weight:600;padding:6px 10px;background:#fef9f8;border-radius:6px}
+.loc-score-range{color:var(--accent);margin-left:4px}
+.loc-final{background:var(--bg);border-radius:8px;padding:12px;margin-top:10px}
+.loc-final-title{font-size:13px;font-weight:700;margin-bottom:6px;text-align:center}
+.loc-final-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.loc-final-item{font-size:12px;text-align:center;padding:6px;background:var(--card);border-radius:6px}
+.loc-tip{font-size:11px;color:var(--muted);margin-top:10px;padding:8px 12px;background:var(--tag-bg);border-radius:6px}
 
-@keyframes treeSlideIn{
-  0%{opacity:0;transform:translateY(-8px)}
-  100%{opacity:1;transform:translateY(0)}
-}
-@keyframes leafFadeIn{
-  0%{opacity:0;transform:translateX(-6px)}
-  100%{opacity:1;transform:translateX(0)}
-}
-
-/* 咨询区 */
-.consult{margin-top:20px;padding:16px;background:linear-gradient(135deg,#fef2f2,#fce4e4);border-radius:var(--radius);text-align:center}
-.consult .ct{font-size:13px;font-weight:700;color:#5a2a2a}
-.consult .cd{font-size:11px;color:var(--muted);margin:6px 0 10px}
-.consult .cb{display:inline-block;padding:8px 24px;background:var(--accent);color:#fff;border-radius:10px;font-size:12px;font-weight:600;text-decoration:none;margin:0 4px}
-
-.footer{text-align:center;padding:20px 16px 30px;color:var(--muted);font-size:11px;line-height:1.8}
-.footer .brand{font-size:14px;font-weight:700;color:var(--text)}
-.footer a{color:var(--accent);text-decoration:none}
-
-@media(max-width:400px){
-  .sys-grid{grid-template-columns:1fr}
-  .stats-row{gap:4px}
-  .stat-block .num{font-size:18px}
+/* 运营手册 */
+.ops-day{margin-bottom:14px}
+.ops-day-title{font-size:13px;font-weight:700;margin-bottom:8px}
+.ops-timeline{display:grid;gap:4px}
+.ops-tl-item{font-size:11px;padding:6px 10px;background:var(--bg);border-radius:6px;display:flex;align-items:center;gap:8px}
+.ops-time{font-weight:700;color:var(--accent);white-space:nowrap;min-width:80px;font-size:10px}
+.ops-block{margin-bottom:14px;padding:12px;background:var(--bg);border-radius:8px}
+.ops-block-title{font-size:13px;font-weight:700;margin-bottom:6px}
+.ops-list{display:grid;gap:4px}
+.ops-list-item{font-size:11px;padding:4px 0;line-height:1.5;color:var(--text)}
+.ops-list-item strong{color:var(--accent)}
+@media(min-width:500px){
+  .loc-criteria{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -203,85 +280,784 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 
 <div class="main">
 
-  <div class="hero">
-    <h1>🏪 门店决策</h1>
-    <p>体系化创业 · 总纲→母卡→VC卡 · 三级决策链</p>
+  <div class="page-header">
+    <h1><span class="hl">门店</span>决策卡</h1>
+    <p>选品类 · 估投入 · 算回本 · 避死坑</p>
   </div>
 
-  <div class="stats-row" id="statsRow"></div>
-
-  <div class="sys-grid" id="sysGrid"></div>
-
-  <div class="consult">
-    <div class="ct">💼 想开一家店？</div>
-    <div class="cd">告诉我城市、预算、客群，推荐最合适的体系</div>
-    <a href="javascript:void(0)" onclick="toggleChat()" class="cb">💬 咨询沧林</a>
-    <a href="javascript:void(0)" onclick="copyWxid()" class="cb" style="background:#5a3a3a">📱 加微信</a>
+  <!-- ===== ① 预算入口 ===== -->
+  <div class="budget-section">
+    <div class="budget-label">💰 你准备了多少开店资金？</div>
+    <div class="budget-grid" id="budgetGrid">
+      <div class="budget-opt active" data-budget="5" onclick="onBudget(this)">
+        <span class="bo-icon">💼</span>
+        5万以下
+        <div class="bo-sub">小店/档口</div>
+      </div>
+      <div class="budget-opt" data-budget="10" onclick="onBudget(this)">
+        <span class="bo-icon">🏪</span>
+        5–10万
+        <div class="bo-sub">标准门店</div>
+      </div>
+      <div class="budget-opt" data-budget="20" onclick="onBudget(this)">
+        <span class="bo-icon">🏬</span>
+        10–20万
+        <div class="bo-sub">品质门店</div>
+      </div>
+      <div class="budget-opt" data-budget="30" onclick="onBudget(this)">
+        <span class="bo-icon">🏗️</span>
+        20万+
+        <div class="bo-sub">旗舰/首店</div>
+      </div>
+    </div>
   </div>
+
+  <!-- ===== ② 筛选 ===== -->
+  <div class="filter-section">
+    <div class="filter-row">
+      <div class="filter-label">品类</div>
+      <div class="filter-tags" data-dim="type">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="卤味">卤味</span>
+        <span class="filter-tag" data-v="早餐">早餐</span>
+        <span class="filter-tag" data-v="快餐">快餐</span>
+        <span class="filter-tag" data-v="饮品">饮品</span>
+        <span class="filter-tag" data-v="小吃">小吃</span>
+        <span class="filter-tag" data-v="炸物">炸物</span>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">回本</div>
+      <div class="filter-tags" data-dim="payback">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="3m">3个月内</span>
+        <span class="filter-tag" data-v="6m">6个月内</span>
+        <span class="filter-tag" data-v="12m">1年内</span>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">风险</div>
+      <div class="filter-tags" data-dim="risk">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="低">低</span>
+        <span class="filter-tag" data-v="中">中</span>
+        <span class="filter-tag" data-v="高">高</span>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-label">模式</div>
+      <div class="filter-tags" data-dim="mode">
+        <span class="filter-tag active" data-v="*">全部</span>
+        <span class="filter-tag" data-v="自营">自营</span>
+        <span class="filter-tag" data-v="夫妻">夫妻店</span>
+        <span class="filter-tag" data-v="品牌">品牌加盟</span>
+      </div>
+    </div>
+    <div class="result-bar">
+      <span>匹配 <span class="count" id="resultCount">—</span> 个门店模型</span>
+      <span style="font-size:10px;color:var(--light)">按风险从低到高排序</span>
+    </div>
+  </div>
+
+  <!-- ===== ③ 门店模型卡 ===== -->
+  <div id="modelArea"></div>
+
+  <!-- ===== ④ 开店配方方案（沧林亲研） ===== -->
+  <div class="recipe-section">
+    <div class="rs-header">
+      <span class="rs-icon">🏆</span>
+      <div>
+        <div class="rs-title">开店配方方案 · 沧林亲研</div>
+        <div class="rs-sub">已验证门店铺货配方，完整工艺卡</div>
+      </div>
+      <span style="font-size:10px;color:var(--accent);background:#fef2f2;padding:3px 8px;border-radius:4px;font-weight:600">¥699/套</span>
+    </div>
+    <div class="recipe-grid" id="recipeGrid">
+      <a class="recipe-card" href="cards/daokou-shaoji.html">
+        <div class="rc-icon">🏮</div>
+        <div class="rc-name">道口烧鸡</div>
+        <div class="rc-badge">已验证</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/桶子鸡_产品卡.html">
+        <div class="rc-icon">🐓</div>
+        <div class="rc-name">开封桶子鸡</div>
+        <div class="rc-badge">已验证</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/叫花鸡_郑州版_产品卡.html">
+        <div class="rc-icon">🏺</div>
+        <div class="rc-name">叫花鸡(郑州版)</div>
+        <div class="rc-badge">已验证</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/茶香鸡_产品卡.html">
+        <div class="rc-icon">🍃</div>
+        <div class="rc-name">茶香鸡</div>
+        <div class="rc-badge">已验证</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/椒麻鸡_产品卡.html">
+        <div class="rc-icon">🌶️</div>
+        <div class="rc-name">椒麻鸡</div>
+        <div class="rc-badge">已验证</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/麻油鸡_产品卡.html">
+        <div class="rc-icon">🫘</div>
+        <div class="rc-name">麻油鸡</div>
+        <div class="rc-badge">已验证</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/沟帮子熏鸡_商业产品卡.html">
+        <div class="rc-icon">🔥</div>
+        <div class="rc-name">沟帮子熏鸡</div>
+        <div class="rc-badge">已验证</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/酱卤牛肉_产品卡.html">
+        <div class="rc-icon">🥩</div>
+        <div class="rc-name">酱卤牛肉</div>
+        <div class="rc-badge">已验证</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/MD_002_藤椒鸭腿门店决策版.html">
+        <div class="rc-icon">🦆</div>
+        <div class="rc-name">藤椒鸭腿</div>
+        <div class="rc-badge">M3新版</div>
+        <div class="rc-price">¥499</div>
+      </a>
+      <a class="recipe-card" href="cards/MD_HZ_000_韩式炸鸡专门店.html">
+        <div class="rc-icon">🍗</div>
+        <div class="rc-name">韩式炸鸡专门店</div>
+        <div class="rc-badge">M3新版</div>
+        <div class="rc-price">¥499</div>
+      </a>
+      <a class="recipe-card" href="cards/MD_CF_000_精品咖啡专门店.html">
+        <div class="rc-icon">☕</div>
+        <div class="rc-name">精品咖啡专门店</div>
+        <div class="rc-badge">M3新版</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/MD_NT_000_精品奶茶店.html">
+        <div class="rc-icon">🥤</div>
+        <div class="rc-name">精品奶茶店</div>
+        <div class="rc-badge">M3新版</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/MD_FM_000_粉面·快餐店.html">
+        <div class="rc-icon">🍜</div>
+        <div class="rc-name">粉面/快餐店</div>
+        <div class="rc-badge">M3新版</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/MD_LW_000_熟食·卤味店.html">
+        <div class="rc-icon">🥩</div>
+        <div class="rc-name">熟食/卤味店</div>
+        <div class="rc-badge">M3新版</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/MD_HG_000_火锅·酸汤·串串店.html">
+        <div class="rc-icon">🫕</div>
+        <div class="rc-name">火锅/酸汤/串串店</div>
+        <div class="rc-badge">M3新版</div>
+        <div class="rc-price">¥699</div>
+      </a>
+      <a class="recipe-card" href="cards/MD_BZ_000_早餐包子店.html">
+        <div class="rc-icon">🥟</div>
+        <div class="rc-name">早餐·包子店</div>
+        <div class="rc-badge">M3新版</div>
+        <div class="rc-price">¥699</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ===== ⑥ 选址测评 ===== -->
+  <div class="location-section">
+    <div class="ls-icon">📍</div>
+    <h3>门店成败，选址占70%</h3>
+    <p>不同品类对选址的要求完全不同 · 选错位置配方再好也白搭</p>
+    <div class="location-grid">
+      <div class="location-item">炸鸡店 → 学校/写字楼周边，外卖覆盖率优先</div>
+      <div class="location-item">早餐店 → 社区入口/菜市场旁，步行5分钟覆盖</div>
+      <div class="location-item">柠檬茶 → 商圈首层/街角位，夏季人流量是关键</div>
+      <div class="location-item">卤味店 → 社区入口/菜市场内，靠复购不靠流量</div>
+      <div class="location-item" style="grid-column:1/-1">💡 糖水/凉菜档口 → 夜市/美食街，纯外带不靠堂食</div>
+    </div>
+  </div>
+
+  <!-- ===== ⑦ 开店死因 ===== -->
+  <div class="death-section">
+    <h3>💀 各品类开店「真实死因」</h3>
+    <div class="death-grid" id="deathGrid"></div>
+  </div>
+
+  <!-- ===== ⑧ 案例对比 ===== -->
+  <div class="case-section">
+    <h3>📊 真实开店案例</h3>
+    <div class="case-grid" id="caseGrid"></div>
+  
+  <!-- ===== ⑨ 开店准备时间轴（从开店手册提炼） ===== -->
+  <div class="timeline-section">
+    <div class="ts-header" onclick="togglePanel('tlPanel')">
+      <span class="ts-icon">📋</span>
+      <div>
+        <div class="ts-title">开店准备 · 时间轴清单</div>
+        <div class="ts-sub">从决定开店到开张，每一步该做什么</div>
+      </div>
+      <span class="ts-toggle" id="tlToggle">展开</span>
+    </div>
+    <div class="ts-body" id="tlPanel">
+      <div class="tl-phase">
+        <div class="tl-phase-title">📆 开店前 60-90 天 · 筹备考察期</div>
+        <div class="tl-items">
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>品类方向锁定</strong>
+              <div class="tl-item-desc">确定主品类和定位（早餐/卤味/炸鸡/饮品等）。参考门店决策卡的品类模型，锁定1个方向不摇摆。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>目标城市评估</strong>
+              <div class="tl-item-desc">查城市人均GDP、常住人口、25-35岁人群比例。判断：是否进入该城市？<br>标准：一线及强二线城市优先，人均GDP达标且人口有增长趋势。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>竞争对手摸底</strong>
+              <div class="tl-item-desc">找出商圈内同品类前三的店，记录：日均客流、客单价、产品结构、价格带。<br>关键：不是去看人家做得怎么样，是去找"他们没做好的"那个入口。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>客流量实地测算</strong>
+              <div class="tl-item-desc">坐在备选店门口数人，连续7天（含周末）。分时段（早/中/晚/夜）记录。<br>核心指标：日均目标客流量 = 经过总人数 × 目标人群占比。<br>公式：日均收入上限 = 日均目标客流量 × 预估进店率(3-8%) × 客单价</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>周期利润测算</strong>
+              <div class="tl-item-desc">开店前必须算清：周期利润 = 日均收入 × 30天 - (房租+人工+原料+水电+平台抽成+损耗)<br>→ 如果算出来月利润 < 你打工工资的1.5倍，别开。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-phase">
+        <div class="tl-phase-title">📆 开店前 30-60 天 · 选址签约期</div>
+        <div class="tl-items">
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>商圈筛选与铺位评估</strong>
+              <div class="tl-item-desc">用选址评分工具对候选铺位打分（40分以下不进入，40-70分暂缓，70分以上进入）。<br>核心看：路宽、门脸宽度、有无隔离带、距公交站距离、门前空场。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>商铺租赁谈判</strong>
+              <div class="tl-item-desc">谈租期(至少3年)、租金涨幅(锁定年涨幅≤5%)、免租期(至少15天装修期)。<br>转让费单独谈，写在合同里。押金一般不超3个月。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>个体工商户注册</strong>
+              <div class="tl-item-desc">所需材料：身份证、租房协议、产权证复印件、一寸照片。<br>流程：工商局申请→核准→领执照（材料齐全1个工作日出证）。<br>费用：开业登记费¥20，变更¥10，补发¥10。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>食品经营许可证办理</strong>
+              <div class="tl-item-desc">需要：营业执照、场地平面图、食品安全制度。<br>注意：装修前最好让食药监的人来看一眼场地，避免装修完不合规返工。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>设备与原料供应链敲定</strong>
+              <div class="tl-item-desc">列设备清单：核心设备（炸炉/煮锅/冰柜）→ 辅设备（计时器/温度计）→ 耗材。<br>找2-3家供应商比价，不要只盯价格，售后响应速度比价格重要。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-phase">
+        <div class="tl-phase-title">📆 开店前 7-30 天 · 装修备货期</div>
+        <div class="tl-items">
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>门店装修与动线设计</strong>
+              <div class="tl-item-desc">动线原则：顾客进门→点单→取餐→离开，不交叉。后厨动线：备料区→操作区→出餐区，按工序排列。<br>40㎡以下不要设堂食区，全部做外带/外卖。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>菜单设计与定价</strong>
+              <div class="tl-item-desc">菜单结构：引流款(低价吸引) + 利润款(核心毛利) + 形象款(品牌调性)。<br>定价参考：毛利率目标60-70%，外卖平台抽成25%需计入成本。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>人员招聘与培训</strong>
+              <div class="tl-item-desc">至少提前15天招人。培训内容：出餐SOP、收银系统操作、卫生规范、服务话术。<br>第一天实际运营前，至少做3次完整流程演练（从备料到出餐）。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>试营业前准备</strong>
+              <div class="tl-item-desc">设备调试 → 原料试做 → 口味还原度测试 → 出餐时间测试。<br>准备开业物料：招牌、菜单牌、POS系统、外卖平台入驻。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-phase">
+        <div class="tl-phase-title">📆 开业 · 第一周实战</div>
+        <div class="tl-items">
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>试营业（3-7天）</strong>
+              <div class="tl-item-desc">不搞大规模宣传，先磨合流程。重点记录：出餐速度、高峰期排队情况、原料消耗量、顾客反馈。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>正式开业活动</strong>
+              <div class="tl-item-desc">开业促销不要"全场5折"——伤品牌。推荐"首单立减+第二份半价"结构。<br>外卖平台：前7天不要上活动，先把自然流量跑一遍，再根据数据调。</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <span class="tl-dot"></span>
+            <div class="tl-item-body">
+              <strong>首周复盘</strong>
+              <div class="tl-item-desc">关键数据：日均单量、客单价、毛利率、差评原因。<br>前7天的差评决定店铺后续评分权重，每天花1小时回复每条评价。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ⑩ 选址评分工具（从逸马店址评估手册提炼） ===== -->
+  <div class="location-tool-section">
+    <div class="ts-header" onclick="togglePanel('locPanel')">
+      <span class="ts-icon">📍</span>
+      <div>
+        <div class="ts-title">选址评分 · 自测工具</div>
+        <div class="ts-sub">城市 → 商圈 → 门店三级评估，帮你看清铺位值不值</div>
+      </div>
+      <span class="ts-toggle" id="locToggle">展开</span>
+    </div>
+    <div class="ts-body" id="locPanel">
+      <div class="loc-intro">
+        <p>这套评分体系由逸马国际顾问集团总结，是连锁品牌（海底捞/真功夫/绝味等）使用的标准选址方法。分三级筛选：<strong>城市→商圈→门店</strong>，每级打分决定是否进入下一级。</p>
+        <p style="margin-top:6px;font-size:11px;color:var(--muted)">💡 评分标准：0-40分=不进入，40-70分=暂缓，70-100分=积极进入</p>
+      </div>
+      <div class="loc-level">
+        <div class="loc-level-title">第一级：城市评估（满分100分）</div>
+        <div class="loc-criteria">
+          <div class="loc-criterion">
+            <span class="lc-label">城市类型</span>
+            <div class="lc-desc">一线/强二线=30分，普通地级市=20分，县级市=10分</div>
+          </div>
+          <div class="loc-criterion">
+            <span class="lc-label">人均GDP</span>
+            <div class="lc-desc">≥5万=25分，3-5万=15分，<3万=5分</div>
+          </div>
+          <div class="loc-criterion">
+            <span class="lc-label">人口规模</span>
+            <div class="lc-desc">常住>500万=25分，200-500万=15分，<200万=5分</div>
+          </div>
+          <div class="loc-criterion">
+            <span class="lc-label">消费水平</span>
+            <div class="lc-desc">城镇居民人均月消费>2000=20分，1000-2000=10分，<1000=5分</div>
+          </div>
+        </div>
+        <div class="loc-score-bar">
+          <span>城市总分：</span>
+          <span class="loc-score-range">0-100分</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--muted)">≥40分进入下一级</span>
+        </div>
+      </div>
+      <div class="loc-level">
+        <div class="loc-level-title">第二级：商圈评估（满分100分）</div>
+        <div class="loc-criteria">
+          <div class="loc-criterion">
+            <span class="lc-label">商圈类型</span>
+            <div class="lc-desc">核心商圈（步行街/购物中心）=30分，次级商圈（社区中心）=20分，边缘商圈=10分</div>
+          </div>
+          <div class="loc-criterion">
+            <span class="lc-label">日均人流量</span>
+            <div class="lc-desc">店门口经过>5000人/天=25分，2000-5000=15分，<2000=5分</div>
+          </div>
+          <div class="loc-criterion">
+            <span class="lc-label">租金水平</span>
+            <div class="lc-desc">租金占营业额预计<15%=25分，15-25%=15分，>25%=5分（按40㎡估算）</div>
+          </div>
+          <div class="loc-criterion">
+            <span class="lc-label">竞争格局</span>
+            <div class="lc-desc">同品类≤2家且定位不同=20分，同品类3-5家=10分，同品类>5家且同质化=5分</div>
+          </div>
+        </div>
+        <div class="loc-score-bar">
+          <span>商圈总分：</span>
+          <span class="loc-score-range">0-100分</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--muted)">≥40分进入下一级</span>
+        </div>
+      </div>
+      <div class="loc-level">
+        <div class="loc-level-title">第三级：门店评估（满分100分）</div>
+        <div class="loc-criteria">
+          <div class="loc-criterion">
+            <span class="lc-label">店铺位置</span>
+            <div class="lc-desc">临街首层/转角位=25分，临街非转角=15分，二楼/巷内=5分</div>
+          </div>
+          <div class="loc-criterion">
+            <span class="lc-label">门面条件</span>
+            <div class="lc-desc">门宽>4米+门头醒目=25分，门宽2-4米=15分，门宽<2米=5分</div>
+          </div>
+          <div class="loc-criterion">
+            <span class="lc-label">面积适用性</span>
+            <div class="lc-desc">面积匹配品类需求+动线合理=25分，面积偏大/偏小但可用=15分，完全不适合=5分</div>
+          </div>
+          <div class="loc-criterion">
+            <span class="lc-label">基础设施</span>
+            <div class="lc-desc">三相电+上下水+排烟=25分，缺一项=15分，缺两项以上=5分</div>
+          </div>
+        </div>
+        <div class="loc-score-bar">
+          <span>门店总分：</span>
+          <span class="loc-score-range">0-100分</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--muted)">≥40分进入总体评估</span>
+        </div>
+      </div>
+      <div class="loc-final">
+        <div class="loc-final-title">📊 综合得分 = 商圈得分 × 60% + 门店得分 × 40%</div>
+        <div class="loc-final-grid">
+          <div class="loc-final-item"><span style="color:var(--green);font-weight:700">≥70分</span> → 积极进入</div>
+          <div class="loc-final-item"><span style="color:#f5a623;font-weight:700">40-70分</span> → 暂缓，等时机成熟</div>
+          <div class="loc-final-item"><span style="color:var(--accent);font-weight:700"><40分</span> → 不进入</div>
+        </div>
+      </div>
+      <div class="loc-tip">
+        💡 <strong>用行动建议</strong>：打印评分表，去3个候选铺位各打一次分，选综合分最高的。差10分以上就选分高的，别因为便宜几千房租将就。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ⑪ 门店运营手册（从店长工作手册提炼） ===== -->
+  <div class="ops-section">
+    <div class="ts-header" onclick="togglePanel('opsPanel')">
+      <span class="ts-icon">⚙️</span>
+      <div>
+        <div class="ts-title">门店运营 · 店长实务手册</div>
+        <div class="ts-sub">开店后每天怎么管，损耗控制、人员管理、突发事件处理</div>
+      </div>
+      <span class="ts-toggle" id="opsToggle">展开</span>
+    </div>
+    <div class="ts-body" id="opsPanel">
+      <div class="ops-day">
+        <div class="ops-day-title">📅 店长一天的工作节奏</div>
+        <div class="ops-timeline">
+          <div class="ops-tl-item"><span class="ops-time">开店前30min</span>确认人员出勤、检查库存、设备调试、零钱准备、灯光卫生</div>
+          <div class="ops-tl-item"><span class="ops-time">开店-午前</span>确认当日营业目标、检查产品陈列、追踪设备问题、分析昨日数据</div>
+          <div class="ops-tl-item"><span class="ops-time">中午</span>轮班午餐，保证高峰全人值守</div>
+          <div class="ops-tl-item"><span class="ops-time">下午1-3点</span>员工培训、问题处理、同行调查</div>
+          <div class="ops-tl-item"><span class="ops-time">傍晚3-6点</span>确认营业额完成进度、订货、交接班</div>
+          <div class="ops-tl-item"><span class="ops-time">晚间-打烊</span>冲刺当日目标、盘点、日报表、打烊安全检查</div>
+        </div>
+      </div>
+      <div class="ops-block">
+        <div class="ops-block-title">⚠️ 损耗控制（餐饮最大隐形成本）</div>
+        <div class="ops-list">
+          <div class="ops-list-item"><strong>每损耗1元，要多卖3-5元才能补回来。</strong>控制损耗就是直接增利润。</div>
+          <div class="ops-list-item"><strong>内部损耗防范：</strong>收银漏洞（少收/错收）、员工私拿、过期报废。关键：日报表必须当天核对，发现问题不超过24小时处理。</div>
+          <div class="ops-list-item"><strong>外部损耗防范：</strong>供应商短斤少两、配送破损、顾客偷窃。关键：每次收货必须当面清点，破损拒收。</div>
+          <div class="ops-list-item"><strong>订货原则：</strong>参考前7天平均销量订货，宁少不多。热销品可以临时补货，滞销品报废了就是纯亏。</div>
+          <div class="ops-list-item"><strong>防盗要点：</strong>店面明亮、收银台只留备用金、监控无死角、主动上前服务可以大幅降低偷窃。</div>
+        </div>
+      </div>
+      <div class="ops-block">
+        <div class="ops-block-title">👥 人员管理要点</div>
+        <div class="ops-list">
+          <div class="ops-list-item"><strong>排班原则：</strong>高峰时段(午11-13点/晚17-20点)全员在岗，低峰时段可安排轮休/培训。</div>
+          <div class="ops-list-item"><strong>培训周期：</strong>新员工前3天跟学、第4-7天在岗辅做、第8天起独立操作。每周一次15分钟品控会。</div>
+          <div class="ops-list-item"><strong>奖惩原则：</strong>表扬公开具体（"小王今天收银零差错"），批评私下对事不对人。每月评一次"服务之星"。 </div>
+          <div class="ops-list-item"><strong>离职管理：</strong>核心岗位（主厨/店长）必须留至少2周的交接期，提前培训替补。不要让一个人卡住整家店。</div>
+        </div>
+      </div>
+      <div class="ops-block">
+        <div class="ops-block-title">🚨 突发事件处理</div>
+        <div class="ops-list">
+          <div class="ops-list-item"><strong>食品客诉：</strong>第一原则——换！不争论。先给顾客换一份/退款，事后再查原因。顾客拍照发网上的传播成本远大于一份餐的成本。</div>
+          <div class="ops-list-item"><strong>设备故障：</strong>核心设备（炸炉/冰柜）要有备用方案（备用设备/临时供应商）。非核心设备24小时内修好。</div>
+          <div class="ops-list-item"><strong>停电/火灾：</strong>立即关气断电，疏散顾客。冰柜食材4小时内不打开可保，超时全部报废不准用。</div>
+          <div class="ops-list-item"><strong>顾客纠纷：</strong>安抚→隔离（带离吧台区域）→解决→记录。现场解决不了就说"我们店长马上来处理"，给双方台阶。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 </div>
 
-<div class="footer">
-  <div class="brand">产品决策库 · 沧林频道</div>
-  <div style="font-size:11px;color:var(--light);margin-bottom:4px">看见水面之下的力量</div>
-  <div><a href="index.html">首页</a> · <a href="stall.html">产品库</a> · <a href="factory.html">工厂上线</a></div>
-</div>
-
 <script>
-function toggleChat(){alert('💬 咨询沧林请加微信 canglin1985')}
-function copyWxid(){navigator.clipboard.writeText('canglin1985');alert('微信已复制：canglin1985')}
-</script>
-<script src="card-catalog.js"></script>
-<script>
-var colors=['#B82C1E','#1a7a4a','#c49a3e','#1a7a8e','#8b4a6e','#5a8a3a','#c0703a','#3a6a7a','#6a4a3a','#8a3a3a','#3a7a5a','#7a5a3a','#4a7a6a','#7a4a5a','#5a7a4a','#7a4a2a','#4a6a7a','#7a5a4a','#3a4a7a','#5a4a4a','#4a6a3a','#7a3a4a'];
+// ===== 门店模型数据库 · 真实产品数据 =====
+const MODELS = [
+  {id:"m01",name:"韩式炸鸡专门店",type:"炸物",payback:"6m",risk:"中",mode:"自营",
+   invest:"10-20万",income:"¥2000-4500/日",gross:"55-65%",
+   staff:"2-3人",area:"20-40㎡",
+   logic:"20款炸鸡+18款酱料，6味腌粉+裹粉+复炸工艺。年糕无骨/鸡翅/拌饭全产品线，外卖80%堂食20%",
+   death:"同质化最严重的赛道。隔壁便宜1块单就跑，必须靠酱料差异化+独家腌粉锁客",
+   card:"HZ_001",cardName:"原味黄金炸鸡"},
+  {id:"m02",name:"包子早餐标准店",type:"早餐",payback:"3m",risk:"低",mode:"夫妻",
+   invest:"6-12万",income:"¥2000-4000/日",gross:"60-70%",
+   staff:"2-3人",area:"20-40㎡",
+   logic:"11款包子+9款粥品+饼类，灌汤包皮冻配方锁味型。早高峰翻台率决定生死，出餐≤7分钟/笼",
+   death:"3点起床难招人。早上6-9点爆单、9点后冷清，一天只赚3小时。包子凉了口感掉一半",
+   card:"MD_BZ_001",cardName:"灌汤包门店运营版"},
+  {id:"m03",name:"手打柠檬茶专营店",type:"饮品",payback:"6m",risk:"中",mode:"自营",
+   invest:"8-15万",income:"¥1500-3500/日",gross:"65-75%",
+   staff:"2-3人",area:"15-30㎡",
+   logic:"55款柠檬茶+59款饮品，48款酱料打底。暴打工艺+特调糖浆，夏天时产¥275+",
+   death:"淡旺季明显，冬天销量腰斩。必须靠热饮线+奶茶线补冬季缺口，不然房租压死",
+   card:"CD_009",cardName:"招牌手打柠檬茶"},
+  {id:"m04",name:"卤炸帮·熟食卤味店",type:"卤味",payback:"3m",risk:"低",mode:"夫妻",
+   invest:"5-10万",income:"¥1500-3500/日",gross:"60-70%",
+   staff:"1-2人",area:"10-25㎡",
+   logic:"川香辣卤7大系列（鸭/鸡/猪/牛/羊/素菜/整体方案），现卤现捞+炸卤双出餐",
+   death:"卤味靠复购不是流量，选错社区没人闻到你味。夏季保质期短，卖不完就是亏损",
+   card:"LZ_001",cardName:"卤炸帮·鸭货系列"},
+  {id:"m05",name:"粉面快餐店",type:"快餐",payback:"3m",risk:"低",mode:"夫妻",
+   invest:"5-12万",income:"¥1500-3500/日",gross:"55-65%",
+   staff:"1-2人",area:"15-30㎡",
+   logic:"柳州螺蛳粉+武汉热干面+长沙牛肉粉+成都担担面+淮南牛肉汤粉，粉面切换仅需换浇头",
+   death:"浇头备多了卖不完损耗，备少了高峰期断货。平台抽成25%+配送费吃利润",
+   card:"FM_001",cardName:"正宗柳州螺蛳粉"},
+  {id:"m06",name:"麻辣烫/冒菜外卖店",type:"快餐",payback:"3m",risk:"中",mode:"自营",
+   invest:"8-15万",income:"¥2000-4000/日",gross:"55-65%",
+   staff:"1-2人",area:"10-25㎡",
+   logic:"麻辣串串香+酸辣粉冒菜版双线出餐，自选称重+2种汤底+小料台。纯外卖模式房租可压到¥3000",
+   death:"价格战最惨赛道。隔壁开两家同品类你就得降价，毛利从65%打到45%",
+   card:"HG_002",cardName:"麻辣串串香（摆摊版）"},  
+  {id:"m07",name:"炒饭炒面花甲店",type:"快餐",payback:"3m",risk:"低",mode:"夫妻",
+   invest:"5-10万",income:"¥1500-3000/日",gross:"60-70%",
+   staff:"1-2人",area:"10-20㎡",
+   logic:"7款猛火快炒（炒饭/炒面/炒花甲/炒虾尾/煲仔饭）+ 麻辣炒螺蛳，翻台率高房租占比低",
+   death:"外卖平台抽成25%，不搞活动没单搞了没利润。出餐速度决定高峰期能接多少单",
+   card:"CF_001",cardName:"馋嘴肉炒饭"},
+  {id:"m08",name:"炸鸡排·小吃专门店",type:"小吃",payback:"6m",risk:"低",mode:"夫妻",
+   invest:"5-12万",income:"¥1500-3000/日",gross:"65-75%",
+   staff:"1-2人",area:"10-20㎡",
+   logic:"17款鸡排+18款小吃+傣舂凉菜，裹粉+炸制标准化出餐。香鸡排/大鸡排/脆皮鸡排全线覆盖",
+   death:"炸油成本高（每天换油+滤油），夏天油温高油烟大。纯外卖出餐速度跟不上午高峰",
+   card:"JP_001",cardName:"香鸡排"},
+  {id:"m09",name:"糖水甜品档口",type:"小吃",payback:"3m",risk:"低",mode:"夫妻",
+   invest:"3-8万",income:"¥1200-2500/日",gross:"65-78%",
+   staff:"1-2人",area:"5-15㎡",
+   logic:"22款糖水+7款甜品（双皮奶/冰粉/烧仙草/杨枝甘露/豆花），高毛利低门槛。时产¥113厚切炒酸奶",
+   death:"夏季旺季冬季淡季明显，降温后销量掉50%+。冷热切换需要双线备货，冬天必须上热甜品",
+   card:"TS_001",cardName:"冰糖水（玫瑰/茉莉白桃）"},
+  {id:"m10",name:"凯里酸汤·火锅店",type:"快餐",payback:"6m",risk:"中",mode:"自营",
+   invest:"10-18万",income:"¥2500-5000/日",gross:"55-65%",
+   staff:"2-3人",area:"30-60㎡",
+   logic:"凯里酸汤鱼+麻辣串串香+酸辣粉冒菜，三线出餐覆盖午餐/晚餐/宵夜。酸汤底料可零售",
+   death:"酸汤有地域认知门槛，外地市场需教育成本。火锅类翻台率低（均消¥60+，客人坐2小时）",
+   card:"HG_001",cardName:"凯里酸汤鱼（摆摊版）"},
+  {id:"m11",name:"胡辣汤早餐连锁店",type:"早餐",payback:"3m",risk:"低",mode:"夫妻",
+   invest:"5-10万",income:"¥1500-3000/日",gross:"65-75%",
+   staff:"2人",area:"10-20㎡",
+   logic:"5款胡辣汤（经典/羊肉/肉丁/面筋）+专用大料粉，标准化汤底可批量预制。出餐≤30秒/碗",
+   death:"同样下午没生意。跨省做胡辣汤需要调整辣度和糊椒比，不然本地人不认",
+   card:"HLT_001",cardName:"经典河南糊辣汤"},
+  {id:"m12",name:"傣舂凉菜·拌菜档口",type:"小吃",payback:"3m",risk:"低",mode:"夫妻",
+   invest:"3-6万",income:"¥800-2000/日",gross:"70-80%",
+   staff:"1人",area:"5-10㎡",
+   logic:"12款傣舂系列（鸡脚/鸡腿/鱿鱼/大虾/米线/泡面）+ 5款冷吃系列，纯冷菜无明火租金极低",
+   death:"夏天爆单冬天没生意，季节性太强。纯档口模式只能做外带，无堂食拉高客单价",
+   card:"DC_001",cardName:"傣味舂鸡脚"},
+  {id:"m13",name:"藤椒鸭腿卤味店",type:"卤味",payback:"3m",risk:"低",mode:"自营",
+   invest:"5-10万",income:"¥2000-3500/日",gross:"60-65%",
+   staff:"1-2人",area:"10-25㎡",
+   logic:"百公斤藤椒鸭腿标准配方，腌制+卤煮双工艺。藤椒风味辨识度极高，竞品少，出餐≤90秒/份",
+   death:"藤椒风味稳定性是命门——藤椒油品质波动直接吃差评。滚揉设备投入1-3万",
+   card:"MD_002_藤椒鸭腿门店决策版",cardName:"藤椒鸭腿门店决策版"},
+];
 
-function render(){
-  if(typeof STORE_DATA==='undefined'){document.getElementById('sysGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">⏳ 加载中...</div>';return}
-  var SYS_DATA=STORE_DATA;
-  var total=0,ms=0,vc=0;
-  SYS_DATA.forEach(function(s){(s.c||[]).forEach(function(c){
-    total++;var n=c.n||'';
-    if(n.indexOf('母卡')>=0||n.indexOf('_M01')>=0||n.indexOf('M01_')>=0||n.indexOf('_M_')>=0)ms++;
-    else if(n.indexOf('总纲')>=0||n.indexOf('T01')>=0||n.indexOf('_T01')>=0){}
-    else vc++;
-  })});
-  document.getElementById('statsRow').innerHTML='<div class="stat-block"><div class="num">'+SYS_DATA.length+'</div><div class="lb">体系</div></div><div class="stat-block"><div class="num">'+total+'</div><div class="lb">决策卡</div></div><div class="stat-block"><div class="num">'+ms+'</div><div class="lb">母卡</div></div><div class="stat-block"><div class="num">'+vc+'</div><div class="lb">VC卡</div></div>';
-  var html='';
-  SYS_DATA.forEach(function(s,i){
-    var c=colors[i%colors.length], bg=c+'18';
-    var master=[],vcards=[],textbook=[];
-    (s.c||[]).forEach(function(card){
-      var nm=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');
-      if(nm.indexOf('母卡')>=0||nm.indexOf('_M01')>=0||nm.indexOf('M01_')>=0)master.push(card);
-      else if(nm.indexOf('总纲')>=0||nm.indexOf('T01')>=0||nm.indexOf('_T01')>=0)textbook.push(card);
-      else vcards.push(card);
-    });
-    html+='<div class="sys-card"><div class="sys-top" onclick="toggleSys(this)"><div class="sys-emoji" style="background:'+bg+';color:'+c+'">'+s.e+'</div><div class="sys-text"><div class="sys-name">'+s.n+'</div><div class="sys-count">'+(s.c?s.c.length:0)+'张决策卡</div></div></div>';
-    html+='<div class="sys-body">';
-    if(textbook.length>0){
-      html+='<div class="tree-node"><div class="tree-label"><span class="tl-dot" style="background:#c49a3e"></span>总纲</div>';
-      textbook.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
-      html+='</div>';
-    }
-    if(master.length>0){
-      html+='<div class="tree-node"><div class="tree-label"><span class="tl-dot" style="background:'+c+'"></span>母卡</div>';
-      master.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
-      html+='</div>';
-    }
-    if(vcards.length>0){
-      html+='<div class="tree-node"><div class="tree-label"><span class="tl-dot" style="background:#E8652D"></span>VC子卡</div>';
-      vcards.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
-      html+='</div>';
-    }
-    html+='</div></div>';
+// ===== 预算逻辑 =====
+let currentBudget = 5;
+
+function onBudget(el){
+  document.querySelectorAll('.budget-opt').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  currentBudget = parseInt(el.dataset.budget);
+  render();
+}
+
+// ===== 筛选 =====
+document.querySelectorAll('.filter-tag').forEach(tag=>{
+  tag.onclick=function(){
+    const parent = this.parentElement;
+    parent.querySelectorAll('.filter-tag').forEach(t=>t.classList.remove('active'));
+    this.classList.add('active');
+    render();
+  };
+});
+
+function getActiveFilters(){
+  const filters = {};
+  document.querySelectorAll('.filter-tags').forEach(group=>{
+    const dim = group.dataset.dim;
+    const active = group.querySelector('.filter-tag.active');
+    filters[dim] = active ? active.dataset.v : '*';
   });
-  document.getElementById('sysGrid').innerHTML=html;
+  return filters;
 }
 
-function toggleSys(el){
-  el.closest('.sys-card').classList.toggle('expanded');
+// ===== 渲染 =====
+function render(){
+  const filters = getActiveFilters();
+
+  let filtered = MODELS.filter(m=>{
+    // 预算过滤（投资额匹配）
+    const investVal = parseInt(m.invest.split('-')[0]) || 0;
+    if(investVal > currentBudget && currentBudget < 30) return false;
+    if(currentBudget <= 5 && investVal > 8) return false;
+    
+    // 品类
+    if(filters.type !== '*' && m.type !== filters.type) return false;
+    // 回本
+    if(filters.payback !== '*' && m.payback !== filters.payback) return false;
+    // 风险
+    if(filters.risk !== '*' && m.risk !== filters.risk) return false;
+    // 模式
+    if(filters.mode !== '*' && !m.mode.includes(filters.mode)) return false;
+    return true;
+  });
+
+  // 按风险排序
+  const riskRank = {低:0,中:1,高:2};
+  filtered.sort((a,b)=>riskRank[a.risk]-riskRank[b.risk]);
+
+  document.getElementById('resultCount').textContent = filtered.length;
+
+  if(filtered.length === 0){
+    document.getElementById('modelArea').innerHTML = '<div class="empty-state"><span class="es-icon">🔍</span>没有匹配的门店模型<br>试试调整预算或筛选条件</div>';
+    return;
+  }
+
+  let html = '<div class="model-grid">';
+  filtered.forEach(m=>{
+    const riskClass = m.risk === '低' ? 'green' : m.risk === '中' ? 'yellow' : 'red';
+    const riskColor = {低:'#7B9A45',中:'#E8652D',高:'#C0392B'}[m.risk];
+    const riskBg = {低:'#f0f6ec',中:'#fef6f2',高:'#fef2f2'}[m.risk];
+    html += `<div class="model-card risk-${riskClass}">
+      <div class="m-header">
+        <div>
+          <div class="m-name">${m.name}</div>
+          <div class="m-tags">
+            <span class="m-tag" style="background:#fef6f2;color:#E8652D">${m.type}</span>
+            <span class="m-tag" style="background:${riskBg};color:${riskColor}">风险${m.risk}</span>
+            <span class="m-tag">${m.mode}</span>
+          </div>
+        </div>
+      </div>
+      <div class="m-stats">
+        <span class="m-stat">💰 <strong>${m.invest}</strong></span>
+        <span class="m-stat">💸 <strong>${m.income}</strong></span>
+        <span class="m-stat">📈 <strong>${m.gross}</strong></span>
+        <span class="m-stat">👥 <strong>${m.staff}</strong></span>
+        <span class="m-stat" style="grid-column:1/-1">📍 <strong>${m.area}</strong></span>
+      </div>
+      <div class="m-core">${m.logic}</div>
+      <div class="m-risk-text">⚠️ ${m.death}</div>
+      <div class="m-actions">
+        <a href="cards/${m.card}.html" class="detail">查看${m.cardName} →</a>
+        <a href="index.html#mainContent" class="buy">选更多产品配方 →</a>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  document.getElementById('modelArea').innerHTML = html;
 }
-render();
+
+// ===== 开店死因 · 真实踩坑 =====
+(function(){
+  const DEATHS = [
+    {title:"炸鸡店死因",text:"同质化最严重赛道。隔壁便宜1块单就跑，最后大家一起没利润。必须靠酱料差异化+腌粉锁客，不然就是给房东打工。"},
+    {title:"早餐店死因",text:"3点起床不是最难的，最难的是6-9点爆单、9点后冷清一天只赚3小时。灌汤包皮冻配方是核心壁垒，凉了口感掉一半外卖差评。"},
+    {title:"柠檬茶死因",text:"冬天销量腰斩。光靠柠檬茶活不过冬季，必须上热饮线+奶茶线。55款柠檬茶里只有30%能撑过秋冬。"},
+    {title:"卤味店死因",text:"选错社区全盘皆输。卤味靠复购不是流量，门口过了500个居民没闻到味，广告费白花。夏天保质期短，当天卖不完就是亏损。"},
+    {title:"粉面店死因",text:"浇头备多了损耗备少了断货，平台抽25%利润被吃。螺蛳粉味大还面临物业投诉风险。"},
+    {title:"麻辣烫死因",text:"价格战最惨赛道。隔壁开两家你就得降价，毛利从65%打到45%。三个麻辣烫店围一个小区打价格战是常态。"},
+  ];
+  let html = '';
+  DEATHS.forEach(d=>{
+    html += `<div class="death-card">
+      <div class="dc-title">${d.title}</div>
+      <div class="dc-text">${d.text}</div>
+    </div>`;
+  });
+  document.getElementById('deathGrid').innerHTML = html;
+})();
+
+// ===== 案例 =====
+(function(){
+  const CASES = [
+    {title:"某炸鸡外卖店、投入8万",before:"月亏2000",after:"月净赚1.8万",
+     reason:"从通用炸鸡粉转沧林6味腌粉体系，复购率从18%升到42%，不再跟普通炸鸡店打价格战"},
+    {title:"某早餐夫妻店、投入6万",before:"月入6000",after:"月净赚2万",
+     reason:"用灌汤包门店运营版标准化，出餐从15分钟/笼压到7分钟/笼，早高峰翻3轮"},
+    {title:"某柠檬茶档口、投入4万",before:"月亏1500",after:"月净赚1.5万",
+     reason:"加入奶茶+热饮线，冬季不再空转。59款饮品轮换上架，客单价从12拉到20"},
+    {title:"某卤味熟食店、投入10万",before:"月入8000",after:"月净赚3万",
+     reason:"从街边店换到菜市场入口，客流从200人/天变800人/天。卤炸帮7大系列轮换上新"},
+  ];
+  let html = '';
+  CASES.forEach(c=>{
+    const isSuccess = c.good !== false;
+    html += `<div class="case-card">
+      <div class="cc-title">${c.title}</div>
+      <div class="cc-meta">调整前：${c.before} → 调整后：<span class="${isSuccess?'good':'bad'}">${c.after}</span></div>
+      <div class="cc-reason">核心变化：${c.reason}</div>
+    </div>`;
+  });
+  document.getElementById('caseGrid').innerHTML = html;
+})();
+
+
+// ===== 折叠面板 =====
+function togglePanel(id){
+  const panel = document.getElementById(id);
+  const toggle = document.getElementById(id.replace('Panel','Toggle'));
+  if(panel.classList.contains('open')){
+    panel.classList.remove('open');
+    if(toggle) toggle.textContent = '展开';
+  } else {
+    panel.classList.add('open');
+    if(toggle) toggle.textContent = '收起';
+  }
+}
+// ===== 初渲染 =====
+document.addEventListener('DOMContentLoaded',render);
 </script>
+
+<div style="text-align:center;padding:20px 16px 30px;color:#7a7269;font-size:11px;line-height:1.8;border-top:1px solid #ddd4ca;margin-top:30px;max-width:800px;margin-left:auto;margin-right:auto">
+  <div style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:4px">产品决策库 · 沧林频道</div>
+  <div><a href="index.html" style="color:#C0392B;text-decoration:none">首页</a> · <a href="stall.html" style="color:#C0392B;text-decoration:none">产品库</a></div>
+</div>
+
 </body>
 </html>
