@@ -92,6 +92,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   transition:max-height 0.45s ease;
 }
 .sys-card.expanded .sys-body{
+  max-height:1200px;
   border-top:1px solid var(--border);
   padding-top:6px;
   padding-bottom:14px;
@@ -130,6 +131,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   border-radius:1px;
 }
 .tree-node:first-child{margin-top:2px}
+.tree-node:nth-child(1){animation-delay:0.15s}
+.tree-node:nth-child(2){animation-delay:0.45s}
+.tree-node:nth-child(3){animation-delay:0.75s}
 
 .tree-label{
   font-size:10px;
@@ -154,8 +158,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   margin-bottom:2px;
   opacity:0;
   transform:translateX(-4px);
-  animation:leafFadeIn 0.25s ease forwards;
+  animation:leafFadeIn 0.3s ease forwards;
 }
+.tree-leaf:nth-child(2){animation-delay:0.08s}
+.tree-leaf:nth-child(3){animation-delay:0.16s}
+.tree-leaf:nth-child(4){animation-delay:0.24s}
+.tree-leaf:nth-child(5){animation-delay:0.32s}
 .tree-leaf:hover{background:var(--tag-bg);padding-left:14px}
 .tree-leaf .tl-arrow{color:var(--light);margin-left:4px;font-size:10px}
 
@@ -272,43 +280,7 @@ function render(){
 }
 
 function toggleSys(el){
-  var card=el.closest('.sys-card');
-  var body=card.querySelector('.sys-body');
-  if(card.classList.contains('expanded')){
-    // 收起：先重置子动画，再收回
-    card.classList.remove('expanded');
-    body.style.maxHeight='0';
-    var nodes=body.querySelectorAll('.tree-node,.tree-leaf');
-    for(var i=0;i<nodes.length;i++){nodes[i].style.animation='none';nodes[i].style.opacity='0'}
-  }else{
-    // 展开
-    card.classList.add('expanded');
-    // 先让内容可见但折叠状态，获取真实高度
-    var nodes=body.querySelectorAll('.tree-node,.tree-leaf');
-    for(var i=0;i<nodes.length;i++){nodes[i].style.animation='none';nodes[i].style.opacity='0'}
-    // 测量实际高度
-    var h=body.scrollHeight;
-    body.style.maxHeight=h+'px';
-    // 等展开动画完成后，依次显示节点
-    setTimeout(function(){
-      var items=body.querySelectorAll('.tree-node');
-      for(var j=0;j<items.length;j++){
-        (function(idx,el2){
-          setTimeout(function(){
-            el2.style.animation='';
-            el2.style.opacity='';
-            // 叶子也恢复动画
-            var leaves=el2.querySelectorAll('.tree-leaf');
-            for(var k=0;k<leaves.length;k++){
-              (function(k2,leaf){
-                setTimeout(function(){leaf.style.animation='';leaf.style.opacity=''},k2*100);
-              })(k,leaves[k]);
-            }
-          },idx*400);
-        })(j,items[j]);
-      }
-    },500); // 等max-height过渡完成
-  }
+  el.closest('.sys-card').classList.toggle('expanded');
 }
 render();
 });
