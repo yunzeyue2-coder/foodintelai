@@ -57,7 +57,7 @@ function getCardTagColor(tag) {
   return '#999';
 }
 
-// 根据卡片名称配不同图标
+// 根据卡片名称配不同图标（支持双emoji：主料+口味）
 function getCardEmoji(name) {
   var map = [
     ['鸡','🐔'],['鸭','🦆'],['鹅','🦆'],['牛','🐮'],['猪','🐷'],
@@ -85,10 +85,30 @@ function getCardEmoji(name) {
     ['糯','🍡'],['麻薯','🍡'],['芋','🟣'],['薯','🍠'],
     ['鲍','🐚'],['参','🌿'],['翅','🪽']
   ];
-  for (var i = 0; i < map.length; i++) {
-    if (name.indexOf(map[i][0]) > -1) return map[i][1];
+  var found = [];
+  // 优先匹配长关键词（避免"柠"匹配到"柠檬"+前缀重复）
+  var priorityKeys = ['麻辣','麻薯','天妇罗','锅贴','米线','烧饼','腐竹','烧鸡','拿铁','美式','烧肉','牛肉','猪肉','鸡肉','鸭肉','鱼饼','柠檬','冰茶','奶茶','蜜汁','酱香','藤椒','蒜香'];
+  for (var pi = 0; pi < priorityKeys.length; pi++) {
+    if (name.indexOf(priorityKeys[pi]) > -1) {
+      // 找到对应emoji
+      for (var mj = 0; mj < map.length; mj++) {
+        if (map[mj][0] === priorityKeys[pi]) {
+          found.push(map[mj][1]);
+          break;
+        }
+      }
+    }
   }
-  return ''; // 返回空，由调用方决定保底emoji
+  // 再扫普通匹配
+  for (var i = 0; i < map.length; i++) {
+    if (name.indexOf(map[i][0]) > -1) {
+      if (found.indexOf(map[i][1]) === -1) {
+        found.push(map[i][1]);
+      }
+      if (found.length >= 2) break; // 最多两个emoji
+    }
+  }
+  return found.length > 0 ? found.join('') : '';
 }
 
 // ===== 门店决策卡：列表模式 =====
