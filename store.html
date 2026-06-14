@@ -156,14 +156,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <script>
 function toggleChat(){alert('💬 咨询沧林请加微信 canglin1985')}
 function copyWxid(){navigator.clipboard.writeText('canglin1985');alert('微信已复制：canglin1985')}
-
-var SYS_DATA=[],colors=['#B82C1E','#1a7a4a','#c49a3e','#1a7a8e','#8b4a6e','#5a8a3a','#c0703a','#3a6a7a','#6a4a3a','#8a3a3a','#3a7a5a','#7a5a3a','#4a7a6a','#7a4a5a','#5a7a4a','#7a4a2a','#4a6a7a','#7a5a4a','#3a4a7a','#5a4a4a','#4a6a3a','#7a3a4a'];
+</script>
+<script src="card-catalog.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+var colors=['#B82C1E','#1a7a4a','#c49a3e','#1a7a8e','#8b4a6e','#5a8a3a','#c0703a','#3a6a7a','#6a4a3a','#8a3a3a','#3a7a5a','#7a5a3a','#4a7a6a','#7a4a5a','#5a7a4a','#7a4a2a','#4a6a7a','#7a5a4a','#3a4a7a','#5a4a4a','#4a6a3a','#7a3a4a'];
 
 function render(){
   if(typeof STORE_DATA==='undefined'){document.getElementById('sysGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">⏳ 加载中...</div>';return}
-  SYS_DATA=STORE_DATA;
-
-  // Stats
+  var SYS_DATA=STORE_DATA;
   var total=0,ms=0,vc=0;
   SYS_DATA.forEach(function(s){(s.c||[]).forEach(function(c){
     total++;var n=c.n||'';
@@ -172,13 +173,9 @@ function render(){
     else vc++;
   })});
   document.getElementById('statsRow').innerHTML='<div class="stat-block"><div class="num">'+SYS_DATA.length+'</div><div class="lb">体系</div></div><div class="stat-block"><div class="num">'+total+'</div><div class="lb">决策卡</div></div><div class="stat-block"><div class="num">'+ms+'</div><div class="lb">母卡</div></div><div class="stat-block"><div class="num">'+vc+'</div><div class="lb">VC卡</div></div>';
-
-  // Cards
   var html='';
   SYS_DATA.forEach(function(s,i){
     var c=colors[i%colors.length], bg=c+'18';
-
-    // 分类
     var master=[],vcards=[],textbook=[];
     (s.c||[]).forEach(function(card){
       var nm=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');
@@ -186,32 +183,21 @@ function render(){
       else if(nm.indexOf('总纲')>=0||nm.indexOf('T01')>=0||nm.indexOf('_T01')>=0)textbook.push(card);
       else vcards.push(card);
     });
-
     html+='<div class="sys-card"><div class="sys-top" onclick="toggleSys(this)"><div class="sys-emoji" style="background:'+bg+';color:'+c+'">'+s.e+'</div><div class="sys-text"><div class="sys-name">'+s.n+'</div><div class="sys-count">'+(s.c?s.c.length:0)+'张决策卡</div></div></div>';
-
     html+='<div class="sys-body">';
     if(textbook.length>0){
       html+='<div style="font-size:10px;font-weight:700;color:#c49a3e;margin-top:8px;margin-bottom:2px">📋 总纲</div><div class="sub-grid">';
-      textbook.forEach(function(card){
-        var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');
-        html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:#c49a3e"></span><span class="sub-name">'+n+'</span></a>';
-      });
+      textbook.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:#c49a3e"></span><span class="sub-name">'+n+'</span></a>';});
       html+='</div>';
     }
     if(master.length>0){
       html+='<div style="font-size:10px;font-weight:700;color:'+c+';margin-top:8px;margin-bottom:2px">📌 母卡</div><div class="sub-grid">';
-      master.forEach(function(card){
-        var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');
-        html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:'+c+'"></span><span class="sub-name">'+n+'</span></a>';
-      });
+      master.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:'+c+'"></span><span class="sub-name">'+n+'</span></a>';});
       html+='</div>';
     }
     if(vcards.length>0){
       html+='<div style="font-size:10px;font-weight:700;color:var(--muted);margin-top:8px;margin-bottom:2px">🔧 VC子卡</div><div class="sub-grid">';
-      vcards.forEach(function(card){
-        var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');
-        html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:#E04E1A"></span><span class="sub-name">'+n+'</span></a>';
-      });
+      vcards.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:#E8652D"></span><span class="sub-name">'+n+'</span></a>';});
       html+='</div>';
     }
     html+='</div></div>';
@@ -219,14 +205,9 @@ function render(){
   document.getElementById('sysGrid').innerHTML=html;
 }
 
-function toggleSys(el){
-  var card=el.closest('.sys-card');
-  card.classList.toggle('expanded');
-}
-</script>
-<script src="card-catalog.js"></script>
-<script>
+function toggleSys(el){el.closest('.sys-card').classList.toggle('expanded')}
 render();
+});
 </script>
 </body>
 </html>
