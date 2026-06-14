@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta property="og:title" content="VORA · 卤水肥肠 | 工厂上线决策报告">
+<meta property="og:title" content="VORA 工厂决策引擎 | 8维FDI评估系统">
 <meta property="og:description" content="8维FDI评分模型·输入产品参数·30秒生成工厂上线决策报告·ABCD分级">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<title>VORA · 卤水肥肠 | 工厂上线决策系统</title>
+<title>VORA 工厂决策引擎 | 8维FDI · 工厂上线评估系统</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0d0d0d;font-family:"PingFang SC","Microsoft YaHei","SF Pro",-apple-system,BlinkMacSystemFont,sans-serif;color:#e0e0e0;-webkit-font-smoothing:antialiased}
@@ -141,910 +141,360 @@ body{background:#0d0d0d;font-family:"PingFang SC","Microsoft YaHei","SF Pro",-ap
 <div class="page">
 
 <div class="top">
-  <div class="logo">VORA<span>.</span>factory</div>
-  <div class="top-right">
-    <a href="#">产品库</a><a href="#">仪表盘</a><a href="#">我的工厂</a>
-    <span class="bdg" style="cursor:pointer" onclick="sharePage()">📤 分享</span>
-    <span class="bdg">策略版</span>
-  </div>
+<div class="logo">VORA<span>.</span>factory</div>
+<div class="top-right">
+<a href="#">产品库</a><a href="#">仪表盘</a><a href="#">我的工厂</a>
+<span class="bdg" style="cursor:pointer" onclick="sharePage()">📤 分享</span>
+<span class="bdg">策略版</span>
+</div>
 </div>
 
 <div class="divider"><span class="divider-line"></span><span class="divider-text">VORA 工厂决策引擎</span><span class="divider-line"></span></div>
 
 <div class="saas">
 
-  <div class="fr3">
-    <div class="fg"><label>产品名称</label><input type="text" id="prodName" value="" placeholder="例：卤水肥肠、酱牛肉…"></div>
-    <div class="fg"><label>产线类型</label><select id="lineType"><option value="酱卤">酱卤产线</option><option value="调理">调理产线</option><option value="速冻">速冻产线</option><option value="新建">无产线·新建</option></select></div>
-    <div class="fg"><label>目标月产量</label><select id="monthly"><option selected value="1~5吨">1~5吨</option><option value="<1吨">&lt;1吨</option><option value="5~20吨">5~20吨</option><option value=">20吨">&gt;20吨</option></select></div>
-  </div>
-  <div class="fr3">
-    <div class="fg"><label>目标渠道</label><select id="channel"><option value="OEM">OEM代工</option><option value="餐饮" selected>连锁餐饮</option><option value="商超">商超零售</option><option value="混合">全渠道</option></select></div>
-    <div class="fg"><label>车间面积</label><select id="area"><option value="<300">&lt;300㎡</option><option value="300~800" selected>300~800㎡</option><option value="800~2000">800~2000㎡</option><option value=">2000">&gt;2000㎡</option></select></div>
-    <div class="fg"><div style="visibility:hidden">x</div></div>
-  </div>
-  <div style="font-size:9px;color:#555;letter-spacing:1px;margin-bottom:6px">现有设备</div>
-  <div class="eq-grid" id="eqGrid">
-    <div class="eq-item selected" data-eq="解冻槽"><span class="ei">🧊</span>解冻槽</div>
-    <div class="eq-item selected" data-eq="夹层锅"><span class="ei">🍲</span>夹层锅</div>
-    <div class="eq-item" data-eq="滚揉机"><span class="ei">🔄</span>滚揉机</div>
-    <div class="eq-item selected" data-eq="清洗机"><span class="ei">💧</span>清洗机</div>
-    <div class="eq-item selected" data-eq="包装机"><span class="ei">📦</span>包装机</div>
-    <div class="eq-item selected" data-eq="冷库"><span class="ei">❄️</span>冷库</div>
-    <div class="eq-item" data-eq="速冻线"><span class="ei">💨</span>速冻线</div>
-    <div class="eq-item" data-eq="杀菌釜"><span class="ei">🔥</span>杀菌釜</div>
-  </div>
-  <button class="analyze-btn" id="analyzeBtn" onclick="startAnalysis()">生成定制分析</button>
-
-  <div class="loading" id="loading">
-    <div class="spinner"></div>
-    <p>分析中···</p>
-    <div class="st" id="stepText"></div>
-  </div>
-
-  <div class="results" id="results">
-
-    <!-- H Bar -->
-    <div class="hbar">
-      <div class="hbi"><div class="l">综合评分</div><div class="n" style="color:#e8a060" id="rScore">—</div><div class="s" id="rGrade">—</div></div>
-      <div class="hbi"><div class="l">每吨毛利</div><div class="n" style="color:#4caf50" id="rTonMargin">—</div><div class="s">行业均 ￥4,500</div></div>
-      <div class="hbi"><div class="l">综合成本</div><div class="n" style="color:#e8a060" id="rTonCost">—</div><div class="s">行业均 ￥55,000</div></div>
-      <div class="hbi"><div class="l">库存周转</div><div class="n" id="rTurnover">—</div><div class="s">行业均 12天</div></div>
-      <div class="hbi"><div class="l">失败概率</div><div class="n" style="color:#4caf50" id="rFail">—</div><div class="s">行业均 22%</div></div>
-    </div>
-
-    <!-- Row1: 饼图 + 雷达图 -->
-    <div class="chart-row2">
-      <div class="chart-box">
-        <div class="ct">自家成本结构</div>
-        <div class="pie-wrap">
-          <div class="pie" id="pieChart"></div>
-          <div class="pie-legend" id="pieLegend"></div>
-        </div>
-      </div>
-      <div class="chart-box">
-        <div class="ct">与同行对比</div>
-        <div class="canvas-wrap"><canvas id="radarCanvas" style="width:100%;max-width:320px;height:auto;aspect-ratio:1/1"></canvas></div>
-        <div class="chart-legend"><span><span class="swatch" style="background:#e8a060"></span>你的工厂</span><span><span class="swatch" style="background:#444"></span>行业平均</span></div>
-      </div>
-    </div>
-
-    <!-- 成本拆解表（匹配饼图） -->
-    <div class="panel">
-      <div class="p-title">💰 成本拆表明细 · 每吨（对应饼图）</div>
-      <table class="tbl">
-        <tr><th>成本项</th><th>金额（元/吨）</th><th>占比</th><th>行业参考（元/吨）</th></tr>
-        <tr><td>原料（冰冻肥肠一级料）</td><td>￥30,000</td><td>60.0%</td><td>￥25,000~42,000</td></tr>
-        <tr><td>人工工资（5人班）</td><td>￥3,000</td><td>6.0%</td><td>￥3,000~6,000</td></tr>
-        <tr><td>管理费分摊</td><td>￥2,000</td><td>4.0%</td><td>￥2,000~4,000</td></tr>
-        <tr><td>能源（蒸汽+电+水）</td><td>￥1,600</td><td>3.2%</td><td>￥1,500~3,000</td></tr>
-        <tr><td>仓储冷链（-18℃冷库）</td><td>￥1,500</td><td>3.0%</td><td>￥1,500~3,000</td></tr>
-        <tr><td>物流配送（同城冷链）</td><td>￥1,500</td><td>3.0%</td><td>￥1,500~3,000</td></tr>
-        <tr><td>车间折旧（设备5年直线）</td><td>￥1,400</td><td>2.8%</td><td>￥1,500~3,000</td></tr>
-        <tr><td>包装（真空袋+纸箱）</td><td>￥900</td><td>1.8%</td><td>￥700~1,500</td></tr>
-        <tr><td>辅料（C1/C2+香辛料）</td><td>￥700</td><td>1.4%</td><td>￥500~1,200</td></tr>
-        <tr><td>维修保养</td><td>￥500</td><td>1.0%</td><td>￥500~1,000</td></tr>
-        <tr><td>品控检测（每批次）</td><td>￥300</td><td>0.6%</td><td>￥300~600</td></tr>
-        <tr class="tot"><td style="color:#e8a060;font-weight:600">每吨综合成本</td><td style="color:#e8a060;font-weight:600">￥51,400</td><td style="color:#e8a060;font-weight:600">100%</td><td style="color:#555">￥45,000~65,000</td></tr>
-      </table>
-    </div>
-
-    <!-- Row2: 产能-价格曲线 + 原料价格走势 -->
-    <div class="chart-row2">
-      <div class="chart-box">
-        <div class="ct">产能与成本关系</div>
-        <div class="canvas-wrap"><canvas id="scaleCanvas" style="width:100%;max-width:400px;height:auto"></canvas></div>
-        <div class="chart-legend"><span><span class="swatch" style="background:#e8a060"></span>单包成本（元/500g）</span></div>
-        <!-- 产能数据表 -->
-        <div style="margin-top:8px;font-size:10px;color:#555">产能-成本对应数据：</div>
-        <table class="tbl" style="margin-top:4px">
-          <tr><th>月产能</th><th>0.5吨</th><th>1吨</th><th>3吨</th><th>5吨</th><th>10吨</th><th>20吨</th></tr>
-          <tr><td>单包成本</td><td>￥64</td><td>￥56</td><td>￥49</td><td>￥46</td><td>￥41</td><td>￥37</td></tr>
-          <tr><td>毛估月利</td><td>-￥1,200</td><td>￥2,800</td><td>￥18,000</td><td>￥40,000</td><td>￥100,000</td><td>￥230,000</td></tr>
-        </table>
-      </div>
-      <div class="chart-box">
-        <div class="ct">原料价格走势（年度/季度）</div>
-        <div class="canvas-wrap"><canvas id="priceTrendCanvas" style="width:100%;max-width:400px;height:auto"></canvas></div>
-        <div class="chart-legend"><span><span class="swatch" style="background:#e8a060"></span>¥/kg</span><span style="color:#ef5350">▲峰值¥47/kg（2021Q2）</span></div>
-        <!-- 价格数据表 -->
-        <div style="margin-top:8px;font-size:10px;color:#555">价格历史数据（精选）：</div>
-        <table class="tbl" style="margin-top:4px">
-          <tr><th>年份</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>年均</th></tr>
-          <tr><td>2020</td><td>¥22</td><td>¥20</td><td>¥28</td><td>¥38</td><td>¥27</td></tr>
-          <tr><td>2021</td><td style="color:#e8a060">¥42</td><td style="color:#ef5350;font-weight:600">¥47</td><td>¥40</td><td>¥35</td><td>¥41</td></tr>
-          <tr><td>2022</td><td>¥31</td><td>¥28</td><td>¥24</td><td>¥22</td><td>¥26</td></tr>
-          <tr><td>2023</td><td>¥24</td><td>¥22</td><td colspan="2" style="color:#555">（数据平滑期）</td><td>¥23</td></tr>
-          <tr><td>2024~26</td><td colspan="4" style="color:#555">¥22~25区间震荡</td><td>¥23</td></tr>
-        </table>
-      </div>
-    </div>
-
-    <!-- Row3: 风险仪表盘（大版） -->
-    <div class="panel">
-      <div class="p-title">⚠️ 风险因素综合警示</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <!-- 出品率 -->
-        <div style="background:#0d0d0d;border:1px solid #2a1a1a;border-radius:8px;padding:16px;border-left:4px solid #e8a060">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <span style="font-size:13px;font-weight:600;color:#e0e0e0">出品率风险</span>
-            <span style="font-size:10px;padding:2px 10px;border-radius:10px;background:#2d1a0a;color:#e8a060;font-weight:600">中风险 · 评分 65</span>
-          </div>
-          <div style="height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden;margin-bottom:6px">
-            <div style="height:100%;width:65%;background:linear-gradient(90deg,#e8a060,#4caf50);border-radius:4px"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:#555">
-            <span>出品率波动 55%~71%</span>
-            <span style="color:#ef5350">低于60%直接亏损</span>
-          </div>
-          <div style="font-size:10px;color:#555;margin-top:4px;padding-top:6px;border-top:1px solid #1a1a1a">
-            根因：原料油脂含量控制 · 卤制方式选择 · 人员操作一致性
-          </div>
-        </div>
-        <!-- 腥味 -->
-        <div style="background:#0d0d0d;border:1px solid #1a2a1a;border-radius:8px;padding:16px;border-left:4px solid #4caf50">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <span style="font-size:13px;font-weight:600;color:#e0e0e0">腥味控制</span>
-            <span style="font-size:10px;padding:2px 10px;border-radius:10px;background:#1a2a1a;color:#4caf50;font-weight:600">低风险 · 评分 70</span>
-          </div>
-          <div style="height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden;margin-bottom:6px">
-            <div style="height:100%;width:70%;background:linear-gradient(90deg,#4caf50,#66bb6a);border-radius:4px"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:#555">
-            <span>泡制+滚揉+预煮三道去腥</span>
-            <span style="color:#4caf50">当前设备条件可控</span>
-          </div>
-          <div style="font-size:10px;color:#555;margin-top:4px;padding-top:6px;border-top:1px solid #1a1a1a">
-            提醒：缺滚揉机时风险等级将升至致命
-          </div>
-        </div>
-        <!-- 原料 -->
-        <div style="background:#0d0d0d;border:1px solid #2d0a0a;border-radius:8px;padding:16px;border-left:4px solid #ef5350">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <span style="font-size:13px;font-weight:600;color:#e0e0e0">原料波动</span>
-            <span style="font-size:10px;padding:2px 10px;border-radius:10px;background:#2d0a0a;color:#ef5350;font-weight:600">高风险 · 评分 45</span>
-          </div>
-          <div style="height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden;margin-bottom:6px">
-            <div style="height:100%;width:45%;background:linear-gradient(90deg,#ef5350,#e8a060);border-radius:4px"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:#555">
-            <span>历史波幅 ￥20~47/kg（+135%）</span>
-            <span style="color:#ef5350">占成本60%，涨10%月亏1.4万</span>
-          </div>
-          <div style="font-size:10px;color:#555;margin-top:4px;padding-top:6px;border-top:1px solid #1a1a1a">
-            应对：储备3家以上供应商 + 低位锁价采购
-          </div>
-        </div>
-        <!-- 供应商 -->
-        <div style="background:#0d0d0d;border:1px solid #2a1a0a;border-radius:8px;padding:16px;border-left:4px solid #e8a060">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <span style="font-size:13px;font-weight:600;color:#e0e0e0">供应商品质</span>
-            <span style="font-size:10px;padding:2px 10px;border-radius:10px;background:#2d1a0a;color:#e8a060;font-weight:600">中风险 · 评分 55</span>
-          </div>
-          <div style="height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden;margin-bottom:6px">
-            <div style="height:100%;width:55%;background:linear-gradient(90deg,#e8a060,#e8a060);border-radius:4px"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:10px;color:#555">
-            <span>2021~2022年更换8家供应商</span>
-            <span style="color:#ef5350">新供方首单出品率低至29%</span>
-          </div>
-          <div style="font-size:10px;color:#555;margin-top:4px;padding-top:6px;border-top:1px solid #1a1a1a">
-            管控：新供应商首单必须小批量试产验证
-          </div>
-        </div>
-      </div>
-      <!-- 底部汇总 -->
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid #1a1a1a">
-        <div style="font-size:10px;color:#555">低于警戒线（评分50）的风险项需要优先处理</div>
-        <div style="display:flex;gap:16px;font-size:10px">
-          <span style="color:#ef5350">● 高风险 1项</span>
-          <span style="color:#e8a060">● 中风险 2项</span>
-          <span style="color:#4caf50">● 低风险 1项</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 定制判断（带权重依据） -->
-    <div class="panel">
-      <div class="p-title">🎯 定制判断 · 权重依据</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:0">
-        <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:10px;color:#555;font-weight:600">最佳产量区间</span>
-            <span style="font-size:9px;color:#444">权重 25%</span>
-          </div>
-          <div style="font-size:14px;color:#e8a060;font-weight:700;margin-bottom:4px" id="u1">—</div>
-          <div style="font-size:9px;color:#555;line-height:1.5;padding-top:4px;border-top:1px solid #151515" id="u1Reason">—</div>
-        </div>
-        <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:10px;color:#555;font-weight:600">最大利润杀手</span>
-            <span style="font-size:9px;color:#444">权重 30%</span>
-          </div>
-          <div style="font-size:14px;color:#ef5350;font-weight:700;margin-bottom:4px" id="u2">—</div>
-          <div style="font-size:9px;color:#555;line-height:1.5;padding-top:4px;border-top:1px solid #151515" id="u2Reason">—</div>
-        </div>
-        <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:10px;color:#555;font-weight:600">降本空间最大</span>
-            <span style="font-size:9px;color:#444">权重 25%</span>
-          </div>
-          <div style="font-size:14px;color:#4caf50;font-weight:700;margin-bottom:4px" id="u3">—</div>
-          <div style="font-size:9px;color:#555;line-height:1.5;padding-top:4px;border-top:1px solid #151515" id="u3Reason">—</div>
-        </div>
-        <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <span style="font-size:10px;color:#555;font-weight:600">投产时间</span>
-            <span style="font-size:9px;color:#444">权重 20%</span>
-          </div>
-          <div style="font-size:14px;color:#e8a060;font-weight:700;margin-bottom:4px" id="u4">—</div>
-          <div style="font-size:9px;color:#555;line-height:1.5;padding-top:4px;border-top:1px solid #151515" id="u4Reason">—</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 八维评估（FDI模型） -->
-    <div class="panel">
-      <div class="p-title">📊 VORA 工厂决策指数 · 8维评估</div>
-      <!-- FDI 大数字 -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1px;background:#222;border-radius:8px;overflow:hidden;margin-bottom:12px">
-        <div class="hbi" style="padding:12px">
-          <div class="l">FDI 指数</div>
-          <div class="n" style="color:#e8a060;font-size:32px" id="fdiScore">—</div>
-          <div class="s" style="font-size:9px">百分制</div>
-        </div>
-        <div class="hbi" style="padding:12px">
-          <div class="l">综合等级</div>
-          <div class="n" style="color:#4caf50;font-size:36px" id="fdiGrade">—</div>
-          <div class="s" style="font-size:9px" id="fdiGradeLabel">—</div>
-        </div>
-        <div class="hbi" style="padding:12px">
-          <div class="l">失败概率</div>
-          <div class="n" style="font-size:24px" id="fdiFail">—</div>
-          <div class="s" style="font-size:9px">行业均值 22%</div>
-        </div>
-        <div class="hbi" style="padding:12px">
-          <div class="l">决策建议</div>
-          <div class="n" style="color:#4caf50;font-size:16px" id="fdiDecision">—</div>
-          <div class="s" style="font-size:9px" id="fdiReason">—</div>
-        </div>
-      </div>
-      <!-- 8维进度条 -->
-      <div id="barContainer">
-        <div class="bar-row" data-idx="0">
-          <span class="bar-label">市场需求</span>
-          <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
-          <span class="bar-score">0/5</span>
-          <span class="bar-wt">×0.2</span>
-          <span class="bar-note">三线通吃，需求确定性强</span>
-        </div>
-        <div class="bar-row" data-idx="1">
-          <span class="bar-label">竞争强度</span>
-          <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
-          <span class="bar-score">0/5</span>
-          <span class="bar-wt">×-0.1</span>
-          <span class="bar-note">中等竞争，未到红海</span>
-        </div>
-        <div class="bar-row" data-idx="2">
-          <span class="bar-label">工艺可行</span>
-          <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
-          <span class="bar-score">0/10</span>
-          <span class="bar-wt">×0.15</span>
-          <span class="bar-note">去腥三道可控，设备条件充分</span>
-        </div>
-        <div class="bar-row" data-idx="3">
-          <span class="bar-label">出品率</span>
-          <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
-          <span class="bar-score">0/10</span>
-          <span class="bar-wt">×0.2</span>
-          <span class="bar-note">标准71%，波动55~71%需管控</span>
-        </div>
-        <div class="bar-row" data-idx="4">
-          <span class="bar-label">成本健康</span>
-          <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
-          <span class="bar-score">0/5</span>
-          <span class="bar-wt">×0.15</span>
-          <span class="bar-note">行业中低位，原料占比60%</span>
-        </div>
-        <div class="bar-row" data-idx="5">
-          <span class="bar-label">渠道适配</span>
-          <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
-          <span class="bar-score">0/5</span>
-          <span class="bar-wt">×0.1</span>
-          <span class="bar-note">OEM+餐饮+商超通吃</span>
-        </div>
-        <div class="bar-row" data-idx="6">
-          <span class="bar-label">风险等级</span>
-          <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
-          <span class="bar-score">0/10</span>
-          <span class="bar-wt">×-0.1</span>
-          <span class="bar-note">2项致命，优先控原料波动</span>
-        </div>
-        <div class="bar-row" data-idx="7">
-          <span class="bar-label">规模化</span>
-          <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
-          <span class="bar-score">0/5</span>
-          <span class="bar-wt">×0.1</span>
-          <span class="bar-note">加锅加人即可放大，无瓶颈</span>
-        </div>
-      </div>
-      <style>
-      .bar-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid #151515}
-      .bar-row:last-child{border-bottom:none}
-      .bar-label{width:52px;font-size:11px;color:#888;flex-shrink:0}
-      .bar-track{flex:1;height:10px;background:#1a1a1a;border-radius:5px;overflow:hidden}
-      .bar-fill{height:100%;border-radius:5px;transition:width 0.6s ease}
-      .bar-score{width:30px;font-size:10px;color:#ccc;text-align:right;flex-shrink:0}
-      .bar-wt{width:28px;font-size:9px;color:#444;flex-shrink:0;text-align:center}
-      .bar-note{width:150px;font-size:10px;color:#555;flex-shrink:0;padding-left:4px;border-left:1px solid #1a1a1a}
-      </style>
-    </div>
-
-    <div class="qbox">
-      <div class="qt">根据以上分析，你想问的是不是</div>
-      <div class="qq">「<em>以我目前的设备条件和产量，</em>投产这个产品<em>到底能不能赚钱？如果能，多久回本？」</em></div>
-      <div class="qs">以上结论基于通用模型。如需基于你的实际财务数据做精确推演，可进一步咨询。</div>
-    </div>
-
-    <!-- 留资区 -->
-    <div style="background:#1a1a1a;border:1px solid #222;border-radius:8px;padding:14px;margin-bottom:14px">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-items:end">
-        <div class="fg"><label>您的姓名</label><input type="text" id="userName" placeholder="姓名"></div>
-        <div class="fg"><label>联系电话</label><input type="text" id="userPhone" placeholder="手机号"></div>
-        <button class="analyze-btn" style="margin:0;padding:10px;font-size:13px" onclick="submitReport()" id="submitBtn">提交获取完整报告</button>
-      </div>
-    </div>
-
-    <!-- 提交流 -->
-    <div id="submitSection" style="display:none;background:#1a150a;border:1px solid #2a2a1a;border-radius:8px;padding:16px;margin-bottom:16px">
-      <div style="text-align:center">
-        <div style="font-size:10px;color:#e8a060;letter-spacing:2px;margin-bottom:6px">报告已生成</div>
-        <div style="font-size:24px;font-weight:800;color:#e8a060;letter-spacing:4px" id="reportId">—</div>
-        <div style="font-size:11px;color:#555;margin:6px 0">请保存此报告编号，我们将在24h内联系您</div>
-        <div style="font-size:10px;color:#555">你的输入条件已记录：<span id="submitSummary" style="color:#888"></span></div>
-      </div>
-    </div>
-
-    <div class="consult">
-      <a class="cbtn" href="#" onclick="alert('专属方案·48h')">预约深度咨询 ¥5,000+</a>
-      <a class="cbtn g" href="#" onclick="showAdmin()">📋 查看已提交报告</a>
-    </div>
-
-    <!-- 后台面板（隐藏） -->
-    <div id="adminPanel" style="display:none;margin-top:16px;background:#0d0d0d;border:1px solid #222;border-radius:8px;padding:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <span style="font-size:10px;color:#e8a060;letter-spacing:2px">📋 已提交报告</span>
-        <span style="font-size:10px;color:#555" id="reportCount">共 0 份</span>
-      </div>
-      <div id="reportList"></div>
-      <div style="text-align:center;margin-top:10px">
-        <span style="font-size:9px;color:#333;cursor:pointer" onclick="document.getElementById('adminPanel').style.display='none'">关闭</span>
-      </div>
-    </div>
-  </div>
+<div class="fr3">
+<div class="fg"><label>产品名称</label><input type="text" id="prodName" value="" placeholder="例：卤水肥肠、酱牛肉…"></div>
+<div class="fg"><label>产线类型</label><select id="lineType"><option value="酱卤">酱卤产线</option><option value="调理">调理产线</option><option value="速冻">速冻产线</option><option value="新建">无产线·新建</option></select></div>
+<div class="fg"><label>目标月产量</label><select id="monthly"><option selected value="1~5吨">1~5吨</option><option value="<1吨">&lt;1吨</option><option value="5~20吨">5~20吨</option><option value=">20吨">&gt;20吨</option></select></div>
 </div>
-<div class="footer">VORA 工厂决策引擎 · 输入产品参数 · 输出ABCD决策报告</div>
+<div class="fr3">
+<div class="fg"><label>目标渠道</label><select id="channel"><option value="OEM">OEM代工</option><option value="餐饮" selected>连锁餐饮</option><option value="商超">商超零售</option><option value="混合">全渠道</option></select></div>
+<div class="fg"><label>车间面积</label><select id="area"><option value="<300">&lt;300㎡</option><option value="300~800" selected>300~800㎡</option><option value="800~2000">800~2000㎡</option><option value=">2000">&gt;2000㎡</option></select></div>
+<div class="fg"><div style="visibility:hidden">x</div></div>
+</div>
+<div style="font-size:9px;color:#555;letter-spacing:1px;margin-bottom:6px">现有设备</div>
+<div class="eq-grid" id="eqGrid">
+<div class="eq-item selected" data-eq="解冻槽"><span class="ei">🧊</span>解冻槽</div>
+<div class="eq-item selected" data-eq="夹层锅"><span class="ei">🍲</span>夹层锅</div>
+<div class="eq-item" data-eq="滚揉机"><span class="ei">🔄</span>滚揉机</div>
+<div class="eq-item selected" data-eq="清洗机"><span class="ei">💧</span>清洗机</div>
+<div class="eq-item selected" data-eq="包装机"><span class="ei">📦</span>包装机</div>
+<div class="eq-item selected" data-eq="冷库"><span class="ei">❄️</span>冷库</div>
+<div class="eq-item" data-eq="速冻线"><span class="ei">💨</span>速冻线</div>
+<div class="eq-item" data-eq="杀菌釜"><span class="ei">🔥</span>杀菌釜</div>
+</div>
+<button class="analyze-btn" id="analyzeBtn" onclick="startAnalysis()">生成定制分析</button>
+
+<div class="loading" id="loading">
+<div class="spinner"></div>
+<p>分析中···</p>
+<div class="st" id="stepText"></div>
 </div>
 
-<script>
-document.querySelectorAll('.eq-item').forEach(e=>e.addEventListener('click',function(){this.classList.toggle('selected')}));
+<div class="results" id="results">
 
-// ═══ Pie chart ═══
-const pieData = [
-  {label:'原料',pct:60,color:'#e8a060'},
-  {label:'人工',pct:6,color:'#66bb6a'},
-  {label:'管理',pct:4,color:'#e57373'},
-  {label:'能源',pct:3.2,color:'#26a69a'},
-  {label:'仓储',pct:3,color:'#ef5350'},
-  {label:'物流',pct:3,color:'#ffa726'},
-  {label:'折旧',pct:2.8,color:'#42a5f5'},
-  {label:'包装',pct:1.8,color:'#4caf50'},
-  {label:'辅料',pct:1.4,color:'#8b6914'},
-  {label:'维修',pct:1,color:'#7c8ae0'},
-  {label:'品控',pct:0.6,color:'#ab47bc'}
-];
+<!-- H Bar -->
+<div class="hbar">
+<div class="hbi"><div class="l">综合评分</div><div class="n" style="color:#e8a060" id="rScore">—</div><div class="s" id="rGrade">—</div></div>
+<div class="hbi"><div class="l">每吨毛利</div><div class="n" style="color:#4caf50" id="rTonMargin">—</div><div class="s">行业均 ￥4,500</div></div>
+<div class="hbi"><div class="l">综合成本</div><div class="n" style="color:#e8a060" id="rTonCost">—</div><div class="s">行业均 ￥55,000</div></div>
+<div class="hbi"><div class="l">库存周转</div><div class="n" id="rTurnover">—</div><div class="s">行业均 12天</div></div>
+<div class="hbi"><div class="l">失败概率</div><div class="n" style="color:#4caf50" id="rFail">—</div><div class="s">行业均 22%</div></div>
+</div>
 
-function drawPie() {
-  const pie = document.getElementById('pieChart');
-  let c = 'conic-gradient(';
-  let s = 0;
-  pieData.forEach((d,i)=>{
-    const e = s + d.pct * 3.6;
-    c += d.color + ' ' + s + 'deg ' + e + 'deg' + (i<pieData.length-1?',':'');
-    s = e;
-  });
-  c += ')';
-  pie.style.background = c;
-  document.getElementById('pieLegend').innerHTML = pieData.map(d =>
-    `<div class="plr"><span class="dot" style="background:${d.color}"></span>${d.label}<span class="plv">${d.pct}%</span></div>`
-  ).join('');
-}
+<!-- Row1: 饼图 + 雷达图 -->
+<div class="chart-row2">
+<div class="chart-box">
+<div class="ct">自家成本结构</div>
+<div class="pie-wrap">
+<div class="pie" id="pieChart"></div>
+<div class="pie-legend" id="pieLegend"></div>
+</div>
+</div>
+<div class="chart-box">
+<div class="ct">与同行对比</div>
+<div class="canvas-wrap"><canvas id="radarCanvas" style="width:100%;max-width:320px;height:auto;aspect-ratio:1/1"></canvas></div>
+<div class="chart-legend"><span><span class="swatch" style="background:#e8a060"></span>你的工厂</span><span><span class="swatch" style="background:#444"></span>行业平均</span></div>
+</div>
+</div>
 
-// ═══ Radar ═══
-function drawRadar(my, avg, labels) {
-  const c = document.getElementById('radarCanvas'), ctx = c.getContext('2d');
-  c.width = c.clientWidth; c.height = c.clientHeight;
-  const cx=c.width/2, cy=c.height/2, r=Math.min(cx,cy)*0.7, L=5;
-  ctx.clearRect(0,0,c.width,c.height);
-  for(let l=1;l<=L;l++){
-    const lr=r*l/L; ctx.beginPath();
-    for(let i=0;i<labels.length;i++){
-      const a=Math.PI*2*i/labels.length-Math.PI/2, x=cx+lr*Math.cos(a), y=cy+lr*Math.sin(a);
-      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-    }
-    ctx.closePath(); ctx.strokeStyle=l===L?'#222':'#151515'; ctx.lineWidth=0.5; ctx.stroke();
-  }
-  for(let i=0;i<labels.length;i++){
-    const a=Math.PI*2*i/labels.length-Math.PI/2;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
-    ctx.strokeStyle='#151515';ctx.lineWidth=0.5;ctx.stroke();
-    const lx=cx+(r+16)*Math.cos(a), ly=cy+(r+16)*Math.sin(a);
-    ctx.fillStyle='#555';ctx.font='9px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(labels[i],lx,ly);
-  }
-  // plot
-  [my, avg].forEach((vals,idx)=>{
-    ctx.beginPath();
-    vals.forEach((v,i)=>{
-      const a=Math.PI*2*i/labels.length-Math.PI/2, x=cx+r*(v/100)*Math.cos(a), y=cy+r*(v/100)*Math.sin(a);
-      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-    });
-    ctx.closePath();
-    if(idx===0){ctx.fillStyle='rgba(232,160,96,0.12)';ctx.fill();ctx.strokeStyle='#e8a060';ctx.lineWidth=2;ctx.stroke();
-      my.forEach((v,i)=>{const a=Math.PI*2*i/labels.length-Math.PI/2;ctx.beginPath();ctx.arc(cx+r*(v/100)*Math.cos(a),cy+r*(v/100)*Math.sin(a),3,0,Math.PI*2);ctx.fillStyle='#e8a060';ctx.fill();});
-    }else{ctx.setLineDash([3,3]);ctx.strokeStyle='#444';ctx.lineWidth=1.5;ctx.stroke();ctx.setLineDash([]);
-      avg.forEach((v,i)=>{const a=Math.PI*2*i/labels.length-Math.PI/2;ctx.beginPath();ctx.arc(cx+r*(v/100)*Math.cos(a),cy+r*(v/100)*Math.sin(a),2,0,Math.PI*2);ctx.fillStyle='#444';ctx.fill();});
-    }
-  });
-}
+<!-- 成本拆解表（匹配饼图） -->
+<div class="panel">
+<div class="p-title">💰 成本拆表明细 · 每吨（对应饼图）</div>
+<table class="tbl">
+<tr><th>成本项</th><th>金额（元/吨）</th><th>占比</th><th>行业参考（元/吨）</th></tr>
+<tr><td>原料（冰冻肥肠一级料）</td><td>￥30,000</td><td>60.0%</td><td>￥25,000~42,000</td></tr>
+<tr><td>人工工资（5人班）</td><td>￥3,000</td><td>6.0%</td><td>￥3,000~6,000</td></tr>
+<tr><td>管理费分摊</td><td>￥2,000</td><td>4.0%</td><td>￥2,000~4,000</td></tr>
+<tr><td>能源（蒸汽+电+水）</td><td>￥1,600</td><td>3.2%</td><td>￥1,500~3,000</td></tr>
+<tr><td>仓储冷链（-18℃冷库）</td><td>￥1,500</td><td>3.0%</td><td>￥1,500~3,000</td></tr>
+<tr><td>物流配送（同城冷链）</td><td>￥1,500</td><td>3.0%</td><td>￥1,500~3,000</td></tr>
+<tr><td>车间折旧（设备5年直线）</td><td>￥1,400</td><td>2.8%</td><td>￥1,500~3,000</td></tr>
+<tr><td>包装（真空袋+纸箱）</td><td>￥900</td><td>1.8%</td><td>￥700~1,500</td></tr>
+<tr><td>辅料（C1/C2+香辛料）</td><td>￥700</td><td>1.4%</td><td>￥500~1,200</td></tr>
+<tr><td>维修保养</td><td>￥500</td><td>1.0%</td><td>￥500~1,000</td></tr>
+<tr><td>品控检测（每批次）</td><td>￥300</td><td>0.6%</td><td>￥300~600</td></tr>
+<tr class="tot"><td style="color:#e8a060;font-weight:600">每吨综合成本</td><td style="color:#e8a060;font-weight:600">￥51,400</td><td style="color:#e8a060;font-weight:600">100%</td><td style="color:#555">￥45,000~65,000</td></tr>
+</table>
+</div>
 
-// ═══ Scale curve (产能-价格关系) ═══
-function drawScaleCurve(lineType) {
-  const c=document.getElementById('scaleCanvas'),ctx=c.getContext('2d');
-  c.width = c.clientWidth; c.height = c.clientHeight;
-  const w=c.width, h=c.height;
-  ctx.clearRect(0,0,w,h);
-  ctx.strokeStyle='#222';ctx.lineWidth=0.5;ctx.strokeRect(40,20,w-50,h-35);
+<!-- Row2: 产能-价格曲线 + 原料价格走势 -->
+<div class="chart-row2">
+<div class="chart-box">
+<div class="ct">产能与成本关系</div>
+<div class="canvas-wrap"><canvas id="scaleCanvas" style="width:100%;max-width:400px;height:auto"></canvas></div>
+<div class="chart-legend"><span><span class="swatch" style="background:#e8a060"></span>单包成本（元/500g）</span></div>
+<!-- 产能数据表 -->
+<div style="margin-top:8px;font-size:10px;color:#555">产能-成本对应数据：</div>
+<table class="tbl" style="margin-top:4px">
+<tr><th>月产能</th><th>0.5吨</th><th>1吨</th><th>3吨</th><th>5吨</th><th>10吨</th><th>20吨</th></tr>
+<tr><td>单包成本</td><td>￥64</td><td>￥56</td><td>￥49</td><td>￥46</td><td>￥41</td><td>￥37</td></tr>
+<tr><td>毛估月利</td><td>-￥1,200</td><td>￥2,800</td><td>￥18,000</td><td>￥40,000</td><td>￥100,000</td><td>￥230,000</td></tr>
+</table>
+</div>
+<div class="chart-box">
+<div class="ct">原料价格走势（年度/季度）</div>
+<div class="canvas-wrap"><canvas id="priceTrendCanvas" style="width:100%;max-width:400px;height:auto"></canvas></div>
+<div class="chart-legend"><span><span class="swatch" style="background:#e8a060"></span>¥/kg</span><span style="color:#ef5350">▲峰值¥47/kg（2021Q2）</span></div>
+<!-- 价格数据表 -->
+<div style="margin-top:8px;font-size:10px;color:#555">价格历史数据（精选）：</div>
+<table class="tbl" style="margin-top:4px">
+<tr><th>年份</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>年均</th></tr>
+<tr><td>2020</td><td>¥22</td><td>¥20</td><td>¥28</td><td>¥38</td><td>¥27</td></tr>
+<tr><td>2021</td><td style="color:#e8a060">¥42</td><td style="color:#ef5350;font-weight:600">¥47</td><td>¥40</td><td>¥35</td><td>¥41</td></tr>
+<tr><td>2022</td><td>¥31</td><td>¥28</td><td>¥24</td><td>¥22</td><td>¥26</td></tr>
+<tr><td>2023</td><td>¥24</td><td>¥22</td><td colspan="2" style="color:#555">（数据平滑期）</td><td>¥23</td></tr>
+<tr><td>2024~26</td><td colspan="4" style="color:#555">¥22~25区间震荡</td><td>¥23</td></tr>
+</table>
+</div>
+</div>
 
-  // Data: 月产能(吨) → 单包成本(元/500g)
-  const data = lineType==='新建'
-    ? [{t:0.5,c:82},{t:1,c:72},{t:3,c:58},{t:5,c:52},{t:10,c:46},{t:20,c:42}]
-    : [{t:0.5,c:68},{t:1,c:58},{t:3,c:50},{t:5,c:47},{t:10,c:42},{t:20,c:38}];
-  const xMin=0,xMax=21,yMin=35,yMax=85;
-  const xScale=(v)=>(v-xMin)/(xMax-xMin)*(w-90)+40;
-  const yScale=(v)=>20+(h-35)-(v-yMin)/(yMax-yMin)*(h-55);
+<!-- Row3: 风险仪表盘（大版） -->
+<div class="panel">
+<div class="p-title">⚠️ 风险因素综合警示</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<!-- 出品率 -->
+<div style="background:#0d0d0d;border:1px solid #2a1a1a;border-radius:8px;padding:16px;border-left:4px solid #e8a060">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<span style="font-size:13px;font-weight:600;color:#e0e0e0">出品率风险</span>
+<span style="font-size:10px;padding:2px 10px;border-radius:10px;background:#2d1a0a;color:#e8a060;font-weight:600">中风险 · 评分 65</span>
+</div>
+<div style="height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden;margin-bottom:6px">
+<div style="height:100%;width:65%;background:linear-gradient(90deg,#e8a060,#4caf50);border-radius:4px"></div>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:10px;color:#555">
+<span>出品率波动 55%~71%</span>
+<span style="color:#ef5350">低于60%直接亏损</span>
+</div>
+<div style="font-size:10px;color:#555;margin-top:4px;padding-top:6px;border-top:1px solid #1a1a1a">
+根因：原料油脂含量控制 · 卤制方式选择 · 人员操作一致性
+</div>
+</div>
+<!-- 腥味 -->
+<div style="background:#0d0d0d;border:1px solid #1a2a1a;border-radius:8px;padding:16px;border-left:4px solid #4caf50">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<span style="font-size:13px;font-weight:600;color:#e0e0e0">腥味控制</span>
+<span style="font-size:10px;padding:2px 10px;border-radius:10px;background:#1a2a1a;color:#4caf50;font-weight:600">低风险 · 评分 70</span>
+</div>
+<div style="height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden;margin-bottom:6px">
+<div style="height:100%;width:70%;background:linear-gradient(90deg,#4caf50,#66bb6a);border-radius:4px"></div>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:10px;color:#555">
+<span>泡制+滚揉+预煮三道去腥</span>
+<span style="color:#4caf50">当前设备条件可控</span>
+</div>
+<div style="font-size:10px;color:#555;margin-top:4px;padding-top:6px;border-top:1px solid #1a1a1a">
+提醒：缺滚揉机时风险等级将升至致命
+</div>
+</div>
+<!-- 原料 -->
+<div style="background:#0d0d0d;border:1px solid #2d0a0a;border-radius:8px;padding:16px;border-left:4px solid #ef5350">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<span style="font-size:13px;font-weight:600;color:#e0e0e0">原料波动</span>
+<span style="font-size:10px;padding:2px 10px;border-radius:10px;background:#2d0a0a;color:#ef5350;font-weight:600">高风险 · 评分 45</span>
+</div>
+<div style="height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden;margin-bottom:6px">
+<div style="height:100%;width:45%;background:linear-gradient(90deg,#ef5350,#e8a060);border-radius:4px"></div>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:10px;color:#555">
+<span>历史波幅 ￥20~47/kg（+135%）</span>
+<span style="color:#ef5350">占成本60%，涨10%月亏1.4万</span>
+</div>
+<div style="font-size:10px;color:#555;margin-top:4px;padding-top:6px;border-top:1px solid #1a1a1a">
+应对：储备3家以上供应商 + 低位锁价采购
+</div>
+</div>
+<!-- 供应商 -->
+<div style="background:#0d0d0d;border:1px solid #2a1a0a;border-radius:8px;padding:16px;border-left:4px solid #e8a060">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<span style="font-size:13px;font-weight:600;color:#e0e0e0">供应商品质</span>
+<span style="font-size:10px;padding:2px 10px;border-radius:10px;background:#2d1a0a;color:#e8a060;font-weight:600">中风险 · 评分 55</span>
+</div>
+<div style="height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden;margin-bottom:6px">
+<div style="height:100%;width:55%;background:linear-gradient(90deg,#e8a060,#e8a060);border-radius:4px"></div>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:10px;color:#555">
+<span>2021~2022年更换8家供应商</span>
+<span style="color:#ef5350">新供方首单出品率低至29%</span>
+</div>
+<div style="font-size:10px;color:#555;margin-top:4px;padding-top:6px;border-top:1px solid #1a1a1a">
+管控：新供应商首单必须小批量试产验证
+</div>
+</div>
+</div>
+<!-- 底部汇总 -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid #1a1a1a">
+<div style="font-size:10px;color:#555">低于警戒线（评分50）的风险项需要优先处理</div>
+<div style="display:flex;gap:16px;font-size:10px">
+<span style="color:#ef5350">● 高风险 1项</span>
+<span style="color:#e8a060">● 中风险 2项</span>
+<span style="color:#4caf50">● 低风险 1项</span>
+</div>
+</div>
+</div>
 
-  // Grid lines
-  ctx.strokeStyle='#151515';ctx.lineWidth=0.3;
-  for(let v=40;v<=80;v+=10){ctx.beginPath();ctx.moveTo(40,yScale(v));ctx.lineTo(w-50,yScale(v));ctx.stroke();
-    ctx.fillStyle='#333';ctx.font='7px sans-serif';ctx.textAlign='right';ctx.fillText('¥'+v,w-52,yScale(v)+2);}
-  // X labels
-  [1,3,5,10,20].forEach(v=>{ctx.fillStyle='#333';ctx.font='7px sans-serif';ctx.textAlign='center';
-    ctx.fillText(v+'t',xScale(v),h-5);});
-  ctx.fillStyle='#444';ctx.font='7px sans-serif';ctx.textAlign='left';ctx.fillText('月产能',w-45,h-5);
-  ctx.fillStyle='#444';ctx.font='7px sans-serif';ctx.textAlign='center';ctx.fillText('成本',15,25);
+<!-- 定制判断（带权重依据） -->
+<div class="panel">
+<div class="p-title">🎯 定制判断 · 权重依据</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:0">
+<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:12px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+<span style="font-size:10px;color:#555;font-weight:600">最佳产量区间</span>
+<span style="font-size:9px;color:#444">权重 25%</span>
+</div>
+<div style="font-size:14px;color:#e8a060;font-weight:700;margin-bottom:4px" id="u1">—</div>
+<div style="font-size:9px;color:#555;line-height:1.5;padding-top:4px;border-top:1px solid #151515" id="u1Reason">—</div>
+</div>
+<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:12px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+<span style="font-size:10px;color:#555;font-weight:600">最大利润杀手</span>
+<span style="font-size:9px;color:#444">权重 30%</span>
+</div>
+<div style="font-size:14px;color:#ef5350;font-weight:700;margin-bottom:4px" id="u2">—</div>
+<div style="font-size:9px;color:#555;line-height:1.5;padding-top:4px;border-top:1px solid #151515" id="u2Reason">—</div>
+</div>
+<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:12px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+<span style="font-size:10px;color:#555;font-weight:600">降本空间最大</span>
+<span style="font-size:9px;color:#444">权重 25%</span>
+</div>
+<div style="font-size:14px;color:#4caf50;font-weight:700;margin-bottom:4px" id="u3">—</div>
+<div style="font-size:9px;color:#555;line-height:1.5;padding-top:4px;border-top:1px solid #151515" id="u3Reason">—</div>
+</div>
+<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:12px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+<span style="font-size:10px;color:#555;font-weight:600">投产时间</span>
+<span style="font-size:9px;color:#444">权重 20%</span>
+</div>
+<div style="font-size:14px;color:#e8a060;font-weight:700;margin-bottom:4px" id="u4">—</div>
+<div style="font-size:9px;color:#555;line-height:1.5;padding-top:4px;border-top:1px solid #151515" id="u4Reason">—</div>
+</div>
+</div>
+</div>
 
-  // Curve
-  ctx.beginPath();
-  data.forEach((d,i)=>{const x=xScale(d.t),y=yScale(d.c);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.strokeStyle='#e8a060';ctx.lineWidth=2;ctx.stroke();
-  // Area under curve
-  ctx.lineTo(xScale(data[data.length-1].t),yScale(85));ctx.lineTo(xScale(data[0].t),yScale(85));ctx.closePath();
-  ctx.fillStyle='rgba(232,160,96,0.06)';ctx.fill();
+<!-- 八维评估（FDI模型） -->
+<div class="panel">
+<div class="p-title">📊 VORA 工厂决策指数 · 8维评估</div>
+<!-- FDI 大数字 -->
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1px;background:#222;border-radius:8px;overflow:hidden;margin-bottom:12px">
+<div class="hbi" style="padding:12px">
+<div class="l">FDI 指数</div>
+<div class="n" style="color:#e8a060;font-size:32px" id="fdiScore">—</div>
+<div class="s" style="font-size:9px">百分制</div>
+</div>
+<div class="hbi" style="padding:12px">
+<div class="l">综合等级</div>
+<div class="n" style="color:#4caf50;font-size:36px" id="fdiGrade">—</div>
+<div class="s" style="font-size:9px" id="fdiGradeLabel">—</div>
+</div>
+<div class="hbi" style="padding:12px">
+<div class="l">失败概率</div>
+<div class="n" style="font-size:24px" id="fdiFail">—</div>
+<div class="s" style="font-size:9px">行业均值 22%</div>
+</div>
+<div class="hbi" style="padding:12px">
+<div class="l">决策建议</div>
+<div class="n" style="color:#4caf50;font-size:16px" id="fdiDecision">—</div>
+<div class="s" style="font-size:9px" id="fdiReason">—</div>
+</div>
+</div>
+<!-- 8维进度条 -->
+<div id="barContainer">
+<div class="bar-row" data-idx="0">
+<span class="bar-label">市场需求</span>
+<div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+<span class="bar-score">0/5</span>
+<span class="bar-wt">×0.2</span>
+<span class="bar-note">三线通吃，需求确定性强</span>
+</div>
+<div class="bar-row" data-idx="1">
+<span class="bar-label">竞争强度</span>
+<div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+<span class="bar-score">0/5</span>
+<span class="bar-wt">×-0.1</span>
+<span class="bar-note">中等竞争，未到红海</span>
+</div>
+<div class="bar-row" data-idx="2">
+<span class="bar-label">工艺可行</span>
+<div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+<span class="bar-score">0/10</span>
+<span class="bar-wt">×0.15</span>
+<span class="bar-note">去腥三道可控，设备条件充分</span>
+</div>
+<div class="bar-row" data-idx="3">
+<span class="bar-label">出品率</span>
+<div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+<span class="bar-score">0/10</span>
+<span class="bar-wt">×0.2</span>
+<span class="bar-note">标准71%，波动55~71%需管控</span>
+</div>
+<div class="bar-row" data-idx="4">
+<span class="bar-label">成本健康</span>
+<div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+<span class="bar-score">0/5</span>
+<span class="bar-wt">×0.15</span>
+<span class="bar-note">行业中低位，原料占比60%</span>
+</div>
+<div class="bar-row" data-idx="5">
+<span class="bar-label">渠道适配</span>
+<div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+<span class="bar-score">0/5</span>
+<span class="bar-wt">×0.1</span>
+<span class="bar-note">OEM+餐饮+商超通吃</span>
+</div>
+<div class="bar-row" data-idx="6">
+<span class="bar-label">风险等级</span>
+<div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+<span class="bar-score">0/10</span>
+<span class="bar-wt">×-0.1</span>
+<span class="bar-note">2项致命，优先控原料波动</span>
+</div>
+<div class="bar-row" data-idx="7">
+<span class="bar-label">规模化</span>
+<div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+<span class="bar-score">0/5</span>
+<span class="bar-wt">×0.1</span>
+<span class="bar-note">加锅加人即可放大，无瓶颈</span>
+</div>
+</div>
+<style>
+.bar-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid #151515}
+.bar-row:last-child{border-bottom:none}
+.bar-label{width:52px;font-size:11px;color:#888;flex-shrink:0}
+.bar-track{flex:1;height:10px;background:#1a1a1a;border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;border-radius:5px;transition:width 0.6s ease}
+.bar-score{width:30px;font-size:10px;color:#ccc;text-align:right;flex-shrink:0}
+.bar-wt{width:28px;font-size:9px;color:#444;flex-shrink:0;text-align:center}
+.bar-note{width:150px;font-size:10px;color:#555;flex-shrink:0;padding-left:4px;border-left:1px solid #1a1a1a}
+</style>
+</div>
 
-  // Dots + labels
-  data.forEach(d=>{
-    const x=xScale(d.t),y=yScale(d.c);
-    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle='#e8a060';ctx.fill();
-    ctx.fillStyle='#888';ctx.font='7px sans-serif';ctx.textAlign='center';
-    ctx.fillText('¥'+d.c,x,y-8);
-  });
+<div class="qbox">
+<div class="qt">根据以上分析，你想问的是不是</div>
+<div class="qq">「<em>以我目前的设备条件和产量，</em>投产这个产品<em>到底能不能赚钱？如果能，多久回本？」</em></div>
+<div class="qs">以上结论基于通用模型。如需基于你的实际财务数据做精确推演，可进一步咨询。</div>
+</div>
 
-  // Highlight current point
-  const cur = data[2]; // 3吨
-  ctx.beginPath();ctx.arc(xScale(cur.t),yScale(cur.c),5,0,Math.PI*2);
-  ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.stroke();
-}
+<!-- 留资区 -->
+<div style="background:#1a1a1a;border:1px solid #222;border-radius:8px;padding:14px;margin-bottom:14px">
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-items:end">
+<div class="fg"><label>您的姓名</label><input type="text" id="userName" placeholder="姓名"></div>
+<div class="fg"><label>联系电话</label><input type="text" id="userPhone" placeholder="手机号"></div>
+<button class="analyze-btn" style="margin:0;padding:10px;font-size:13px" onclick="submitReport()" id="submitBtn">提交获取完整报告</button>
+</div>
+</div>
 
-// ═══ Price trend (年度季度) ═══
-function drawPriceTrend() {
-  const c=document.getElementById('priceTrendCanvas'),ctx=c.getContext('2d');
-  c.width = c.clientWidth; c.height = c.clientHeight;
-  const w=c.width, h=c.height;
-  ctx.clearRect(0,0,w,h);
-  ctx.strokeStyle='#222';ctx.lineWidth=0.5;ctx.strokeRect(40,20,w-50,h-35);
-
-  const data = [
-    {l:'20Q1',v:22},{l:'20Q2',v:20},{l:'20Q3',v:28},{l:'20Q4',v:38},
-    {l:'21Q1',v:42},{l:'21Q2',v:47},{l:'21Q3',v:40},{l:'21Q4',v:35},
-    {l:'22Q1',v:31},{l:'22Q2',v:28},{l:'22Q3',v:24},{l:'22Q4',v:22},
-    {l:'23H1',v:24},{l:'23H2',v:22},{l:'24H1',v:25},{l:'24H2',v:23},
-    {l:'25H1',v:24},{l:'25H2',v:22},{l:'26H1',v:22},{l:'26Q2',v:23}
-  ];
-  const xMin=0,xMax=data.length-1,yMin=17,yMax=50;
-  const xScale=(i)=>40+i/(xMax-xMin)*(w-90);
-  const yScale=(v)=>20+(h-35)-(v-yMin)/(yMax-yMin)*(h-55);
-
-  // Grid
-  ctx.strokeStyle='#151515';ctx.lineWidth=0.3;
-  for(let v=20;v<=50;v+=10){ctx.beginPath();ctx.moveTo(40,yScale(v));ctx.lineTo(w-50,yScale(v));ctx.stroke();
-    ctx.fillStyle='#333';ctx.font='7px sans-serif';ctx.textAlign='right';ctx.fillText('¥'+v,w-52,yScale(v)+2);}
-
-  // Fill area
-  ctx.beginPath();
-  data.forEach((d,i)=>{const x=xScale(i),y=yScale(d.v);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.lineTo(xScale(data.length-1),yScale(17));ctx.lineTo(xScale(0),yScale(17));ctx.closePath();
-  ctx.fillStyle='rgba(232,160,96,0.08)';ctx.fill();
-
-  // Curve
-  ctx.beginPath();
-  data.forEach((d,i)=>{const x=xScale(i),y=yScale(d.v);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.strokeStyle='#e8a060';ctx.lineWidth=1.5;ctx.stroke();
-
-  // X labels (every other)
-  data.forEach((d,i)=>{
-    if(i%2===0||i===data.length-1){
-      ctx.fillStyle='#333';ctx.font='6px sans-serif';ctx.textAlign='center';
-      ctx.fillText(d.l,xScale(i),h-5);
-    }
-  });
-
-  // Peak marker
-  const peak=data[5];
-  const px=xScale(5),py=yScale(47);
-  ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fillStyle='#ef5350';ctx.fill();
-  ctx.fillStyle='#ef5350';ctx.font='7px sans-serif';ctx.textAlign='center';
-  ctx.fillText('¥47/kg',px,py-10);
-}
-
-// ═══ Octagonal Radar (8维) ═══
-function drawOctoRadar(myPcts, avgPcts, labels) {
-  const c=document.getElementById('octoRadar'),ctx=c.getContext('2d');
-  const cx=110,cy=110,r=78,n=8,levels=4;
-  ctx.clearRect(0,0,220,220);
-
-  // Grid
-  for(let l=1;l<=levels;l++){
-    const lr=r*l/levels;ctx.beginPath();
-    for(let i=0;i<n;i++){
-      const a=Math.PI*2*i/n-Math.PI/2,x=cx+lr*Math.cos(a),y=cy+lr*Math.sin(a);
-      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-    }
-    ctx.closePath();ctx.strokeStyle=l===levels?'#222':'#151515';ctx.lineWidth=0.5;ctx.stroke();
-  }
-  // Axes
-  for(let i=0;i<n;i++){
-    const a=Math.PI*2*i/n-Math.PI/2;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
-    ctx.strokeStyle='#151515';ctx.lineWidth=0.5;ctx.stroke();
-    const lx=cx+(r+17)*Math.cos(a),ly=cy+(r+17)*Math.sin(a);
-    ctx.fillStyle='#555';ctx.font='7px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(labels[i],lx,ly);
-  }
-  // Plot your values
-  ctx.beginPath();
-  myPcts.forEach((v,i)=>{
-    const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(v/100)*Math.cos(a),y=cy+r*(v/100)*Math.sin(a);
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
-  ctx.closePath();ctx.fillStyle='rgba(232,160,96,0.1)';ctx.fill();
-  ctx.strokeStyle='#e8a060';ctx.lineWidth=2;ctx.stroke();
-  myPcts.forEach((v,i)=>{
-    const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(v/100)*Math.cos(a),y=cy+r*(v/100)*Math.sin(a);
-    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle='#e8a060';ctx.fill();
-  });
-  // Plot avg
-  ctx.beginPath();
-  avgPcts.forEach((v,i)=>{
-    const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(v/100)*Math.cos(a),y=cy+r*(v/100)*Math.sin(a);
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
-  ctx.closePath();ctx.setLineDash([3,3]);ctx.strokeStyle='#444';ctx.lineWidth=1.5;ctx.stroke();ctx.setLineDash([]);
-  avgPcts.forEach((v,i)=>{
-    const a=Math.PI*2*i/n-Math.PI/2,x=cx+r*(v/100)*Math.cos(a),y=cy+r*(v/100)*Math.sin(a);
-    ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);ctx.fillStyle='#444';ctx.fill();
-  });
-  // FDI center label
-  ctx.fillStyle='#e8a060';ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText('FDI',cx,cy-6);
-  ctx.fillStyle='#e8a060';ctx.font='bold 22px sans-serif';
-  ctx.fillText(document.getElementById('fdiScore').textContent||'—',cx,cy+18);
-}
-function drawRiskMeter(hasRoller) {
-  const c=document.getElementById('riskMeterCanvas'),ctx=c.getContext('2d'),w=280,h=130;
-  ctx.clearRect(0,0,w,h);
-
-  const risks = hasRoller
-    ? [
-        {label:'出品率',score:65,color:'#e8a060',desc:'波动55~71%'},
-        {label:'腥味控制',score:70,color:'#66bb6a',desc:'三道工序可控'},
-        {label:'原料波动',score:45,color:'#ef5350',desc:'波幅135%'},
-        {label:'供应商品质',score:55,color:'#e8a060',desc:'新供方须验证'}
-      ]
-    : [
-        {label:'出品率',score:45,color:'#ef5350',desc:'缺滚揉机不可控'},
-        {label:'腥味控制',score:30,color:'#ef5350',desc:'缺关键设备'},
-        {label:'原料波动',score:45,color:'#ef5350',desc:'波幅135%'},
-        {label:'供应商品质',score:55,color:'#e8a060',desc:'新供方须验证'}
-      ];
-
-  const margin=15,gap=12,barW=(w-2*margin-3*gap)/4,barH=80;
-  const baseY=40;
-
-  risks.forEach((r,i)=>{
-    const x=margin+i*(barW+gap),h=barH*(r.score/100),y=baseY+barH-h;
-
-    // Bar
-    const grad=ctx.createLinearGradient(x,baseY+barH,x,baseY);
-    grad.addColorStop(0,r.color+'44');
-    grad.addColorStop(1,r.color);
-    ctx.fillStyle=grad;
-    ctx.beginPath();ctx.roundRect(x,y,barW,h,3);ctx.fill();
-
-    // Score number
-    ctx.fillStyle=r.score<50?'#ef5350':r.score<60?'#e8a060':'#4caf50';
-    ctx.font='bold 11px sans-serif';ctx.textAlign='center';
-    ctx.fillText(r.score,x+barW/2,y-6);
-
-    // Label
-    ctx.fillStyle='#888';ctx.font='8px sans-serif';ctx.textAlign='center';
-    ctx.fillText(r.label,x+barW/2,baseY+barH+14);
-
-    // Desc
-    ctx.fillStyle='#555';ctx.font='7px sans-serif';ctx.textAlign='center';
-    ctx.fillText(r.desc,x+barW/2,baseY+barH+26);
-  });
-
-  // Threshold line
-  ctx.setLineDash([3,3]);ctx.strokeStyle='#ef5350';ctx.lineWidth=1;
-  const thrY=baseY+barH*(50/100);
-  ctx.beginPath();ctx.moveTo(margin,thrY);ctx.lineTo(margin+4*barW+3*gap,thrY);ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle='#ef5350';ctx.font='7px sans-serif';ctx.textAlign='left';
-  ctx.fillText('警戒线 50',margin+4*barW+3*gap+4,thrY+3);
-}
-
-// ═══ Start analysis ═══
-function startAnalysis(){
-  const btn=document.getElementById('analyzeBtn'),ld=document.getElementById('loading'),res=document.getElementById('results'),st=document.getElementById('stepText');
-  btn.disabled=true;btn.textContent='分析中';ld.style.display='block';res.style.display='none';
-  const hasRoller=Array.from(document.querySelectorAll('.eq-item.selected')).map(e=>e.dataset.eq).includes('滚揉机');
-  const line=document.getElementById('lineType').value,mon=document.getElementById('monthly').value;
-  const ss=[
-    '① 匹配产品品类库 · 分析中…请稍候',
-    '② 调取工艺数据库 · 提取工序链与参数',
-    '③ 对照设备清单 · 计算产线匹配度',
-    '④ 联网采集原料行情 · 交叉比对实时价格',
-    '⑤ 交叉验证成本数据 · 校准历史与当前价差',
-    '⑥ 推演出品率模型 · 模拟原料品质波动',
-    '⑦ 计算规模效应曲线 · 不同产量成本推演',
-    '⑧ 扫描风险因素 · 标记致命与高风险项',
-    '⑨ 生成8维FDI评分 · 加权计算综合指数',
-    '⑩ 输出决策结论 · 撰写定制评估报告'
-  ];
-  let i=0;const iv=setInterval(()=>{if(i<ss.length){st.textContent=ss[i];i++}},3200);
-  setTimeout(()=>{
-    clearInterval(iv);ld.style.display='none';res.style.display='block';btn.disabled=false;btn.textContent='重新生成';
-    let s=81,tonC='￥51,400',tonM='￥7,200',turn='12天',fail='12%';
-    if(!hasRoller){s-=8;tonM='￥5,400';fail='28%'}
-    if(line==='新建'){s-=10;tonC='￥58,000';tonM='￥4,800';turn='15天';fail='22%'}
-    if(mon==='<1吨'){s-=8;tonC='￥68,000';tonM='￥2,800';turn='18天';fail='35%'}
-    if(mon==='>20吨'){s+=5;tonC='￥42,000';tonM='￥10,500';turn='8天';fail='5%'}
-    s=Math.min(100,Math.max(30,s));
-    document.getElementById('rScore').textContent=s;
-    document.getElementById('rGrade').textContent=s>=80?'A·强推':s>=65?'B·可做':'C·谨慎';
-    document.getElementById('rTonMargin').textContent=tonM;
-    document.getElementById('rTonCost').textContent=tonC;
-    document.getElementById('rTurnover').textContent=turn;
-    document.getElementById('rFail').textContent=fail;
-
-    drawPie();
-    let myVals=[75,70,65,80,72],avgVals=[65,58,55,62,60];
-    if(!hasRoller)myVals=[60,55,50,65,58];
-    if(line==='新建')myVals=[55,50,45,60,52];
-    if(mon==='>20吨')myVals=[85,80,90,85,88];
-    drawRadar(myVals,avgVals,['成本控制','出品率','周转效率','制造费用','毛利水平']);
-    drawScaleCurve(line);
-    drawPriceTrend();
-    drawRiskMeter(hasRoller);
-
-    document.getElementById('u1').textContent=mon==='<1吨'?'先做到3吨/月以上':'当前产量匹配最佳成本区间';
-    document.getElementById('u1Reason').textContent='依据：规模效应曲线显示3吨是盈亏平衡点，5吨开始释放规模红利';
-    document.getElementById('u2').textContent=!hasRoller?'设备缺口致出品率不可控':'原料占成本60%，涨10%月亏1.4万';
-    document.getElementById('u2Reason').textContent='依据：风险警示图中「原料波动」评分45低于警戒线50，成本拆解中原料占比60%';
-    document.getElementById('u3').textContent='原料分级管理·一级料比三级料贵￥5,000但出品率高12%';
-    document.getElementById('u3Reason').textContent='依据：成本拆解表显示原料占比60%，不同等级原料价差￥5,000/吨，出品率差异12%';
-    document.getElementById('u4').textContent=line==='新建'?'3~6月后':'立即·2月内完成工艺验证';
-    document.getElementById('u4Reason').textContent='依据：设备复用率'+(hasRoller?'85%（仅缺滚揉机时需采购）':'60%（需新增关键设备）');
-    document.getElementById('u4Reason').textContent+=line==='新建'?'，新建产线建设期3~6个月':'';
-
-    // 八维 FDI 计算
-    // 基于图表数据赋值
-    let d1=5, d2=3, d7=6; // 市场5、竞争3、风险6（固定值）
-    let d3=hasRoller?7:5;  // 工艺可行：有滚揉机7，无5
-    let d4=hasRoller?7:5;  // 出品率：有滚揉机7，无5
-    let d5=4; if(mon==='<1吨')d5=2; if(mon==='>20吨')d5=5; // 成本健康
-    let d6=hasRoller?4:3;  // 渠道适配
-    let d8=5; if(line==='新建')d8=3; // 规模化
-
-    // FDI公式
-    let fdi = d1*0.2 + d3*0.15 + d4*0.2 + d5*0.15 + d6*0.1 + d8*0.1 - d2*0.1 - d7*0.1;
-    let fdiPct = Math.round(fdi/5*100);
-    fdiPct = Math.min(100, Math.max(20, fdiPct));
-
-    let grade='D',gradeLabel='不建议';
-    if(fdiPct>=85){grade='A';gradeLabel='强推投产';}
-    else if(fdiPct>=70){grade='B';gradeLabel='可做';}
-    else if(fdiPct>=50){grade='C';gradeLabel='谨慎';}
-
-    let decision='值得投入',reason='市场好·产线匹配';
-    if(!hasRoller){decision='条件性投入';reason='缺滚揉机是硬伤';}
-    if(line==='新建'){decision='建议先OEM';reason='新建投入大';}
-    if(mon==='<1吨'){decision='建议扩产';reason='固定成本过高';}
-
-    document.getElementById('d1Score').textContent=d1+'/5';
-    document.getElementById('d2Score').textContent=d2+'/5';
-    document.getElementById('d3Score').textContent=d3+'/10';
-    document.getElementById('d4Score').textContent=d4+'/10';
-    document.getElementById('d5Score').textContent=d5+'/5';
-    document.getElementById('d6Score').textContent=d6+'/5';
-    document.getElementById('d7Score').textContent=d7+'/10';
-    document.getElementById('d8Score').textContent=d8+'/5';
-    document.getElementById('fdiScore').textContent=fdiPct;
-    document.getElementById('fdiGrade').textContent=grade;
-    document.getElementById('fdiGradeLabel').textContent=gradeLabel;
-    document.getElementById('fdiDecision').textContent=decision;
-    document.getElementById('fdiReason').textContent=reason;
-
-    // 失败概率（基于FDI映射）
-    let failProb = Math.round(50 - fdiPct * 0.4);
-    failProb = Math.min(45, Math.max(5, failProb));
-    document.getElementById('fdiFail').textContent=failProb+'%';
-
-    // 8维进度条
-    const barData = [
-      {score:d1, max:5, color:'#e8a060'},
-      {score:d2, max:5, color:'#ef5350'},
-      {score:d3, max:10, color:'#4caf50'},
-      {score:d4, max:10, color:'#e8a060'},
-      {score:d5, max:5, color:'#4caf50'},
-      {score:d6, max:5, color:'#e8a060'},
-      {score:d7, max:10, color:'#ef5350'},
-      {score:d8, max:5, color:'#4caf50'}
-    ];
-    document.querySelectorAll('.bar-row').forEach((row,i)=>{
-      const d=barData[i];
-      const pct = d.score/d.max*100;
-      row.querySelector('.bar-fill').style.width=pct+'%';
-      row.querySelector('.bar-fill').style.background=d.color;
-      row.querySelector('.bar-score').textContent=d.score+'/'+d.max;
-    });
-
-    // 八角雷达图
-    // 负向指标反转（竞争、风险：值越低越好，但在图上显示越高越好）
-    let myPcts = [
-      d1/5*100,           // 市场需求
-      (6-d2)/5*100,       // 竞争（反转）
-      d3/10*100,          // 工艺可行
-      d4/10*100,          // 出品率
-      d5/5*100,           // 成本健康
-      d6/5*100,           // 渠道适配
-      (11-d7)/10*100,     // 风险（反转）
-      d8/5*100            // 规模化
-    ];
-    let avgPcts = [75, 60, 65, 62, 68, 65, 58, 70];
-    drawOctoRadar(myPcts, avgPcts, ['市场','竞争','工艺','出品','成本','渠道','风险','规模']);
-  },34500)
-}
-
-// Init
-drawPie();
-drawRadar([75,70,65,80,72],[65,58,55,62,60],['成本控制','出品率','周转效率','制造费用','毛利水平']);
-drawScaleCurve('酱卤');
-drawPriceTrend();
-drawOctoRadar([100,60,70,70,80,80,50,100],[75,60,65,62,68,65,58,70],['市场','竞争','工艺','出品','成本','渠道','风险','规模']);
-
-// ═══ 提交流程 ═══
-function submitReport(){
-  const name=document.getElementById('userName').value.trim();
-  const phone=document.getElementById('userPhone').value.trim();
-  if(!name||!phone){alert('请填写姓名和联系电话');return;}
-
-  const prod=document.getElementById('prodName').value;
-  const line=document.getElementById('lineType').value;
-  const mon=document.getElementById('monthly').value;
-  const ch=document.getElementById('channel').value;
-  const eqs=Array.from(document.querySelectorAll('.eq-item.selected')).map(e=>e.dataset.eq).join('、');
-  const fdi=document.getElementById('fdiScore').textContent;
-  const grade=document.getElementById('fdiGrade').textContent;
-  const score=document.getElementById('rScore').textContent;
-
-  const id='VORA-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2,3).toUpperCase();
-  const now=new Date();
-  const timeStr=now.getFullYear()+'-'+(now.getMonth()+1).toString().padStart(2,'0')+'-'+now.getDate().toString().padStart(2,'0')+' '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
-
-  const report={
-    id,time:timeStr,name,phone,
-    product:prod,line,monthly:mon,channel:ch,
-    equipment:eqs,
-    fdi,grade,score
-  };
-
-  let reports=JSON.parse(localStorage.getItem('vora_reports')||'[]');
-  reports.unshift(report);
-  localStorage.setItem('vora_reports',JSON.stringify(reports));
-
-  document.getElementById('reportId').textContent=id;
-  document.getElementById('submitSummary').textContent=prod+' | '+line+' | '+mon+' | '+ch;
-  document.getElementById('submitSection').style.display='block';
-  document.getElementById('submitBtn').textContent='报告已提交';
-  document.getElementById('submitBtn').disabled=true;
-
-  renderReportList();
-}
-
-function upgradeReport(){
-  const name=document.getElementById('userName').value.trim();
-  const phone=document.getElementById('userPhone').value.trim();
-  if(!name||!phone){alert('请先填写姓名和联系电话，再升级深度报告');return;}
-  alert('深度报告（¥199）提交成功！顾问将在24h内联系您，输出竞品对标+工艺优化方案。');
-}
-
-function showAdmin(){
-  const panel=document.getElementById('adminPanel');
-  panel.style.display=panel.style.display==='none'?'block':'none';
-  renderReportList();
-}
-
-function renderReportList(){
-  const reports=JSON.parse(localStorage.getItem('vora_reports')||'[]');
-  document.getElementById('reportCount').textContent='共 '+reports.length+' 份';
-  const list=document.getElementById('reportList');
-  if(reports.length===0){
-    list.innerHTML='<div style="font-size:11px;color:#444;text-align:center;padding:16px">暂无提交记录</div>';
-    return;
-  }
-  list.innerHTML=reports.map(r=>
-    '<div style="background:#1a1a1a;border-radius:6px;padding:10px;margin-bottom:6px;font-size:11px">'+
-      '<div style="display:flex;justify-content:space-between;color:#e8a060;margin-bottom:4px">'+
-        '<span style="font-weight:600">'+r.id+'</span>'+
-        '<span style="color:#555">'+r.time+'</span>'+
-      '</div>'+
-      '<div style="color:#888">'+r.name+' | '+r.phone+'</div>'+
-      '<div style="color:#666;margin-top:2px">'+r.product+' | '+r.line+' | '+r.monthly+' | 设备:'+r.equipment+'</div>'+
-      '<div style="display:flex;gap:12px;margin-top:4px;color:#555">'+
-        '<span>FDI: '+r.fdi+'</span>'+
-        '<span>等级: '+r.grade+'</span>'+
-        '<span>评分: '+r.score+'</span>'+
-      '</div>'+
-    '</div>'
-  ).join('');
-}
-
-// 页面加载时渲染已有报告
-renderReportList();
-
-// ═══ 分享功能 ═══
-function sharePage(){
-  const url = window.location.href;
-  const title = document.title;
-  const desc = document.querySelector('meta[property="og:description"]')?.content || '';
-
-  if(navigator.share){
-    navigator.share({title, text: desc, url}).catch(()=>{});
-  } else {
-    // Fallback: 复制链接
-    const textarea = document.createElement('textarea');
-    textarea.value = title + '\n' + desc + '\n' + url;
-    document.body.appendChild(textarea);
-    textarea.select();
-    try {
-      document.execCommand('copy');
-      alert('✅ 链接已复制，可分享给好友');
-    } catch(e){
-      prompt('复制以下链接分享：', url);
-    }
-    document.body.removeChild(textarea);
-  }
-}
-</script>
-</body>
-</html>
+<!-- 提交流 -->
+<div id="submitSection" style="display:none;background:#1a150a;border:1px solid #2a2a1a;border-radius:8px;padding:16px;margin-bottom:16px">
+<div style="text-align:center">
