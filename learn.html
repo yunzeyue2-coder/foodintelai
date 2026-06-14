@@ -156,25 +156,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .meta-stall{background:#f5f2ed;color:#7a6a52}
 .meta-free{background:#f0f6ec;color:#7B9A45}
 .meta-paid{background:#fef2f2;color:#B82C1E}
-.stats-bar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.stat-card{background:var(--card);border-radius:12px;padding:14px;text-align:center;box-shadow:var(--shadow);border-left:3px solid var(--accent)}
-.stat-card .sn{font-size:24px;font-weight:800;color:var(--accent)}
-.stat-card .sl{font-size:11px;color:var(--muted);margin-top:2px}
-.quick-links{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
-.quick-links::-webkit-scrollbar{display:none}
-.quick-link{flex-shrink:0;padding:10px 16px;border-radius:10px;background:var(--card);box-shadow:var(--shadow);text-decoration:none;color:var(--text);font-size:13px;font-weight:600;text-align:center;min-width:90px;transition:.15s}
-.quick-link:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
-.quick-link .ql-emoji{font-size:22px;display:block;margin-bottom:4px}
 .footer{text-align:center;padding:20px 16px 30px;color:var(--muted);font-size:11px;line-height:1.8;border-top:1px solid var(--border);margin-top:30px}
 .footer .brand{font-size:14px;font-weight:700;color:var(--text)}
 .footer a{color:var(--accent);text-decoration:none}
 @media(min-width:480px){
   .form-grid{grid-template-columns:1fr 1fr 1fr}
   .law-grid{grid-template-columns:1fr 1fr}
-  .stats-bar{grid-template-columns:repeat(4,1fr)}
 }
 @media(max-width:480px){
-  .stats-bar{grid-template-columns:1fr 1fr}
   .know-card{padding:12px}
 }
 </style>
@@ -374,21 +363,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     </div>
   </div>
 
-  <!-- 统计 -->
-  <div class="stats-bar" id="statsBar">
-    <div class="stat-card"><div class="sn" id="totalSys">—</div><div class="sl">体系项目</div></div>
-    <div class="stat-card"><div class="sn" id="totalCards">—</div><div class="sl">决策卡</div></div>
-    <div class="stat-card"><div class="sn" id="totalMaster">—</div><div class="sl">母卡</div></div>
-    <div class="stat-card"><div class="sn" id="totalVc">—</div><div class="sl">VC子卡</div></div>
-  </div>
-
-  <!-- 快速入口 -->
-  <div class="quick-links">
-    <a href="stall.html" class="quick-link"><span class="ql-emoji">🔥</span>产品库</a>
-    <a href="store.html" class="quick-link"><span class="ql-emoji">🏪</span>门店体系</a>
-    <a href="factory.html" class="quick-link"><span class="ql-emoji">🏭</span>工厂方案</a>
-  </div>
-
   <!-- 搜索 -->
   <div class="search-box">
     <span class="si">🔍</span>
@@ -476,7 +450,6 @@ function buildKnowledge(){
   KNOWLEDGE.unshift({t:'免费',e:'🔥',n:'2025-2026食品创业趋势',d:'街头火锅、文创餐饮、露营美食等新业态深度分析',f:'stall.html',cat:'趋势',p:'free'});
   renderCats();
   renderAll();
-  updateStats();
 }
 
 function renderCats(){
@@ -518,26 +491,6 @@ function renderAll(){
   if(items.length===0)html='<div style="text-align:center;padding:30px;color:var(--muted)">没有找到相关内容</div>';
   document.getElementById('knowList').innerHTML=html;
 }
-
-function updateStats(){
-  if(typeof STORE_DATA==='undefined')return;
-  var sysCount=STORE_DATA.length;
-  var total=0,ms=0,vc=0;
-  STORE_DATA.forEach(function(s){
-    (s.c||[]).forEach(function(c){
-      total++;
-      var n=c.n||'';
-      if(n.indexOf('母卡')>=0||n.indexOf('_M01')>=0||n.indexOf('M01_')>=0||n.indexOf('_M_')>=0)ms++;
-      else if(n.indexOf('总纲')>=0||n.indexOf('T01')>=0||n.indexOf('_T01')>=0){}
-      else vc++;
-    });
-  });
-  document.getElementById('totalSys').textContent=sysCount;
-  document.getElementById('totalCards').textContent=total;
-  document.getElementById('totalMaster').textContent=ms;
-  document.getElementById('totalVc').textContent=vc;
-}
-
 buildKnowledge();
 </script>
 <script src="card-catalog.js"></script>
