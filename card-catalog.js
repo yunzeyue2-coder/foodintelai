@@ -44,7 +44,8 @@ const STALL_DATA = [
 ];
 
 // ===== 渲染函数 =====
-// 识别卡类型：母卡、子卡、单卡
+
+// 识别卡类型
 function getCardTag(name) {
   if (name.indexOf('（母）') > -1 || name.indexOf('(母)') > -1 || name.indexOf('母卡') > -1) return '母';
   if (name.indexOf('（子）') > -1 || name.indexOf('(子)') > -1) return '子';
@@ -56,7 +57,42 @@ function getCardTagColor(tag) {
   return '#999';
 }
 
-function renderCards(id, data, exp) {
+// 根据卡片名称配不同图标
+function getCardEmoji(name) {
+  var map = [
+    ['鸡','🐔'],['鸭','🦆'],['鹅','🦆'],['牛','🐮'],['猪','🐷'],
+    ['鱼','🐟'],['虾','🦐'],['蟹','🦀'],['螺','🐚'],['蛙','🐸'],
+    ['辣','🌶️'],['麻辣','🌶️'],['藤椒','🌿'],
+    ['冰','🧊'],['茶','🍵'],['奶','🥛'],
+    ['咖啡','☕'],['拿铁','☕'],['美式','☕'],['可可','🍫'],
+    ['包','🥟'],['饺','🥟'],['锅贴','🥟'],['煎','🍳'],
+    ['饼','🫓'],['馍','🫓'],['烧饼','🫓'],
+    ['面','🍜'],['粉','🍜'],['米线','🍜'],
+    ['饭','🍚'],['粥','🥣'],['汤','🥣'],
+    ['炸','🍤'],['天妇罗','🍤'],['烤','🔥'],
+    ['酱','🫙'],['蘸','🧂'],
+    ['串','🍢'],['肠','🌭'],
+    ['肉','🥩'],['骨','🦴'],
+    ['豆','🫘'],['腐竹','🫘'],['藕','🥔'],['土豆','🥔'],
+    ['果','🍎'],['莓','🍓'],['芒','🥭'],['橙','🍊'],
+    ['椰','🥥'],['荔','🫐'],['柠','🍋'],['桃','🍑'],
+    ['葡','🍇'],['梅','🍒'],['杏','🍑'],
+    ['酒','🍶'],['花','🌸'],['桂','🌼'],['茉','🌿'],
+    ['菜','🥬'],['蔬','🥦'],['卷','🥗'],
+    ['蛋','🥚'],['丸','⚪'],
+    ['脆','✨'],['酥','✨'],['蜜','🍯'],['甜','🍯'],
+    ['酸','🍋'],['香','🌿'],
+    ['糯','🍡'],['麻薯','🍡'],['芋','🟣'],['薯','🍠'],
+    ['鲍','🐚'],['参','🌿'],['翅','🪽']
+  ];
+  for (var i = 0; i < map.length; i++) {
+    if (name.indexOf(map[i][0]) > -1) return map[i][1];
+  }
+  return ''; // 返回空，由调用方决定保底emoji
+}
+
+// ===== 门店决策卡：列表模式 =====
+function renderStoreCards(id, data, exp) {
   var el = document.getElementById(id);
   if (!el) return;
   var html = '<div class="cat-list">';
@@ -67,31 +103,55 @@ function renderCards(id, data, exp) {
     h += '<span class="cc-name">' + d.n + '</span>';
     h += '<span class="cc-count">' + d.c.length + '张</span>';
     h += '<span class="cc-arrow">&#9660;</span>';
-    h += '</div>';
-    h += '<div class="cc-body">';
-    // 卡片图标网格
-    h += '<div class="icon-grid">';
+    h += '</div><div class="cc-body">';
+    h += '<div class="list-grid">';
     d.c.forEach(function(c) {
       var tag = getCardTag(c.n);
-      var shortName = c.n.replace(/（[^）]*）/g, '').replace(/\([^)]*\)/g, '').replace(/^[A-Z0-9_]+\s*/, '').trim();
-      if (shortName.length > 8) shortName = shortName.slice(0, 7) + '…';
       var tagColor = getCardTagColor(tag);
-      h += '<a class="icon-card" href="' + c.f + '">';
-      h += '<div class="icon-card-emoji">' + d.e + '</div>';
-      h += '<div class="icon-card-name">' + shortName + '</div>';
-      if (tag) {
-        h += '<div class="icon-card-tag" style="background:' + tagColor + '">' + tag + '</div>';
-      }
-      h += '</a>';
+      var tagHtml = tag ? '<span class="list-tag" style="background:' + tagColor + '">' + tag + '</span>' : '';
+      h += '<a class="list-card" href="' + c.f + '">' + tagHtml + '<span class="list-name">' + c.n + '</span><span class="list-arrow">›</span></a>';
     });
-    h += '</div>';
-    h += '</div></div>';
+    h += '</div></div></div>';
     html += h;
   });
   html += '</div>';
   el.innerHTML = html;
 }
+
+// ===== 地摊产品卡：图标模式（多元化图标） =====
+function renderStallCards(id, data) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var html = '<div class="cat-list">';
+  data.forEach(function(d) {
+    var h = '<div class="cat-card">';
+    h += '<div class="cc-header" onclick="var b=this.nextElementSibling;b.classList.toggle(\'hide\');var a=this.querySelector(\'.cc-arrow\');a.style.transform=a.style.transform===\'rotate(180deg)\'?\'rotate(0deg)\':\'rotate(180deg)\'">';
+    h += '<span class="cc-emoji">' + d.e + '</span>';
+    h += '<span class="cc-name">' + d.n + '</span>';
+    h += '<span class="cc-count">' + d.c.length + '张</span>';
+    h += '<span class="cc-arrow">&#9660;</span>';
+    h += '</div><div class="cc-body">';
+    h += '<div class="icon-grid">';
+    d.c.forEach(function(c) {
+      var tag = getCardTag(c.n);
+      var shortName = c.n.replace(/（[^）]*）/g, '').replace(/\([^)]*\)/g, '').replace(/^[A-Z0-9_]+\s*/, '').trim();
+      if (shortName.length > 8) shortName = shortName.slice(0, 7) + '…';
+      var cardEmoji = getCardEmoji(c.n) || d.e; // 优先卡名匹配，没有才用分类emoji
+      var tagColor = getCardTagColor(tag);
+      h += '<a class="icon-card" href="' + c.f + '">';
+      h += '<div class="icon-card-emoji">' + cardEmoji + '</div>';
+      h += '<div class="icon-card-name">' + shortName + '</div>';
+      if (tag) h += '<div class="icon-card-tag" style="background:' + tagColor + '">' + tag + '</div>';
+      h += '</a>';
+    });
+    h += '</div></div></div>';
+    html += h;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  renderCards('storeCards', STORE_DATA, true);
-  renderCards('stallCards', STALL_DATA, true);
+  renderStoreCards('storeCards', STORE_DATA);
+  renderStallCards('stallCards', STALL_DATA);
 });
