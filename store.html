@@ -116,8 +116,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   padding-left:16px;
   margin-top:8px;
   opacity:0;
-  transform:translateY(8px);
-  animation:treeFadeIn 0.4s ease forwards;
+  transform:translateY(-6px);
+  animation:treeSlideIn 0.35s ease forwards;
 }
 /* 横向连接线 */
 .tree-node::before{
@@ -143,7 +143,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 }
 .tree-label .tl-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
 
-/* 树叶子 */
+/* 树节点内的叶子逐条滑入 */
 .tree-leaf{
   display:block;
   padding:6px 10px;
@@ -153,12 +153,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   border-radius:6px;
   transition:.15s;
   margin-bottom:2px;
+  opacity:0;
+  transform:translateX(-4px);
+  animation:leafFadeIn 0.25s ease forwards;
 }
 .tree-leaf:hover{background:var(--tag-bg);padding-left:14px}
 .tree-leaf .tl-arrow{color:var(--light);margin-left:4px;font-size:10px}
 
-@keyframes treeFadeIn{
-  to{opacity:1;transform:translateY(0)}
+@keyframes treeSlideIn{
+  0%{opacity:0;transform:translateY(-8px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+@keyframes leafFadeIn{
+  0%{opacity:0;transform:translateX(-6px)}
+  100%{opacity:1;transform:translateX(0)}
 }
 
 /* 咨询区 */
@@ -245,18 +253,18 @@ function render(){
     html+='<div class="sys-card"><div class="sys-top" onclick="toggleSys(this)"><div class="sys-emoji" style="background:'+bg+';color:'+c+'">'+s.e+'</div><div class="sys-text"><div class="sys-name">'+s.n+'</div><div class="sys-count">'+(s.c?s.c.length:0)+'张决策卡</div></div></div>';
     html+='<div class="sys-body">';
     if(textbook.length>0){
-      html+='<div class="tree-node" style="animation-delay:0.05s"><div class="tree-label"><span class="tl-dot" style="background:#c49a3e"></span>总纲</div>';
-      textbook.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
+      html+='<div class="tree-node" style="animation-delay:0.1s"><div class="tree-label"><span class="tl-dot" style="background:#c49a3e"></span>总纲</div>';
+      textbook.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf" style="animation-delay:'+(0.2+i*0.08)+'s">'+n+'<span class="tl-arrow">→</span></a>';});
       html+='</div>';
     }
     if(master.length>0){
-      html+='<div class="tree-node" style="animation-delay:0.1s"><div class="tree-label"><span class="tl-dot" style="background:'+c+'"></span>母卡</div>';
-      master.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
+      html+='<div class="tree-node" style="animation-delay:0.4s"><div class="tree-label"><span class="tl-dot" style="background:'+c+'"></span>母卡</div>';
+      master.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf" style="animation-delay:'+(0.5+i*0.08)+'s">'+n+'<span class="tl-arrow">→</span></a>';});
       html+='</div>';
     }
     if(vcards.length>0){
-      html+='<div class="tree-node" style="animation-delay:0.15s"><div class="tree-label"><span class="tl-dot" style="background:#E8652D"></span>VC子卡</div>';
-      vcards.forEach(function(card){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
+      html+='<div class="tree-node" style="animation-delay:0.7s"><div class="tree-label"><span class="tl-dot" style="background:#E8652D"></span>VC子卡</div>';
+      vcards.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf" style="animation-delay:'+(0.8+i*0.08)+'s">'+n+'<span class="tl-arrow">→</span></a>';});
       html+='</div>';
     }
     html+='</div></div>';
