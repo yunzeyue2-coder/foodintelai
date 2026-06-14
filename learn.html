@@ -2,36 +2,177 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>入门知识库 · 产品决策库</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>知识库 · 产品决策库</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="theme-color" content="#c4a265">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-icon.png">
+<meta name="theme-color" content="#d4a843">
+<meta name="msapplication-TileColor" content="#d4a843">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#f8f4ed;
+  --bg:#faf9f5;
   --card:#ffffff;
   --text:#1a1a1a;
   --muted:#8a7a66;
   --light:#c0b098;
-  --accent:#c4a265;
-  --border:#e8dcc8;
-  --tag-bg:#f0e8d8;
-  --radius:12px;
-  --shadow:0 2px 8px rgba(0,0,0,.04);
+  --accent:#d4a843;
+  --accent-light:#e8c060;
+  --border:#e8e0d0;
+  --tag-bg:#f2ede2;
+  --radius:14px;
+  --shadow:0 2px 10px rgba(0,0,0,.04);
+  --shadow-hover:0 6px 20px rgba(0,0,0,.08);
 }
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;line-height:1.6}
-.nav{position:sticky;top:0;z-index:50;background:rgba(248,244,237,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 16px}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;line-height:1.6;-webkit-font-smoothing:antialiased}
+.nav{position:sticky;top:0;z-index:50;background:rgba(250,249,245,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 16px}
 .nav-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:50px}
 .nav-brand{font-size:16px;font-weight:700;color:var(--accent);text-decoration:none}
 .nav-links{display:flex;gap:2px}
-.nav-links a{padding:6px 10px;font-size:12px;color:var(--muted);text-decoration:none;border-radius:6px}
+.nav-links a{padding:6px 10px;font-size:12px;color:var(--muted);text-decoration:none;border-radius:6px;transition:.15s}
 .nav-links a:hover{background:var(--tag-bg)}
+.nav-links a.active{background:var(--accent);color:#fff;font-weight:600}
 .main{max-width:720px;margin:0 auto;padding:0 16px 40px}
-.footer{text-align:center;padding:20px 16px 30px;color:var(--muted);font-size:11px;border-top:1px solid var(--border);margin-top:30px}
+
+/* ===== Hero ===== */
+.page-hero{text-align:center;padding:28px 0 8px}
+.page-hero h1{font-size:24px;font-weight:800;color:#3d2b1a}
+.page-hero h1 span{color:var(--accent)}
+.page-hero p{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* ===== 搜索 ===== */
+.search-box{
+  margin:16px 0;
+  position:relative;
+}
+.search-box input{
+  width:100%;
+  padding:12px 16px 12px 40px;
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  font-size:14px;
+  background:var(--card);
+  color:var(--text);
+  outline:none;
+  transition:.2s;
+}
+.search-box input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(212,168,67,.1)}
+.search-box input::placeholder{color:var(--light)}
+.search-box .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--light);pointer-events:none}
+
+/* ===== 分类标签 ===== */
+.cat-strip{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  padding:4px 0 12px;
+  margin-bottom:8px;
+}
+.cat-strip::-webkit-scrollbar{display:none}
+.cat-tag{
+  flex-shrink:0;
+  padding:6px 14px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:600;
+  background:var(--card);
+  border:1px solid var(--border);
+  color:var(--muted);
+  cursor:pointer;
+  white-space:nowrap;
+  transition:.15s;
+}
+.cat-tag:hover{border-color:var(--accent);color:var(--accent)}
+.cat-tag.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ===== 知识卡片列表 ===== */
+.know-list{display:flex;flex-direction:column;gap:8px}
+.know-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:16px;
+  transition:.2s;
+  text-decoration:none;
+  color:var(--text);
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  border:1px solid transparent;
+}
+.know-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:var(--accent-light)}
+.know-card .know-emoji{font-size:28px;flex-shrink:0;width:36px;text-align:center}
+.know-card .know-info{flex:1;min-width:0}
+.know-card .know-title{font-size:15px;font-weight:700;margin-bottom:2px}
+.know-card .know-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.know-card .know-meta{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+.know-card .know-meta span{
+  font-size:10px;
+  padding:2px 8px;
+  border-radius:4px;
+  font-weight:600;
+}
+.meta-system{background:#fef6f2;color:#d47a30}
+.meta-stall{background:#f5f2ed;color:#7a6a52}
+.meta-free{background:#f0f6ec;color:#7B9A45}
+.meta-paid{background:#fef2f2;color:#B82C1E}
+
+/* ===== 统计区 ===== */
+.stats-bar{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:16px;
+}
+.stat-card{
+  background:var(--card);
+  border-radius:12px;
+  padding:14px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  border-left:3px solid var(--accent);
+}
+.stat-card .stat-num{font-size:24px;font-weight:800;color:var(--accent)}
+.stat-card .stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ===== 快速入口 ===== */
+.quick-links{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  margin-bottom:16px;
+}
+.quick-links::-webkit-scrollbar{display:none}
+.quick-link{
+  flex-shrink:0;
+  padding:10px 16px;
+  border-radius:10px;
+  background:var(--card);
+  box-shadow:var(--shadow);
+  text-decoration:none;
+  color:var(--text);
+  font-size:13px;
+  font-weight:600;
+  text-align:center;
+  min-width:90px;
+  transition:.15s;
+}
+.quick-link:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.quick-link .ql-emoji{font-size:22px;display:block;margin-bottom:4px}
+
+.footer{text-align:center;padding:20px 16px 30px;color:var(--muted);font-size:11px;line-height:1.8;border-top:1px solid var(--border);margin-top:30px}
 .footer .brand{font-size:14px;font-weight:700;color:var(--text)}
 .footer a{color:var(--accent);text-decoration:none}
+@media(max-width:480px){
+  .stats-bar{grid-template-columns:1fr 1fr}
+  .know-card{padding:12px}
+}
 </style>
 </head>
 <body>
@@ -41,34 +182,172 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <a href="index.html" class="nav-brand">产品决策库</a>
     <div class="nav-links">
       <a href="stall.html">🔥 产品库</a>
-      <a href="learn.html">📖 知识库</a>
+      <a href="learn.html" class="active">📖 知识库</a>
       <a href="javascript:void(0)" onclick="toggleChat()">🔧 工具</a>
       <a href="index.html#price">👑 会员</a>
     </div>
   </div>
 </div>
 
-<div class="main" style="padding-top:24px;text-align:center">
-  <h1 style="font-size:22px;font-weight:800;color:var(--text)">📖 入门知识库</h1>
-  <p style="font-size:13px;color:var(--muted);margin:6px 0 20px">内容驱动 · 心智图 · 一卡一价</p>
+<div class="main">
 
-  <div style="background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)">
-    <div style="font-size:15px;color:var(--muted);margin-bottom:16px">🛠️ 知识库内容正在整理中</div>
-    <p style="font-size:13px;color:var(--muted);line-height:1.8">
-      现有内容：免费知识 · 趋势分析 · 科普文章<br>
-      即将上线：心智图导航 · 单卡付费解锁<br><br>
-      <a href="index.html" style="color:var(--accent);font-weight:600">← 返回首页</a>
-    </p>
+  <div class="page-hero">
+    <h1>📖 知识库</h1>
+    <p>食品创业知识体系 · 一卡一价 · 编号不乱</p>
   </div>
+
+  <!-- 统计 -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-card"><div class="stat-num" id="totalSys">—</div><div class="stat-label">体系项目</div></div>
+    <div class="stat-card"><div class="stat-num" id="totalCards">—</div><div class="stat-label">决策卡</div></div>
+    <div class="stat-card"><div class="stat-num" id="totalMaster">—</div><div class="stat-label">母卡</div></div>
+    <div class="stat-card"><div class="stat-num" id="totalVc">—</div><div class="stat-label">VC子卡</div></div>
+  </div>
+
+  <!-- 快速入口 -->
+  <div class="quick-links">
+    <a href="stall.html" class="quick-link"><span class="ql-emoji">🔥</span>产品库</a>
+    <a href="store.html" class="quick-link"><span class="ql-emoji">🏪</span>门店体系</a>
+    <a href="factory.html" class="quick-link"><span class="ql-emoji">🏭</span>工厂方案</a>
+    <a href="product-archive.html" class="quick-link"><span class="ql-emoji">📂</span>分类目录</a>
+  </div>
+
+  <!-- 搜索 -->
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="搜索知识点、品类、工艺..." oninput="filterKnow(this.value)">
+  </div>
+
+  <!-- 分类标签 -->
+  <div class="cat-strip" id="catStrip"></div>
+
+  <!-- 知识列表 -->
+  <div id="knowList"></div>
+
+  <!-- 付费墙说明 -->
+  <div style="background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-top:16px;border-left:4px solid var(--accent)">
+    <div style="font-size:14px;font-weight:700;margin-bottom:8px">💰 如何获取完整知识？</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8">
+      <strong>免费：</strong>浏览概要、品类概览、知识索引<br>
+      <strong>¥39/单卡：</strong>解锁单张产品卡的完整配方+工艺数据<br>
+      <strong>¥299/年会员：</strong>解锁90%产品卡，完整配方+优先AI咨询<br>
+      <strong>¥599/年至尊：</strong>全部卡解锁+1对1工艺咨询+新品推送<br>
+      <a href="javascript:void(0)" onclick="copyWxid()" style="color:var(--accent);font-weight:600">联系沧林开通 →</a>
+    </div>
+  </div>
+
 </div>
 
 <div class="footer">
   <div class="brand">产品决策库 · 沧林频道</div>
-  <div style="margin-top:4px"><a href="index.html">首页</a> · <a href="stall.html">地摊产品</a> · <a href="store.html">门店决策</a> · <a href="factory.html">工厂上线</a></div>
+  <div style="margin-bottom:4px;font-size:11px;color:var(--light)">看见水面之下的力量</div>
+  <div><a href="index.html">首页</a> · <a href="stall.html">产品库</a> · <a href="store.html">门店决策</a> · <a href="factory.html">工厂上线</a></div>
+  <div style="margin-top:4px;font-size:10px;color:#ccc">微信 canglin1985 · foodintelai.com</div>
 </div>
 
 <script>
 function toggleChat(){alert('💬 咨询沧林请加微信 canglin1985')}
+function copyWxid(){navigator.clipboard.writeText('canglin1985');alert('微信已复制：canglin1985')}
+
+// 知识数据
+var KNOWLEDGE = [];
+
+// 从 card-catalog.js 构建知识条目
+function buildKnowledge(){
+  if(typeof STORE_DATA==='undefined'){document.getElementById('knowList').innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">⏳ 加载中...</div>';return}
+  KNOWLEDGE=[];
+  STORE_DATA.forEach(function(s){
+    var allCards=s.c||[];
+    // 总纲
+    var textbooks=allCards.filter(function(c){return (c.n||'').indexOf('总纲')>=0||(c.n||'').indexOf('T01')>=0});
+    textbooks.forEach(function(c){
+      KNOWLEDGE.push({t:'总纲',e:'📋',n:c.n||'',d:s.n+'体系 · 顶层创业框架',f:c.f||'',cat:s.n,p:'paid'});
+    });
+    // 母卡
+    var masters=allCards.filter(function(c){return (c.n||'').indexOf('母卡')>=0||(c.n||'').indexOf('_M01')>=0||(c.n||'').indexOf('M01_')>=0});
+    masters.forEach(function(c){
+      KNOWLEDGE.push({t:'母卡',e:'📌',n:c.n||'',d:s.n+' · 核心工艺体系与配方框架',f:c.f||'',cat:s.n,p:'paid'});
+    });
+    // VC卡取前3个展示
+    var vcs=allCards.filter(function(c){return (c.n||'').indexOf('VC')>=0||(c.n||'').indexOf('V0')>=0});
+    vcs.forEach(function(c,i){
+      if(i<3){
+        KNOWLEDGE.push({t:'VC卡',e:'🔧',n:c.n||'',d:s.n+' · 细分工艺决策卡',f:c.f||'',cat:s.n,p:'paid'});
+      }
+    });
+    // 体系知识
+    KNOWLEDGE.push({t:'体系',e:s.e||'📂',n:s.n+'体系总览',d:'包含'+(allCards.length)+'张决策卡，覆盖创业全链路',f:'store.html#'+encodeURIComponent(s.n),cat:s.n,p:'free'});
+  });
+  // 添加免费基础知识
+  KNOWLEDGE.unshift({t:'免费',e:'📖',n:'创业决策方法论',d:'从0到1的食品创业决策框架：选品、定价、选址、供应链',f:'store.html',cat:'通用',p:'free'});
+  KNOWLEDGE.unshift({t:'免费',e:'💰',n:'食品创业投资模型',d:'不同品类投资门槛、回本周期、盈亏平衡点分析',f:stall.html?stall.html:'stall.html',cat:'通用',p:'free'});
+  KNOWLEDGE.unshift({t:'免费',e:'🔥',n:'2025-2026食品创业趋势',d:'街头火锅、文创餐饮、露营美食等新业态深度分析',f:'stall.html',cat:'趋势',p:'free'});
+  renderCats();
+  renderAll();
+  updateStats();
+}
+
+function renderCats(){
+  var cats={};
+  KNOWLEDGE.forEach(function(k){cats[k.cat]=true});
+  var keys=Object.keys(cats);
+  var html='<span class="cat-tag active" data-cat="all" onclick="filterCat(this,\'all\')">全部</span>';
+  keys.forEach(function(k){html+='<span class="cat-tag" data-cat="'+k+'" onclick="filterCat(this,\''+k+'\')">'+k+'</span>'});
+  document.getElementById('catStrip').innerHTML=html;
+}
+
+var currentCat='all',currentQ='';
+
+function filterCat(el,cat){
+  document.querySelectorAll('.cat-tag').forEach(function(t){t.classList.remove('active')});
+  el.classList.add('active');
+  currentCat=cat;
+  renderAll();
+}
+
+function filterKnow(q){
+  currentQ=q.toLowerCase();
+  renderAll();
+}
+
+function renderAll(){
+  var items=KNOWLEDGE.filter(function(k){
+    if(currentCat!=='all' && k.cat!==currentCat)return false;
+    if(currentQ && (k.n||'').toLowerCase().indexOf(currentQ)<0 && (k.d||'').toLowerCase().indexOf(currentQ)<0)return false;
+    return true;
+  });
+  var html='<div class="know-list">';
+  items.forEach(function(k){
+    var tagCls=k.p==='free'?'meta-free':'meta-paid';
+    var tagName=k.p==='free'?'免费':'付费';
+    html+='<a href="'+k.f+'" class="know-card"><div class="know-emoji">'+k.e+'</div><div class="know-info"><div class="know-title">'+k.n+'</div><div class="know-desc">'+k.d+'</div><div class="know-meta"><span style="background:#f0e8de;color:#7a6a52">'+k.t+'</span><span class="'+tagCls+'">'+tagName+'</span></div></div></a>';
+  });
+  html+='</div>';
+  if(items.length===0)html='<div style="text-align:center;padding:30px;color:var(--muted)">没有找到相关内容</div>';
+  document.getElementById('knowList').innerHTML=html;
+}
+
+function updateStats(){
+  if(typeof STORE_DATA==='undefined')return;
+  var sysCount=STORE_DATA.length;
+  var total=0,ms=0,vc=0;
+  STORE_DATA.forEach(function(s){
+    (s.c||[]).forEach(function(c){
+      total++;
+      var n=c.n||'';
+      if(n.indexOf('母卡')>=0||n.indexOf('_M01')>=0||n.indexOf('M01_')>=0||n.indexOf('_M_')>=0)ms++;
+      else if(n.indexOf('总纲')>=0||n.indexOf('T01')>=0||n.indexOf('_T01')>=0){}
+      else vc++;
+    });
+  });
+  document.getElementById('totalSys').textContent=sysCount;
+  document.getElementById('totalCards').textContent=total;
+  document.getElementById('totalMaster').textContent=ms;
+  document.getElementById('totalVc').textContent=vc;
+}
+
+buildKnowledge();
 </script>
+<script src="card-catalog.js"></script>
 </body>
 </html>
