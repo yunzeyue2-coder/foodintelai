@@ -89,10 +89,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
   padding:0 14px 0 28px;
   max-height:0;
   overflow:hidden;
-  transition:max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+  transition:max-height 0.45s ease;
 }
 .sys-card.expanded .sys-body{
-  max-height:800px;
   border-top:1px solid var(--border);
   padding-top:6px;
   padding-bottom:14px;
@@ -253,18 +252,18 @@ function render(){
     html+='<div class="sys-card"><div class="sys-top" onclick="toggleSys(this)"><div class="sys-emoji" style="background:'+bg+';color:'+c+'">'+s.e+'</div><div class="sys-text"><div class="sys-name">'+s.n+'</div><div class="sys-count">'+(s.c?s.c.length:0)+'张决策卡</div></div></div>';
     html+='<div class="sys-body">';
     if(textbook.length>0){
-      html+='<div class="tree-node" style="animation-delay:0.1s"><div class="tree-label"><span class="tl-dot" style="background:#c49a3e"></span>总纲</div>';
-      textbook.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf" style="animation-delay:'+(0.2+i*0.08)+'s">'+n+'<span class="tl-arrow">→</span></a>';});
+      html+='<div class="tree-node"><div class="tree-label"><span class="tl-dot" style="background:#c49a3e"></span>总纲</div>';
+      textbook.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
       html+='</div>';
     }
     if(master.length>0){
-      html+='<div class="tree-node" style="animation-delay:0.4s"><div class="tree-label"><span class="tl-dot" style="background:'+c+'"></span>母卡</div>';
-      master.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf" style="animation-delay:'+(0.5+i*0.08)+'s">'+n+'<span class="tl-arrow">→</span></a>';});
+      html+='<div class="tree-node"><div class="tree-label"><span class="tl-dot" style="background:'+c+'"></span>母卡</div>';
+      master.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
       html+='</div>';
     }
     if(vcards.length>0){
-      html+='<div class="tree-node" style="animation-delay:0.7s"><div class="tree-label"><span class="tl-dot" style="background:#E8652D"></span>VC子卡</div>';
-      vcards.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf" style="animation-delay:'+(0.8+i*0.08)+'s">'+n+'<span class="tl-arrow">→</span></a>';});
+      html+='<div class="tree-node"><div class="tree-label"><span class="tl-dot" style="background:#E8652D"></span>VC子卡</div>';
+      vcards.forEach(function(card,i){var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');html+='<a href="'+card.f+'" class="tree-leaf">'+n+'<span class="tl-arrow">→</span></a>';});
       html+='</div>';
     }
     html+='</div></div>';
@@ -272,7 +271,45 @@ function render(){
   document.getElementById('sysGrid').innerHTML=html;
 }
 
-function toggleSys(el){el.closest('.sys-card').classList.toggle('expanded')}
+function toggleSys(el){
+  var card=el.closest('.sys-card');
+  var body=card.querySelector('.sys-body');
+  if(card.classList.contains('expanded')){
+    // 收起：先重置子动画，再收回
+    card.classList.remove('expanded');
+    body.style.maxHeight='0';
+    var nodes=body.querySelectorAll('.tree-node,.tree-leaf');
+    for(var i=0;i<nodes.length;i++){nodes[i].style.animation='none';nodes[i].style.opacity='0'}
+  }else{
+    // 展开
+    card.classList.add('expanded');
+    // 先让内容可见但折叠状态，获取真实高度
+    var nodes=body.querySelectorAll('.tree-node,.tree-leaf');
+    for(var i=0;i<nodes.length;i++){nodes[i].style.animation='none';nodes[i].style.opacity='0'}
+    // 测量实际高度
+    var h=body.scrollHeight;
+    body.style.maxHeight=h+'px';
+    // 等展开动画完成后，依次显示节点
+    setTimeout(function(){
+      var items=body.querySelectorAll('.tree-node');
+      for(var j=0;j<items.length;j++){
+        (function(idx,el2){
+          setTimeout(function(){
+            el2.style.animation='';
+            el2.style.opacity='';
+            // 叶子也恢复动画
+            var leaves=el2.querySelectorAll('.tree-leaf');
+            for(var k=0;k<leaves.length;k++){
+              (function(k2,leaf){
+                setTimeout(function(){leaf.style.animation='';leaf.style.opacity=''},k2*100);
+              })(k,leaves[k]);
+            }
+          },idx*400);
+        })(j,items[j]);
+      }
+    },500); // 等max-height过渡完成
+  }
+}
 render();
 });
 </script>
