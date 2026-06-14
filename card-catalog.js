@@ -181,11 +181,13 @@ function renderStallCards(id, data) {
     h += '<div class="icon-grid">';
     d.c.forEach(function(c) {
       var tag = getCardTag(c.n);
-      var shortName = c.n.replace(/（[^）]*）/g, '').replace(/\([^)]*\)/g, '').replace(/^[A-Z0-9_]+\s*/, '').trim();
+      var isFree = c.n.indexOf('免费') > -1 || c.n.indexOf('free') > -1;
+      var shortName = c.n.replace(/（[^）]*）/g, '').replace(/\([^)]*\)/g, '').replace(/^[A-Z0-9_]+\\s*/, '').trim();
       if (shortName.length > 8) shortName = shortName.slice(0, 7) + '…';
-      var cardEmoji = getCardEmoji(c.n) || d.e; // 优先卡名匹配，没有才用分类emoji
+      var cardEmoji = getCardEmoji(c.n) || d.e;
       var tagColor = getCardTagColor(tag);
-      h += '<a class="icon-card" href="' + c.f + '">';
+      var lockTag = isFree ? '' : '<div class="icon-card-lock" style="position:absolute;top:-4px;left:-4px;font-size:9px;background:#e8a060;color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center">🔒</div>';
+      h += '<a class="icon-card" href="' + c.f + '">' + lockTag;
       h += '<div class="icon-card-emoji">' + cardEmoji + '</div>';
       h += '<div class="icon-card-name">' + shortName + '</div>';
       if (tag) h += '<div class="icon-card-tag" style="background:' + tagColor + '">' + tag + '</div>';
