@@ -417,6 +417,28 @@ var KNOWLEDGE = [];
 function buildKnowledge(){
   if(typeof STORE_DATA==='undefined'){document.getElementById('knowList').innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">⏳ 加载中...</div>';return}
   KNOWLEDGE=[];
+
+  // ===== 15 款限免卡片 =====
+  var FREE_CARDS = [
+    {t:'限免',e:'🥩',n:'BBQ_V01_腌料体系',d:'中式烧烤·3大腌料基底配方，摆摊开店通用',f:'catalog/BBQ/BBQ_V01_腌料体系.html',cat:'烧烤',p:'free'},
+    {t:'限免',e:'🍗',n:'SL_V01_腌制与皮水体系',d:'烧腊·脆皮烧鸭/叉烧的皮水与腌制工艺',f:'catalog/SL/SL_V01_腌制与皮水体系.html',cat:'烧腊',p:'free'},
+    {t:'限免',e:'🥩',n:'KR_002_厚切五花肉',d:'韩式烤肉·厚切五花腌制与烤制标准工艺',f:'catalog/KR/KR_002_厚切五花肉.html',cat:'韩式烤肉',p:'free'},
+    {t:'限免',e:'🐷',n:'Z01 五香猪头肉（母）',d:'猪系列·五香卤猪头肉完整工艺与配方框架',f:'catalog/Z/Z01 五香猪头肉（母）.html',cat:'猪系列',p:'free'},
+    {t:'限免',e:'🐔',n:'J06 五香鸡爪（母）',d:'鸡系列·五香鸡爪卤制工艺，软糯入味',f:'catalog/J/J06 五香鸡爪（母）.html',cat:'鸡系列',p:'free'},
+    {t:'限免',e:'🫘',n:'LW001 卤鸭脖（母）',d:'卤味体系·鸭脖卤水配方与卤制时间控制',f:'catalog/LW/LW001 卤鸭脖（母）LW_001.html',cat:'卤味',p:'free'},
+    {t:'限免',e:'🫕',n:'HG_V01_火锅底料配方体系',d:'火锅·麻辣/清油/番茄3大底料配方',f:'catalog/HG/HG_V01_火锅底料配方体系.html',cat:'火锅',p:'free'},
+    {t:'限免',e:'🥘',n:'GS_V01_贵州酸汤发酵高汤体系',d:'酸汤·凯里红酸汤发酵工艺与配比',f:'catalog/GS/GS_V01_贵州酸汤发酵高汤体系.html',cat:'贵州酸汤',p:'free'},
+    {t:'限免',e:'🥟',n:'小笼包（母）MP_003',d:'面点·鲜肉小笼包皮冻配方与包制手法',f:'catalog/其他/小笼包（母）MP_003.html',cat:'面点',p:'free'},
+    {t:'限免',e:'🍗',n:'原味黄金炸鸡（母）HZ_001',d:'韩式炸鸡·黄金脆皮炸鸡腌料裹粉全流程',f:'catalog/其他/原味黄金炸鸡（母）HZ_001.html',cat:'韩式炸鸡',p:'free'},
+    {t:'限免',e:'🫘',n:'SC01 甜辣藕片（素菜·免费）',d:'素菜·甜辣藕片，小摊爆品低成本高毛利',f:'catalog/SC/SC01 甜辣藕片（素菜·免费）.html',cat:'素菜',p:'free'},
+    {t:'限免',e:'🥬',n:'傣舂鸡脚（母）DC_001',d:'傣舂·酸辣舂鸡脚，仪式感爆品小摊',f:'catalog/其他/傣舂鸡脚（母）DC_001.html',cat:'傣舂',p:'free'},
+    {t:'限免',e:'🍳',n:'CJ_M01_炒鸡创业母卡',d:'炒鸡·临沂炒鸡创业全链路决策框架',f:'catalog/CJ/CJ_M01_炒鸡创业母卡.html',cat:'炒鸡',p:'free'},
+    {t:'限免',e:'🍢',n:'ZHA_V01_炸串挂糊体系',d:'炸串·面糊/脆糊/裹粉3大挂糊方案',f:'catalog/ZHA/ZHA_V01_炸串挂糊体系.html',cat:'炸串',p:'free'},
+    {t:'限免',e:'🐟',n:'KY_M01_烤鱼创业母卡',d:'烤鱼·清江鱼/草鱼选品到出品的完整决策',f:'catalog/KY/KY_M01_烤鱼创业母卡.html',cat:'烤鱼',p:'free'},
+  ];
+  FREE_CARDS.forEach(function(c){KNOWLEDGE.push(c)});
+
+  // ===== 体系动态知识 =====
   STORE_DATA.forEach(function(s){
     var allCards=s.c||[];
     // 总纲
@@ -479,8 +501,8 @@ function renderAll(){
   var html='<div class="know-list">';
   items.forEach(function(k){
     var tagCls=k.p==='free'?'meta-free':'meta-paid';
-    var tagName=k.p==='free'?'免费':'付费';
-    html+='<a href="'+k.f+'" class="know-card"><div class="ke">'+k.e+'</div><div class="ki"><div class="kt">'+k.n+'</div><div class="kd">'+k.d+'</div><div class="km"><span style="background:#f0e8de;color:#7a6a52">'+k.t+'</span><span class="'+tagCls+'">'+tagName+'</span></div></div></a>';
+    var tagName=k.p==='free'?(k.t==='限免'?'限免':'免费'):'付费';
+    html+='<a href="'+k.f+'" class="know-card"><div class="ke">'+k.e+'</div><div class="ki"><div class="kt">'+k.n+'</div><div class="kd">'+k.d+'</div><div class="km"><span style="background:#f0e8de;color:#7a6a52">'+k.t+'</span><span class="'+tagCls+'" style="'+(k.t==='限免'?'background:#FFF3E0;color:#E65100;':'')+'">'+tagName+'</span></div></div></a>';
   });
   html+='</div>';
   if(items.length===0)html='<div style="text-align:center;padding:30px;color:var(--muted)">没有找到相关内容</div>';
