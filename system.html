@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>体系卡 · 产品决策库</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body,html{
+            height:100%;
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+            background:radial-gradient(circle at center,#FDFDFD 0%,#F5F6F8 100%);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            overflow:auto;
+        }
+        .brand-container{
+            flex:1;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            padding:40px 20px 20px;
+            width:100%;
+            max-width:480px;
+        }
+        .logo-box{
+            width:100px;
+            height:100px;
+            background:#8A1C22;
+            border-radius:24px;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            box-shadow:0 12px 32px rgba(138,28,34,0.15);
+            margin-bottom:18px;
+            font-size:44px;
+            transition:transform .5s ease;
+        }
+        .brand-title{
+            font-size:20px;
+            font-weight:700;
+            color:#1A1A1A;
+            letter-spacing:2px;
+            margin-bottom:2px;
+        }
+        .brand-subtitle{
+            font-size:12px;
+            color:#8A1C22;
+            letter-spacing:4px;
+            font-weight:500;
+        }
+        .card-count{
+            font-size:13px;
+            color:#8A1C22;
+            letter-spacing:1px;
+            margin-top:10px;
+            font-weight:600;
+        }
+        .back-btn{
+            display:inline-block;
+            margin-top:16px;
+            padding:8px 20px;
+            background:rgba(138,28,34,.08);
+            color:#8A1C22;
+            border-radius:8px;
+            font-size:12px;
+            font-weight:600;
+            text-decoration:none;
+            transition:.2s;
+        }
+        .back-btn:hover{background:rgba(138,28,34,.15)}
+        .sub-list{
+            width:100%;
+            max-width:480px;
+            padding:0 20px 30px;
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+        }
+        .sub-list-title{
+            font-size:12px;
+            color:#999;
+            letter-spacing:2px;
+            font-weight:600;
+            margin-bottom:4px;
+            padding-left:4px;
+        }
+        .sub-item{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            padding:10px 14px;
+            background:#fff;
+            border-radius:10px;
+            text-decoration:none;
+            color:#1A1A1A;
+            font-size:13px;
+            font-weight:500;
+            border:1px solid #E8E8E8;
+            transition:.15s;
+        }
+        .sub-item:hover{
+            transform:translateY(-1px);
+            box-shadow:0 3px 12px rgba(0,0,0,.06);
+            border-color:#8A1C22;
+        }
+        .sub-item .tag{
+            font-size:8px;
+            font-weight:700;
+            color:#fff;
+            padding:2px 6px;
+            border-radius:3px;
+            flex-shrink:0;
+        }
+        .sub-item .name{flex:1}
+        .sub-item .arrow{color:#ccc;font-size:14px}
+    </style>
+</head>
+<body>
+    <div class="brand-container" id="brandArea">
+        <div class="logo-box" id="logoBox">🍗</div>
+        <div class="brand-title" id="sysTitle">烧腊体系</div>
+        <div class="brand-subtitle">产品决策库</div>
+        <div class="card-count" id="cardCount">6张体系卡</div>
+        <a class="back-btn" href="store.html">← 返回全部体系</a>
+    </div>
+    <div class="sub-list-title">📋 全部子卡</div>
+    <div class="sub-list" id="subList"></div>
+    <script src="card-catalog.js"></script>
+    <script>
+    (function(){
+        var params = new URLSearchParams(window.location.search);
+        var id = params.get('id') || 'SL';
+        if(typeof STORE_DATA === 'undefined'){
+            document.getElementById('sysTitle').textContent = '体系加载中';
+            return;
+        }
+        var found = null;
+        STORE_DATA.forEach(function(d){if(d.p === id) found=d;});
+        if(!found){
+            document.getElementById('sysTitle').textContent = '未找到该体系';
+            return;
+        }
+        document.getElementById('logoBox').textContent = found.e;
+        document.getElementById('sysTitle').textContent = found.n;
+        document.getElementById('cardCount').textContent = found.c.length + '张体系卡';
+
+        var list = document.getElementById('subList');
+        var html = '';
+        found.c.forEach(function(c){
+            var tag = '';
+            if(c.n.indexOf('（母）')>-1||c.n.indexOf('母卡')>-1) tag = '母';
+            else if(c.n.indexOf('（子）')>-1||c.n.indexOf('(子)')>-1) tag = '子';
+            var tagColor = tag==='母'?'#C0392B':'#E8652D';
+            var tagHtml = tag ? '<span class="tag" style="background:'+tagColor+'">'+tag+'</span>' : '';
+            var name = c.n.replace(/（[^）]*）/g,'').replace(/\([^)]*\)/g,'').replace(/^[A-Z0-9_]+ /,'');
+            html += '<a class="sub-item" href="'+c.f+'">'+tagHtml+'<span class="name">'+name+'</span><span class="arrow">›</span></a>';
+        });
+        list.innerHTML = html;
+    })();
+    </script>
+</body>
+</html>
