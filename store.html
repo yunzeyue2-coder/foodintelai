@@ -270,22 +270,6 @@ body{
 }
 .section-block{padding:0 0 12px}
 .section-block h3{padding:0 4px}
-/* 体系卡片列表 */
-.cat-card{margin-bottom:8px;background:var(--card);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.02)}
-.cat-card .cc-header{padding:12px 14px;font-size:15px;font-weight:700;color:#3a2a1a;display:flex;align-items:center;gap:8px;cursor:pointer;background:#fcf8f4;user-select:none;transition:.1s}
-.cat-card .cc-header:hover{background:#f8f2ec}
-.cat-card .cc-header .cc-emoji{font-size:20px}
-.cat-card .cc-header .cc-name{flex:1}
-.cat-card .cc-header .cc-count{font-size:11px;color:var(--light);font-weight:400}
-.cat-card .cc-header .cc-arrow{font-size:10px;color:var(--light);transition:transform .2s}
-.cat-card .cc-body{padding:0 12px 12px;display:block}
-.cat-card .cc-body.hide{display:none}
-.list-grid{display:flex;flex-direction:column;gap:6px}
-.list-card{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg);border-radius:6px;text-decoration:none;color:var(--text);font-size:13px;transition:.15s}
-.list-card:hover{background:var(--tag-bg)}
-.list-card .list-tag{font-size:8px;font-weight:700;color:#fff;padding:1px 5px;border-radius:2px;flex-shrink:0}
-.list-card .list-name{flex:1}
-.list-card .list-arrow{color:#ccc;font-size:14px}
 </style>
 </head>
 <body>
@@ -495,11 +479,76 @@ body{
     </div>
   </div>
 
-  <!-- ===== ⑤ 门店体系决策卡 (22品类) ===== -->
-  <div class="section-block">
-    <h3 style="font-size:17px;font-weight:700;margin:24px 0 14px;display:flex;align-items:center;gap:8px">📋 全品类体系卡 · 22大品类</h3>
-    <div id="storeCards"></div>
+  <!-- ===== ⑤ 门店体系决策卡 (22品类·分类卡片布局) ===== -->
+  <div class="store-system-section">
+    <h3 style="font-size:17px;font-weight:700;margin:24px 0 12px;display:flex;align-items:center;gap:8px">📋 全品类体系卡 · 22大品类</h3>
+    <div id="storeSystemGrid"></div>
   </div>
+  <style>
+  .store-system-section{max-width:720px;margin:0 auto}
+  .sys-group{margin-bottom:10px}
+  .sys-group-title{font-size:13px;font-weight:700;color:var(--muted);padding:6px 12px 6px 0;display:flex;align-items:center;gap:6px;letter-spacing:.5px}
+  .sys-group-title .line{flex:1;height:1px;background:var(--border);margin-left:6px}
+  .sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .sys-card{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--card);border-radius:10px;text-decoration:none;color:var(--text);border:1px solid var(--border);transition:.15s;cursor:pointer}
+  .sys-card:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.06);border-color:var(--accent-light)}
+  .sys-card .se{font-size:20px;width:28px;text-align:center;flex-shrink:0}
+  .sys-card .sn{font-size:13px;font-weight:600;flex:1}
+  .sys-card .sc{font-size:10px;color:var(--light);font-weight:600}
+  .sys-sub{display:none;padding:6px 0 4px 18px;flex-direction:column;gap:4px}
+  .sys-sub.open{display:flex}
+  .sys-sub a{display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--bg);border-radius:6px;text-decoration:none;color:var(--text);font-size:12px;transition:.1s}
+  .sys-sub a:hover{background:var(--tag-bg)}
+  .sys-sub a .st{font-size:8px;font-weight:700;color:#fff;padding:1px 5px;border-radius:2px;flex-shrink:0}
+  </style>
+  <script>
+  // 22品类分组
+  var SYS_GROUPS = [
+    {g:"卤味系",emoji:"🫘",items:["LW","VC","J","Z","B","E","SC"]},
+    {g:"烧烤/油炸",emoji:"🔥",items:["BBQ","KR","SL","ZHA"]},
+    {g:"火锅/汤锅",emoji:"🫕",items:["HG","GS","MLT","XLX","KY"]},
+    {g:"粉面系",emoji:"🍜",items:["HM","YN"]},
+    {g:"韩式系",emoji:"🥩",items:["KF","JL","PC"]},
+    {g:"其他",emoji:"🍳",items:["CJ"]}
+  ];
+  document.addEventListener('DOMContentLoaded',function(){
+    var el = document.getElementById('storeSystemGrid');
+    if(!el)return;
+    // 从全局 STORE_DATA 查
+    var lookup = {};
+    if(typeof STORE_DATA !== 'undefined'){
+      STORE_DATA.forEach(function(d){lookup[d.p]=d;});
+    }
+    var html = '';
+    SYS_GROUPS.forEach(function(gp){
+      html += '<div class="sys-group">';
+      html += '<div class="sys-group-title">'+gp.emoji+' '+gp.g+'<span class="line"></span></div>';
+      html += '<div class="sys-grid">';
+      gp.items.forEach(function(k){
+        var d = lookup[k];
+        if(!d)return;
+        html += '<div class="sys-card" onclick="var s=this.nextElementSibling;if(s)s.classList.toggle(\'open\')">';
+        html += '<span class="se">'+d.e+'</span>';
+        html += '<span class="sn">'+d.n+'</span>';
+        html += '<span class="sc">'+d.c.length+'张</span>';
+        html += '</div>';
+        // 子卡列表
+        html += '<div class="sys-sub">';
+        d.c.forEach(function(c){
+          var tag = '';
+          if(c.n.indexOf('（母）')>-1||c.n.indexOf('母卡')>-1) tag = '母';
+          else if(c.n.indexOf('（子）')>-1||c.n.indexOf('(子)')>-1) tag = '子';
+          var tagColor = tag==='母'?'#C0392B':'#E8652D';
+          var tagHtml = tag ? '<span class="st" style="background:'+tagColor+'">'+tag+'</span>' : '';
+          html += '<a href="'+c.f+'">'+tagHtml+'<span>'+c.n.replace(/（[^）]*）/g,'').replace(/\([^)]*\)/g,'').replace(/^[A-Z0-9_]+ /,'')+'</span></a>';
+        });
+        html += '</div>';
+      });
+      html += '</div></div>';
+    });
+    el.innerHTML = html;
+  });
+  </script>
 
   <!-- ===== ⑥ 选址测评 ===== -->
   <div class="location-section">
