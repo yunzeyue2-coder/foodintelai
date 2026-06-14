@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>门店决策卡 · 产品决策库</title>
+<title>门店决策 · 产品决策库</title>
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,7 +12,6 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-icon.png">
 <meta name="theme-color" content="#B82C1E">
-<meta name="msapplication-TileColor" content="#B82C1E">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -22,12 +21,9 @@
   --muted:#7a6a62;
   --light:#b5a098;
   --accent:#B82C1E;
-  --accent-light:#D95040;
   --border:#ded0c8;
   --tag-bg:#e8ddd6;
-  --radius:14px;
-  --shadow:0 3px 14px rgba(0,0,0,.06);
-  --shadow-hover:0 8px 28px rgba(0,0,0,.10);
+  --radius:16px;
 }
 body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;line-height:1.5;-webkit-font-smoothing:antialiased}
 .nav{position:sticky;top:0;z-index:50;background:rgba(250,244,240,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 16px}
@@ -39,200 +35,87 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .nav-links a.active{background:var(--accent);color:#fff;font-weight:600}
 .main{max-width:720px;margin:0 auto;padding:0 16px 40px}
 
-/* ===== Hero ===== */
-.page-hero{text-align:center;padding:28px 0 12px}
-.page-hero h1{font-size:22px;font-weight:800}
-.page-hero p{font-size:13px;color:var(--muted);margin-top:4px}
+/* Hero */
+.hero{text-align:center;padding:28px 0 12px}
+.hero h1{font-size:22px;font-weight:800}
+.hero p{font-size:13px;color:var(--muted);margin-top:4px}
 
-/* ===== 体系总纲入口 ===== */
-.outline-card{
-  background:var(--card);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:16px;
-  margin-bottom:20px;
-  border-left:4px solid var(--accent);
-}
-.outline-card h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:8px}
-.outline-grid{display:flex;flex-wrap:wrap;gap:6px}
-.outline-tag{
-  padding:6px 12px;
-  background:var(--tag-bg);
-  border-radius:8px;
-  font-size:11px;
-  font-weight:600;
-  color:var(--muted);
-  display:flex;
-  align-items:center;
-  gap:4px;
-}
+/* 统计横条 */
+.stats-row{display:flex;gap:8px;margin-bottom:20px}
+.stat-block{flex:1;background:var(--card);border-radius:12px;padding:12px 8px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.stat-block .num{font-size:22px;font-weight:800;color:var(--accent)}
+.stat-block .lb{font-size:11px;color:var(--muted);margin-top:2px}
 
-/* ===== 体系卡片（现代） ===== */
+/* ===== 体系卡片网格 ===== */
+.sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .sys-card{
   background:var(--card);
   border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
   overflow:hidden;
   transition:.2s;
-  border:1px solid #f0e8e2;
 }
-.sys-card:hover{box-shadow:var(--shadow-hover)}
-.sys-card-header{
-  padding:14px 16px;
+.sys-card:active{transform:scale(.97)}
+
+/* 卡片头部 */
+.sys-top{
+  padding:16px 14px 12px;
   display:flex;
   align-items:center;
   gap:10px;
   cursor:pointer;
   user-select:none;
-  transition:.15s;
 }
-.sys-card-header:hover{background:#f8f2ee}
-.sys-card-header .sys-emoji{font-size:24px;width:36px;text-align:center;flex-shrink:0}
-.sys-card-header .sys-icon{
-  width:36px;height:36px;
-  border-radius:10px;
+.sys-top .sys-emoji{
+  width:44px;height:44px;
+  border-radius:12px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:18px;
+  font-size:22px;
   flex-shrink:0;
 }
-.sys-card-header .sys-info{flex:1;min-width:0}
-.sys-card-header .sys-name{font-size:15px;font-weight:700}
-.sys-card-header .sys-desc{font-size:11px;color:var(--muted);margin-top:1px}
-.sys-card-header .sys-meta{display:flex;align-items:center;gap:6px;flex-shrink:0}
-.sys-count{
-  font-size:10px;
-  padding:2px 8px;
-  border-radius:4px;
-  background:var(--tag-bg);
-  color:var(--muted);
-  font-weight:600;
-}
-.sys-arrow{font-size:14px;color:var(--light);transition:transform .25s ease}
-.sys-card.open .sys-arrow{transform:rotate(180deg)}
+.sys-top .sys-text{flex:1;min-width:0}
+.sys-top .sys-name{font-size:14px;font-weight:700}
+.sys-top .sys-count{font-size:11px;color:var(--muted);margin-top:1px}
 
-/* ===== 体系内容区 ===== */
-.sys-body{
-  display:none;
-  padding:0 16px 16px;
-  border-top:1px solid var(--border);
-}
-.sys-card.open .sys-body{display:block}
+/* 内容区（默认折叠） */
+.sys-body{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
+.sys-card.expanded .sys-body{display:block}
 
-.sys-type-label{
-  font-size:11px;
-  font-weight:700;
-  padding:6px 0 4px;
-  color:var(--muted);
-  letter-spacing:2px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-top:10px;
-}
-.sys-type-label::after{
-  content:'';
-  flex:1;
-  height:1px;
-  background:var(--border);
-}
-
-/* ===== 总纲卡片 ===== */
-.master-card{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px 14px;
-  background:var(--bg);
-  border-radius:10px;
-  text-decoration:none;
-  color:var(--text);
-  margin-bottom:6px;
-  transition:.15s;
-}
-.master-card:hover{background:#f0e8e2;transform:translateY(-1px)}
-.master-card .mc-emoji{font-size:20px;flex-shrink:0}
-.master-card .mc-info{flex:1;min-width:0}
-.master-card .mc-name{font-size:13px;font-weight:600}
-.master-card .mc-desc{font-size:11px;color:var(--muted);margin-top:1px}
-.master-card .mc-arrow{color:var(--light);font-size:12px;flex-shrink:0}
-
-/* ===== 母卡网格 ===== */
-.mc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
-.mc-item{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:10px 12px;
-  background:var(--bg);
-  border-radius:10px;
-  text-decoration:none;
-  color:var(--text);
-  font-size:12px;
-  font-weight:500;
-  transition:.15s;
-}
-.mc-item:hover{background:#f0e8e2;transform:translateY(-1px)}
-.mc-item .mc-item-emoji{font-size:16px;flex-shrink:0}
-.mc-item .mc-item-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-/* ===== VC卡网格（紧凑） ===== */
-.vc-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:4px}
-.vc-item{
+/* 子卡列表 */
+.sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px}
+.sub-item{
   display:flex;
   align-items:center;
   gap:6px;
-  padding:7px 10px;
+  padding:8px 10px;
   background:var(--bg);
   border-radius:8px;
   text-decoration:none;
-  color:var(--muted);
+  color:var(--text);
   font-size:11.5px;
-  transition:.15s;
+  transition:.1s;
 }
-.vc-item:hover{background:#f0e8e2;color:var(--text)}
-.vc-item .vc-item-dot{width:4px;height:4px;border-radius:50%;background:#E04E1A;flex-shrink:0}
-.vc-item .vc-item-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sub-item:active{background:var(--tag-bg);transform:scale(.97)}
+.sub-item .sub-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.sub-item .sub-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* ===== 分隔标签 ===== */
-.sys-type-label{font-size:11px;font-weight:700;padding:10px 0 6px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.stl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.vc-count{font-weight:400;color:var(--light)}
-
-/* ===== 咨询区 ===== */
-.consult-block{
-  margin-top:20px;
-  padding:18px;
-  background:linear-gradient(135deg,#fef2f2,#fce4e4);
-  border-radius:var(--radius);
-  border:1px solid #f5d0d0;
-  text-align:center;
-}
-.consult-block .cb-title{font-size:14px;font-weight:700;color:#5a2a2a}
-.consult-block .cb-desc{font-size:12px;color:var(--muted);margin:6px 0 12px}
-.consult-block .cb-btn{
-  display:inline-block;
-  padding:8px 28px;
-  background:var(--accent);
-  color:#fff;
-  border-radius:10px;
-  font-size:13px;
-  font-weight:600;
-  text-decoration:none;
-  margin:0 4px;
-  transition:.15s;
-}
-.consult-block .cb-btn:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(184,44,30,.25)}
-.consult-block .cb-btn.alt{background:#4a2c2c}
+/* 咨询区 */
+.consult{margin-top:20px;padding:16px;background:linear-gradient(135deg,#fef2f2,#fce4e4);border-radius:var(--radius);text-align:center}
+.consult .ct{font-size:13px;font-weight:700;color:#5a2a2a}
+.consult .cd{font-size:11px;color:var(--muted);margin:6px 0 10px}
+.consult .cb{display:inline-block;padding:8px 24px;background:var(--accent);color:#fff;border-radius:10px;font-size:12px;font-weight:600;text-decoration:none;margin:0 4px}
 
 .footer{text-align:center;padding:20px 16px 30px;color:var(--muted);font-size:11px;line-height:1.8}
-.footer .brand{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.footer .brand{font-size:14px;font-weight:700;color:var(--text)}
 .footer a{color:var(--accent);text-decoration:none}
-@media(max-width:480px){
-  .mc-grid{grid-template-columns:1fr}
-  .vc-grid{grid-template-columns:1fr}
+
+@media(max-width:400px){
+  .sys-grid{grid-template-columns:1fr}
+  .sub-grid{grid-template-columns:1fr}
+  .stats-row{gap:4px}
+  .stat-block .num{font-size:18px}
 }
 </style>
 </head>
@@ -243,7 +126,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
     <a href="index.html" class="nav-brand">产品决策库</a>
     <div class="nav-links">
       <a href="stall.html">🔥 产品库</a>
-      <a href="learn.html">📖 知识库</a>
       <a href="javascript:void(0)" onclick="toggleChat()">🔧 工具</a>
       <a href="index.html#price">👑 会员</a>
     </div>
@@ -251,124 +133,103 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 </div>
 
 <div class="main">
-  <div class="page-hero">
-    <h1>🏪 门店决策卡</h1>
-    <p>体系化创业项目 · 总纲→母卡→VC卡 · 每个体系配专属咨询</p>
+
+  <div class="hero">
+    <h1>🏪 门店决策</h1>
+    <p>体系化创业 · 总纲→母卡→VC卡 · 三级决策链</p>
   </div>
 
-  <!-- 总纲一览 -->
-  <div class="outline-card" id="outlineCard">
-    <h3>📋 22个体系总览</h3>
-    <div class="outline-grid" id="outlineTags"></div>
-    <div style="margin-top:10px;font-size:11px;color:var(--muted)">
-      总纲<span style="color:var(--accent);font-weight:700">·</span>母卡<span style="color:var(--accent);font-weight:700">·</span>VC卡 三级决策链
-    </div>
+  <div class="stats-row" id="statsRow"></div>
+
+  <div class="sys-grid" id="sysGrid"></div>
+
+  <div class="consult">
+    <div class="ct">💼 想开一家店？</div>
+    <div class="cd">告诉我城市、预算、客群，推荐最合适的体系</div>
+    <a href="javascript:void(0)" onclick="toggleChat()" class="cb">💬 咨询沧林</a>
+    <a href="javascript:void(0)" onclick="copyWxid()" class="cb" style="background:#5a3a3a">📱 加微信</a>
   </div>
 
-  <!-- 体系渲染区 -->
-  <div id="storeCards"></div>
-
-  <!-- 咨询 -->
-  <div class="consult-block">
-    <div class="cb-title">💼 想开一家店？</div>
-    <div class="cb-desc">告诉我你的城市、预算、目标客群，帮你匹配最合适的体系</div>
-    <a href="javascript:void(0)" onclick="toggleChat()" class="cb-btn">💬 咨询沧林</a>
-    <a href="javascript:void(0)" onclick="copyWxid()" class="cb-btn alt">📱 加微信聊</a>
-  </div>
 </div>
 
 <div class="footer">
   <div class="brand">产品决策库 · 沧林频道</div>
-  <div style="margin-bottom:6px;font-size:11px;color:var(--light)">看见水面之下的力量</div>
-  <div><a href="index.html">首页</a> · <a href="stall.html">产品库</a> · <a href="learn.html">知识库</a> · <a href="factory.html">工厂上线</a></div>
-  <div style="margin-top:4px;font-size:10px;color:#ccc">微信 canglin1985 · foodintelai.com</div>
+  <div style="font-size:11px;color:var(--light);margin-bottom:4px">看见水面之下的力量</div>
+  <div><a href="index.html">首页</a> · <a href="stall.html">产品库</a> · <a href="factory.html">工厂上线</a></div>
 </div>
-
-<!-- AI Chat -->
-<button class="fab" onclick="toggleChat()" style="position:fixed;bottom:24px;right:24px;width:50px;height:50px;border-radius:50%;background:var(--accent);color:#fff;font-size:24px;border:none;cursor:pointer;box-shadow:0 3px 12px rgba(184,44,30,.3);z-index:999">🤖</button>
-<div class="chat-box" id="chatBox" style="position:fixed;bottom:84px;right:16px;width:320px;max-width:90vw;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.12);z-index:999;display:none;overflow:hidden">
-  <div class="chat-head" style="padding:12px 14px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;display:flex;justify-content:space-between">🤖 沧林门店顾问 <button onclick="toggleChat()" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer">✕</button></div>
-  <div class="chat-msgs" id="chatMsgs" style="padding:12px;max-height:300px;overflow-y:auto;font-size:13px">
-    <div style="background:#f0e8e4;padding:10px;border-radius:8px;margin-bottom:8px">👋 想开什么类型的店？烧烤、卤味、火锅还是其他？告诉我预算和城市。</div>
-  </div>
-  <div class="chat-input" style="display:flex;border-top:1px solid #eee;padding:8px">
-    <input type="text" id="chatInput" placeholder="输入问题..." style="flex:1;border:none;padding:8px 10px;font-size:13px;outline:none" onkeydown="if(event.key==='Enter')sendChat()">
-    <button onclick="sendChat()" style="padding:8px 14px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">发送</button>
-  </div>
-</div>
-<div class="toast" id="toast" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:8px 18px;border-radius:8px;font-size:12px;z-index:9999;display:none"></div>
 
 <script>
-function toggleChat(){var b=document.getElementById('chatBox');b.style.display=b.style.display==='none'||!b.style.display?'block':'none'}
-function sendChat(){var i=document.getElementById('chatInput'),q=i.value.trim();if(!q)return;var m=document.getElementById('chatMsgs');m.innerHTML+='<div style="text-align:right;margin:6px 0"><span style="background:#e8d8d0;padding:8px 12px;border-radius:8px;font-size:13px;display:inline-block">'+q+'</span></div>';i.value='';setTimeout(function(){m.innerHTML+='<div style="background:#f0e8e4;padding:10px;border-radius:8px;margin-bottom:8px;font-size:13px">收到！沧林会尽快回复。也可以加微信 canglin1985 直接聊。</div>';m.scrollTop=m.scrollHeight},800);m.scrollTop=m.scrollHeight}
-function copyWxid(){var t=document.getElementById('toast');t.textContent='微信已复制：canglin1985';t.style.display='block';setTimeout(function(){t.style.display='none'},2000);navigator.clipboard.writeText('canglin1985')}
+function toggleChat(){alert('💬 咨询沧林请加微信 canglin1985')}
+function copyWxid(){navigator.clipboard.writeText('canglin1985');alert('微信已复制：canglin1985')}
 
-// 从 card-catalog.js 渲染（STORE_DATA 已定义）
-function renderStore(){
-  var el=document.getElementById('storeCards'),html='';
-  var outlineEl=document.getElementById('outlineTags'),outlineHtml='';
-  if(typeof STORE_DATA==='undefined'){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">⏳ 加载中...</div>';return}
-  STORE_DATA.forEach(function(s,i){
-    // 体系主题色
-    var hues=['#B82C1E','#1a7a4a','#c49a3e','#1a7a8e','#8b4a6e','#5a8a3a','#c0703a','#3a6a7a','#6a4a3a','#8a3a3a','#3a7a5a','#7a5a3a','#4a7a6a','#7a4a5a','#5a7a4a','#7a4a2a','#4a6a7a','#7a5a4a','#3a4a7a','#5a4a4a','#4a6a3a','#7a3a4a'];
-    var cHue=hues[i%hues.length];
+var SYS_DATA=[],colors=['#B82C1E','#1a7a4a','#c49a3e','#1a7a8e','#8b4a6e','#5a8a3a','#c0703a','#3a6a7a','#6a4a3a','#8a3a3a','#3a7a5a','#7a5a3a','#4a7a6a','#7a4a5a','#5a7a4a','#7a4a2a','#4a6a7a','#7a5a4a','#3a4a7a','#5a4a4a','#4a6a3a','#7a3a4a'];
 
-    // 分类子卡
-    var master=[],vc=[],textbook=[];
-    (s.c||[]).forEach(function(c){
-      var nm=(c.n||c.f||'').replace(/^.*\//,'').replace(/\.html$/,'');
-      if(nm.indexOf('母卡')>=0||nm.indexOf('_M01')>=0||nm.indexOf('M01_')>=0||nm.indexOf('_M_')>=0)master.push(c);
-      else if(nm.indexOf('总纲')>=0||nm.indexOf('T01')>=0||nm.indexOf('_T01')>=0)textbook.push(c);
-      else vc.push(c);
+function render(){
+  if(typeof STORE_DATA==='undefined'){document.getElementById('sysGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">⏳ 加载中...</div>';return}
+  SYS_DATA=STORE_DATA;
+
+  // Stats
+  var total=0,ms=0,vc=0;
+  SYS_DATA.forEach(function(s){(s.c||[]).forEach(function(c){
+    total++;var n=c.n||'';
+    if(n.indexOf('母卡')>=0||n.indexOf('_M01')>=0||n.indexOf('M01_')>=0||n.indexOf('_M_')>=0)ms++;
+    else if(n.indexOf('总纲')>=0||n.indexOf('T01')>=0||n.indexOf('_T01')>=0){}
+    else vc++;
+  })});
+  document.getElementById('statsRow').innerHTML='<div class="stat-block"><div class="num">'+SYS_DATA.length+'</div><div class="lb">体系</div></div><div class="stat-block"><div class="num">'+total+'</div><div class="lb">决策卡</div></div><div class="stat-block"><div class="num">'+ms+'</div><div class="lb">母卡</div></div><div class="stat-block"><div class="num">'+vc+'</div><div class="lb">VC卡</div></div>';
+
+  // Cards
+  var html='';
+  SYS_DATA.forEach(function(s,i){
+    var c=colors[i%colors.length], bg=c+'18';
+
+    // 分类
+    var master=[],vcards=[],textbook=[];
+    (s.c||[]).forEach(function(card){
+      var nm=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');
+      if(nm.indexOf('母卡')>=0||nm.indexOf('_M01')>=0||nm.indexOf('M01_')>=0)master.push(card);
+      else if(nm.indexOf('总纲')>=0||nm.indexOf('T01')>=0||nm.indexOf('_T01')>=0)textbook.push(card);
+      else vcards.push(card);
     });
 
-    var allCount=s.c?s.c.length:0;
-    var headerBg=cHue+'18';
-
-    html+='<div class="sys-card" onclick="toggleSys(this)">';
-    html+='<div class="sys-card-header"><div class="sys-icon" style="background:'+headerBg+';color:'+cHue+'">'+s.e+'</div><div class="sys-info"><div class="sys-name">'+s.n+'</div><div class="sys-desc">'+allCount+'张卡</div></div><div class="sys-meta"><span class="sys-count">'+allCount+'张</span><span class="sys-arrow">▾</span></div></div>';
+    html+='<div class="sys-card"><div class="sys-top" onclick="toggleSys(this)"><div class="sys-emoji" style="background:'+bg+';color:'+c+'">'+s.e+'</div><div class="sys-text"><div class="sys-name">'+s.n+'</div><div class="sys-count">'+(s.c?s.c.length:0)+'张决策卡</div></div></div>';
 
     html+='<div class="sys-body">';
-
-    // 总纲
     if(textbook.length>0){
-      html+='<div class="sys-type-label"><span class="stl-dot" style="background:#c49a3e"></span>总纲</div>';
-      textbook.forEach(function(c){
-        var n=c.n||'';
-        html+='<a href="'+c.f+'" class="master-card" style="border-left:3px solid #c49a3e"><div class="mc-emoji">📋</div><div class="mc-info"><div class="mc-name">'+n+'</div><div class="mc-desc">顶层创业框架 · 体系总纲</div></div><span class="mc-arrow">→</span></a>';
+      html+='<div style="font-size:10px;font-weight:700;color:#c49a3e;margin-top:8px;margin-bottom:2px">📋 总纲</div><div class="sub-grid">';
+      textbook.forEach(function(card){
+        var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');
+        html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:#c49a3e"></span><span class="sub-name">'+n+'</span></a>';
       });
+      html+='</div>';
     }
-
-    // 母卡
     if(master.length>0){
-      html+='<div class="sys-type-label"><span class="stl-dot" style="background:'+cHue+'"></span>母卡</div><div class="mc-grid">';
-      master.forEach(function(c){
-        var n=c.n||'';
-        html+='<a href="'+c.f+'" class="mc-item" style="border-left:3px solid '+cHue+'"><span class="mc-item-emoji">📌</span><span class="mc-item-name">'+n+'</span></a>';
+      html+='<div style="font-size:10px;font-weight:700;color:'+c+';margin-top:8px;margin-bottom:2px">📌 母卡</div><div class="sub-grid">';
+      master.forEach(function(card){
+        var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');
+        html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:'+c+'"></span><span class="sub-name">'+n+'</span></a>';
       });
       html+='</div>';
     }
-
-    // VC卡
-    if(vc.length>0){
-      html+='<div class="sys-type-label"><span class="stl-dot" style="background:#E04E1A"></span>VC卡 <span class="vc-count">'+vc.length+'张</span></div><div class="vc-grid">';
-      vc.forEach(function(c){
-        var n=c.n||'';
-        html+='<a href="'+c.f+'" class="vc-item"><span class="vc-item-dot"></span><span class="vc-item-name">'+n+'</span></a>';
+    if(vcards.length>0){
+      html+='<div style="font-size:10px;font-weight:700;color:var(--muted);margin-top:8px;margin-bottom:2px">🔧 VC子卡</div><div class="sub-grid">';
+      vcards.forEach(function(card){
+        var n=(card.n||card.f||'').replace(/^.*\//,'').replace(/\.html$/,'');
+        html+='<a href="'+card.f+'" class="sub-item"><span class="sub-dot" style="background:#E04E1A"></span><span class="sub-name">'+n+'</span></a>';
       });
       html+='</div>';
     }
-
     html+='</div></div>';
-
-    // 总纲标签
-    outlineHtml+='<span class="outline-tag" onclick="document.getElementById(\'storeCards\').children['+i+']&&document.getElementById(\'storeCards\').children['+i+'].scrollIntoView({behavior:\'smooth\',block:\'center\'})" style="cursor:pointer">'+s.e+' '+s.n+'</span>';
   });
-  el.innerHTML=html;
-  if(outlineEl)outlineEl.innerHTML=outlineHtml+'<span class="outline-tag" style="background:var(--accent);color:#fff;cursor:default">共'+STORE_DATA.length+'个体系</span>';
+  document.getElementById('sysGrid').innerHTML=html;
 }
-function toggleSys(c){c.classList.toggle('open')}
-renderStore();
+
+function toggleSys(el){
+  var card=el.closest('.sys-card');
+  card.classList.toggle('expanded');
+}
+
+render();
 </script>
 <script src="card-catalog.js"></script>
 </body>
