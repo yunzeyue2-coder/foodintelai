@@ -1,437 +1,431 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
-<title>冰菠萝 · 创业项目测评 V5.1</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
-.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
-.rating-bar{background:linear-gradient(135deg,#F4A261,#E76F51);padding:16px 18px;color:#fff}
-.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
-.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
-.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
-.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
-.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
-.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
-.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
-.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
-.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
-.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
-.radar-item .stars{font-size:13px;letter-spacing:0px}
-.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
-.radar-item.high{background:#fef2ee}
-.radar-item.high .stars{color:#E8652D}
-.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
-.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
-.fit-yes{background:#f0f6ec;color:#3a6b2e}
-.fit-no{background:#fef2f2;color:#b53b3b}
-.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
-.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
-.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
-.logic-item:last-child{border-bottom:none}
-.logic-item .v{font-weight:700;color:#C0392B}
-.metric-row{display:flex;gap:6px;margin-top:6px}
-.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
-.metric-card .m-label{font-size:9px;color:#7a7269}
-.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
-.metric-card .m-sub{font-size:8px;color:#b5aaa0}
-.mc-orange{background:#fdf2ee}
-.mc-orange .m-val{color:#E8652D}
-.mc-gold{background:#fef6ec}
-.mc-gold .m-val{color:#D4A574}
-.mc-green{background:#f0f6ec}
-.mc-green .m-val{color:#5a8f3c}
-.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
-.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
-.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
-.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
-.track-good .t-h{color:#5a8f3c}
-.track-bad .t-h{color:#C0392B}
-.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
-.track-verdict strong{color:#E8652D}
-.prod-struct{display:flex;flex-direction:column;gap:8px}
-.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
-.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
-.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
-.prod-tier .t-price{color:#b5aaa0;font-size:11px}
-.tier-lead{background:#fef6ec}
-.tier-lead .t-badge{background:#E8652D;color:#fff}
-.tier-profit{background:#f0f6ec}
-.tier-profit .t-badge{background:#5a8f3c;color:#fff}
-.tier-set{background:#eef2ff}
-.tier-set .t-badge{background:#4f6ef7;color:#fff}
-.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-.stall-item{padding:10px;border-radius:10px;text-align:center}
-.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
-.stall-item .stars{font-size:12px;letter-spacing:1px}
-.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
-.risk-item:last-child{border-bottom:none}
-.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
-.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
-.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
-.judge-box .j-text strong{color:#C0392B}
-.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
-.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
-.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
-.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
-.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.process-step .ps-desc{flex:1}
-.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
-.rel-grid{display:flex;flex-direction:column;gap:6px}
-.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
-.rel-item:active{background:#e8dfd5}
-.rel-item .r-emoji{font-size:16px}
-.rel-item .r-name{flex:1;font-weight:600}
-.rel-item .r-arrow{color:#ccc;font-size:10px}
-.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
-.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
-.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
-.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
-.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
-.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
-.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
-.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
-.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
-.pay-content.show{display:block}
-.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
-.recipe-line .k{color:#5a4f44}
-.recipe-line .v{font-weight:600;color:#3a322a}
-.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
-table{width:100%;border-collapse:collapse;font-size:11px}
-th,td{padding:8px 6px;text-align:left}
-.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
-h1{font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px}
-.header-sub{font-size:12px;color:#b5aaa0}
-</style>
-<link rel="stylesheet" href="../../paywall.css">
-</head>
-<body>
-<div class="card">
-
-<!-- ===== 01 Header ===== -->
-<div style="padding:12px 18px 4px;background:#faf8f5">
-  <h1>🍍 冰菠萝</h1>
-  <div class="header-sub">热带风味 · 清爽解腻 · 地摊爆款</div>
-</div>
-<div class="rating-bar">
-  <div class="r-top">
-    <div class="r-score">
-      <span class="r-num">8.8</span>
-      <span class="r-label">FoodIntelAI评分</span>
-    </div>
-    <span class="r-grade">A级项目</span>
-  </div>
-  <div class="r-tagline">酸甜口地摊王者，核心竞争力不是菠萝，而是糖水底和冰沙化处理。</div>
-  <div class="r-tags">
-    <span>🔥 热度高</span>
-    <span>💰 投资800+</span>
-    <span>👤 1人可做</span>
-    <span>🔄 复购高</span>
-  </div>
-</div>
-
-<!-- ===== 02 项目速览 ===== -->
-<div class="section">
-  <div class="s-title">📊 项目速览</div>
-  <div class="radar-grid">
-    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
-    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
-    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">极低</div></div>
-    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★★☆</div><div class="val">中等</div></div>
-    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
-  </div>
-</div>
-
-<!-- ===== 03 适合谁 ===== -->
-<div class="section">
-  <div class="fit-wrap">
-    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
-      <div class="fit-item fit-yes">✅ 新手摆摊/学生创业</div>
-      <div class="fit-item fit-yes">✅ 夏季夜市主力单品</div>
-      <div class="fit-item fit-yes">✅ 作为炸鸡/烧烤摊的搭售品</div>
-      <div class="fit-item fit-yes">✅ 景区/水上乐园周边</div>
-      <div class="fit-item fit-yes">✅ 追求高毛利低门槛</div>
-    </div>
-    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
-      <div class="fit-item fit-no">❌ 冬季主力（季节性明显）</div>
-      <div class="fit-item fit-no">❌ 追求全年稳定收入</div>
-      <div class="fit-item fit-no">❌ 无法保证冷链储存</div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== 04 赚钱逻辑 ===== -->
-<div class="section">
-  <div class="s-title">💰 赚钱逻辑</div>
-  <div class="logic-box">
-    <div class="l-title">🧠 顾客为什么买</div>
-    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：天然酸甜 × 解暑解腻 × 区别于奶茶的新鲜感</div>
-    <div class="l-title">📈 利润从哪里来</div>
-    <div class="logic-item"><span>冰菠萝水（引流）</span><span class="v">毛利82%</span></div>
-    <div class="logic-item"><span>菠萝冰沙（升级款）</span><span class="v">毛利75%</span></div>
-    <div class="logic-item"><span>加椰果/脆波波（+¥2）</span><span class="v">毛利85%</span></div>
-    <div class="logic-item"><span>双拼套餐（+酸梅汤）</span><span class="v">客单价拉高35%</span></div>
-    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
-    <div class="logic-item"><span>推出“菠萝椰奶冰沙”+¥3</span><span class="v"></span></div>
-    <div class="logic-item"><span>加料区（脆波波/椰果/爆珠）任选+¥2/样</span><span class="v"></span></div>
-    <div class="l-title">🔄 如何提高复购</div>
-    <div class="logic-item"><span>第二杯半价（锁定双人购买）</span><span class="v"></span></div>
-    <div class="logic-item"><span>每周限定口味（百香果/青柠菠萝）</span><span class="v"></span></div>
-  </div>
-  <div class="metric-row">
-    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥500-900</div><div class="m-sub">4-6h出摊(夏季)</div></div>
-    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥4,000-6,000</div><div class="m-sub">出摊20天(预估)</div></div>
-    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">3-7天</div><div class="m-sub">含设备</div></div>
-  </div>
-  <div class="badge" style="margin-top:8px">💡 数据来源：参考南方夜市水果茶摊实测数据及广西特色糖水摊平均水平。</div>
-</div>
-
-<!-- ===== 05 赛道判断 ===== -->
-<div class="section">
-  <div class="s-title">📈 赛道判断</div>
-  <div class="track-grid">
-    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
-      <div class="t-item">口味普适性高，酸甜口覆盖男女老少</div>
-      <div class="t-item">原材料便宜，菠萝进价低，损耗可控</div>
-      <div class="t-item">制作简单，出餐速度快（30秒/杯）</div>
-      <div class="t-item">视觉清爽，适合拍照打卡传播</div>
-    </div>
-    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
-      <div class="t-item">季节性明显，夏天爆单，冬天无人问津</div>
-      <div class="t-item">门槛极低，同质化严重，容易价格战</div>
-      <div class="t-item">菠萝品质波动大，酸度不可控</div>
-      <div class="t-item">冰沙款需要冰沙机，增加设备投入</div>
-    </div>
-  </div>
-  <div class="track-verdict">
-    <strong>市场现状：</strong>夏季地摊标配，几乎每个夜市都有。但多数摊位是“糖水+菠萝块”的简陋版，口感普通。<br>
-    <strong>未来判断：</strong>2026年夏季仍会是引流爆款。竞争点在于“冰沙化程度”和“酸甜比平衡”。纯粹卖菠萝水利润薄，必须转型菠萝冰沙或搭配椰奶形成差异化。<br>
-    <strong>是否值得进入：是</strong>（前提：夏季作为引流品，或搭配冬季热饮形成全年产品线。）
-  </div>
-</div>
-
-<!-- ===== 06 项目评估（V5.1维度） ===== -->
-<div class="section">
-  <div class="s-title">🚦 项目评估</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">激烈但分散</div></div>
-    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">1-2天</div></div>
-    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">酸甜平衡难调</div></div>
-    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥300以内试做</div></div>
-  </div>
-  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A</span></div>
-</div>
-
-<!-- ===== 07 30天验证路线 ===== -->
-<div class="section">
-  <div class="s-title">🗓️ 30天验证路线</div>
-  <div style="display:flex;flex-direction:column;gap:4px">
-    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购菠萝、冰糖，按配方试煮糖水底，测试酸甜比。</span></div>
-    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20人试喝，收集酸甜度、菠萝块大小反馈，调整比例。</span></div>
-    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备60杯），测试夜市/学校周边人流量和定价。</span></div>
-    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>根据数据决定是否购置冰沙机，推出菠萝冰沙升级款。</span></div>
-    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘日均销量、净利润、回头客比例，决定长期经营或换品。</span></div>
-  </div>
-  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
-    <strong>🔑 关键验证节点：</strong>① Day7首日能否卖出40杯以上 ② Day15复购率是否＞25% ③ Day30冰沙款销量占比是否＞30%。<br>
-    <strong>🚪 退出标准：</strong>连续3天营收＜200元 / 菠萝损耗率＞25% / 顾客反馈“太酸/太甜”比例超过40%。<br>
-    <strong>✅ 继续标准：</strong>日均销量稳定在60杯以上 / 冰沙款客单价提升超3元 / 出现主动加料的顾客。
-  </div>
-</div>
-
-<!-- ===== 08 设备清单（≥15项+证照） ===== -->
-<div class="section">
-  <div class="s-title">🛠️ 设备清单</div>
-  <div><strong>🔸 固定设备</strong>：40L保温桶(¥120-180) · 30L煮锅(¥80-120) · 商用封口机(¥150-250) · 电子秤(¥30-50) · 长柄勺(¥10) · 菠萝挖球器/切块器(¥20) · 食品级滤网(¥15) · 大号漏斗(¥8) · 砧板+刀(¥30)</div>
-  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠桌(¥60-120) · 桌布(¥15) · 招牌灯箱(¥80-150) · 价格牌(¥20) · 冰桶/大号保温箱(¥80-150) · 椅子(¥30) · 收款码牌(¥5) · 冰沙机(可选¥200-400)</div>
-  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：菠萝30斤(¥60-90) · 冰糖10斤(¥40-60) · 500ml奶茶杯300套(¥60-80) · 吸管300根(¥8) · 打包袋150个(¥15) · 椰果/脆波波小料(¥40)</div>
-  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
-    <div><strong>💰 最低启动方案：¥700-1,100</strong>（已有保温桶，使用家中锅具，不买冰沙机）</div>
-    <div><strong>💰 完整启动方案：¥1,300-2,000</strong>（含冰沙机+招牌+全套设备）</div>
-    <div style="margin-top:6px"><strong>📄 证照成本及时间：</strong>健康证¥80（1-3天）；食品摊贩备案¥0-50（咨询街道城管）；部分夜市摊位费¥300-800/月。菠萝切块需注意生熟分开，否则食品安全风险。合计最低¥80，完整合规约¥400-900。</div>
-  </div>
-</div>
-
-<!-- ===== 09 产品结构 ===== -->
-<div class="section">
-  <div class="s-title">📦 产品结构</div>
-  <div class="prod-struct">
-    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">经典冰菠萝水（菠萝块+糖水）</span><span class="t-price">¥6-8（500ml）</span></div>
-    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">菠萝冰沙 · 菠萝椰奶</span><span class="t-price">¥10-13</span></div>
-    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">双拼套餐（+酸梅汤）· 加料全家福</span><span class="t-price">¥12-18</span></div>
-  </div>
-</div>
-
-<!-- ===== 10 摆摊指数 ===== -->
-<div class="section">
-  <div class="s-title">🔥 摆摊指数</div>
-  <div class="stall-grid">
-    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★★</div></div>
-    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
-    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
-    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
-    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★★★</div></div>
-    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★★☆☆</div></div>
-  </div>
-</div>
-
-<!-- ===== 11 最大风险（6项，含政策/场地） ===== -->
-<div class="section">
-  <div class="s-title">⚠️ 最大风险</div>
-  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>夏季城管对水果摊检查严格，切菠萝需持有健康证，生熟混放可能被警告。部分城市禁止现场削皮切块。</div>
-  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>季节性极强，冬季销量仅为夏季10-20%。若摊位全年签约，需搭配热饮（姜枣茶/热橙茶）分摊成本。</div>
-  <div class="risk-item"><span class="r-icon">3️⃣</span>菠萝品质波动：菠萝产地不同酸度差异大，同一配方可能过酸或过甜。雨季菠萝甜度下降，需要每日试吃调整糖量。</div>
-  <div class="risk-item"><span class="r-icon">4️⃣</span>损耗风险：切好的菠萝块冷藏最多2天，超过变味。菠萝皮重量占40%，损耗率高。</div>
-  <div class="risk-item"><span class="r-icon">5️⃣</span>同质化价格战：隔壁摊位卖5元一杯，你卖8元很难，最后利润被压缩至1-2元/杯。</div>
-  <div class="risk-item"><span class="r-icon">6️⃣</span>冰沙机故障：夏季高温连续工作容易烧机，没备用机直接停售，损失全天收入。</div>
-</div>
-
-<!-- ===== 12 最终决策判断（原沧林判断） ===== -->
-<div class="section">
-  <div class="s-title">🧠 最终决策判断</div>
-  <div class="judge-box">
-    <div class="j-text">
-      <strong>✅ 为什么值得做：</strong>验证成本极低（¥300可试做），出餐快，毛利高。夏季景区/夜市天然爆款，视觉清爽自带传播。菠萝冰沙款客单价可做到12元以上。<br>
-      <strong>❌ 为什么不值得做：</strong>季节性太强，一年只能卖5个月。门槛极低，容易陷入价格战。如果无法保证菠萝品质稳定，口碑容易崩。<br>
-      <strong>🔑 进入条件（满足任意3条）：</strong>① 摊位位于夜市/景区/学校 ② 夏季气温高于30°C天数超过60天 ③ 能找到稳定供应的菠萝批发商（价格低于2元/斤）④ 愿意购置冰沙机做升级款 ⑤ 能接受冬季换品或休摊。<br>
-      <strong>🚪 退出条件：</strong>① 连续两周日均利润低于150元 ② 菠萝损耗率超过30% ③ 被城管警告无法解决现场切块问题 ④ 周边出现3家以上同质摊位。<br>
-      <strong>🎯 最终判断：可进</strong> —— 非常适合夏季兼职或学生创业，但不应作为全年唯一收入来源。建议搭配冬季热饮，或只在5-9月出摊。
-    </div>
-  </div>
-</div>
-
-<!-- ===== 13 核心工艺（带验证点） ===== -->
-<div class="section">
-  <div class="s-title">🔪 核心工艺</div>
-  <div class="process-flow">
-    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">菠萝预处理（去涩提香）</span><div class="ps-verify">[验证点] 菠萝切块后，用淡盐水浸泡10分钟，捞出沥干。尝一块，涩味消失，甜味更突出。</div></div>
-    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">糖水底熬制（黄金配比）</span><div class="ps-verify">[验证点] 水:冰糖=10:1.2，小火煮至冰糖完全融化，关火冷却。糖水滴在手背，感觉微黏但不齁甜。</div></div>
-    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">调和酸甜度（每日微调）</span><div class="ps-verify">[验证点] 取100ml糖水+50g菠萝块，试吃一口。应该是“入口甜，咬菠萝微酸，咽下回甘”。若酸则加糖水，若甜则加柠檬汁。</div></div>
-    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">冰沙化处理（高利润款）</span><div class="ps-verify">[验证点] 菠萝块50g+冰块150g+糖水100ml → 冰沙机打10秒。成品应呈绵密冰沙状，无大冰块，勺子舀起不滴水。</div></div>
-  </div>
-  <div class="badge" style="margin-top:4px">⚠️ 完整商用配比（精确到克）、每日酸度调整表、菠萝保存方案见下方付费区</div>
-</div>
-
-<!-- ===== 14 成本利润（完整7项） ===== -->
-<div class="section">
-  <div class="s-title">📐 成本利润</div>
-  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
-    <div class="recipe-line"><span class="k">核心原料成本（菠萝+冰糖）</span><span class="v">¥1.2/500ml杯</span></div>
-    <div class="recipe-line"><span class="k">包装成本（杯+盖+吸管+袋）</span><span class="v">¥0.50/套</span></div>
-    <div class="recipe-line"><span class="k">耗材成本（冰块+燃料）</span><span class="v">¥0.25/杯</span></div>
-    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥1.95/杯（冰菠萝水）</span></div>
-    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥6～¥13（冰沙款）</span></div>
-    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">68%～85%</span></div>
-    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售80杯（均价¥8.5）→ 日毛利¥524，月净利¥7,000（出摊20天，扣除杂费）</span></div>
-  </div>
-</div>
-
-<!-- ===== 15 完整出摊包（付费锁定区，V5.1要求7模块） ===== -->
-<div class="pay-area">
-  <div class="lock-icon">🔒</div>
-  <h3>📦 完整出摊包 · 数据全开</h3>
-  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
-  <div class="price-tag">¥19 <small>永久解锁（母卡特惠）</small></div>
-  <button class="btn" id="unlockBtn">点击解锁全部内容</button>
-  <div class="note">解锁后查看商用糖水底配方、每日酸度调整表、菠萝冰沙黄金比例</div>
-
-  <div id="payContent" class="pay-content">
-    <!-- 1️⃣ 精确配方 -->
-    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用精确配方 (10升糖水底 · 约25杯)</div>
-    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
-      <div class="recipe-line"><span>菠萝（去皮净重）</span><span>1500g（约3-4个菠萝）</span></div>
-      <div class="recipe-line"><span>清水（糖水用）</span><span>8000g</span></div>
-      <div class="recipe-line"><span>冰糖（黄冰糖最佳）</span><span>800g（可按试喝调整至700-900g）</span></div>
-      <div class="recipe-line"><span>柠檬汁（防氧化+提酸）</span><span>30g（约1个柠檬）</span></div>
-      <div class="recipe-line"><span>盐（盐水浸泡用）</span><span>10g</span></div>
-    </div>
-    <!-- 2️⃣ 精确克数加料表 -->
-    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 加料成本对照表（每杯）</div>
-    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
-      <div class="recipe-line"><span>椰果30g</span><span>¥0.4成本 → 售价+¥2</span></div>
-      <div class="recipe-line"><span>脆波波30g</span><span>¥0.6成本 → 售价+¥2.5</span></div>
-      <div class="recipe-line"><span>爆爆珠30g</span><span>¥0.5成本 → 售价+¥2</span></div>
-      <div class="recipe-line"><span>双拼（任意两种）</span><span>¥0.9成本 → 售价+¥3.5</span></div>
-    </div>
-    <!-- 3️⃣ 冰沙比例 -->
-    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 菠萝冰沙黄金比例（500ml杯）</div>
-    <div style="background:#fff;border-radius:10px;padding:0 12px;margin-bottom:12px">
-      <div class="recipe-line"><span>菠萝块</span><span>60g</span></div>
-      <div class="recipe-line"><span>冰块</span><span>180g（约12块标准冰）</span></div>
-      <div class="recipe-line"><span>糖水</span><span>120ml</span></div>
-      <div class="recipe-line"><span>打冰时间</span><span>10-12秒（冰沙机）</span></div>
-      <div class="recipe-line"><span>成品温度</span><span>0-4°C</span></div>
-    </div>
-    <!-- 4️⃣ 批量SOP -->
-    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 批量SOP (20升/50升糖水底)</div>
-    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
-      <div class="recipe-line"><span>20升(50杯): 菠萝3kg · 冰糖1.6kg · 水16kg · 耗时1.5h（含切块）</span></div>
-      <div class="recipe-line"><span>50升(125杯): 菠萝7.5kg · 冰糖4kg · 水40kg · 耗时2.5h（需两口锅）</span></div>
-      <div class="recipe-line"><span>📌 关键: 菠萝块切好后必须盐水浸泡+冷藏，否则氧化发黑。</span></div>
-    </div>
-    <!-- 5️⃣ 翻车处理 -->
-    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
-    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
-      <div><strong>菠萝发黑（氧化）</strong>→ 切块后立刻泡盐水+柠檬汁；已发黑的挑出丢弃。</div>
-      <div><strong>太酸（菠萝品质差）</strong>→ 增加糖水比例，或加一勺炼乳中和酸味。</div>
-      <div><strong>太甜/腻</strong>→ 加柠檬汁5g或加冰水稀释。</div>
-      <div><strong>冰沙太稀（冰块不足）</strong>→ 减少糖水10ml，增加冰块20g。</div>
-      <div><strong>有发酵味（变质）</strong>→ 整锅废弃！菠萝糖水冷藏不超过24小时。</div>
-    </div>
-    <!-- 6️⃣ 变体方案 -->
-    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款高利润变体</div>
-    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
-      <div><strong>🥥 菠萝椰奶冰沙（夏季爆款）</strong>：椰浆50ml替换50ml糖水。成本+0.8元，售价13-15元，奶香浓郁。</div>
-      <div><strong>🍋 百香果青柠菠萝（小清新）</strong>：百香果半个+青柠2片。成本+0.6元，售价+3元，酸爽解腻。</div>
-      <div><strong>🌿 薄荷菠萝冰（差异化）</strong>：加入薄荷糖浆5g+新鲜薄荷叶。成本+0.3元，清凉感翻倍。</div>
-    </div>
-    <!-- 7️⃣ 规模化方案 -->
-    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
-    <div style="background:#fff;border-radius:10px;padding:12px">
-      当单日销量＞150杯时：建议① 采购商用冰沙机（约1500元，连续工作不烧机）；② 与水果批发商签订日配送协议，降低菠萝成本10%；③ 开发“菠萝糖水底浓缩汁”，提前熬好冷藏，出摊时加冰+菠萝块即可，出餐速度提升至15秒/杯；④ 夏季快闪摊位模式：只租5-9月，降低全年租金成本；⑤ 外卖专用：冰沙款＋保温袋配送，注明“建议15分钟内饮用”。
-    </div>
-    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
-  </div>
-</div>
-
-<!-- ===== 16 关联产品（同赛道+内部跳转） ===== -->
-<div class="section">
-  <div class="s-title">🔗 关联产品</div>
-  <div class="rel-grid">
-    <a class="rel-item" href="#"><span class="r-emoji">🥤</span><span class="r-name">绿豆冰糖水（夏季互补·母卡）</span><span class="r-arrow">→</span></a>
-    <a class="rel-item" href="#"><span class="r-emoji">🍡</span><span class="r-name">红豆小汤圆（冬季转型参考）</span><span class="r-arrow">→</span></a>
-    <a class="rel-item" href="#"><span class="r-emoji">🍗</span><span class="r-name">原味黄金炸鸡（解腻绝配）</span><span class="r-arrow">→</span></a>
-  </div>
-  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡，可点击跳转</div>
-</div>
-
-<!-- ===== 17 咨询入口 ===== -->
-<div class="section" style="border-bottom: none;">
-  <div class="s-title">📞 咨询入口</div>
-  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
-    <div><strong>📌 咨询场景：</strong>夏季摊位选址评估 · 菠萝品质辨别 · 冰沙机选购指南</div>
-    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1出摊包答疑 · 每日酸度调整表 · 菠萝保存技巧</div>
-    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“菠萝卡”）</div>
-    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
-  </div>
-</div>
-
-<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
-</div>
-
-<script>
-  document.getElementById('unlockBtn').addEventListener('click', function() {
-    document.getElementById('payContent').classList.toggle('show');
-    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
-  });
-</script>
-<script src="../../paywall.js"></script>
-</body>
-</html>
+     1|     1|     1|<!DOCTYPE html>
+     2|     2|     2|<html lang="zh-CN">
+     3|     3|     3|<head>
+     4|     4|     4|<meta charset="UTF-8">
+     5|     5|     5|<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+     6|     6|     6|<title>冰菠萝 · 创业项目测评 V5.1</title>
+     7|     7|     7|<style>
+     8|     8|     8|*{margin:0;padding:0;box-sizing:border-box}
+     9|     9|     9|body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+    10|    10|    10|.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+    11|    11|    11|.rating-bar{background:linear-gradient(135deg,#F4A261,#E76F51);padding:16px 18px;color:#fff}
+    12|    12|    12|.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+    13|    13|    13|.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+    14|    14|    14|.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+    15|    15|    15|.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+    16|    16|    16|.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+    17|    17|    17|.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+    18|    18|    18|.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+    19|    19|    19|.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+    20|    20|    20|.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+    21|    21|    21|.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    22|    22|    22|.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    23|    23|    23|.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+    24|    24|    24|.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+    25|    25|    25|.radar-item .stars{font-size:13px;letter-spacing:0px}
+    26|    26|    26|.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+    27|    27|    27|.radar-item.high{background:#fef2ee}
+    28|    28|    28|.radar-item.high .stars{color:#E8652D}
+    29|    29|    29|.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    30|    30|    30|.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+    31|    31|    31|.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+    32|    32|    32|.fit-yes{background:#f0f6ec;color:#3a6b2e}
+    33|    33|    33|.fit-no{background:#fef2f2;color:#b53b3b}
+    34|    34|    34|.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+    35|    35|    35|.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+    36|    36|    36|.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+    37|    37|    37|.logic-item:last-child{border-bottom:none}
+    38|    38|    38|.logic-item .v{font-weight:700;color:#C0392B}
+    39|    39|    39|.metric-row{display:flex;gap:6px;margin-top:6px}
+    40|    40|    40|.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+    41|    41|    41|.metric-card .m-label{font-size:9px;color:#7a7269}
+    42|    42|    42|.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+    43|    43|    43|.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+    44|    44|    44|.mc-orange{background:#fdf2ee}
+    45|    45|    45|.mc-orange .m-val{color:#E8652D}
+    46|    46|    46|.mc-gold{background:#fef6ec}
+    47|    47|    47|.mc-gold .m-val{color:#D4A574}
+    48|    48|    48|.mc-green{background:#f0f6ec}
+    49|    49|    49|.mc-green .m-val{color:#5a8f3c}
+    50|    50|    50|.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    51|    51|    51|.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+    52|    52|    52|.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+    53|    53|    53|.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+    54|    54|    54|.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+    55|    55|    55|.track-good .t-h{color:#5a8f3c}
+    56|    56|    56|.track-bad .t-h{color:#C0392B}
+    57|    57|    57|.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+    58|    58|    58|.track-verdict strong{color:#E8652D}
+    59|    59|    59|.prod-struct{display:flex;flex-direction:column;gap:8px}
+    60|    60|    60|.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+    61|    61|    61|.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+    62|    62|    62|.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+    63|    63|    63|.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+    64|    64|    64|.tier-lead{background:#fef6ec}
+    65|    65|    65|.tier-lead .t-badge{background:#E8652D;color:#fff}
+    66|    66|    66|.tier-profit{background:#f0f6ec}
+    67|    67|    67|.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+    68|    68|    68|.tier-set{background:#eef2ff}
+    69|    69|    69|.tier-set .t-badge{background:#4f6ef7;color:#fff}
+    70|    70|    70|.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    71|    71|    71|.stall-item{padding:10px;border-radius:10px;text-align:center}
+    72|    72|    72|.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+    73|    73|    73|.stall-item .stars{font-size:12px;letter-spacing:1px}
+    74|    74|    74|.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+    75|    75|    75|.risk-item:last-child{border-bottom:none}
+    76|    76|    76|.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+    77|    77|    77|.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+    78|    78|    78|.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+    79|    79|    79|.judge-box .j-text strong{color:#C0392B}
+    80|    80|    80|.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+    81|    81|    81|.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+    82|    82|    82|.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+    83|    83|    83|.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+    84|    84|    84|.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    85|    85|    85|.process-step .ps-desc{flex:1}
+    86|    86|    86|.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+    87|    87|    87|.rel-grid{display:flex;flex-direction:column;gap:6px}
+    88|    88|    88|.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+    89|    89|    89|.rel-item:active{background:#e8dfd5}
+    90|    90|    90|.rel-item .r-emoji{font-size:16px}
+    91|    91|    91|.rel-item .r-name{flex:1;font-weight:600}
+    92|    92|    92|.rel-item .r-arrow{color:#ccc;font-size:10px}
+    93|    93|    93|.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+    94|    94|    94|.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+    95|    95|    95|.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+    96|    96|    96|.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+    97|    97|    97|.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+    98|    98|    98|.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+    99|    99|    99|.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+   100|   100|   100|.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+   101|   101|   101|.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+   102|   102|   102|.pay-content.show{display:block}
+   103|   103|   103|.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+   104|   104|   104|.recipe-line .k{color:#5a4f44}
+   105|   105|   105|.recipe-line .v{font-weight:600;color:#3a322a}
+   106|   106|   106|.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+   107|   107|   107|table{width:100%;border-collapse:collapse;font-size:11px}
+   108|   108|   108|th,td{padding:8px 6px;text-align:left}
+   109|   109|   109|.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+   110|   110|   110|h1{font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px}
+   111|   111|   111|.header-sub{font-size:12px;color:#b5aaa0}
+   112|   112|   112|</style>
+   113|   113|   113|<link rel="stylesheet" href="../../paywall.css">
+   114|   114|   114|</head>
+   115|   115|   115|<body>
+   116|   116|   116|<div class="card">
+   117|   117|   117|
+   118|   118|   118|<!-- ===== 01 Header ===== -->
+   119|   119|   119|<div style="padding:12px 18px 4px;background:#faf8f5">
+   120|   120|   120|  <h1>🍍 冰菠萝</h1>
+   121|   121|   121|  <div class="header-sub">热带风味 · 清爽解腻 · 地摊爆款</div>
+   122|   122|   122|</div>
+   123|   123|   123|<div class="rating-bar">
+   124|   124|   124|  <div class="r-top">
+   125|   125|   125|    <div class="r-score">
+   126|   126|   126|      <span class="r-num">8.8</span>
+   127|   127|   127|      <span class="r-label">FoodIntelAI评分</span>
+   128|   128|   128|    </div>
+   129|   129|   129|    <span class="r-grade">A级项目</span>
+   130|   130|   130|  </div>
+   131|   131|   131|  <div class="r-tagline">酸甜口地摊王者，核心竞争力不是菠萝，而是糖水底和冰沙化处理。</div>
+   132|   132|   132|  <div class="r-tags">
+   133|   133|   133|    <span>🔥 热度高</span>
+   134|   134|   134|    <span>💰 投资800+</span>
+   135|   135|   135|    <span>👤 1人可做</span>
+   136|   136|   136|    <span>🔄 复购高</span>
+   137|   137|   137|  </div>
+   138|   138|   138|</div>
+   139|   139|   139|
+   140|   140|   140|<!-- ===== 02 项目速览 ===== -->
+   141|   141|   141|<div class="section">
+   142|   142|   142|  <div class="s-title">📊 项目速览</div>
+   143|   143|   143|  <div class="radar-grid">
+   144|   144|   144|    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+   145|   145|   145|    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+   146|   146|   146|    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">极低</div></div>
+   147|   147|   147|    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★★☆</div><div class="val">中等</div></div>
+   148|   148|   148|    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+   149|   149|   149|  </div>
+   150|   150|   150|</div>
+   151|   151|   151|
+   152|   152|   152|<!-- ===== 03 适合谁 ===== -->
+   153|   153|   153|<div class="section">
+   154|   154|   154|  <div class="fit-wrap">
+   155|   155|   155|    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+   156|   156|   156|      <div class="fit-item fit-yes">✅ 新手摆摊/学生创业</div>
+   157|   157|   157|      <div class="fit-item fit-yes">✅ 夏季夜市主力单品</div>
+   158|   158|   158|      <div class="fit-item fit-yes">✅ 作为炸鸡/烧烤摊的搭售品</div>
+   159|   159|   159|      <div class="fit-item fit-yes">✅ 景区/水上乐园周边</div>
+   160|   160|   160|      <div class="fit-item fit-yes">✅ 追求高毛利低门槛</div>
+   161|   161|   161|    </div>
+   162|   162|   162|    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+   163|   163|   163|      <div class="fit-item fit-no">❌ 冬季主力（季节性明显）</div>
+   164|   164|   164|      <div class="fit-item fit-no">❌ 追求全年稳定收入</div>
+   165|   165|   165|      <div class="fit-item fit-no">❌ 无法保证冷链储存</div>
+   166|   166|   166|    </div>
+   167|   167|   167|  </div>
+   168|   168|   168|</div>
+   169|   169|   169|
+   170|   170|   170|<!-- ===== 04 赚钱逻辑 ===== -->
+   171|   171|   171|<div class="section">
+   172|   172|   172|  <div class="s-title">💰 赚钱逻辑</div>
+   173|   173|   173|  <div class="logic-box">
+   174|   174|   174|    <div class="l-title">🧠 顾客为什么买</div>
+   175|   175|   175|    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是：天然酸甜 × 解暑解腻 × 区别于奶茶的新鲜感</div>
+   176|   176|   176|    <div class="l-title">📈 利润从哪里来</div>
+   177|   177|   177|    <div class="logic-item"><span>冰菠萝水（引流）</span><span class="v">毛利82%</span></div>
+   178|   178|   178|    <div class="logic-item"><span>菠萝冰沙（升级款）</span><span class="v">毛利75%</span></div>
+   179|   179|   179|    <div class="logic-item"><span>加椰果/脆波波（+¥2）</span><span class="v">毛利85%</span></div>
+   180|   180|   180|    <div class="logic-item"><span>双拼套餐（+酸梅汤）</span><span class="v">客单价拉高35%</span></div>
+   181|   181|   181|    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+   182|   182|   182|    <div class="logic-item"><span>推出“菠萝椰奶冰沙”+¥3</span><span class="v"></span></div>
+   183|   183|   183|    <div class="logic-item"><span>加料区（脆波波/椰果/爆珠）任选+¥2/样</span><span class="v"></span></div>
+   184|   184|   184|    <div class="l-title">🔄 如何提高复购</div>
+   185|   185|   185|    <div class="logic-item"><span>第二杯半价（锁定双人购买）</span><span class="v"></span></div>
+   186|   186|   186|    <div class="logic-item"><span>每周限定口味（百香果/青柠菠萝）</span><span class="v"></span></div>
+   187|   187|   187|  </div>
+   188|   188|   188|  <div class="metric-row">
+   189|   189|   189|    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥500-900</div><div class="m-sub">4-6h出摊(夏季)</div></div>
+   190|   190|   190|    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥4,000-6,000</div><div class="m-sub">出摊20天(预估)</div></div>
+   191|   191|   191|    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">3-7天</div><div class="m-sub">含设备</div></div>
+   192|   192|   192|  </div>
+   193|   193|   193|  <div class="badge" style="margin-top:8px">💡 数据来源：参考南方夜市水果茶摊实测数据及广西特色糖水摊平均水平。</div>
+   194|   194|   194|</div>
+   195|   195|   195|
+   196|   196|   196|<!-- ===== 05 赛道判断 ===== -->
+   197|   197|   197|<div class="section">
+   198|   198|   198|  <div class="s-title">📈 赛道判断</div>
+   199|   199|   199|  <div class="track-grid">
+   200|   200|   200|    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+   201|   201|   201|      <div class="t-item">口味普适性高，酸甜口覆盖男女老少</div>
+   202|   202|   202|      <div class="t-item">原材料便宜，菠萝进价低，损耗可控</div>
+   203|   203|   203|      <div class="t-item">制作简单，出餐速度快（30秒/杯）</div>
+   204|   204|   204|      <div class="t-item">视觉清爽，适合拍照打卡传播</div>
+   205|   205|   205|    </div>
+   206|   206|   206|    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+   207|   207|   207|      <div class="t-item">季节性明显，夏天爆单，冬天无人问津</div>
+   208|   208|   208|      <div class="t-item">门槛极低，同质化严重，容易价格战</div>
+   209|   209|   209|      <div class="t-item">菠萝品质波动大，酸度不可控</div>
+   210|   210|   210|      <div class="t-item">冰沙款需要冰沙机，增加设备投入</div>
+   211|   211|   211|    </div>
+   212|   212|   212|  </div>
+   213|   213|   213|  <div class="track-verdict">
+   214|   214|   214|    <strong>市场现状：</strong>夏季地摊标配，几乎每个夜市都有。但多数摊位是“糖水+菠萝块”的简陋版，口感普通。<br>
+   215|   215|   215|    <strong>未来判断：</strong>2026年夏季仍会是引流爆款。竞争点在于“冰沙化程度”和“酸甜比平衡”。纯粹卖菠萝水利润薄，必须转型菠萝冰沙或搭配椰奶形成差异化。<br>
+   216|   216|   216|    <strong>是否值得进入：是</strong>（前提：夏季作为引流品，或搭配冬季热饮形成全年产品线。）
+   217|   217|   217|  </div>
+   218|   218|   218|</div>
+   219|   219|   219|
+   220|   220|   220|<!-- ===== 06 项目评估（V5.1维度） ===== -->
+   221|   221|   221|<div class="section">
+   222|   222|   222|  <div class="s-title">🚦 项目评估</div>
+   223|   223|   223|  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+   224|   224|   224|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">激烈但分散</div></div>
+   225|   225|   225|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">1-2天</div></div>
+   226|   226|   226|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">酸甜平衡难调</div></div>
+   227|   227|   227|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥300以内试做</div></div>
+   228|   228|   228|  </div>
+   229|   229|   229|  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A</span></div>
+   230|   230|   230|</div>
+   231|   231|   231|
+   232|   232|   232|<!-- ===== 07 30天验证路线 ===== -->
+   233|   233|   233|<div class="section">
+   234|   234|   234|  <div class="s-title">🗓️ 30天验证路线</div>
+   235|   235|   235|  <div style="display:flex;flex-direction:column;gap:4px">
+   236|   236|   236|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购菠萝、冰糖，按配方试煮糖水底，测试酸甜比。</span></div>
+   237|   237|   237|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>邀请20人试喝，收集酸甜度、菠萝块大小反馈，调整比例。</span></div>
+   238|   238|   238|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>第一次摆摊（预备60杯），测试夜市/学校周边人流量和定价。</span></div>
+   239|   239|   239|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>根据数据决定是否购置冰沙机，推出菠萝冰沙升级款。</span></div>
+   240|   240|   240|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘日均销量、净利润、回头客比例，决定长期经营或换品。</span></div>
+   241|   241|   241|  </div>
+   242|   242|   242|  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+   243|   243|   243|    <strong>🔑 关键验证节点：</strong>① Day7首日能否卖出40杯以上 ② Day15复购率是否＞25% ③ Day30冰沙款销量占比是否＞30%。<br>
+   244|   244|   244|    <strong>🚪 退出标准：</strong>连续3天营收＜200元 / 菠萝损耗率＞25% / 顾客反馈“太酸/太甜”比例超过40%。<br>
+   245|   245|   245|    <strong>✅ 继续标准：</strong>日均销量稳定在60杯以上 / 冰沙款客单价提升超3元 / 出现主动加料的顾客。
+   246|   246|   246|  </div>
+   247|   247|   247|</div>
+   248|   248|   248|
+   249|   249|   249|<!-- ===== 08 设备清单（≥15项+证照） ===== -->
+   250|   250|   250|<div class="section">
+   251|   251|   251|  <div class="s-title">🛠️ 设备清单</div>
+   252|   252|   252|  <div><strong>🔸 固定设备</strong>：40L保温桶(¥120-180) · 30L煮锅(¥80-120) · 商用封口机(¥150-250) · 电子秤(¥30-50) · 长柄勺(¥10) · 菠萝挖球器/切块器(¥20) · 食品级滤网(¥15) · 大号漏斗(¥8) · 砧板+刀(¥30)</div>
+   253|   253|   253|  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠桌(¥60-120) · 桌布(¥15) · 招牌灯箱(¥80-150) · 价格牌(¥20) · 冰桶/大号保温箱(¥80-150) · 椅子(¥30) · 收款码牌(¥5) · 冰沙机(可选¥200-400)</div>
+   254|   254|   254|  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：菠萝30斤(¥60-90) · 冰糖10斤(¥40-60) · 500ml奶茶杯300套(¥60-80) · 吸管300根(¥8) · 打包袋150个(¥15) · 椰果/脆波波小料(¥40)</div>
+   255|   255|   255|  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+   256|   256|   256|    <div><strong>💰 最低启动方案：¥700-1,100</strong>（已有保温桶，使用家中锅具，不买冰沙机）</div>
+   257|   257|   257|    <div><strong>💰 完整启动方案：¥1,300-2,000</strong>（含冰沙机+招牌+全套设备）</div>
+   258|   258|   258|    <div style="margin-top:6px"><strong>📄 证照成本及时间：</strong>健康证¥80（1-3天）；食品摊贩备案¥0-50（咨询街道城管）；部分夜市摊位费¥300-800/月。菠萝切块需注意生熟分开，否则食品安全风险。合计最低¥80，完整合规约¥400-900。</div>
+   259|   259|   259|  </div>
+   260|   260|   260|</div>
+   261|   261|   261|
+   262|   262|   262|<!-- ===== 09 产品结构 ===== -->
+   263|   263|   263|<div class="section">
+   264|   264|   264|  <div class="s-title">📦 产品结构</div>
+   265|   265|   265|  <div class="prod-struct">
+   266|   266|   266|    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">经典冰菠萝水（菠萝块+糖水）</span><span class="t-price">¥6-8（500ml）</span></div>
+   267|   267|   267|    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">菠萝冰沙 · 菠萝椰奶</span><span class="t-price">¥10-13</span></div>
+   268|   268|   268|    <div class="prod-tier tier-set"><span class="t-badge">套餐</span><span class="t-name">双拼套餐（+酸梅汤）· 加料全家福</span><span class="t-price">¥12-18</span></div>
+   269|   269|   269|  </div>
+   270|   270|   270|</div>
+   271|   271|   271|
+   272|   272|   272|<!-- ===== 10 摆摊指数 ===== -->
+   273|   273|   273|<div class="section">
+   274|   274|   274|  <div class="s-title">🔥 摆摊指数</div>
+   275|   275|   275|  <div class="stall-grid">
+   276|   276|   276|    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★★</div></div>
+   277|   277|   277|    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★★☆</div></div>
+   278|   278|   278|    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+   279|   279|   279|    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★★☆☆</div></div>
+   280|   280|   280|    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏔️ 景区</div><div class="stars">★★★★★</div></div>
+   281|   281|   281|    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★★☆☆</div></div>
+   282|   282|   282|  </div>
+   283|   283|   283|</div>
+   284|   284|   284|
+   285|   285|   285|<!-- ===== 11 最大风险（6项，含政策/场地） ===== -->
+   286|   286|   286|<div class="section">
+   287|   287|   287|  <div class="s-title">⚠️ 最大风险</div>
+   288|   288|   288|  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>夏季城管对水果摊检查严格，切菠萝需持有健康证，生熟混放可能被警告。部分城市禁止现场削皮切块。</div>
+   289|   289|   289|  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>季节性极强，冬季销量仅为夏季10-20%。若摊位全年签约，需搭配热饮（姜枣茶/热橙茶）分摊成本。</div>
+   290|   290|   290|  <div class="risk-item"><span class="r-icon">3️⃣</span>菠萝品质波动：菠萝产地不同酸度差异大，同一配方可能过酸或过甜。雨季菠萝甜度下降，需要每日试吃调整糖量。</div>
+   291|   291|   291|  <div class="risk-item"><span class="r-icon">4️⃣</span>损耗风险：切好的菠萝块冷藏最多2天，超过变味。菠萝皮重量占40%，损耗率高。</div>
+   292|   292|   292|  <div class="risk-item"><span class="r-icon">5️⃣</span>同质化价格战：隔壁摊位卖5元一杯，你卖8元很难，最后利润被压缩至1-2元/杯。</div>
+   293|   293|   293|  <div class="risk-item"><span class="r-icon">6️⃣</span>冰沙机故障：夏季高温连续工作容易烧机，没备用机直接停售，损失全天收入。</div>
+   294|   294|   294|</div>
+   295|   295|   295|
+   296|   296|   296|<!-- ===== 12 最终决策判断（原沧林判断） ===== -->
+   297|   297|   297|<div class="section">
+   298|   298|   298|  <div class="s-title">🧠 最终决策判断</div>
+   299|   299|   299|  <div class="judge-box">
+   300|   300|   300|    <div class="j-text">
+   301|   301|   301|      <strong>✅ 为什么值得做：</strong>验证成本极低（¥300可试做），出餐快，毛利高。夏季景区/夜市天然爆款，视觉清爽自带传播。菠萝冰沙款客单价可做到12元以上。<br>
+   302|   302|   302|      <strong>❌ 为什么不值得做：</strong>季节性太强，一年只能卖5个月。门槛极低，容易陷入价格战。如果无法保证菠萝品质稳定，口碑容易崩。<br>
+   303|   303|   303|      <strong>🔑 进入条件（满足任意3条）：</strong>① 摊位位于夜市/景区/学校 ② 夏季气温高于30°C天数超过60天 ③ 能找到稳定供应的菠萝批发商（价格低于2元/斤）④ 愿意购置冰沙机做升级款 ⑤ 能接受冬季换品或休摊。<br>
+   304|   304|   304|      <strong>🚪 退出条件：</strong>① 连续两周日均利润低于150元 ② 菠萝损耗率超过30% ③ 被城管警告无法解决现场切块问题 ④ 周边出现3家以上同质摊位。<br>
+   305|   305|   305|      <strong>🎯 最终判断：可进</strong> —— 非常适合夏季兼职或学生创业，但不应作为全年唯一收入来源。建议搭配冬季热饮，或只在5-9月出摊。
+   306|   306|   306|    </div>
+   307|   307|   307|  </div>
+   308|   308|   308|</div>
+   309|   309|   309|
+   310|   310|   310|<!-- ===== 13 核心工艺（带验证点） ===== -->
+   311|   311|   311|<div class="section">
+   312|   312|   312|  <div class="s-title">🔪 核心工艺</div>
+   313|   313|   313|  <div class="process-flow">
+   314|   314|   314|    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">菠萝预处理（去涩提香）</span><div class="ps-verify">[验证点] 菠萝切块后，用淡盐水浸泡10分钟，捞出沥干。尝一块，涩味消失，甜味更突出。</div></div>
+   315|   315|   315|    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">糖水底熬制（黄金配比）</span><div class="ps-verify">[验证点] 水:冰糖=10:1.2，小火煮至冰糖完全融化，关火冷却。糖水滴在手背，感觉微黏但不齁甜。</div></div>
+   316|   316|   316|    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">调和酸甜度（每日微调）</span><div class="ps-verify">[验证点] 取100ml糖水+50g菠萝块，试吃一口。应该是“入口甜，咬菠萝微酸，咽下回甘”。若酸则加糖水，若甜则加柠檬汁。</div></div>
+   317|   317|   317|    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">冰沙化处理（高利润款）</span><div class="ps-verify">[验证点] 菠萝块50g+冰块150g+糖水100ml → 冰沙机打10秒。成品应呈绵密冰沙状，无大冰块，勺子舀起不滴水。</div></div>
+   318|   318|   318|  </div>
+   319|   319|   319|  <div class="badge" style="margin-top:4px">⚠️ 完整商用配比（精确到克）、每日酸度调整表、菠萝保存方案见下方付费区</div>
+   320|   320|   320|</div>
+   321|   321|   321|
+   322|   322|   322|<!-- ===== 14 成本利润（完整7项） ===== -->
+   323|   323|   323|<div class="section">
+   324|   324|   324|  <div class="s-title">📐 成本利润</div>
+   325|   325|   325|  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+   326|   326|   326|    <div class="recipe-line"><span class="k">核心原料成本（菠萝+冰糖）</span><span class="v">¥1.2/500ml杯</span></div>
+   327|   327|   327|    <div class="recipe-line"><span class="k">包装成本（杯+盖+吸管+袋）</span><span class="v">¥0.50/套</span></div>
+   328|   328|   328|    <div class="recipe-line"><span class="k">耗材成本（冰块+燃料）</span><span class="v">¥0.25/杯</span></div>
+   329|   329|   329|    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥1.95/杯（冰菠萝水）</span></div>
+   330|   330|   330|    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥6～¥13（冰沙款）</span></div>
+   331|   331|   331|    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">68%～85%</span></div>
+   332|   332|   332|    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售80杯（均价¥8.5）→ 日毛利¥524，月净利¥7,000（出摊20天，扣除杂费）</span></div>
+   333|   333|   333|  </div>
+   334|   334|   334|</div>
+   335|   335|   335|
+   336|   336|   336|<!-- ===== 15 完整出摊包（付费锁定区，V5.1要求7模块） ===== -->
+   337|   337|   337|<div class="pay-area">
+   338|   338|   338|  <div class="lock-icon">🔒</div>
+   339|   339|   339|  <h3>📦 完整出摊包 · 数据全开</h3>
+   340|   340|   340|  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+   341|   341|   341|  <div class="price-tag">¥19 <small>永久解锁（母卡特惠）</small></div>
+   342|   342|   342|  <button class="btn" <del</button>
+   343|   343|   343|  <div class="note">解锁后查看商用糖水底配方、每日酸度调整表、菠萝冰沙黄金比例</div>
+   344|   344|   344|
+   345|   345|   345|  <div id="payContent" class="pay-content" style="display:block">
+   346|   346|   346|    <!-- 1️⃣ 精确配方 -->
+   347|   347|   347|    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 商用精确配方 (10升糖水底 · 约25杯)</div>
+   348|   348|   <div class="recipe-box">
+   349|   349|     <div class="recipe-line"><span>菠萝（去皮净重）</span><span>1500g（约3-4个菠萝）</span></div>
+   350|   350|     <div class="recipe-line"><span>清水（糖水用）</span><span>8000g</span></div>
+   351|   351|     <div class="recipe-line"><span>冰糖（黄冰糖最佳）</span><span>800g（可按试喝调整至700-900g）</span></div>
+   352|   352|     <div class="recipe-line"><span>柠檬汁（防氧化+提酸）</span><span>30g（约1个柠檬）</span></div>
+   353|   353|     <div class="recipe-line"><span>盐（盐水浸泡用）</span><span>10g</span></div>
+   354|   354|   </div>
+   355|   355|   <!-- 2️⃣ 精确克数加料表 -->
+   356|   356|   356|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 加料成本对照表（每杯）</div>
+   357|   357|   <div class="recipe-box">
+   358|   358|     <div class="recipe-line"><span>椰果30g</span><span>¥0.4成本 → 售价+¥2</span></div>
+   359|   359|     <div class="recipe-line"><span>脆波波30g</span><span>¥0.6成本 → 售价+¥2.5</span></div>
+   360|   360|     <div class="recipe-line"><span>爆爆珠30g</span><span>¥0.5成本 → 售价+¥2</span></div>
+   361|   361|     <div class="recipe-line"><span>双拼（任意两种）</span><span>¥0.9成本 → 售价+¥3.5</span></div>
+   362|   362|   </div>
+   363|   363|   <!-- 3️⃣ 冰沙比例 -->
+   364|   364|   <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 菠萝冰沙黄金比例（500ml杯）</div>
+   365|   365|   <div class="recipe-box">
+   366|   366|     <div class="recipe-line"><span>菠萝块</span><span>60g</span></div>
+   367|   367|     <div class="recipe-line"><span>冰块</span><span>180g（约12块标准冰）</span></div>
+   368|   368|     <div class="recipe-line"><span>糖水</span><span>120ml</span></div>
+   369|   369|     <div class="recipe-line"><span>打冰时间</span><span>10-12秒（冰沙机）</span></div>
+   370|   370|     <div class="recipe-line"><span>成品温度</span><span>0-4°C</span></div>
+   371|   371|   </div>
+   372|   372|   <!-- 4️⃣ 批量SOP (20升/50升糖水底) -->
+   373|   373|   373|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 批量SOP (20升/50升糖水底)</div>
+   374|   374|   374|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+   375|   375|   375|      <div class="recipe-line"><span>20升(50杯): 菠萝3kg · 冰糖1.6kg · 水16kg · 耗时1.5h（含切块）</span></div>
+   376|   376|   376|      <div class="recipe-line"><span>50升(125杯): 菠萝7.5kg · 冰糖4kg · 水40kg · 耗时2.5h（需两口锅）</span></div>
+   377|   377|   377|      <div class="recipe-line"><span>📌 关键: 菠萝块切好后必须盐水浸泡+冷藏，否则氧化发黑。</span></div>
+   378|   378|   378|    </div>
+   379|   379|   379|    <!-- 5️⃣ 翻车处理 -->
+   380|   380|   380|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 翻车解决方案</div>
+   381|   381|   381|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+   382|   382|   382|      <div><strong>菠萝发黑（氧化）</strong>→ 切块后立刻泡盐水+柠檬汁；已发黑的挑出丢弃。</div>
+   383|   383|   383|      <div><strong>太酸（菠萝品质差）</strong>→ 增加糖水比例，或加一勺炼乳中和酸味。</div>
+   384|   384|   384|      <div><strong>太甜/腻</strong>→ 加柠檬汁5g或加冰水稀释。</div>
+   385|   385|   385|      <div><strong>冰沙太稀（冰块不足）</strong>→ 减少糖水10ml，增加冰块20g。</div>
+   386|   386|   386|      <div><strong>有发酵味（变质）</strong>→ 整锅废弃！菠萝糖水冷藏不超过24小时。</div>
+   387|   387|   387|    </div>
+   388|   388|   388|    <!-- 6️⃣ 变体方案 -->
+   389|   389|   389|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 3款高利润变体</div>
+   390|   390|   390|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+   391|   391|   391|      <div><strong>🥥 菠萝椰奶冰沙（夏季爆款）</strong>：椰浆50ml替换50ml糖水。成本+0.8元，售价13-15元，奶香浓郁。</div>
+   392|   392|   392|      <div><strong>🍋 百香果青柠菠萝（小清新）</strong>：百香果半个+青柠2片。成本+0.6元，售价+3元，酸爽解腻。</div>
+   393|   393|   393|      <div><strong>🌿 薄荷菠萝冰（差异化）</strong>：加入薄荷糖浆5g+新鲜薄荷叶。成本+0.3元，清凉感翻倍。</div>
+   394|   394|   394|    </div>
+   395|   395|   395|    <!-- 7️⃣ 规模化方案 -->
+   396|   396|   396|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 规模化方案</div>
+   397|   397|   397|    <div style="background:#fff;border-radius:10px;padding:12px">
+   398|   398|   398|      当单日销量＞150杯时：建议① 采购商用冰沙机（约1500元，连续工作不烧机）；② 与水果批发商签订日配送协议，降低菠萝成本10%；③ 开发“菠萝糖水底浓缩汁”，提前熬好冷藏，出摊时加冰+菠萝块即可，出餐速度提升至15秒/杯；④ 夏季快闪摊位模式：只租5-9月，降低全年租金成本；⑤ 外卖专用：冰沙款＋保温袋配送，注明“建议15分钟内饮用”。
+   399|   399|   399|    </div>
+   400|   400|   400|    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+   401|   401|   401|  </div>
+   402|   402|   402|</div>
+   403|   403|   403|
+   404|   404|   404|<!-- ===== 16 关联产品（同赛道+内部跳转） ===== -->
+   405|   405|   405|<div class="section">
+   406|   406|   406|  <div class="s-title">🔗 关联产品</div>
+   407|   407|   407|  <div class="rel-grid">
+   408|   408|   408|    <a class="rel-item" href="#"><span class="r-emoji">🥤</span><span class="r-name">绿豆冰糖水（夏季互补·母卡）</span><span class="r-arrow">→</span></a>
+   409|   409|   409|    <a class="rel-item" href="#"><span class="r-emoji">🍡</span><span class="r-name">红豆小汤圆（冬季转型参考）</span><span class="r-arrow">→</span></a>
+   410|   410|   410|    <a class="rel-item" href="#"><span class="r-emoji">🍗</span><span class="r-name">原味黄金炸鸡（解腻绝配）</span><span class="r-arrow">→</span></a>
+   411|   411|   411|  </div>
+   412|   412|   412|  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡，可点击跳转</div>
+   413|   413|   413|</div>
+   414|   414|   414|
+   415|   415|   415|<!-- ===== 17 咨询入口 ===== -->
+   416|   416|   416|<div class="section" style="border-bottom: none;">
+   417|   417|   417|  <div class="s-title">📞 咨询入口</div>
+   418|   418|   418|  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+   419|   419|   419|    <div><strong>📌 咨询场景：</strong>夏季摊位选址评估 · 菠萝品质辨别 · 冰沙机选购指南</div>
+   420|   420|   420|    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>1对1出摊包答疑 · 每日酸度调整表 · 菠萝保存技巧</div>
+   421|   421|   421|    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“菠萝卡”）</div>
+   422|   422|   422|    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+   423|   423|   423|  </div>
+   424|   424|   424|</div>
+   425|   425|   425|
+   426|   426|   426|<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+   427|   427|   427|</div>
+   428|   428|   428|
+   429|   429|   429|<script>
+   430|   436|   436|</body>
+   431|   437|   437|</html>
