@@ -1,456 +1,458 @@
-     1|<!DOCTYPE html>
-     2|<html lang="zh-CN">
-     3|<head>
-     4|<meta charset="UTF-8">
-     5|<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
-     6|<title>TS_083 厚椰冻冻 · 创业项目测评 V5.1</title>
-     7|<style>
-     8|*{margin:0;padding:0;box-sizing:border-box}
-     9|body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
-    10|.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
-    11|
-    12|/* 顶部评级栏 */
-    13|.rating-bar{background:linear-gradient(135deg,#1e4d5c,#0f3b46);padding:16px 18px;color:#fff}
-    14|.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-    15|.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
-    16|.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
-    17|.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
-    18|.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
-    19|.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
-    20|.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
-    21|.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
-    22|
-    23|.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
-    24|.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-    25|.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-    26|.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
-    27|.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
-    28|.radar-item .stars{font-size:13px;letter-spacing:0px}
-    29|.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
-    30|.radar-item.high{background:#fef2ee}
-    31|.radar-item.high .stars{color:#E8652D}
-    32|
-    33|.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    34|.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
-    35|.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
-    36|.fit-yes{background:#f0f6ec;color:#3a6b2e}
-    37|.fit-no{background:#fef2f2;color:#b53b3b}
-    38|
-    39|.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
-    40|.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
-    41|.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
-    42|.logic-item:last-child{border-bottom:none}
-    43|.logic-item .v{font-weight:700;color:#C0392B}
-    44|
-    45|.metric-row{display:flex;gap:6px;margin-top:6px}
-    46|.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
-    47|.metric-card .m-label{font-size:9px;color:#7a7269}
-    48|.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
-    49|.metric-card .m-sub{font-size:8px;color:#b5aaa0}
-    50|.mc-orange{background:#fdf2ee}
-    51|.mc-orange .m-val{color:#E8652D}
-    52|.mc-gold{background:#fef6ec}
-    53|.mc-gold .m-val{color:#D4A574}
-    54|.mc-green{background:#f0f6ec}
-    55|.mc-green .m-val{color:#5a8f3c}
-    56|
-    57|.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-    58|.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
-    59|.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
-    60|.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
-    61|.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
-    62|.track-good .t-h{color:#5a8f3c}
-    63|.track-bad .t-h{color:#C0392B}
-    64|.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
-    65|.track-verdict strong{color:#E8652D}
-    66|
-    67|.prod-struct{display:flex;flex-direction:column;gap:8px}
-    68|.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
-    69|.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
-    70|.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
-    71|.prod-tier .t-price{color:#b5aaa0;font-size:11px}
-    72|.tier-lead{background:#fef6ec}
-    73|.tier-lead .t-badge{background:#E8652D;color:#fff}
-    74|.tier-profit{background:#f0f6ec}
-    75|.tier-profit .t-badge{background:#5a8f3c;color:#fff}
-    76|.tier-set{background:#eef2ff}
-    77|.tier-set .t-badge{background:#4f6ef7;color:#fff}
-    78|
-    79|.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-    80|.stall-item{padding:10px;border-radius:10px;text-align:center}
-    81|.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
-    82|.stall-item .stars{font-size:12px;letter-spacing:1px}
-    83|.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
-    84|.risk-item:last-child{border-bottom:none}
-    85|.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
-    86|
-    87|.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
-    88|.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
-    89|.judge-box .j-text strong{color:#C0392B}
-    90|.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
-    91|.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
-    92|
-    93|.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
-    94|.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
-    95|.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    96|.process-step .ps-desc{flex:1}
-    97|.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
-    98|
-    99|.rel-grid{display:flex;flex-direction:column;gap:6px}
-   100|.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
-   101|.rel-item:active{background:#e8dfd5}
-   102|.rel-item .r-emoji{font-size:16px}
-   103|.rel-item .r-name{flex:1;font-weight:600}
-   104|.rel-item .r-arrow{color:#ccc;font-size:10px}
-   105|
-   106|/* 付费锁定区 */
-   107|.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
-   108|.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
-   109|.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
-   110|.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
-   111|.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
-   112|.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
-   113|.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
-   114|.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
-   115|.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
-   116|.pay-content.show{display:block}
-   117|
-   118|.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
-   119|.recipe-line .k{color:#5a4f44}
-   120|.recipe-line .v{font-weight:600;color:#3a322a}
-   121|
-   122|.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
-   123|table{width:100%;border-collapse:collapse;font-size:11px}
-   124|th,td{padding:8px 6px;text-align:left}
-   125|.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
-   126|</style>
-   127|<link rel="stylesheet" href="../../paywall.css">
-   128|</head>
-   129|<body>
-   130|<div class="card">
-   131|
-   132|<!-- ===== 01 Header ===== -->
-   133|<div style="padding:12px 18px 4px;background:#faf8f5">
-   134|  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥥 厚椰冻冻</h1>
-   135|  <div style="font-size:12px;color:#b5aaa0">清甜椰冻 · 网红甜品</div>
-   136|</div>
-   137|<div class="rating-bar">
-   138|  <div class="r-top">
-   139|    <div class="r-score">
-   140|      <span class="r-num">8.2</span>
-   141|      <span class="r-label">FoodIntelAI评分</span>
-   142|    </div>
-   143|    <span class="r-grade">A-级项目</span>
-   144|  </div>
-   145|  <div class="r-tagline">高颜值、高毛利夏季单品，但受季节和网红生命周期影响大。</div>
-   146|  <div class="r-tags">
-   147|    <span>🌿 网红属性</span>
-   148|    <span>💰 投资2500+</span>
-   149|    <span>🧑‍🍳 1人可做</span>
-   150|    <span>🔄 复购一般</span>
-   151|  </div>
-   152|</div>
-   153|
-   154|<!-- ===== 02 项目速览 ===== -->
-   155|<div class="section">
-   156|  <div class="s-title">📊 项目速览</div>
-   157|  <div class="radar-grid">
-   158|    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
-   159|    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
-   160|    <div class="radar-item high"><div class="label">💰 投资</div><div class="stars">★★★★☆</div><div class="val">2500+</div></div>
-   161|    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div><div class="val">简单</div></div>
-   162|    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高毛利</div></div>
-   163|  </div>
-   164|</div>
-   165|
-   166|<!-- ===== 03 适合谁 ===== -->
-   167|<div class="section">
-   168|  <div class="fit-wrap">
-   169|    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
-   170|      <div class="fit-item fit-yes">✅ 夏季摆摊创业者</div>
-   171|      <div class="fit-item fit-yes">✅ 颜值经济玩家</div>
-   172|      <div class="fit-item fit-yes">✅ 寻求高毛利补充产品的摊主</div>
-   173|      <div class="fit-item fit-yes">✅ 新手/女性创业者</div>
-   174|      <div class="fit-item fit-yes">✅ 景区/夜市摊位经营者</div>
-   175|    </div>
-   176|    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
-   177|      <div class="fit-item fit-no">❌ 追求高复购率的摊主</div>
-   178|      <div class="fit-item fit-no">❌ 北方冬季户外摆摊者</div>
-   179|      <div class="fit-item fit-no">❌ 只想卖一个单品的人</div>
-   180|    </div>
-   181|  </div>
-   182|</div>
-   183|
-   184|<!-- ===== 04 赚钱逻辑 ===== -->
-   185|<div class="section">
-   186|  <div class="s-title">💰 赚钱逻辑</div>
-   187|  <div class="logic-box">
-   188|    <div class="l-title">🧠 顾客为什么买</div>
-   189|    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是“清凉解腻、健康低卡”的心理慰藉和“高颜值、好出片”的社交分享价值。</div>
-   190|    <div class="l-title">📈 利润从哪里来</div>
-   191|    <div class="logic-item"><span>核心原料成品化（厚椰乳+预拌粉）</span><span class="v">毛利65%+</span></div>
-   192|    <div class="logic-item"><span>自助加料提升客单价</span><span class="v">每加料+2~3元</span></div>
-   193|    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
-   194|    <div class="logic-item"><span>设置加料台：芒果/芋圆/脆波波</span><span class="v"></span></div>
-   195|    <div class="logic-item"><span>推出“厚椰冻+饮品”套餐</span><span class="v"></span></div>
-   196|    <div class="l-title">🔄 如何提高复购</div>
-   197|    <div class="logic-item"><span>每月一款季节限定口味（桂花/西瓜）</span><span class="v"></span></div>
-   198|    <div class="logic-item"><span>集点卡：买5送1</span><span class="v"></span></div>
-   199|  </div>
-   200|  <div class="metric-row">
-   201|    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥500-1000</div><div class="m-sub">预估·夜市周末</div></div>
-   202|    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥4000-8000</div><div class="m-sub">出摊25天</div></div>
-   203|    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">5-8天</div><div class="m-sub">低投入快回本</div></div>
-   204|  </div>
-   205|  <div class="badge" style="margin-top:6px">📌 量化数据来源：基于2024年南方二线城市夜市同类摊位实测推算</div>
-   206|</div>
-   207|
-   208|<!-- ===== 05 赛道判断 ===== -->
-   209|<div class="section">
-   210|  <div class="s-title">📈 赛道判断</div>
-   211|  <div class="track-grid">
-   212|    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
-   213|      <div class="t-item">制作极简，出餐仅30秒，适合高流量夜市</div>
-   214|      <div class="t-item">颜值自带传播，小红书/抖音易爆单</div>
-   215|      <div class="t-item">厚椰乳供应链成熟，品质稳定</div>
-   216|    </div>
-   217|    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
-   218|      <div class="t-item">季节性明显，冬季销量断崖下跌</div>
-   219|      <div class="t-item">同质化严重，缺乏壁垒</div>
-   220|      <div class="t-item">非刚需，复购率低于小吃类</div>
-   221|    </div>
-   222|  </div>
-   223|  <div class="track-verdict">
-   224|    <strong>市场现状：</strong>网红产品爆发复制期，一二线夜市开始饱和，下沉市场仍有窗口，热度高但竞争者快速增加。<br>
-   225|    <strong>未来判断：</strong>1-2年内将像“暴打柠檬茶”一样普及，价格从15-20元下探至9.9-15元，必须升级为甜品站模式。<br>
-   226|    <strong>是否值得进入：是</strong>（强烈建议作为夏季组合项目，不建议孤注一掷）
-   227|  </div>
-   228|</div>
-   229|
-   230|<!-- ===== 06 项目评估 ===== -->
-   231|<div class="section">
-   232|  <div class="s-title">🚦 项目评估</div>
-   233|  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-   234|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">竞争升温但未饱和</div></div>
-   235|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">半天掌握</div></div>
-   236|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★☆</div><div style="font-size:10px;color:#5a4f44">比例微调影响小</div></div>
-   237|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥300内可试做</div></div>
-   238|  </div>
-   239|  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
-   240|</div>
-   241|
-   242|<!-- ===== 同赛道对比（固定表格） ===== -->
-   243|<div class="section">
-   244|  <div class="s-title">📊 同赛道对比</div>
-   245|  <div style="overflow-x:auto">
-   246|    <table style="min-width:420px">
-   247|      <thead><tr style="background:#3a322a;color:#fff"><th>项目名称</th><th>投资(1-5)</th><th>难度(1-5)</th><th>利润(1-5)</th><th>竞争(1-5)</th><th>推荐等级</th><th>卡片链接</th></tr></thead>
-   248|      <tbody>
-   249|        <tr style="background:#fef6ec"><td>🥥 厚椰冻冻</td><td>★★★★</td><td>★★</td><td>★★★★</td><td>★★★</td><td>A-</td><td><a href="#" style="color:#E8652D">#HZ_020</a></td></tr>
-   250|        <tr><td>🍧 冰粉/凉糕</td><td>★★★</td><td>★★</td><td>★★★</td><td>★★★★</td><td>B+</td><td><a href="#" style="color:#D4A574">#HZ_018</a></td></tr>
-   251|        <tr style="background:#f8f4ef"><td>🥤 暴打柠檬茶</td><td>★★★★</td><td>★★★</td><td>★★★</td><td>★★★★★</td><td>B</td><td><a href="#" style="color:#5a8f3c">#HZ_022</a></td></tr>
-   252|        <tr><td>🍦 椰子冻专卖</td><td>★★★★</td><td>★★</td><td>★★★★</td><td>★★★</td><td>A-</td><td><a href="#">#HZ_025</a></td></tr>
-   253|      </tbody>
-   254|    </table>
-   255|  </div>
-   256|  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡，点击可跳转</div>
-   257|</div>
-   258|
-   259|<!-- ===== 07 30天验证路线 ===== -->
-   260|<div class="section">
-   261|  <div class="s-title">🗓️ 30天验证路线</div>
-   262|  <div style="display:flex;flex-direction:column;gap:4px">
-   263|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购厚椰乳+白凉粉，试做5份，调整甜度和凝固比例</span></div>
-   264|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>设计招牌、价格牌，购买暖色灯带（提升颜值）</span></div>
-   265|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>首次摆摊（夜市/集市），备货40份，测试定价15元及人流</span></div>
-   266|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加2-3种小料（芒果/脆波波），测试加购率</span></div>
-   267|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘营收、复购率，决策是否继续或转为组合项目</span></div>
-   268|  </div>
-   269|  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
-   270|    <strong>🔑 关键验证节点：</strong>① Day7首日能否售出30+份 ② Day15加料后加购率是否＞30% ③ Day30周复购率是否＞15%<br>
-   271|    <strong>🚪 退出标准：</strong>连续5天日营收＜300元 / 周边1个月内出现3家以上同类竞品 / 差评集中在“太甜/太淡”<br>
-   272|    <strong>✅ 继续标准：</strong>周末日营收稳定800元以上 / 有老顾客主动问询 / 复购率高于20%
-   273|  </div>
-   274|</div>
-   275|
-   276|<!-- ===== 08 设备清单（含证照） ===== -->
-   277|<div class="section">
-   278|  <div class="s-title">🛠️ 设备清单</div>
-   279|  <div><strong>🔸 固定设备</strong>：商用展示柜(¥800-1500) · 制冰机(可选，或买冰) · 电子秤(¥15) · 不锈钢盆×2(¥30) · 手动打蛋器(¥10)</div>
-   280|  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠操作台(¥150) · 暖色LED灯带/灯箱(¥100) · 透明防尘罩(¥60) · 收款码牌(¥20) · 露营车(¥200)</div>
-   281|  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：厚椰乳5L(¥75) · 白凉粉/吉利丁(¥30) · 一次性碗勺+袋子300套(¥120) · 小料(芒果/蜜豆等)(¥100) · 定制腰封/贴纸(¥50)</div>
-   282|  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
-   283|    <div><strong>💰 最低启动方案：¥650</strong>（家用冰箱+买冰+二手桌椅）</div>
-   284|    <div><strong>💰 完整启动方案：¥2,800～4,000</strong>（含展示柜、全套新设备）</div>
-   285|    <div style="margin-top:6px"><strong>📄 证照成本及时间：</strong>健康证¥80（1天），食品摊贩备案¥0~100（1天），摊位费押金¥500-2000（视夜市而定）</div>
-   286|  </div>
-   287|</div>
-   288|
-   289|<!-- ===== 09 产品结构 ===== -->
-   290|<div class="section">
-   291|  <div class="s-title">📦 产品结构</div>
-   292|  <div class="prod-struct">
-   293|    <div class="prod-tier tier-lead"><span class="t-badge">引流款</span><span class="t-name">招牌原味厚椰冻</span><span class="t-price">¥9.9</span></div>
-   294|    <div class="prod-tier tier-profit"><span class="t-badge">利润款</span><span class="t-name">生椰斑斓冻 · 芒芒厚椰冻</span><span class="t-price">¥15-18</span></div>
-   295|    <div class="prod-tier tier-set"><span class="t-badge">套餐款</span><span class="t-name">厚椰冻+手打柠檬茶</span><span class="t-price">¥25-28</span></div>
-   296|  </div>
-   297|</div>
-   298|
-   299|<!-- ===== 10 摆摊指数 ===== -->
-   300|<div class="section">
-   301|  <div class="s-title">🔥 摆摊指数</div>
-   302|  <div class="stall-grid">
-   303|    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★☆</div></div>
-   304|    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★☆☆</div></div>
-   305|    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
-   306|    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★☆☆☆</div></div>
-   307|    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏔️ 景区</div><div class="stars">★★★★★</div></div>
-   308|    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★★☆☆</div></div>
-   309|  </div>
-   310|</div>
-   311|
-   312|<!-- ===== 11 最大风险 ===== -->
-   313|<div class="section">
-   314|  <div class="s-title">⚠️ 最大风险</div>
-   315|  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>城管对无证摊贩查处，现场制售甜品可能面临额外卫生抽查。</div>
-   316|  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>摊位费每年上涨10-20%，雨季/冬季营收直接腰斩，无室内场地备用。</div>
-   317|  <div class="risk-item"><span class="r-icon">3️⃣</span>网红产品生命周期短：半年后热度可能消退，需不断推新口味维持关注。</div>
-   318|  <div class="risk-item"><span class="r-icon">4️⃣</span>食品安全隐患：夏季椰冻易变质，一旦顾客腹泻整个生意终结。</div>
-   319|  <div class="risk-item"><span class="r-icon">5️⃣</span>同质化价格战：门槛极低，对手可直接在旁边卖9.9元低价竞争。</div>
-   320|  <div class="risk-item"><span class="r-icon">6️⃣</span>原料成本波动：厚椰乳价格受进口椰子影响，成本可能上涨20%。</div>
-   321|</div>
-   322|
-   323|<!-- ===== 12 最终决策判断 ===== -->
-   324|<div class="section">
-   325|  <div class="s-title">🧠 最终决策判断</div>
-   326|  <div class="judge-box">
-   327|    <div class="j-text">
-   328|      <strong>✅ 为什么值得做：</strong>投入低（最低650元），出餐快，毛利高，作为夏季组合项目是极好的现金牛，5-8天即可回本。<br>
-   329|      <strong>❌ 为什么不值得做：</strong>受季节影响大，非刚需，产品生命周期短，很难成为持续3-5年的长期事业。<br>
-   330|      <strong>🔑 进入条件：</strong>① 找到夏季人流量大的夜市/景区摊位 ② 已计划或正在经营其他小吃，作为补充项目 ③ 愿意花200元做灯光和招牌提升颜值。<br>
-   331|      <strong>🚪 退出条件：</strong>① 连续2周日营收低于400元 ② 周边出现2家以上直接竞品且打价格战 ③ 小红书/抖音相关热度明显下降。<br>
-   332|      <strong>🎯 最终判断：可进（作为组合项目）</strong> —— 不建议孤注一掷，但作为夏季补充，是顶级的利润放大器。
-   333|    </div>
-   334|    <div class="j-tags"><span>#厚椰冻冻</span><span>#网红甜品</span><span>#夏季爆款</span><span>#高毛利</span></div>
-   335|  </div>
-   336|</div>
-   337|
-   338|<!-- ===== 13 核心工艺（带验证点） ===== -->
-   339|<div class="section">
-   340|  <div class="s-title">🔪 核心工艺</div>
-   341|  <div class="process-flow">
-   342|    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">厚椰乳+糖+水加热至50-60°C</span><div class="ps-verify">[验证点] 手指触碰液体表面能坚持3秒不烫手，即为50-60°C</div></div>
-   343|    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">加入白凉粉/吉利丁，搅拌至完全融化</span><div class="ps-verify">[验证点] 勺子舀起液体，勺背能挂上薄浆，流下速度变慢</div></div>
-   344|    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">过滤倒入模具，撇去浮沫</span><div class="ps-verify">[验证点] 成品表面光洁无气泡，无未融粉粒沉淀</div></div>
-   345|    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">冷藏0-4°C定型3小时以上</span><div class="ps-verify">[验证点] 3小时后倾斜模具，椰冻整体不流动，呈果冻状弹性</div></div>
-   346|  </div>
-   347|  <div class="badge" style="margin-top:4px">⚠️ 完整配比（精确到克）及翻车方案见下方付费区</div>
-   348|</div>
-   349|
-   350|<!-- ===== 14 成本利润 ===== -->
-   351|<div class="section">
-   352|  <div class="s-title">📐 成本利润</div>
-   353|  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
-   354|    <div class="recipe-line"><span class="k">核心原料成本</span><span class="v">¥3.5/份</span></div>
-   355|    <div class="recipe-line"><span class="k">包装成本</span><span class="v">¥1.2/份</span></div>
-   356|    <div class="recipe-line"><span class="k">耗材成本（冰/小料均摊）</span><span class="v">¥0.8/份</span></div>
-   357|    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥5.5/份</span></div>
-   358|    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥9.9～¥18</span></div>
-   359|    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">44%～69%</span></div>
-   360|    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售70份（均价¥15）→ 日毛利¥665，月净利¥9,975（出摊25天）</span></div>
-   361|  </div>
-   362|</div>
-   363|
-   364|<!-- ===== 15 完整出摊包（付费区，7模块） ===== -->
-   365|<div class="pay-area">
-   366|  <div class="lock-icon">🔒</div>
-   367|  <h3>📦 完整出摊包 · 数据全开</h3>
-   368|  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
-   369|  <div class="price-tag">¥49 <small>永久解锁</small></div>
-   371|  <div class="note">解锁后查看完整配方、温度曲线、变体和翻车方案</div>
-   372|
-   373|  <div id="payContent" class="pay-content">
-   374|    <!-- 1️⃣ 精确配方 -->
-   375|    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 精确配方 (按500g成品计)</div>
-   376|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
-   377|      <div class="recipe-line"><span>厚椰乳</span><span>350g</span></div>
-   378|      <div class="recipe-line"><span>纯净水</span><span>130g</span></div>
-   379|      <div class="recipe-line"><span>白砂糖</span><span>20g</span></div>
-   380|      <div class="recipe-line"><span>白凉粉（或吉利丁粉）</span><span>12g</span></div>
-   381|    </div>
-   382|    <!-- 2️⃣ 温度曲线 -->
-   383|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 凝固温度曲线</div>
-   384|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
-   385|      <div class="recipe-line"><span>最佳加热区间</span><span>55°C（手碰不烫）</span></div>
-   386|      <div class="recipe-line"><span>冷藏温度</span><span>0-4°C · 3小时以上</span></div>
-   387|      <div class="recipe-line"><span>热饮版（冬季）</span><span>加热至70°C，保温售卖</span></div>
-   388|    </div>
-   389|    <!-- 3️⃣ 批量SOP -->
-   390|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 批量SOP (20份/50份)</div>
-   391|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
-   392|      <div class="recipe-line"><span>20份（约7kg液体）</span><span>厚椰乳7kg+水2.6kg+白凉粉240g，熬煮时间15分钟</span></div>
-   393|      <div class="recipe-line"><span>50份（约17.5kg）</span><span>需分2锅，每锅熬制20分钟，冷藏柜需足够容量</span></div>
-   394|    </div>
-   395|    <!-- 4️⃣ 翻车处理 -->
-   396|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 翻车解决方案</div>
-   397|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
-   398|      <div><strong>太软/不成形：</strong>白凉粉比例不足→补加2-3g/500ml，重新加热溶解再冷藏</div>
-   399|      <div><strong>口感发硬：</strong>白凉粉过多→下次减量，或加入30g牛奶调整</div>
-   400|      <div><strong>表面起皮/分层：</strong>未搅拌均匀或温度过高→全程搅拌不离火，过滤2遍</div>
-   401|    </div>
-   402|    <!-- 5️⃣ 变体方案 -->
-   403|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 3款变体 (斑斓/芒果/咖啡)</div>
-   404|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
-   405|      <div><strong>🌿 生椰斑斓：</strong>加斑斓叶汁15g，同步减少水15g</div>
-   406|      <div><strong>🥭 芒果厚椰冻：</strong>底层加新鲜芒果粒50g，淋椰冻液</div>
-   407|      <div><strong>☕ 椰香咖啡冻：</strong>水换为浓缩咖啡液20g+水110g</div>
-   408|    </div>
-   409|    <!-- 6️⃣ 规模化方案 -->
-   410|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 规模化方案</div>
-   411|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
-   412|      当日销＞150份时：建议采购商用凝固剂（更稳定）、添置第二台冷柜、预批量分装冷冻保存（解冻后口感下降10%可接受）。可转型为“甜品站”增加冰粉、清补凉等。
-   413|    </div>
-   414|    <!-- 7️⃣ 额外: 小料比例 -->
-   415|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 加料区标准配比</div>
-   416|    <div style="background:#fff;border-radius:10px;padding:12px">
-   417|      <div class="recipe-line"><span>蜜红豆</span><span>每勺20g·成本0.5元</span></div>
-   418|      <div class="recipe-line"><span>脆波波</span><span>每勺25g·成本0.6元</span></div>
-   419|      <div class="recipe-line"><span>芒果丁</span><span>每份30g·成本0.8元</span></div>
-   420|    </div>
-   421|    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
-   422|  </div>
-   423|</div>
-   424|
-   425|<!-- ===== 16 关联产品（同赛道，内部卡片） ===== -->
-   426|<div class="section">
-   427|  <div class="s-title">🔗 关联产品</div>
-   428|  <div class="rel-grid">
-   429|    <a class="rel-item" href="#"><span class="r-emoji">🥥</span><span class="r-name">椰子冻·专卖店模型（母卡）</span><span class="r-arrow">→</span></a>
-   430|    <a class="rel-item" href="#"><span class="r-emoji">🍧</span><span class="r-name">网红冰粉·摆摊组合卡</span><span class="r-arrow">→</span></a>
-   431|    <a class="rel-item" href="#"><span class="r-emoji">🍵</span><span class="r-name">暴打柠檬茶·饮品搭售卡</span><span class="r-arrow">→</span></a>
-   432|  </div>
-   433|  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡，可点击跳转</div>
-   434|</div>
-   435|
-   436|<!-- ===== 17 咨询入口 ===== -->
-   437|<div class="section" style="border-bottom: none;">
-   438|  <div class="s-title">📞 咨询入口</div>
-   439|  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
-   440|    <div><strong>📌 咨询场景：</strong>选址评估 · 厚椰乳供应链 · 颜值包装设计</div>
-   441|    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>本地化口味微调 · 摆摊避坑 · 外卖平台上线指导</div>
-   442|    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“厚椰冻冻”）</div>
-   443|    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
-   444|  </div>
-   445|</div>
-   446|
-   447|<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
-   448|</div>
-   449|
-   450|<script>
-   452|    document.getElementById('payContent').classList.toggle('show');
-   453|    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
-   454|  });
-   455|</script>
-   456|<script src="../../paywall.js"></script>
-   457|</body>
-   458|</html>
+     1|     1|<!DOCTYPE html>
+     2|     2|<html lang="zh-CN">
+     3|     3|<head>
+     4|     4|<meta charset="UTF-8">
+     5|     5|<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+     6|     6|<title>TS_083 厚椰冻冻 · 创业项目测评 V5.1</title>
+     7|     7|<style>
+     8|     8|*{margin:0;padding:0;box-sizing:border-box}
+     9|     9|body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+    10|    10|.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+    11|    11|
+    12|    12|/* 顶部评级栏 */
+    13|    13|.rating-bar{background:linear-gradient(135deg,#1e4d5c,#0f3b46);padding:16px 18px;color:#fff}
+    14|    14|.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+    15|    15|.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+    16|    16|.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+    17|    17|.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+    18|    18|.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+    19|    19|.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+    20|    20|.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+    21|    21|.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+    22|    22|
+    23|    23|.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+    24|    24|.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    25|    25|.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    26|    26|.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+    27|    27|.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+    28|    28|.radar-item .stars{font-size:13px;letter-spacing:0px}
+    29|    29|.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+    30|    30|.radar-item.high{background:#fef2ee}
+    31|    31|.radar-item.high .stars{color:#E8652D}
+    32|    32|
+    33|    33|.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    34|    34|.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+    35|    35|.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+    36|    36|.fit-yes{background:#f0f6ec;color:#3a6b2e}
+    37|    37|.fit-no{background:#fef2f2;color:#b53b3b}
+    38|    38|
+    39|    39|.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+    40|    40|.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+    41|    41|.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+    42|    42|.logic-item:last-child{border-bottom:none}
+    43|    43|.logic-item .v{font-weight:700;color:#C0392B}
+    44|    44|
+    45|    45|.metric-row{display:flex;gap:6px;margin-top:6px}
+    46|    46|.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+    47|    47|.metric-card .m-label{font-size:9px;color:#7a7269}
+    48|    48|.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+    49|    49|.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+    50|    50|.mc-orange{background:#fdf2ee}
+    51|    51|.mc-orange .m-val{color:#E8652D}
+    52|    52|.mc-gold{background:#fef6ec}
+    53|    53|.mc-gold .m-val{color:#D4A574}
+    54|    54|.mc-green{background:#f0f6ec}
+    55|    55|.mc-green .m-val{color:#5a8f3c}
+    56|    56|
+    57|    57|.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    58|    58|.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+    59|    59|.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+    60|    60|.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+    61|    61|.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+    62|    62|.track-good .t-h{color:#5a8f3c}
+    63|    63|.track-bad .t-h{color:#C0392B}
+    64|    64|.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+    65|    65|.track-verdict strong{color:#E8652D}
+    66|    66|
+    67|    67|.prod-struct{display:flex;flex-direction:column;gap:8px}
+    68|    68|.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+    69|    69|.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+    70|    70|.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+    71|    71|.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+    72|    72|.tier-lead{background:#fef6ec}
+    73|    73|.tier-lead .t-badge{background:#E8652D;color:#fff}
+    74|    74|.tier-profit{background:#f0f6ec}
+    75|    75|.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+    76|    76|.tier-set{background:#eef2ff}
+    77|    77|.tier-set .t-badge{background:#4f6ef7;color:#fff}
+    78|    78|
+    79|    79|.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    80|    80|.stall-item{padding:10px;border-radius:10px;text-align:center}
+    81|    81|.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+    82|    82|.stall-item .stars{font-size:12px;letter-spacing:1px}
+    83|    83|.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+    84|    84|.risk-item:last-child{border-bottom:none}
+    85|    85|.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+    86|    86|
+    87|    87|.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+    88|    88|.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+    89|    89|.judge-box .j-text strong{color:#C0392B}
+    90|    90|.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+    91|    91|.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+    92|    92|
+    93|    93|.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+    94|    94|.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+    95|    95|.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    96|    96|.process-step .ps-desc{flex:1}
+    97|    97|.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+    98|    98|
+    99|    99|.rel-grid{display:flex;flex-direction:column;gap:6px}
+   100|   100|.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+   101|   101|.rel-item:active{background:#e8dfd5}
+   102|   102|.rel-item .r-emoji{font-size:16px}
+   103|   103|.rel-item .r-name{flex:1;font-weight:600}
+   104|   104|.rel-item .r-arrow{color:#ccc;font-size:10px}
+   105|   105|
+   106|   106|/* 付费锁定区 */
+   107|   107|.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+   108|   108|.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+   109|   109|.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+   110|   110|.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+   111|   111|.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+   112|   112|.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+   113|   113|.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+   114|   114|.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+   115|   115|.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+   116|   116|.pay-content.show{display:block}
+   117|   117|
+   118|   118|.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+   119|   119|.recipe-line .k{color:#5a4f44}
+   120|   120|.recipe-line .v{font-weight:600;color:#3a322a}
+   121|   121|
+   122|   122|.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+   123|   123|table{width:100%;border-collapse:collapse;font-size:11px}
+   124|   124|th,td{padding:8px 6px;text-align:left}
+   125|   125|.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+   126|   126|</style>
+   127|   127|<link rel="stylesheet" href="../../paywall.css">
+   128|   128|</head>
+   129|   129|<body>
+   130|   130|<div class="card">
+   131|   131|
+   132|   132|<!-- ===== 01 Header ===== -->
+   133|   133|<div style="padding:12px 18px 4px;background:#faf8f5">
+   134|   134|  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥥 厚椰冻冻</h1>
+   135|   135|  <div style="font-size:12px;color:#b5aaa0">清甜椰冻 · 网红甜品</div>
+   136|   136|</div>
+   137|   137|<div class="rating-bar">
+   138|   138|  <div class="r-top">
+   139|   139|    <div class="r-score">
+   140|   140|      <span class="r-num">8.2</span>
+   141|   141|      <span class="r-label">FoodIntelAI评分</span>
+   142|   142|    </div>
+   143|   143|    <span class="r-grade">A-级项目</span>
+   144|   144|  </div>
+   145|   145|  <div class="r-tagline">高颜值、高毛利夏季单品，但受季节和网红生命周期影响大。</div>
+   146|   146|  <div class="r-tags">
+   147|   147|    <span>🌿 网红属性</span>
+   148|   148|    <span>💰 投资2500+</span>
+   149|   149|    <span>🧑‍🍳 1人可做</span>
+   150|   150|    <span>🔄 复购一般</span>
+   151|   151|  </div>
+   152|   152|</div>
+   153|   153|
+   154|   154|<!-- ===== 02 项目速览 ===== -->
+   155|   155|<div class="section">
+   156|   156|  <div class="s-title">📊 项目速览</div>
+   157|   157|  <div class="radar-grid">
+   158|   158|    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+   159|   159|    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+   160|   160|    <div class="radar-item high"><div class="label">💰 投资</div><div class="stars">★★★★☆</div><div class="val">2500+</div></div>
+   161|   161|    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div><div class="val">简单</div></div>
+   162|   162|    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高毛利</div></div>
+   163|   163|  </div>
+   164|   164|</div>
+   165|   165|
+   166|   166|<!-- ===== 03 适合谁 ===== -->
+   167|   167|<div class="section">
+   168|   168|  <div class="fit-wrap">
+   169|   169|    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+   170|   170|      <div class="fit-item fit-yes">✅ 夏季摆摊创业者</div>
+   171|   171|      <div class="fit-item fit-yes">✅ 颜值经济玩家</div>
+   172|   172|      <div class="fit-item fit-yes">✅ 寻求高毛利补充产品的摊主</div>
+   173|   173|      <div class="fit-item fit-yes">✅ 新手/女性创业者</div>
+   174|   174|      <div class="fit-item fit-yes">✅ 景区/夜市摊位经营者</div>
+   175|   175|    </div>
+   176|   176|    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+   177|   177|      <div class="fit-item fit-no">❌ 追求高复购率的摊主</div>
+   178|   178|      <div class="fit-item fit-no">❌ 北方冬季户外摆摊者</div>
+   179|   179|      <div class="fit-item fit-no">❌ 只想卖一个单品的人</div>
+   180|   180|    </div>
+   181|   181|  </div>
+   182|   182|</div>
+   183|   183|
+   184|   184|<!-- ===== 04 赚钱逻辑 ===== -->
+   185|   185|<div class="section">
+   186|   186|  <div class="s-title">💰 赚钱逻辑</div>
+   187|   187|  <div class="logic-box">
+   188|   188|    <div class="l-title">🧠 顾客为什么买</div>
+   189|   189|    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">买的是“清凉解腻、健康低卡”的心理慰藉和“高颜值、好出片”的社交分享价值。</div>
+   190|   190|    <div class="l-title">📈 利润从哪里来</div>
+   191|   191|    <div class="logic-item"><span>核心原料成品化（厚椰乳+预拌粉）</span><span class="v">毛利65%+</span></div>
+   192|   192|    <div class="logic-item"><span>自助加料提升客单价</span><span class="v">每加料+2~3元</span></div>
+   193|   193|    <div class="l-title" style="margin-top:6px">📈 如何提高客单价</div>
+   194|   194|    <div class="logic-item"><span>设置加料台：芒果/芋圆/脆波波</span><span class="v"></span></div>
+   195|   195|    <div class="logic-item"><span>推出“厚椰冻+饮品”套餐</span><span class="v"></span></div>
+   196|   196|    <div class="l-title">🔄 如何提高复购</div>
+   197|   197|    <div class="logic-item"><span>每月一款季节限定口味（桂花/西瓜）</span><span class="v"></span></div>
+   198|   198|    <div class="logic-item"><span>集点卡：买5送1</span><span class="v"></span></div>
+   199|   199|  </div>
+   200|   200|  <div class="metric-row">
+   201|   201|    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">¥500-1000</div><div class="m-sub">预估·夜市周末</div></div>
+   202|   202|    <div class="metric-card mc-gold"><div class="m-label">月净赚</div><div class="m-val">¥4000-8000</div><div class="m-sub">出摊25天</div></div>
+   203|   203|    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">5-8天</div><div class="m-sub">低投入快回本</div></div>
+   204|   204|  </div>
+   205|   205|  <div class="badge" style="margin-top:6px">📌 量化数据来源：基于2024年南方二线城市夜市同类摊位实测推算</div>
+   206|   206|</div>
+   207|   207|
+   208|   208|<!-- ===== 05 赛道判断 ===== -->
+   209|   209|<div class="section">
+   210|   210|  <div class="s-title">📈 赛道判断</div>
+   211|   211|  <div class="track-grid">
+   212|   212|    <div class="track-box track-good"><div class="t-h">✅ 优势</div>
+   213|   213|      <div class="t-item">制作极简，出餐仅30秒，适合高流量夜市</div>
+   214|   214|      <div class="t-item">颜值自带传播，小红书/抖音易爆单</div>
+   215|   215|      <div class="t-item">厚椰乳供应链成熟，品质稳定</div>
+   216|   216|    </div>
+   217|   217|    <div class="track-box track-bad"><div class="t-h">❌ 劣势</div>
+   218|   218|      <div class="t-item">季节性明显，冬季销量断崖下跌</div>
+   219|   219|      <div class="t-item">同质化严重，缺乏壁垒</div>
+   220|   220|      <div class="t-item">非刚需，复购率低于小吃类</div>
+   221|   221|    </div>
+   222|   222|  </div>
+   223|   223|  <div class="track-verdict">
+   224|   224|    <strong>市场现状：</strong>网红产品爆发复制期，一二线夜市开始饱和，下沉市场仍有窗口，热度高但竞争者快速增加。<br>
+   225|   225|    <strong>未来判断：</strong>1-2年内将像“暴打柠檬茶”一样普及，价格从15-20元下探至9.9-15元，必须升级为甜品站模式。<br>
+   226|   226|    <strong>是否值得进入：是</strong>（强烈建议作为夏季组合项目，不建议孤注一掷）
+   227|   227|  </div>
+   228|   228|</div>
+   229|   229|
+   230|   230|<!-- ===== 06 项目评估 ===== -->
+   231|   231|<div class="section">
+   232|   232|  <div class="s-title">🚦 项目评估</div>
+   233|   233|  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+   234|   234|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">市场竞争</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">竞争升温但未饱和</div></div>
+   235|   235|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">学习周期</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">半天掌握</div></div>
+   236|   236|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">操作容错度</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★☆</div><div style="font-size:10px;color:#5a4f44">比例微调影响小</div></div>
+   237|   237|    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">最低验证资金</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★★</div><div style="font-size:10px;color:#5a4f44">¥300内可试做</div></div>
+   238|   238|  </div>
+   239|   239|  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#5a4f44;font-weight:600">推荐等级</span><span style="font-size:18px;font-weight:800;color:#E8652D">A-</span></div>
+   240|   240|</div>
+   241|   241|
+   242|   242|<!-- ===== 同赛道对比（固定表格） ===== -->
+   243|   243|<div class="section">
+   244|   244|  <div class="s-title">📊 同赛道对比</div>
+   245|   245|  <div style="overflow-x:auto">
+   246|   246|    <table style="min-width:420px">
+   247|   247|      <thead><tr style="background:#3a322a;color:#fff"><th>项目名称</th><th>投资(1-5)</th><th>难度(1-5)</th><th>利润(1-5)</th><th>竞争(1-5)</th><th>推荐等级</th><th>卡片链接</th></tr></thead>
+   248|   248|      <tbody>
+   249|   249|        <tr style="background:#fef6ec"><td>🥥 厚椰冻冻</td><td>★★★★</td><td>★★</td><td>★★★★</td><td>★★★</td><td>A-</td><td><a href="#" style="color:#E8652D">#HZ_020</a></td></tr>
+   250|   250|        <tr><td>🍧 冰粉/凉糕</td><td>★★★</td><td>★★</td><td>★★★</td><td>★★★★</td><td>B+</td><td><a href="#" style="color:#D4A574">#HZ_018</a></td></tr>
+   251|   251|        <tr style="background:#f8f4ef"><td>🥤 暴打柠檬茶</td><td>★★★★</td><td>★★★</td><td>★★★</td><td>★★★★★</td><td>B</td><td><a href="#" style="color:#5a8f3c">#HZ_022</a></td></tr>
+   252|   252|        <tr><td>🍦 椰子冻专卖</td><td>★★★★</td><td>★★</td><td>★★★★</td><td>★★★</td><td>A-</td><td><a href="#">#HZ_025</a></td></tr>
+   253|   253|      </tbody>
+   254|   254|    </table>
+   255|   255|  </div>
+   256|   256|  <div class="badge" style="margin-top:6px">💡 所有对比卡片均为FoodIntelAI已发布标准卡，点击可跳转</div>
+   257|   257|</div>
+   258|   258|
+   259|   259|<!-- ===== 07 30天验证路线 ===== -->
+   260|   260|<div class="section">
+   261|   261|  <div class="s-title">🗓️ 30天验证路线</div>
+   262|   262|  <div style="display:flex;flex-direction:column;gap:4px">
+   263|   263|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>采购厚椰乳+白凉粉，试做5份，调整甜度和凝固比例</span></div>
+   264|   264|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>设计招牌、价格牌，购买暖色灯带（提升颜值）</span></div>
+   265|   265|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>首次摆摊（夜市/集市），备货40份，测试定价15元及人流</span></div>
+   266|   266|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>增加2-3种小料（芒果/脆波波），测试加购率</span></div>
+   267|   267|    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>复盘营收、复购率，决策是否继续或转为组合项目</span></div>
+   268|   268|  </div>
+   269|   269|  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px">
+   270|   270|    <strong>🔑 关键验证节点：</strong>① Day7首日能否售出30+份 ② Day15加料后加购率是否＞30% ③ Day30周复购率是否＞15%<br>
+   271|   271|    <strong>🚪 退出标准：</strong>连续5天日营收＜300元 / 周边1个月内出现3家以上同类竞品 / 差评集中在“太甜/太淡”<br>
+   272|   272|    <strong>✅ 继续标准：</strong>周末日营收稳定800元以上 / 有老顾客主动问询 / 复购率高于20%
+   273|   273|  </div>
+   274|   274|</div>
+   275|   275|
+   276|   276|<!-- ===== 08 设备清单（含证照） ===== -->
+   277|   277|<div class="section">
+   278|   278|  <div class="s-title">🛠️ 设备清单</div>
+   279|   279|  <div><strong>🔸 固定设备</strong>：商用展示柜(¥800-1500) · 制冰机(可选，或买冰) · 电子秤(¥15) · 不锈钢盆×2(¥30) · 手动打蛋器(¥10)</div>
+   280|   280|  <div style="margin-top:8px"><strong>🔸 摊位设备</strong>：折叠操作台(¥150) · 暖色LED灯带/灯箱(¥100) · 透明防尘罩(¥60) · 收款码牌(¥20) · 露营车(¥200)</div>
+   281|   281|  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：厚椰乳5L(¥75) · 白凉粉/吉利丁(¥30) · 一次性碗勺+袋子300套(¥120) · 小料(芒果/蜜豆等)(¥100) · 定制腰封/贴纸(¥50)</div>
+   282|   282|  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+   283|   283|    <div><strong>💰 最低启动方案：¥650</strong>（家用冰箱+买冰+二手桌椅）</div>
+   284|   284|    <div><strong>💰 完整启动方案：¥2,800～4,000</strong>（含展示柜、全套新设备）</div>
+   285|   285|    <div style="margin-top:6px"><strong>📄 证照成本及时间：</strong>健康证¥80（1天），食品摊贩备案¥0~100（1天），摊位费押金¥500-2000（视夜市而定）</div>
+   286|   286|  </div>
+   287|   287|</div>
+   288|   288|
+   289|   289|<!-- ===== 09 产品结构 ===== -->
+   290|   290|<div class="section">
+   291|   291|  <div class="s-title">📦 产品结构</div>
+   292|   292|  <div class="prod-struct">
+   293|   293|    <div class="prod-tier tier-lead"><span class="t-badge">引流款</span><span class="t-name">招牌原味厚椰冻</span><span class="t-price">¥9.9</span></div>
+   294|   294|    <div class="prod-tier tier-profit"><span class="t-badge">利润款</span><span class="t-name">生椰斑斓冻 · 芒芒厚椰冻</span><span class="t-price">¥15-18</span></div>
+   295|   295|    <div class="prod-tier tier-set"><span class="t-badge">套餐款</span><span class="t-name">厚椰冻+手打柠檬茶</span><span class="t-price">¥25-28</span></div>
+   296|   296|  </div>
+   297|   297|</div>
+   298|   298|
+   299|   299|<!-- ===== 10 摆摊指数 ===== -->
+   300|   300|<div class="section">
+   301|   301|  <div class="s-title">🔥 摆摊指数</div>
+   302|   302|  <div class="stall-grid">
+   303|   303|    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌙 夜市</div><div class="stars">★★★★☆</div></div>
+   304|   304|    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏫 学校</div><div class="stars">★★★☆☆</div></div>
+   305|   305|    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 商圈</div><div class="stars">★★★★☆</div></div>
+   306|   306|    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 社区</div><div class="stars">★★☆☆☆</div></div>
+   307|   307|    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏔️ 景区</div><div class="stars">★★★★★</div></div>
+   308|   308|    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📱 外卖</div><div class="stars">★★★☆☆</div></div>
+   309|   309|  </div>
+   310|   310|</div>
+   311|   311|
+   312|   312|<!-- ===== 11 最大风险 ===== -->
+   313|   313|<div class="section">
+   314|   314|  <div class="s-title">⚠️ 最大风险</div>
+   315|   315|  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>政策与证照风险：</strong>城管对无证摊贩查处，现场制售甜品可能面临额外卫生抽查。</div>
+   316|   316|  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>场地与季节风险：</strong>摊位费每年上涨10-20%，雨季/冬季营收直接腰斩，无室内场地备用。</div>
+   317|   317|  <div class="risk-item"><span class="r-icon">3️⃣</span>网红产品生命周期短：半年后热度可能消退，需不断推新口味维持关注。</div>
+   318|   318|  <div class="risk-item"><span class="r-icon">4️⃣</span>食品安全隐患：夏季椰冻易变质，一旦顾客腹泻整个生意终结。</div>
+   319|   319|  <div class="risk-item"><span class="r-icon">5️⃣</span>同质化价格战：门槛极低，对手可直接在旁边卖9.9元低价竞争。</div>
+   320|   320|  <div class="risk-item"><span class="r-icon">6️⃣</span>原料成本波动：厚椰乳价格受进口椰子影响，成本可能上涨20%。</div>
+   321|   321|</div>
+   322|   322|
+   323|   323|<!-- ===== 12 最终决策判断 ===== -->
+   324|   324|<div class="section">
+   325|   325|  <div class="s-title">🧠 最终决策判断</div>
+   326|   326|  <div class="judge-box">
+   327|   327|    <div class="j-text">
+   328|   328|      <strong>✅ 为什么值得做：</strong>投入低（最低650元），出餐快，毛利高，作为夏季组合项目是极好的现金牛，5-8天即可回本。<br>
+   329|   329|      <strong>❌ 为什么不值得做：</strong>受季节影响大，非刚需，产品生命周期短，很难成为持续3-5年的长期事业。<br>
+   330|   330|      <strong>🔑 进入条件：</strong>① 找到夏季人流量大的夜市/景区摊位 ② 已计划或正在经营其他小吃，作为补充项目 ③ 愿意花200元做灯光和招牌提升颜值。<br>
+   331|   331|      <strong>🚪 退出条件：</strong>① 连续2周日营收低于400元 ② 周边出现2家以上直接竞品且打价格战 ③ 小红书/抖音相关热度明显下降。<br>
+   332|   332|      <strong>🎯 最终判断：可进（作为组合项目）</strong> —— 不建议孤注一掷，但作为夏季补充，是顶级的利润放大器。
+   333|   333|    </div>
+   334|   334|    <div class="j-tags"><span>#厚椰冻冻</span><span>#网红甜品</span><span>#夏季爆款</span><span>#高毛利</span></div>
+   335|   335|  </div>
+   336|   336|</div>
+   337|   337|
+   338|   338|<!-- ===== 13 核心工艺（带验证点） ===== -->
+   339|   339|<div class="section">
+   340|   340|  <div class="s-title">🔪 核心工艺</div>
+   341|   341|  <div class="process-flow">
+   342|   342|    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">厚椰乳+糖+水加热至50-60°C</span><div class="ps-verify">[验证点] 手指触碰液体表面能坚持3秒不烫手，即为50-60°C</div></div>
+   343|   343|    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">加入白凉粉/吉利丁，搅拌至完全融化</span><div class="ps-verify">[验证点] 勺子舀起液体，勺背能挂上薄浆，流下速度变慢</div></div>
+   344|   344|    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">过滤倒入模具，撇去浮沫</span><div class="ps-verify">[验证点] 成品表面光洁无气泡，无未融粉粒沉淀</div></div>
+   345|   345|    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">冷藏0-4°C定型3小时以上</span><div class="ps-verify">[验证点] 3小时后倾斜模具，椰冻整体不流动，呈果冻状弹性</div></div>
+   346|   346|  </div>
+   347|   347|  <div class="badge" style="margin-top:4px">⚠️ 完整配比（精确到克）及翻车方案见下方付费区</div>
+   348|   348|</div>
+   349|   349|
+   350|   350|<!-- ===== 14 成本利润 ===== -->
+   351|   351|<div class="section">
+   352|   352|  <div class="s-title">📐 成本利润</div>
+   353|   353|  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+   354|   354|    <div class="recipe-line"><span class="k">核心原料成本</span><span class="v">¥3.5/份</span></div>
+   355|   355|    <div class="recipe-line"><span class="k">包装成本</span><span class="v">¥1.2/份</span></div>
+   356|   356|    <div class="recipe-line"><span class="k">耗材成本（冰/小料均摊）</span><span class="v">¥0.8/份</span></div>
+   357|   357|    <div class="recipe-line"><span class="k">单份总成本</span><span class="v">¥5.5/份</span></div>
+   358|   358|    <div class="recipe-line"><span class="k">售价区间</span><span class="v">¥9.9～¥18</span></div>
+   359|   359|    <div class="recipe-line"><span class="k">毛利区间</span><span class="v">44%～69%</span></div>
+   360|   360|    <div class="recipe-line"><span class="k">示例利润模型</span><span class="v">日售70份（均价¥15）→ 日毛利¥665，月净利¥9,975（出摊25天）</span></div>
+   361|   361|  </div>
+   362|   362|</div>
+   363|   363|
+   364|   364|<!-- ===== 15 完整出摊包（付费区，7模块） ===== -->
+   365|   365|<div class="pay-area">
+   366|   366|  <div class="lock-icon">🔒</div>
+   367|   367|  <h3>📦 完整出摊包 · 数据全开</h3>
+   368|   368|  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+   369|   369|  <div class="price-tag">¥49 <small>永久解锁</small></div>
+   370|   371|  <div class="note">解锁后查看完整配方、温度曲线、变体和翻车方案</div>
+   371|   372|
+   372|   373|    <button class="btn" onclick="var p=document.getElementById('payContent');p.classList.toggle('show');this.textContent=this.textContent==='🔓 展开完整出摊包'?'收起':'🔓 展开完整出摊包'">🔓 展开完整出摊包</button>
+  <div class="note">点开展示完整配方数据（带模糊保护）</div>
+  <div id="payContent" class="pay-content">
+   373|   374|    <!-- 1️⃣ 精确配方 -->
+   374|   375|    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 精确配方 (按500g成品计)</div>
+   375|   376|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+   376|   377|      <div class="recipe-line"><span>厚椰乳</span><span>350g</span></div>
+   377|   378|      <div class="recipe-line"><span>纯净水</span><span>130g</span></div>
+   378|   379|      <div class="recipe-line"><span>白砂糖</span><span>20g</span></div>
+   379|   380|      <div class="recipe-line"><span>白凉粉（或吉利丁粉）</span><span>12g</span></div>
+   380|   381|    </div>
+   381|   382|    <!-- 2️⃣ 温度曲线 -->
+   382|   383|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 凝固温度曲线</div>
+   383|   384|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+   384|   385|      <div class="recipe-line"><span>最佳加热区间</span><span>55°C（手碰不烫）</span></div>
+   385|   386|      <div class="recipe-line"><span>冷藏温度</span><span>0-4°C · 3小时以上</span></div>
+   386|   387|      <div class="recipe-line"><span>热饮版（冬季）</span><span>加热至70°C，保温售卖</span></div>
+   387|   388|    </div>
+   388|   389|    <!-- 3️⃣ 批量SOP -->
+   389|   390|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 批量SOP (20份/50份)</div>
+   390|   391|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+   391|   392|      <div class="recipe-line"><span>20份（约7kg液体）</span><span>厚椰乳7kg+水2.6kg+白凉粉240g，熬煮时间15分钟</span></div>
+   392|   393|      <div class="recipe-line"><span>50份（约17.5kg）</span><span>需分2锅，每锅熬制20分钟，冷藏柜需足够容量</span></div>
+   393|   394|    </div>
+   394|   395|    <!-- 4️⃣ 翻车处理 -->
+   395|   396|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">4️⃣ 翻车解决方案</div>
+   396|   397|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+   397|   398|      <div><strong>太软/不成形：</strong>白凉粉比例不足→补加2-3g/500ml，重新加热溶解再冷藏</div>
+   398|   399|      <div><strong>口感发硬：</strong>白凉粉过多→下次减量，或加入30g牛奶调整</div>
+   399|   400|      <div><strong>表面起皮/分层：</strong>未搅拌均匀或温度过高→全程搅拌不离火，过滤2遍</div>
+   400|   401|    </div>
+   401|   402|    <!-- 5️⃣ 变体方案 -->
+   402|   403|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">5️⃣ 3款变体 (斑斓/芒果/咖啡)</div>
+   403|   404|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+   404|   405|      <div><strong>🌿 生椰斑斓：</strong>加斑斓叶汁15g，同步减少水15g</div>
+   405|   406|      <div><strong>🥭 芒果厚椰冻：</strong>底层加新鲜芒果粒50g，淋椰冻液</div>
+   406|   407|      <div><strong>☕ 椰香咖啡冻：</strong>水换为浓缩咖啡液20g+水110g</div>
+   407|   408|    </div>
+   408|   409|    <!-- 6️⃣ 规模化方案 -->
+   409|   410|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">6️⃣ 规模化方案</div>
+   410|   411|    <div style="background:#fff;border-radius:10px;padding:12px;margin-bottom:12px">
+   411|   412|      当日销＞150份时：建议采购商用凝固剂（更稳定）、添置第二台冷柜、预批量分装冷冻保存（解冻后口感下降10%可接受）。可转型为“甜品站”增加冰粉、清补凉等。
+   412|   413|    </div>
+   413|   414|    <!-- 7️⃣ 额外: 小料比例 -->
+   414|   415|    <div style="font-size:12px;font-weight:700;margin-bottom:6px">7️⃣ 加料区标准配比</div>
+   415|   416|    <div style="background:#fff;border-radius:10px;padding:12px">
+   416|   417|      <div class="recipe-line"><span>蜜红豆</span><span>每勺20g·成本0.5元</span></div>
+   417|   418|      <div class="recipe-line"><span>脆波波</span><span>每勺25g·成本0.6元</span></div>
+   418|   419|      <div class="recipe-line"><span>芒果丁</span><span>每份30g·成本0.8元</span></div>
+   419|   420|    </div>
+   420|   421|    <div class="badge" style="margin-top:10px">以上为付费完整出摊包，禁止在免费区传播</div>
+   421|   422|  </div>
+   422|   423|</div>
+   423|   424|
+   424|   425|<!-- ===== 16 关联产品（同赛道，内部卡片） ===== -->
+   425|   426|<div class="section">
+   426|   427|  <div class="s-title">🔗 关联产品</div>
+   427|   428|  <div class="rel-grid">
+   428|   429|    <a class="rel-item" href="#"><span class="r-emoji">🥥</span><span class="r-name">椰子冻·专卖店模型（母卡）</span><span class="r-arrow">→</span></a>
+   429|   430|    <a class="rel-item" href="#"><span class="r-emoji">🍧</span><span class="r-name">网红冰粉·摆摊组合卡</span><span class="r-arrow">→</span></a>
+   430|   431|    <a class="rel-item" href="#"><span class="r-emoji">🍵</span><span class="r-name">暴打柠檬茶·饮品搭售卡</span><span class="r-arrow">→</span></a>
+   431|   432|  </div>
+   432|   433|  <div class="badge" style="margin-top:4px">💡 所有关联卡片均为FoodIntelAI已发布标准卡，可点击跳转</div>
+   433|   434|</div>
+   434|   435|
+   435|   436|<!-- ===== 17 咨询入口 ===== -->
+   436|   437|<div class="section" style="border-bottom: none;">
+   437|   438|  <div class="s-title">📞 咨询入口</div>
+   438|   439|  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+   439|   440|    <div><strong>📌 咨询场景：</strong>选址评估 · 厚椰乳供应链 · 颜值包装设计</div>
+   440|   441|    <div style="margin-top:6px"><strong>📝 咨询内容：</strong>本地化口味微调 · 摆摊避坑 · 外卖平台上线指导</div>
+   441|   442|    <div style="margin-top:8px"><strong>📱 联系方式：</strong>微信 canglin1985（备注“厚椰冻冻”）</div>
+   442|   443|    <a href="#" class="btn" style="display:inline-block;margin-top:10px;background:#3a322a">📲 立即咨询</a>
+   443|   444|  </div>
+   444|   445|</div>
+   445|   446|
+   446|   447|<div class="ftr">FoodIntel AI V5.1 · 沧林食品工作站 · 决策先于工艺</div>
+   447|   448|</div>
+   448|   449|
+   449|   450|<script>
+   450|   452|    document.getElementById('payContent').classList.toggle('show');
+   451|   453|    this.textContent = this.textContent === '点击解锁全部内容' ? '收起完整出摊包' : '点击解锁全部内容';
+   452|   454|  });
+   453|   455|</script>
+   454|   456|<script src="../../paywall.js"></script>
+   455|   457|</body>
+   456|   458|</html>
