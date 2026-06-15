@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>藤椒鸭腿 · 门店决策卡 · M3 · 沧林食品</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#eaebea;color:#2c2c2c;padding:24px 16px;line-height:1.7}
+.card{max-width:540px;margin:0 auto;background:#f8f7f4;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.06)}
+:root{--primary:#295F4E;--primary-light:#e8efe8;--primary-dark:#1c4237;--accent:#d4893b;--accent-light:#eb9a45;--bg-meta:#edf2ec;--bg-level:#e8ede6;--border:#ced5cc;--text:#3a3a3a;--text-light:#8a8a8a}
+.meta{padding:20px 22px 14px;background:var(--bg-meta);border-bottom:1px solid var(--border)}
+.meta .badge{display:inline-block;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 12px;border-radius:4px;margin-bottom:6px;letter-spacing:.3px}
+.meta h1{font-size:22px;font-weight:700;color:var(--primary-dark);line-height:1.3;margin-bottom:2px}
+.meta .sub{font-size:12px;color:var(--text-light);margin-bottom:8px}
+.meta .price-tag{display:inline-block;font-size:14px;font-weight:800;color:var(--accent);background:#fef6f2;padding:3px 14px;border-radius:4px}
+
+/* ===== 决策评分 ===== */
+.score-banner{display:flex;gap:6px;padding:12px 22px;background:var(--bg-level);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.score-item{text-align:center;flex:1;min-width:60px;padding:6px 4px;background:var(--primary-light);border-radius:8px}
+.score-item .s-label{font-size:8px;color:var(--text-light);margin-bottom:1px}
+.score-item .s-stars{font-size:11px;color:var(--accent)}
+.score-item .s-stars .off{color:#ddd5cc}
+.score-item.highlight{background:var(--primary);color:#fff;min-width:70px}
+.score-item.highlight .s-label{color:rgba(255,255,255,.7)}
+.score-item.highlight .s-stars{color:#fff}
+
+/* ===== 一句话定位 ===== */
+.tagline{padding:16px 22px 12px;text-align:center;background:#f3f5f1;border-bottom:1px solid var(--border)}
+.tagline .qt{font-size:14px;font-weight:700;color:var(--primary-dark)}
+.tagline .qt em{color:var(--primary);font-style:normal}
+
+/* ===== 通用section ===== */
+.section{padding:14px 22px;border-bottom:1px solid var(--border)}
+.s-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px;padding-bottom:4px;border-bottom:2px solid #e8e6e0}
+.story{font-size:13px;line-height:2;color:var(--text)}
+.story em{color:var(--primary);font-style:normal;font-weight:600}
+.story strong{color:var(--primary-dark)}
+
+/* ===== 核心指标 ===== */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.kpi-item{padding:10px 12px;background:#f0ede8;border-radius:8px;text-align:center}
+.kpi-item .kpi-val{font-size:16px;font-weight:800;color:var(--primary)}
+.kpi-item .kpi-label{font-size:9px;color:var(--text-light);margin-top:1px}
+
+/* ===== 阶段标签 ===== */
+.stage-grid{display:flex;flex-wrap:wrap;gap:6px}
+.stage-item{padding:6px 14px;border-radius:6px;font-size:11px;font-weight:600}
+.stage-item.on{background:var(--primary);color:#fff}
+.stage-item.off{background:#e8e6e0;color:var(--text-light)}
+
+/* ===== 适合谁 ===== */
+.fitter-grid{display:flex;flex-direction:column;gap:6px}
+.fitter-item{padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:12px;line-height:1.6}
+.fitter-item .f-label{font-weight:700;color:var(--primary);display:block;margin-bottom:2px}
+.fitter-item.good{background:#f0f6ec;border-color:#c5d6b5}
+
+/* ===== 盈利模型 ===== */
+.cost-box{padding:12px 14px;background:#f1f4ef;border-radius:10px;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;color:var(--text);border-bottom:1px dashed #e0e4dc}
+.row:last-child{border:none}
+.row .v{font-weight:600}
+.row.tot{border-top:2px solid var(--primary);margin-top:4px;padding-top:10px;font-weight:700;color:var(--primary);font-size:15px;border-bottom:none}
+
+/* ===== 盈亏测算 ===== */
+.be-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.be-item{padding:10px;background:#f0f4ef;border-radius:8px;text-align:center}
+.be-item .be-val{font-size:15px;font-weight:800;color:var(--primary-dark)}
+.be-item .be-label{font-size:9px;color:var(--text-light);margin-top:1px}
+
+/* ===== 产品结构 ===== */
+.prod-str{padding:0}
+.prod-str .p-item{display:flex;gap:8px;padding:6px 0;font-size:12px;color:var(--text);border-bottom:1px dashed #e8e6e0}
+.prod-str .p-item:last-child{border:none}
+.prod-str .p-label{min-width:64px;font-weight:600;color:var(--primary)}
+
+/* ===== SOP ===== */
+.sop-step{padding:6px 0;font-size:12px;color:var(--text);display:flex;gap:8px;border-bottom:1px dashed #e8e6e0}
+.sop-step:last-child{border:none}
+.sop-step .num{font-weight:700;color:var(--primary);min-width:16px}
+.sop-goal{display:inline-block;margin-top:6px;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:2px 12px;border-radius:4px}
+
+/* ===== 品控体系 ===== */
+.qc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.qc-item{padding:8px 6px;background:#f1f4ef;border-radius:6px;font-size:10px;color:var(--text);text-align:center;line-height:1.5}
+.qc-item .qc-label{font-weight:700;color:var(--primary);font-size:11px}
+
+/* ===== 损耗 ===== */
+.loss-item{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text);border-bottom:1px dashed #e8e6e0}
+.loss-item:last-child{border:none}
+.loss-item .loss-v{font-weight:600;color:var(--accent)}
+
+/* ===== 风险预警 ===== */
+.risk-item{display:flex;gap:8px;padding:5px 0;font-size:12px;color:var(--text)}
+.risk-stars{display:flex;gap:2px;margin-left:auto;flex-shrink:0;font-size:10px}
+.risk-stars .on{color:var(--accent)}
+.risk-stars .off{color:#ddd5cc}
+
+/* ===== 场景 ===== */
+.scene-grid{display:flex;flex-wrap:wrap;gap:6px}
+.scene-item{padding:5px 12px;background:#f0f4ef;color:var(--primary);border-radius:6px;font-size:11px;font-weight:600}
+
+/* ===== 点评 ===== */
+.review{padding:16px 22px;background:#f3f5f1;border-bottom:1px solid var(--border)}
+.review .r-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px}
+.review .r-body{font-size:12px;line-height:2;color:var(--text)}
+.review .r-body strong{color:var(--primary-dark)}
+.review .r-tag{display:inline-block;margin-top:8px;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 14px;border-radius:4px}
+
+/* ===== 付费墙 ===== */
+.paywall{background:linear-gradient(135deg,#f0f4ef,#fcf9f2);border:1.5px dashed var(--border);border-radius:14px;padding:22px;margin:14px 22px;text-align:center}
+.paywall .p-header{font-size:10px;color:var(--text-light);margin-bottom:2px;letter-spacing:1px}
+.paywall .price-row{display:flex;justify-content:center;gap:10px;margin:8px 0}
+.paywall .price-item{flex:1;padding:10px 8px;background:#fff;border-radius:8px;border:1px solid var(--border)}
+.paywall .price-item .p-price{font-size:20px;font-weight:800;color:var(--primary)}
+.paywall .price-item .p-price span{font-size:11px;font-weight:400;color:var(--text-light)}
+.paywall .price-item .p-label{font-size:10px;color:var(--text-light);margin-top:2px}
+.paywall .price-item.featured{border-color:var(--primary);background:var(--primary-light)}
+.paywall .tier{background:#f8f7f4;border-radius:8px;padding:12px;margin:8px 0;text-align:left}
+.paywall .tier .t-price{font-size:15px;font-weight:700;color:var(--primary-dark)}
+.paywall .tier .t-list{font-size:11px;color:var(--text);margin-top:4px}
+.paywall .tier .t-list li{list-style:none;padding:2px 0;border-bottom:1px dashed #ecece6}
+.paywall .tier .t-list li:last-child{border:none}
+.paywall .tier .t-list li:before{content:"▸ ";color:var(--primary)}
+.paywall .btn{display:block;background:var(--primary);color:#fff;padding:12px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:.2s;margin-top:10px}
+.paywall .btn:hover{background:var(--primary-dark)}
+.paywall .foot{font-size:10px;color:var(--text-light);margin-top:8px}
+
+.paywall-section{background:#faf5ea;border:2px dashed #d4c5a0;border-radius:12px;margin:20px 0;overflow:hidden}
+.paywall-section .pw-header{padding:16px;text-align:center;cursor:pointer}
+.paywall-section .pw-header .lock-icon{font-size:28px;margin-bottom:6px}
+.paywall-section .pw-header h3{font-size:16px;font-weight:700;color:#8B0000;margin-bottom:4px}
+.paywall-section .pw-header .pw-sub{font-size:12px;color:#888;margin-bottom:10px}
+.paywall-section .pw-header .pw-btn{display:inline-block;background:#8B0000;color:#fff;padding:10px 32px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;border:none;cursor:pointer}
+.paywall-section .pw-content{display:none;padding:16px;border-top:1px dashed #d4c5a0}
+.paywall-section .pw-content.show{display:block}
+
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- ██████ 元信息 ██████ -->
+  <div class="meta">
+    <div class="badge">MD_002 · 门店决策卡 · M3</div>
+    <h1>藤椒鸭腿门店决策版</h1>
+    <div class="sub">品类：卤味·藤椒风味·鸭货 / 面积：10-25㎡ / 投资等级：★★☆☆☆</div>
+    <span class="price-tag">¥499/套（门店决策版）</span>
+  </div>
+
+  <!-- ██████ 决策评分引擎 ██████ -->
+  <div class="score-banner">
+    <div class="score-item">
+      <div class="s-label">🏁 启动难度</div>
+      <div class="s-stars">★★<span class="off">☆☆☆</span></div>
+    </div>
+    <div class="score-item">
+      <div class="s-label">💰 回本速度</div>
+      <div class="s-stars">★★★★<span class="off">☆</span></div>
+    </div>
+    <div class="score-item">
+      <div class="s-label">🔄 复购能力</div>
+      <div class="s-stars">★★★★<span class="off">☆</span></div>
+    </div>
+    <div class="score-item">
+      <div class="s-label">🔧 操作复杂度</div>
+      <div class="s-stars">★★★<span class="off">☆☆</span></div>
+    </div>
+    <div class="score-item highlight">
+      <div class="s-label">⭐ 综合评分</div>
+      <div class="s-stars">★★★★</div>
+    </div>
+  </div>
+
+  <!-- ██████ 一句话定位 ██████ -->
+  <div class="tagline">
+    <div class="qt">「藤椒风味鸭腿，门店复购利器」<br><em>百公斤标准配方·腌制+卤煮双工艺·日营业额¥2000-3500</em></div>
+  </div>
+
+  <!-- ██████ 适合阶段 ██████ -->
+  <div class="section">
+    <div class="s-title">📌 适合阶段</div>
+    <div class="stage-grid">
+      <span class="stage-item on">筹备期</span>
+      <span class="stage-item on">新店0-3个月</span>
+      <span class="stage-item on">稳定运营期</span>
+      <span class="stage-item off">连锁扩张期</span>
+    </div>
+  </div>
+
+  <!-- ██████ 适合谁 ██████ -->
+  <div class="section">
+    <div class="s-title">🎯 适合谁 · 一句话判定</div>
+    <div class="fitter-grid">
+      <div class="fitter-item good">
+        <span class="f-label">✅ 推荐——新手/创业入行</span>
+        有卤味基础、想走差异化路线的门店老板。藤椒风味辨识度高，竞品少，毛利60%+
+      </div>
+      <div class="fitter-item">
+        <span class="f-label">🔄 可做——有经验升级</span>
+        现有卤味店增加藤椒鸭腿产品线，复用老汤+卤制设备，边际成本极低
+      </div>
+      <div class="fitter-item">
+        <span class="f-label">❌ 劝退——不推荐</span>
+        纯新手无卤味经验的，不建议一上来就做藤椒鸭腿。腌制+卤煮+藤椒风味把控需要实战积累
+      </div>
+    </div>
+  </div>
+
+  <!-- ██████ 核心经营指标 ██████ -->
+  <div class="section">
+    <div class="s-title">📊 核心经营指标</div>
+    <div class="kpi-grid">
+      <div class="kpi-item"><div class="kpi-val">¥250-400</div><div class="kpi-label">单小时产值(¥/h)</div></div>
+      <div class="kpi-item"><div class="kpi-val">¥1,200-1,800</div><div class="kpi-label">单人日产值(¥/人/天)</div></div>
+      <div class="kpi-item"><div class="kpi-val">60-65%</div><div class="kpi-label">毛利率</div></div>
+      <div class="kpi-item"><div class="kpi-val">90秒/份（切配+装袋）</div><div class="kpi-label">出餐时间</div></div>
+    </div>
+  </div>
+
+  <!-- ██████ 盈亏测算 ██████ -->
+  <div class="section">
+    <div class="s-title">💰 盈亏测算</div>
+    <div class="be-grid">
+      <div class="be-item"><div class="be-val">¥6,000/月</div><div class="be-label">月房租上限</div></div>
+      <div class="be-item"><div class="be-val">40份</div><div class="be-label">日保本单量</div></div>
+      <div class="be-item"><div class="be-val">¥2.8万/月</div><div class="be-label">月保本流水</div></div>
+      <div class="be-item"><div class="be-val">¥1.2-2.0万</div><div class="be-label">预期月净利</div></div>
+    </div>
+  </div>
+
+  <!-- ██████ 门店盈利模型 ██████ -->
+  <div class="section">
+    <div class="s-title">📈 门店盈利模型</div>
+    <div class="cost-box">
+      <div class="row"><span>客单价</span><span class="v">¥28-38</span></div>
+      <div class="row"><span>日订单</span><span class="v">60-100单</span></div>
+      <div class="row"><span>日营业额</span><span class="v">¥2,000-3,500</span></div>
+      <div class="row"><span>月营业额</span><span class="v">¥5.2-8.5万</span></div>
+      <div class="row"><span>毛利率</span><span class="v">62%</span></div>
+      <div class="row"><span>净利率</span><span class="v">24%</span></div>
+      <div class="row"><span>房租占比</span><span class="v">15%</span></div>
+      <div class="row"><span>人工占比</span><span class="v">12%</span></div>
+      <div class="row tot"><span>月净利</span><span class="v">≈¥1.2-2.0万</span></div>
+    </div>
+  </div>
+
+  <!-- ██████ 产品结构设计 ██████ -->
+  <div class="section">
+    <div class="s-title">📋 产品结构设计</div>
+    <div class="prod-str">
+      <div class="p-item"><span class="p-label">引流产品</span>藤椒鸭腿半只 ¥28（尝鲜价/招牌必点）</div>
+      <div class="p-item"><span class="p-label">利润产品</span>藤椒鸭腿整只 ¥58（毛利65%+）</div>
+      <div class="p-item"><span class="p-label">形象产品</span>藤椒鸭腿礼盒 ¥88-128（送礼/节日）</div>
+      <div class="p-item"><span class="p-label">套餐产品</span>藤椒鸭腿+凉菜+饮品 套餐 ¥38-48</div>
+    </div>
+    <div class="story" style="margin-top:6px;font-size:11px;">推荐SKU数量：<strong>8-12个（鸭腿+鸭货+凉菜+饮品）</strong></div>
+  </div>
+
+  <!-- ██████ 出餐SOP ██████ -->
+  <div class="section">
+    <div class="s-title">⚙️ 出餐SOP</div>
+        <div class="sop-step"><span class="num">①</span>解冻→去残毛→清洗（中心温度0-4℃）</div>
+    <div class="sop-step"><span class="num">②</span>滚揉腌制：滚揉50分钟+静腌48-60小时（100kg基准）</div>
+    <div class="sop-step"><span class="num">③</span>焯水去浮沫→入卤汤</div>
+    <div class="sop-step"><span class="num">④</span>大火烧开→转小火卤60分钟→关火焖30-60分钟</div>
+    <div class="sop-step"><span class="num">⑤</span>捞出冷却→刷藤椒油增香</div>
+    <div class="sop-step"><span class="num">⑥</span>切配装盒→淋卤汁→出餐</div>
+    <div class="sop-goal">目标：单份出餐 ≤ 90秒（含切配+装盒）</div>
+  </div>
+
+  <!-- ██████ 品控体系 ██████ -->
+  <div class="section">
+    <div class="s-title">✅ 品控体系</div>
+    <div class="qc-grid">
+      <div class="qc-item"><div class="qc-label">🌡️ 温度</div>卤制中心温度≥85°C</div>
+      <div class="qc-item"><div class="qc-label">⏱️ 时间</div>卤60min+焖30-60min</div>
+      <div class="qc-item"><div class="qc-label">⚖️ 重量</div>每份±10g</div>
+      <div class="qc-item"><div class="qc-label">🧂 关键参数</div>卤水盐度2.5%±0.2%</div>
+      <div class="qc-item"><div class="qc-label">🎨 外观</div>皮色酱红均匀/不破皮</div>
+      <div class="qc-item"><div class="qc-label">👅 口感</div>皮Q肉嫩·藤椒麻香·每日品测</div>
+    </div>
+    <div class="story" style="margin-top:6px;font-size:10px;color:var(--text-light);text-align:center">
+      巡检频率：每日开市前→午间抽检→收市考核
+    </div>
+  </div>
+
+  <!-- ██████ 损耗控制 ██████ -->
+  <div class="section">
+    <div class="s-title">📉 损耗控制</div>
+        <div class="loss-item"><span>原料解冻损耗</span><span class="loss-v">≤ 3%</span></div>
+    <div class="loss-item"><span>滚揉腌制损耗</span><span class="loss-v">≤ 1%</span></div>
+    <div class="loss-item"><span>卤制损耗</span><span class="loss-v">≤ 5%</span></div>
+    <div class="loss-item"><span>成品损耗（当日报废）</span><span class="loss-v">≤ 3%</span></div>
+    <div class="loss-item" style="font-weight:700;color:var(--primary-dark)"><span>总损耗目标</span><span class="loss-v" style="color:var(--primary)">≤ 10%</span></div>
+  </div>
+
+  <!-- ██████ 风险预警 ██████ -->
+  <div class="section">
+    <div class="s-title">⚠️ 风险预警</div>
+        <div class="risk-item"><span>藤椒风味稳定性</span><div class="risk-stars"><span class="on">●</span><span class="on">●</span><span class="on">●</span><span class="off">●</span><span class="off">●</span></div></div>
+    <div class="risk-item"><span>滚揉设备投资（¥1-3万）</span><div class="risk-stars"><span class="on">●</span><span class="on">●</span><span class="on">●</span><span class="off">●</span><span class="off">●</span></div></div>
+    <div class="risk-item"><span>卤制时间承诺（顾客等不了）</span><div class="risk-stars"><span class="on">●</span><span class="on">●</span><span class="off">●</span><span class="off">●</span><span class="off">●</span></div></div>
+    <div class="risk-item"><span>原料价格波动（鸭肉行情）</span><div class="risk-stars"><span class="on">●</span><span class="on">●</span><span class="off">●</span><span class="off">●</span><span class="off">●</span></div></div>
+  </div>
+
+  <!-- ██████ 适合场景 ██████ -->
+  <div class="section">
+    <div class="s-title">📍 适合场景</div>
+    <div class="scene-grid">
+      <span class="scene-item">社区店</span>
+      <span class="scene-item">菜市场</span>
+      <span class="scene-item">商业街</span>
+      <span class="scene-item">外卖专营</span>
+      <span class="scene-item">熟食档口</span>
+    </div>
+  </div>
+
+  <!-- ██████ FoodIntelAI 点评 ██████ -->
+  <div class="review">
+    <div class="r-title">🎙️ FoodIntelAI 点评</div>
+    <div class="r-body">
+      <strong>适合谁：</strong>有卤味基础、想做差异化的门店老板。藤椒风味辨识度高，竞品少<br>
+      <strong>不适合谁：</strong>纯新手入行、没有卤制设备的。藤椒风味稳定性需要经验<br>
+      <strong>最大机会：</strong>藤椒鸭腿在卤味赛道里竞品极少，差异化强。百公斤配方标准化后，员工可独立操作<br>
+      <strong>最大风险：</strong>滚揉设备投入1-3万，藤椒风味稳定性依赖于藤椒油品质和腌制工艺的把控
+    </div>
+    <div class="r-tag">推荐等级：★★★★☆</div>
+  </div>
+
+  <!-- ██████ 付费区 ██████ -->
+  <div class="paywall">
+    <div class="p-header">— 选择适合你的版本 —</div>
+    <div class="price-row">
+      <div class="price-item">
+        <div class="p-price">¥199</div>
+        <div class="p-label">单品配方卡</div>
+      </div>
+      <div class="price-item featured">
+        <div class="p-price">¥499</div>
+        <div class="p-label">⭐ 门店运营版</div>
+      </div>
+      <div class="price-item">
+        <div class="p-price">¥999</div>
+        <div class="p-label">完整门店系统</div>
+      </div>
+    </div>
+    <div class="tier">
+      <div class="t-price">¥199 · 单品配方卡</div>
+      <div class="t-list">
+        <li>藤椒鸭腿腌制配方（精确克数+辅料清单）</li>
+        <li>卤汤调配标准+操作SOP</li>
+      </div>
+    </div>
+    <div class="tier" style="border:1.5px solid var(--primary);background:var(--primary-light)">
+      <div class="t-price">¥499 · 门店决策版</div>
+      <div class="t-list">
+        <li>以上全部</li>
+        <li>100kg基准配方（滚揉+腌制+卤制全链路）</li>
+        <li>岗位SOP（2人/3人版）+品控检查表</li>
+        <li>员工培训体系（Day 1-15考核表）</li>
+        <li>损耗控制表+日清流程</li>
+      </div>
+    </div>
+    <div class="tier">
+      <div class="t-price">¥999 · 完整门店系统</div>
+      <div class="t-list">
+        <li>以上全部</li>
+        <li>盈利模型+三档回本测算</li>
+        <li>选址标准+设备清单+采购渠道</li>
+        <li>菜单规划+外卖运营模型+定价策略</li>
+        <li>管理制度+排班表模板+风险预案</li>
+      </div>
+    </div>
+    <a class="btn" href="https://foodintelai.com">加微信 canglin1985 获取</a>
+    <div class="foot">摆摊卡老客升级享优惠价</div>
+  </div>
+
+</div>
+
+<div class="paywall-section">
+  <div class="pw-header" onclick="this.nextElementSibling.classList.toggle('show')">
+    <div class="lock-icon">🔒</div>
+    <h3>藤椒鸭腿 · 完整工艺配方</h3>
+    <div class="pw-sub">已验证门店铺货配方 · 沧林亲研</div>
+    <button class="pw-btn" onclick="event.stopPropagation();this.parentElement.nextElementSibling.classList.toggle('show');this.textContent=this.parentElement.nextElementSibling.classList.contains('show')?'收起配方':'🔓 解锁完整工艺配方'">🔓 解锁完整工艺配方</button>
+  </div>
+  <div class="pw-content">
+    <p style="font-size:13px;color:#555;line-height:1.8">藤椒鸭腿完整门店铺货配方，包含精确克数配比、工艺参数、设备清单、成本模型。沧林亲研已验证方案。</p>
+  </div>
+</div>
+</body>
+</html>
