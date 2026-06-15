@@ -1112,6 +1112,26 @@ body{
   flex-shrink:0;
 }
 
+/* ===== 分享面板 ===== */
+.nav-actions{display:flex;align-items:center;gap:4px}
+.share-btn,.bookmark-btn{border:none;background:none;font-size:17px;cursor:pointer;padding:4px 6px;border-radius:6px;transition:.15s;line-height:1;color:var(--muted)}
+.share-btn:hover,.bookmark-btn:hover{background:var(--tag-bg);color:var(--text)}
+.share-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99;background:rgba(0,0,0,.12);opacity:0;pointer-events:none;transition:.2s}
+.share-overlay.show{opacity:1;pointer-events:auto}
+.share-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.92);z-index:100;background:var(--card);border-radius:16px;padding:20px;width:280px;box-shadow:0 8px 40px rgba(0,0,0,.12);opacity:0;pointer-events:none;transition:.2s}
+.share-panel.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.share-panel h3{font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;text-align:center}
+.share-options{display:flex;flex-direction:column;gap:8px}
+.share-option{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:none;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text);transition:.15s;width:100%;text-align:left}
+.share-option:hover{background:var(--tag-bg)}
+.share-option .ico{font-size:20px;width:28px;text-align:center}
+.share-option .label{font-weight:500}
+.share-option .desc{font-size:11px;color:var(--light);margin-left:auto}
+.share-close{margin-top:12px;width:100%;padding:8px;border:none;border-radius:10px;background:var(--tag-bg);color:var(--muted);font-size:13px;cursor:pointer;transition:.15s}
+.share-close:hover{background:var(--border);color:var(--text)}
+.share-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#333;color:#fff;font-size:13px;padding:8px 16px;border-radius:8px;z-index:200;opacity:0;pointer-events:none;transition:.3s}
+.share-toast.show{opacity:1}
+
 </style>
 </head>
 <body>
@@ -1123,7 +1143,10 @@ body{
       <span style="font-weight:400;font-size:18px;color:#6B7280">AI</span>
       <span style="font-size:13px;color:var(--muted);font-weight:600">食品决策库</span>
     </a>
-    <button onclick="bookmark()" style="border:none;background:none;font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:.15s;line-height:1" title="收藏本页">⭐</button>
+    <div class="nav-actions">
+      <button onclick="toggleShare()" class="share-btn" title="分享本页">📤</button>
+      <button onclick="bookmark()" class="bookmark-btn" title="收藏本页">⭐</button>
+    </div>
   </div>
 </div>
 
@@ -2125,5 +2148,68 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 
 <script src="card-catalog.js"></script>
+<!-- 分享面板 -->
+<div class="share-overlay" id="shareOverlay" onclick="closeShare()"></div>
+<div class="share-panel" id="sharePanel">
+  <h3>📤 分享本页</h3>
+  <div class="share-options">
+    <button class="share-option" onclick="copyLink()">
+      <span class="ico">🔗</span>
+      <span class="label">复制链接</span>
+      <span class="desc">直接复制</span>
+    </button>
+    <button class="share-option" onclick="showQR()">
+      <span class="ico">📱</span>
+      <span class="label">生成二维码</span>
+      <span class="desc">扫码打开</span>
+    </button>
+    <button class="share-option" onclick="shareWechat()">
+      <span class="ico">💬</span>
+      <span class="label">微信分享</span>
+      <span class="desc">截图发送</span>
+    </button>
+  </div>
+  <button class="share-close" onclick="closeShare()">取消</button>
+</div>
+<div class="share-toast" id="shareToast"></div>
+<div id="qrcodeContainer" style="display:none"></div>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+function toggleShare(){
+  const overlay=document.getElementById('shareOverlay');
+  const panel=document.getElementById('sharePanel');
+  overlay.classList.toggle('show');
+  panel.classList.toggle('show');
+}
+function closeShare(){
+  document.getElementById('shareOverlay').classList.remove('show');
+  document.getElementById('sharePanel').classList.remove('show');
+}
+function showToast(msg){
+  const t=document.getElementById('shareToast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+function copyLink(){
+  const url=window.location.href;
+  if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>{showToast('✅ 链接已复制');closeShare();})}
+  else{const i=document.createElement('input');i.value=url;document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);showToast('✅ 链接已复制');closeShare();}
+}
+function showQR(){
+  const c=document.getElementById('qrcodeContainer');
+  if(c.querySelector('canvas')){closeShare();return}
+  c.style.display='block';
+  try{
+    new QRCode(c,{text:window.location.href,width:160,height:160});
+    showToast('📱 二维码已生成');
+  }catch(e){
+    showToast('⚠️ 二维码生成失败');
+  }
+}
+function shareWechat(){
+  showToast('💬 截图发送给微信好友');
+}
+</script>
 </body>
 </html>
