@@ -559,64 +559,85 @@ buildKnowledge();
 <!-- 分享面板 -->
 <div class="share-overlay" id="shareOverlay" onclick="closeShare()"></div>
 <div class="share-panel" id="sharePanel">
-  <h3>📤 分享本页</h3>
-  <div class="share-options">
-    <button class="share-option" onclick="copyLink()">
-      <span class="ico">🔗</span>
-      <span class="label">复制链接</span>
-      <span class="desc">直接复制</span>
-    </button>
-    <button class="share-option" onclick="showQR()">
-      <span class="ico">📱</span>
-      <span class="label">生成二维码</span>
-      <span class="desc">扫码打开</span>
-    </button>
-    <button class="share-option" onclick="shareWechat()">
-      <span class="ico">💬</span>
-      <span class="label">微信分享</span>
-      <span class="desc">截图发送</span>
-    </button>
+  <div id="shareMenu">
+    <h3>📤 分享本页</h3>
+    <div class="share-options">
+      <a class="share-option" onclick="copyLink()">
+        <span class="ico">🔗</span>
+        <span class="label">复制链接</span>
+        <span class="desc">直接复制</span>
+      </a>
+      <a class="share-option" onclick="showQRCode()">
+        <span class="ico">📱</span>
+        <span class="label">二维码</span>
+        <span class="desc">扫码打开</span>
+      </a>
+      <a class="share-option" onclick="shareToWechat()">
+        <span class="ico">💬</span>
+        <span class="label">微信分享</span>
+        <span class="desc">截图发送</span>
+      </a>
+    </div>
+    <button class="share-close" onclick="closeShare()">取消</button>
   </div>
-  <button class="share-close" onclick="closeShare()">取消</button>
+  <div id="shareQRView" style="display:none;text-align:center">
+    <h3 id="qrTitle">📱 扫一扫打开</h3>
+    <div id="qrcode" style="width:180px;height:180px;margin:12px auto;background:#fff;padding:12px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--light)">生成中...</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px" id="qrHint">使用微信/浏览器扫码打开</div>
+    <button class="share-close" onclick="backToMenu()" style="margin-bottom:6px">← 返回</button>
+    <button class="share-close" onclick="closeShare()">关闭</button>
+  </div>
 </div>
 <div class="share-toast" id="shareToast"></div>
-<div id="qrcodeContainer" style="display:none"></div>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
+var QR_SHOWN = false;
 function toggleShare(){
-  const overlay=document.getElementById('shareOverlay');
-  const panel=document.getElementById('sharePanel');
-  overlay.classList.toggle('show');
-  panel.classList.toggle('show');
+  document.getElementById('shareOverlay').classList.toggle('show');
+  document.getElementById('sharePanel').classList.toggle('show');
 }
 function closeShare(){
   document.getElementById('shareOverlay').classList.remove('show');
   document.getElementById('sharePanel').classList.remove('show');
+  backToMenu();
+}
+function backToMenu(){
+  document.getElementById('shareMenu').style.display='block';
+  document.getElementById('shareQRView').style.display='none';
 }
 function showToast(msg){
-  const t=document.getElementById('shareToast');
+  var t=document.getElementById('shareToast');
   t.textContent=msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2000);
+  setTimeout(function(){t.classList.remove('show');},2000);
 }
 function copyLink(){
-  const url=window.location.href;
-  if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>{showToast('✅ 链接已复制');closeShare();})}
-  else{const i=document.createElement('input');i.value=url;document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);showToast('✅ 链接已复制');closeShare();}
+  var url=window.location.href;
+  if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){showToast('✅ 链接已复制');closeShare();});}
+  else{var i=document.createElement('input');i.value=url;document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);showToast('✅ 链接已复制');closeShare();}
 }
-function showQR(){
-  const c=document.getElementById('qrcodeContainer');
-  if(c.querySelector('canvas')){closeShare();return}
-  c.style.display='block';
+function showQRCode(){
+  document.getElementById('shareMenu').style.display='none';
+  document.getElementById('shareQRView').style.display='block';
+  document.getElementById('qrTitle').textContent='📱 扫一扫打开';
+  document.getElementById('qrHint').textContent='使用微信/浏览器扫码打开';
+  generateQR();
+}
+function shareToWechat(){
+  document.getElementById('shareMenu').style.display='none';
+  document.getElementById('shareQRView').style.display='block';
+  document.getElementById('qrTitle').textContent='💬 截图分享到微信';
+  document.getElementById('qrHint').textContent='保存二维码图片，发送给微信好友或群聊';
+  generateQR();
+}
+function generateQR(){
+  if(QR_SHOWN) return;
+  var c=document.getElementById('qrcode');
+  c.innerHTML='';
   try{
     new QRCode(c,{text:window.location.href,width:160,height:160});
-    showToast('📱 二维码已生成');
-  }catch(e){
-    showToast('⚠️ 二维码生成失败');
-  }
-}
-function shareWechat(){
-  showToast('💬 截图发送给微信好友');
+    QR_SHOWN=true;
+  }catch(e){c.innerHTML='⚠️ 生成失败，请手动复制链接';}
 }
 </script>
 </body>
