@@ -1,165 +1,213 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>体系卡 · 产品决策库</title>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body,html{
-            height:100%;
-            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-            background:radial-gradient(circle at center,#FDFDFD 0%,#F5F6F8 100%);
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            overflow:auto;
-        }
-        .brand-container{
-            flex:1;
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-            align-items:center;
-            padding:40px 20px 20px;
-            width:100%;
-            max-width:480px;
-        }
-        .logo-box{
-            width:100px;
-            height:100px;
-            background:#8A1C22;
-            border-radius:24px;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            box-shadow:0 12px 32px rgba(138,28,34,0.15);
-            margin-bottom:18px;
-            font-size:44px;
-            transition:transform .5s ease;
-        }
-        .brand-title{
-            font-size:20px;
-            font-weight:700;
-            color:#1A1A1A;
-            letter-spacing:2px;
-            margin-bottom:2px;
-        }
-        .brand-subtitle{
-            font-size:12px;
-            color:#8A1C22;
-            letter-spacing:4px;
-            font-weight:500;
-        }
-        .card-count{
-            font-size:13px;
-            color:#8A1C22;
-            letter-spacing:1px;
-            margin-top:10px;
-            font-weight:600;
-        }
-        .back-btn{
-            display:inline-block;
-            margin-top:16px;
-            padding:8px 20px;
-            background:rgba(138,28,34,.08);
-            color:#8A1C22;
-            border-radius:8px;
-            font-size:12px;
-            font-weight:600;
-            text-decoration:none;
-            transition:.2s;
-        }
-        .back-btn:hover{background:rgba(138,28,34,.15)}
-        .sub-list{
-            width:100%;
-            max-width:480px;
-            padding:0 20px 30px;
-            display:flex;
-            flex-direction:column;
-            gap:6px;
-        }
-        .sub-list-title{
-            font-size:12px;
-            color:#999;
-            letter-spacing:2px;
-            font-weight:600;
-            margin-bottom:4px;
-            padding-left:4px;
-        }
-        .sub-item{
-            display:flex;
-            align-items:center;
-            gap:8px;
-            padding:10px 14px;
-            background:#fff;
-            border-radius:10px;
-            text-decoration:none;
-            color:#1A1A1A;
-            font-size:13px;
-            font-weight:500;
-            border:1px solid #E8E8E8;
-            transition:.15s;
-        }
-        .sub-item:hover{
-            transform:translateY(-1px);
-            box-shadow:0 3px 12px rgba(0,0,0,.06);
-            border-color:#8A1C22;
-        }
-        .sub-item .tag{
-            font-size:8px;
-            font-weight:700;
-            color:#fff;
-            padding:2px 6px;
-            border-radius:3px;
-            flex-shrink:0;
-        }
-        .sub-item .name{flex:1}
-        .sub-item .arrow{color:#ccc;font-size:14px}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>体系卡 · 食品决策库</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f5f0e8;
+  --card:#fcfaf7;
+  --text:#1a1a1a;
+  --muted:#7a6e60;
+  --light:#b5a898;
+  --accent:#C0392B;
+  --accent-light:#E8652D;
+  --border:#d8ccbc;
+  --tag-bg:#e8dcc8;
+  --radius-xl:20px;
+  --radius-md:12px;
+  --radius-sm:8px;
+}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.page{max-width:600px;margin:0 auto;padding:0 16px 40px}
+
+/* ===== 体系头部 ===== */
+.sys-header{
+  background:var(--card);
+  border-radius:var(--radius-xl);
+  padding:28px 24px 22px;
+  margin:20px 0 14px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+  text-align:center;
+  position:relative;
+}
+.sys-emoji{
+  font-size:42px;
+  display:block;
+  margin-bottom:6px;
+}
+.sys-name{
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:2px;
+}
+.sys-count{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:2px;
+  letter-spacing:1px;
+}
+.sys-back{
+  position:absolute;
+  left:16px;
+  top:16px;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:var(--muted);
+  font-size:18px;
+  transition:.2s;
+}
+.sys-back:hover{background:var(--tag-bg);color:var(--accent)}
+
+/* ===== 卡片列表 ===== */
+.card-list{display:grid;gap:8px}
+
+.card-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px;
+  background:var(--card);
+  border-radius:var(--radius-md);
+  text-decoration:none;
+  color:var(--text);
+  border:1px solid var(--border);
+  transition:.2s;
+}
+.card-item:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 16px rgba(0,0,0,.06);
+  border-color:var(--accent-light);
+}
+.card-item .ci-tag{
+  font-size:10px;
+  font-weight:700;
+  color:#fff;
+  padding:2px 8px;
+  border-radius:4px;
+  flex-shrink:0;
+  line-height:1.5;
+}
+.card-item .ci-name{
+  flex:1;
+  font-size:14px;
+  font-weight:600;
+  line-height:1.3;
+}
+.card-item .ci-arrow{
+  color:var(--light);
+  font-size:18px;
+  flex-shrink:0;
+  transition:.2s;
+}
+.card-item:hover .ci-arrow{
+  color:var(--accent);
+  transform:translateX(3px);
+}
+
+/* ===== 加载中 ===== */
+.loading{
+  text-align:center;
+  padding:60px 0;
+  color:var(--muted);
+  font-size:14px;
+}
+.loading .spinner{
+  display:inline-block;
+  width:28px;height:28px;
+  border:3px solid var(--tag-bg);
+  border-top-color:var(--accent);
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+  margin-bottom:8px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== 空状态 ===== */
+.empty-state{
+  text-align:center;
+  padding:40px 0;
+  color:var(--muted);
+  font-size:14px;
+}
+</style>
 </head>
 <body>
-    <div class="brand-container" id="brandArea">
-        <div class="logo-box" id="logoBox">🍗</div>
-        <div class="brand-title" id="sysTitle">烧腊体系</div>
-        <div class="brand-subtitle">产品决策库</div>
-        <div class="card-count" id="cardCount">6张体系卡</div>
-        <a class="back-btn" href="store.html">← 返回全部体系</a>
-    </div>
-    <div class="sub-list-title">📋 全部子卡</div>
-    <div class="sub-list" id="subList"></div>
-    <script src="card-catalog.js"></script>
-    <script>
-    (function(){
-        var params = new URLSearchParams(window.location.search);
-        var id = params.get('id') || 'SL';
-        if(typeof STORE_DATA === 'undefined'){
-            document.getElementById('sysTitle').textContent = '体系加载中';
-            return;
-        }
-        var found = null;
-        STORE_DATA.forEach(function(d){if(d.p === id) found=d;});
-        if(!found){
-            document.getElementById('sysTitle').textContent = '未找到该体系';
-            return;
-        }
-        document.getElementById('logoBox').textContent = found.e;
-        document.getElementById('sysTitle').textContent = found.n;
-        document.getElementById('cardCount').textContent = found.c.length + '张体系卡';
+<div class="page">
+  <div class="sys-header" id="sysHeader">
+    <a class="sys-back" href="store.html" aria-label="返回">←</a>
+    <span class="sys-emoji" id="sysEmoji">🍗</span>
+    <div class="sys-name" id="sysName">加载中...</div>
+    <div class="sys-count" id="sysCount">—</div>
+  </div>
+  <div class="card-list" id="cardList"></div>
+</div>
 
-        var list = document.getElementById('subList');
-        var html = '';
-        found.c.forEach(function(c){
-            var tag = '';
-            if(c.n.indexOf('（母）')>-1||c.n.indexOf('母卡')>-1) tag = '母';
-            else if(c.n.indexOf('（子）')>-1||c.n.indexOf('(子)')>-1) tag = '子';
-            var tagColor = tag==='母'?'#C0392B':'#E8652D';
-            var tagHtml = tag ? '<span class="tag" style="background:'+tagColor+'">'+tag+'</span>' : '';
-            var name = c.n.replace(/（[^）]*）/g,'').replace(/\([^)]*\)/g,'').replace(/^[A-Z0-9_]+ /,'');
-            html += '<a class="sub-item" href="'+c.f+'">'+tagHtml+'<span class="name">'+name+'</span><span class="arrow">›</span></a>';
-        });
-        list.innerHTML = html;
-    })();
-    </script>
+<script src="card-catalog.js"></script>
+<script>
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('id') || 'SL';
+
+  var emojiEl = document.getElementById('sysEmoji');
+  var nameEl = document.getElementById('sysName');
+  var countEl = document.getElementById('sysCount');
+  var listEl = document.getElementById('cardList');
+
+  if(typeof STORE_DATA === 'undefined'){
+    listEl.innerHTML = '<div class="loading"><div class="spinner"></div>体系加载中</div>';
+    return;
+  }
+
+  var found = null;
+  STORE_DATA.forEach(function(d){if(d.p === id) found=d;});
+  if(!found){
+    nameEl.textContent = '未找到该体系';
+    countEl.textContent = '—';
+    listEl.innerHTML = '<div class="empty-state">😕 暂未收录该体系卡片</div>';
+    return;
+  }
+
+  emojiEl.textContent = found.e;
+  nameEl.textContent = found.n;
+  countEl.textContent = found.c.length + '张卡片';
+
+  var html = '';
+  found.c.forEach(function(c, idx){
+    var tag = '';
+    if(c.n.indexOf('（母）')>-1 || c.n.indexOf('母卡')>-1) tag = '母';
+    else if(c.n.indexOf('（子）')>-1 || c.n.indexOf('(子)')>-1) tag = '子';
+    var tagColor = tag==='母' ? '#C0392B' : '#E8652D';
+
+    // 清洗显示名
+    var name = c.n
+      .replace(/^[A-Z0-9_]+ /,'')  // 去掉编号前缀
+      .replace(/（[^）]*）/g,'')    // 去掉中文括号内容
+      .replace(/\([^)]*\)/g,'');    // 去掉英文括号内容
+
+    var tagHtml = tag ? '<span class="ci-tag" style="background:'+tagColor+'">'+tag+'</span>' : '';
+    html += '<a class="card-item" href="'+c.f+'">'
+      + tagHtml
+      + '<span class="ci-name">'+name+'</span>'
+      + '<span class="ci-arrow">›</span>'
+      + '</a>';
+  });
+  listEl.innerHTML = html;
+})();
+</script>
 </body>
 </html>
