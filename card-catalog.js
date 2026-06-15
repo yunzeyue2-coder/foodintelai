@@ -76,31 +76,24 @@ const STALL_DATA = [
 
 // ===== 手工精选热品（排除物料/调味料/裹粉，每天新上产品可手工加入） =====
 // 格式：{name:"显示名",shortName:"简称(可选)",file:"路径",emoji:"图标",cat:"品类"}
-// 22个体系创业母卡·英雄区热品展示
-// 含创业母卡(M01)和体系代表卡
+// 添加新品时push到数组末尾，旧的定期轮换
+// 排除类目：GF裹粉、FL粉料、JL_酱料、PC_拌菜、KF_咖啡
 var HOT_PICKS = [
+  {name:"五指毛桃椰乳（母）TS_065",shortName:"五指毛桃椰乳",file:"catalog/其他/五指毛桃椰乳（母）TS_065.html",emoji:"🌿",cat:"甜品饮品"},
+  {name:"冰菠萝（母）TS_005",shortName:"冰菠萝",file:"catalog/其他/冰菠萝（母）TS_005.html",emoji:"🍍",cat:"甜品饮品"},
+  {name:"厚椰冻冻（母）TS_083",shortName:"厚椰冻冻",file:"catalog/其他/厚椰冻冻（母）TS_083.html",emoji:"🥥",cat:"甜品饮品"},
+  {name:"腊汁肉夹馍XC_120",shortName:"腊汁肉夹馍",file:"catalog/其他/腊汁肉夹馍XC_120.html",emoji:"🥙",cat:"小吃系列"},
   {name:"BBQ_M01_中式烧烤创业母卡",shortName:"中式烧烤",file:"catalog/BBQ/BBQ_M01_中式烧烤创业母卡.html",emoji:"🔥",cat:"中式烧烤"},
-  {name:"SL_M01_烧腊创业母卡",shortName:"烧腊体系",file:"catalog/SL/SL_M01_烧腊创业母卡.html",emoji:"🍗",cat:"烧腊体系"},
-  {name:"CJ_M01_炒鸡创业母卡",shortName:"炒鸡体系",file:"catalog/CJ/CJ_M01_炒鸡创业母卡.html",emoji:"🍳",cat:"炒鸡体系"},
-  {name:"GS_M01_贵州酸汤创业母卡",shortName:"贵州酸汤",file:"catalog/GS/GS_M01_贵州酸汤创业母卡.html",emoji:"🥘",cat:"贵州酸汤"},
-  {name:"HG_M01_火锅创业母卡",shortName:"火锅体系",file:"catalog/HG/HG_M01_火锅创业母卡.html",emoji:"🫕",cat:"火锅体系"},
-  {name:"HM_M01_河南烩面创业母卡",shortName:"河南烩面",file:"catalog/HM/HM_M01_河南烩面创业母卡.html",emoji:"🍜",cat:"河南烩面"},
-  {name:"KY_M01_烤鱼创业母卡",shortName:"烤鱼体系",file:"catalog/KY/KY_M01_烤鱼创业母卡.html",emoji:"🐟",cat:"烤鱼体系"},
   {name:"MLT_M01_麻辣烫冒菜创业母卡",shortName:"麻辣烫冒菜",file:"catalog/MLT/MLT_M01_麻辣烫冒菜创业母卡.html",emoji:"🥘",cat:"麻辣烫冒菜"},
   {name:"XLX_M01_小龙虾创业母卡",shortName:"小龙虾",file:"catalog/XLX/XLX_M01_小龙虾创业母卡.html",emoji:"🦞",cat:"小龙虾"},
-  {name:"YN_M01_云南米线创业母卡",shortName:"云南米线",file:"catalog/YN/YN_M01_云南米线创业母卡.html",emoji:"🍜",cat:"云南米线"},
-  {name:"ZHA_M01_炸串创业母卡",shortName:"中式炸串",file:"catalog/ZHA/ZHA_M01_炸串创业母卡.html",emoji:"🍢",cat:"中式炸串"},
-  {name:"KR_001_秘制大块肉",shortName:"韩式烤肉",file:"catalog/KR/KR_001_秘制大块肉.html",emoji:"🥩",cat:"韩式烤肉"},
-  {name:"J01 五香整鸡（母）",shortName:"五香整鸡",file:"catalog/J/J01 五香整鸡（母）.html",emoji:"🐔",cat:"鸡系列"},
-  {name:"Z01 五香猪头肉（母）",shortName:"五香猪头肉",file:"catalog/Z/Z01 五香猪头肉（母）.html",emoji:"🐷",cat:"猪系列"},
-  {name:"B01 五香牛腱",shortName:"五香牛腱",file:"catalog/B/B01 五香牛腱.html",emoji:"🐮",cat:"牛系列"},
-  {name:"E01 五香鹅翅",shortName:"五香鹅翅",file:"catalog/E/E01 五香鹅翅.html",emoji:"🦆",cat:"鹅系列"},
-  {name:"LW001 卤鸭脖（母）LW_001",shortName:"卤鸭脖",file:"catalog/LW/LW001 卤鸭脖（母）LW_001.html",emoji:"🫘",cat:"卤味体系"},
-  {name:"VC001 麻辣鸭脖",shortName:"麻辣鸭脖",file:"catalog/VC/VC001 麻辣鸭脖.html",emoji:"🌶️",cat:"卤味·变体"},
-  {name:"SC01 甜辣藕片（素菜·免费）",shortName:"甜辣藕片",file:"catalog/SC/SC01 甜辣藕片（素菜·免费）.html",emoji:"🥗",cat:"素菜系列"},
-  {name:"JL_020_韩式烤肉蘸酱",shortName:"韩式烤肉蘸酱",file:"catalog/JL/JL_020_韩式烤肉蘸酱.html",emoji:"🧂",cat:"韩式酱料"},
-  {name:"KF_001_石锅拌饭",shortName:"石锅拌饭",file:"catalog/KF/KF_001_石锅拌饭.html",emoji:"🍲",cat:"韩式汤/主食"},
-  {name:"PC_K01_韩式辣白菜系列",shortName:"韩式辣白菜",file:"catalog/PC/PC_K01_韩式辣白菜系列.html",emoji:"🥬",cat:"韩式拌菜"},
+  {name:"经典手打柠檬茶（母）LM_001",shortName:"经典手打柠檬茶",file:"catalog/其他/经典手打柠檬茶（母）LM_001.html",emoji:"🍋",cat:"柠檬系列"},
+  {name:"原味黄金炸鸡（母）HZ_001",shortName:"原味黄金炸鸡",file:"catalog/其他/原味黄金炸鸡（母）HZ_001.html",emoji:"🐔",cat:"韩式炸鸡"},
+  {name:"傣舂鸡脚（母）DC_001",shortName:"傣舂鸡脚",file:"catalog/其他/傣舂鸡脚（母）DC_001.html",emoji:"🐔",cat:"傣舂凉菜"},
+  {name:"小笼包（母）MP_003",shortName:"小笼包",file:"catalog/其他/小笼包（母）MP_003.html",emoji:"🥟",cat:"面点包子"},
+  {name:"盐烧鸡腿串（母）JP_001",shortName:"盐烧鸡腿串",file:"catalog/其他/盐烧鸡腿串（母）JP_001.html",emoji:"🍢",cat:"炸物串烧"},
+  {name:"臭豆腐（母）XC_100",shortName:"臭豆腐",file:"catalog/其他/臭豆腐（母）XC_100.html",emoji:"🧀",cat:"小吃系列"},
+  {name:"河南胡辣汤（母）MP_036",shortName:"河南胡辣汤",file:"catalog/其他/河南胡辣汤（母）MP_036.html",emoji:"🥘",cat:"面点包子"},
+  {name:"杏仁豆腐（母）TS_081",shortName:"杏仁豆腐",file:"catalog/其他/杏仁豆腐（母）TS_081.html",emoji:"🍑",cat:"甜品饮品"},
 ];
 
 // ===== 渲染函数 =====
