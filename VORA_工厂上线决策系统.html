@@ -30,6 +30,13 @@ body{background:#0d0d0d;font-family:"PingFang SC","Microsoft YaHei","SF Pro",-ap
 .eq-item{padding:12px;border-radius:6px;text-align:center;cursor:pointer;font-size:13px;border:1px solid #222;background:#1a1a1a;color:#888;transition:.2s}
 .eq-item.selected{border-color:#e8a060;background:#1a150a;color:#e8a060}
 .eq-item .ei{font-size:22px;display:block;margin-bottom:4px}
+.eq-sections{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.eq-group{}
+.eq-group-title{font-size:9px;color:#444;letter-spacing:1px;margin-bottom:4px;padding-left:2px}
+.eq-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.eq-item.disabled{opacity:0.25;cursor:not-allowed;border-color:#151515;background:#0d0d0d}
+@media(max-width:700px){.eq-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:480px){.eq-row{grid-template-columns:repeat(2,1fr)}}
 .analyze-btn{width:100%;background:#e8a060;border:none;border-radius:10px;padding:18px;color:#0d0d0d;font-size:17px;font-weight:700;cursor:pointer;margin:20px 0 24px;transition:.2s}
 .analyze-btn:hover{background:#d4904f}
 .analyze-btn:disabled{opacity:0.3;cursor:not-allowed}
@@ -115,7 +122,7 @@ body{background:#0d0d0d;font-family:"PingFang SC","Microsoft YaHei","SF Pro",-ap
 
 <div class="fr3">
 <div class="fg"><label>产品名称</label><input type="text" id="prodName" value="" placeholder="例：卤水肥肠、酱牛肉、烧鸡…"></div>
-<div class="fg"><label>产线类型</label><select id="lineType"><option value="酱卤">酱卤产线</option><option value="调理">调理产线</option><option value="速冻">速冻产线</option><option value="新建">无产线·新建</option></select></div>
+<div class="fg"><label>产线类型</label><select id="lineType" onchange="onLineTypeChange()"><option value="酱卤">酱卤产线</option><option value="调理">调理产线</option><option value="速冻">速冻产线</option><option value="油炸">油炸产线</option><option value="面点">面点产线</option><option value="新建">无产线·新建</option></select></div>
 <div class="fg"><label>目标月产量</label><select id="monthly"><option selected value="1~5吨">1~5吨</option><option value="<1吨">&lt;1吨</option><option value="5~20吨">5~20吨</option><option value=">20吨">&gt;20吨</option></select></div>
 </div>
 <div class="fr3">
@@ -123,16 +130,11 @@ body{background:#0d0d0d;font-family:"PingFang SC","Microsoft YaHei","SF Pro",-ap
 <div class="fg"><label>车间面积</label><select id="area"><option value="<300">&lt;300㎡</option><option value="300~800" selected>300~800㎡</option><option value="800~2000">800~2000㎡</option><option value=">2000">&gt;2000㎡</option></select></div>
 <div class="fg"><div style="visibility:hidden">x</div></div>
 </div>
-<div style="font-size:9px;color:#555;letter-spacing:1px;margin-bottom:6px">现有设备</div>
-<div class="eq-grid" id="eqGrid">
-<div class="eq-item selected" data-eq="解冻槽"><span class="ei">🧊</span>解冻槽</div>
-<div class="eq-item selected" data-eq="夹层锅"><span class="ei">🍲</span>夹层锅</div>
-<div class="eq-item" data-eq="滚揉机"><span class="ei">🔄</span>滚揉机</div>
-<div class="eq-item selected" data-eq="清洗机"><span class="ei">💧</span>清洗机</div>
-<div class="eq-item selected" data-eq="包装机"><span class="ei">📦</span>包装机</div>
-<div class="eq-item selected" data-eq="冷库"><span class="ei">❄️</span>冷库</div>
-<div class="eq-item" data-eq="速冻线"><span class="ei">💨</span>速冻线</div>
-<div class="eq-item" data-eq="杀菌釜"><span class="ei">🔥</span>杀菌釜</div>
+<div style="font-size:9px;color:#555;letter-spacing:1px;margin-bottom:6px">产线设备配置 <span style="color:#333;font-size:8px;letter-spacing:0">（选产线自动配置 · 灰色为不可用设备）</span></div>
+<div class="eq-sections" id="eqSections"></div>
+<div style="font-size:8px;color:#333;letter-spacing:0;margin-bottom:4px;padding:6px 8px;background:#1a1a1a;border-radius:4px">
+  <span style="color:#e8a060">■</span> 通用设备（始终可加/减）
+  <span style="color:#555;margin-left:12px">解冻槽 · 包装线 · 灭菌线 · 速冻线 · 车间/冷库 · 熟化设备</span>
 </div>
 <button class="analyze-btn" id="analyzeBtn" onclick="startAnalysis()">基于工厂条件 · 生成定制分析</button>
 
@@ -616,11 +618,87 @@ function matchArchetype(name) {
   return 'feichang'; // default to 肥肠
 }
 
-// ===== 设备交互 =====
-document.querySelectorAll('.eq-item').forEach(el => {
-  el.addEventListener('click', function() {
-    this.classList.toggle('selected');
+// ===== 设备分类数据 =====
+const EQ_DATA = [
+  {g:'前处理', items:[
+    {id:'thaw', n:'解冻槽', e:'🧊', lines:['酱卤','调理','速冻','油炸','面点'], uni:true},
+    {id:'wash', n:'清洗机', e:'💧', lines:['酱卤','调理','速冻','油炸']},
+    {id:'cutter', n:'斩拌机', e:'🔪', lines:['调理']},
+    {id:'grinder', n:'绞肉机', e:'⚙️', lines:['调理']},
+    {id:'dicerslicer', n:'切丁切片机', e:'📏', lines:['油炸','调理']},
+  ]},
+  {g:'腌制·调味', items:[
+    {id:'tumbler', n:'滚揉机', e:'🔄', lines:['酱卤','调理']},
+    {id:'curing', n:'熟化设备/腌制罐', e:'🧂', lines:['酱卤','调理'], uni:true},
+    {id:'injector', n:'盐水注射机', e:'💉', lines:['调理']},
+  ]},
+  {g:'热加工', items:[
+    {id:'kettle', n:'夹层锅/卤煮锅', e:'🍲', lines:['酱卤','调理']},
+    {id:'stirfry', n:'炒制机/自动炒锅', e:'🥘', lines:['调理']},
+    {id:'fryline', n:'油炸生产线', e:'🍟', lines:['油炸']},
+    {id:'coating', n:'上浆裹粉线', e:'🥖', lines:['油炸']},
+    {id:'steam', n:'蒸制/烤炉', e:'♨️', lines:['面点']},
+    {id:'sterilize', n:'灭菌线/杀菌釜', e:'🔥', lines:[], uni:true},
+  ]},
+  {g:'成型·制面', items:[
+    {id:'mixer', n:'和面机', e:'🥣', lines:['面点']},
+    {id:'press', n:'压面机', e:'📄', lines:['面点']},
+    {id:'former', n:'成型机(包子/饺子/面条)', e:'🥟', lines:['速冻','面点']},
+    {id:'proofer', n:'醒发箱', e:'🧁', lines:['面点']},
+  ]},
+  {g:'速冻·包装', items:[
+    {id:'freezer', n:'速冻线/隧道', e:'💨', lines:['速冻','油炸','面点'], uni:true},
+    {id:'packing', n:'包装线/封口线', e:'📦', lines:['酱卤','调理','速冻','油炸','面点'], uni:true},
+    {id:'vacuumpack', n:'真空包装机', e:'🎁', lines:[]},
+    {id:'metaldet', n:'金属检测机', e:'🛡️', lines:[]},
+  ]},
+  {g:'车间·通用', items:[
+    {id:'workshop', n:'车间/冷库', e:'❄️', lines:['酱卤','调理','速冻','油炸','面点'], uni:true},
+  ]},
+];
+
+// ===== 渲染设备面板 =====
+function renderEqSections(lineType) {
+  var el = document.getElementById('eqSections');
+  var html = '';
+  EQ_DATA.forEach(function(gp){
+    html += '<div class="eq-group"><div class="eq-group-title">' + gp.g + '</div><div class="eq-row">';
+    gp.items.forEach(function(eq){
+      var hasLine = eq.lines.indexOf(lineType) > -1;
+      var isUni = eq.uni === true;
+      var enabled = isUni || hasLine || lineType === '新建';
+      var selected = isUni || hasLine;
+      if (lineType === '新建') selected = false;
+      // For universal items, restore saved state
+      var cls = 'eq-item' + (selected ? ' selected' : '') + (enabled ? '' : ' disabled');
+      html += '<div class="' + cls + '" data-eq="' + eq.n + '" data-uni="' + (isUni?'1':'0') + '" data-lines="' + eq.lines.join(',') + '" onclick="toggleEq(this)"><span class="ei">' + eq.e + '</span>' + eq.n + '</div>';
+    });
+    html += '</div></div>';
   });
+  el.innerHTML = html;
+}
+
+// ===== 设备切换 =====
+function toggleEq(el) {
+  if (el.classList.contains('disabled')) return;
+  el.classList.toggle('selected');
+}
+
+// ===== 产线切换 =====
+function onLineTypeChange() {
+  var lt = document.getElementById('lineType').value;
+  renderEqSections(lt);
+  // 重建后重新绑定通用设备的已选状态
+}
+
+// ===== 获取已选设备 =====
+function getSelectedEqs() {
+  return [...document.querySelectorAll('.eq-item.selected')].map(function(e){return e.dataset.eq;});
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', function(){
+  renderEqSections(document.getElementById('lineType').value);
 });
 
 // ===== 加载动画 =====
@@ -683,15 +761,18 @@ function generateReport(data, productName) {
   let monthly = document.getElementById('monthly').value;
   let channel = document.getElementById('channel').value;
   let area = document.getElementById('area').value;
-  let eqs = [...document.querySelectorAll('.eq-item.selected')].map(e => e.dataset.eq);
+  let eqs = getSelectedEqs();
 
   // Adjust FDI baseline based on equipment
   let fdi = [...data.fdi];
   if (eqs.includes('滚揉机')) { fdi[2] = Math.min(10, fdi[2] + 1); fdi[3] = Math.min(10, fdi[3] + 1); }
-  if (eqs.includes('速冻线')) { fdi[7] = Math.min(5, fdi[7] + 1); }
-  if (eqs.includes('杀菌釜')) { fdi[6] = Math.max(1, fdi[6] - 1); }
-  if (!eqs.includes('冷库')) { fdi[6] = Math.min(10, fdi[6] + 3); fdi[3] = Math.max(1, fdi[3] - 1); }
+  if (eqs.includes('速冻线/隧道')) { fdi[7] = Math.min(5, fdi[7] + 1); }
+  if (eqs.includes('灭菌线/杀菌釜')) { fdi[6] = Math.max(1, fdi[6] - 1); }
+  if (!eqs.includes('车间/冷库')) { fdi[6] = Math.min(10, fdi[6] + 3); fdi[3] = Math.max(1, fdi[3] - 1); }
   if (!eqs.includes('解冻槽')) { fdi[2] = Math.max(1, fdi[2] - 1); }
+  if (eqs.includes('斩拌机')) { fdi[2] = Math.min(10, fdi[2] + 1); }
+  if (eqs.includes('油炸生产线')) { fdi[1] = Math.min(10, fdi[1] + 1); }
+  if (eqs.includes('成型机(包子/饺子/面条)')) { fdi[7] = Math.min(5, fdi[7] + 1); }
   if (lineType === '新建') { fdi[7] = Math.max(1, fdi[7] - 2); }
 
   // Scale adjustments
