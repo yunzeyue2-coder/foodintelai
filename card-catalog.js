@@ -74,6 +74,28 @@ const STALL_DATA = [
   {p:"KF_",n:"韩式汤/主食（单品）",e:"🍲",c:[{f:"catalog/其他/摩卡咖啡（母）KF_003.html",n:"摩卡咖啡（母）KF_003"},{f:"catalog/其他/桂花拿铁（母）KF_009.html",n:"桂花拿铁（母）KF_009"},{f:"catalog/其他/桂花酒酿拿铁（母）KF_013.html",n:"桂花酒酿拿铁（母）KF_013"},{f:"catalog/其他/椰云拿铁（母）KF_006.html",n:"椰云拿铁（母）KF_006"},{f:"catalog/其他/樱花拿铁（母）KF_011.html",n:"樱花拿铁（母）KF_011"},{f:"catalog/其他/油柑美式（母）KF_007.html",n:"油柑美式（母）KF_007"},{f:"catalog/其他/焦糖玛奇朵（母）KF_004.html",n:"焦糖玛奇朵（母）KF_004"},{f:"catalog/其他/生椰拿铁（母）KF_005.html",n:"生椰拿铁（母）KF_005"},{f:"catalog/其他/经典拿铁（母）KF_002.html",n:"经典拿铁（母）KF_002"},{f:"catalog/其他/美式咖啡（母）KF_001.html",n:"美式咖啡（母）KF_001"},{f:"catalog/其他/草莓拿铁（母）KF_012.html",n:"草莓拿铁（母）KF_012"},{f:"catalog/其他/黄皮美式（母）KF_008.html",n:"黄皮美式（母）KF_008"},{f:"catalog/其他/黑糖燕麦拿铁（母）KF_010.html",n:"黑糖燕麦拿铁（母）KF_010"}]},
   {p:"PC_",n:"韩式拌菜（单品）",e:"🥬",c:[{f:"catalog/其他/卷心菜沙拉（子）PC_002.html",n:"卷心菜沙拉（子）PC_002"},{f:"catalog/其他/原味饭团（子）PC_006.html",n:"原味饭团（子）PC_006"},{f:"catalog/其他/圆白菜丝·紫甘蓝丝（子）PC_003.html",n:"圆白菜丝·紫甘蓝丝（子）PC_003"},{f:"catalog/其他/肉松饭团（子）PC_007.html",n:"肉松饭团（子）PC_007"},{f:"catalog/其他/辣拌海螺（子）PC_005.html",n:"辣拌海螺（子）PC_005"},{f:"catalog/其他/酸辣白萝卜（子）PC_004.html",n:"酸辣白萝卜（子）PC_004"},{f:"catalog/其他/金枪鱼饭团（子）PC_008.html",n:"金枪鱼饭团（子）PC_008"},{f:"catalog/其他/韩式酸甜脆白萝卜（子）PC_001.html",n:"韩式酸甜脆白萝卜（子）PC_001"}]}];
 
+// ===== 手工精选热品（排除物料/调味料/裹粉，每天新上产品可手工加入） =====
+// 格式：{name:"显示名",shortName:"简称(可选)",file:"路径",emoji:"图标",cat:"品类"}
+// 添加新品时push到数组末尾，旧的定期轮换
+// 排除类目：GF裹粉、FL粉料、JL_酱料、PC_拌菜、KF_咖啡
+var HOT_PICKS = [
+  {name:"五指毛桃椰乳（母）TS_065",shortName:"五指毛桃椰乳",file:"catalog/其他/五指毛桃椰乳（母）TS_065.html",emoji:"🌿",cat:"甜品饮品"},
+  {name:"冰菠萝（母）TS_005",shortName:"冰菠萝",file:"catalog/其他/冰菠萝（母）TS_005.html",emoji:"🍍",cat:"甜品饮品"},
+  {name:"厚椰冻冻（母）TS_083",shortName:"厚椰冻冻",file:"catalog/其他/厚椰冻冻（母）TS_083.html",emoji:"🥥",cat:"甜品饮品"},
+  {name:"登封芝麻烧饼XC_123",shortName:"登封芝麻烧饼",file:"catalog/其他/登封芝麻烧饼XC_123.html",emoji:"🫓",cat:"小吃系列"},
+  {name:"腊汁肉夹馍XC_120",shortName:"腊汁肉夹馍",file:"catalog/其他/腊汁肉夹馍XC_120.html",emoji:"🥙",cat:"小吃系列"},
+  {name:"洛阳涮牛肚XC_124",shortName:"洛阳涮牛肚",file:"catalog/其他/洛阳涮牛肚XC_124.html",emoji:"🐮",cat:"小吃系列"},
+  {name:"藤椒鸭腿XC_125",shortName:"藤椒鸭腿",file:"catalog/其他/藤椒鸭腿XC_125.html",emoji:"🦆",cat:"小吃系列"},
+  {name:"经典手打柠檬茶（母）LM_001",shortName:"经典手打柠檬茶",file:"catalog/其他/经典手打柠檬茶（母）LM_001.html",emoji:"🍋",cat:"柠檬系列"},
+  {name:"原味黄金炸鸡（母）HZ_001",shortName:"原味黄金炸鸡",file:"catalog/其他/原味黄金炸鸡（母）HZ_001.html",emoji:"🐔",cat:"韩式炸鸡"},
+  {name:"傣舂鸡脚（母）DC_001",shortName:"傣舂鸡脚",file:"catalog/其他/傣舂鸡脚（母）DC_001.html",emoji:"🐔",cat:"傣舂凉菜"},
+  {name:"小笼包（母）MP_003",shortName:"小笼包",file:"catalog/其他/小笼包（母）MP_003.html",emoji:"🥟",cat:"面点包子"},
+  {name:"盐烧鸡腿串（母）JP_001",shortName:"盐烧鸡腿串",file:"catalog/其他/盐烧鸡腿串（母）JP_001.html",emoji:"🍢",cat:"炸物串烧"},
+  {name:"臭豆腐（母）XC_100",shortName:"臭豆腐",file:"catalog/其他/臭豆腐（母）XC_100.html",emoji:"🧀",cat:"小吃系列"},
+  {name:"河南胡辣汤（母）MP_036",shortName:"河南胡辣汤",file:"catalog/其他/河南胡辣汤（母）MP_036.html",emoji:"🥘",cat:"面点包子"},
+  {name:"杏仁豆腐（母）TS_081",shortName:"杏仁豆腐",file:"catalog/其他/杏仁豆腐（母）TS_081.html",emoji:"🍑",cat:"甜品饮品"},
+];
+
 // ===== 渲染函数 =====
 
 // 识别卡类型

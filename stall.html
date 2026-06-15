@@ -181,23 +181,7 @@ function stallSearch(q){
   });
 }
 
-// ===== 热品rank：按照各品类卡片数量+品类热度估算 =====
-function getHotProducts(data, count){
-  var all = [];
-  data.forEach(function(d){
-    d.c.forEach(function(c){
-      var shortName = c.n.replace(/（[^）]*）/g, '').replace(/\\([^)]*\\)/g, '').replace(/^[A-Z0-9_]+\\s*/, '').trim();
-      var catName = d.n;
-      var emoji = getCardEmoji(c.n) || d.e;
-      all.push({name: c.n, shortName: shortName, file: c.f, emoji: emoji, cat: catName});
-    });
-  });
-  // 打乱选前count个（模拟热品轮换）
-  var shuffled = all.slice();
-  for(var i=shuffled.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]}
-  return shuffled.slice(0, Math.min(count, shuffled.length));
-}
-
+// ===== 场景标签 =====
 function renderHotTrend(containerId, products){
   var el = document.getElementById(containerId);
   if(!el)return;
@@ -318,8 +302,8 @@ document.addEventListener('DOMContentLoaded', function(){
     // 渲染全部分类
     renderStallCards('stallCards', STALL_DATA);
     document.getElementById('totalCount').textContent = countAllCards() + '张';
-    // 渲染热品
-    var hot = getHotProducts(STALL_DATA, 10);
+    // 渲染热品（从手工精选列表读，不接受随机物料）
+    var hot = typeof HOT_PICKS !== 'undefined' ? HOT_PICKS.slice(0, 10) : [];
     renderHotTrend('hotTrendStrip', hot);
     // 渲染场景标签
     renderSceneTags();
