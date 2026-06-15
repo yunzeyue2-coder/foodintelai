@@ -1112,6 +1112,7 @@ body{
   flex-shrink:0;
 }
 
+
 /* ===== 分享面板 ===== */
 .nav-actions{display:flex;align-items:center;gap:4px}
 .share-btn,.bookmark-btn{border:none;background:none;font-size:17px;cursor:pointer;padding:4px 6px;border-radius:6px;transition:.15s;line-height:1;color:var(--muted)}
@@ -1131,10 +1132,32 @@ body{
 .share-close:hover{background:var(--border);color:var(--text)}
 .share-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#333;color:#fff;font-size:13px;padding:8px 16px;border-radius:8px;z-index:200;opacity:0;pointer-events:none;transition:.3s}
 .share-toast.show{opacity:1}
+/* ===== 闪屏 ===== */
+#splash{
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  z-index:9999;
+  background:#d4a070;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:opacity .5s ease;
+}
+#splash.hide{opacity:0;pointer-events:none}
+#splash-text{
+  color:#fff;
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:4px;
+  line-height:1.5;
+  text-align:center;
+}
 
 </style>
 </head>
 <body>
+
+<div id="splash"><div id="splash-text">少走弯路<br>快人一步</div></div>
 
 <div class="nav">
   <div class="nav-inner">
@@ -1826,6 +1849,13 @@ renderStallCats();
 updateHeroStats();
 renderHotZone();
 loadCardsData();
+
+// 闪屏隐藏
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    document.getElementById('splash').classList.add('hide');
+  },600);
+});
 
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('show');
