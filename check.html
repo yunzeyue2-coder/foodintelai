@@ -1,1055 +1,238 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>极速开店体检 | FoodIntel AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodIntelAI Check V1.1</title>
 <style>
-/* ===== Reset & Base ===== */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px;-webkit-text-size-adjust:100%}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
-  background:#f5f0e8;color:#1a1a1a;min-height:100vh;line-height:1.6;
-  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale
-}
-/* ===== Header ===== */
-.site-header{
-  background:#fff;padding:16px 20px;border-bottom:1px solid rgba(0,0,0,.05);
-  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100
-}
-.site-header h1{font-size:18px;font-weight:600;color:#C0392B}
-.site-header .back-link{font-size:14px;color:#7a7269;text-decoration:none;display:flex;align-items:center;gap:4px}
-.site-header .back-link:hover{color:#C0392B}
-/* ===== Container ===== */
-.app-wrap{max-width:540px;margin:0 auto;padding:20px 16px 40px}
-/* ===== Progress Bar ===== */
-.progress-wrap{margin-bottom:20px}
-.progress-labels{display:flex;justify-content:space-between;margin-bottom:6px}
-.progress-labels span{font-size:11px;color:#7a7269;transition:color .3s;white-space:nowrap}
-.progress-labels span.active{color:#C0392B;font-weight:600}
-.progress-track{height:4px;background:#e0d8cf;border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,#C0392B,#E8652D);border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1);width:0%}
-/* ===== Steps ===== */
-.step{display:none;animation:fadeIn .35s ease}
-.step.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.step-title{font-size:20px;font-weight:700;margin-bottom:4px;color:#1a1a1a}
-.step-desc{font-size:13px;color:#7a7269;margin-bottom:16px;line-height:1.5}
-.step-sub{font-size:13px;color:#7a7269;margin-bottom:12px;line-height:1.5}
-/* ===== Choice Cards ===== */
-.choice-grid{display:grid;gap:8px;margin-bottom:20px}
-.choice-grid.single{grid-template-columns:1fr}
-.choice-grid.double{grid-template-columns:1fr 1fr}
-.choice-grid.triple{grid-template-columns:1fr 1fr 1fr}
-.choice-grid.quad{grid-template-columns:1fr 1fr 1fr 1fr}
-.choice-card{
-  background:#fff;border:2px solid #e8e0d6;border-radius:14px;padding:12px 14px;
-  cursor:pointer;transition:all .22s ease;user-select:none;-webkit-tap-highlight-color:transparent;
-  display:flex;align-items:center;gap:8px;min-height:48px
-}
-.choice-card:hover{border-color:#d4c8bc;background:#fcfaf7}
-.choice-card.selected{border-color:#C0392B;background:#fef6f4;box-shadow:0 0 0 1px rgba(192,57,43,.15)}
-.choice-card .radio{
-  width:20px;height:20px;border-radius:50%;border:2px solid #d4c8bc;
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .22s
-}
-.choice-card.selected .radio{border-color:#C0392B;background:#C0392B}
-.choice-card.selected .radio::after{content:'';width:7px;height:7px;border-radius:50%;background:#fff}
-.choice-card .checkbox{
-  width:20px;height:20px;border-radius:4px;border:2px solid #d4c8bc;
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .22s
-}
-.choice-card.selected .checkbox{border-color:#C0392B;background:#C0392B}
-.choice-card.selected .checkbox::after{content:'';width:10px;height:5px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg) translateY(-1px)}
-.choice-card .label{font-size:14px;font-weight:500;color:#1a1a1a;flex:1}
-.choice-card .badge{font-size:11px;color:#7a7269;background:#f0ebe4;padding:2px 8px;border-radius:20px;flex-shrink:0}
-/* ===== Buttons ===== */
-.btn-row{display:flex;gap:10px;margin-top:4px}
-.btn{
-  flex:1;padding:14px 20px;border:none;border-radius:12px;font-size:16px;font-weight:600;
-  cursor:pointer;transition:all .2s ease;min-height:48px;display:flex;align-items:center;justify-content:center;gap:6px
-}
-.btn:active{transform:scale(.97)}
-.btn-primary{background:#C0392B;color:#fff}
-.btn-primary:hover{background:#a83226}
-.btn-secondary{background:#e8e0d6;color:#1a1a1a}
-.btn-secondary:hover{background:#dcd4c8}
-.btn-outline{background:transparent;color:#C0392B;border:2px solid #C0392B}
-.btn-outline:hover{background:#fef6f4}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.btn-sm{padding:10px 16px;font-size:13px;min-height:40px}
-/* ===== Responsive grids ===== */
-@media(max-width:420px){.choice-grid.triple{grid-template-columns:1fr 1fr}.choice-grid.quad{grid-template-columns:1fr 1fr}}
-/* ===== Results ===== */
-.result-header{margin-bottom:16px;text-align:center}
-.result-header h2{font-size:20px;color:#C0392B;margin-bottom:4px}
-.result-header p{font-size:13px;color:#7a7269}
-/* ===== Score Hero ===== */
-.score-hero{
-  background:#fff;border-radius:14px;padding:24px 20px;box-shadow:0 2px 12px rgba(0,0,0,.06);
-  text-align:center;margin-bottom:16px;animation:slideUp .4s ease both
-}
-.score-hero .score-number{font-size:56px;font-weight:800;line-height:1;margin-bottom:4px}
-.score-hero .score-label{font-size:13px;color:#7a7269;margin-bottom:8px}
-.score-hero .score-badge{display:inline-block;padding:8px 20px;border-radius:30px;font-size:16px;font-weight:700}
-.badge-green{background:#e8f5e9;color:#2e7d32}
-.badge-yellow{background:#fff8e1;color:#f57f17}
-.badge-red{background:#ffebee;color:#c62828}
-.badge-black{background:#37474f;color:#fff}
-/* ===== Survival Bar ===== */
-.survival-wrap{background:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px;animation:slideUp .4s ease both}
-.survival-wrap h3{font-size:15px;font-weight:600;margin-bottom:10px;color:#1a1a1a}
-.survival-bar{height:10px;background:#eee9e2;border-radius:5px;overflow:hidden;margin-bottom:8px;display:flex}
-.survival-bar .seg{height:100%;transition:width .8s ease .2s}
-.survival-bar .seg.high{background:#43a047}
-.survival-bar .seg.med{background:#fdd835}
-.survival-bar .seg.low{background:#e53935}
-.survival-label{display:flex;justify-content:space-between;font-size:12px;color:#7a7269}
-.survival-label .hl{font-weight:600}
-/* ===== Dimension Bars ===== */
-.dimensions-wrap{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px;animation:slideUp .4s ease both}
-.dimensions-wrap h3{font-size:15px;font-weight:600;margin-bottom:12px;color:#1a1a1a}
-.dim-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.dim-row:last-child{margin-bottom:0}
-.dim-label{font-size:12px;color:#555;min-width:80px;font-weight:500;line-height:1.3}
-.dim-track{flex:1;height:8px;background:#eee9e2;border-radius:4px;overflow:hidden}
-.dim-fill{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.4,0,.2,1) .15s;width:0%}
-.dim-score{font-size:12px;font-weight:600;color:#1a1a1a;min-width:38px;text-align:right}
-/* ===== Decision Cards ===== */
-.decision-wrap{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px;animation:slideUp .4s ease both}
-.decision-wrap h3{font-size:15px;font-weight:600;margin-bottom:12px;color:#1a1a1a}
-.decision-item{display:flex;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
-.decision-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
-.decision-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center}
-.decision-text{flex:1}
-.decision-text .dt-label{font-size:12px;color:#7a7269;margin-bottom:2px}
-.decision-text .dt-value{font-size:14px;font-weight:600;color:#1a1a1a}
-/* ===== Category Rankings ===== */
-.cat-rank-wrap{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px;animation:slideUp .4s ease both}
-.cat-rank-wrap h3{font-size:15px;font-weight:600;margin-bottom:10px;color:#1a1a1a}
-.cat-rank-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f0ebe4}
-.cat-rank-item:last-child{border-bottom:none}
-.cat-rank-num{font-size:12px;font-weight:700;color:#C0392B;width:18px;text-align:center}
-.cat-rank-name{font-size:14px;font-weight:500;flex:1}
-.cat-rank-score{font-size:12px;color:#7a7269}
-.cat-rank-bar{width:60px;height:6px;background:#eee9e2;border-radius:3px;overflow:hidden;flex-shrink:0}
-.cat-rank-fill{height:100%;background:linear-gradient(90deg,#E8652D,#C0392B);border-radius:3px}
-/* ===== Card link button ===== */
-.card-link-wrap{text-align:center;margin-bottom:16px}
-.card-link-wrap .btn{display:inline-flex;max-width:300px;margin:0 auto}
-/* ===== Restart ===== */
-.restart-wrap{text-align:center;margin-top:8px}
-.restart-wrap .btn{max-width:260px;margin:0 auto;display:inline-flex}
-/* ===== Helper ===== */
-.mt-8{margin-top:8px}
-.mb-8{margin-bottom:8px}
-.text-center{text-align:center}
-.text-muted{color:#7a7269;font-size:12px}
-.hidden{display:none!important}
-/* ===== Animations ===== */
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.delay-1{animation-delay:.05s}
-.delay-2{animation-delay:.1s}
-.delay-3{animation-delay:.15s}
-.delay-4{animation-delay:.2s}
-.delay-5{animation-delay:.25s}
-.delay-6{animation-delay:.3s}
-/* ===== Responsive ===== */
-@media(max-width:420px){
-  .app-wrap{padding:16px 12px 32px}
-  .step-title{font-size:18px}
-  .choice-card{padding:10px 12px;min-height:44px}
-  .choice-card .label{font-size:13px}
-  .score-hero{padding:20px 16px}
-  .score-hero .score-number{font-size:48px}
-  .dim-label{min-width:70px;font-size:11px}
-  .result-card{padding:14px}
-  .btn{font-size:15px;padding:12px 16px}
-  .progress-labels span{font-size:10px}
-}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#0b0f14;color:#e6e6e6}
+.container{max-width:540px;margin:auto;padding:20px}
+h1{font-size:22px;margin-bottom:16px}
+.brand-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.brand-bar .logo{font-size:14px;font-weight:700;color:#00ff88}
+.brand-bar .src{font-size:10px;color:#6b7a8a;background:#1e2a38;padding:3px 10px;border-radius:10px}
+.card{background:#121824;padding:18px;border-radius:12px;margin-bottom:16px}
+.card h3{font-size:14px;font-weight:600;margin-bottom:12px;color:#8b9aaa}
+label{font-size:11px;color:#6b7a8a;display:block;margin-top:10px;margin-bottom:3px}
+label:first-of-type{margin-top:0}
+input,select{width:100%;padding:10px 12px;background:#0b0f14;border:1px solid #2a3442;color:#e6e6e6;border-radius:8px;font-size:13px;outline:none;transition:.15s;box-sizing:border-box}
+input:focus,select:focus{border-color:#00ff88}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7a8a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+button{width:100%;padding:13px;background:#00ff88;border:none;color:#000;font-weight:700;font-size:15px;border-radius:10px;cursor:pointer;transition:.15s;margin-top:14px}
+button:hover{background:#00cc6a}
+button:disabled{opacity:.35;cursor:not-allowed}
+.page{display:none}
+.page.active{display:block}
+.result{display:none}
+.result.show{display:block}
+.section{background:#121824;padding:18px;border-radius:12px;margin-top:12px;animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.rs-title{font-size:10px;color:#6b7a8a;letter-spacing:2px;margin-bottom:10px;font-weight:600}
+.score-wrap{text-align:center;padding:4px 0}
+.score-num{font-size:52px;font-weight:800;line-height:1;margin-bottom:6px}
+.score-grade{display:inline-block;padding:5px 16px;border-radius:20px;font-size:15px;font-weight:700;margin-bottom:6px}
+.score-verdict{font-size:13px;font-weight:600;margin-bottom:6px}
+.biz-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.biz-item{background:#0b0f14;border-radius:10px;padding:12px;text-align:center}
+.biz-item .num{font-size:22px;font-weight:800;color:#00ff88}
+.biz-item .lbl{font-size:11px;color:#6b7a8a;margin-top:2px}
+.risk-box{margin-top:10px;padding:10px;background:#1e0f0f;border-radius:8px;font-size:11px;color:#ff6b6b;border:1px solid rgba(255,75,75,.15)}
+.prod-card{display:block;padding:12px 14px;background:#0b0f14;border-radius:10px;margin-bottom:8px;text-decoration:none;color:inherit;border:1px solid #2a3442;transition:.15s}
+.prod-card:hover{border-color:#3a4a5a}
+.prod-card .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.prod-card .name{font-size:14px;font-weight:600}
+.prod-card .tag{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600}
+.prod-card .reason{font-size:11px;color:#6b7a8a;line-height:1.4}
+.prod-card .link{font-size:11px;color:#00ff88;font-weight:600;margin-top:3px}
+.action{text-align:center;margin-top:12px;padding:6px 0}
+.action .btn{display:inline-block;padding:10px 20px;background:#00ff88;color:#000;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:4px}
+.action .sub{font-size:10px;color:#5a6a7a}
+.action .re{display:inline-block;padding:7px 14px;background:transparent;border:1px solid #2a3442;color:#6b7a8a;border-radius:8px;font-size:11px;cursor:pointer;margin-top:6px}
+.toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:#1a2a2a;color:#00ff88;padding:8px 16px;border-radius:8px;font-size:12px;z-index:999;display:none;border:1px solid #00ff8833}
 </style>
 </head>
 <body>
 
-<header class="site-header">
-  <a href="/" class="back-link">← FoodIntel</a>
-  <h1>极速开店体检</h1>
-  <span style="width:60px"></span>
-</header>
+<div class="container">
 
-<div class="app-wrap" id="app">
+<div class="brand-bar">
+  <div class="logo">🥘 FoodIntelAI</div>
+  <div class="src" id="sourceTag">直接访问</div>
+</div>
 
-  <!-- Quick Check intro -->
-  <div style="text-align:center;margin-bottom:20px;padding:12px 0 4px">
-    <div style="font-size:14px;color:#7a7269;line-height:1.5">
-      填几个简单信息，3分钟看看你的开店想法靠不靠谱
+<h1>开店体检 V1.1</h1>
+
+<!-- Input -->
+<div class="card page active" id="inputPage">
+  <h3>10秒决策输入</h3>
+
+  <label>品类</label>
+  <select id="category">
+    <option value="">请选择</option>
+    <option value="卤味">卤味</option>
+    <option value="冷吃红油">冷吃红油</option>
+    <option value="韩式炸鸡">韩式炸鸡</option>
+    <option value="炒鸡">炒鸡</option>
+    <option value="酸汤">酸汤</option>
+    <option value="早餐面点">早餐面点</option>
+    <option value="饮品甜品">饮品甜品</option>
+    <option value="小吃烤串">小吃烤串</option>
+    <option value="傣舂舂菜">傣舂舂菜</option>
+  </select>
+
+  <label>预算（元）</label>
+  <input id="budget" type="number" placeholder="如：20000" oninput="checkReady()">
+
+  <label>城市等级</label>
+  <select id="city">
+    <option value="1">一线城市</option>
+    <option value="2">二线城市</option>
+    <option value="3">三线及以下</option>
+  </select>
+
+  <label>餐饮经验</label>
+  <select id="exp">
+    <option value="0">无经验</option>
+    <option value="1">1-3年</option>
+    <option value="2">3年以上</option>
+  </select>
+
+  <label>经营形式</label>
+  <select id="scene">
+    <option value="stall">摆摊</option>
+    <option value="store">门店</option>
+    <option value="delivery">外卖</option>
+  </select>
+
+  <button id="submitBtn" disabled onclick="runCheck()">开始测算</button>
+</div>
+
+<!-- Result -->
+<div class="result" id="resultPage">
+  <div id="r1" class="section" style="animation-delay:0s">
+    <div class="rs-title">① 决策结论</div>
+    <div class="score-wrap">
+      <div class="score-num" id="sScore">—</div>
+      <div class="score-grade" id="sGrade"></div>
+      <div class="score-verdict" id="sVerdict"></div>
     </div>
   </div>
-
-  <!-- Progress -->
-  <div class="progress-wrap">
-    <div class="progress-labels" id="progressLabels">
-      <span class="active">选址</span><span>品类</span><span>预算</span><span>经验</span><span>形式</span><span>竞品</span>
+  <div id="r2" class="section" style="animation-delay:.1s">
+    <div class="rs-title">② 商业模型</div>
+    <div class="biz-grid">
+      <div class="biz-item"><div class="num" id="sPrice">—</div><div class="lbl">客单价</div></div>
+      <div class="biz-item"><div class="num" id="sMargin">—</div><div class="lbl">毛利率</div></div>
+      <div class="biz-item"><div class="num" id="sProfit">—</div><div class="lbl">日利润</div></div>
+      <div class="biz-item"><div class="num" id="sPayback">—</div><div class="lbl">回本周期</div></div>
     </div>
-    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="risk-box" id="sRisk"></div>
+  </div>
+  <div id="r3" class="section" style="animation-delay:.2s">
+    <div class="rs-title">③ 推荐产品卡</div>
+    <div id="sProducts"></div>
   </div>
 
-  <!-- ===== Step 1: City + Location ===== -->
-  <div class="step active" data-step="0" id="step0">
-    <div class="step-title">📍 城市层级 + 位置类型</div>
-    <div class="step-desc">选择你所在的城市层级和具体位置类型</div>
-    <div class="step-sub" style="font-size:12px;color:#C0392B;font-weight:500">第一步：城市层级</div>
-    <div class="choice-grid double" id="cityGrid">
-      <div class="choice-card" data-value="0"><div class="radio"></div><span class="label">一线</span></div>
-      <div class="choice-card" data-value="1"><div class="radio"></div><span class="label">新一线</span></div>
-      <div class="choice-card" data-value="2"><div class="radio"></div><span class="label">二线</span></div>
-      <div class="choice-card" data-value="3"><div class="radio"></div><span class="label">三线</span></div>
-      <div class="choice-card" data-value="4"><div class="radio"></div><span class="label">四线</span></div>
-      <div class="choice-card" data-value="5"><div class="radio"></div><span class="label">县城</span></div>
-      <div class="choice-card" data-value="6"><div class="radio"></div><span class="label">乡镇</span></div>
-    </div>
-    <div class="step-sub" style="font-size:12px;color:#C0392B;font-weight:500">第二步：位置类型</div>
-    <div class="choice-grid double" id="locationGrid">
-      <div class="choice-card" data-value="0"><div class="radio"></div><span class="label">商圈</span></div>
-      <div class="choice-card" data-value="1"><div class="radio"></div><span class="label">社区</span></div>
-      <div class="choice-card" data-value="2"><div class="radio"></div><span class="label">学校周边</span></div>
-      <div class="choice-card" data-value="3"><div class="radio"></div><span class="label">工业区</span></div>
-      <div class="choice-card" data-value="4"><div class="radio"></div><span class="label">夜市</span></div>
-      <div class="choice-card" data-value="5"><div class="radio"></div><span class="label">交通枢纽</span></div>
-      <div class="choice-card" data-value="6"><div class="radio"></div><span class="label">乡镇集市</span></div>
-    </div>
-    <div class="btn-row"><div></div><button class="btn btn-primary" id="toStep1Btn" disabled>下一步 →</button></div>
+  <div class="action">
+    <a href="javascript:void(0)" class="btn" onclick="showWechat()">💬 咨询沧林</a>
+    <div class="sub">微信 canglin1985</div>
+    <button class="re" onclick="restart()">🔄 重新测一次</button>
   </div>
-
-  <!-- ===== Step 2: Categories (multi-select 1-3) ===== -->
-  <div class="step" data-step="1" id="step1">
-    <div class="step-title">📋 想做的品类</div>
-    <div class="step-desc">选择你感兴趣的品类（可选1-3个）</div>
-    <div class="step-sub" id="catCountHint" style="font-size:12px;color:#E8652D;font-weight:500">已选 0 个</div>
-    <div class="choice-grid triple" id="categoryGrid">
-      <div class="choice-card multi" data-value="卤味"><div class="checkbox"></div><span class="label">卤味</span></div>
-      <div class="choice-card multi" data-value="冷吃红油"><div class="checkbox"></div><span class="label">冷吃红油</span></div>
-      <div class="choice-card multi" data-value="炒鸡"><div class="checkbox"></div><span class="label">炒鸡</span></div>
-      <div class="choice-card multi" data-value="韩式炸鸡"><div class="checkbox"></div><span class="label">韩式炸鸡</span></div>
-      <div class="choice-card multi" data-value="韩式烤肉"><div class="checkbox"></div><span class="label">韩式烤肉</span></div>
-      <div class="choice-card multi" data-value="早餐面点"><div class="checkbox"></div><span class="label">早餐面点</span></div>
-      <div class="choice-card multi" data-value="饮品甜品"><div class="checkbox"></div><span class="label">饮品甜品</span></div>
-      <div class="choice-card multi" data-value="日式轻餐饮"><div class="checkbox"></div><span class="label">日式轻餐饮</span></div>
-      <div class="choice-card multi" data-value="小吃烤串"><div class="checkbox"></div><span class="label">小吃烤串</span></div>
-      <div class="choice-card multi" data-value="酸汤"><div class="checkbox"></div><span class="label">酸汤</span></div>
-      <div class="choice-card multi" data-value="江西小炒"><div class="checkbox"></div><span class="label">江西小炒</span></div>
-      <div class="choice-card multi" data-value="傣舂舂菜"><div class="checkbox"></div><span class="label">傣舂舂菜</span></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goStep(0)">← 上一步</button>
-      <button class="btn btn-primary" id="toStep2Btn" disabled>下一步 →</button>
-    </div>
-  </div>
-
-  <!-- ===== Step 3: Budget ===== -->
-  <div class="step" data-step="2" id="step2">
-    <div class="step-title">💰 预算范围</div>
-    <div class="step-desc">你准备投入多少启动资金？包含设备、装修、首批物料等</div>
-    <div class="choice-grid single" id="budgetGrid">
-      <div class="choice-card" data-value="0"><div class="radio"></div><span class="label">¥1万以内</span></div>
-      <div class="choice-card" data-value="1"><div class="radio"></div><span class="label">¥1-3万</span></div>
-      <div class="choice-card" data-value="2"><div class="radio"></div><span class="label">¥3-8万</span></div>
-      <div class="choice-card" data-value="3"><div class="radio"></div><span class="label">¥8-15万</span></div>
-      <div class="choice-card" data-value="4"><div class="radio"></div><span class="label">¥15-30万</span></div>
-      <div class="choice-card" data-value="5"><div class="radio"></div><span class="label">¥30万以上</span></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goStep(1)">← 上一步</button>
-      <button class="btn btn-primary" id="toStep3Btn" disabled>下一步 →</button>
-    </div>
-  </div>
-
-  <!-- ===== Step 4: Experience ===== -->
-  <div class="step" data-step="3" id="step3">
-    <div class="step-title">🧑‍🍳 餐饮经验</div>
-    <div class="step-desc">你有多久的餐饮从业或创业经验？</div>
-    <div class="choice-grid single" id="expGrid">
-      <div class="choice-card" data-value="0"><div class="radio"></div><span class="label">零经验 <span class="badge">没做过餐饮</span></span></div>
-      <div class="choice-card" data-value="1"><div class="radio"></div><span class="label">1年以下</span></div>
-      <div class="choice-card" data-value="2"><div class="radio"></div><span class="label">1-3年</span></div>
-      <div class="choice-card" data-value="3"><div class="radio"></div><span class="label">3-5年</span></div>
-      <div class="choice-card" data-value="4"><div class="radio"></div><span class="label">5年以上</span></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goStep(2)">← 上一步</button>
-      <button class="btn btn-primary" id="toStep4Btn" disabled>下一步 →</button>
-    </div>
-  </div>
-
-  <!-- ===== Step 5: Format + Rent ===== -->
-  <div class="step" data-step="4" id="step4">
-    <div class="step-title">🏪 商业形式 + 月房租</div>
-    <div class="step-desc">你的开店形式和预估月房租</div>
-    <div class="step-sub" style="font-size:12px;color:#C0392B;font-weight:500">商业形式</div>
-    <div class="choice-grid double" id="formatGrid">
-      <div class="choice-card" data-value="0"><div class="radio"></div><span class="label">摆摊</span></div>
-      <div class="choice-card" data-value="1"><div class="radio"></div><span class="label">小店（＜30㎡）</span></div>
-      <div class="choice-card" data-value="2"><div class="radio"></div><span class="label">门店（30-100㎡）</span></div>
-      <div class="choice-card" data-value="3"><div class="radio"></div><span class="label">工厂</span></div>
-      <div class="choice-card" data-value="4"><div class="radio"></div><span class="label">线上</span></div>
-    </div>
-    <div class="step-sub" style="font-size:12px;color:#C0392B;font-weight:500;margin-top:8px">预估月房租</div>
-    <div class="choice-grid double" id="rentGrid">
-      <div class="choice-card" data-value="0"><div class="radio"></div><span class="label">¥2000以下</span></div>
-      <div class="choice-card" data-value="1"><div class="radio"></div><span class="label">¥2000-5000</span></div>
-      <div class="choice-card" data-value="2"><div class="radio"></div><span class="label">¥5000-1万</span></div>
-      <div class="choice-card" data-value="3"><div class="radio"></div><span class="label">¥1-2万</span></div>
-      <div class="choice-card" data-value="4"><div class="radio"></div><span class="label">¥2万以上</span></div>
-      <div class="choice-card" data-value="5"><div class="radio"></div><span class="label">不确定</span></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goStep(3)">← 上一步</button>
-      <button class="btn btn-primary" id="toStep5Btn" disabled>下一步 →</button>
-    </div>
-  </div>
-
-  <!-- ===== Step 6: Competition + Daily Target ===== -->
-  <div class="step" data-step="5" id="step5">
-    <div class="step-title">📊 竞品密度 + 日营业额目标</div>
-    <div class="step-desc">你目标区域的竞争情况和收入预期</div>
-    <div class="step-sub" style="font-size:12px;color:#C0392B;font-weight:500">同品类竞争密度</div>
-    <div class="choice-grid single" id="compGrid">
-      <div class="choice-card" data-value="0"><div class="radio"></div><span class="label">不清楚 <span class="badge">还没观察过</span></span></div>
-      <div class="choice-card" data-value="1"><div class="radio"></div><span class="label">低 <span class="badge">同类很少</span></span></div>
-      <div class="choice-card" data-value="2"><div class="radio"></div><span class="label">中 <span class="badge">有一些但不多</span></span></div>
-      <div class="choice-card" data-value="3"><div class="radio"></div><span class="label">高 <span class="badge">遍地都是</span></span></div>
-    </div>
-    <div class="step-sub" style="font-size:12px;color:#C0392B;font-weight:500;margin-top:8px">期望日营业额（选大概区间）</div>
-    <div class="choice-grid single" id="targetGrid">
-      <div class="choice-card" data-value="0"><div class="radio"></div><span class="label">¥500以下</span></div>
-      <div class="choice-card" data-value="1"><div class="radio"></div><span class="label">¥500-1000</span></div>
-      <div class="choice-card" data-value="2"><div class="radio"></div><span class="label">¥1000-2000</span></div>
-      <div class="choice-card" data-value="3"><div class="radio"></div><span class="label">¥2000-5000</span></div>
-      <div class="choice-card" data-value="4"><div class="radio"></div><span class="label">¥5000以上</span></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-secondary" onclick="goStep(4)">← 上一步</button>
-      <button class="btn btn-primary" id="calcBtn" disabled>生成生死报告 →</button>
-    </div>
-  </div>
-
-  <!-- ===== Step 7: Results ===== -->
-  <div class="step" data-step="6" id="step6">
-    <div id="resultsArea"></div>
-    <div class="restart-wrap">
-      <button class="btn btn-outline" onclick="restart()">🔄 重新测试</button>
-    </div>
-  </div>
+</div>
 
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-// ============================================================
-// 8维门店决策v2 — 品类Profile数据
-// ============================================================
-const CITY_KEYS = ['一线','新一线','二线','三线','四线','县城','乡镇'];
-const LOC_KEYS = ['商圈','社区','学校周边','工业区','夜市','交通枢纽','乡镇集市'];
-
-const CATEGORIES = [
-  {
-    name:'卤味',key:'卤味',
-    impulse:4, scene_fit:[4,5,5,4,5,4,5], repurchase:4,
-    margin_rate:4, daily_order:4, turnover:4,
-    stability:4, staff_dep:2, standard:4,
-    price_war:4, head_brand:3,
-    vis_comm:3, short_video:3, memory:3,
-    food_safety:3,
-    card_link:'catalog/LW/LW001 卤鸭脖（母）LW_001.html'
-  },
-  {
-    name:'冷吃红油',key:'冷吃红油',
-    impulse:3, scene_fit:[3,3,3,2,4,3,3], repurchase:3,
-    margin_rate:5, daily_order:3, turnover:3,
-    stability:3, staff_dep:1, standard:4,
-    price_war:3, head_brand:2,
-    vis_comm:4, short_video:4, memory:3,
-    food_safety:3,
-    card_link:'catalog/其他/LC_001 冷吃红油创业母卡.html'
-  },
-  {
-    name:'炒鸡',key:'炒鸡',
-    impulse:3, scene_fit:[3,4,5,4,3,3,4], repurchase:5,
-    margin_rate:3, daily_order:3, turnover:2,
-    stability:3, staff_dep:4, standard:3,
-    price_war:3, head_brand:2,
-    vis_comm:2, short_video:3, memory:4,
-    food_safety:2,
-    card_link:'catalog/CJ/CJ_M01_炒鸡创业母卡.html'
-  },
-  {
-    name:'韩式炸鸡',key:'韩式炸鸡',
-    impulse:5, scene_fit:[5,4,5,3,5,4,2], repurchase:3,
-    margin_rate:4, daily_order:4, turnover:4,
-    stability:4, staff_dep:2, standard:5,
-    price_war:5, head_brand:4,
-    vis_comm:4, short_video:4, memory:3,
-    food_safety:2,
-    card_link:'catalog/其他/HZ_001 原味黄金炸鸡（母）.html'
-  },
-  {
-    name:'韩式烤肉',key:'韩式烤肉',
-    impulse:4, scene_fit:[5,3,3,2,3,2,1], repurchase:3,
-    margin_rate:2, daily_order:2, turnover:1,
-    stability:3, staff_dep:5, standard:2,
-    price_war:3, head_brand:4,
-    vis_comm:5, short_video:5, memory:5,
-    food_safety:2,
-    card_link:'catalog/KR/KR_001_秘制大块肉.html'
-  },
-  {
-    name:'早餐面点',key:'早餐面点',
-    impulse:1, scene_fit:[3,5,5,4,2,3,4], repurchase:5,
-    margin_rate:4, daily_order:5, turnover:5,
-    stability:4, staff_dep:4, standard:3,
-    price_war:3, head_brand:2,
-    vis_comm:1, short_video:1, memory:2,
-    food_safety:3,
-    card_link:'catalog/其他/MP_001 鲜肉包（母）.html'
-  },
-  {
-    name:'饮品甜品',key:'饮品甜品',
-    impulse:5, scene_fit:[5,4,4,3,4,4,2], repurchase:3,
-    margin_rate:5, daily_order:4, turnover:4,
-    stability:5, staff_dep:2, standard:5,
-    price_war:5, head_brand:5,
-    vis_comm:5, short_video:5, memory:4,
-    food_safety:1,
-    card_link:'catalog/其他/TS_001 现打芝麻糊（母）.html'
-  },
-  {
-    name:'日式轻餐饮',key:'日式轻餐饮',
-    impulse:3, scene_fit:[5,3,3,2,2,3,1], repurchase:3,
-    margin_rate:3, daily_order:2, turnover:2,
-    stability:4, staff_dep:4, standard:4,
-    price_war:2, head_brand:3,
-    vis_comm:4, short_video:3, memory:3,
-    food_safety:2,
-    card_link:'catalog/其他/JP_001 盐烧鸡腿串（母）.html'
-  },
-  {
-    name:'小吃烤串',key:'小吃烤串',
-    impulse:5, scene_fit:[4,4,4,4,5,4,5], repurchase:4,
-    margin_rate:4, daily_order:4, turnover:3,
-    stability:3, staff_dep:3, standard:3,
-    price_war:4, head_brand:2,
-    vis_comm:4, short_video:5, memory:5,
-    food_safety:3,
-    card_link:'catalog/其他/XC_100 臭豆腐（母）.html'
-  },
-  {
-    name:'酸汤',key:'酸汤',
-    impulse:2, scene_fit:[3,4,4,4,3,3,4], repurchase:4,
-    margin_rate:3, daily_order:3, turnover:3,
-    stability:3, staff_dep:4, standard:3,
-    price_war:2, head_brand:1,
-    vis_comm:3, short_video:3, memory:4,
-    food_safety:2,
-    card_link:'catalog/GS/GS_M01_贵州酸汤创业母卡.html'
-  },
-  {
-    name:'江西小炒',key:'江西小炒',
-    impulse:2, scene_fit:[3,5,5,5,3,4,5], repurchase:5,
-    margin_rate:2, daily_order:4, turnover:4,
-    stability:3, staff_dep:5, standard:2,
-    price_war:3, head_brand:2,
-    vis_comm:2, short_video:2, memory:2,
-    food_safety:2,
-    card_link:'catalog/其他/XC_110 酸辣粉（母）.html'
-  },
-  {
-    name:'傣舂舂菜',key:'傣舂舂菜',
-    impulse:4, scene_fit:[4,3,3,2,4,3,2], repurchase:2,
-    margin_rate:5, daily_order:2, turnover:3,
-    stability:2, staff_dep:2, standard:2,
-    price_war:1, head_brand:1,
-    vis_comm:5, short_video:5, memory:5,
-    food_safety:3,
-    card_link:'catalog/其他/DC_001 傣舂鸡脚（母）.html'
-  }
-];
-
-// ============================================================
-// 城市×位置流量Profile (7×7)
-// ============================================================
-const CITY_LOC_PROFILES = {
-  // 一线
-  "0_0":{flow:5,stay:4,convert:5,intercept:4},
-  "0_1":{flow:4,stay:5,convert:4,intercept:3},
-  "0_2":{flow:4,stay:3,convert:5,intercept:3},
-  "0_3":{flow:5,stay:3,convert:3,intercept:2},
-  "0_4":{flow:4,stay:2,convert:4,intercept:3},
-  "0_5":{flow:5,stay:2,convert:4,intercept:4},
-  "0_6":{flow:1,stay:1,convert:2,intercept:1},
-  // 新一线
-  "1_0":{flow:5,stay:4,convert:5,intercept:4},
-  "1_1":{flow:4,stay:5,convert:4,intercept:3},
-  "1_2":{flow:4,stay:3,convert:5,intercept:3},
-  "1_3":{flow:5,stay:3,convert:3,intercept:2},
-  "1_4":{flow:4,stay:2,convert:4,intercept:3},
-  "1_5":{flow:5,stay:2,convert:4,intercept:4},
-  "1_6":{flow:2,stay:2,convert:3,intercept:1},
-  // 二线
-  "2_0":{flow:4,stay:4,convert:4,intercept:3},
-  "2_1":{flow:4,stay:5,convert:4,intercept:3},
-  "2_2":{flow:4,stay:3,convert:5,intercept:2},
-  "2_3":{flow:4,stay:3,convert:3,intercept:2},
-  "2_4":{flow:4,stay:2,convert:4,intercept:3},
-  "2_5":{flow:4,stay:2,convert:3,intercept:3},
-  "2_6":{flow:2,stay:2,convert:3,intercept:1},
-  // 三线
-  "3_0":{flow:4,stay:3,convert:4,intercept:3},
-  "3_1":{flow:3,stay:5,convert:4,intercept:2},
-  "3_2":{flow:3,stay:3,convert:4,intercept:2},
-  "3_3":{flow:4,stay:3,convert:3,intercept:2},
-  "3_4":{flow:4,stay:2,convert:4,intercept:2},
-  "3_5":{flow:3,stay:2,convert:3,intercept:3},
-  "3_6":{flow:3,stay:3,convert:3,intercept:1},
-  // 四线
-  "4_0":{flow:3,stay:3,convert:3,intercept:2},
-  "4_1":{flow:3,stay:4,convert:3,intercept:2},
-  "4_2":{flow:3,stay:3,convert:4,intercept:2},
-  "4_3":{flow:3,stay:3,convert:3,intercept:2},
-  "4_4":{flow:3,stay:2,convert:3,intercept:2},
-  "4_5":{flow:2,stay:2,convert:2,intercept:2},
-  "4_6":{flow:3,stay:3,convert:3,intercept:1},
-  // 县城
-  "5_0":{flow:3,stay:3,convert:3,intercept:2},
-  "5_1":{flow:3,stay:4,convert:3,intercept:2},
-  "5_2":{flow:3,stay:3,convert:4,intercept:1},
-  "5_3":{flow:3,stay:3,convert:3,intercept:1},
-  "5_4":{flow:3,stay:2,convert:3,intercept:1},
-  "5_5":{flow:2,stay:2,convert:2,intercept:1},
-  "5_6":{flow:4,stay:3,convert:3,intercept:2},
-  // 乡镇
-  "6_0":{flow:2,stay:2,convert:2,intercept:1},
-  "6_1":{flow:2,stay:4,convert:3,intercept:1},
-  "6_2":{flow:2,stay:2,convert:3,intercept:1},
-  "6_3":{flow:2,stay:3,convert:2,intercept:1},
-  "6_4":{flow:3,stay:2,convert:3,intercept:1},
-  "6_5":{flow:1,stay:1,convert:2,intercept:1},
-  "6_6":{flow:4,stay:4,convert:4,intercept:2}
+var PROFILE = {
+  '卤味':{margin:4,standard:4,scale:3,risk:3,price:28,mr:0.62,dp:450,pb:4,cs:[{n:'卤鸭脖创业母卡',t:'母卡',p:'¥39',l:'catalog/LW/LW001 卤鸭脖（母）LW_001.html',r:'卤味基础模型，标准化高'},{n:'卤鸭翅（母）',t:'母卡',p:'¥39',l:'catalog/LW/LW002 卤鸭翅（母）LW_002.html',r:'出品率高，新手友好'}]},
+  '冷吃红油':{margin:5,standard:4,scale:4,risk:2,price:58,mr:0.68,dp:600,pb:2.5,cs:[{n:'冷吃红油创业母卡',t:'母卡',p:'¥39',l:'catalog/其他/LC_001 冷吃红油创业母卡.html',r:'毛利高，预算够'},{n:'冷吃牛肉条（子）',t:'子卡',p:'¥19',l:'catalog/其他/LC_002 冷吃牛肉条（子）.html',r:'头牌产品先上'}]},
+  '韩式炸鸡':{margin:4,standard:5,scale:4,risk:3,price:22,mr:0.58,dp:500,pb:3,cs:[{n:'原味黄金炸鸡（母）',t:'母卡',p:'¥39',l:'catalog/其他/HZ_001 原味黄金炸鸡（母）.html',r:'标准化极强，零基础可做'},{n:'蜜汁酱裹鸡块（母）',t:'母卡',p:'¥39',l:'catalog/其他/HZ_002 蜜汁酱裹鸡块（母）.html',r:'复购率最高'}]},
+  '炒鸡':{margin:3,standard:3,scale:3,risk:4,price:38,mr:0.55,dp:550,pb:5,cs:[{n:'炒鸡创业母卡',t:'母卡',p:'¥39',l:'catalog/CJ/CJ_M01_炒鸡创业母卡.html',r:'毛利稳，需后厨经验'},{n:'炒鸡工艺体系',t:'子卡',p:'¥19',l:'catalog/CJ/CJ_V01_炒鸡工艺体系.html',r:'先看工艺'}]},
+  '酸汤':{margin:3,standard:3,scale:3,risk:3,price:42,mr:0.56,dp:520,pb:4,cs:[{n:'贵州酸汤创业母卡',t:'母卡',p:'¥39',l:'catalog/其他/ST_M01 贵州酸汤创业母卡.html',r:'酸汤热度高，入局好时机'},{n:'酸汤鱼（子）',t:'子卡',p:'¥19',l:'catalog/其他/ST_01 酸汤鱼（子）.html',r:'头牌产品先用它'}]},
+  '早餐面点':{margin:4,standard:3,scale:4,risk:2,price:12,mr:0.65,dp:350,pb:3,cs:[{n:'鲜肉包（母）',t:'母卡',p:'¥39',l:'catalog/其他/MP_001 鲜肉包（母）.html',r:'早餐刚需回本快'},{n:'煎饼果子（母）',t:'母卡',p:'¥39',l:'catalog/其他/MP_008 煎饼果子（母）.html',r:'单品利润高'}]},
+  '饮品甜品':{margin:5,standard:5,scale:5,risk:3,price:18,mr:0.72,dp:650,pb:2,cs:[{n:'五指毛桃椰乳（母）',t:'母卡',p:'¥39',l:'catalog/其他/TS_065 五指毛桃椰乳（母）.html',r:'毛利极高标准化最强'},{n:'斑斓冻（母）',t:'母卡',p:'¥39',l:'catalog/其他/TS_003 斑斓冻（母）.html',r:'网红属性高毛利'}]},
+  '小吃烤串':{margin:4,standard:3,scale:3,risk:3,price:25,mr:0.60,dp:480,pb:3.5,cs:[{n:'臭豆腐（母）',t:'母卡',p:'¥39',l:'catalog/其他/XC_100 臭豆腐（母）.html',r:'刚需小吃无淡季'},{n:'铁板鱿鱼（母）',t:'母卡',p:'¥39',l:'catalog/其他/XC_101 铁板鱿鱼（母）.html',r:'夜市爆品'}]},
+  '傣舂舂菜':{margin:5,standard:2,scale:2,risk:2,price:20,mr:0.70,dp:380,pb:2,cs:[{n:'傣舂鸡脚（母）',t:'母卡',p:'¥39',l:'catalog/其他/DC_001 傣舂鸡脚（母）.html',r:'视觉强适合短视频'},{n:'傣舂大虾（母）',t:'母卡',p:'¥39',l:'catalog/其他/DC_003 傣舂大虾（母）.html',r:'客单价高利润大'}]}
 };
 
-// ============================================================
-// State
-// ============================================================
-const state = { city:-1, location:-1, categories:[], budget:-1, exp:-1, format:-1, rent:-1, comp:-1, target:-1 };
-let currentStep = 0;
-const totalSteps = 6;
+(function(){
+  var s=new URLSearchParams(window.location.search).get('from');
+  if(s) document.getElementById('sourceTag').textContent='来自：'+s;
+})();
 
-// ============================================================
-// DOM helpers
-// ============================================================
-const $ = id=>document.getElementById(id);
-const progressFill = $('progressFill');
-const progressLabels = document.querySelectorAll('.progress-labels span');
-
-function goStep(n){
-  document.querySelector('.step.active').classList.remove('active');
-  document.getElementById('step'+n).classList.add('active');
-  currentStep = n;
-  updateProgress();
-  window.scrollTo({top:0,behavior:'smooth'});
+function checkReady(){
+  var cat=document.getElementById('category').value;
+  var bud=document.getElementById('budget').value;
+  document.getElementById('submitBtn').disabled=!cat||!bud;
 }
 
-function updateProgress(){
-  const pct = (currentStep/totalSteps)*100;
-  progressFill.style.width = pct+'%';
-  progressLabels.forEach((el,i)=>{
-    el.classList.toggle('active',i<=currentStep);
+['category','budget','city','exp','scene'].forEach(function(id){
+  document.getElementById(id).addEventListener('change',checkReady);
+});
+
+function runCheck(){
+  var cat=document.getElementById('category').value;
+  var bud=parseInt(document.getElementById('budget').value)||0;
+  var city=parseInt(document.getElementById('city').value);
+  var exp=parseInt(document.getElementById('exp').value);
+  var scene=document.getElementById('scene').value;
+  if(!cat||!bud) return;
+
+  var p=PROFILE[cat];
+  if(!p){showToast('品类数据缺失');return}
+
+  var cm=[1.2,1.0,0.8][city]||1.0, em=[0.8,1.0,1.2][exp]||1.0, sm={stall:1.1,store:1.0,delivery:0.9}[scene]||1.0;
+  var bm=bud<10000?0.6:bud<30000?0.8:bud<80000?1.0:1.1;
+  var score=Math.round(Math.min(100,Math.max(0,(
+    (p.margin/5)*cm*0.30 + (p.margin/5)*0.25 + (p.standard/5)*0.20 + (1-p.risk/5)*0.15 + (p.scale/5)*sm*bm*em*0.10
+  )*100)));
+  var grade=score>=80?'S':score>=65?'A':score>=50?'B':'C';
+  var color={S:'#00ff88',A:'#4db8ff',B:'#ffcc00',C:'#ff4d4d'}[grade];
+  var bg={S:'rgba(0,255,136,.1)',A:'rgba(77,184,255,.1)',B:'rgba(255,204,0,.1)',C:'rgba(255,77,77,.1)'}[grade];
+  var rec=score>=65?'YES':score>=50?'CAUTION':'NO';
+  var recText={YES:'✅ 推荐进入',CAUTION:'⚠️ 谨慎进入',NO:'❌ 不建议'}[rec];
+  var risk={S:'竞争可能加剧',A:'原料价格波动',B:'标准化能力需加强',C:'预算或经验不匹配'}[grade];
+
+  track(cat);
+
+  document.getElementById('inputPage').style.display='none';
+  document.getElementById('resultPage').classList.add('show');
+
+  document.getElementById('sScore').innerText=score;
+  document.getElementById('sScore').style.color=color;
+  document.getElementById('sGrade').innerHTML='<span style="background:'+bg+';color:'+color+';padding:5px 16px;border-radius:20px;font-weight:700">'+grade+' 级</span>';
+  document.getElementById('sVerdict').innerHTML='<span style="color:'+color+'">'+recText+'</span>';
+  document.getElementById('sPrice').innerText='¥'+p.price;
+  document.getElementById('sMargin').innerText=(p.mr*100|0)+'%';
+  document.getElementById('sProfit').innerText='¥'+Math.round(p.dp*cm);
+  document.getElementById('sPayback').innerText=p.pb+'月';
+  document.getElementById('sRisk').innerHTML='⚠️ 最大风险：'+risk;
+
+  var h='';
+  p.cs.forEach(function(c){
+    h+='<a class="prod-card" href="'+c.l+'" onclick="trackClick(\''+c.n+'\')">';
+    h+='<div class="top"><span class="name">'+c.n+'</span><span class="tag" style="background:'+(c.t==='母卡'?'rgba(0,255,136,.15)':'rgba(77,184,255,.15)')+';color:'+(c.t==='母卡'?'#00ff88':'#4db8ff')+'">'+c.t+'</span></div>';
+    h+='<div class="reason">'+c.r+'</div><div class="link">'+c.p+' → 查看详情</div></a>';
   });
+  document.getElementById('sProducts').innerHTML=h;
+
+  window.scrollTo({top:0});
 }
 
-// ============================================================
-// Single-select init
-// ============================================================
-function initSingleSelect(gridId, stateKey, ...dependents){
-  const grid = document.getElementById(gridId);
-  grid.addEventListener('click',e=>{
-    const card = e.target.closest('.choice-card');
-    if(!card) return;
-    grid.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
-    card.classList.add('selected');
-    state[stateKey] = parseInt(card.dataset.value);
-    dependents.forEach(fn=>fn());
-  });
-}
+function track(c){try{var l=JSON.parse(localStorage.getItem('fi_events')||'[]');l.push({ev:'check',cat:c,ts:Date.now()});localStorage.setItem('fi_events',JSON.stringify(l))}catch(e){}}
+function trackClick(n){try{var l=JSON.parse(localStorage.getItem('fi_events')||'[]');l.push({ev:'click',cat:n,ts:Date.now()});localStorage.setItem('fi_events',JSON.stringify(l))}catch(e){}}
 
-// ============================================================
-// Multi-select (max 3)
-// ============================================================
-function initMultiSelect(gridId, stateKey, maxCount, hintId, nextBtnId){
-  const grid = document.getElementById(gridId);
-  const hint = hintId ? document.getElementById(hintId) : null;
-  grid.addEventListener('click',e=>{
-    const card = e.target.closest('.choice-card');
-    if(!card) return;
-    const isSelected = card.classList.contains('selected');
-    const currentCount = grid.querySelectorAll('.choice-card.selected').length;
-    if(!isSelected && currentCount >= maxCount) return; // max reached
-    card.classList.toggle('selected');
-    const vals = [];
-    grid.querySelectorAll('.choice-card.selected').forEach(c=>vals.push(c.dataset.value));
-    state[stateKey] = vals;
-    if(hint) hint.textContent = '已选 '+vals.length+' 个（最多'+maxCount+'个）';
-    if(nextBtnId){
-      const btn = document.getElementById(nextBtnId);
-      btn.disabled = vals.length === 0;
-    }
-  });
-}
-
-// ============================================================
-// Dependent enable logic
-// ============================================================
-function checkStep1(){
-  $('toStep1Btn').disabled = !(state.city>=0 && state.location>=0);
-}
-function checkStep2(){
-  $('toStep2Btn').disabled = state.categories.length===0;
-}
-function checkStep3(){
-  $('toStep3Btn').disabled = state.budget<0;
-}
-function checkStep4(){
-  $('toStep4Btn').disabled = state.exp<0;
-}
-function checkStep5(){
-  $('toStep5Btn').disabled = !(state.format>=0 && state.rent>=0);
-}
-function checkStep6(){
-  $('calcBtn').disabled = !(state.comp>=0 && state.target>=0);
-}
-
-// ============================================================
-// Init all grids
-// ============================================================
-initSingleSelect('cityGrid','city',checkStep1);
-initSingleSelect('locationGrid','location',checkStep1);
-initMultiSelect('categoryGrid','categories',3,'catCountHint','toStep2Btn');
-initSingleSelect('budgetGrid','budget',checkStep3);
-initSingleSelect('expGrid','exp',checkStep4);
-initSingleSelect('formatGrid','format',checkStep5);
-initSingleSelect('rentGrid','rent',checkStep5);
-initSingleSelect('compGrid','comp',checkStep6);
-initSingleSelect('targetGrid','target',checkStep6);
-
-// ============================================================
-// Next buttons
-// ============================================================
-$('toStep1Btn').addEventListener('click',()=>goStep(1));
-$('toStep2Btn').addEventListener('click',()=>goStep(2));
-$('toStep3Btn').addEventListener('click',()=>goStep(3));
-$('toStep4Btn').addEventListener('click',()=>goStep(4));
-$('toStep5Btn').addEventListener('click',()=>goStep(5));
-$('calcBtn').addEventListener('click',calculate);
-
-// ============================================================
-// 8维评分引擎
-// ============================================================
-
-// 1. 流量结构质量（25分）
-function calcFlowScore(city, loc){
-  const key = city+'_'+loc;
-  const p = CITY_LOC_PROFILES[key] || {flow:2,stay:2,convert:2,intercept:2};
-  const raw = p.flow*10 + p.stay*5 + p.convert*5 + p.intercept*5; // max 125
-  return raw * 25 / 125;
-}
-
-// 2. 品类-场景匹配度（15分）
-function calcCategoryMatch(cat, loc){
-  return cat.impulse + (cat.scene_fit[loc]||0) + cat.repurchase; // max 15
-}
-
-// 3. 单店盈利结构（20分）
-function calcProfit(cat, budget, rent, target){
-  // margin_rate (0-5), daily_order (0-5), turnover (0-5)
-  // fixed cost pressure based on budget and rent
-  const margin = cat.margin_rate;
-  const daily = cat.daily_order;
-  const turnover = cat.turnover;
-  // fixed cost: higher budget = better, higher rent = worse
-  let fixedCost = 3; // default
-  if(budget>=0 && budget<=1) fixedCost = 1; // low budget = high pressure
-  else if(budget<=2) fixedCost = 2;
-  else if(budget<=3) fixedCost = 4;
-  else if(budget>=4) fixedCost = 5;
-  // rent penalty: high rent reduces fixed cost score
-  if(rent>=3) fixedCost = Math.max(0, fixedCost-1);
-  if(rent>=4) fixedCost = Math.max(0, fixedCost-1);
-  
-  return margin + daily + turnover + fixedCost; // max 20
-}
-
-// 4. 执行与标准化难度（10分）
-function calcExec(cat, exp){
-  const stability = cat.stability; // 0-5
-  const staffDep = 5 - cat.staff_dep; // inverted: low dep = high score
-  const standard = cat.standard; // 0-5
-  let base = stability + staffDep + standard; // max 15
-  // experience bonus: higher exp reduces difficulty
-  let expBonus = 0;
-  if(exp>=3) expBonus = 1; // 1-3yr
-  if(exp>=4) expBonus = 2; // 5yr+
-  // Normalize to 0-10
-  return Math.min(10, Math.round((base / 15) * 8 + expBonus));
-}
-
-// 5. 竞争结构强度（10分）
-function calcCompetition(cat, comp){
-  // comp: 0=不清楚(中), 1=低, 2=中, 3=高
-  const compMap = [2, 1, 3, 5]; // density score (higher = more competition)
-  const density = compMap[comp] || 2;
-  const densityScore = Math.max(0, 5 - density); // 0-5 inverted
-  const pw = cat.price_war; // 0-5, higher = more sensitive = worse
-  const hb = cat.head_brand; // 0-5, higher = more pressure = worse
-  const priceScore = Math.max(0, 5 - pw);
-  const brandScore = Math.max(0, 5 - hb);
-  // weighted: density matters most
-  return Math.round((densityScore*0.4 + priceScore*0.3 + brandScore*0.3) * 10 / 5);
-}
-
-// 6. 启动资金与现金压力（10分）
-function calcCost(budget, rent, format){
-  // Budget score (higher budget = better)
-  const budgetScores = [1, 2, 3, 4, 4, 5];
-  const bScore = budgetScores[budget] || 2;
-  // Rent pressure (higher rent = worse)
-  const rentScores = [5, 4, 3, 2, 1, 3]; // '不确定' = 3
-  const rScore = rentScores[rent] || 3;
-  // Format pressure: 摆摊/线上 low cost, 门店 high cost
-  const formatScores = [5, 3, 2, 1, 4]; // 摆摊,小店,门店,工厂,线上
-  const fScore = formatScores[format] || 3;
-  // Composite: rent has highest weight for cash pressure
-  return Math.round((bScore*0.3 + rScore*0.4 + fScore*0.3) * 10 / 5);
-}
-
-// 7. 品牌传播效率（5分）
-function calcBrand(cat){
-  return Math.round((cat.vis_comm + cat.short_video + cat.memory) * 5 / 15);
-}
-
-// 8. 风险不可逆性（5分）
-function calcRisk(cat, exp){
-  const food = cat.food_safety; // 0-5, higher = more risk
-  const policy = 2; // generic policy risk (1-3 scale, map to 0-5)
-  // Staff risk: low exp = higher risk
-  const expRiskMap = [4, 3, 2, 2, 1];
-  const staffRisk = expRiskMap[exp] || 3;
-  // Rent contract risk: generic 2
-  const contractRisk = 2;
-  // Convert to 0-5 scale: total raw max = 5+3+4+2=14
-  const raw = food + policy + staffRisk + contractRisk; // 0-14
-  return Math.round((14 - raw) * 5 / 14); // invert: higher raw risk = lower score
-}
-
-// ============================================================
-// Main calculation
-// ============================================================
-function calculate(){
-  const city = state.city;
-  const loc = state.location;
-  const cats = state.categories;
-  const budget = state.budget;
-  const exp = state.exp;
-  const format = state.format;
-  const rent = state.rent;
-  const comp = state.comp;
-  const target = state.target;
-
-  // If no categories selected, use all
-  let candidates = (cats && cats.length>0) 
-    ? CATEGORIES.filter(c=>cats.includes(c.key))
-    : CATEGORIES;
-
-  // Score each category
-  const scored = candidates.map(cat=>{
-    const f1 = calcFlowScore(city, loc);
-    const f2 = calcCategoryMatch(cat, loc);
-    const f3 = calcProfit(cat, budget, rent, target);
-    const f4 = calcExec(cat, exp);
-    const f5 = calcCompetition(cat, comp);
-    const f6 = calcCost(budget, rent, format);
-    const f7 = calcBrand(cat);
-    const f8 = calcRisk(cat, exp);
-    
-    const total = Math.round((f1 + f2 + f3 + f4 + f5 + f6 + f7 + f8) * 10) / 10;
-    
-    return { cat, f1, f2, f3, f4, f5, f6, f7, f8, total };
-  });
-
-  // Sort by total descending
-  scored.sort((a,b)=>b.total - a.total);
-  
-  renderResults(scored, city, loc, budget, exp, format, rent, comp, target);
-  goStep(6);
-  
-  // 异步上报数据
-  reportCheckData(city, loc, cats, budget, exp, format, rent, comp, target, scored);
-}
-
-// ============================================================
-// 数据上报
-// ============================================================
-function reportCheckData(city, loc, cats, budget, exp, format, rent, comp, target, results){
-  try {
-    const best = results[0];
-    const payload = {
-      city, location: loc,
-      categories: cats,
-      budget, experience: exp,
-      format, rent, competition: comp, target,
-      score: best?.total || 0,
-      best_category: best?.cat?.name || '',
-      dims: results.slice(0,3).map(r=>({name:r.cat.name, score:r.total}))
-    };
-    const blob = new Blob([JSON.stringify(payload)], {type:'application/json'});
-    navigator.sendBeacon('/api/check/submit', blob);
-  } catch(e){ /*静默失败*/ }
-}
-
-// ============================================================
-// Render results
-// ============================================================
-function renderResults(results, city, loc, budget, exp, format, rent, comp, target){
-  const area = $('resultsArea');
-  if(results.length===0){
-    area.innerHTML = '<div class="result-header"><h2>暂无匹配结果</h2><p>请重新选择条件</p></div>';
-    return;
-  }
-
-  const best = results[0];
-  const total = best.total;
-  
-  // Decision
-  let badgeHtml, badgeClass, decisionText;
-  if(total >= 85){
-    badgeClass = 'badge-green';
-    badgeHtml = '🟢 强烈建议开店';
-    decisionText = '可扩张模型—该品类在此场景下具备复制扩张潜力';
-  } else if(total >= 70){
-    badgeClass = 'badge-yellow';
-    badgeHtml = '🟡 可试点';
-    decisionText = '小规模验证—建议先开单店试水，验证模型后再考虑扩张';
-  } else if(total >= 60){
-    badgeClass = 'badge-red';
-    badgeHtml = '🔴 高风险';
-    decisionText = '谨慎进入—多个维度风险较高，需有明确改善方案';
-  } else {
-    badgeClass = 'badge-black';
-    badgeHtml = '⛔ 不建议进入';
-    decisionText = '当前条件组合风险过高，建议调整品类或者位置';
-  }
-
-  // Survival probability
-  const survFlow = best.f1/25;
-  const survProfit = best.f3/20;
-  const survMatch = best.f2/15;
-  const survExec = best.f4/10;
-  const survRisk = best.f8/5;
-  const survProb = survFlow*0.3 + survProfit*0.3 + survMatch*0.2 + survExec*0.1 + survRisk*0.1;
-  let survLabel, survHigh, survMed, survLow;
-  if(survProb >= 0.65){
-    survLabel = '高概率存活 🟢';
-    survHigh = survProb*100;
-    survMed = 0;
-    survLow = 100 - survHigh;
-  } else if(survProb >= 0.4){
-    survLabel = '中概率试错 🟡';
-    survMed = survProb*100;
-    survHigh = Math.max(0, (survProb-0.2)*100);
-    survLow = 100 - survHigh - survMed;
-  } else {
-    survLabel = '高概率失败 🔴';
-    survLow = (1-survProb)*100;
-    survMed = survProb*100;
-    survHigh = 0;
-  }
-
-  // Find worst dimension
-  const dims = [
-    {name:'流量结构质量',score:best.f1,max:25,weight:'25%',key:'f1'},
-    {name:'品类-场景匹配',score:best.f2,max:15,weight:'15%',key:'f2'},
-    {name:'单店盈利结构',score:best.f3,max:20,weight:'20%',key:'f3'},
-    {name:'执行标准化难度',score:best.f4,max:10,weight:'10%',key:'f4'},
-    {name:'竞争结构强度',score:best.f5,max:10,weight:'10%',key:'f5'},
-    {name:'资金与现金压力',score:best.f6,max:10,weight:'10%',key:'f6'},
-    {name:'品牌传播效率',score:best.f7,max:5,weight:'5%',key:'f7'},
-    {name:'风险不可逆性',score:best.f8,max:5,weight:'5%',key:'f8'}
-  ];
-  
-  // Sort by weight descending for display
-  const dimsSorted = [...dims].sort((a,b)=>b.max - a.max);
-  
-  // Find worst dimension (lowest %)
-  const worstDim = [...dims].reduce((a,b)=>(a.score/a.max)<(b.score/b.max)?a:b);
-  
-  // Improvement path based on worst dimension
-  const improveMap = {
-    '流量结构质量':'重新选址—选择自然客流更大、停留时间更长的位置，避免高截流竞争区',
-    '品类-场景匹配':'更换品类或调整定位—选一个更适合当前场景的品类，或更换到更适合该品类的位置',
-    '单店盈利结构':'优化成本结构—提升单品毛利率、降低固定成本，或提高翻台周转效率',
-    '执行标准化难度':'简化流程+加强培训—建立标准化SOP，降低对高水平厨师的依赖',
-    '竞争结构强度':'差异化竞争—避开同品类密集区，打造差异化产品和品牌定位',
-    '资金与现金压力':'降低启动规模—考虑摆摊或小店起步，控制房租成本，预留3个月现金流',
-    '品牌传播效率':'加强视觉与短视频传播—设计有记忆点的视觉符号，增加短视频内容输出',
-    '风险不可逆性':'规避核心风险—确保食安合规，签订合理房租合同，降低人员流失风险'
-  };
-
-  // Model recommendation
-  let modelRec;
-  if(total >= 80){
-    modelRec = '复制扩张模型 — 标准化程度高，可快速复制到多个点位';
-  } else if(total >= 65){
-    modelRec = '标准店模型 — 单店深耕，打磨盈利模型后再考虑扩张';
-  } else if(total >= 55){
-    modelRec = '快闪模型 — 建议以快闪/摆摊形式低成本验证市场需求';
-  } else {
-    modelRec = '不建议开店 — 当前条件组合不成熟，建议调整策略';
-  }
-
-  // Dimension colors
-  const dimColors = ['#C0392B','#E8652D','#d48a76','#b8a99a','#a89888','#7a7269','#5a5249','#3a3229'];
-
-  // Build category ranking
-  let catRankHtml = '';
-  if(results.length > 1){
-    catRankHtml = `
-      <div class="cat-rank-wrap delay-4">
-        <h3>📊 品类匹配排名</h3>
-        ${results.map((r,i)=>{
-          const pct = Math.min(100, Math.round(r.total));
-          return `
-            <div class="cat-rank-item">
-              <span class="cat-rank-num">${i+1}</span>
-              <span class="cat-rank-name">${r.cat.name}</span>
-              <span class="cat-rank-score">${r.total.toFixed(1)}分</span>
-              <div class="cat-rank-bar"><div class="cat-rank-fill" style="width:${pct}%"></div></div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    `;
-  }
-
-  // Card link
-  const cardLink = best.cat.card_link || '';
-
-  area.innerHTML = `
-    <!-- Score Hero -->
-    <div class="score-hero delay-1">
-      <div class="score-number" style="color:${total>=85?'#2e7d32':total>=70?'#f57f17':total>=60?'#c62828':'#37474f'}">${total.toFixed(0)}</div>
-      <div class="score-label">/ 100 · 综合评分</div>
-      <div class="score-badge ${badgeClass}">${badgeHtml}</div>
-      <div style="margin-top:10px;font-size:13px;color:#555">${decisionText}</div>
-    </div>
-
-    <!-- Best Category -->
-    <div style="background:#fff;border-radius:14px;padding:12px 18px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px;text-align:center;animation:slideUp .4s ease both;animation-delay:.08s">
-      <span style="font-size:13px;color:#7a7269">最佳匹配品类</span>
-      <div style="font-size:22px;font-weight:700;color:#C0392B;margin-top:2px">${best.cat.name}</div>
-    </div>
-
-    <!-- Survival Probability -->
-    <div class="survival-wrap delay-2">
-      <h3>🎯 存活预估</h3>
-      <div class="survival-bar">
-        <div class="seg high" style="width:${survHigh}%"></div>
-        <div class="seg med" style="width:${survMed}%"></div>
-        <div class="seg low" style="width:${survLow}%"></div>
-      </div>
-      <div class="survival-label">
-        <span><span class="hl" style="color:#43a047">■</span> 高存活</span>
-        <span><span class="hl" style="color:#fdd835">■</span> 中概率</span>
-        <span><span class="hl" style="color:#e53935">■</span> 高失败</span>
-      </div>
-      <div style="margin-top:8px;font-size:15px;font-weight:600;text-align:center">${survLabel}</div>
-    </div>
-
-    <!-- 8维评分 -->
-    <div class="dimensions-wrap delay-3">
-      <h3>📈 评分详情</h3>
-      ${dimsSorted.map((d,i)=>{
-        const pct = Math.min(100, Math.round(d.score/d.max*100));
-        const color = dimColors[i%dimColors.length];
-        return `
-          <div class="dim-row">
-            <span class="dim-label">${d.name}</span>
-            <div class="dim-track"><div class="dim-fill" style="width:${pct}%;background:${color}"></div></div>
-            <span class="dim-score">${d.score.toFixed(1)}/${d.max}</span>
-          </div>
-        `;
-      }).join('')}
-    </div>
-
-    <!-- Decision Recommendations -->
-    <div class="decision-wrap delay-4">
-      <h3>📋 决策建议</h3>
-      <div class="decision-item">
-        <span class="decision-icon">🏪</span>
-        <div class="decision-text">
-          <div class="dt-label">推荐模型</div>
-          <div class="dt-value">${modelRec}</div>
-        </div>
-      </div>
-      <div class="decision-item">
-        <span class="decision-icon">⚠️</span>
-        <div class="decision-text">
-          <div class="dt-label">最大风险点</div>
-          <div class="dt-value">${worstDim.name}（${worstDim.score.toFixed(1)}/${worstDim.max}）</div>
-        </div>
-      </div>
-      <div class="decision-item">
-        <span class="decision-icon">💡</span>
-        <div class="decision-text">
-          <div class="dt-label">最优改善路径</div>
-          <div class="dt-value">${improveMap[worstDim.name]||'综合提升各维度表现'}</div>
-        </div>
-      </div>
-    </div>
-
-    ${catRankHtml}
-
-    ${cardLink ? `
-      <div class="card-link-wrap delay-5">
-        <a href="${cardLink}" class="btn btn-primary btn-sm">🔍 查看 ${best.cat.name} 产品卡</a>
-      </div>
-    ` : ''}
-  `;
-}
-
-// ============================================================
-// Restart
-// ============================================================
 function restart(){
-  state.city=-1;state.location=-1;state.categories=[];state.budget=-1;state.exp=-1;
-  state.format=-1;state.rent=-1;state.comp=-1;state.target=-1;
-  document.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
-  document.querySelectorAll('.btn-primary').forEach(b=>b.disabled=true);
-  $('calcBtn').disabled=true;
-  $('catCountHint').textContent = '已选 0 个';
-  goStep(0);
+  document.getElementById('resultPage').classList.remove('show');
+  document.getElementById('inputPage').style.display='block';
+  document.getElementById('category').value='';
+  document.getElementById('budget').value='';
+  document.getElementById('submitBtn').disabled=true;
+  window.scrollTo({top:0});
 }
-
-// ============================================================
-// Init progress
-// ============================================================
-updateProgress();
-
-// ============================================================
-// Touch-friendly: prevent double-tap zoom
-// ============================================================
-document.addEventListener('touchend',e=>{
-  const now = Date.now();
-  if(now - (document.lastTouch||0) < 300) e.preventDefault();
-  document.lastTouch = now;
-},{passive:false});
+function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(function(){t.style.display='none'},2000)}
+function showWechat(){showToast('微信号 canglin1985（已复制）');var i=document.createElement('input');i.value='canglin1985';document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i)}
 </script>
 </body>
 </html>
