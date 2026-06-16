@@ -1,426 +1,425 @@
-     1|<!DOCTYPE html>
-     2|<html lang="zh-CN">
-     3|<head>
-     4|<meta charset="UTF-8">
-     5|<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
-     6|<title>LC_002 冷吃牛肉条 · 四川自贡冷吃系列</title>
-     7|<style>
-     8|*{margin:0;padding:0;box-sizing:border-box}
-     9|body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
-    10|.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
-    11|.prod-header{padding:18px 18px 10px;text-align:center;background:#faf8f5}
-    12|.prod-header .ph-name{font-size:22px;font-weight:800;color:#3a2a1a;letter-spacing:1px}
-    13|.prod-header .ph-sub{font-size:11px;color:#b5aaa0;margin-top:2px;font-weight:400;letter-spacing:2px}
-    14|.variant-bar{background:linear-gradient(90deg,#8B1A1A,#C0392B);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
-    15|.variant-bar .v-label{font-weight:700;letter-spacing:1px}
-    16|.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
-    17|.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
-    18|.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
-    19|.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
-    20|.meta .price-tag{display:inline-block;background:#C0392B;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
-    21|.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
-    22|.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-    23|.diff-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
-    24|.diff-tag{font-size:9px;padding:2px 8px;border-radius:3px;background:#f5ede5;color:#7a6a5a;white-space:nowrap}
-    25|.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-    26|.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
-    27|.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
-    28|.radar-item .stars{font-size:13px;letter-spacing:0px}
-    29|.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
-    30|.radar-item.high{background:#fef2ee}.radar-item.high .stars{color:#E8652D}
-    31|.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    32|.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
-    33|.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
-    34|.fit-yes{background:#f0f6ec;color:#3a6b2e}
-    35|.fit-no{background:#fef2f2;color:#b53b3b}
-    36|.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
-    37|.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
-    38|.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
-    39|.logic-item:last-child{border-bottom:none}
-    40|.logic-item .v{font-weight:700;color:#C0392B}
-    41|.metric-row{display:flex;gap:6px;margin-top:6px}
-    42|.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
-    43|.metric-card .m-label{font-size:9px;color:#7a7269}
-    44|.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
-    45|.metric-card .m-sub{font-size:8px;color:#b5aaa0}
-    46|.mc-orange{background:#fdf2ee}.mc-orange .m-val{color:#E8652D}
-    47|.mc-gold{background:#fef6ec}.mc-gold .m-val{color:#D4A574}
-    48|.mc-green{background:#f0f6ec}.mc-green .m-val{color:#5a8f3c}
-    49|.mc-red{background:#fef2f2}.mc-red .m-val{color:#C0392B}
-    50|.eval-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    51|.eval-item{padding:12px 10px;border-radius:10px;text-align:center;background:#f8f4ef}
-    52|.eval-item .ev-label{font-size:10px;color:#7a7269;margin-bottom:4px}
-    53|.eval-item .ev-stars{font-size:14px}
-    54|.eval-item .ev-desc{font-size:10px;color:#5a4f44;margin-top:3px}
-    55|.comp-row{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid #f0ece6;font-size:12px}
-    56|.comp-row:last-child{border-bottom:none}
-    57|.comp-row .c-score{width:28px;height:20px;border-radius:4px;background:#f5ede5;font-weight:700;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    58|.comp-row .c-name{flex:1;color:#3a322a}
-    59|.comp-row .c-note{color:#b5aaa0;font-size:10px}
-    60|.comp-score-a{background:#e8f0e0;color:#3a6b2e}
-    61|.comp-score-b{background:#fef6ec;color:#D4A574}
-    62|.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-    63|.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
-    64|.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
-    65|.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
-    66|.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
-    67|.track-good .t-h{color:#5a8f3c}.track-bad .t-h{color:#C0392B}
-    68|.device-list{background:#f8f4ef;border-radius:10px;padding:12px;margin:6px 0}
-    69|.device-item{display:flex;justify-content:space-between;font-size:11px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
-    70|.device-item:last-child{border-bottom:none}
-    71|.device-item .d-name{font-weight:500}
-    72|.device-item .d-price{color:#C0392B;font-weight:600}
-    73|.device-sum{font-size:11px;font-weight:700;text-align:right;padding:8px 0 0;color:#3a322a;border-top:1px solid #e0d8ce}
-    74|.prod-struct{display:flex;flex-direction:column;gap:8px}
-    75|.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
-    76|.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
-    77|.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
-    78|.prod-tier .t-price{color:#b5aaa0;font-size:11px}
-    79|.tier-lead{background:#fef6ec}.tier-lead .t-badge{background:#E8652D;color:#fff}
-    80|.tier-profit{background:#f0f6ec}.tier-profit .t-badge{background:#5a8f3c;color:#fff}
-    81|.tier-premium{background:#fef2f2}.tier-premium .t-badge{background:#C0392B;color:#fff}
-    82|.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-    83|.stall-item{padding:10px;border-radius:10px;text-align:center}
-    84|.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
-    85|.stall-item .stars{font-size:12px;letter-spacing:1px}
-    86|.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
-    87|.risk-item:last-child{border-bottom:none}.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
-    88|.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
-    89|.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
-    90|.judge-box .j-text strong{color:#C0392B}
-    91|.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
-    92|.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
-    93|.cost-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-    94|.cost-item{padding:10px;border-radius:10px;text-align:center;background:#f8f4ef}
-    95|.cost-item .c-label{font-size:9px;color:#7a7269;margin-bottom:2px}
-    96|.cost-item .c-val{font-size:14px;font-weight:700;color:#3a322a}
-    97|.cost-item .c-sub{font-size:9px;color:#b5aaa0;margin-top:1px}
-    98|.cost-highlight{color:#C0392B!important}
-    99|.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-   100|.pack-item{background:#f8f4ef;border-radius:10px;padding:10px;font-size:11px;color:#5a4f44;line-height:1.5}
-   101|.pack-item .p-icon{font-size:16px;margin-bottom:2px}
-   102|.pack-item .p-title{font-weight:700;color:#3a322a;margin-bottom:2px}
-   103|.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-   104|.rel-item{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;font-size:11px;color:#3a322a}
-   105|.rel-item .r-emoji{font-size:14px}
-   106|.rel-item .r-name{flex:1;font-weight:500}
-   107|.rel-item .r-arrow{color:#b5aaa0;font-size:10px}
-   108|.recipe-box{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px}
-   109|.recipe-box .rb-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
-   110|.recipe-line{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
-   111|.recipe-line:last-child{border-bottom:none}
-   112|.recipe-line .rl-label{min-width:80px;color:#5a4f44}
-   113|.recipe-line .rl-val{font-weight:600;color:#3a322a;text-align:right;min-width:80px}
-   114|.recipe-line .rl-mid{flex:1;text-align:center;color:#7a7269;font-size:11px}
-   115|.fold-box{margin:8px 0}
-   116|.fold-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:#f5ede5;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#3a322a;cursor:pointer;text-align:left}
-   117|.fold-btn .fb-arrow{transition:transform .2s;font-size:10px;color:#b5aaa0}
-   118|.fold-btn.active .fb-arrow{transform:rotate(180deg)}
-   119|.fold-content{display:none;padding:10px 14px;background:#fdfcf9;border-radius:0 0 8px 8px;border:1px solid #f5ede5;border-top:none}
-   120|.fold-content.show{display:block}
-   121|.fold-content .fc-item{font-size:11px;color:#5a4f44;padding:4px 0;line-height:1.6}
-   122|.consult-box{background:#f8f4ef;border-radius:12px;padding:16px;margin:0 18px 16px;border:1px solid #eee5d8}
-   123|.consult-box .c-head{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
-   124|.consult-box .c-desc{font-size:11px;color:#7a7269;margin-bottom:10px}
-   125|.consult-box .c-wx{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-radius:8px;font-size:12px;font-weight:600;color:#3a322a;cursor:pointer;justify-content:center;border:1px solid #D4A574}
-   126|.consult-box .c-copy{font-size:9px;color:#b5aaa0;text-align:center;margin-top:4px}
-   127|.ftr{padding:16px 18px;text-align:center;background:#3a322a;color:#b5aaa0;font-size:11px;line-height:1.8}
-   128|.ftr .f-brand{font-size:12px;font-weight:700;color:#e0d5ca;margin-bottom:2px}
-   129|.ftr .f-tagline{font-size:10px;color:#988d80;margin-bottom:6px}
-   130|.ftr .f-links{display:flex;justify-content:center;gap:12px;font-size:10px}
-   131|.ftr .f-links a{color:#D4A574;text-decoration:none}
-   132|</style>
-   133|</head>
-   134|<body>
-   135|<div class="card">
-   136|
-   137|<div class="prod-header">
-   138|  <div class="ph-name">🥩 冷吃牛肉条</div>
-   139|  <div class="ph-sub">四川自贡冷吃系列 · LC_002 · 子卡</div>
-   140|</div>
-   141|
-   142|<div class="variant-bar">
-   143|  <span class="v-label">🌶️ 核心利润品 · 两段炸制+干煸红油</span>
-   144|  <a href="LC_001%20冷吃红油创业母卡.html" class="v-link">← 返回母卡</a>
-   145|</div>
-   146|
-   147|<div class="meta">
-   148|  <h1>冷吃牛肉条</h1>
-   149|  <div class="sub">自贡冷吃工艺 · 牛后腿/进口冻肉 · 核心利润品</div>
-   150|  <span class="price-tag">¥68~78/斤</span>
-   151|  <span class="price-tag" style="background:#5a8f3c;margin-left:4px">毛利50~55%</span>
-   152|</div>
-   153|
-   154|<div class="section">
-   155|  <div class="s-title">📊 单品速览</div>
-   156|  <div class="radar-grid">
-   157|    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">冷吃系列核心品</div></div>
-   158|    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="val">下酒零食·回头率高</div></div>
-   159|    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">¥300起买肉试做</div></div>
-   160|    <div class="radar-item high"><div class="label">💵 利润</div><div class="stars">★★★★☆</div><div class="val">50~55%·含红油</div></div>
-   161|    <div class="radar-item"><div class="label">📚 难度</div><div class="stars">★★★☆☆</div><div class="val">两段炸需练手感</div></div>
-   162|    <div class="radar-item high"><div class="label">📈 空间</div><div class="stars">★★★★★</div><div class="val">散称+真空全国发</div></div>
-   163|  </div>
-   164|</div>
-   165|
-   166|<div class="section">
-   167|  <div class="s-title">🎯 适合谁</div>
-   168|  <div class="fit-wrap">
-   169|    <div class="fit-col"><div class="f-head">✅ 适合</div>
-   170|      <div class="fit-item fit-yes">冷吃摊主·牛肉条为主力利润品</div>
-   171|      <div class="fit-item fit-yes">会用两段炸的（低温+高温）</div>
-   172|      <div class="fit-item fit-yes">有稳定牛肉进货渠道的</div>
-   173|      <div class="fit-item fit-yes">想线上真空发货的</div>
-   174|    </div>
-   175|    <div class="fit-col"><div class="f-head">❌ 不适合</div>
-   176|      <div class="fit-item fit-no">一锅炸到底不控油温的</div>
-   177|      <div class="fit-item fit-no">用牛腩牛腱替代后腿的（出品差）</div>
-   178|      <div class="fit-item fit-no">只做纯本地·不做线上拓展的</div>
-   179|    </div>
-   180|  </div>
-   181|</div>
-   182|
-   183|<div class="section">
-   184|  <div class="s-title">💰 赚钱逻辑</div>
-   185|  <div class="logic-box">
-   186|    <div class="l-title">🧑‍🍳 卖什么</div>
-   187|    <div class="logic-item"><span>冷吃牛肉条（散称）</span><span class="v">¥68~78/斤</span></div>
-   188|    <div class="logic-item"><span>冷吃牛肉条（真空·250g/袋）</span><span class="v">¥24~28/袋</span></div>
-   189|    <div class="logic-item"><span>冷吃牛肉条（批量5斤+）</span><span class="v">¥58~62/斤</span></div>
-   190|  </div>
-   191|  <div class="logic-box">
-   192|    <div class="l-title">📈 利润体系</div>
-   193|    <div class="logic-item"><span>鲜牛后腿进价</span><span class="v">¥28~38/斤</span></div>
-   194|    <div class="logic-item"><span>冷冻进口替代</span><span class="v">¥18~26/斤</span></div>
-   195|    <div class="logic-item"><span>炸制出品率</span><span class="v">55~65%</span></div>
-   196|    <div class="logic-item"><span>红油+辅料占成品</span><span class="v">8~10%</span></div>
-   197|    <div class="logic-item"><span>成品综合成本</span><span class="v">≈¥30~40/斤</span></div>
-   198|    <div class="logic-item"><span>毛利率</span><span class="v">50~55%</span></div>
-   199|    <div class="logic-item"><span>单人日产（3h）</span><span class="v">10~15斤</span></div>
-   200|    <div class="logic-item"><span>单品日毛利</span><span class="v">¥380~585</span></div>
-   201|  </div>
-   202|  <div style="font-size:10px;color:#3a6b2e;background:#f0f6ec;padding:8px 10px;border-radius:8px">
-   203|    💡 <strong>毛利高的原因：</strong>红油+花椒+辣椒占成品8~10%，成本远低于肉。散称免包装比预包装省15~20%成本。两样加起来，整体毛利比纯肉率高一截。
-   204|  </div>
-   205|</div>
-   206|
-   207|<div class="section">
-   208|  <div class="s-title">📈 赛道判断</div>
-   209|  <div class="judge-box">
-   210|    <div class="j-text">
-   211|      <strong>冷吃牛肉条</strong>是自贡冷吃体系中除冷吃兔外最核心的单品。随着自贡冷吃兔（2014年地标保护产品）的全国知名度提升，冷吃牛肉作为同工艺延伸品，市场接受度高。<br><br>
-   212|      与卤牛肉切片（带水·不耐存）和麻辣牛肉干（烘烤型·出品率低）相比，冷吃牛肉条的差异化在于两段炸制+干煸红油——干香耐嚼、冷却后风味更浓、散称毛利更高。<br><br>
-   213|      <strong>优势：</strong>①自贡冷吃工艺成熟 ②可溢价（¥68~78/斤）③红油+散称推高毛利 ④真空后可快递 ⑤一套工艺·学员好教<br><br>
-   214|      <strong>劣势：</strong>①牛肉进价波动大 ②出品率只有55~65% ③需要两段炸制练手 ④没有冷链不能长途快递
-   215|    </div>
-   216|  </div>
-   217|</div>
-   218|
-   219|<div class="section">
-   220|  <div class="s-title">🚦 项目评估</div>
-   221|  <div class="eval-grid">
-   222|    <div class="eval-item"><div class="ev-label">市场竞争</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">冷吃品类竞争者多</div></div>
-   223|    <div class="eval-item"><div class="ev-label">学习周期</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">炸制练手7天</div></div>
-   224|    <div class="eval-item"><div class="ev-label">操作容错度</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">油温控不好就翻</div></div>
-   225|    <div class="eval-item"><div class="ev-label">最低验证资金</div><div class="ev-stars">★★★★★</div><div class="ev-desc">≈300元买肉试做</div></div>
-   226|  </div>
-   227|</div>
-   228|
-   229|<div class="section">
-   230|  <div class="s-title">📊 同赛道对比</div>
-   231|  <div class="comp-row"><span class="c-score comp-score-a">55~65%</span><span class="c-name">冷吃牛肉条（本卡）</span><span class="c-note">两段炸+干煸红油·干香耐嚼</span></div>
-   232|  <div class="comp-row"><span class="c-score comp-score-b">45~55%</span><span class="c-name">卤牛肉切片</span><span class="c-note">带水偏湿·不耐存</span></div>
-   233|  <div class="comp-row"><span class="c-score comp-score-b">50~60%</span><span class="c-name">麻辣牛肉干</span><span class="c-note">烘烤型·偏硬·出成低</span></div>
-   234|  <div class="comp-row"><span class="c-score comp-score-a">60~70%</span><span class="c-name">冷吃兔丁（同工艺）</span><span class="c-note">自贡根源·出品更高</span></div>
-   235|  <div style="margin-top:6px;font-size:9px;color:#b5aaa0;text-align:center">出品率对比（数值越高原料损耗越小）</div>
-   236|</div>
-   237|
-   238|<div class="section">
-   239|  <div class="s-title">🗓️ 单品验证路线</div>
-   240|  <div class="track-grid">
-   241|    <div class="track-box track-good"><div class="t-h">Day1~3 丨 试做</div><div class="t-item">买牛后腿2斤试切条</div><div class="t-item">练两段炸油温手感</div><div class="t-item">试3版红油量</div></div>
-   242|    <div class="track-box track-good"><div class="t-h">Day7 丨 试吃</div><div class="t-item">请10人试吃反馈</div><div class="t-item">调整腌制配比</div></div>
-   243|    <div class="track-box track-good"><div class="t-h">Day15 丨 试卖</div><div class="t-item">带5斤去摊上试卖</div><div class="t-item">统计出品率+成本</div></div>
-   244|    <div class="track-box track-good"><div class="t-h">Day30 丨 定版</div><div class="t-item">配方标准化</div><div class="t-item">考虑真空发货</div></div>
-   245|  </div>
-   246|</div>
-   247|
-   248|<div class="section">
-   249|  <div class="s-title">🛠️ 单品设备</div>
-   250|  <div class="device-list">
-   251|    <div class="device-item"><span class="d-name">炒锅+炸锅</span><span class="d-price">已含在母卡设备中</span></div>
-   252|    <div class="device-item"><span class="d-name">油温温度计</span><span class="d-price">¥20~40</span></div>
-   253|    <div class="device-item"><span class="d-name">不锈钢盆×3</span><span class="d-price">¥30~60</span></div>
-   254|    <div class="device-item"><span class="d-name">电子秤+计时器</span><span class="d-price">¥30~60</span></div>
-   255|    <div class="device-item"><span class="d-name">真空包装机</span><span class="d-price">¥100~300</span></div>
-   256|    <div class="device-item"><span class="d-name">真空袋+标签纸</span><span class="d-price">¥50~100/千个</span></div>
-   257|    <div class="device-sum">单品追加投资：约¥230~560（母卡设备已含基础）</div>
-   258|  </div>
-   259|</div>
-   260|
-   261|<div class="section">
-   262|  <div class="s-title">📦 产品结构</div>
-   263|  <div class="prod-struct">
-   264|    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">试吃装（100g）</span><span class="t-price">¥12~15</span></div>
-   265|    <div class="prod-tier tier-profit"><span class="t-badge">标准</span><span class="t-name">散称牛肉条</span><span class="t-price">¥68~78/斤</span></div>
-   266|    <div class="prod-tier tier-premium"><span class="t-badge">精装</span><span class="t-name">真空礼盒250g</span><span class="t-price">¥24~28/袋</span></div>
-   267|    <div class="prod-tier tier-set"><span class="t-badge">批量</span><span class="t-name">批量5斤+</span><span class="t-price">¥58~62/斤</span></div>
-   268|  </div>
-   269|</div>
-   270|
-   271|<div class="section">
-   272|  <div class="s-title">🔥 摆摊指数</div>
-   273|  <div class="stall-grid">
-   274|    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🏘️ 城中村/工业区</div><div class="stars">★★★★★</div></div>
-   275|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">📱 同城线上+真空</div><div class="stars">★★★★★</div></div>
-   276|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🌃 夜市摆摊</div><div class="stars">★★★★☆</div></div>
-   277|    <div class="stall-item" style="background:#eef2ff"><div class="s-name">📦 真空快递全国</div><div class="stars">★★★★☆</div></div>
-   278|    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🎓 学员教学用</div><div class="stars">★★★★★</div></div>
-   279|    <div class="stall-item" style="background:#fdf2ee"><div class="s-name">🏪 超市档口</div><div class="stars">★★★☆☆</div></div>
-   280|  </div>
-   281|</div>
-   282|
-   283|<div class="section">
-   284|  <div class="s-title">⚠️ 最大风险</div>
-   285|  <div class="risk-item"><span class="r-icon">💀</span><span><strong>油温控制不当：</strong>两段炸制的核心是低温定型+高温脱水。初炸温度高了外焦内生，复炸温度低了不回酥。新手至少练7天才能稳定。建议买温度计，不要凭感觉。</span></div>
-   286|  <div class="risk-item"><span class="r-icon">🥩</span><span><strong>牛肉选错部位：</strong>牛后腿适合做冷吃——筋膜少、肉质紧。用牛腩（太肥出品率低）或牛腱（筋肉多口感乱）都不对。进货时认准后腿肉。</span></div>
-   287|  <div class="risk-item"><span class="r-icon">💰</span><span><strong>牛肉进价波动大：</strong>鲜牛肉价格随行情波动，夏季贵冬季便宜。价格波动±5~8元/斤直接影响毛利。建议冷冻进口牛肉做备选方案，价差对冲。</span></div>
-   288|  <div class="risk-item"><span class="r-icon">📦</span><span><strong>快递品控：</strong>真空包装的冷吃牛肉条常温发快递，夏天运输3天以上有变质风险。必须加冰袋+泡沫箱，成本上升¥3~5/单。</span></div>
-   289|  <div class="risk-item"><span class="r-icon">⏰</span><span><strong>单人产能有限：</strong>一个人一天最多处理10~15斤牛肉条成品。想扩量必须加人手。学员教学可以缓解但解决不了根本产能问题。</span></div>
-   290|</div>
-   291|
-   292|<div class="section">
-   293|  <div class="s-title">🔪 核心工艺</div>
-   294|  <div class="fold-box">
-   295|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
-   296|      <span>🥩 腌制配比（每500g牛肉）</span>
-   297|      <span class="fb-arrow">▼</span>
-   298|    </button>
-   299|    <div class="fold-content">
-   300|      <div class="recipe-line"><span class="rl-label">牛后腿肉</span><span class="rl-mid">500g·逆纹切条0.5~1cm宽</span><span class="rl-val">—</span></div>
-   301|      <div class="recipe-line"><span class="rl-label">盐</span><span class="rl-mid">5~8g</span><span class="rl-val">底味</span></div>
-   302|      <div class="recipe-line"><span class="rl-label">白糖</span><span class="rl-mid">5~10g</span><span class="rl-val">提鲜回甘</span></div>
-   303|      <div class="recipe-line"><span class="rl-label">料酒</span><span class="rl-mid">10~15ml</span><span class="rl-val">去腥</span></div>
-   304|      <div class="recipe-line"><span class="rl-label">生抽</span><span class="rl-mid">10ml</span><span class="rl-val">提鲜</span></div>
-   305|      <div class="recipe-line"><span class="rl-label">老抽</span><span class="rl-mid">3ml</span><span class="rl-val">上色</span></div>
-   306|      <div class="recipe-line"><span class="rl-label">姜葱</span><span class="rl-mid">适量</span></div>
-   307|      <div class="recipe-line"><span class="rl-label">食用油</span><span class="rl-mid">5~10ml</span><span class="rl-val">锁水</span></div>
-   308|      <div class="recipe-line" style="border-bottom:none"><span class="rl-label">腌制时间</span><span class="rl-mid">冷藏30~60min</span><span class="rl-val">不水洗直接炸</span></div>
-   309|    </div>
-   310|  </div>
-   311|  <div class="fold-box">
-   312|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
-   313|      <span>🔥 两段式炸制</span>
-   314|      <span class="fb-arrow">▼</span>
-   315|    </button>
-   316|    <div class="fold-content">
-   317|      <div class="fc-item"><strong>① 初炸（140~150°C / 3~5min）：</strong>断生定型，锁住肉汁。</div>
-   318|      <div class="fc-item"><strong>② 复炸（160~170°C / 2~4min）：</strong>表面焦香脱水，便于保存。表面微焦边缘卷曲即好。</div>
-   319|      <div class="fc-item"><strong>判断标准：</strong>酱红偏棕色，表面微干边缘略卷。炸太久老咬不动，炸太短回软不耐存。</div>
-   320|    </div>
-   321|  </div>
-   322|  <div class="fold-box">
-   323|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
-   324|      <span>🌶️ 干煸→拌红油</span>
-   325|      <span class="fb-arrow">▼</span>
-   326|    </button>
-   327|    <div class="fold-content">
-   328|      <div class="fc-item"><strong>干煸：</strong>炒锅少油，下泡过温水的干辣椒丝+花椒粒+姜蒜爆香，放炸好的牛肉条中火干煸2~3min至起酥。</div>
-   329|      <div class="fc-item"><strong>拌红油：</strong>关火后倒入秘制红油+熟芝麻+糖少许，翻匀。每条裹薄薄一层。</div>
-   330|      <div class="fc-item"><strong>冷却：</strong>摊开放凉。冷却后红油被肉吸收，风味更浓。</div>
-   331|    </div>
-   332|  </div>
-   333|  <div class="fold-box">
-   334|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
-   335|      <span>⚠️ 翻车手册（6条）</span>
-   336|      <span class="fb-arrow">▼</span>
-   337|    </button>
-   338|    <div class="fold-content">
-   339|      <div class="fc-item"><strong>太硬咬不动：</strong>炸太久或牛部位错。→ 复炸不超4min，用后腿逆纹切。</div>
-   340|      <div class="fc-item"><strong>回潮软了：</strong>复炸不到位或没晾凉。→ 炸到焦香脱水，彻底放凉再装。</div>
-   341|      <div class="fc-item"><strong>不入味：</strong>腌制不够或切太粗。→ 至少腌30min，条宽不超1cm。</div>
-   342|      <div class="fc-item"><strong>红油挂不住：</strong>牛肉太光滑。→ 干煸起酥才挂得住。</div>
-   343|      <div class="fc-item"><strong>发黑：</strong>老抽太多或炸过头。→ 老抽不超3ml。注意火候。</div>
-   344|      <div class="fc-item"><strong>有膻味：</strong>腌制不够或不新鲜。→ 加花椒粉3g/500g去膻。</div>
-   345|    </div>
-   346|  </div>
-   347|</div>
-   348|
-   349|<div class="section">
-   350|  <div class="s-title">💰 成本利润</div>
-   351|  <div class="cost-grid">
-   352|    <div class="cost-item"><div class="c-label">鲜牛后腿</div><div class="c-val cost-highlight">28~38元/斤</div><div class="c-sub">2026年批发</div></div>
-   353|    <div class="cost-item"><div class="c-label">冷冻进口替代</div><div class="c-val cost-highlight">18~26元/斤</div><div class="c-sub">降本方案</div></div>
-   354|    <div class="cost-item"><div class="c-label">出品率</div><div class="c-val cost-highlight">55~65%</div><div class="c-sub">油炸后</div></div>
-   355|    <div class="cost-item"><div class="c-label">红油+料均摊</div><div class="c-val cost-highlight">3~5元/斤</div><div class="c-sub">占成品8~10%</div></div>
-   356|    <div class="cost-item"><div class="c-label">成品成本</div><div class="c-val cost-highlight">≈30~40元/斤</div><div class="c-sub">综合</div></div>
-   357|    <div class="cost-item"><div class="c-label">毛利率</div><div class="c-val">50~55%</div><div class="c-sub">售价¥68~78</div></div>
-   358|  </div>
-   359|</div>
-   360|
-   361|<div class="section">
-   362|  <div class="s-title">🎒 完整出品包</div>
-   363|  <div class="pack-grid">
-   364|    <div class="pack-item"><div class="p-icon">🥩</div><div class="p-title">腌制配比</div>500g基准·盐糖酒酱油·30~60min</div>
-   365|    <div class="pack-item"><div class="p-icon">🔥</div><div class="p-title">两段炸参数</div>初炸140~150°C+复炸160~170°C</div>
-   366|    <div class="pack-item"><div class="p-icon">🌶️</div><div class="p-title">干煸红油</div>泡水辣椒+花椒爆香→红油裹身</div>
-   367|    <div class="pack-item"><div class="p-icon">⚠️</div><div class="p-title">翻车手册</div>6种翻车+解决方案</div>
-   368|    <div class="pack-item"><div class="p-icon">💰</div><div class="p-title">成本核算</div>进价→出品→成本→毛利</div>
-   369|    <div class="pack-item"><div class="p-icon">📦</div><div class="p-title">真空发货</div>250g/袋·¥24~28·含标签</div>
-   370|  </div>
-   371|</div>
-   372|
-   373|<div class="section">
-   374|  <div class="s-title">🔗 关联产品</div>
-   375|  <div class="rel-grid">
-   376|    <a class="rel-item" href="LC_001%20冷吃红油创业母卡.html"><span class="r-emoji">📖</span><span class="r-name">LC_001 冷吃红油创业母卡</span><span class="r-arrow">→</span></a>
-   377|    <a class="rel-item" href="LC_003%20冷吃鸭舌（子）.html"><span class="r-emoji">🦆</span><span class="r-name">LC_003 冷吃鸭舌（子）</span><span class="r-arrow">→</span></a>
-   378|    <a class="rel-item" href="LC_004%20折耳根豆干（子）.html"><span class="r-emoji">🫘</span><span class="r-name">LC_004 折耳根豆干（子）</span><span class="r-arrow">→</span></a>
-   379|    <a class="rel-item" href="LC_005%20冷吃鸡副（子）.html"><span class="r-emoji">🐔</span><span class="r-name">LC_005 冷吃鸡副（子）</span><span class="r-arrow">→</span></a>
-   380|  </div>
-   381|</div>
-   382|
-   383|<div class="section" style="border-top:2px dashed #ddd4ca">
-   384|  <div class="s-title">💎 冷吃牛肉条 · 完整数据包</div>
-   385|  <div class="recipe-box">
-   386|    <div class="rb-title">🌡️ 炸制温度曲线</div>
-   387|    <div class="recipe-line"><span class="rl-label">初炸</span><span class="rl-mid">140~150°C</span><span class="rl-val">3~5min</span></div>
-   388|    <div class="recipe-line"><span class="rl-label">复炸</span><span class="rl-mid">160~170°C</span><span class="rl-val">2~4min</span></div>
-   389|    <div class="recipe-line"><span class="rl-label">干煸</span><span class="rl-mid">中火</span><span class="rl-val">2~3min</span></div>
-   390|    <div class="recipe-line" style="border-bottom:none"><span class="rl-label">判断</span><span class="rl-mid">表面微焦·边缘卷曲</span></div>
-   391|  </div>
-   392|  <div class="recipe-box">
-   393|    <div class="rb-title">📦 售卖规格</div>
-   394|    <div class="recipe-line"><span class="rl-label">散称</span><span class="rl-mid">¥68~78/斤</span><span class="rl-val">毛利50~55%</span></div>
-   395|    <div class="recipe-line"><span class="rl-label">真空250g</span><span class="rl-mid">¥24~28/袋</span></div>
-   396|    <div class="recipe-line"><span class="rl-label">批量5斤+</span><span class="rl-mid">¥58~62/斤</span></div>
-   397|    <div class="recipe-line" style="border-bottom:none"><span class="rl-label">学员教学</span><span class="rl-mid">含在母卡¥8,000中</span></div>
-   398|  </div>
-   399|  <div style="font-size:10px;color:#b5aaa0;text-align:center;padding:6px 0 0">⚠️ 完整数据包（批量腌制·油温曲线·红油精确克重·真空SOP）定价¥19，咨询沧林获取</div>
-   400|</div>
-   401|
-   402|<div class="consult-box">
-   403|  <div class="c-head">📱 咨询沧林</div>
-   404|  <div class="c-desc">关于冷吃牛肉条的任何问题，直接问</div>
-   405|  <div class="c-wx" onclick="copyWx()">📋 复制微信号：canglin1985</div>
-   406|  <div class="c-copy">微信复制 · 添加好友 · 直接开聊</div>
-   407|</div>
-   408|
-   409|<div class="ftr">
-   410|  <div class="f-brand">🍜 食品决策库 · 冷吃红油系列</div>
-   411|  <div class="f-tagline">子卡 · 单品完整决策数据</div>
-   412|  <div style="font-size:8px;color:#6a5a4a;margin-bottom:6px;line-height:1.4">
-   413|    <strong>数据说明：</strong>牛肉批发价综合自农业农村部2026年5月+1688批发均价。出品率/红油占比为行业经验值。实际因牛肉部位/批次/工艺存在差异。<br>
-   414|    子卡数据与母卡工艺体系一致，互相补充。
-   415|  </div>
-   416|  <div class="f-links">
-   417|    <a href="LC_001%20冷吃红油创业母卡.html">← 返回母卡</a>
-   418|    <a href="#">微信 canglin1985</a>
-   419|  </div>
-   420|</div>
-   421|
-   422|</div>
-   423|<script>function copyWx(){navigator.clipboard.writeText('canglin1985')}</script>
-   424|</body>
-   425|</html>
-   426|
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>LC_002 冷吃牛肉条 · 四川自贡冷吃系列</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.prod-header{padding:18px 18px 10px;text-align:center;background:#faf8f5}
+.prod-header .ph-name{font-size:22px;font-weight:800;color:#3a2a1a;letter-spacing:1px}
+.prod-header .ph-sub{font-size:11px;color:#b5aaa0;margin-top:2px;font-weight:400;letter-spacing:2px}
+.variant-bar{background:linear-gradient(90deg,#8B1A1A,#C0392B);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#C0392B;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.diff-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.diff-tag{font-size:9px;padding:2px 8px;border-radius:3px;background:#f5ede5;color:#7a6a5a;white-space:nowrap}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}.mc-green .m-val{color:#5a8f3c}
+.mc-red{background:#fef2f2}.mc-red .m-val{color:#C0392B}
+.eval-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.eval-item{padding:12px 10px;border-radius:10px;text-align:center;background:#f8f4ef}
+.eval-item .ev-label{font-size:10px;color:#7a7269;margin-bottom:4px}
+.eval-item .ev-stars{font-size:14px}
+.eval-item .ev-desc{font-size:10px;color:#5a4f44;margin-top:3px}
+.comp-row{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid #f0ece6;font-size:12px}
+.comp-row:last-child{border-bottom:none}
+.comp-row .c-score{width:28px;height:20px;border-radius:4px;background:#f5ede5;font-weight:700;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.comp-row .c-name{flex:1;color:#3a322a}
+.comp-row .c-note{color:#b5aaa0;font-size:10px}
+.comp-score-a{background:#e8f0e0;color:#3a6b2e}
+.comp-score-b{background:#fef6ec;color:#D4A574}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}.track-bad .t-h{color:#C0392B}
+.device-list{background:#f8f4ef;border-radius:10px;padding:12px;margin:6px 0}
+.device-item{display:flex;justify-content:space-between;font-size:11px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.device-item:last-child{border-bottom:none}
+.device-item .d-name{font-weight:500}
+.device-item .d-price{color:#C0392B;font-weight:600}
+.device-sum{font-size:11px;font-weight:700;text-align:right;padding:8px 0 0;color:#3a322a;border-top:1px solid #e0d8ce}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-premium{background:#fef2f2}.tier-premium .t-badge{background:#C0392B;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.cost-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.cost-item{padding:10px;border-radius:10px;text-align:center;background:#f8f4ef}
+.cost-item .c-label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.cost-item .c-val{font-size:14px;font-weight:700;color:#3a322a}
+.cost-item .c-sub{font-size:9px;color:#b5aaa0;margin-top:1px}
+.cost-highlight{color:#C0392B!important}
+.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pack-item{background:#f8f4ef;border-radius:10px;padding:10px;font-size:11px;color:#5a4f44;line-height:1.5}
+.pack-item .p-icon{font-size:16px;margin-bottom:2px}
+.pack-item .p-title{font-weight:700;color:#3a322a;margin-bottom:2px}
+.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.rel-item{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;font-size:11px;color:#3a322a}
+.rel-item .r-emoji{font-size:14px}
+.rel-item .r-name{flex:1;font-weight:500}
+.rel-item .r-arrow{color:#b5aaa0;font-size:10px}
+.recipe-box{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px}
+.recipe-box .rb-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.recipe-line{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .rl-label{min-width:80px;color:#5a4f44}
+.recipe-line .rl-val{font-weight:600;color:#3a322a;text-align:right;min-width:80px}
+.recipe-line .rl-mid{flex:1;text-align:center;color:#7a7269;font-size:11px}
+.fold-box{margin:8px 0}
+.fold-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:#f5ede5;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#3a322a;cursor:pointer;text-align:left}
+.fold-btn .fb-arrow{transition:transform .2s;font-size:10px;color:#b5aaa0}
+.fold-btn.active .fb-arrow{transform:rotate(180deg)}
+.fold-content{display:none;padding:10px 14px;background:#fdfcf9;border-radius:0 0 8px 8px;border:1px solid #f5ede5;border-top:none}
+.fold-content.show{display:block}
+.fold-content .fc-item{font-size:11px;color:#5a4f44;padding:4px 0;line-height:1.6}
+.consult-box{background:#f8f4ef;border-radius:12px;padding:16px;margin:0 18px 16px;border:1px solid #eee5d8}
+.consult-box .c-head{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.consult-box .c-desc{font-size:11px;color:#7a7269;margin-bottom:10px}
+.consult-box .c-wx{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-radius:8px;font-size:12px;font-weight:600;color:#3a322a;cursor:pointer;justify-content:center;border:1px solid #D4A574}
+.consult-box .c-copy{font-size:9px;color:#b5aaa0;text-align:center;margin-top:4px}
+.ftr{padding:16px 18px;text-align:center;background:#3a322a;color:#b5aaa0;font-size:11px;line-height:1.8}
+.ftr .f-brand{font-size:12px;font-weight:700;color:#e0d5ca;margin-bottom:2px}
+.ftr .f-tagline{font-size:10px;color:#988d80;margin-bottom:6px}
+.ftr .f-links{display:flex;justify-content:center;gap:12px;font-size:10px}
+.ftr .f-links a{color:#D4A574;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div class="prod-header">
+  <div class="ph-name">🥩 冷吃牛肉条</div>
+  <div class="ph-sub">四川自贡冷吃系列 · LC_002 · 子卡</div>
+</div>
+
+<div class="variant-bar">
+  <span class="v-label">🌶️ 核心利润品 · 两段炸制+干煸红油</span>
+  <a href="LC_001%20冷吃红油创业母卡.html" class="v-link">← 返回母卡</a>
+</div>
+
+<div class="meta">
+  <h1>冷吃牛肉条</h1>
+  <div class="sub">自贡冷吃工艺 · 牛后腿/进口冻肉 · 核心利润品</div>
+  <span class="price-tag">¥68~78/斤</span>
+  <span class="price-tag" style="background:#5a8f3c;margin-left:4px">毛利50~55%</span>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 单品速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">冷吃系列核心品</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="val">下酒零食·回头率高</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">¥300起买肉试做</div></div>
+    <div class="radar-item high"><div class="label">💵 利润</div><div class="stars">★★★★☆</div><div class="val">50~55%·含红油</div></div>
+    <div class="radar-item"><div class="label">📚 难度</div><div class="stars">★★★☆☆</div><div class="val">两段炸需练手感</div></div>
+    <div class="radar-item high"><div class="label">📈 空间</div><div class="stars">★★★★★</div><div class="val">散称+真空全国发</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🎯 适合谁</div>
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head">✅ 适合</div>
+      <div class="fit-item fit-yes">冷吃摊主·牛肉条为主力利润品</div>
+      <div class="fit-item fit-yes">会用两段炸的（低温+高温）</div>
+      <div class="fit-item fit-yes">有稳定牛肉进货渠道的</div>
+      <div class="fit-item fit-yes">想线上真空发货的</div>
+    </div>
+    <div class="fit-col"><div class="f-head">❌ 不适合</div>
+      <div class="fit-item fit-no">一锅炸到底不控油温的</div>
+      <div class="fit-item fit-no">用牛腩牛腱替代后腿的（出品差）</div>
+      <div class="fit-item fit-no">只做纯本地·不做线上拓展的</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧑‍🍳 卖什么</div>
+    <div class="logic-item"><span>冷吃牛肉条（散称）</span><span class="v">¥68~78/斤</span></div>
+    <div class="logic-item"><span>冷吃牛肉条（真空·250g/袋）</span><span class="v">¥24~28/袋</span></div>
+    <div class="logic-item"><span>冷吃牛肉条（批量5斤+）</span><span class="v">¥58~62/斤</span></div>
+  </div>
+  <div class="logic-box">
+    <div class="l-title">📈 利润体系</div>
+    <div class="logic-item"><span>鲜牛后腿进价</span><span class="v">¥28~38/斤</span></div>
+    <div class="logic-item"><span>冷冻进口替代</span><span class="v">¥18~26/斤</span></div>
+    <div class="logic-item"><span>炸制出品率</span><span class="v">55~65%</span></div>
+    <div class="logic-item"><span>红油+辅料占成品</span><span class="v">8~10%</span></div>
+    <div class="logic-item"><span>成品综合成本</span><span class="v">≈¥30~40/斤</span></div>
+    <div class="logic-item"><span>毛利率</span><span class="v">50~55%</span></div>
+    <div class="logic-item"><span>单人日产（3h）</span><span class="v">10~15斤</span></div>
+    <div class="logic-item"><span>单品日毛利</span><span class="v">¥380~585</span></div>
+  </div>
+  <div style="font-size:10px;color:#3a6b2e;background:#f0f6ec;padding:8px 10px;border-radius:8px">
+    💡 <strong>毛利高的原因：</strong>红油+花椒+辣椒占成品8~10%，成本远低于肉。散称免包装比预包装省15~20%成本。两样加起来，整体毛利比纯肉率高一截。
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>冷吃牛肉条</strong>是自贡冷吃体系中除冷吃兔外最核心的单品。随着自贡冷吃兔（2014年地标保护产品）的全国知名度提升，冷吃牛肉作为同工艺延伸品，市场接受度高。<br><br>
+      与卤牛肉切片（带水·不耐存）和麻辣牛肉干（烘烤型·出品率低）相比，冷吃牛肉条的差异化在于两段炸制+干煸红油——干香耐嚼、冷却后风味更浓、散称毛利更高。<br><br>
+      <strong>优势：</strong>①自贡冷吃工艺成熟 ②可溢价（¥68~78/斤）③红油+散称推高毛利 ④真空后可快递 ⑤一套工艺·学员好教<br><br>
+      <strong>劣势：</strong>①牛肉进价波动大 ②出品率只有55~65% ③需要两段炸制练手 ④没有冷链不能长途快递
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div class="eval-grid">
+    <div class="eval-item"><div class="ev-label">市场竞争</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">冷吃品类竞争者多</div></div>
+    <div class="eval-item"><div class="ev-label">学习周期</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">炸制练手7天</div></div>
+    <div class="eval-item"><div class="ev-label">操作容错度</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">油温控不好就翻</div></div>
+    <div class="eval-item"><div class="ev-label">最低验证资金</div><div class="ev-stars">★★★★★</div><div class="ev-desc">≈300元买肉试做</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div class="comp-row"><span class="c-score comp-score-a">55~65%</span><span class="c-name">冷吃牛肉条（本卡）</span><span class="c-note">两段炸+干煸红油·干香耐嚼</span></div>
+  <div class="comp-row"><span class="c-score comp-score-b">45~55%</span><span class="c-name">卤牛肉切片</span><span class="c-note">带水偏湿·不耐存</span></div>
+  <div class="comp-row"><span class="c-score comp-score-b">50~60%</span><span class="c-name">麻辣牛肉干</span><span class="c-note">烘烤型·偏硬·出成低</span></div>
+  <div class="comp-row"><span class="c-score comp-score-a">60~70%</span><span class="c-name">冷吃兔丁（同工艺）</span><span class="c-note">自贡根源·出品更高</span></div>
+  <div style="margin-top:6px;font-size:9px;color:#b5aaa0;text-align:center">出品率对比（数值越高原料损耗越小）</div>
+</div>
+
+<div class="section">
+  <div class="s-title">🗓️ 单品验证路线</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">Day1~3 丨 试做</div><div class="t-item">买牛后腿2斤试切条</div><div class="t-item">练两段炸油温手感</div><div class="t-item">试3版红油量</div></div>
+    <div class="track-box track-good"><div class="t-h">Day7 丨 试吃</div><div class="t-item">请10人试吃反馈</div><div class="t-item">调整腌制配比</div></div>
+    <div class="track-box track-good"><div class="t-h">Day15 丨 试卖</div><div class="t-item">带5斤去摊上试卖</div><div class="t-item">统计出品率+成本</div></div>
+    <div class="track-box track-good"><div class="t-h">Day30 丨 定版</div><div class="t-item">配方标准化</div><div class="t-item">考虑真空发货</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🛠️ 单品设备</div>
+  <div class="device-list">
+    <div class="device-item"><span class="d-name">炒锅+炸锅</span><span class="d-price">已含在母卡设备中</span></div>
+    <div class="device-item"><span class="d-name">油温温度计</span><span class="d-price">¥20~40</span></div>
+    <div class="device-item"><span class="d-name">不锈钢盆×3</span><span class="d-price">¥30~60</span></div>
+    <div class="device-item"><span class="d-name">电子秤+计时器</span><span class="d-price">¥30~60</span></div>
+    <div class="device-item"><span class="d-name">真空包装机</span><span class="d-price">¥100~300</span></div>
+    <div class="device-item"><span class="d-name">真空袋+标签纸</span><span class="d-price">¥50~100/千个</span></div>
+    <div class="device-sum">单品追加投资：约¥230~560（母卡设备已含基础）</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">试吃装（100g）</span><span class="t-price">¥12~15</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">标准</span><span class="t-name">散称牛肉条</span><span class="t-price">¥68~78/斤</span></div>
+    <div class="prod-tier tier-premium"><span class="t-badge">精装</span><span class="t-name">真空礼盒250g</span><span class="t-price">¥24~28/袋</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">批量</span><span class="t-name">批量5斤+</span><span class="t-price">¥58~62/斤</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🏘️ 城中村/工业区</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">📱 同城线上+真空</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🌃 夜市摆摊</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#eef2ff"><div class="s-name">📦 真空快递全国</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🎓 学员教学用</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fdf2ee"><div class="s-name">🏪 超市档口</div><div class="stars">★★★☆☆</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">💀</span><span><strong>油温控制不当：</strong>两段炸制的核心是低温定型+高温脱水。初炸温度高了外焦内生，复炸温度低了不回酥。新手至少练7天才能稳定。建议买温度计，不要凭感觉。</span></div>
+  <div class="risk-item"><span class="r-icon">🥩</span><span><strong>牛肉选错部位：</strong>牛后腿适合做冷吃——筋膜少、肉质紧。用牛腩（太肥出品率低）或牛腱（筋肉多口感乱）都不对。进货时认准后腿肉。</span></div>
+  <div class="risk-item"><span class="r-icon">💰</span><span><strong>牛肉进价波动大：</strong>鲜牛肉价格随行情波动，夏季贵冬季便宜。价格波动±5~8元/斤直接影响毛利。建议冷冻进口牛肉做备选方案，价差对冲。</span></div>
+  <div class="risk-item"><span class="r-icon">📦</span><span><strong>快递品控：</strong>真空包装的冷吃牛肉条常温发快递，夏天运输3天以上有变质风险。必须加冰袋+泡沫箱，成本上升¥3~5/单。</span></div>
+  <div class="risk-item"><span class="r-icon">⏰</span><span><strong>单人产能有限：</strong>一个人一天最多处理10~15斤牛肉条成品。想扩量必须加人手。学员教学可以缓解但解决不了根本产能问题。</span></div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="fold-box">
+    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+      <span>🥩 腌制配比（每500g牛肉）</span>
+      <span class="fb-arrow">▼</span>
+    </button>
+    <div class="fold-content">
+      <div class="recipe-line"><span class="rl-label">牛后腿肉</span><span class="rl-mid">500g·逆纹切条0.5~1cm宽</span><span class="rl-val">—</span></div>
+      <div class="recipe-line"><span class="rl-label">盐</span><span class="rl-mid">5~8g</span><span class="rl-val">底味</span></div>
+      <div class="recipe-line"><span class="rl-label">白糖</span><span class="rl-mid">5~10g</span><span class="rl-val">提鲜回甘</span></div>
+      <div class="recipe-line"><span class="rl-label">料酒</span><span class="rl-mid">10~15ml</span><span class="rl-val">去腥</span></div>
+      <div class="recipe-line"><span class="rl-label">生抽</span><span class="rl-mid">10ml</span><span class="rl-val">提鲜</span></div>
+      <div class="recipe-line"><span class="rl-label">老抽</span><span class="rl-mid">3ml</span><span class="rl-val">上色</span></div>
+      <div class="recipe-line"><span class="rl-label">姜葱</span><span class="rl-mid">适量</span></div>
+      <div class="recipe-line"><span class="rl-label">食用油</span><span class="rl-mid">5~10ml</span><span class="rl-val">锁水</span></div>
+      <div class="recipe-line" style="border-bottom:none"><span class="rl-label">腌制时间</span><span class="rl-mid">冷藏30~60min</span><span class="rl-val">不水洗直接炸</span></div>
+    </div>
+  </div>
+  <div class="fold-box">
+    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+      <span>🔥 两段式炸制</span>
+      <span class="fb-arrow">▼</span>
+    </button>
+    <div class="fold-content">
+      <div class="fc-item"><strong>① 初炸（140~150°C / 3~5min）：</strong>断生定型，锁住肉汁。</div>
+      <div class="fc-item"><strong>② 复炸（160~170°C / 2~4min）：</strong>表面焦香脱水，便于保存。表面微焦边缘卷曲即好。</div>
+      <div class="fc-item"><strong>判断标准：</strong>酱红偏棕色，表面微干边缘略卷。炸太久老咬不动，炸太短回软不耐存。</div>
+    </div>
+  </div>
+  <div class="fold-box">
+    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+      <span>🌶️ 干煸→拌红油</span>
+      <span class="fb-arrow">▼</span>
+    </button>
+    <div class="fold-content">
+      <div class="fc-item"><strong>干煸：</strong>炒锅少油，下泡过温水的干辣椒丝+花椒粒+姜蒜爆香，放炸好的牛肉条中火干煸2~3min至起酥。</div>
+      <div class="fc-item"><strong>拌红油：</strong>关火后倒入秘制红油+熟芝麻+糖少许，翻匀。每条裹薄薄一层。</div>
+      <div class="fc-item"><strong>冷却：</strong>摊开放凉。冷却后红油被肉吸收，风味更浓。</div>
+    </div>
+  </div>
+  <div class="fold-box">
+    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+      <span>⚠️ 翻车手册（6条）</span>
+      <span class="fb-arrow">▼</span>
+    </button>
+    <div class="fold-content">
+      <div class="fc-item"><strong>太硬咬不动：</strong>炸太久或牛部位错。→ 复炸不超4min，用后腿逆纹切。</div>
+      <div class="fc-item"><strong>回潮软了：</strong>复炸不到位或没晾凉。→ 炸到焦香脱水，彻底放凉再装。</div>
+      <div class="fc-item"><strong>不入味：</strong>腌制不够或切太粗。→ 至少腌30min，条宽不超1cm。</div>
+      <div class="fc-item"><strong>红油挂不住：</strong>牛肉太光滑。→ 干煸起酥才挂得住。</div>
+      <div class="fc-item"><strong>发黑：</strong>老抽太多或炸过头。→ 老抽不超3ml。注意火候。</div>
+      <div class="fc-item"><strong>有膻味：</strong>腌制不够或不新鲜。→ 加花椒粉3g/500g去膻。</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💰 成本利润</div>
+  <div class="cost-grid">
+    <div class="cost-item"><div class="c-label">鲜牛后腿</div><div class="c-val cost-highlight">28~38元/斤</div><div class="c-sub">2026年批发</div></div>
+    <div class="cost-item"><div class="c-label">冷冻进口替代</div><div class="c-val cost-highlight">18~26元/斤</div><div class="c-sub">降本方案</div></div>
+    <div class="cost-item"><div class="c-label">出品率</div><div class="c-val cost-highlight">55~65%</div><div class="c-sub">油炸后</div></div>
+    <div class="cost-item"><div class="c-label">红油+料均摊</div><div class="c-val cost-highlight">3~5元/斤</div><div class="c-sub">占成品8~10%</div></div>
+    <div class="cost-item"><div class="c-label">成品成本</div><div class="c-val cost-highlight">≈30~40元/斤</div><div class="c-sub">综合</div></div>
+    <div class="cost-item"><div class="c-label">毛利率</div><div class="c-val">50~55%</div><div class="c-sub">售价¥68~78</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🎒 完整出品包</div>
+  <div class="pack-grid">
+    <div class="pack-item"><div class="p-icon">🥩</div><div class="p-title">腌制配比</div>500g基准·盐糖酒酱油·30~60min</div>
+    <div class="pack-item"><div class="p-icon">🔥</div><div class="p-title">两段炸参数</div>初炸140~150°C+复炸160~170°C</div>
+    <div class="pack-item"><div class="p-icon">🌶️</div><div class="p-title">干煸红油</div>泡水辣椒+花椒爆香→红油裹身</div>
+    <div class="pack-item"><div class="p-icon">⚠️</div><div class="p-title">翻车手册</div>6种翻车+解决方案</div>
+    <div class="pack-item"><div class="p-icon">💰</div><div class="p-title">成本核算</div>进价→出品→成本→毛利</div>
+    <div class="pack-item"><div class="p-icon">📦</div><div class="p-title">真空发货</div>250g/袋·¥24~28·含标签</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="LC_001%20冷吃红油创业母卡.html"><span class="r-emoji">📖</span><span class="r-name">LC_001 冷吃红油创业母卡</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="LC_003%20冷吃鸭舌（子）.html"><span class="r-emoji">🦆</span><span class="r-name">LC_003 冷吃鸭舌（子）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="LC_004%20折耳根豆干（子）.html"><span class="r-emoji">🫘</span><span class="r-name">LC_004 折耳根豆干（子）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="LC_005%20冷吃鸡副（子）.html"><span class="r-emoji">🐔</span><span class="r-name">LC_005 冷吃鸡副（子）</span><span class="r-arrow">→</span></a>
+  </div>
+</div>
+
+<div class="section" style="border-top:2px dashed #ddd4ca">
+  <div class="s-title">💎 冷吃牛肉条 · 完整数据包</div>
+  <div class="recipe-box">
+    <div class="rb-title">🌡️ 炸制温度曲线</div>
+    <div class="recipe-line"><span class="rl-label">初炸</span><span class="rl-mid">140~150°C</span><span class="rl-val">3~5min</span></div>
+    <div class="recipe-line"><span class="rl-label">复炸</span><span class="rl-mid">160~170°C</span><span class="rl-val">2~4min</span></div>
+    <div class="recipe-line"><span class="rl-label">干煸</span><span class="rl-mid">中火</span><span class="rl-val">2~3min</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="rl-label">判断</span><span class="rl-mid">表面微焦·边缘卷曲</span></div>
+  </div>
+  <div class="recipe-box">
+    <div class="rb-title">📦 售卖规格</div>
+    <div class="recipe-line"><span class="rl-label">散称</span><span class="rl-mid">¥68~78/斤</span><span class="rl-val">毛利50~55%</span></div>
+    <div class="recipe-line"><span class="rl-label">真空250g</span><span class="rl-mid">¥24~28/袋</span></div>
+    <div class="recipe-line"><span class="rl-label">批量5斤+</span><span class="rl-mid">¥58~62/斤</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="rl-label">学员教学</span><span class="rl-mid">含在母卡¥8,000中</span></div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;text-align:center;padding:6px 0 0">⚠️ 完整数据包（批量腌制·油温曲线·红油精确克重·真空SOP）定价¥19，咨询沧林获取</div>
+</div>
+
+<div class="consult-box">
+  <div class="c-head">📱 咨询沧林</div>
+  <div class="c-desc">关于冷吃牛肉条的任何问题，直接问</div>
+  <div class="c-wx" onclick="copyWx()">📋 复制微信号：canglin1985</div>
+  <div class="c-copy">微信复制 · 添加好友 · 直接开聊</div>
+</div>
+
+<div class="ftr">
+  <div class="f-brand">🍜 食品决策库 · 冷吃红油系列</div>
+  <div class="f-tagline">子卡 · 单品完整决策数据</div>
+  <div style="font-size:8px;color:#6a5a4a;margin-bottom:6px;line-height:1.4">
+    <strong>数据说明：</strong>牛肉批发价综合自农业农村部2026年5月+1688批发均价。出品率/红油占比为行业经验值。实际因牛肉部位/批次/工艺存在差异。<br>
+    子卡数据与母卡工艺体系一致，互相补充。
+  </div>
+  <div class="f-links">
+    <a href="LC_001%20冷吃红油创业母卡.html">← 返回母卡</a>
+    <a href="#">微信 canglin1985</a>
+  </div>
+</div>
+
+</div>
+<script>function copyWx(){navigator.clipboard.writeText('canglin1985')}</script>
+</body>
+</html>
