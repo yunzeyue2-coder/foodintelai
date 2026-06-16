@@ -789,6 +789,29 @@ function calculate(){
   
   renderResults(scored, city, loc, budget, exp, format, rent, comp, target);
   goStep(6);
+  
+  // 异步上报数据
+  reportCheckData(city, loc, cats, budget, exp, format, rent, comp, target, scored);
+}
+
+// ============================================================
+// 数据上报
+// ============================================================
+function reportCheckData(city, loc, cats, budget, exp, format, rent, comp, target, results){
+  try {
+    const best = results[0];
+    const payload = {
+      city, location: loc,
+      categories: cats,
+      budget, experience: exp,
+      format, rent, competition: comp, target,
+      score: best?.total || 0,
+      best_category: best?.cat?.name || '',
+      dims: results.slice(0,3).map(r=>({name:r.cat.name, score:r.total}))
+    };
+    const blob = new Blob([JSON.stringify(payload)], {type:'application/json'});
+    navigator.sendBeacon('/api/check/submit', blob);
+  } catch(e){ /*静默失败*/ }
 }
 
 // ============================================================
