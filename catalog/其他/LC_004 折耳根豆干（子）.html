@@ -1,0 +1,413 @@
+     1|<!DOCTYPE html>
+     2|<html lang="zh-CN">
+     3|<head>
+     4|<meta charset="UTF-8">
+     5|<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+     6|<title>LC_004 折耳根豆干 · 四川冷吃素食系列</title>
+     7|<style>
+     8|*{margin:0;padding:0;box-sizing:border-box}
+     9|body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+    10|.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+    11|.prod-header{padding:18px 18px 10px;text-align:center;background:#faf8f5}
+    12|.prod-header .ph-name{font-size:22px;font-weight:800;color:#3a2a1a;letter-spacing:1px}
+    13|.prod-header .ph-sub{font-size:11px;color:#b5aaa0;margin-top:2px;font-weight:400;letter-spacing:2px}
+    14|.variant-bar{background:linear-gradient(90deg,#5a8f3c,#7ab85c);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+    15|.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+    16|.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+    17|.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+    18|.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+    19|.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+    20|.meta .price-tag{display:inline-block;background:#5a8f3c;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+    21|.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+    22|.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    23|.diff-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+    24|.diff-tag{font-size:9px;padding:2px 8px;border-radius:3px;background:#f5ede5;color:#7a6a5a;white-space:nowrap}
+    25|.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    26|.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+    27|.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+    28|.radar-item .stars{font-size:13px;letter-spacing:0px}
+    29|.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+    30|.radar-item.high{background:#fef2ee}.radar-item.high .stars{color:#E8652D}
+    31|.radar-item.green{background:#f0f6ec}.radar-item.green .stars{color:#5a8f3c}
+    32|.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    33|.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+    34|.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+    35|.fit-yes{background:#f0f6ec;color:#3a6b2e}
+    36|.fit-no{background:#fef2f2;color:#b53b3b}
+    37|.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+    38|.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+    39|.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+    40|.logic-item:last-child{border-bottom:none}
+    41|.logic-item .v{font-weight:700;color:#5a8f3c}
+    42|.metric-row{display:flex;gap:6px;margin-top:6px}
+    43|.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+    44|.metric-card .m-label{font-size:9px;color:#7a7269}
+    45|.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+    46|.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+    47|.mc-orange{background:#fdf2ee}.mc-orange .m-val{color:#E8652D}
+    48|.mc-gold{background:#fef6ec}.mc-gold .m-val{color:#D4A574}
+    49|.mc-green{background:#f0f6ec}.mc-green .m-val{color:#5a8f3c}
+    50|.mc-red{background:#fef2f2}.mc-red .m-val{color:#C0392B}
+    51|.eval-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    52|.eval-item{padding:12px 10px;border-radius:10px;text-align:center;background:#f8f4ef}
+    53|.eval-item .ev-label{font-size:10px;color:#7a7269;margin-bottom:4px}
+    54|.eval-item .ev-stars{font-size:14px}
+    55|.eval-item .ev-desc{font-size:10px;color:#5a4f44;margin-top:3px}
+    56|.comp-row{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid #f0ece6;font-size:12px}
+    57|.comp-row:last-child{border-bottom:none}
+    58|.comp-row .c-score{width:28px;height:20px;border-radius:4px;background:#f5ede5;font-weight:700;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    59|.comp-row .c-name{flex:1;color:#3a322a}
+    60|.comp-row .c-note{color:#b5aaa0;font-size:10px}
+    61|.comp-score-a{background:#e8f0e0;color:#3a6b2e}
+    62|.comp-score-b{background:#fef6ec;color:#D4A574}
+    63|.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    64|.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+    65|.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+    66|.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+    67|.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+    68|.track-good .t-h{color:#5a8f3c}.track-bad .t-h{color:#C0392B}
+    69|.device-list{background:#f8f4ef;border-radius:10px;padding:12px;margin:6px 0}
+    70|.device-item{display:flex;justify-content:space-between;font-size:11px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+    71|.device-item:last-child{border-bottom:none}
+    72|.device-item .d-name{font-weight:500}
+    73|.device-item .d-price{color:#5a8f3c;font-weight:600}
+    74|.device-sum{font-size:11px;font-weight:700;text-align:right;padding:8px 0 0;color:#3a322a;border-top:1px solid #e0d8ce}
+    75|.prod-struct{display:flex;flex-direction:column;gap:8px}
+    76|.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+    77|.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+    78|.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+    79|.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+    80|.tier-lead{background:#fef6ec}.tier-lead .t-badge{background:#E8652D;color:#fff}
+    81|.tier-profit{background:#f0f6ec}.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+    82|.tier-premium{background:#fef2f2}.tier-premium .t-badge{background:#C0392B;color:#fff}
+    83|.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    84|.stall-item{padding:10px;border-radius:10px;text-align:center}
+    85|.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+    86|.stall-item .stars{font-size:12px;letter-spacing:1px}
+    87|.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+    88|.risk-item:last-child{border-bottom:none}.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+    89|.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+    90|.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+    91|.judge-box .j-text strong{color:#5a8f3c}
+    92|.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+    93|.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+    94|.cost-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    95|.cost-item{padding:10px;border-radius:10px;text-align:center;background:#f8f4ef}
+    96|.cost-item .c-label{font-size:9px;color:#7a7269;margin-bottom:2px}
+    97|.cost-item .c-val{font-size:14px;font-weight:700;color:#3a322a}
+    98|.cost-item .c-sub{font-size:9px;color:#b5aaa0;margin-top:1px}
+    99|.cost-highlight{color:#5a8f3c!important}
+   100|.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+   101|.pack-item{background:#f8f4ef;border-radius:10px;padding:10px;font-size:11px;color:#5a4f44;line-height:1.5}
+   102|.pack-item .p-icon{font-size:16px;margin-bottom:2px}
+   103|.pack-item .p-title{font-weight:700;color:#3a322a;margin-bottom:2px}
+   104|.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+   105|.rel-item{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;font-size:11px;color:#3a322a}
+   106|.rel-item .r-emoji{font-size:14px}
+   107|.rel-item .r-name{flex:1;font-weight:500}
+   108|.rel-item .r-arrow{color:#b5aaa0;font-size:10px}
+   109|.recipe-box{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px}
+   110|.recipe-box .rb-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+   111|.recipe-line{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+   112|.recipe-line:last-child{border-bottom:none}
+   113|.recipe-line .rl-label{min-width:80px;color:#5a4f44}
+   114|.recipe-line .rl-val{font-weight:600;color:#3a322a;text-align:right;min-width:80px}
+   115|.recipe-line .rl-mid{flex:1;text-align:center;color:#7a7269;font-size:11px}
+   116|.fold-box{margin:8px 0}
+   117|.fold-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:#f5ede5;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#3a322a;cursor:pointer;text-align:left}
+   118|.fold-btn .fb-arrow{transition:transform .2s;font-size:10px;color:#b5aaa0}
+   119|.fold-btn.active .fb-arrow{transform:rotate(180deg)}
+   120|.fold-content{display:none;padding:10px 14px;background:#fdfcf9;border-radius:0 0 8px 8px;border:1px solid #f5ede5;border-top:none}
+   121|.fold-content.show{display:block}
+   122|.fold-content .fc-item{font-size:11px;color:#5a4f44;padding:4px 0;line-height:1.6}
+   123|.consult-box{background:#f8f4ef;border-radius:12px;padding:16px;margin:0 18px 16px;border:1px solid #eee5d8}
+   124|.consult-box .c-head{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+   125|.consult-box .c-desc{font-size:11px;color:#7a7269;margin-bottom:10px}
+   126|.consult-box .c-wx{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-radius:8px;font-size:12px;font-weight:600;color:#3a322a;cursor:pointer;justify-content:center;border:1px solid #D4A574}
+   127|.consult-box .c-copy{font-size:9px;color:#b5aaa0;text-align:center;margin-top:4px}
+   128|.ftr{padding:16px 18px;text-align:center;background:#3a322a;color:#b5aaa0;font-size:11px;line-height:1.8}
+   129|.ftr .f-brand{font-size:12px;font-weight:700;color:#e0d5ca;margin-bottom:2px}
+   130|.ftr .f-tagline{font-size:10px;color:#988d80;margin-bottom:6px}
+   131|.ftr .f-links{display:flex;justify-content:center;gap:12px;font-size:10px}
+   132|.ftr .f-links a{color:#D4A574;text-decoration:none}
+   133|</style>
+   134|</head>
+   135|<body>
+   136|<div class="card">
+   137|
+   138|<div class="prod-header">
+   139|  <div class="ph-name">🌿 折耳根豆干</div>
+   140|  <div class="ph-sub">冷吃系列 · 素食高毛利品 · LC_004 · 子卡</div>
+   141|</div>
+   142|
+   143|<div class="variant-bar">
+   144|  <span class="v-label">🌿 高毛利走量品 · 不油炸·毛利70~80%</span>
+   145|  <a href="LC_001%20冷吃红油创业母卡.html" class="v-link">← 返回母卡</a>
+   146|</div>
+   147|
+   148|<div class="meta">
+   149|  <h1>折耳根豆干</h1>
+   150|  <div class="sub">冷吃素食 · 层叠工艺 · 系列最高毛利品</div>
+   151|  <span class="price-tag">¥18~25/斤</span>
+   152|  <span class="price-tag" style="background:#C0392B;margin-left:4px">毛利70~80%</span>
+   153|</div>
+   154|
+   155|<div class="section">
+   156|  <div class="s-title">📊 单品速览</div>
+   157|  <div class="radar-grid">
+   158|    <div class="radar-item green"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">折耳根有争议·但粘性高</div></div>
+   159|    <div class="radar-item green"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">爱折耳根的反复买</div></div>
+   160|    <div class="radar-item green"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">¥100起试做</div></div>
+   161|    <div class="radar-item green"><div class="label">💵 利润</div><div class="stars">★★★★★</div><div class="val">70~80%·系列最高</div></div>
+   162|    <div class="radar-item green"><div class="label">📚 难度</div><div class="stars">★★☆☆☆</div><div class="val">不油炸·层叠拌料</div></div>
+   163|    <div class="radar-item green"><div class="label">📈 空间</div><div class="stars">★★★★☆</div><div class="val">素食走量大·溢价低</div></div>
+   164|  </div>
+   165|</div>
+   166|
+   167|<div class="section">
+   168|  <div class="s-title">🎯 适合谁</div>
+   169|  <div class="fit-wrap">
+   170|    <div class="fit-col"><div class="f-head">✅ 适合</div>
+   171|      <div class="fit-item fit-yes">想推高毛利走量品的摊主</div>
+   172|      <div class="fit-item fit-yes">折耳根爱好者·区域有认知</div>
+   173|      <div class="fit-item fit-yes">新手入门·不油炸好上手</div>
+   174|      <div class="fit-item fit-yes">想用低成本试卖的子品</div>
+   175|    </div>
+   176|    <div class="fit-col"><div class="f-head">❌ 不适合</div>
+   177|      <div class="fit-item fit-no">不吃折耳根的地区（江浙沪皖）</div>
+   178|      <div class="fit-item fit-no">追求高客单价·¥18/斤嫌低</div>
+   179|      <div class="fit-item fit-no">不研究杀水工艺的（出水翻车）</div>
+   180|    </div>
+   181|  </div>
+   182|</div>
+   183|
+   184|<div class="section">
+   185|  <div class="s-title">💰 赚钱逻辑</div>
+   186|  <div class="logic-box">
+   187|    <div class="l-title">🧑‍🍳 卖什么</div>
+   188|    <div class="logic-item"><span>折耳根豆干（散称）</span><span class="v">¥18~25/斤</span></div>
+   189|    <div class="logic-item"><span>折耳根豆干（真空·250g/袋）</span><span class="v">¥5~7/袋</span></div>
+   190|    <div class="logic-item"><span>折耳根豆干（批量5斤+）</span><span class="v">¥15~18/斤</span></div>
+   191|  </div>
+   192|  <div class="logic-box">
+   193|    <div class="l-title">📈 利润体系</div>
+   194|    <div class="logic-item"><span>新鲜折耳根</span><span class="v">¥3~5/斤</span></div>
+   195|    <div class="logic-item"><span>白豆干</span><span class="v">¥3~5/斤</span></div>
+   196|    <div class="logic-item"><span>出品率</span><span class="v">90~95%（几乎不出水）</span></div>
+   197|    <div class="logic-item"><span>红油+料占成品</span><span class="v">12~15%</span></div>
+   198|    <div class="logic-item"><span>成品综合成本</span><span class="v">≈¥5~8/斤</span></div>
+   199|    <div class="logic-item"><span>毛利率</span><span class="v">70~80%</span></div>
+   200|    <div class="logic-item"><span>单人日产（3h）</span><span class="v">15~20斤</span></div>
+   201|    <div class="logic-item"><span>单品日毛利</span><span class="v">¥195~400</span></div>
+   202|  </div>
+   203|  <div style="font-size:10px;color:#3a6b2e;background:#f0f6ec;padding:8px 10px;border-radius:8px">
+   204|    💡 <strong>毛利高的原因：</strong>折耳根和豆干都是便宜原料（¥3~5/斤），出品率高达90~95%几乎不出水，红油+料仅占成品12~15%。不油炸节省油成本，综合成本仅¥5~8/斤，卖¥18~25就是70~80%毛利，是整个冷吃系列中最高的。折耳根走量，薄利多销。
+   205|  </div>
+   206|</div>
+   207|
+   208|<div class="section">
+   209|  <div class="s-title">📈 赛道判断</div>
+   210|  <div class="judge-box">
+   211|    <div class="j-text">
+   212|      <strong>折耳根豆干</strong>定位冷吃系列中的素食高毛利走量品。折耳根（鱼腥草）在西南地区是国民级野菜，四川/云南/贵州/重庆认知度极高，但在江浙沪皖等区域接受度低——这是一把双刃剑。<br><br>
+   213|      与凉拌折耳根（现做现卖·不便存）和香辣豆干（纯豆干·属大路货·毛利低）相比，折耳根豆干的差异化在于折耳根+豆干的层叠工艺——不油炸、出品率高（90~95%）、毛利全系列第一（70~80%）。折耳根本身口感脆嫩回香，豆干吸收红油后层次丰富，冷吃风味最佳。<br><br>
+   214|      <strong>优势：</strong>①原料极便宜 ②出品率极高 ③不油炸·出品快 ④毛利70~80%全系列最高 ⑤新手也能做<br><br>
+   215|      <strong>劣势：</strong>①折耳根有区域局限 ②单斤客单价低（¥18~25）③季节性影响（春嫩秋冬根老）④需做区域市场判断
+   216|    </div>
+   217|  </div>
+   218|</div>
+   219|
+   220|<div class="section">
+   221|  <div class="s-title">🚦 项目评估</div>
+   222|  <div class="eval-grid">
+   223|    <div class="eval-item"><div class="ev-label">市场竞争</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">折耳根凉菜多·冷吃豆干少</div></div>
+   224|    <div class="eval-item"><div class="ev-label">学习周期</div><div class="ev-stars">★★★★★</div><div class="ev-desc">不油炸·1天学会</div></div>
+   225|    <div class="eval-item"><div class="ev-label">操作容错度</div><div class="ev-stars">★★★★☆</div><div class="ev-desc">杀水够了就不翻车</div></div>
+   226|    <div class="eval-item"><div class="ev-label">最低验证资金</div><div class="ev-stars">★★★★★</div><div class="ev-desc">≈100元试做</div></div>
+   227|  </div>
+   228|</div>
+   229|
+   230|<div class="section">
+   231|  <div class="s-title">📊 同赛道对比</div>
+   232|  <div class="comp-row"><span class="c-score comp-score-a">90~95%</span><span class="c-name">折耳根豆干（本卡）</span><span class="c-note">层叠·不油炸·高毛利</span></div>
+   233|  <div class="comp-row"><span class="c-score comp-score-b">70~80%</span><span class="c-name">凉拌折耳根</span><span class="c-note">现做现卖·不能存</span></div>
+   234|  <div class="comp-row"><span class="c-score comp-score-b">85~90%</span><span class="c-name">香辣豆干（纯豆干）</span><span class="c-note">大路货·毛利低</span></div>
+   235|  <div class="comp-row"><span class="c-score comp-score-a">85~90%</span><span class="c-name">冷吃藕片（同系列素食）</span><span class="c-note">素食品·毛利50~60%</span></div>
+   236|  <div style="margin-top:6px;font-size:9px;color:#b5aaa0;text-align:center">出品率对比（数值越高原料损耗越小）</div>
+   237|</div>
+   238|
+   239|<div class="section">
+   240|  <div class="s-title">🗓️ 单品验证路线</div>
+   241|  <div class="track-grid">
+   242|    <div class="track-box track-good"><div class="t-h">Day1~3 丨 试做</div><div class="t-item">买折耳根+豆干各1斤</div><div class="t-item">练习杀水（盐腌10~15min）</div><div class="t-item">试3版红油麻酱配比</div></div>
+   243|    <div class="track-box track-good"><div class="t-h">Day7 丨 试吃</div><div class="t-item">请10人试吃反馈</div><div class="t-item">调整折耳根:豆干比例</div></div>
+   244|    <div class="track-box track-good"><div class="t-h">Day15 丨 试卖</div><div class="t-item">带8斤去摊上试卖</div><div class="t-item">统计出品率+成本</div></div>
+   245|    <div class="track-box track-good"><div class="t-h">Day30 丨 定版</div><div class="t-item">配方标准化</div><div class="t-item">考虑真空小袋发货</div></div>
+   246|  </div>
+   247|</div>
+   248|
+   249|<div class="section">
+   250|  <div class="s-title">🛠️ 单品设备</div>
+   251|  <div class="device-list">
+   252|    <div class="device-item"><span class="d-name">炒锅+拌料盆</span><span class="d-price">已含在母卡设备中</span></div>
+   253|    <div class="device-item"><span class="d-name">切菜砧板+菜刀</span><span class="d-price">¥30~60</span></div>
+   254|    <div class="device-item"><span class="d-name">不锈钢盆×3</span><span class="d-price">¥30~60</span></div>
+   255|    <div class="device-item"><span class="d-name">电子秤+计时器</span><span class="d-price">¥30~60</span></div>
+   256|    <div class="device-item"><span class="d-name">细纱布/挤水袋</span><span class="d-price">¥10~20</span></div>
+   257|    <div class="device-item"><span class="d-name">真空包装机</span><span class="d-price">¥100~300</span></div>
+   258|    <div class="device-item"><span class="d-name">真空袋+标签纸</span><span class="d-price">¥50~100/千个</span></div>
+   259|    <div class="device-sum">单品追加投资：约¥250~600（母卡设备已含基础·主要加真空）</div>
+   260|  </div>
+   261|</div>
+   262|
+   263|<div class="section">
+   264|  <div class="s-title">📦 产品结构</div>
+   265|  <div class="prod-struct">
+   266|    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">试吃装（100g）</span><span class="t-price">¥3~5</span></div>
+   267|    <div class="prod-tier tier-profit"><span class="t-badge">标准</span><span class="t-name">散称折耳根豆干</span><span class="t-price">¥18~25/斤</span></div>
+   268|    <div class="prod-tier tier-premium"><span class="t-badge">精装</span><span class="t-name">真空250g袋</span><span class="t-price">¥5~7/袋</span></div>
+   269|    <div class="prod-tier tier-set"><span class="t-badge">批量</span><span class="t-name">批量5斤+</span><span class="t-price">¥15~18/斤</span></div>
+   270|  </div>
+   271|</div>
+   272|
+   273|<div class="section">
+   274|  <div class="s-title">🔥 摆摊指数</div>
+   275|  <div class="stall-grid">
+   276|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🏘️ 城中村/工业区</div><div class="stars">★★★★★</div></div>
+   277|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">📱 同城线上+真空</div><div class="stars">★★★★☆</div></div>
+   278|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🌃 夜市摆摊</div><div class="stars">★★★★☆</div></div>
+   279|    <div class="stall-item" style="background:#eef2ff"><div class="s-name">📦 真空快递全国</div><div class="stars">★★★☆☆</div></div>
+   280|    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🎓 学员教学用</div><div class="stars">★★★★★</div></div>
+   281|    <div class="stall-item" style="background:#fdf2ee"><div class="s-name">🏪 超市档口</div><div class="stars">★★★☆☆</div></div>
+   282|  </div>
+   283|</div>
+   284|
+   285|<div class="section">
+   286|  <div class="s-title">⚠️ 最大风险</div>
+   287|  <div class="risk-item"><span class="r-icon">💧</span><span><strong>折耳根出水：</strong>杀水不够是头号翻车原因。折耳根本身含水量高，不杀水拌料后半小时就出水稀释红油。必须盐腌10~15min后用力挤干，这一步不能省。</span></div>
+   288|  <div class="risk-item"><span class="r-icon">🔪</span><span><strong>豆干太碎：</strong>豆干切太细拌料时容易碎裂成渣，口感全无。豆干丝要控制在0.5cm宽，切得规整才有嚼头。</span></div>
+   289|  <div class="risk-item"><span class="r-icon">🌶️</span><span><strong>红油不挂：</strong>折耳根表面光滑，红油挂不住导致出品色淡味薄。必须先用红油拌好静置10min让折耳根吸收，再码盘上桌。</span></div>
+   290|  <div class="risk-item"><span class="r-icon">🌙</span><span><strong>隔夜变味：</strong>麻酱如果用水调，隔夜就发酸。麻酱必须用料油（熟香油/菜籽油）调和，才能在常温下过夜不坏。</span></div>
+   291|  <div class="risk-item"><span class="r-icon">🥬</span><span><strong>口感单一：</strong>全是折耳根或全是豆干都不对。折耳根和豆干必须保持1:1比例，才既有折耳根的脆嫩又有豆干的嚼劲，层次丰富。</span></div>
+   292|</div>
+   293|
+   294|<div class="section">
+   295|  <div class="s-title">🔪 核心工艺</div>
+   296|  <div class="fold-box">
+   297|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+   298|      <span>🌿 折耳根处理 · 杀水工艺</span>
+   299|      <span class="fb-arrow">▼</span>
+   300|    </button>
+   301|    <div class="fold-content">
+   302|      <div class="fc-item"><strong>① 选材：</strong>选鲜嫩折耳根（春季最嫩·秋冬偏老）。掐得动、根部白嫩为佳。老根纤维太粗影响口感。</div>
+   303|      <div class="fc-item"><strong>② 清洗：</strong>折耳根多泥沙，逐根搓洗3~4遍至水清。切2~3cm段，叶和嫩尖保留。</div>
+   304|      <div class="fc-item"><strong>③ 杀水（关键步骤）：</strong>折耳根段放入盆中，加盐约2g/每斤折耳根，抓匀静置10~15min。出水后用力挤干水分（可装细纱布袋拧）。挤得越干，出品越耐存。</div>
+   305|      <div class="fc-item"><strong>④ 判断标准：</strong>挤干后的折耳根手感干爽微韧，无明显滴水。这一步做好了后面就稳了。</div>
+   306|    </div>
+   307|  </div>
+   308|  <div class="fold-box">
+   309|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+   310|      <span>🥟 豆干层叠 + 拌料调配</span>
+   311|      <span class="fb-arrow">▼</span>
+   312|    </button>
+   313|    <div class="fold-content">
+   314|      <div class="fc-item"><strong>① 豆干处理：</strong>白豆干切丝，宽0.5cm。切好后入沸水焯2~3min去豆腥味。捞出沥干放凉。</div>
+   315|      <div class="fc-item"><strong>② 麻酱调配（关键）：</strong>芝麻酱用料油（熟菜籽油或香油）调稀，⚠️绝对不用水。料油调麻酱才能隔夜不坏，水调麻酱隔夜必发酸。</div>
+   316|      <div class="fc-item"><strong>③ 层叠工艺：</strong>大盆中一层折耳根一层豆干丝交替铺放。比例1:1（折耳根500g : 豆干500g）。这样口感层次最好。</div>
+   317|      <div class="fc-item"><strong>④ 拌料：</strong>倒入麻酱+红油+盐+糖+花椒粉+熟芝麻+辣椒油。轻轻抓匀，每一条都裹上红油。拌好后放置10min让折耳根吸收，再装盘。</div>
+   318|    </div>
+   319|  </div>
+   320|  <div class="fold-box">
+   321|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+   322|      <span>⚠️ 翻车手册（6条）</span>
+   323|      <span class="fb-arrow">▼</span>
+   324|    </button>
+   325|    <div class="fold-content">
+   326|      <div class="fc-item"><strong>出水稀了：</strong>杀水不够→盐腌后用力挤干，至少10~15min。</div>
+   327|      <div class="fc-item"><strong>豆干碎了：</strong>切太细或拌太猛→豆干丝保持0.5cm宽，轻拌匀。</div>
+   328|      <div class="fc-item"><strong>红油不挂：</strong>折耳根表面滑→先拌红油静置10min再上桌。</div>
+   329|      <div class="fc-item"><strong>隔夜发酸：</strong>麻酱用水调→麻酱必须用料油调，绝对不用水。</div>
+   330|      <div class="fc-item"><strong>口感单一：</strong>比例失衡→折耳根:豆干=1:1，不能偏废。</div>
+   331|      <div class="fc-item"><strong>豆腥味重：</strong>豆干没焯水→豆干丝必须焯水2~3min去腥。</div>
+   332|    </div>
+   333|  </div>
+   334|</div>
+   335|
+   336|<div class="section">
+   337|  <div class="s-title">💰 成本利润</div>
+   338|  <div class="cost-grid">
+   339|    <div class="cost-item"><div class="c-label">新鲜折耳根</div><div class="c-val cost-highlight">3~5元/斤</div><div class="c-sub">2026年批发</div></div>
+   340|    <div class="cost-item"><div class="c-label">白豆干</div><div class="c-val cost-highlight">3~5元/斤</div><div class="c-sub">豆腐坊直供</div></div>
+   341|    <div class="cost-item"><div class="c-label">出品率</div><div class="c-val cost-highlight">90~95%</div><div class="c-sub">几乎不出水</div></div>
+   342|    <div class="cost-item"><div class="c-label">红油+料均摊</div><div class="c-val cost-highlight">1~2元/斤</div><div class="c-sub">占成品12~15%</div></div>
+   343|    <div class="cost-item"><div class="c-label">成品成本</div><div class="c-val cost-highlight">≈5~8元/斤</div><div class="c-sub">综合</div></div>
+   344|    <div class="cost-item"><div class="c-label">毛利率</div><div class="c-val">70~80%</div><div class="c-sub">售价¥18~25</div></div>
+   345|  </div>
+   346|</div>
+   347|
+   348|<div class="section">
+   349|  <div class="s-title">🎒 完整出品包</div>
+   350|  <div class="pack-grid">
+   351|    <div class="pack-item"><div class="p-icon">🌿</div><div class="p-title">折耳根处理</div>杀水工艺·盐腌10~15min·挤干</div>
+   352|    <div class="pack-item"><div class="p-icon">🥟</div><div class="p-title">豆干层叠</div>0.5cm宽·焯水去腥·1:1叠放</div>
+   353|    <div class="pack-item"><div class="p-icon">🥜</div><div class="p-title">麻酱调配</div>料油调麻酱·隔夜不坏</div>
+   354|    <div class="pack-item"><div class="p-icon">🌶️</div><div class="p-title">红油拌料</div>麻酱+红油+花椒+芝麻·静置10min</div>
+   355|    <div class="pack-item"><div class="p-icon">💰</div><div class="p-title">成本核算</div>进价→出品→成本→毛利</div>
+   356|    <div class="pack-item"><div class="p-icon">📦</div><div class="p-title">真空发货</div>250g/袋·¥5~7·含标签</div>
+   357|  </div>
+   358|</div>
+   359|
+   360|<div class="section">
+   361|  <div class="s-title">🔗 关联产品</div>
+   362|  <div class="rel-grid">
+   363|    <a class="rel-item" href="LC_001%20冷吃红油创业母卡.html"><span class="r-emoji">📖</span><span class="r-name">LC_001 冷吃红油创业母卡</span><span class="r-arrow">→</span></a>
+   364|    <a class="rel-item" href="LC_002%20冷吃牛肉条（子）.html"><span class="r-emoji">🥩</span><span class="r-name">LC_002 冷吃牛肉条（子）</span><span class="r-arrow">→</span></a>
+   365|    <a class="rel-item" href="LC_003%20冷吃鸭舌（子）.html"><span class="r-emoji">🦆</span><span class="r-name">LC_003 冷吃鸭舌（子）</span><span class="r-arrow">→</span></a>
+   366|    <a class="rel-item" href="LC_005%20冷吃鸡副（子）.html"><span class="r-emoji">🐔</span><span class="r-name">LC_005 冷吃鸡副（子）</span><span class="r-arrow">→</span></a>
+   367|  </div>
+   368|</div>
+   369|
+   370|<div class="section" style="border-top:2px dashed #ddd4ca">
+   371|  <div class="s-title">💎 折耳根豆干 · 完整数据包</div>
+   372|  <div class="recipe-box">
+   373|    <div class="rb-title">🌿 折耳根处理参数</div>
+   374|    <div class="recipe-line"><span class="rl-label">杀水方法</span><span class="rl-mid">盐腌10~15min</span><span class="rl-val">用力挤干</span></div>
+   375|    <div class="recipe-line"><span class="rl-label">用盐量</span><span class="rl-mid">约2g/斤折耳根</span><span class="rl-val">底味</span></div>
+   376|    <div class="recipe-line"><span class="rl-label">切段尺寸</span><span class="rl-mid">2~3cm段</span><span class="rl-val">保留嫩叶</span></div>
+   377|    <div class="recipe-line" style="border-bottom:none"><span class="rl-label">判断标准</span><span class="rl-mid">手感干爽·不滴水</span></div>
+   378|  </div>
+   379|  <div class="recipe-box">
+   380|    <div class="rb-title">📦 售卖规格</div>
+   381|    <div class="recipe-line"><span class="rl-label">散称</span><span class="rl-mid">¥18~25/斤</span><span class="rl-val">毛利70~80%</span></div>
+   382|    <div class="recipe-line"><span class="rl-label">真空250g</span><span class="rl-mid">¥5~7/袋</span></div>
+   383|    <div class="recipe-line"><span class="rl-label">批量5斤+</span><span class="rl-mid">¥15~18/斤</span></div>
+   384|    <div class="recipe-line" style="border-bottom:none"><span class="rl-label">学员教学</span><span class="rl-mid">含在母卡¥8,000中</span></div>
+   385|  </div>
+   386|  <div style="font-size:10px;color:#b5aaa0;text-align:center;padding:6px 0 0">⚠️ 完整数据包（折耳根选品标准·杀水工艺·麻酱调配比例·批量拌料SOP）定价¥19，咨询沧林获取</div>
+   387|</div>
+   388|
+   389|<div class="consult-box">
+   390|  <div class="c-head">📱 咨询沧林</div>
+   391|  <div class="c-desc">关于折耳根豆干的任何问题，直接问</div>
+   392|  <div class="c-wx" onclick="copyWx()">📋 复制微信号：canglin1985</div>
+   393|  <div class="c-copy">微信复制 · 添加好友 · 直接开聊</div>
+   394|</div>
+   395|
+   396|<div class="ftr">
+   397|  <div class="f-brand">🍜 食品决策库 · 冷吃红油系列</div>
+   398|  <div class="f-tagline">子卡 · 单品完整决策数据</div>
+   399|  <div style="font-size:8px;color:#6a5a4a;margin-bottom:6px;line-height:1.4">
+   400|    <strong>数据说明：</strong>折耳根/豆干批发价综合自农产品批发市场2026年5月。出品率/红油占比为行业经验值。折耳根因季节性品质有差异。<br>
+   401|    子卡数据与母卡工艺体系一致，互相补充。
+   402|  </div>
+   403|  <div class="f-links">
+   404|    <a href="LC_001%20冷吃红油创业母卡.html">← 返回母卡</a>
+   405|    <a href="#">微信 canglin1985</a>
+   406|  </div>
+   407|</div>
+   408|
+   409|</div>
+   410|<script>function copyWx(){navigator.clipboard.writeText('canglin1985')}</script>
+   411|</body>
+   412|</html>
+   413|

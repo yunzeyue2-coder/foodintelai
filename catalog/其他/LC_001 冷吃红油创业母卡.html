@@ -1,0 +1,506 @@
+     1|<!DOCTYPE html>
+     2|<html lang="zh-CN">
+     3|<head>
+     4|<meta charset="UTF-8">
+     5|<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+     6|<title>LC_001 冷吃红油创业母卡 · 真人案例拆解</title>
+     7|<style>
+     8|*{margin:0;padding:0;box-sizing:border-box}
+     9|body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+    10|.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+    11|.prod-header{padding:18px 18px 10px;text-align:center;background:#faf8f5}
+    12|.prod-header .ph-name{font-size:22px;font-weight:800;color:#3a2a1a;letter-spacing:1px}
+    13|.prod-header .ph-sub{font-size:11px;color:#b5aaa0;margin-top:2px;font-weight:400;letter-spacing:2px}
+    14|.rating-bar{background:linear-gradient(135deg,#8B1A1A,#C0392B);padding:16px 18px;color:#fff;position:relative}
+    15|.rating-bar::after{content:'真人案例';position:absolute;top:10px;right:14px;font-size:9px;background:rgba(255,255,255,.12);padding:2px 8px;border-radius:3px;letter-spacing:1px}
+    16|.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+    17|.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+    18|.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+    19|.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+    20|.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+    21|.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4;margin-top:4px}
+    22|.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+    23|.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+    24|.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+    25|.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    26|.story-box{background:linear-gradient(135deg,#fef6f0,#faf0e8);border-radius:12px;padding:14px;margin-bottom:10px;border-left:3px solid #C0392B}
+    27|.story-box .s-text{font-size:12px;line-height:1.8;color:#4a3f35}
+    28|.story-box .s-text strong{color:#C0392B}
+    29|.story-box .s-quote{font-size:11px;color:#8a7a6a;font-style:italic;margin-top:8px;padding-top:8px;border-top:1px solid #f0e0d0}
+    30|.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    31|.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+    32|.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+    33|.radar-item .stars{font-size:13px;letter-spacing:0px}
+    34|.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+    35|.radar-item.high{background:#fef2ee}.radar-item.high .stars{color:#E8652D}
+    36|.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    37|.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+    38|.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+    39|.fit-yes{background:#f0f6ec;color:#3a6b2e}
+    40|.fit-no{background:#fef2f2;color:#b53b3b}
+    41|.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+    42|.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+    43|.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+    44|.logic-item:last-child{border-bottom:none}
+    45|.logic-item .v{font-weight:700;color:#C0392B}
+    46|.metric-row{display:flex;gap:6px;margin-top:6px}
+    47|.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+    48|.metric-card .m-label{font-size:9px;color:#7a7269}
+    49|.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+    50|.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+    51|.mc-orange{background:#fdf2ee}.mc-orange .m-val{color:#E8652D}
+    52|.mc-gold{background:#fef6ec}.mc-gold .m-val{color:#D4A574}
+    53|.mc-green{background:#f0f6ec}.mc-green .m-val{color:#5a8f3c}
+    54|.mc-red{background:#fef2f2}.mc-red .m-val{color:#C0392B}
+    55|.eval-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    56|.eval-item{padding:12px 10px;border-radius:10px;text-align:center;background:#f8f4ef}
+    57|.eval-item .ev-label{font-size:10px;color:#7a7269;margin-bottom:4px}
+    58|.eval-item .ev-stars{font-size:14px}
+    59|.eval-item .ev-desc{font-size:10px;color:#5a4f44;margin-top:3px}
+    60|.comp-row{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid #f0ece6;font-size:12px}
+    61|.comp-row:last-child{border-bottom:none}
+    62|.comp-row .c-score{width:28px;height:20px;border-radius:4px;background:#f5ede5;font-weight:700;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    63|.comp-row .c-name{flex:1;color:#3a322a}
+    64|.comp-row .c-note{color:#b5aaa0;font-size:10px}
+    65|.comp-score-a{background:#e8f0e0;color:#3a6b2e}
+    66|.comp-score-b{background:#fef6ec;color:#D4A574}
+    67|.comp-score-c{background:#fdf2ee;color:#b53b3b}
+    68|.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    69|.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+    70|.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+    71|.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+    72|.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+    73|.track-good .t-h{color:#5a8f3c}.track-bad .t-h{color:#C0392B}
+    74|.device-list{background:#f8f4ef;border-radius:10px;padding:12px;margin:6px 0}
+    75|.device-item{display:flex;justify-content:space-between;font-size:11px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+    76|.device-item:last-child{border-bottom:none}
+    77|.device-item .d-name{font-weight:500}
+    78|.device-item .d-price{color:#C0392B;font-weight:600}
+    79|.device-sum{font-size:11px;font-weight:700;text-align:right;padding:8px 0 0;color:#3a322a;border-top:1px solid #e0d8ce}
+    80|.prod-struct{display:flex;flex-direction:column;gap:8px}
+    81|.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+    82|.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+    83|.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+    84|.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+    85|.tier-lead{background:#fef6ec}.tier-lead .t-badge{background:#E8652D;color:#fff}
+    86|.tier-profit{background:#f0f6ec}.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+    87|.tier-set{background:#eef2ff}.tier-set .t-badge{background:#4f6ef7;color:#fff}
+    88|.tier-premium{background:#fef2f2}.tier-premium .t-badge{background:#C0392B;color:#fff}
+    89|.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    90|.stall-item{padding:10px;border-radius:10px;text-align:center}
+    91|.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+    92|.stall-item .stars{font-size:12px;letter-spacing:1px}
+    93|.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+    94|.risk-item:last-child{border-bottom:none}.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+    95|.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+    96|.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+    97|.judge-box .j-text strong{color:#C0392B}
+    98|.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+    99|.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+   100|.cost-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+   101|.cost-item{padding:10px;border-radius:10px;text-align:center;background:#f8f4ef}
+   102|.cost-item .c-label{font-size:9px;color:#7a7269;margin-bottom:2px}
+   103|.cost-item .c-val{font-size:14px;font-weight:700;color:#3a322a}
+   104|.cost-item .c-sub{font-size:9px;color:#b5aaa0;margin-top:1px}
+   105|.cost-highlight{color:#C0392B!important}
+   106|.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+   107|.pack-item{background:#f8f4ef;border-radius:10px;padding:10px;font-size:11px;color:#5a4f44;line-height:1.5}
+   108|.pack-item .p-icon{font-size:16px;margin-bottom:2px}
+   109|.pack-item .p-title{font-weight:700;color:#3a322a;margin-bottom:2px}
+   110|.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+   111|.rel-item{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;font-size:11px;color:#3a322a}
+   112|.rel-item .r-emoji{font-size:14px}
+   113|.rel-item .r-name{flex:1;font-weight:500}
+   114|.rel-item .r-arrow{color:#b5aaa0;font-size:10px}
+   115|.consult-box{background:#f8f4ef;border-radius:12px;padding:16px;margin:0 18px 16px;border:1px solid #eee5d8}
+   116|.consult-box .c-head{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+   117|.consult-box .c-desc{font-size:11px;color:#7a7269;margin-bottom:10px}
+   118|.consult-box .c-wx{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-radius:8px;font-size:12px;font-weight:600;color:#3a322a;cursor:pointer;justify-content:center;border:1px solid #D4A574}
+   119|.consult-box .c-copy{font-size:9px;color:#b5aaa0;text-align:center;margin-top:4px}
+   120|.recipe-box{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px}
+   121|.recipe-box .rb-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+   122|.recipe-line{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+   123|.recipe-line:last-child{border-bottom:none}
+   124|.recipe-line .rl-label{min-width:80px;color:#5a4f44}
+   125|.recipe-line .rl-val{font-weight:600;color:#3a322a;text-align:right;min-width:80px}
+   126|.recipe-line .rl-mid{flex:1;text-align:center;color:#7a7269;font-size:11px}
+   127|.ftr{padding:16px 18px;text-align:center;background:#3a322a;color:#b5aaa0;font-size:11px;line-height:1.8}
+   128|.ftr .f-brand{font-size:12px;font-weight:700;color:#e0d5ca;margin-bottom:2px}
+   129|.ftr .f-tagline{font-size:10px;color:#988d80;margin-bottom:6px}
+   130|.ftr .f-links{display:flex;justify-content:center;gap:12px;font-size:10px}
+   131|.ftr .f-links a{color:#D4A574;text-decoration:none}
+   132|.fold-box{margin:8px 0}
+   133|.fold-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:#f5ede5;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#3a322a;cursor:pointer;text-align:left}
+   134|.fold-btn .fb-arrow{transition:transform .2s;font-size:10px;color:#b5aaa0}
+   135|.fold-btn.active .fb-arrow{transform:rotate(180deg)}
+   136|.fold-content{display:none;padding:10px 14px;background:#fdfcf9;border-radius:0 0 8px 8px;border:1px solid #f5ede5;border-top:none}
+   137|.fold-content.show{display:block}
+   138|.fold-content .fc-item{font-size:11px;color:#5a4f44;padding:4px 0;line-height:1.6}
+   139|.recipe-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;padding:4px 0}
+   140|.recipe-grid .rg-item{text-align:center;font-size:11px;padding:3px 0}
+   141|.recipe-grid .rg-label{font-size:9px;color:#7a7269}
+   142|.recipe-grid .rg-val{font-weight:600;color:#3a322a}
+   143|.model-box{background:#faf0e8;border-radius:12px;padding:14px;margin-bottom:8px;border:1px solid #f0e0d0}
+   144|.model-box .mb-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+   145|.model-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+   146|.model-row:last-child{border-bottom:none}
+   147|.model-row .mv{font-weight:700;color:#C0392B}
+   148|.model-row .mv.green{color:#5a8f3c}
+   149|.product-matrix{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+   150|.matrix-item{background:#f8f4ef;border-radius:10px;padding:10px;text-align:center;border:1px solid #eee5d8}
+   151|.matrix-item .m-icon{font-size:22px;margin-bottom:4px}
+   152|.matrix-item .m-name{font-size:12px;font-weight:700;color:#3a322a}
+   153|.matrix-item .m-role{font-size:9px;color:#E8652D;font-weight:600;margin-top:2px}
+   154|.matrix-item .m-desc{font-size:10px;color:#7a7269;margin-top:3px}
+   155|</style>
+   156|</head>
+   157|<body>
+   158|<div class="card">
+   159|
+   160|<div class="prod-header">
+   161|  <div class="ph-name">🌶️ 冷吃红油创业母卡</div>
+   162|  <div class="ph-sub">四川冷吃系列 · LC_001 · 品类母卡 · 真人案例</div>
+   163|</div>
+   164|
+   165|<div class="rating-bar">
+   166|  <div class="r-top">
+   167|    <div class="r-score"><span class="r-num">8.6</span><span class="r-label">综合评分</span></div>
+   168|    <span class="r-grade">A级项目</span>
+   169|  </div>
+   170|  <div class="r-tagline">散称冷吃 · 一套通用工艺打四个品 · 零售+学员两条腿</div>
+   171|  <div class="r-tags">
+   172|    <span>🔥 真人案例</span>
+   173|    <span>💰 投资3000元</span>
+   174|    <span>👥 夫妻档</span>
+   175|    <span>🌶️ 四川红油冷吃</span>
+   176|    <span>📱 直播引流</span>
+   177|    <span>🎓 学员¥8000/人</span>
+   178|  </div>
+   179|</div>
+   180|
+   181|<div class="section">
+   182|  <div class="s-title">👤 这个案例是真实的</div>
+   183|  <div class="story-box">
+   184|    <div class="s-text">
+   185|      温州温岭，一个修了五六年手机的人，在网上赌博输了80多万，外账欠了100多万。半夜翻过桥上栏杆，警察来了，没死成。<br><br>
+   186|      现在身上不装钱，手机媳妇儿管着。<strong>但他有一个摊。</strong><br><br>
+   187|      2025年10月底，他开始做冷吃。从修手机改行卖小吃，他说：<strong>"卖小吃比修手机有前途。"</strong><br><br>
+   188|      事实证明他是对的——他不是铺子不是档口，是一辆小推车。每天出摊3小时。媳妇儿抖音直播，1300多个粉丝（截至2026年6月16日），不多但管用——直播的时候有人看，摆摊的时候有人买，网上私信也有人问。<br><br>
+   189|      他干冷吃不到一年，全国收了8个学员，¥8000/人。<strong>摊的成本不超过三千块。</strong>他还有真空包装机，可以对外发货、发样品，有标签纸，成本不高。<br><br>
+   190|      纯红油冷吃和带水的钵钵鸡不一样——油把空气隔绝了，不容易坏。<br><br>
+   191|      <strong>赌博害了他，但摆摊救了他。</strong>
+   192|    </div>
+   193|    <div class="s-quote">—— 沧林口述 · 老蒲堂弟真实经历 · 数据截至2026年6月</div>
+   194|  </div>
+   195|</div>
+   196|
+   197|<div class="section">
+   198|  <div class="s-title">📊 项目速览</div>
+   199|  <div class="radar-grid">
+   200|    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">冷吃红油·川味风潮正热</div></div>
+   201|    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="val">散称天天买·回头客极高</div></div>
+   202|    <div class="radar-item high"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">极低·3000元起步</div></div>
+   203|    <div class="radar-item"><div class="label">📚 难度</div><div class="stars">★★★☆☆</div><div class="val">中等（红油核心）</div></div>
+   204|    <div class="radar-item high"><div class="label">💵 利润</div><div class="stars">★★★★★</div><div class="val">极高·散称省包装</div></div>
+   205|    <div class="radar-item"><div class="label">📈 空间</div><div class="stars">★★★★★</div><div class="val">极大·学员模式可复制</div></div>
+   206|  </div>
+   207|</div>
+   208|
+   209|<div class="section">
+   210|  <div class="s-title">🎯 适合谁</div>
+   211|  <div class="fit-wrap">
+   212|    <div class="fit-col"><div class="f-head">✅ 适合</div>
+   213|      <div class="fit-item fit-yes">夫妻档/情侣档创业（一人做产品一人直播）</div>
+   214|      <div class="fit-item fit-yes">四川人在外地的冷吃创业（地域优势）</div>
+   215|      <div class="fit-item fit-yes">小成本试错·推车起步的创业者</div>
+   216|      <div class="fit-item fit-yes">想收学员做知识变现的手艺人</div>
+   217|      <div class="fit-item fit-yes">做过食品·想转散称高毛利模式的人</div>
+   218|    </div>
+   219|    <div class="fit-col"><div class="f-head">❌ 不适合</div>
+   220|      <div class="fit-item fit-no">不会做红油的纯新手（核心壁垒）</div>
+   221|      <div class="fit-item fit-no">不做直播不引流的（线上流量是命脉）</div>
+   222|      <div class="fit-item fit-no">只卖一个品的（产品矩阵不够撑）</div>
+   223|      <div class="fit-item fit-no">想开大店的（这就是小摊逻辑）</div>
+   224|    </div>
+   225|  </div>
+   226|</div>
+   227|
+   228|<div class="section">
+   229|  <div class="s-title">💰 赚钱逻辑</div>
+   230|  <div class="story-box" style="border-left-color:#D4A574;background:#fdf8f0">
+   231|    <div class="s-text" style="font-size:12px">
+   232|      <strong>两条腿走路，缺一条都不稳：</strong><br>
+   233|      腿① <strong>散称零售</strong> — 城中村推车，每天3小时，日营收700~1000元。牛肉条、鸭舌卖贵价，折耳根豆干走量。散称不加包装，毛利率比预包装高15~20%。<br>
+   234|      腿② <strong>收学员</strong> — ¥8000/人，全国已收8人 = 6万4。一条工艺链路教所有人，边际成本几乎为零。<br>
+   235|      散称保现金流，学员费做利润。两条腿加起来，月入稳稳的。
+   236|    </div>
+   237|  </div>
+   238|  <div class="logic-box">
+   239|    <div class="l-title">🧑‍🍳 卖什么</div>
+   240|    <div class="logic-item"><span>冷吃牛肉条</span><span class="v">¥68~78/斤</span></div>
+   241|    <div class="logic-item"><span>冷吃鸭舌</span><span class="v">¥68~88/斤</span></div>
+   242|    <div class="logic-item"><span>折耳根豆干</span><span class="v">¥18~25/斤</span></div>
+   243|    <div class="logic-item"><span>冷吃鸡翅尖/鸡爪</span><span class="v">¥28~38/斤</span></div>
+   244|  </div>
+   245|  <div class="logic-box">
+   246|    <div class="l-title">📈 利润体系</div>
+   247|    <div class="logic-item"><span>牛肉条原料成本</span><span class="v">≈¥20~25/斤</span></div>
+   248|    <div class="logic-item"><span>牛肉条出品率</span><span class="v">≈55~65%</span></div>
+   249|    <div class="logic-item"><span>牛肉条毛利率</span><span class="v">≈55~65%</span></div>
+   250|    <div class="logic-item"><span>鸭舌毛利率</span><span class="v">≈45~55%</span></div>
+   251|    <div class="logic-item"><span>折耳根豆干毛利率</span><span class="v">≈70~80%</span></div>
+   252|    <div class="logic-item"><span>鸡副毛利率</span><span class="v">≈55~65%</span></div>
+   253|    <div class="logic-item"><span>学员单人边际利润</span><span class="v">≈¥7,800+</span></div>
+   254|    <div class="logic-item"><span>3h出摊日营收</span><span class="v">700~1,000元</span></div>
+   255|  </div>
+   256|  <div class="metric-row">
+   257|    <div class="metric-card mc-orange"><div class="m-label">日营收</div><div class="m-val">700~1,000元</div><div class="m-sub">3小时出摊</div></div>
+   258|    <div class="metric-card mc-gold"><div class="m-label">月净现金流</div><div class="m-val">8,000~15,000元</div><div class="m-sub">零售+学员</div></div>
+   259|    <div class="metric-card mc-green"><div class="m-label">回本</div><div class="m-val">3~5天</div><div class="m-sub">总投资3000元</div></div>
+   260|  </div>
+   261|</div>
+   262|
+   263|<div class="section">
+   264|  <div class="s-title">📦 产品矩阵（一套工艺打四个品）</div>
+   265|  <div class="product-matrix">
+   266|    <div class="matrix-item">
+   267|      <div class="m-icon">🥩</div>
+   268|      <div class="m-name">冷吃牛肉条</div>
+   269|      <div class="m-role">核心利润品</div>
+   270|      <div class="m-desc">鲜肉→腌→炸→干煸→红油<br>¥68~78/斤·毛利50~55%</div>
+   271|    </div>
+   272|    <div class="matrix-item">
+   273|      <div class="m-icon">🦆</div>
+   274|      <div class="m-name">冷吃鸭舌</div>
+   275|      <div class="m-role">溢价款</div>
+   276|      <div class="m-desc">同工艺·贵价品<br>¥68~88/斤·毛利45~55%</div>
+   277|    </div>
+   278|    <div class="matrix-item">
+   279|      <div class="m-icon">🫘</div>
+   280|      <div class="m-name">折耳根豆干</div>
+   281|      <div class="m-role">引流款</div>
+   282|      <div class="m-desc">折耳根1cm丁·豆干叠加<br>¥18~25/斤·毛利70~80%</div>
+   283|    </div>
+   284|    <div class="matrix-item">
+   285|      <div class="m-icon">🐔</div>
+   286|      <div class="m-name">冷吃鸡副</div>
+   287|      <div class="m-role">走量款</div>
+   288|      <div class="m-desc">鸡翅尖·鸡爪·同工艺<br>¥28~38/斤·毛利55~65%</div>
+   289|    </div>
+   290|  </div>
+   291|</div>
+   292|
+   293|<div class="section">
+   294|  <div class="s-title">🏗️ 商业模式</div>
+   295|  <div class="model-box">
+   296|    <div class="mb-title">腿① · 散称零售（每天3小时）</div>
+   297|    <div class="model-row"><span>出摊时间</span><span class="mv">每天下午/傍晚 3小时</span></div>
+   298|    <div class="model-row"><span>售卖方式</span><span class="mv green">散称·不用包装·毛利高</span></div>
+   299|    <div class="model-row"><span>日营收</span><span class="mv">700~1,000元</span></div>
+   300|    <div class="model-row"><span>回头客策略</span><span class="mv green">味道+微信群预告出摊</span></div>
+   301|  </div>
+   302|  <div class="model-box">
+   303|    <div class="mb-title">腿② · 收学员（¥8,000/人）</div>
+   304|    <div class="model-row"><span>已收学员</span><span class="mv">8人（全国范围）</span></div>
+   305|    <div class="model-row"><span>学员收入累计</span><span class="mv">¥64,000</span></div>
+   306|    <div class="model-row"><span>教授内容</span><span class="mv">全套工艺+产品矩阵+出摊经验</span></div>
+   307|    <div class="model-row"><span>招生渠道</span><span class="mv green">抖音直播+学员转介绍</span></div>
+   308|  </div>
+   309|  <div class="model-box" style="border-color:#E8652D">
+   310|    <div class="mb-title">💡 为什么这个模式能跑通</div>
+   311|    <div class="model-row"><span>① 散称省成本</span><span class="mv green">不买包装机·不印标签·不要QS</span></div>
+   312|    <div class="model-row"><span>② 通用工艺降学习成本</span><span class="mv green">一条工艺链路走四个品</span></div>
+   313|    <div class="model-row"><span>③ 夫妻档互补</span><span class="mv green">他做产品·她直播引客</span></div>
+   314|    <div class="model-row"><span>④ 学员无边际成本</span><span class="mv green">教一遍可以用8遍</span></div>
+   315|    <div class="model-row"><span>⑤ 推车灵活试错</span><span class="mv green">城中村没人管·不收租金</span></div>
+   316|  </div>
+   317|</div>
+   318|
+   319|<div class="section">
+   320|  <div class="s-title">📈 赛道判断</div>
+   321|  <div class="judge-box">
+   322|    <div class="j-text">
+   323|      <strong>冷吃红油</strong>源自自贡盐帮菜体系，核心是自贡冷吃兔（百年历史·2014年地标保护产品）。其工艺特征是"炒+炸结合+凉菜收"——肉料经腌制、炸制定型、干煸起酥后，拌入红油冷却食用。冷却后香味更浓，故名"冷吃"。在此基础上延伸出冷吃牛肉、冷吃鸡尖、冷吃豆干等全系列。<br><br>
+   324|      与乐山钵钵鸡（麻辣不见椒·红油清汤底·浸串）、棒棒鸡（怪味·七味融合·木棒捶松）不同，冷吃红油的特点是干香、耐嚼、红油裹身、冷却后风味更佳。散称售卖时，顾客按斤购买，回家可当凉菜、下酒菜或零食。<br><br>
+   325|      <strong>核心优势：</strong>①自贡冷吃体系经过百年验证，工艺成熟稳定 ②一套工艺通吃多个品（牛肉/鸭舌/鸡副/豆干），学习成本极低 ③散称模式免包装，毛利率比预包装高15~20% ④冷却后风味不降反升，适合提前备货 ⑤学员模式打开了收入天花板<br><br>
+   326|      <strong>最大风险：</strong>①红油配方是命脉——外地人做不出自贡红油的层次感 ②抖音引流不稳定，平台限流影响客流 ③单人日产能上限约30~40斤 ④冷吃属于休闲零食，不是刚需品类<br><br>
+   327|      <strong>2026年判断：</strong>四川人在外地的冷吃红油摊是一条被验证过的路径。红油手艺+直播引流+学员收费三者缺一不可。
+   328|    </div>
+   329|  </div>
+   330|</div>
+   331|
+   332|<div class="section">
+   333|  <div class="s-title">🚦 项目评估</div>
+   334|  <div class="eval-grid">
+   335|    <div class="eval-item"><div class="ev-label">市场竞争</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">四川冷吃·外地竞争少</div></div>
+   336|    <div class="eval-item"><div class="ev-label">学习周期</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">7~14天练红油</div></div>
+   337|    <div class="eval-item"><div class="ev-label">操作容错度</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">红油调不好全毁</div></div>
+   338|    <div class="eval-item"><div class="ev-label">最低验证资金</div><div class="ev-stars">★★★★★</div><div class="ev-desc">≈1500元</div></div>
+   339|  </div>
+   340|</div>
+   341|
+   342|<div class="section">
+   343|  <div class="s-title">📊 同赛道对比</div>
+   344|  <div class="comp-row"><span class="c-score comp-score-a">8.6</span><span class="c-name">冷吃红油（本卡）</span><span class="c-note">散称·高毛利·学员变现·夫妻档</span></div>
+   345|  <div class="comp-row"><span class="c-score comp-score-a">8.3</span><span class="c-name">卤味推车</span><span class="c-note">卤水通用·但需老卤·毛利略低</span></div>
+   346|  <div class="comp-row"><span class="c-score comp-score-b">7.8</span><span class="c-name">油炸小摊</span><span class="c-note">现炸现卖·香气足·但出餐慢</span></div>
+   347|  <div class="comp-row"><span class="c-score comp-score-b">7.5</span><span class="c-name">凉拌菜摊</span><span class="c-note">门槛低·但竞争大·毛利中等</span></div>
+   348|</div>
+   349|
+   350|<div class="section">
+   351|  <div class="s-title">🗓️ 30天验证路线</div>
+   352|  <div class="track-grid">
+   353|    <div class="track-box track-good"><div class="t-h">Day1~7 丨 红油定味</div><div class="t-item">试3版红油配方（辣椒配比+油温）</div><div class="t-item">选出最能打的一版</div><div class="t-item">试做牛肉条+折耳根豆干</div></div>
+   354|    <div class="track-box track-good"><div class="t-h">Day8~15 丨 抖音起号</div><div class="t-item">媳妇儿开抖音号·每天发1条</div><div class="t-item">拍冷吃制作过程+试吃反应</div><div class="t-item">看同城流量能不能跑起来</div></div>
+   355|    <div class="track-box track-good"><div class="t-h">Day16~20 丨 试卖</div><div class="t-item">城中村推车试摆3天</div><div class="t-item">统计日销量和客单价</div><div class="t-item">测试散称定价和包装方案</div></div>
+   356|    <div class="track-box track-good"><div class="t-h">Day30 丨 复购验证</div><div class="t-item">第一批回头客比例</div><div class="t-item">核算真实利润+日均工时</div><div class="t-item">决定是否收第一个学员</div></div>
+   357|  </div>
+   358|</div>
+   359|
+   360|<div class="section">
+   361|  <div class="s-title">🛠️ 设备清单</div>
+   362|  <div class="device-list">
+   363|    <div class="device-item"><span class="d-name">手推车/折叠桌</span><span class="d-price">500~800元</span></div>
+   364|    <div class="device-item"><span class="d-name">猛火灶+炒锅</span><span class="d-price">200~400元</span></div>
+   365|    <div class="device-item"><span class="d-name">炸锅+漏勺</span><span class="d-price">80~150元</span></div>
+   366|    <div class="device-item"><span class="d-name">不锈钢盆×5（腌制/拌料/存放）</span><span class="d-price">80~120元</span></div>
+   367|    <div class="device-item"><span class="d-name">电子秤+计时器+温度计</span><span class="d-price">60~100元</span></div>
+   368|    <div class="device-item"><span class="d-name">不锈钢托盘×3（散称展示）</span><span class="d-price">60~100元</span></div>
+   369|    <div class="device-item"><span class="d-name">一次性手套+食品夹+打包袋</span><span class="d-price">100~200元</span></div>
+   370|    <div class="device-item"><span class="d-name">招牌灯箱+价目表</span><span class="d-price">150~300元</span></div>
+   371|    <div class="device-item"><span class="d-name">手机支架+补光灯（直播用）</span><span class="d-price">50~100元</span></div>
+   372|    <div class="device-item"><span class="d-name">首批原料（牛肉/鸭舌/豆干/调料）</span><span class="d-price">500~800元</span></div>
+   373|    <div class="device-sum">设备总投入：约 2,000~3,000元</div>
+   374|  </div>
+   375|</div>
+   376|
+   377|<div class="section">
+   378|  <div class="s-title">📦 产品结构</div>
+   379|  <div class="prod-struct">
+   380|    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">折耳根豆干</span><span class="t-price">¥18~25/斤</span></div>
+   381|    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">冷吃牛肉条</span><span class="t-price">¥68~78/斤</span></div>
+   382|    <div class="prod-tier tier-premium"><span class="t-badge">溢价</span><span class="t-name">冷吃鸭舌</span><span class="t-price">¥68~88/斤</span></div>
+   383|    <div class="prod-tier tier-set"><span class="t-badge">走量</span><span class="t-name">冷吃鸡副（翅尖/鸡爪）</span><span class="t-price">¥28~38/斤</span></div>
+   384|    <div class="prod-tier tier-set"><span class="t-badge">知识</span><span class="t-name">收学员（全套工艺教学）</span><span class="t-price">¥8,000/人</span></div>
+   385|  </div>
+   386|</div>
+   387|
+   388|<div class="section">
+   389|  <div class="s-title">🔥 摆摊指数</div>
+   390|  <div class="stall-grid">
+   391|    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🏘️ 城中村/安置区</div><div class="stars">★★★★★</div></div>
+   392|    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🏭 工业区门口</div><div class="stars">★★★★★</div></div>
+   393|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🌃 夜市摆摊</div><div class="stars">★★★★☆</div></div>
+   394|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🏪 菜市场档口</div><div class="stars">★★★★☆</div></div>
+   395|    <div class="stall-item" style="background:#eef2ff"><div class="s-name">📱 抖音同城引流</div><div class="stars">★★★★★</div></div>
+   396|    <div class="stall-item" style="background:#fdf2ee"><div class="s-name">🏢 写字楼附近</div><div class="stars">★★★☆☆</div></div>
+   397|  </div>
+   398|</div>
+   399|
+   400|<div class="section">
+   401|  <div class="s-title">⚠️ 最大风险</div>
+   402|  <div class="risk-item"><span class="r-icon">💀</span><span><strong>红油是命脉：</strong>冷吃红油的核心竞争力全在红油上。辣椒品种配比（二荆条+朝天椒+灯笼椒）、油温控制（140~150°C激香不焦）、香料比例——这三样缺一个味道就差一截。外地人做不出四川红油的层次感，需要反复试。</span></div>
+   403|  <div class="risk-item"><span class="r-icon">📱</span><span><strong>直播引流不稳定：</strong>媳妇儿抖音1100粉能拉到客，但抖音算法变了、被限流了、本地竞品也开直播了——流量随时会断。需要持续输出内容+维护私域微信群。</span></div>
+   404|  <div class="risk-item"><span class="r-icon">⏰</span><span><strong>单人产能天花板：</strong>一个人每天做30~40斤成品就是极限了。想扩量必须雇人、换设备、租场地——每一步都增加成本和风险。收学员是聪明打法：不靠卖货扩量，靠教人扩量。</span></div>
+   405|  <div class="risk-item"><span class="r-icon">🌡️</span><span><strong>食品安全红线：</strong>散称冷吃没有真空包装，常温保存2~3天，冷藏5~7天。夏天出货必须控制在当天卖完的量。一旦有顾客吃出问题，整个摊就没了。健康证+冷藏设备是底线。</span></div>
+   406|  <div class="risk-item"><span class="r-icon">🗺️</span><span><strong>地域限制：</strong>四川冷吃在浙江台州属于异乡味道，核心客群是外地务工的四川人+本地尝鲜客。如果到了一个没有四川人群体的城市，销量直接腰斩。</span></div>
+   407|</div>
+   408|
+   409|<div class="section">
+   410|  <div class="s-title">🔪 核心工艺：冷吃红油通用流程</div>
+   411|
+   412|  <div class="fold-box">
+   413|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+   414|      <span>🥩 通用工艺链路（8步）</span>
+   415|      <span class="fb-arrow">▼</span>
+   416|    </button>
+   417|    <div class="fold-content">
+   418|      <div class="fc-item"><strong>① 解冻：</strong>冷冻肉提前12h冷藏解冻（或流水解冻2h）。鲜肉直接进入下一步。</div>
+   419|      <div class="fc-item"><strong>② 清洗：</strong>流水冲洗至无血水。牛肉条去筋膜，鸭舌去喉管，鸡翅尖剪去爪尖。</div>
+   420|      <div class="fc-item"><strong>③ 修整：</strong>牛肉顺纹切条（0.5~1cm宽·5cm长），鸭舌整根，折耳根切1cm丁，鸡翅尖对半剪开。</div>
+   421|      <div class="fc-item"><strong>④ 腌制（每500g肉）：</strong>盐5~8g+糖5~10g+料酒10~15ml+生抽10ml+老抽3ml+姜葱适量，抓匀冷藏腌制30~60min。牛肉需逆纹切条，腌制后不水洗，直接下锅。</div>
+   422|      <div class="fc-item"><strong>⑤ 炸制（两段式）：</strong>初炸140~150°C/3~5min（断生定型锁汁）→捞出→复炸160~170°C/2~4min（表面焦香脱水）。牛肉条表面微焦边缘卷曲即好。鸡副2~3min，鸭舌3min。</div>
+   423|      <div class="fc-item"><strong>⑥ 干煸：</strong>炒锅少油，下泡过温水的干辣椒丝+花椒粒+姜蒜爆香，放入炸好的肉料，中火干煸2~3min至表面起酥出香。</div>
+   424|      <div class="fc-item"><strong>⑦ 拌红油：</strong>关火后趁热倒入秘制红油+熟芝麻+糖少许，翻拌均匀。</div>
+   425|      <div class="fc-item"><strong>⑧ 出品：</strong>散称装盘，撒白芝麻+葱花点缀。折耳根豆干单独拌（折耳根丁+豆干层叠+青红花椒圈+泡菜丁+红油）。</div>
+   426|    </div>
+   427|  </div>
+   428|
+   429|  <div class="fold-box">
+   430|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+   431|      <span>🌶️ 核心秘制红油配方</span>
+   432|      <span class="fb-arrow">▼</span>
+   433|    </button>
+   434|    <div class="fold-content">
+   435|      <div class="fc-item"><strong>辣椒组合（总量100%·经典麻辣型）：</strong>二荆条60g（甜香主料·出红油色）+ 子弹头/朝天椒30g（提供辣度）+ 新一代10g（深红复合香）。辣椒剪段去籽，小火炒至酥脆出香（手捏即碎），打成粗粉。粗细比5:3:2（太细易糊·太粗不出味）。</div>
+   436|      <div class="fc-item"><strong>香料粉（每500g辣椒面配）：</strong>八角4g·桂皮3g·香叶2g·草果1个（破壳）·小茴香3g·山奈2g·白蔻2g·丁香1粒。打粉。</div>
+   437|      <div class="fc-item"><strong>油料：</strong>菜籽油1500g（必须菜籽油，其他油出不来那个香）。菜籽油:辣椒面=3:1。</div>
+   438|      <div class="fc-item"><strong>激油工艺（6步）：</strong>①菜籽油烧至240°C去生味→②降温至140°C下葱姜洋葱香菜，小火炸焦捞出→③降温至120~130°C下泡过水的香料，小火炸香捞出→④油温升至180~190°C，辣椒面分三等份，盆底先放1/3，冲入搅匀→⑤10min后油温降至150~160°C，放第二份辣椒面搅匀→⑥油温降至100~120°C，放第三份+熟芝麻+一小勺白酒/醋（激发脂溶性香味），加盖闷12~24h出红油。</div>
+   439|      <div class="fc-item"><strong>⚠️ 灵魂细节：</strong>辣椒面中先加一勺冷油拌匀（防热油激糊）。油温超过190°C辣椒发苦，低于140°C不出红油。闷12h让油和辣椒充分融合——当天用和隔天用味道差一倍。</div>
+   440|    </div>
+   441|  </div>
+   442|
+   443|  <div style="font-size:11px;color:#7a7269;padding:8px 10px;background:#fdf8f0;border-radius:8px;margin-top:8px">
+   444|    💡 <strong>冷吃红油核心壁垒三要素：</strong>辣椒品种配比（二荆条+朝天椒+灯笼椒）+ 油温控制（140~150°C）+ 闷泡12h。三样全到位就是正宗四川红油冷吃。<br><br>
+   445|    <strong>⚠️ 食安红线：</strong>①散称冷吃保质期短（常温2~3天·冷藏5~7天）②每天出摊前检查是否有异味 ③接触生熟食的器具严格分开 ④健康证必须办 ⑤夏天建议配冷藏展示柜
+   446|  </div>
+   447|</div>
+   448|
+   449|<div class="section">
+   450|  <div class="s-title">💰 成本利润</div>
+   451|  <div class="cost-grid">
+   452|    <div class="cost-item"><div class="c-label">牛肉条原料（鲜牛后腿）</div><div class="c-val cost-highlight">28~38元/斤</div><div class="c-sub">出品率55~65%</div></div>
+   453|    <div class="cost-item"><div class="c-label">牛肉条（冷冻进口替代）</div><div class="c-val cost-highlight">18~26元/斤</div><div class="c-sub">行业常用降本方案</div></div>
+   454|    <div class="cost-item"><div class="c-label">鸭舌原料（冻品·你给的数据）</div><div class="c-val cost-highlight">35~38元/斤</div><div class="c-sub">出品率50~65%</div></div>
+   455|    <div class="cost-item"><div class="c-label">豆干+折耳根</div><div class="c-val cost-highlight">3~6元/斤</div><div class="c-sub">出品率85~90%</div></div>
+   456|    <div class="cost-item"><div class="c-label">鸡副原料（冻品翅尖）</div><div class="c-val cost-highlight">8~12元/斤</div><div class="c-sub">出品率60~70%</div></div>
+   457|    <div class="cost-item"><div class="c-label">菜籽油+调料均摊</div><div class="c-val cost-highlight">3~5元/斤</div><div class="c-sub">含辣椒+香料+油</div></div>
+   458|  </div>
+   459|  <div style="margin-top:8px;padding:10px 12px;background:#f0f6ec;border-radius:8px;font-size:11px;color:#3a6b2e;line-height:1.6">
+   460|    <strong>利润分析：</strong>冷吃红油的毛利高，核心原因是出品率计算方式——炸制后肉料出品率约50~65%（鸭舌50~65%、牛肉55~65%），但拌入红油、辣椒、花椒后，这些辅料（约占成品重量的8~10%）算在产品总重量里一起卖。油和辣椒的成本远低于肉，所以最终毛利比纯肉率高出一截。散称免包装又省了包装机+袋子+标签的费用。<br>
+   461|    牛肉条综合成本约¥30~35/斤成品→售价¥58~68/斤→毛利约50~55%。日售20斤牛肉条+10斤其他品，日营收约¥700~1,000。<br>
+   462|    他有真空包装机，可以对外发货、发样品——不止做本地散称。<br>
+   463|    <strong>学员利润：</strong>¥8,000/人×2人/月=¥16,000/月纯利润（几乎无成本）。<br>
+   464|    <strong>定价建议：</strong>牛肉条定¥58~68/斤是市场中间价。折耳根豆干¥18~25是引流价。三个品买满¥100送¥5——拉升客单价。
+   465|  </div>
+   466|</div>
+   467|
+   468|<div class="section">
+   469|  <div class="s-title">🎒 完整出摊包</div>
+   470|  <div class="pack-grid">
+   471|    <div class="pack-item"><div class="p-icon">🌶️</div><div class="p-title">秘制红油配方</div>辣椒配比·香料粉·油温曲线·闷泡12h工艺</div>
+   472|    <div class="pack-item"><div class="p-icon">🥩</div><div class="p-title">通用工艺SOP</div>解冻→清洗→修整→腌制→炸制→干煸→拌红油→出品</div>
+   473|    <div class="pack-item"><div class="p-icon">📦</div><div class="p-title">散称出餐方案</div>不锈钢托盘展示·手套夹取·袋子称重·报价话术</div>
+   474|    <div class="pack-item"><div class="p-icon">📱</div><div class="p-title">抖音直播引流</div>拍什么·怎么播·同城流量怎么薅·私域怎么建</div>
+   475|    <div class="pack-item"><div class="p-icon">🎓</div><div class="p-title">学员变现体系</div>怎么定价·教什么·怎么招·服务流程</div>
+   476|    <div class="pack-item"><div class="p-icon">⚠️</div><div class="p-title">翻车手册</div>红油发苦·成品回软·保质期短·流量断崖</div>
+   477|  </div>
+   478|</div>
+   479|
+   480|<div class="section">
+   481|  <div class="s-title">🔗 关联产品</div>
+   482|  <div class="rel-grid">
+   483|    <span class="rel-item"><span class="r-emoji">🥩</span><span class="r-name">冷吃牛肉条（暂无卡片）</span><span class="r-arrow">→</span></span>
+   484|    <span class="rel-item"><span class="r-emoji">🦆</span><span class="r-name">冷吃鸭舌（暂无卡片）</span><span class="r-arrow">→</span></span>
+   485|    <span class="rel-item"><span class="r-emoji">🫘</span><span class="r-name">凉拌折耳根（暂无卡片）</span><span class="r-arrow">→</span></span>
+   486|    <span class="rel-item"><span class="r-emoji">🐔</span><span class="r-name">冷吃鸡副（暂无卡片）</span><span class="r-arrow">→</span></span>
+   487|  </div>
+   488|  <div class="rel-grid">
+    <a class="rel-item" href="LC_002%20冷吃牛肉条（子）.html"><span class="r-emoji">🥩</span><span class="r-name">LC_002 冷吃牛肉条（子）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="LC_003%20冷吃鸭舌（子）.html"><span class="r-emoji">🦆</span><span class="r-name">LC_003 冷吃鸭舌（子）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="LC_004%20折耳根豆干（子）.html"><span class="r-emoji">🫘</span><span class="r-name">LC_004 折耳根豆干（子）</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="LC_005%20冷吃鸡副（子）.html"><span class="r-emoji">🐔</span><span class="r-name">LC_005 冷吃鸡副（子）</span><span class="r-arrow">→</span></a>
+  </div>
+   489|</div>
+   490|
+   491|<div class="section" style="border-top:2px dashed #ddd4ca">
+   492|  <div class="s-title">💎 冷吃红油 · 完整创业数据包</div>
+   493|
+   494|  <div class="recipe-box">
+   495|    <div class="rb-title">🌡️ 红油激油温度曲线</div>
+   496|    <div class="recipe-line"><span class="rl-label">菜籽油去生味</span><span class="rl-mid">240°C·至冒烟</span></div>
+   497|    <div class="recipe-line"><span class="rl-label">降温·炸小料</span><span class="rl-mid">140°C·葱姜洋葱炸焦捞出</span></div>
+   498|    <div class="recipe-line"><span class="rl-label">炸香料</span><span class="rl-mid">120~130°C·泡水香料·小火10~15min</span></div>
+   499|    <div class="recipe-line"><span class="rl-label">第一次冲油</span><span class="rl-mid">180~190°C·入1/3辣椒面</span></div>
+   500|    <div class="recipe-line"><span class="rl-label">第二次冲油</span><span class="rl-mid">150~160°C·入1/3辣椒面</span></div>
+   501|

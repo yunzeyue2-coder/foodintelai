@@ -1,0 +1,415 @@
+     1|<!DOCTYPE html>
+     2|<html lang="zh-CN">
+     3|<head>
+     4|<meta charset="UTF-8">
+     5|<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+     6|<title>LC_003 冷吃鸭舌 · 四川自贡冷吃系列</title>
+     7|<style>
+     8|*{margin:0;padding:0;box-sizing:border-box}
+     9|body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+    10|.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+    11|.prod-header{padding:18px 18px 10px;text-align:center;background:#faf8f5}
+    12|.prod-header .ph-name{font-size:22px;font-weight:800;color:#3a2a1a;letter-spacing:1px}
+    13|.prod-header .ph-sub{font-size:11px;color:#b5aaa0;margin-top:2px;font-weight:400;letter-spacing:2px}
+    14|.variant-bar{background:linear-gradient(90deg,#C49A6C,#D4A574);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+    15|.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+    16|.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+    17|.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+    18|.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+    19|.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+    20|.meta .price-tag{display:inline-block;background:#C0392B;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+    21|.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+    22|.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    23|.diff-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+    24|.diff-tag{font-size:9px;padding:2px 8px;border-radius:3px;background:#f5ede5;color:#7a6a5a;white-space:nowrap}
+    25|.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    26|.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+    27|.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+    28|.radar-item .stars{font-size:13px;letter-spacing:0px}
+    29|.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+    30|.radar-item.high{background:#fef2ee}.radar-item.high .stars{color:#E8652D}
+    31|.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    32|.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+    33|.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+    34|.fit-yes{background:#f0f6ec;color:#3a6b2e}
+    35|.fit-no{background:#fef2f2;color:#b53b3b}
+    36|.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+    37|.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+    38|.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+    39|.logic-item:last-child{border-bottom:none}
+    40|.logic-item .v{font-weight:700;color:#C0392B}
+    41|.metric-row{display:flex;gap:6px;margin-top:6px}
+    42|.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+    43|.metric-card .m-label{font-size:9px;color:#7a7269}
+    44|.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+    45|.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+    46|.mc-orange{background:#fdf2ee}.mc-orange .m-val{color:#E8652D}
+    47|.mc-gold{background:#fef6ec}.mc-gold .m-val{color:#D4A574}
+    48|.mc-green{background:#f0f6ec}.mc-green .m-val{color:#5a8f3c}
+    49|.mc-red{background:#fef2f2}.mc-red .m-val{color:#C0392B}
+    50|.eval-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    51|.eval-item{padding:12px 10px;border-radius:10px;text-align:center;background:#f8f4ef}
+    52|.eval-item .ev-label{font-size:10px;color:#7a7269;margin-bottom:4px}
+    53|.eval-item .ev-stars{font-size:14px}
+    54|.eval-item .ev-desc{font-size:10px;color:#5a4f44;margin-top:3px}
+    55|.comp-row{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid #f0ece6;font-size:12px}
+    56|.comp-row:last-child{border-bottom:none}
+    57|.comp-row .c-score{width:28px;height:20px;border-radius:4px;background:#f5ede5;font-weight:700;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    58|.comp-row .c-name{flex:1;color:#3a322a}
+    59|.comp-row .c-note{color:#b5aaa0;font-size:10px}
+    60|.comp-score-a{background:#e8f0e0;color:#3a6b2e}
+    61|.comp-score-b{background:#fef6ec;color:#D4A574}
+    62|.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    63|.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+    64|.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+    65|.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+    66|.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+    67|.track-good .t-h{color:#5a8f3c}.track-bad .t-h{color:#C0392B}
+    68|.device-list{background:#f8f4ef;border-radius:10px;padding:12px;margin:6px 0}
+    69|.device-item{display:flex;justify-content:space-between;font-size:11px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+    70|.device-item:last-child{border-bottom:none}
+    71|.device-item .d-name{font-weight:500}
+    72|.device-item .d-price{color:#C0392B;font-weight:600}
+    73|.device-sum{font-size:11px;font-weight:700;text-align:right;padding:8px 0 0;color:#3a322a;border-top:1px solid #e0d8ce}
+    74|.prod-struct{display:flex;flex-direction:column;gap:8px}
+    75|.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+    76|.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+    77|.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+    78|.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+    79|.tier-lead{background:#fef6ec}.tier-lead .t-badge{background:#E8652D;color:#fff}
+    80|.tier-profit{background:#f0f6ec}.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+    81|.tier-premium{background:#fef2f2}.tier-premium .t-badge{background:#C0392B;color:#fff}
+    82|.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+    83|.stall-item{padding:10px;border-radius:10px;text-align:center}
+    84|.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+    85|.stall-item .stars{font-size:12px;letter-spacing:1px}
+    86|.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+    87|.risk-item:last-child{border-bottom:none}.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+    88|.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+    89|.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+    90|.judge-box .j-text strong{color:#C0392B}
+    91|.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+    92|.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+    93|.cost-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    94|.cost-item{padding:10px;border-radius:10px;text-align:center;background:#f8f4ef}
+    95|.cost-item .c-label{font-size:9px;color:#7a7269;margin-bottom:2px}
+    96|.cost-item .c-val{font-size:14px;font-weight:700;color:#3a322a}
+    97|.cost-item .c-sub{font-size:9px;color:#b5aaa0;margin-top:1px}
+    98|.cost-highlight{color:#C0392B!important}
+    99|.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+   100|.pack-item{background:#f8f4ef;border-radius:10px;padding:10px;font-size:11px;color:#5a4f44;line-height:1.5}
+   101|.pack-item .p-icon{font-size:16px;margin-bottom:2px}
+   102|.pack-item .p-title{font-weight:700;color:#3a322a;margin-bottom:2px}
+   103|.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+   104|.rel-item{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;font-size:11px;color:#3a322a}
+   105|.rel-item .r-emoji{font-size:14px}
+   106|.rel-item .r-name{flex:1;font-weight:500}
+   107|.rel-item .r-arrow{color:#b5aaa0;font-size:10px}
+   108|.recipe-box{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px}
+   109|.recipe-box .rb-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+   110|.recipe-line{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:4px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+   111|.recipe-line:last-child{border-bottom:none}
+   112|.recipe-line .rl-label{min-width:80px;color:#5a4f44}
+   113|.recipe-line .rl-val{font-weight:600;color:#3a322a;text-align:right;min-width:80px}
+   114|.recipe-line .rl-mid{flex:1;text-align:center;color:#7a7269;font-size:11px}
+   115|.fold-box{margin:8px 0}
+   116|.fold-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 14px;background:#f5ede5;border:none;border-radius:8px;font-size:12px;font-weight:700;color:#3a322a;cursor:pointer;text-align:left}
+   117|.fold-btn .fb-arrow{transition:transform .2s;font-size:10px;color:#b5aaa0}
+   118|.fold-btn.active .fb-arrow{transform:rotate(180deg)}
+   119|.fold-content{display:none;padding:10px 14px;background:#fdfcf9;border-radius:0 0 8px 8px;border:1px solid #f5ede5;border-top:none}
+   120|.fold-content.show{display:block}
+   121|.fold-content .fc-item{font-size:11px;color:#5a4f44;padding:4px 0;line-height:1.6}
+   122|.consult-box{background:#f8f4ef;border-radius:12px;padding:16px;margin:0 18px 16px;border:1px solid #eee5d8}
+   123|.consult-box .c-head{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+   124|.consult-box .c-desc{font-size:11px;color:#7a7269;margin-bottom:10px}
+   125|.consult-box .c-wx{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-radius:8px;font-size:12px;font-weight:600;color:#3a322a;cursor:pointer;justify-content:center;border:1px solid #D4A574}
+   126|.consult-box .c-copy{font-size:9px;color:#b5aaa0;text-align:center;margin-top:4px}
+   127|.ftr{padding:16px 18px;text-align:center;background:#3a322a;color:#b5aaa0;font-size:11px;line-height:1.8}
+   128|.ftr .f-brand{font-size:12px;font-weight:700;color:#e0d5ca;margin-bottom:2px}
+   129|.ftr .f-tagline{font-size:10px;color:#988d80;margin-bottom:6px}
+   130|.ftr .f-links{display:flex;justify-content:center;gap:12px;font-size:10px}
+   131|.ftr .f-links a{color:#D4A574;text-decoration:none}
+   132|</style>
+   133|</head>
+   134|<body>
+   135|<div class="card">
+   136|
+   137|<div class="prod-header">
+   138|  <div class="ph-name">🦆 冷吃鸭舌</div>
+   139|  <div class="ph-sub">四川自贡冷吃系列 · LC_003 · 子卡</div>
+   140|</div>
+   141|
+   142|<div class="variant-bar">
+   143|  <span class="v-label">🌶️ 溢价款 · 炸2~3min · 出品率50~65%</span>
+   144|  <a href="LC_001%20冷吃红油创业母卡.html" class="v-link">← 返回母卡</a>
+   145|</div>
+   146|
+   147|<div class="meta">
+   148|  <h1>冷吃鸭舌</h1>
+   149|  <div class="sub">自贡冷吃工艺 · A级冻鸭舌 · 溢价款拉升客单价</div>
+   150|  <span class="price-tag">¥68~88/斤</span>
+   151|  <span class="price-tag" style="background:#D4A574;margin-left:4px">毛利45~55%</span>
+   152|</div>
+   153|
+   154|<div class="section">
+   155|  <div class="s-title">📊 单品速览</div>
+   156|  <div class="radar-grid">
+   157|    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">溢价品·持续有需求</div></div>
+   158|    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="val">下酒零食·回头率高</div></div>
+   159|    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">¥300起买鸭舌试做</div></div>
+   160|    <div class="radar-item high"><div class="label">💵 利润</div><div class="stars">★★★★☆</div><div class="val">45~55%·含红油</div></div>
+   161|    <div class="radar-item"><div class="label">📚 难度</div><div class="stars">★★☆☆☆</div><div class="val">炸2~3min·比牛肉简单</div></div>
+   162|    <div class="radar-item high"><div class="label">📈 空间</div><div class="stars">★★★★☆</div><div class="val">散称+真空礼盒全国发</div></div>
+   163|  </div>
+   164|</div>
+   165|
+   166|<div class="section">
+   167|  <div class="s-title">🎯 适合谁</div>
+   168|  <div class="fit-wrap">
+   169|    <div class="fit-col"><div class="f-head">✅ 适合</div>
+   170|      <div class="fit-item fit-yes">想拉升客单价的冷吃摊主</div>
+   171|      <div class="fit-item fit-yes">有稳定A级鸭舌进货渠道的</div>
+   172|      <div class="fit-item fit-yes">做真空礼盒·送礼市场的</div>
+   173|      <div class="fit-item fit-yes">已会做牛肉条想加溢价品的</div>
+   174|    </div>
+   175|    <div class="fit-col"><div class="f-head">❌ 不适合</div>
+   176|      <div class="fit-item fit-no">进不到A级整舌的（卖相差）</div>
+   177|      <div class="fit-item fit-no">不做高端只走低价保量的</div>
+   178|      <div class="fit-item fit-no">没有品控意识（容易腥）</div>
+   179|    </div>
+   180|  </div>
+   181|</div>
+   182|
+   183|<div class="section">
+   184|  <div class="s-title">💰 赚钱逻辑</div>
+   185|  <div class="logic-box">
+   186|    <div class="l-title">🧑‍🍳 卖什么</div>
+   187|    <div class="logic-item"><span>冷吃鸭舌（散称）</span><span class="v">¥68~88/斤</span></div>
+   188|    <div class="logic-item"><span>冷吃鸭舌（真空·200g/袋）</span><span class="v">¥20~24/袋</span></div>
+   189|    <div class="logic-item"><span>冷吃鸭舌（批量3斤+）</span><span class="v">¥58~68/斤</span></div>
+   190|  </div>
+   191|  <div class="logic-box">
+   192|    <div class="l-title">📈 利润体系</div>
+   193|    <div class="logic-item"><span>A级冻鸭舌批发价</span><span class="v">¥35~38/斤</span></div>
+   194|    <div class="logic-item"><span>炸制出品率</span><span class="v">50~65%</span></div>
+   195|    <div class="logic-item"><span>红油+辅料占成品</span><span class="v">8~10%</span></div>
+   196|    <div class="logic-item"><span>成品综合成本</span><span class="v">≈¥40~50/斤</span></div>
+   197|    <div class="logic-item"><span>毛利率</span><span class="v">45~55%</span></div>
+   198|    <div class="logic-item"><span>单人日产（单品补充）</span><span class="v">5~8斤</span></div>
+   199|    <div class="logic-item"><span>每斤约</span><span class="v">40~60根</span></div>
+   200|    <div class="logic-item"><span>单根售价</span><span class="v">¥1.5~2/根</span></div>
+   201|    <div class="logic-item"><span>单品日毛利</span><span class="v">¥142~400</span></div>
+   202|  </div>
+   203|  <div style="font-size:10px;color:#3a6b2e;background:#f0f6ec;padding:8px 10px;border-radius:8px">
+   204|    💡 <strong>毛利高的原因：</strong>鸭舌是鸭副最贵部位，自带溢价属性。红油+辅料占成品8~10%，成本远低于鸭舌本身。散称免包装+溢价定位，整体毛利维持在45~55%。品控稳定时毛利拉得更高。
+   205|  </div>
+   206|</div>
+   207|
+   208|<div class="section">
+   209|  <div class="s-title">📈 赛道判断</div>
+   210|  <div class="judge-box">
+   211|    <div class="j-text">
+   212|      <strong>冷吃鸭舌</strong>是自贡冷吃体系中的溢价单品——原材料（鸭舌）是鸭副最贵部位，售价¥68~88/斤属于冷吃系列的"天花板"价位。<br><br>
+   213|      与卤鸭舌（带水·不耐存）、烤鸭舌（需要烤炉·出品率低）相比，冷吃鸭舌的差异化在于炸制2~3min+干煸红油——干香耐嚼、冷却后风味更浓、真空后可以快递。<br><br>
+   214|      <strong>优势：</strong>①自带溢价属性，拉升客单价 ②炸制时间短（2~3min），工艺比牛肉条简单 ③品控稳定·A级整舌标准化 ④真空礼盒适合送礼场景 ⑤下酒零食复购率高<br><br>
+   215|      <strong>劣势：</strong>①鸭舌批发价偏高（¥35~38/斤） ②出品率50~65%较低 ③日产只有5~8斤（单品补充） ④A级品货源不稳定
+   216|    </div>
+   217|  </div>
+   218|</div>
+   219|
+   220|<div class="section">
+   221|  <div class="s-title">🚦 项目评估</div>
+   222|  <div class="eval-grid">
+   223|    <div class="eval-item"><div class="ev-label">市场竞争</div><div class="ev-stars">★★★☆☆</div><div class="ev-desc">溢价品类·竞争适中</div></div>
+   224|    <div class="eval-item"><div class="ev-label">学习周期</div><div class="ev-stars">★★☆☆☆</div><div class="ev-desc">炸2~3min·当天学会</div></div>
+   225|    <div class="eval-item"><div class="ev-label">操作容错度</div><div class="ev-stars">★★★★☆</div><div class="ev-desc">比牛肉条容错高</div></div>
+   226|    <div class="eval-item"><div class="ev-label">最低验证资金</div><div class="ev-stars">★★★★★</div><div class="ev-desc">≈300元买鸭舌试做</div></div>
+   227|  </div>
+   228|</div>
+   229|
+   230|<div class="section">
+   231|  <div class="s-title">📊 同赛道对比</div>
+   232|  <div class="comp-row"><span class="c-score comp-score-a">50~65%</span><span class="c-name">冷吃鸭舌（本卡）</span><span class="c-note">炸2~3min+干煸红油·干香耐嚼</span></div>
+   233|  <div class="comp-row"><span class="c-score comp-score-b">45~55%</span><span class="c-name">卤鸭舌</span><span class="c-note">带水偏湿·不耐存·需要冷藏</span></div>
+   234|  <div class="comp-row"><span class="c-score comp-score-b">40~50%</span><span class="c-name">烤鸭舌</span><span class="c-note">需烤炉·出品率低·时间成本高</span></div>
+   235|  <div class="comp-row"><span class="c-score comp-score-a">55~65%</span><span class="c-name">冷吃鸭副（同工艺）</span><span class="c-note">鸭翅/鸭掌·出品率更高·溢价低</span></div>
+   236|  <div style="margin-top:6px;font-size:9px;color:#b5aaa0;text-align:center">出品率对比（数值越高原料损耗越小）</div>
+   237|</div>
+   238|
+   239|<div class="section">
+   240|  <div class="s-title">🗓️ 单品验证路线</div>
+   241|  <div class="track-grid">
+   242|    <div class="track-box track-good"><div class="t-h">Day1~3 丨 试做</div><div class="t-item">买A级冻鸭舌2斤解冻</div><div class="t-item">练炸2~3min油温手感</div><div class="t-item">试2版红油量</div></div>
+   243|    <div class="track-box track-good"><div class="t-h">Day7 丨 试吃</div><div class="t-item">请10人试吃反馈</div><div class="t-item">确认无腥味·卖相OK</div></div>
+   244|    <div class="track-box track-good"><div class="t-h">Day15 丨 试卖</div><div class="t-item">带3斤去摊上试卖</div><div class="t-item">统计出品率+成本</div></div>
+   245|    <div class="track-box track-good"><div class="t-h">Day30 丨 定版</div><div class="t-item">配方标准化·定售价</div><div class="t-item">推出真空礼盒装</div></div>
+   246|  </div>
+   247|</div>
+   248|
+   249|<div class="section">
+   250|  <div class="s-title">🛠️ 单品设备</div>
+   251|  <div class="device-list">
+   252|    <div class="device-item"><span class="d-name">炒锅+炸锅</span><span class="d-price">已含在母卡设备中</span></div>
+   253|    <div class="device-item"><span class="d-name">油温温度计</span><span class="d-price">¥20~40</span></div>
+   254|    <div class="device-item"><span class="d-name">不锈钢盆×3</span><span class="d-price">¥30~60</span></div>
+   255|    <div class="device-item"><span class="d-name">剪刀（剪舌根）</span><span class="d-price">¥10~20</span></div>
+   256|    <div class="device-item"><span class="d-name">电子秤+计时器</span><span class="d-price">¥30~60</span></div>
+   257|    <div class="device-item"><span class="d-name">真空包装机</span><span class="d-price">¥100~300</span></div>
+   258|    <div class="device-item"><span class="d-name">真空袋+标签纸</span><span class="d-price">¥50~100/千个</span></div>
+   259|    <div class="device-sum">单品追加投资：约¥240~580（母卡设备已含基础）</div>
+   260|  </div>
+   261|</div>
+   262|
+   263|<div class="section">
+   264|  <div class="s-title">📦 产品结构</div>
+   265|  <div class="prod-struct">
+   266|    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">试吃装（100g）</span><span class="t-price">¥12~15</span></div>
+   267|    <div class="prod-tier tier-profit"><span class="t-badge">标准</span><span class="t-name">散称鸭舌</span><span class="t-price">¥68~88/斤</span></div>
+   268|    <div class="prod-tier tier-premium"><span class="t-badge">精装</span><span class="t-name">真空礼盒200g</span><span class="t-price">¥20~24/袋</span></div>
+   269|    <div class="prod-tier tier-set" style="background:#f8f4ef"><span class="t-badge" style="background:#7a6a5a;color:#fff">批量</span><span class="t-name">批量3斤+</span><span class="t-price">¥58~68/斤</span></div>
+   270|  </div>
+   271|</div>
+   272|
+   273|<div class="section">
+   274|  <div class="s-title">🔥 摆摊指数</div>
+   275|  <div class="stall-grid">
+   276|    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🏘️ 城中村/工业区</div><div class="stars">★★★★☆</div></div>
+   277|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">📱 同城线上+真空</div><div class="stars">★★★★★</div></div>
+   278|    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🌃 夜市摆摊</div><div class="stars">★★★★☆</div></div>
+   279|    <div class="stall-item" style="background:#eef2ff"><div class="s-name">📦 真空快递全国</div><div class="stars">★★★★★</div></div>
+   280|    <div class="stall-item" style="background:#fef6ec"><div class="s-name">🎁 送礼/伴手礼</div><div class="stars">★★★★★</div></div>
+   281|    <div class="stall-item" style="background:#fdf2ee"><div class="s-name">🏪 超市档口</div><div class="stars">★★★☆☆</div></div>
+   282|  </div>
+   283|</div>
+   284|
+   285|<div class="section">
+   286|  <div class="s-title">⚠️ 最大风险</div>
+   287|  <div class="risk-item"><span class="r-icon">💀</span><span><strong>炸太硬：</strong>鸭舌体积小、肉薄，炸太久直接变干柴。控制在3min以内，表面金黄微干就捞起。宁愿欠一点也不能过，回锅比炸过头好。</span></div>
+   288|  <div class="risk-item"><span class="r-icon">🦆</span><span><strong>有腥味：</strong>没洗干净。鸭舌冷冻后舌根容易残留杂质。流水多冲几遍，沥干再腌。鸭舌是标准品，没有喉管问题，只要冲洗到位就不腥。</span></div>
+   289|  <div class="risk-item"><span class="r-icon">📉</span><span><strong>卖相差：</strong>B/C级短舌混入拉低卖相。统一采购A级整舌，长短均匀、卖相统一。短舌虽然便宜但真空后顾客一眼看出不整齐。</span></div>
+   290|  <div class="risk-item"><span class="r-icon">🌶️</span><span><strong>红油挂不住：</strong>鸭舌表面太干导致红油滑落。干煸时间缩短，留点潮气，红油趁热拌进去才挂得住。</span></div>
+   291|  <div class="risk-item"><span class="r-icon">🧂</span><span><strong>太咸：</strong>腌料重+红油也有盐分，双重叠加容易偏咸。腌制时少放盐（5g/500g即可），红油控制量。</span></div>
+   292|</div>
+   293|
+   294|<div class="section">
+   295|  <div class="s-title">🔪 核心工艺</div>
+   296|  <div class="fold-box">
+   297|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+   298|      <span>🦆 预处理+腌制（每500g鸭舌）</span>
+   299|      <span class="fb-arrow">▼</span>
+   300|    </button>
+   301|    <div class="fold-content">
+   302|      <div class="recipe-line"><span class="rl-label">A级冻鸭舌</span><span class="rl-mid">500g·冷藏解冻至半软</span><span class="rl-val">—</span></div>
+   303|      <div class="recipe-line"><span class="rl-label">清洗</span><span class="rl-mid">流水多冲几遍·去油脂</span><span class="rl-val">沥干</span></div>
+   304|      <div class="recipe-line"><span class="rl-label">盐</span><span class="rl-mid">5g</span><span class="rl-val">底味（宁少勿多）</span></div>
+   305|      <div class="recipe-line"><span class="rl-label">白糖</span><span class="rl-mid">5g</span><span class="rl-val">提鲜回甘</span></div>
+   306|      <div class="recipe-line"><span class="rl-label">料酒</span><span class="rl-mid">10ml</span><span class="rl-val">去腥</span></div>
+   307|      <div class="recipe-line"><span class="rl-label">生抽</span><span class="rl-mid">8ml</span><span class="rl-val">提鲜</span></div>
+   308|      <div class="recipe-line"><span class="rl-label">姜葱</span><span class="rl-mid">适量</span><span class="rl-val">—</span></div>
+   309|      <div class="recipe-line" style="border-bottom:none"><span class="rl-label">腌制时间</span><span class="rl-mid">冷藏30min</span><span class="rl-val">沥干水分再腌</span></div>
+   310|    </div>
+   311|  </div>
+   312|  <div class="fold-box">
+   313|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+   314|      <span>🔥 炸制+干煸</span>
+   315|      <span class="fb-arrow">▼</span>
+   316|    </button>
+   317|    <div class="fold-content">
+   318|      <div class="fc-item"><strong>炸制：</strong>油温160~170°C，炸2~3min至表面金黄微干。鸭舌体积小、肉薄，比牛肉时间短一半以上。宁可欠炸不能过。</div>
+   319|      <div class="fc-item"><strong>干煸：</strong>炒锅少油，下泡过温水的干辣椒丝+花椒粒+姜蒜爆香，放炸好的鸭舌中火干煸1~2min。时间缩短留点潮气，红油才挂得住。</div>
+   320|      <div class="fc-item"><strong>拌红油：</strong>关火后倒入秘制红油+熟芝麻+糖少许，翻拌均匀。每根裹薄薄一层红油。</div>
+   321|      <div class="fc-item"><strong>冷却：</strong>摊开放凉。冷却后红油被吸收，风味更浓。</div>
+   322|    </div>
+   323|  </div>
+   324|  <div class="fold-box">
+   325|    <button class="fold-btn" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('show')">
+   326|      <span>⚠️ 翻车手册（5条）</span>
+   327|      <span class="fb-arrow">▼</span>
+   328|    </button>
+   329|    <div class="fold-content">
+   330|      <div class="fc-item"><strong>炸太硬：</strong>炸太久。→ 不超3min，金黄微干就捞。</div>
+   331|      <div class="fc-item"><strong>有腥味：</strong>没洗干净。→ 流水多冲几遍，沥干再腌。</div>
+   332|      <div class="fc-item"><strong>卖相差：</strong>B/C级短舌混入。→ 统一买A级整舌。</div>
+   333|      <div class="fc-item"><strong>红油挂不住：</strong>表面太干。→ 干煸时间缩短留点潮气。</div>
+   334|      <div class="fc-item" style="border-bottom:none"><strong>太咸：</strong>腌料重+红油也有盐。→ 腌制少放盐，红油控制量。</div>
+   335|    </div>
+   336|  </div>
+   337|</div>
+   338|
+   339|<div class="section">
+   340|  <div class="s-title">💰 成本利润</div>
+   341|  <div class="cost-grid">
+   342|    <div class="cost-item"><div class="c-label">A级冻鸭舌</div><div class="c-val cost-highlight">35~38元/斤</div><div class="c-sub">2026年批发价</div></div>
+   343|    <div class="cost-item"><div class="c-label">B级冻鸭舌（备选）</div><div class="c-val cost-highlight">28~32元/斤</div><div class="c-sub">降本·卖相差</div></div>
+   344|    <div class="cost-item"><div class="c-label">出品率</div><div class="c-val cost-highlight">50~65%</div><div class="c-sub">油炸后</div></div>
+   345|    <div class="cost-item"><div class="c-label">红油+料均摊</div><div class="c-val cost-highlight">3~5元/斤</div><div class="c-sub">占成品8~10%</div></div>
+   346|    <div class="cost-item"><div class="c-label">成品成本</div><div class="c-val cost-highlight">≈40~50元/斤</div><div class="c-sub">综合</div></div>
+   347|    <div class="cost-item"><div class="c-label">毛利率</div><div class="c-val">45~55%</div><div class="c-sub">售价¥68~88</div></div>
+   348|  </div>
+   349|</div>
+   350|
+   351|<div class="section">
+   352|  <div class="s-title">🎒 完整出品包</div>
+   353|  <div class="pack-grid">
+   354|    <div class="pack-item"><div class="p-icon">🦆</div><div class="p-title">分选标准</div>A级整舌·长短均匀·去油脂</div>
+   355|    <div class="pack-item"><div class="p-icon">🧂</div><div class="p-title">腌制配比</div>500g基准·盐5g·冷藏30min</div>
+   356|    <div class="pack-item"><div class="p-icon">🔥</div><div class="p-title">炸制曲线</div>160~170°C·2~3min·金黄微干</div>
+   357|    <div class="pack-item"><div class="p-icon">🌶️</div><div class="p-title">干煸红油</div>1~2min干煸+红油裹身·留潮气</div>
+   358|    <div class="pack-item"><div class="p-icon">💰</div><div class="p-title">成本核算</div>进价→出品→成本→毛利</div>
+   359|    <div class="pack-item"><div class="p-icon">📦</div><div class="p-title">真空发货</div>200g/袋·¥20~24·礼盒装</div>
+   360|  </div>
+   361|</div>
+   362|
+   363|<div class="section">
+   364|  <div class="s-title">🔗 关联产品</div>
+   365|  <div class="rel-grid">
+   366|    <a class="rel-item" href="LC_001%20冷吃红油创业母卡.html"><span class="r-emoji">📖</span><span class="r-name">LC_001 冷吃红油创业母卡</span><span class="r-arrow">→</span></a>
+   367|    <a class="rel-item" href="LC_002%20冷吃牛肉条（子）.html"><span class="r-emoji">🥩</span><span class="r-name">LC_002 冷吃牛肉条（子）</span><span class="r-arrow">→</span></a>
+   368|    <span class="rel-item" style="color:#b5aaa0;cursor:default"><span class="r-emoji">🫘</span><span class="r-name">LC_004 折耳根豆干（暂无卡片）</span><span class="r-arrow">→</span></span>
+   369|    <span class="rel-item" style="color:#b5aaa0;cursor:default"><span class="r-emoji">🐔</span><a class="rel-item" class="r-name">LC_005 冷吃鸡副（子）</a><span class="r-arrow">→</span></span>
+   370|  </div>
+   371|</div>
+   372|
+   373|<div class="section" style="border-top:2px dashed #ddd4ca">
+   374|  <div class="s-title">💎 冷吃鸭舌 · 完整数据包</div>
+   375|  <div class="recipe-box">
+   376|    <div class="rb-title">🌡️ 炸制温度曲线</div>
+   377|    <div class="recipe-line"><span class="rl-label">炸制</span><span class="rl-mid">160~170°C</span><span class="rl-val">2~3min</span></div>
+   378|    <div class="recipe-line"><span class="rl-label">干煸</span><span class="rl-mid">中火</span><span class="rl-val">1~2min</span></div>
+   379|    <div class="recipe-line" style="border-bottom:none"><span class="rl-label">判断</span><span class="rl-mid">表面金黄微干</span></div>
+   380|  </div>
+   381|  <div class="recipe-box">
+   382|    <div class="rb-title">📦 售卖规格</div>
+   383|    <div class="recipe-line"><span class="rl-label">散称</span><span class="rl-mid">¥68~88/斤</span><span class="rl-val">毛利45~55%</span></div>
+   384|    <div class="recipe-line"><span class="rl-label">真空200g</span><span class="rl-mid">¥20~24/袋</span><span class="rl-val">礼盒装</span></div>
+   385|    <div class="recipe-line"><span class="rl-label">批量3斤+</span><span class="rl-mid">¥58~68/斤</span></div>
+   386|    <div class="recipe-line" style="border-bottom:none"><span class="rl-label">学员教学</span><span class="rl-mid">含在母卡¥8,000中</span></div>
+   387|  </div>
+   388|  <div style="font-size:10px;color:#b5aaa0;text-align:center;padding:6px 0 0">⚠️ 完整数据包（分选标准·腌制配比·炸制曲线·红油克重）定价¥19，咨询沧林获取</div>
+   389|</div>
+   390|
+   391|<div class="consult-box">
+   392|  <div class="c-head">📱 咨询沧林</div>
+   393|  <div class="c-desc">关于冷吃鸭舌的任何问题，直接问</div>
+   394|  <div class="c-wx" onclick="copyWx()">📋 复制微信号：canglin1985</div>
+   395|  <div class="c-copy">微信复制 · 添加好友 · 直接开聊</div>
+   396|</div>
+   397|
+   398|<div class="ftr">
+   399|  <div class="f-brand">🍜 食品决策库 · 冷吃红油系列</div>
+   400|  <div class="f-tagline">子卡 · 单品完整决策数据</div>
+   401|  <div style="font-size:8px;color:#6a5a4a;margin-bottom:6px;line-height:1.4">
+   402|    <strong>数据说明：</strong>鸭舌批发价综合自禽类批发市场2026年5月+1688批发均价。出品率/红油占比为行业经验值。<br>
+   403|    子卡数据与母卡工艺体系一致，互相补充。
+   404|  </div>
+   405|  <div class="f-links">
+   406|    <a href="LC_001%20冷吃红油创业母卡.html">← 返回母卡</a>
+   407|    <a href="#">微信 canglin1985</a>
+   408|  </div>
+   409|</div>
+   410|
+   411|</div>
+   412|<script>function copyWx(){navigator.clipboard.writeText('canglin1985').then(()=>{const e=document.querySelector('.c-wx');e.textContent='✅ 已复制！';setTimeout(()=>{e.innerHTML='📋 复制微信号：canglin1985'},2000)})}</script>
+   413|</body>
+   414|</html>
+   415|
