@@ -81,16 +81,16 @@ const STALL_DATA = [
     {f:"catalog/其他/LC_005 冷吃鸡副（子）.html",n:"LC_005 冷吃鸡副（子）"}
   ]},
   {p:"TY",n:"限免体验卡",e:"🎁",c:[
-    {f:"catalog/其他/TY_001 手搓冰粉（体验卡）.html",n:"TY_001 手搓冰粉"},
-    {f:"catalog/其他/TY_002 暴打柠檬茶（体验卡）.html",n:"TY_002 暴打柠檬茶"},
-    {f:"catalog/其他/TY_003 烤面筋（体验卡）.html",n:"TY_003 烤面筋"},
-    {f:"catalog/其他/TY_004 铁板豆腐（体验卡）.html",n:"TY_004 铁板豆腐"},
-    {f:"catalog/其他/TY_005 铁板烤肠（体验卡）.html",n:"TY_005 铁板烤肠"},
-    {f:"catalog/其他/TY_006 酸梅汤（体验卡）.html",n:"TY_006 酸梅汤"},
-    {f:"catalog/其他/TY_007 钵仔糕（体验卡）.html",n:"TY_007 钵仔糕"},
-    {f:"catalog/其他/TY_008 卤红水（体验卡）.html",n:"TY_008 卤红水"},
-    {f:"catalog/其他/TY_009 冷吃牛肉条（体验卡）.html",n:"TY_009 冷吃牛肉条"},
-    {f:"catalog/其他/TY_010 炒鸡基础配方（体验卡）.html",n:"TY_010 炒鸡基础配方"}
+    {f:"catalog/其他/TY_001 手搓冰粉（体验卡）.html",n:"手搓冰粉·体验卡"},
+    {f:"catalog/其他/TY_002 暴打柠檬茶（体验卡）.html",n:"暴打柠檬茶·体验卡"},
+    {f:"catalog/其他/TY_003 烤面筋（体验卡）.html",n:"烤面筋·体验卡"},
+    {f:"catalog/其他/TY_004 铁板豆腐（体验卡）.html",n:"铁板豆腐·体验卡"},
+    {f:"catalog/其他/TY_005 铁板烤肠（体验卡）.html",n:"铁板烤肠·体验卡"},
+    {f:"catalog/其他/TY_006 酸梅汤（体验卡）.html",n:"酸梅汤·体验卡"},
+    {f:"catalog/其他/TY_007 钵仔糕（体验卡）.html",n:"钵仔糕·体验卡"},
+    {f:"catalog/其他/TY_008 卤红水（体验卡）.html",n:"卤红水·体验卡"},
+    {f:"catalog/其他/TY_009 冷吃牛肉条（体验卡）.html",n:"冷吃牛肉条·体验卡"},
+    {f:"catalog/其他/TY_010 炒鸡基础配方（体验卡）.html",n:"炒鸡基础配方·体验卡"}
   ]}];
 
 // ===== 手工精选热品（排除物料/调味料/裹粉，每天新上产品可手工加入） =====
@@ -226,7 +226,7 @@ function renderStallCards(id, data) {
     h += '<div class="icon-grid">';
     d.c.forEach(function(c) {
       var tag = getCardTag(c.n);
-      var isFree = c.n.indexOf('免费') > -1 || c.n.indexOf('free') > -1;
+      var isFree = c.n.indexOf('免费') > -1 || c.n.indexOf('free') > -1 || c.n.indexOf('体验卡') > -1 || c.n.indexOf('体验') > -1;
       var shortName = c.n.replace(/（[^）]*）/g, '').replace(/\([^)]*\)/g, '').replace(/^[A-Z0-9_]+\\s*/, '').trim();
       if (shortName.length > 8) shortName = shortName.slice(0, 7) + '…';
       var cardEmoji = getCardEmoji(c.n) || d.e;
