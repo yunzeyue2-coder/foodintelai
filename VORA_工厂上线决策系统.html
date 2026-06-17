@@ -30,7 +30,6 @@ body{background:#0d0d0d;font-family:"PingFang SC","Microsoft YaHei","SF Pro",-ap
 .eq-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
 .eq-item{padding:12px;border-radius:6px;text-align:center;cursor:pointer;font-size:13px;border:1px solid #2a2a2a;background:#1a1a1a;color:#bbb;transition:.2s}
 .eq-item.selected{border-color:#e8a060;background:#1a150a;color:#e8a060}
-.eq-item.disabled{opacity:0.3;cursor:not-allowed;border-color:#151515;background:#0d0d0d}
 .eq-item .ei{font-size:22px;display:block;margin-bottom:4px}
 .eq-sections{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
 @media(max-width:700px){.eq-item{font-size:12px;padding:8px}}
@@ -39,7 +38,6 @@ body{background:#0d0d0d;font-family:"PingFang SC","Microsoft YaHei","SF Pro",-ap
 .eq-group{}
 .eq-group-title{font-size:9px;color:#444;letter-spacing:1px;margin-bottom:4px;padding-left:2px}
 .eq-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.eq-item.disabled{opacity:0.25;cursor:not-allowed;border-color:#151515;background:#0d0d0d}
 @media(max-width:700px){.eq-row{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:480px){.eq-row{grid-template-columns:repeat(2,1fr)}}
 .analyze-btn{width:100%;background:#e8a060;border:none;border-radius:10px;padding:18px;color:#0d0d0d;font-size:17px;font-weight:700;cursor:pointer;margin:20px 0 24px;transition:.2s}
@@ -162,7 +160,7 @@ body{background:#0d0d0d;font-family:"PingFang SC","Microsoft YaHei","SF Pro",-ap
 <div class="fg"><label>车间面积</label><select id="area"><option value="<300">&lt;300㎡</option><option value="300~800" selected>300~800㎡</option><option value="800~2000">800~2000㎡</option><option value=">2000">&gt;2000㎡</option></select></div>
 <div class="fg"><div style="visibility:hidden">x</div></div>
 </div>
-<div style="font-size:9px;color:#555;letter-spacing:1px;margin-bottom:6px">产线设备配置 <span style="color:#333;font-size:8px;letter-spacing:0">（选产线自动配置 · 灰色为不可用设备）</span></div>
+<div style="font-size:9px;color:#555;letter-spacing:1px;margin-bottom:6px">产线设备配置 <span style="color:#333;font-size:8px;letter-spacing:0">（点击切换选/不选 · 初始按产线自动勾选）</span></div>
 <div class="eq-sections" id="eqSections"></div>
 <div style="font-size:8px;color:#333;letter-spacing:0;margin-bottom:4px;padding:6px 8px;background:#1a1a1a;border-radius:4px">
   <span style="color:#e8a060">■</span> 通用设备（始终可加/减）
@@ -777,11 +775,9 @@ function renderEqSections(lineType) {
     gp.items.forEach(function(eq){
       var hasLine = eq.lines.indexOf(lineType) > -1;
       var isUni = eq.uni === true;
-      var enabled = isUni || hasLine || lineType === '新建';
       var selected = isUni || hasLine;
       if (lineType === '新建') selected = false;
-      // For universal items, restore saved state
-      var cls = 'eq-item' + (selected ? ' selected' : '') + (enabled ? '' : ' disabled');
+      var cls = 'eq-item' + (selected ? ' selected' : '');
       html += '<div class="' + cls + '" data-eq="' + eq.n + '" data-uni="' + (isUni?'1':'0') + '" data-lines="' + eq.lines.join(',') + '" onclick="toggleEq(this)"><span class="ei">' + eq.e + '</span>' + eq.n + '</div>';
     });
     html += '</div></div>';
