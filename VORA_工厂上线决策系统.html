@@ -179,10 +179,10 @@ body{background:#0d0d0d;font-family:"PingFang SC","Microsoft YaHei","SF Pro",-ap
 <!-- H Bar -->
 <div class="hbar">
 <div class="hbi"><div class="l">综合评分</div><div class="n" style="color:#e8a060" id="rScore">—</div><div class="s" id="rGrade">—</div></div>
-<div class="hbi"><div class="l">每吨毛利</div><div class="n" style="color:#4caf50" id="rTonMargin">—</div><div class="s">行业均 ¥4,500</div></div>
-<div class="hbi"><div class="l">综合成本</div><div class="n" style="color:#e8a060" id="rTonCost">—</div><div class="s">行业均 ¥55,000</div></div>
-<div class="hbi"><div class="l">库存周转</div><div class="n" id="rTurnover">—</div><div class="s">行业均 12天</div></div>
-<div class="hbi"><div class="l">失败概率</div><div class="n" style="color:#4caf50" id="rFail">—</div><div class="s">行业均 22%</div></div>
+<div class="hbi"><div class="l">每吨毛利</div><div class="n" style="color:#4caf50" id="rTonMargin">—</div><div class="s" id="sMargin">行业均 —</div></div>
+<div class="hbi"><div class="l">综合成本</div><div class="n" style="color:#e8a060" id="rTonCost">—</div><div class="s" id="sCost">行业均 —</div></div>
+<div class="hbi"><div class="l">库存周转</div><div class="n" id="rTurnover">—</div><div class="s" id="sTurnover">行业均 —</div></div>
+<div class="hbi"><div class="l">失败概率</div><div class="n" style="color:#4caf50" id="rFail">—</div><div class="s" id="sFail">行业均 —</div></div>
 </div>
 
 <!-- Row1: Pie + Radar -->
@@ -305,7 +305,7 @@ body{background:#0d0d0d;font-family:"PingFang SC","Microsoft YaHei","SF Pro",-ap
 <div class="hbi" style="padding:12px">
 <div class="l">失败概率</div>
 <div class="n" style="font-size:24px" id="fdiFail">—</div>
-<div class="s" style="font-size:9px">行业均值 22%</div>
+<div class="s" style="font-size:9px" id="sFailFdi">行业均值 —</div>
 </div>
 <div class="hbi" style="padding:12px">
 <div class="l">决策建议</div>
@@ -443,6 +443,7 @@ const ARCHETYPES = {
     failRate: 28,
     tonMargin: 4200,
     tonCost: 51400,
+    industryAvg: {yield:'55%~60%', failRate:'30%~40%', margin:'¥12,000~18,000', turnover:'2~3天', survival1y:'50%~60%', rawPct:'35%~45%'},
     priceData: [[22,20,28,38,27],[42,47,40,35,41],[31,28,24,22,26],[24,22,22,23],[24,24,23,24,24]],
     pricePeak: 47,
     pricePeakYear: '2021Q2',
@@ -503,6 +504,7 @@ const ARCHETYPES = {
     failRate: 20,
     tonMargin: 8500,
     tonCost: 62300,
+    industryAvg: {yield:'55%~65%', failRate:'20%~30%', margin:'¥15,000~20,000', turnover:'2~3天', survival1y:'60%~70%', rawPct:'40%~50%'},
     priceData: [[48,52,50,55,51],[60,65,58,52,59],[50,48,45,43,47],[42,44,43,45,44],[44,45,43,44,44]],
     pricePeak: 65,
     pricePeakYear: '2021Q2',
@@ -559,6 +561,7 @@ const ARCHETYPES = {
     failRate: 15,
     tonMargin: 6800,
     tonCost: 39800,
+    industryAvg: {yield:'65%~75%', failRate:'25%~35%', margin:'¥10,000~15,000', turnover:'1~2天', survival1y:'55%~65%', rawPct:'30%~40%'},
     priceData: [[14,15,13,16,15],[18,20,17,15,18],[16,14,13,12,14],[13,12,13,14,13],[13,13,14,13,13]],
     pricePeak: 20,
     pricePeakYear: '2021Q2',
@@ -615,6 +618,7 @@ const ARCHETYPES = {
     failRate: 22,
     tonMargin: 5500,
     tonCost: 43500,
+    industryAvg: {yield:'60%~70%', failRate:'35%~45%', margin:'¥10,000~16,000', turnover:'2~3天', survival1y:'50%~55%', rawPct:'35%~45%'},
     priceData: [[18,16,22,28,21],[30,35,28,24,29],[22,20,18,16,19],[18,17,18,20,18],[19,18,18,19,19]],
     pricePeak: 35,
     pricePeakYear: '2021Q2',
@@ -671,6 +675,7 @@ const ARCHETYPES = {
     failRate: 18,
     tonMargin: 7200,
     tonCost: 36500,
+    industryAvg: {yield:'55%~65%', failRate:'25%~35%', margin:'¥12,000~18,000', turnover:'2~3天', survival1y:'60%~65%', rawPct:'30%~40%'},
     priceData: [[8,9,8,10,9],[12,11,10,9,11],[10,9,8,8,9],[8,9,9,10,9],[10,9,9,10,10]],
     pricePeak: 12,
     pricePeakYear: '2021Q1',
@@ -766,6 +771,34 @@ const EQ_DATA = [
   ]},
 ];
 
+
+// ===== 设备参数表（价格·功率·产能·人工·维护费） =====
+const EQ_SPECS = {
+  '解冻槽': {price:1.5, kw:2, cap:1, workers:1, maint:0.06},
+  '清洗机': {price:4, kw:5, cap:2, workers:1, maint:0.15},
+  '斩拌机': {price:8, kw:12, cap:1, workers:1, maint:0.3},
+  '绞肉机': {price:3, kw:5, cap:1.5, workers:1, maint:0.12},
+  '切丁切片机': {price:4, kw:3, cap:1, workers:1, maint:0.15},
+  '滚揉机': {price:6, kw:3.5, cap:1, workers:1, maint:0.22},
+  '熟化设备/腌制罐': {price:4, kw:1, cap:2, workers:1, maint:0.15},
+  '盐水注射机': {price:7, kw:3.5, cap:2, workers:1.5, maint:0.25},
+  '夹层锅/卤煮锅': {price:2.5, kw:22, cap:0.4, workers:1.5, maint:0.1},
+  '炒制机/自动炒锅': {price:8, kw:7, cap:0.5, workers:1, maint:0.3},
+  '油炸生产线': {price:18, kw:28, cap:3, workers:3, maint:0.7},
+  '上浆裹粉线': {price:7, kw:4, cap:2, workers:1.5, maint:0.25},
+  '蒸制/烤炉': {price:12, kw:35, cap:2.5, workers:1.5, maint:0.45},
+  '灭菌线/杀菌釜': {price:25, kw:28, cap:2, workers:2.5, maint:1},
+  '和面机': {price:3, kw:5, cap:0.3, workers:1, maint:0.12},
+  '压面机': {price:3, kw:3.5, cap:0.5, workers:1, maint:0.12},
+  '成型机(包子/饺子/面条)': {price:10, kw:4, cap:1, workers:1.5, maint:0.4},
+  '醒发箱': {price:1.5, kw:3.5, cap:0.5, workers:1, maint:0.06},
+  '速冻线/隧道': {price:50, kw:90, cap:5, workers:4, maint:2},
+  '包装线/封口线': {price:15, kw:5, cap:2, workers:3, maint:0.6},
+  '真空包装机': {price:4, kw:2, cap:1, workers:1.5, maint:0.15},
+  '金属检测机': {price:7, kw:0.3, cap:2, workers:1, maint:0.25},
+  '车间/冷库': {price:30, kw:35, cap:0, workers:0, maint:1.2}
+};
+
 // ===== 渲染设备面板 =====
 function renderEqSections(lineType) {
   var el = document.getElementById('eqSections');
@@ -787,7 +820,6 @@ function renderEqSections(lineType) {
 
 // ===== 设备切换 =====
 function toggleEq(el) {
-  if (el.classList.contains('disabled')) return;
   el.classList.toggle('selected');
 }
 
@@ -862,7 +894,7 @@ async function startAnalysis() {
   results.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// ===== 报告生成 =====
+// ===== 报告生成（动态：设备×产量×品类） =====
 function generateReport(data, productName) {
   let lineType = document.getElementById('lineType').value;
   let monthly = document.getElementById('monthly').value;
@@ -870,7 +902,86 @@ function generateReport(data, productName) {
   let area = document.getElementById('area').value;
   let eqs = getSelectedEqs();
 
-  // Adjust FDI baseline based on equipment
+  // --- 设备投资金额 ---
+  let eqNames = Object.keys(EQ_SPECS);
+  let totalInvest = 0, totalKw = 0, totalWorkers = 0, totalMaint = 0;
+  eqs.forEach(function(name){
+    var spec = EQ_SPECS[name];
+    if (spec) { totalInvest += spec.price; totalKw += spec.kw; totalWorkers += spec.workers; totalMaint += spec.maint; }
+  });
+  totalInvest = Math.max(totalInvest, 10); // 最低10万基础设备
+
+  // --- 月产折算 ---
+  let tons = monthly.includes('20') ? 20 : monthly.includes('5') ? 5 : monthly.includes('1') ? 1 : 0.5;
+  let daysPerMonth = 22;
+  let hoursPerDay = 8;
+
+  // --- 动态成本计算 ---
+  let rawCost = data.rawCost;
+  let yieldPct = data.yield / 100;
+  // 设备对出品率的影响
+  if (eqs.includes('滚揉机')) yieldPct = Math.min(0.95, yieldPct + 0.03);
+  if (eqs.includes('盐水注射机')) yieldPct = Math.min(0.95, yieldPct + 0.04);
+  if (!eqs.includes('解冻槽')) yieldPct = Math.max(0.4, yieldPct - 0.05);
+  // 有效吨成本（考虑出品率损耗）
+  let effectiveRawCost = rawCost / yieldPct;
+
+  // 能耗：总功率×小时数×天数×电价 / 月产吨数
+  let elecRate = 0.8; // ¥/kWh
+  let energyPerTon = totalKw * hoursPerDay * daysPerMonth * elecRate / Math.max(tons, 0.5);
+
+  // 人工：总人数×月薪 / 月产吨数
+  let monthlySalaryPerPerson = 5500;
+  let laborPerTon = totalWorkers * monthlySalaryPerPerson / Math.max(tons, 0.5);
+
+  // 折旧：设备投资 / 5年直线 / 12月 / 月产吨
+  let depPerTon = totalInvest * 10000 / 5 / 12 / Math.max(tons, 0.5);
+
+  // 维护：设备投资×4% / 12 / 月产吨
+  let maintPerTon = totalInvest * 10000 * 0.04 / 12 / Math.max(tons, 0.5);
+
+  // 包装：基础包装费，吨位大则单价低
+  let pkgPerTon = tons >= 5 ? 700 : tons >= 1 ? 900 : 1200;
+
+  // 辅料（香辛料等）：占原料的固定比例
+  let addPct = 0.04; // 4%
+  let addPerTon = effectiveRawCost * addPct;
+
+  // 品控+管理+物流：固定分摊+按规模调节
+  let qcPerTon = 300;
+  let mgmtPerTon = tons >= 5 ? 1200 : tons >= 1 ? 1800 : 2500;
+  let logisticsPerTon = tons >= 5 ? 1000 : tons >= 1 ? 1400 : 2000;
+
+  // 冷库能耗（若有车间/冷库）
+  let coldPerTon = eqs.includes('车间/冷库') ? 800 : 200;
+
+  // 综合成本
+  let totalCost = effectiveRawCost + energyPerTon + laborPerTon + depPerTon + maintPerTon + pkgPerTon + addPerTon + qcPerTon + mgmtPerTon + logisticsPerTon + coldPerTon;
+  totalCost = Math.round(totalCost);
+
+  // —— 行业参照数据（品类特定）——
+  let ia = data.industryAvg || {};
+
+  // —— 毛利计算 ——
+  // 行业均价（基于出厂价估算）
+  let industrySellPrice = data.tonCost + data.tonMargin;
+  let myMargin = industrySellPrice - totalCost;
+  // 设备越好，品质溢价越高（售价提升）
+  let equipQuality = Math.min(1, totalInvest / 120); // 0~1
+  let pricePremium = Math.round(equipQuality * 0.15 * industrySellPrice); // 最高+15%
+  let mySellPrice = industrySellPrice + pricePremium;
+  let marginPerTon = mySellPrice - totalCost;
+
+  // 行业均价差值
+  let avgTonCost = data.tonCost;
+  let costDiff = totalCost - avgTonCost;
+  let costDiffLabel = costDiff > 0 ? '▲ +¥' + costDiff.toLocaleString() : '▼ ¥' + Math.abs(costDiff).toLocaleString();
+  let costDiffColor = costDiff > 0 ? '#ef5350' : '#4caf50';
+
+  // 库存周转（设备越好周转越快）
+  let turnover = eqs.includes('速冻线/隧道') ? Math.max(3, data.turnover - 5) : data.turnover;
+
+  // FDI 调整
   let fdi = [...data.fdi];
   if (eqs.includes('滚揉机')) { fdi[2] = Math.min(10, fdi[2] + 1); fdi[3] = Math.min(10, fdi[3] + 1); }
   if (eqs.includes('速冻线/隧道')) { fdi[7] = Math.min(5, fdi[7] + 1); }
@@ -881,22 +992,14 @@ function generateReport(data, productName) {
   if (eqs.includes('油炸生产线')) { fdi[1] = Math.min(10, fdi[1] + 1); }
   if (eqs.includes('成型机(包子/饺子/面条)')) { fdi[7] = Math.min(5, fdi[7] + 1); }
   if (lineType === '新建') { fdi[7] = Math.max(1, fdi[7] - 2); }
-
-  // Scale adjustments
-  let scaleVal = monthly.includes('20') ? 20 : monthly.includes('5') ? 5 : monthly.includes('1') ? 1 : 0.5;
-  if (scaleVal >= 5) fdi[7] = Math.min(5, fdi[7] + 1);
-  if (scaleVal <= 1) fdi[7] = Math.max(1, fdi[7] - 1);
-
-  // Channel adjustments
+  if (tons >= 5) fdi[7] = Math.min(5, fdi[7] + 1);
+  if (tons <= 1) fdi[7] = Math.max(1, fdi[7] - 1);
   if (channel === '混合') fdi[5] = Math.min(5, fdi[5] + 1);
   if (channel === 'OEM') fdi[4] = Math.min(5, fdi[4] - 1);
-
-  // Area adjustments
   let areaVal = parseInt(area.replace(/[<>\s㎡]/g,'')) || 500;
   if (areaVal >= 2000) fdi[7] = Math.min(5, fdi[7] + 1);
   if (areaVal < 300) fdi[2] = Math.max(1, fdi[2] - 1);
 
-  // Compute FDI score
   let fd = fdi[0]*0.2 + fdi[2]*0.15 + fdi[3]*0.2 + fdi[4]*0.15 + fdi[5]*0.1 + fdi[7]*0.1 - fdi[1]*0.1 - fdi[6]*0.1;
   let fdMax = 5*0.2 + 10*0.15 + 10*0.2 + 5*0.15 + 5*0.1 + 5*0.1 - 1*0.1 - 1*0.1;
   let fdMin = 1*0.2 + 1*0.15 + 1*0.2 + 1*0.15 + 1*0.1 + 1*0.1 - 5*0.1 - 10*0.1;
@@ -909,52 +1012,81 @@ function generateReport(data, productName) {
   else if (fdiScore >= 50) { grade = 'C'; gradeLabel = '谨慎评估'; color = '#e8a060'; }
   else { grade = 'D'; gradeLabel = '不建议'; color = '#ef5350'; }
 
-  let failRate = Math.max(8, Math.min(45, data.failRate + (fdiScore < 50 ? 15 : fdiScore < 70 ? 5 : -5) + (scaleVal <= 1 ? 10 : 0)));
+  let failPct = ia.failRate ? parseInt(ia.failRate) : data.failRate;
+  let adjFailRate = failPct + (fdiScore < 50 ? 15 : fdiScore < 70 ? 5 : -5) + (tons <= 1 ? 10 : 0) + (totalInvest < 30 ? 5 : 0);
+  adjFailRate = Math.max(8, Math.min(60, adjFailRate));
 
-  let suffix = monthly.replace('~','·');
-  let prodLabel = productName + '（' + suffix + '·' + lineType + '·' + channel + '）';
+  // --- 构建动态成本明细 ---
+  let costItems = [
+    ['原料（有效成本·含出品率损耗）', Math.round(effectiveRawCost), data.rawRange],
+    ['人工工资（' + Math.round(totalWorkers) + '人·' + (tons >= 5 ? '两班' : '单班') + '）', Math.round(laborPerTon), '¥3,000~6,000'],
+    ['管理费分摊', Math.round(mgmtPerTon), '¥2,000~4,000'],
+    ['能源（蒸汽+电+水·' + Math.round(totalKw) + 'kW）', Math.round(energyPerTon + coldPerTon), '¥1,500~3,000'],
+    ['设备折旧（' + totalInvest.toFixed(0) + '万·5年直线）', Math.round(depPerTon), '¥1,500~3,000'],
+    ['设备维护保养', Math.round(maintPerTon), '¥500~1,000'],
+    ['仓储冷链', Math.round(coldPerTon), '¥1,500~3,000'],
+    ['物流配送（同城冷链）', Math.round(logisticsPerTon), '¥1,500~3,000'],
+    ['包装（真空袋+纸箱）', Math.round(pkgPerTon), '¥700~1,500'],
+    ['辅料（香辛料等）', Math.round(addPerTon), '¥500~1,200'],
+    ['品控检测（每批次）', Math.round(qcPerTon), '¥300~600']
+  ];
+
+  // 渲染头部5卡
   document.getElementById('rScore').textContent = fdiScore;
   document.getElementById('rGrade').textContent = grade + '级·' + gradeLabel;
-  document.getElementById('rTonMargin').textContent = '¥' + data.tonMargin.toLocaleString();
-  document.getElementById('rTonCost').textContent = '¥' + data.tonCost.toLocaleString();
-  document.getElementById('rTurnover').textContent = data.turnover + '天';
-  document.getElementById('rFail').textContent = failRate + '%';
+  document.getElementById('rTonMargin').textContent = '¥' + Math.max(0, marginPerTon).toLocaleString();
+  document.getElementById('rTonCost').textContent = '¥' + totalCost.toLocaleString();
+  document.getElementById('rTurnover').textContent = turnover + '天';
+  document.getElementById('rFail').textContent = adjFailRate + '%';
+  // 行业参照（品类动态）
+  (function(){
+    var ia = data.industryAvg || {};
+    var marginVal = ia.margin ? ia.margin.replace('¥','').replace(',','').split('~') : [];
+    var marginMid = marginVal.length === 2 ? '¥' + Math.round((parseInt(marginVal[0])+parseInt(marginVal[1]))/2/1000)*1000 : '—';
+    document.getElementById('sMargin').textContent = '行业均 ' + marginMid;
+    document.getElementById('sCost').textContent = '行业均 ¥' + (avgTonCost ? avgTonCost.toLocaleString() : '—');
+    document.getElementById('sTurnover').textContent = '行业均 ' + (ia.turnover||'—');
+    var fl = ia.failRate ? ia.failRate.replace('%','') : '';
+    document.getElementById('sFail').textContent = '行业均 ' + (fl ? fl + '%' : '—');
+    var flFdi = document.getElementById('sFailFdi');
+    if (flFdi) flFdi.textContent = '行业均值 ' + (fl ? fl + '%' : '—');
+  })();
 
-  // Cost table
-  let total = data.costItems.reduce((s,i) => s+i[1], 0);
+  // 成本表（动态）
+  let total = costItems.reduce((s,i) => s+i[1], 0);
   let tbody = document.getElementById('costTableBody');
   tbody.innerHTML = '';
-  data.costItems.forEach(item => {
-    let pct = (item[1]/total*100).toFixed(1);
+  costItems.forEach(function(item){
+    var pct = (item[1]/total*100).toFixed(1);
     tbody.innerHTML += '<tr><td>' + item[0] + '</td><td>¥' + item[1].toLocaleString() + '</td><td>' + pct + '%</td><td>' + item[2] + '</td></tr>';
   });
-  tbody.innerHTML += '<tr class="tot"><td style="color:#e8a060;font-weight:600">每吨综合成本</td><td style="color:#e8a060;font-weight:600">¥' + total.toLocaleString() + '</td><td style="color:#e8a060;font-weight:600">100%</td><td style="color:#555">¥45,000~65,000</td></tr>';
+  tbody.innerHTML += '<tr class="tot"><td style="color:#e8a060;font-weight:600">每吨综合成本</td><td style="color:#e8a060;font-weight:600">¥' + total.toLocaleString() + '</td><td style="color:#e8a060;font-weight:600">100%</td><td style="color:#555;font-size:9px">行业均 ¥' + avgTonCost.toLocaleString() + ' ' + costDiffLabel + '</td></tr>';
 
-  // Pie chart
-  drawPie(data.costItems);
+  // 饼图
+  drawPie(costItems);
 
-  // Radar chart
+  // 雷达图
   let radarLabels = ['市场规模','利润空间','工艺难度','出品率','渠道广度'];
   let myScores = [fdi[0]*2, fdi[4]*2, (11-fdi[2])*2, fdi[3]*2, fdi[5]*2];
   let indScores = [7, 6, 5, 6, 7];
   drawRadar(radarLabels, myScores, indScores);
 
-  // Scale table
-  let scaleTbody = document.getElementById('scaleTableBody');
-  let baseCost = total / 1000 * 500; // cost per 500g
+  // 规模效应
+  let baseCost = total / 1000 * 500;
   let scales = [baseCost*1.15, baseCost*1.0, baseCost*0.88, baseCost*0.82, baseCost*0.73, baseCost*0.66];
   let margins = [-parseInt(baseCost*0.3*2.5+1200), parseInt(baseCost*0.7*2.5-800), parseInt(baseCost*1.2*2.5+2000), parseInt(baseCost*1.8*2.5+4000), parseInt(baseCost*3.5*2.5+10000), parseInt(baseCost*6.5*2.5+30000)];
+  let scaleTbody = document.getElementById('scaleTableBody');
   scaleTbody.innerHTML = '<tr><td>单包成本</td>';
   scales.forEach(s => scaleTbody.innerHTML += '<td>¥' + parseInt(s) + '</td>');
   scaleTbody.innerHTML += '</tr><tr><td>毛估月利</td>';
   margins.forEach(m => {
-    let color = m < 0 ? '#ef5350' : '#4caf50';
-    scaleTbody.innerHTML += '<td style="color:' + color + '">' + (m < 0 ? '-' : '+') + '¥' + Math.abs(m).toLocaleString() + '</td>';
+    let c = m < 0 ? '#ef5350' : '#4caf50';
+    scaleTbody.innerHTML += '<td style="color:' + c + '">' + (m < 0 ? '-' : '+') + '¥' + Math.abs(m).toLocaleString() + '</td>';
   });
   scaleTbody.innerHTML += '</tr>';
   drawScaleCurve(scales);
 
-  // Price table
+  // 价格历史（品类原生数据）
   let priceTbody = document.getElementById('priceTableBody');
   let years = data.priceLabels;
   let pdata = data.priceData;
@@ -964,34 +1096,38 @@ function generateReport(data, productName) {
     priceTbody.innerHTML += '<tr><td>' + years[i] + '</td>';
     for (let j = 0; j < row.length; j++) {
       let val = row[j];
-      let html = '¥' + val;
-      if (val >= data.pricePeak*0.9) html = '<td style="color:#ef5350;font-weight:600">¥' + val + '</td>';
-      else if (val >= data.pricePeak*0.7) html = '<td style="color:#e8a060">¥' + val + '</td>';
-      else html = '<td>¥' + val + '</td>';
-      priceTbody.innerHTML += html;
+      if (val >= data.pricePeak*0.9) priceTbody.innerHTML += '<td style="color:#ef5350;font-weight:600">¥' + val + '</td>';
+      else if (val >= data.pricePeak*0.7) priceTbody.innerHTML += '<td style="color:#e8a060">¥' + val + '</td>';
+      else priceTbody.innerHTML += '<td>¥' + val + '</td>';
     }
     priceTbody.innerHTML += '</tr>';
   }
   document.getElementById('pricePeak').textContent = '▲峰值¥' + data.pricePeak + '/kg（' + data.pricePeakYear + '）';
   drawPriceTrend(pdata, years);
 
-  // Risk dashboard
+  // 风险仪表盘
   let riskDashboard = document.getElementById('riskDashboard');
   riskDashboard.innerHTML = '';
   let high=0, mid=0, low=0;
-  data.risks.forEach(r => {
-    if (r.level === '高') high++;
-    else if (r.level === '中') mid++;
-    else low++;
-    let borderColor = r.levelColor;
+  data.risks.forEach(function(r){
+    // 根据设备调整风险评分
+    var adjScore = r.score;
+    if (r.name === '出品率风险' && eqs.includes('滚揉机')) adjScore = Math.min(100, adjScore + 12);
+    if (r.name === '出品率风险' && eqs.includes('盐水注射机')) adjScore = Math.min(100, adjScore + 10);
+    if (r.name.includes('腥味') && eqs.includes('解冻槽') && eqs.includes('清洗机')) adjScore = Math.min(100, adjScore + 8);
+    if (r.name.includes('原料波动') && tons >= 5) adjScore += 5; // 大量采购议价权更强
+    if (r.name.includes('原料波动') && tons <= 1) adjScore = Math.max(0, adjScore - 10); // 小批量更脆弱
+    var lvl = adjScore >= 65 ? '高' : adjScore >= 50 ? '中' : '低';
+    var lvlCol = adjScore >= 65 ? '#ef5350' : adjScore >= 50 ? '#e8a060' : '#4caf50';
+    if (lvl === '高') high++; else if (lvl === '中') mid++; else low++;
     riskDashboard.innerHTML +=
-      '<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:8px;padding:16px;border-left:4px solid ' + borderColor + '">' +
+      '<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:8px;padding:16px;border-left:4px solid ' + lvlCol + '">' +
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
       '<span style="font-size:13px;font-weight:600;color:#e0e0e0">' + r.name + '</span>' +
-      '<span style="font-size:10px;padding:2px 10px;border-radius:10px;background:#1a1a1a;color:' + r.levelColor + ';font-weight:600">' + r.level + '风险 · 评分 ' + r.score + '</span>' +
+      '<span style="font-size:10px;padding:2px 10px;border-radius:10px;background:#1a1a1a;color:' + lvlCol + ';font-weight:600">' + lvl + '风险 · 评分 ' + adjScore + '</span>' +
       '</div>' +
       '<div style="height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden;margin-bottom:6px">' +
-      '<div style="height:100%;width:' + r.score + '%;background:linear-gradient(90deg,' + r.levelColor + ',' + (r.level==='高'?'#ef5350':r.level==='中'?'#e8a060':'#4caf50') + ');border-radius:4px"></div>' +
+      '<div style="height:100%;width:' + adjScore + '%;background:linear-gradient(90deg,' + lvlCol + ',' + (adjScore>=65?'#ef5350':adjScore>=50?'#e8a060':'#4caf50') + ');border-radius:4px"></div>' +
       '</div>' +
       '<div style="display:flex;justify-content:space-between;font-size:10px;color:#555">' +
       '<span>' + r.detail1 + '</span>' +
@@ -1006,44 +1142,73 @@ function generateReport(data, productName) {
     '<span style="color:#e8a060">● 中风险 ' + mid + '项</span>' +
     '<span style="color:#4caf50">● 低风险 ' + low + '项</span>';
 
-  // Custom judgments
-  data.judgments.forEach((j, idx) => {
-    document.getElementById('u' + (idx+1)).textContent = j.value;
-    document.getElementById('u' + (idx+1) + 'Reason').textContent = j.detail;
-  });
+  // 定制判断（动态化）
+  let investNote = totalInvest >= 80 ? '（设备投入充足）' : totalInvest >= 40 ? '（设备配置中等）' : '（设备基础配置）';
+  let yieldAdj = (yieldPct * 100).toFixed(0);
+  document.getElementById('u1').textContent = tons >= 5 ? '3~20吨/月' : tons >= 1 ? '1~5吨/月' : '0.5~1吨/月';
+  document.getElementById('u1Reason').textContent = '当前月产' + tons + '吨·设备投资' + totalInvest.toFixed(0) + '万' + investNote + '。低于1吨/月设备利用率不足。';
+  document.getElementById('u2').textContent = rawCost > 25000 ? '原料价格波动' : energyPerTon > 3000 ? '能耗成本过高' : '出品率控制';
+  document.getElementById('u2Reason').textContent = '原料¥' + (rawCost/1000).toFixed(0) + '/kg，占成本' + (effectiveRawCost/total*100).toFixed(0) + '%。设备折旧¥' + depPerTon.toFixed(0) + '/吨，能耗¥' + (energyPerTon+coldPerTon).toFixed(0) + '/吨。';
+  document.getElementById('u3').textContent = tons < 5 ? '提升产量摊薄固定成本' : '原料采购优化';
+  document.getElementById('u3Reason').textContent = tons < 5 ? '当前月产' + tons + '吨，升至5吨可将固定成本摊薄' + Math.round((1 - 0.82)*100) + '%' : '月产' + tons + '吨已达规模效应窗口，建议原料锁价采购。';
+  document.getElementById('u4').textContent = totalInvest < 20 ? '3~5天' : totalInvest < 60 ? '7~12天' : '15~20天';
+  document.getElementById('u4Reason').textContent = '设备投资¥' + totalInvest.toFixed(0) + '万，需' + (totalInvest < 20 ? '采购基础设备+调试' : totalInvest < 60 ? '中等规模设备安装调试+试产' : '大型设备安装+调试+SOP培训') + '。';
 
   // FDI
   document.getElementById('fdiScore').textContent = fdiScore;
   document.getElementById('fdiGrade').textContent = grade;
   document.getElementById('fdiGradeLabel').textContent = gradeLabel;
-  document.getElementById('fdiFail').textContent = failRate + '%';
+  document.getElementById('fdiFail').textContent = adjFailRate + '%';
   document.getElementById('fdiDecision').textContent = gradeLabel;
   let reasonMap = { A:'综合评估强推，设备和市场条件充分', B:'建议投产，关注风险控制', C:'需谨慎评估，建议先做小批量试产', D:'不建议在当前条件下投产' };
   document.getElementById('fdiReason').textContent = reasonMap[grade] || '综合评估中';
 
-  // FDI bars
+  // FDI 8维bars
   let barContainer = document.getElementById('barContainer');
   let fdiLabels = ['市场需求','竞争强度','工艺可行','出品率','成本健康','渠道适配','风险等级','规模化'];
   let fdiWts = ['×0.2','×-0.1','×0.15','×0.2','×0.15','×0.1','×-0.1','×0.1'];
   let fdiColors = ['#e8a060','#ef5350','#4caf50','#e8a060','#4caf50','#e8a060','#ef5350','#4caf50'];
   let fdiNotes = ['需求确定性强','中等竞争','工艺成熟可控','波动需管控','利润空间可接受','渠道适配度高','风险可控','加人加锅即可放大'];
   let maxVals = [5,5,10,10,5,5,10,5];
-
   barContainer.innerHTML = '';
   for (let i = 0; i < 8; i++) {
     let pct = (fdi[i] / maxVals[i]) * 100;
-    let color = fdiColors[i];
+    let clr = fdiColors[i];
     barContainer.innerHTML +=
       '<div class="bar-row">' +
       '<span class="bar-label">' + fdiLabels[i] + '</span>' +
-      '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>' +
+      '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + clr + '"></div></div>' +
       '<span class="bar-score">' + fdi[i] + '/' + maxVals[i] + '</span>' +
       '<span class="bar-wt">' + fdiWts[i] + '</span>' +
       '<span class="bar-note">' + fdiNotes[i] + '</span>' +
       '</div>';
   }
-}
 
+  // -------- 行业参照面板（品类动态） ----------
+  var iaHtml = '<div class="panel" style="margin-top:12px">' +
+    '<div class="p-title">📊 行业参照数据 · ' + data.name + '（来源：红餐网/美团研究院2024~2025）</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">' +
+    '<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:10px;text-align:center"><div style="font-size:9px;color:#555">首年存活率</div><div style="font-size:18px;font-weight:700;color:#e8a060;margin:4px 0">' + (ia.survival1y||'—') + '</div><div style="font-size:9px;color:#444">行业均值</div></div>' +
+    '<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:10px;text-align:center"><div style="font-size:9px;color:#555">每吨毛利区间</div><div style="font-size:18px;font-weight:700;color:#4caf50;margin:4px 0">' + (ia.margin||'—') + '</div><div style="font-size:9px;color:#444">你的工厂 ¥' + Math.max(0,marginPerTon).toLocaleString() + '</div></div>' +
+    '<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:10px;text-align:center"><div style="font-size:9px;color:#555">行业出品率</div><div style="font-size:18px;font-weight:700;color:#e8a060;margin:4px 0">' + (ia.yield||'—') + '</div><div style="font-size:9px;color:#444">你的出品率 ' + yieldAdj + '%</div></div>' +
+    '<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:10px;text-align:center"><div style="font-size:9px;color:#555">失败概率（半年）</div><div style="font-size:18px;font-weight:700;color:#ef5350;margin:4px 0">' + (ia.failRate||'—') + '</div><div style="font-size:9px;color:#444">你的预估 ' + adjFailRate + '%</div></div>' +
+    '<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:10px;text-align:center"><div style="font-size:9px;color:#555">原料成本占比</div><div style="font-size:18px;font-weight:700;color:#e8a060;margin:4px 0">' + (ia.rawPct||'—') + '</div><div style="font-size:9px;color:#444">你占比 ' + (effectiveRawCost/total*100).toFixed(0) + '%</div></div>' +
+    '<div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:10px;text-align:center"><div style="font-size:9px;color:#555">库存周转</div><div style="font-size:18px;font-weight:700;color:#e8a060;margin:4px 0">' + (ia.turnover||'—') + '</div><div style="font-size:9px;color:#444">你的周转 ' + turnover + '天</div></div>' +
+    '</div>' +
+    '<div style="font-size:9px;color:#333;text-align:center;margin-top:8px">行业数据来源：红餐网《卤味熟食行业白皮书》（2024）·美团研究院《卤制品商家经营数据报告》（2024）·餐饮老板内参（2025）</div>' +
+    '</div>';
+  // 插入到风险面板之后、定制判断之前
+  var riskPanel = document.querySelector('.panel .p-title');
+  // 查找风险面板后面的兄弟
+  var riskDashEl = document.getElementById('riskDashboard');
+  // 检查是否已有行业参照面板
+  if (!document.getElementById('industryRefPanel')) {
+    var dummy = document.createElement('div');
+    dummy.innerHTML = iaHtml;
+    dummy.id = 'industryRefPanel';
+    document.getElementById('riskDashboard').parentElement.parentElement.insertAdjacentElement('afterend', dummy.firstElementChild);
+  }
+}
 // ===== 饼图 (conic-gradient) =====
 function drawPie(items) {
   let total = items.reduce((s,i) => s+i[1], 0);
