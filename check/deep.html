@@ -217,6 +217,29 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
       </div>
     </div>
 
+    <div class="form-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label>在当地测试过了吗</label>
+          <select id="f13">
+            <option value="0">完全没试过</option>
+            <option value="1" selected>自己做过·朋友说还行</option>
+            <option value="2">摆摊/试吃过·有反馈数据</option>
+            <option value="3">长期测试过·验证可行</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>计划上架几个单品</label>
+          <select id="f14">
+            <option value="1">1-3个（极致精简）</option>
+            <option value="2" selected>4-6个（夫妻档合理）</option>
+            <option value="3">7-10个（需更多人手）</option>
+            <option value="4">>10个（品控挑战大）</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <button class="btn-submit" onclick="run()">📊 生成评估报告</button>
   </div>
 
@@ -229,16 +252,16 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 // 品类基础数据（权重 由我们配）
 // ============================================================
 const CAT_DATA = {
-  '卤味': {growth:75, margin:72, standard:78, scale:70, risk:55, season:80, supply:75},
-  '冷吃红油': {growth:82, margin:88, standard:80, scale:75, risk:45, season:75, supply:72},
-  '潮汕南乳炸鸡': {growth:90, margin:78, standard:82, scale:80, risk:50, season:65, supply:78},
-  '韩式炸鸡': {growth:65, margin:68, standard:90, scale:82, risk:55, season:60, supply:85},
-  '炒鸡': {growth:60, margin:65, standard:65, scale:68, risk:65, season:78, supply:68},
-  '贵州酸汤': {growth:88, margin:70, standard:62, scale:65, risk:50, season:72, supply:55},
-  '早餐面点': {growth:70, margin:78, standard:72, scale:75, risk:35, season:85, supply:72},
-  '饮品甜品': {growth:82, margin:85, standard:92, scale:85, risk:50, season:50, supply:80},
-  '小吃烤串': {growth:72, margin:75, standard:68, scale:65, risk:55, season:55, supply:70},
-  '傣舂舂菜': {growth:78, margin:88, standard:55, scale:50, risk:40, season:60, supply:45},
+  '卤味': {growth:75, margin:72, standard:78, scale:70, risk:55, season:80, supply:75, sku:2},
+  '冷吃红油': {growth:82, margin:88, standard:80, scale:75, risk:45, season:75, supply:72, sku:2},
+  '潮汕南乳炸鸡': {growth:90, margin:78, standard:82, scale:80, risk:50, season:65, supply:78, sku:2},
+  '韩式炸鸡': {growth:65, margin:68, standard:90, scale:82, risk:55, season:60, supply:85, sku:2},
+  '炒鸡': {growth:60, margin:65, standard:65, scale:68, risk:65, season:78, supply:68, sku:2},
+  '贵州酸汤': {growth:88, margin:70, standard:62, scale:65, risk:50, season:72, supply:55, sku:2},
+  '早餐面点': {growth:70, margin:78, standard:72, scale:75, risk:35, season:85, supply:72, sku:1},
+  '饮品甜品': {growth:82, margin:85, standard:92, scale:85, risk:50, season:50, supply:80, sku:3},
+  '小吃烤串': {growth:72, margin:75, standard:68, scale:65, risk:55, season:55, supply:70, sku:3},
+  '傣舂舂菜': {growth:78, margin:88, standard:55, scale:50, risk:40, season:60, supply:45, sku:2},
 };
 
 function getVal(id){return document.getElementById(id).value}
@@ -261,6 +284,8 @@ function run(){
   const area = parseInt(getVal('f10'));
   const revenue = parseInt(getVal('f11'));
   const payback = parseInt(getVal('f12'));
+  const testVal = parseInt(getVal('f13'));
+  const skuVal = parseInt(getVal('f14'));
 
   // 城市系数
   const cm = [1.0, 0.85, 0.72][city-1] || 0.85;
@@ -284,9 +309,14 @@ function run(){
   const rm = [0.5, 0.85, 1.0, 1.05][revenue-1] || 0.8;
   // 回本期望系数
   const pbm = [1.15, 1.0, 0.85, 0.7][payback-1] || 0.85;
+  // 测试验证系数
+  const testm = [0.6, 0.85, 1.0, 1.15][testVal] || 0.85;
+  // SKU合理度系数（与品类推荐SKU数对比）
+  const skuDiff = Math.abs(skuVal - cd.sku);
+  const skum = skuDiff === 0 ? 1.1 : skuDiff <= 1 ? 1.0 : skuDiff <= 2 ? 0.85 : 0.65;
 
   // 综合经营能力因子
-  const opFactor = (em * 0.25 + tm * 0.2 + teem * 0.15 + om * 0.2 + sfm * 0.2);
+  const opFactor = (em * 0.2 + tm * 0.15 + teem * 0.1 + om * 0.15 + sfm * 0.1 + testm * 0.15 + skum * 0.15);
 
   // 计算8维评分
   const dims = [
