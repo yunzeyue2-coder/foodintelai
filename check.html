@@ -2,195 +2,140 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>FoodIntelAI V6 — 餐饮创业风控仿真器</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodIntelAI Check V1.1</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#0b0f14;color:#e6e6e6}
-.container{max-width:540px;margin:auto;padding:16px 14px}
-/* Brand bar */
-.brand-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.brand-bar .logo{font-size:13px;font-weight:700;color:#00ff88;letter-spacing:1px}
-.brand-bar .version{font-size:9px;color:#6b7a8a;background:#1e2a38;padding:2px 10px;border-radius:8px}
-h1{font-size:18px;font-weight:800;color:#e6e6e6;margin-bottom:4px}
-.sub{font-size:10px;color:#6b7a8a;margin-bottom:16px;line-height:1.5}
-/* Cards */
-.card{background:#121824;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #1e2a38}
-.card h3{font-size:12px;font-weight:600;color:#8b9aaa;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.card h3 .badge{background:#00ff88;color:#000;font-size:8px;padding:1px 8px;border-radius:6px;font-weight:700}
-label{font-size:10px;color:#5a6a7a;display:block;margin-top:8px;margin-bottom:3px}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#0b0f14;color:#e6e6e6}
+.container{max-width:540px;margin:auto;padding:20px}
+h1{font-size:22px;margin-bottom:16px}
+.brand-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.brand-bar .logo{font-size:14px;font-weight:700;color:#00ff88}
+.brand-bar .src{font-size:10px;color:#6b7a8a;background:#1e2a38;padding:3px 10px;border-radius:10px}
+.card{background:#121824;padding:18px;border-radius:12px;margin-bottom:16px}
+.card h3{font-size:14px;font-weight:600;margin-bottom:12px;color:#8b9aaa}
+label{font-size:11px;color:#6b7a8a;display:block;margin-top:10px;margin-bottom:3px}
 label:first-of-type{margin-top:0}
 input,select{width:100%;padding:10px 12px;background:#0b0f14;border:1px solid #2a3442;color:#e6e6e6;border-radius:8px;font-size:13px;outline:none;transition:.15s;box-sizing:border-box}
 input:focus,select:focus{border-color:#00ff88}
 select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7a8a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
-input[type=number]{-moz-appearance:textfield}
-input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
-button{width:100%;padding:13px;background:#00ff88;border:none;color:#000;font-weight:700;font-size:14px;border-radius:10px;cursor:pointer;transition:.15s;margin-top:12px}
+button{width:100%;padding:13px;background:#00ff88;border:none;color:#000;font-weight:700;font-size:15px;border-radius:10px;cursor:pointer;transition:.15s;margin-top:14px}
 button:hover{background:#00cc6a}
-button:disabled{opacity:.3;cursor:not-allowed}
-/* Result sections */
-.rs{display:none}
-.rs.show{display:block}
-.section{background:#121824;padding:16px;border-radius:12px;margin-top:10px;border:1px solid #1e2a38;animation:fadeIn .4s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.rs-label{font-size:9px;color:#6b7a8a;letter-spacing:2px;margin-bottom:8px;font-weight:600}
-/* Death header */
-.death-header{text-align:center;padding:6px 0}
-.death-header .eng{font-size:10px;color:#6b7a8a;letter-spacing:2px;margin-bottom:2px}
-.death-header .verdict{font-size:16px;font-weight:700;margin-bottom:2px}
-.death-header .subrisk{font-size:11px;color:#6b7a8a;line-height:1.4}
-/* Death cards */
-.death-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.death-item{background:#0b0f14;border-radius:10px;padding:8px 10px;border-left:3px solid;position:relative}
-.death-item .d-icon{font-size:11px}
-.death-item .d-name{font-size:11px;font-weight:600;margin:2px 0}
-.death-item .d-bar-wrap{height:4px;background:#1a1f2a;border-radius:2px;overflow:hidden;margin-top:4px}
-.death-item .d-bar{height:100%;border-radius:2px;transition:width .6s ease}
-.death-item .d-pct{font-size:9px;color:#6b7a8a;position:absolute;right:8px;top:8px}
-/* Profit row */
-.profit-row{display:flex;justify-content:space-around;padding:8px 0}
-.profit-item{text-align:center}
-.profit-item .val{font-size:16px;font-weight:700}
-.profit-item .lbl{font-size:8px;color:#6b7a8a;margin-top:1px;letter-spacing:1px}
-/* Comparison table */
-.comp-table{width:100%;border-collapse:collapse;font-size:10px;margin-top:4px}
-.comp-table th{text-align:left;padding:6px 4px;color:#6b7a8a;font-weight:500;border-bottom:1px solid #1e2a38}
-.comp-table td{padding:6px 4px;border-bottom:1px solid #141a24}
-.comp-table tr:last-child td{border-bottom:none}
-.comp-table .highlight{color:#00ff88;font-weight:700}
-.comp-table .warning{color:#ff6b6b}
-/* Final decision */
-.final-box{background:linear-gradient(135deg,#0a1a14,#0b0f14);border:1px solid #00ff8833;border-radius:10px;padding:14px;text-align:center;margin-top:8px}
-.final-box .fb-icon{font-size:20px;margin-bottom:4px}
-.final-box .fb-title{font-size:13px;font-weight:700;color:#00ff88;margin-bottom:2px}
-.final-box .fb-desc{font-size:10px;color:#6b7a8a;line-height:1.5}
-.final-box .fb-cta{display:inline-block;margin-top:8px;padding:7px 20px;background:#00ff88;color:#000;border-radius:8px;font-size:11px;font-weight:700;text-decoration:none}
-/* Action */
-.action{text-align:center;margin-top:10px;padding:4px 0}
-.action .re{display:inline-block;padding:7px 14px;background:transparent;border:1px solid #2a3442;color:#6b7a8a;border-radius:8px;font-size:11px;cursor:pointer;transition:.15s}
-.action .re:hover{border-color:#00ff88;color:#00ff88}
-/* Toast */
-.toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:#1a2a2a;color:#00ff88;padding:8px 16px;border-radius:8px;font-size:11px;z-index:999;display:none;border:1px solid #00ff8833;white-space:nowrap}
-/* Link field */
-.link-row{display:flex;gap:6px;margin-top:6px}
-.link-row input{flex:1;font-size:10px;padding:6px 8px}
-.link-row button{width:auto;padding:6px 12px;margin:0;font-size:10px;white-space:nowrap}
+button:disabled{opacity:.35;cursor:not-allowed}
+.page{display:none}
+.page.active{display:block}
+.result{display:none}
+.result.show{display:block}
+.section{background:#121824;padding:18px;border-radius:12px;margin-top:12px;animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.rs-title{font-size:10px;color:#6b7a8a;letter-spacing:2px;margin-bottom:10px;font-weight:600}
+.score-wrap{text-align:center;padding:4px 0}
+.score-num{font-size:52px;font-weight:800;line-height:1;margin-bottom:6px}
+.score-grade{display:inline-block;padding:5px 16px;border-radius:20px;font-size:15px;font-weight:700;margin-bottom:6px}
+.score-verdict{font-size:13px;font-weight:600;margin-bottom:6px}
+.biz-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.biz-item{background:#0b0f14;border-radius:10px;padding:12px;text-align:center}
+.biz-item .num{font-size:22px;font-weight:800;color:#00ff88}
+.biz-item .lbl{font-size:11px;color:#6b7a8a;margin-top:2px}
+.risk-box{margin-top:10px;padding:10px;background:#1e0f0f;border-radius:8px;font-size:11px;color:#ff6b6b;border:1px solid rgba(255,75,75,.15)}
+.prod-card{display:block;padding:12px 14px;background:#0b0f14;border-radius:10px;margin-bottom:8px;text-decoration:none;color:inherit;border:1px solid #2a3442;transition:.15s}
+.prod-card:hover{border-color:#3a4a5a}
+.prod-card .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.prod-card .name{font-size:14px;font-weight:600}
+.prod-card .tag{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:600}
+.prod-card .reason{font-size:11px;color:#6b7a8a;line-height:1.4}
+.prod-card .link{font-size:11px;color:#00ff88;font-weight:600;margin-top:3px}
+.action{text-align:center;margin-top:12px;padding:6px 0}
+.action .btn{display:inline-block;padding:10px 20px;background:#00ff88;color:#000;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:4px}
+.action .sub{font-size:10px;color:#5a6a7a}
+.action .re{display:inline-block;padding:7px 14px;background:transparent;border:1px solid #2a3442;color:#6b7a8a;border-radius:8px;font-size:11px;cursor:pointer;margin-top:6px}
+.toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:#1a2a2a;color:#00ff88;padding:8px 16px;border-radius:8px;font-size:12px;z-index:999;display:none;border:1px solid #00ff8833}
 </style>
 </head>
 <body>
 
 <div class="container">
 
-<!-- Brand bar -->
 <div class="brand-bar">
-  <div class="logo">🧠 FoodIntelAI</div>
-  <div class="version">V6 · 风控仿真器</div>
+  <div class="logo">🥘 FoodIntelAI</div>
+  <div class="src" id="sourceTag">直接访问</div>
 </div>
 
-<h1>餐饮创业风控仿真器</h1>
-<div class="sub">填6个字段 → 死亡路径预演 + 多方案博弈 + 生存率评估</div>
+<h1>开店体检 V1.1</h1>
 
-<!-- INPUT -->
-<div class="card" id="inputPage">
-  <h3><span>📋</span> 创业画像 <span class="badge">6维</span></h3>
+<!-- Input -->
+<div class="card page active" id="inputPage">
+  <h3>10秒决策输入</h3>
 
-  <label>① 想做的品类</label>
+  <label>品类</label>
   <select id="category">
     <option value="">请选择</option>
-    <option value="炸鸡小吃">炸鸡小吃</option>
-    <option value="卤味熟食">卤味熟食</option>
-    <option value="奶茶饮品">奶茶饮品</option>
-    <option value="烧烤夜宵">烧烤夜宵</option>
-    <option value="预制菜外卖">预制菜外卖</option>
+    <option value="卤味">卤味</option>
+    <option value="冷吃红油">冷吃红油</option>
+    <option value="韩式炸鸡">韩式炸鸡</option>
+    <option value="炒鸡">炒鸡</option>
+    <option value="酸汤">酸汤</option>
+    <option value="早餐面点">早餐面点</option>
+    <option value="饮品甜品">饮品甜品</option>
+    <option value="小吃烤串">小吃烤串</option>
+    <option value="傣舂舂菜">傣舂舂菜</option>
   </select>
 
-  <label>② 城市等级</label>
+  <label>预算（元）</label>
+  <input id="budget" type="number" placeholder="如：20000" oninput="checkReady()">
+
+  <label>城市等级</label>
   <select id="city">
-    <option value="一线城市">一线城市（北上广深）</option>
-    <option value="新一线城市">新一线城市（成杭武南等）</option>
-    <option value="三四线城市">三四线城市</option>
-    <option value="县城">县城/乡镇</option>
+    <option value="1">一线城市</option>
+    <option value="2">二线城市</option>
+    <option value="3">三线及以下</option>
   </select>
 
-  <label>③ 启动预算（万元）</label>
-  <input id="budget" type="number" placeholder="如 10" oninput="checkReady()">
-
-  <label>④ 餐饮经验</label>
+  <label>餐饮经验</label>
   <select id="exp">
     <option value="0">无经验</option>
     <option value="1">1-3年</option>
     <option value="2">3年以上</option>
   </select>
 
-  <label>⑤ 经营形式</label>
+  <label>经营形式</label>
   <select id="scene">
     <option value="stall">摆摊</option>
     <option value="store">门店</option>
     <option value="delivery">外卖</option>
   </select>
 
-  <label>⑥ 团队人数</label>
-  <select id="team">
-    <option value="1">1人（单干）</option>
-    <option value="2">2人</option>
-    <option value="3">3-5人</option>
-    <option value="6">6人以上</option>
-  </select>
-
-  <button id="submitBtn" disabled onclick="runV6()">☠️ 开始风控模拟</button>
+  <button id="submitBtn" disabled onclick="runCheck()">开始测算</button>
 </div>
 
-<!-- RESULT -->
-<div class="rs" id="resultPage">
-
-  <!-- 死亡诊断 -->
-  <div class="section" style="animation-delay:0s">
-    <div class="rs-label">☠️ 死亡模拟</div>
-    <div class="death-header" id="deathHeader">
-      <div class="eng">DEATH DIAGNOSIS</div>
-      <div class="verdict" id="bestCategory"></div>
-      <div class="subrisk" id="riskSummary"></div>
-    </div>
-    <div class="death-grid" id="deathGrid"></div>
-  </div>
-
-  <!-- 盈利模拟 -->
-  <div class="section" style="animation-delay:.1s">
-    <div class="rs-label">💰 盈利预测</div>
-    <div class="profit-row" id="profitRow"></div>
-    <div id="survivalBar" style="margin-top:6px"></div>
-  </div>
-
-  <!-- 多方案对比 -->
-  <div class="section" style="animation-delay:.15s">
-    <div class="rs-label">📊 多方案博弈</div>
-    <table class="comp-table" id="compTable">
-      <tr><th>品类</th><th style="text-align:right">生存率</th><th style="text-align:right">月利润</th><th style="text-align:right">风险数</th></tr>
-    </table>
-  </div>
-
-  <!-- 最终决策 -->
-  <div class="section" style="animation-delay:.2s">
-    <div class="rs-label">🎯 最终决策</div>
-    <div class="final-box" id="finalBox">
-      <div class="fb-icon">🏆</div>
-      <div class="fb-title" id="finalTitle">—</div>
-      <div class="fb-desc" id="finalDesc"></div>
-      <a class="fb-cta" id="finalCTA" href="">📦 查看推荐产品卡</a>
+<!-- Result -->
+<div class="result" id="resultPage">
+  <div id="r1" class="section" style="animation-delay:0s">
+    <div class="rs-title">① 决策结论</div>
+    <div class="score-wrap">
+      <div class="score-num" id="sScore">—</div>
+      <div class="score-grade" id="sGrade"></div>
+      <div class="score-verdict" id="sVerdict"></div>
     </div>
   </div>
-
-  <!-- 分享链接 -->
-  <div class="section" style="animation-delay:.25s">
-    <div class="rs-label">🔗 分享这个结果</div>
-    <div class="link-row">
-      <input id="shareLink" readonly value="" onclick="this.select()">
-      <button onclick="copyLink()">复制</button>
+  <div id="r2" class="section" style="animation-delay:.1s">
+    <div class="rs-title">② 商业模型</div>
+    <div class="biz-grid">
+      <div class="biz-item"><div class="num" id="sPrice">—</div><div class="lbl">客单价</div></div>
+      <div class="biz-item"><div class="num" id="sMargin">—</div><div class="lbl">毛利率</div></div>
+      <div class="biz-item"><div class="num" id="sProfit">—</div><div class="lbl">日利润</div></div>
+      <div class="biz-item"><div class="num" id="sPayback">—</div><div class="lbl">回本周期</div></div>
     </div>
+    <div class="risk-box" id="sRisk"></div>
+  </div>
+  <div id="r3" class="section" style="animation-delay:.2s">
+    <div class="rs-title">③ 推荐产品卡</div>
+    <div id="sProducts"></div>
   </div>
 
   <div class="action">
-    <button class="re" onclick="restart()">🔄 重新模拟</button>
+    <a href="javascript:void(0)" class="btn" onclick="showWechat()">💬 咨询沧林</a>
+    <div class="sub">微信 canglin1985</div>
+    <button class="re" onclick="restart()">🔄 重新测一次</button>
   </div>
 </div>
 
@@ -199,299 +144,95 @@ button:disabled{opacity:.3;cursor:not-allowed}
 <div class="toast" id="toast"></div>
 
 <script>
-/* ========================================================
-   V6 · Food Venture Risk Engine
-   ======================================================== */
-
-// —— 品类真实数据
-var realCategoryDB = {
-  "炸鸡小吃": { costRange: [2.8, 4.2], priceRange: [10, 18], grossMargin: 0.55, survivalRate: 0.62, failureMonthPeak: 8 },
-  "卤味熟食": { costRange: [3.5, 6], priceRange: [15, 28], grossMargin: 0.52, survivalRate: 0.68, failureMonthPeak: 10 },
-  "奶茶饮品": { costRange: [1.5, 3], priceRange: [12, 20], grossMargin: 0.65, survivalRate: 0.58, failureMonthPeak: 6 },
-  "烧烤夜宵": { costRange: [5, 10], priceRange: [20, 50], grossMargin: 0.48, survivalRate: 0.45, failureMonthPeak: 5 },
-  "预制菜外卖": { costRange: [4, 7], priceRange: [18, 35], grossMargin: 0.58, survivalRate: 0.72, failureMonthPeak: 12 }
+var PROFILE = {
+  '卤味':{margin:4,standard:4,scale:3,risk:3,price:28,mr:0.62,dp:450,pb:4,cs:[{n:'卤鸭脖创业母卡',t:'母卡',p:'¥39',l:'catalog/LW/LW001 卤鸭脖（母）LW_001.html',r:'卤味基础模型，标准化高'},{n:'卤鸭翅（母）',t:'母卡',p:'¥39',l:'catalog/LW/LW002 卤鸭翅（母）LW_002.html',r:'出品率高，新手友好'}]},
+  '冷吃红油':{margin:5,standard:4,scale:4,risk:2,price:58,mr:0.68,dp:600,pb:2.5,cs:[{n:'冷吃红油创业母卡',t:'母卡',p:'¥39',l:'catalog/其他/LC_001 冷吃红油创业母卡.html',r:'毛利高，预算够'},{n:'冷吃牛肉条（子）',t:'子卡',p:'¥19',l:'catalog/其他/LC_002 冷吃牛肉条（子）.html',r:'头牌产品先上'}]},
+  '韩式炸鸡':{margin:4,standard:5,scale:4,risk:3,price:22,mr:0.58,dp:500,pb:3,cs:[{n:'原味黄金炸鸡（母）',t:'母卡',p:'¥39',l:'catalog/其他/HZ_001 原味黄金炸鸡（母）.html',r:'标准化极强，零基础可做'},{n:'蜜汁酱裹鸡块（母）',t:'母卡',p:'¥39',l:'catalog/其他/HZ_002 蜜汁酱裹鸡块（母）.html',r:'复购率最高'}]},
+  '炒鸡':{margin:3,standard:3,scale:3,risk:4,price:38,mr:0.55,dp:550,pb:5,cs:[{n:'炒鸡创业母卡',t:'母卡',p:'¥39',l:'catalog/CJ/CJ_M01_炒鸡创业母卡.html',r:'毛利稳，需后厨经验'},{n:'炒鸡工艺体系',t:'子卡',p:'¥19',l:'catalog/CJ/CJ_V01_炒鸡工艺体系.html',r:'先看工艺'}]},
+  '酸汤':{margin:3,standard:3,scale:3,risk:3,price:42,mr:0.56,dp:520,pb:4,cs:[{n:'贵州酸汤创业母卡',t:'母卡',p:'¥39',l:'catalog/其他/ST_M01 贵州酸汤创业母卡.html',r:'酸汤热度高，入局好时机'},{n:'酸汤鱼（子）',t:'子卡',p:'¥19',l:'catalog/其他/ST_01 酸汤鱼（子）.html',r:'头牌产品先用它'}]},
+  '早餐面点':{margin:4,standard:3,scale:4,risk:2,price:12,mr:0.65,dp:350,pb:3,cs:[{n:'鲜肉包（母）',t:'母卡',p:'¥39',l:'catalog/其他/MP_001 鲜肉包（母）.html',r:'早餐刚需回本快'},{n:'煎饼果子（母）',t:'母卡',p:'¥39',l:'catalog/其他/MP_008 煎饼果子（母）.html',r:'单品利润高'}]},
+  '饮品甜品':{margin:5,standard:5,scale:5,risk:3,price:18,mr:0.72,dp:650,pb:2,cs:[{n:'五指毛桃椰乳（母）',t:'母卡',p:'¥39',l:'catalog/其他/TS_065 五指毛桃椰乳（母）.html',r:'毛利极高标准化最强'},{n:'斑斓冻（母）',t:'母卡',p:'¥39',l:'catalog/其他/TS_003 斑斓冻（母）.html',r:'网红属性高毛利'}]},
+  '小吃烤串':{margin:4,standard:3,scale:3,risk:3,price:25,mr:0.60,dp:480,pb:3.5,cs:[{n:'臭豆腐（母）',t:'母卡',p:'¥39',l:'catalog/其他/XC_100 臭豆腐（母）.html',r:'刚需小吃无淡季'},{n:'铁板鱿鱼（母）',t:'母卡',p:'¥39',l:'catalog/其他/XC_101 铁板鱿鱼（母）.html',r:'夜市爆品'}]},
+  '傣舂舂菜':{margin:5,standard:2,scale:2,risk:2,price:20,mr:0.70,dp:380,pb:2,cs:[{n:'傣舂鸡脚（母）',t:'母卡',p:'¥39',l:'catalog/其他/DC_001 傣舂鸡脚（母）.html',r:'视觉强适合短视频'},{n:'傣舂大虾（母）',t:'母卡',p:'¥39',l:'catalog/其他/DC_003 傣舂大虾（母）.html',r:'客单价高利润大'}]}
 };
 
-// —— 城市模型
-var cityDB = {
-  "一线城市":   { rentIndex: 5, traffic: 5, competition: 5, volatility: 4, baseFailureRisk: 0.35 },
-  "新一线城市": { rentIndex: 4, traffic: 4, competition: 4, volatility: 3, baseFailureRisk: 0.28 },
-  "三四线城市": { rentIndex: 2, traffic: 2, competition: 2, volatility: 2, baseFailureRisk: 0.22 },
-  "县城":       { rentIndex: 1, traffic: 1, competition: 1, volatility: 1, baseFailureRisk: 0.18 }
-};
+(function(){
+  var s=new URLSearchParams(window.location.search).get('from');
+  if(s) document.getElementById('sourceTag').textContent='来自：'+s;
+})();
 
-// —— 死亡路径定义
-var DEATH_PATHS = [
-  { id: 'traffic', name: '流量断崖', icon: '🚫', desc: '没人来', threshold: 3, risk: 'traffic' },
-  { id: 'cost', name: '成本失控', icon: '💸', desc: '越卖越亏', threshold: 0.5, risk: 'margin' },
-  { id: 'competition', name: '竞争碾压', icon: '⚔️', desc: '被挤死', threshold: 4, risk: 'competition' },
-  { id: 'cashflow', name: '现金流断裂', icon: '🧊', desc: '撑不过3个月', threshold: 4, risk: 'rent' },
-  { id: 'fatigue', name: '产品疲劳', icon: '🍂', desc: '复购崩', threshold: 0.5, risk: 'survival' },
-  { id: 'earlycrash', name: '早期崩盘', icon: '💥', desc: '撑不过半年', threshold: 6, risk: 'peak' }
-];
-
-// —— 死亡模拟器
-function deathSimulator(category, city){
-  var c = realCategoryDB[category];
-  var cityRisk = cityDB[city];
-  if(!c || !cityRisk) return [];
-
-  var deaths = [];
-
-  // 1. 流量断崖
-  var p1 = cityRisk.traffic < 3 ? 0.7 : 0.3;
-  deaths.push({ id:'traffic', prob: p1, name:DEATH_PATHS[0].name, icon:DEATH_PATHS[0].icon, desc:DEATH_PATHS[0].desc });
-
-  // 2. 成本失控
-  var p2 = c.grossMargin < 0.5 ? 0.8 : 0.3;
-  deaths.push({ id:'cost', prob: p2, name:DEATH_PATHS[1].name, icon:DEATH_PATHS[1].icon, desc:DEATH_PATHS[1].desc });
-
-  // 3. 竞争碾压
-  var p3 = cityRisk.competition > 4 ? 0.75 : 0.25;
-  deaths.push({ id:'competition', prob: p3, name:DEATH_PATHS[2].name, icon:DEATH_PATHS[2].icon, desc:DEATH_PATHS[2].desc });
-
-  // 4. 现金流断裂
-  var p4 = cityRisk.rentIndex > 4 ? 0.7 : 0.3;
-  deaths.push({ id:'cashflow', prob: p4, name:DEATH_PATHS[3].name, icon:DEATH_PATHS[3].icon, desc:DEATH_PATHS[3].desc });
-
-  // 5. 产品疲劳
-  var p5 = c.survivalRate < 0.5 ? 0.6 : 0.2;
-  deaths.push({ id:'fatigue', prob: p5, name:DEATH_PATHS[4].name, icon:DEATH_PATHS[4].icon, desc:DEATH_PATHS[4].desc });
-
-  // 6. 早期崩盘
-  var p6 = c.failureMonthPeak < 6 ? 0.8 : 0.3;
-  deaths.push({ id:'earlycrash', prob: p6, name:DEATH_PATHS[5].name, icon:DEATH_PATHS[5].icon, desc:DEATH_PATHS[5].desc });
-
-  return deaths;
+function checkReady(){
+  var cat=document.getElementById('category').value;
+  var bud=document.getElementById('budget').value;
+  document.getElementById('submitBtn').disabled=!cat||!bud;
 }
 
-// —— 盈利模拟
-function profitV6(category, city, budget, exp, scene, team){
-  var c = realCategoryDB[category];
-  var cityRisk = cityDB[city];
-  if(!c || !cityRisk) return null;
+['category','budget','city','exp','scene'].forEach(function(id){
+  document.getElementById(id).addEventListener('change',checkReady);
+});
 
-  var trafficMul = cityRisk.traffic * (0.8 + 0.2 * team);
-  var dailySales = 80 * trafficMul;
+function runCheck(){
+  var cat=document.getElementById('category').value;
+  var bud=parseInt(document.getElementById('budget').value)||0;
+  var city=parseInt(document.getElementById('city').value);
+  var exp=parseInt(document.getElementById('exp').value);
+  var scene=document.getElementById('scene').value;
+  if(!cat||!bud) return;
 
-  var avgCost = (c.costRange[0] + c.costRange[1]) / 2;
-  var avgPrice = (c.priceRange[0] + c.priceRange[1]) / 2;
-  var cost = dailySales * avgCost;
-  var revenue = dailySales * avgPrice;
+  var p=PROFILE[cat];
+  if(!p){showToast('品类数据缺失');return}
 
-  var rent = cityRisk.rentIndex * 180;
-  var labor = 400 + (team - 1) * 300;
-  var other = 200;
+  var cm=[1.2,1.0,0.8][city]||1.0, em=[0.8,1.0,1.2][exp]||1.0, sm={stall:1.1,store:1.0,delivery:0.9}[scene]||1.0;
+  var bm=bud<10000?0.6:bud<30000?0.8:bud<80000?1.0:1.1;
+  var score=Math.round(Math.min(100,Math.max(0,(
+    (p.margin/5)*cm*0.30 + (p.margin/5)*0.25 + (p.standard/5)*0.20 + (1-p.risk/5)*0.15 + (p.scale/5)*sm*bm*em*0.10
+  )*100)));
+  var grade=score>=80?'S':score>=65?'A':score>=50?'B':'C';
+  var color={S:'#00ff88',A:'#4db8ff',B:'#ffcc00',C:'#ff4d4d'}[grade];
+  var bg={S:'rgba(0,255,136,.1)',A:'rgba(77,184,255,.1)',B:'rgba(255,204,0,.1)',C:'rgba(255,77,77,.1)'}[grade];
+  var rec=score>=65?'YES':score>=50?'CAUTION':'NO';
+  var recText={YES:'✅ 推荐进入',CAUTION:'⚠️ 谨慎进入',NO:'❌ 不建议'}[rec];
+  var risk={S:'竞争可能加剧',A:'原料价格波动',B:'标准化能力需加强',C:'预算或经验不匹配'}[grade];
 
-  var totalCost = cost + rent + labor + other;
-  var profit = revenue - totalCost;
+  track(cat);
 
-  // 经验加成
-  var expMul = exp == 2 ? 1.2 : exp == 1 ? 1.05 : 0.85;
-  profit = profit * expMul;
-
-  // 场景加成
-  var sceneMul = { stall: 0.7, store: 1.0, delivery: 0.85 }[scene] || 1.0;
-  profit = profit * sceneMul;
-
-  var survivalAdjusted = c.survivalRate * (1 - cityRisk.baseFailureRisk) * (0.8 + 0.2 * expMul);
-
-  var breakEven = profit > 0 ? Math.max(1, Math.round(budget * 10000 / (profit * 30))) : 99;
-
-  return {
-    revenue: Math.round(revenue),
-    cost: Math.round(cost),
-    rent: rent,
-    labor: labor,
-    profit: Math.round(profit),
-    survivalAdjusted: Math.min(1, Math.max(0, survivalAdjusted)),
-    breakEven: breakEven,
-    grossMargin: c.grossMargin
-  };
-}
-
-// —— 多方案引擎
-function scenarioEngine(city, budget, exp, scene, team){
-  var categories = Object.keys(realCategoryDB);
-  var results = [];
-  categories.forEach(function(cat){
-    var profit = profitV6(cat, city, budget, exp, scene, team);
-    var deaths = deathSimulator(cat, city);
-    if(profit){
-      results.push({
-        category: cat,
-        profit: profit.profit,
-        survival: profit.survivalAdjusted,
-        deaths: deaths,
-        deathCount: deaths.filter(function(d){ return d.prob > 0.5 }).length,
-        breakEven: profit.breakEven,
-        margin: profit.grossMargin
-      });
-    }
-  });
-  results.sort(function(a, b){ return b.survival - a.survival });
-  return results;
-}
-
-// —— 颜色
-function deathColor(p){
-  if(p >= 0.7) return '#ff4d4d';
-  if(p >= 0.5) return '#ffaa33';
-  if(p >= 0.3) return '#ffdd44';
-  return '#44cc88';
-}
-
-// —— RUN
-function runV6(){
-  var category = document.getElementById('category').value;
-  var city = document.getElementById('city').value;
-  var budget = parseFloat(document.getElementById('budget').value) || 5;
-  var exp = parseInt(document.getElementById('exp').value) || 0;
-  var scene = document.getElementById('scene').value;
-  var team = parseInt(document.getElementById('team').value) || 1;
-
-  if(!category || !city) return;
-
-  var results = scenarioEngine(city, budget, exp, scene, team);
-  var best = results[0];
-  var deaths = deathSimulator(best.category, city);
-  var profit = profitV6(best.category, city, budget, exp, scene, team);
-
-  // 换页
-  document.getElementById('inputPage').style.display = 'none';
+  document.getElementById('inputPage').style.display='none';
   document.getElementById('resultPage').classList.add('show');
 
-  // —— 死亡诊断
-  document.getElementById('bestCategory').textContent = '🏆 ' + best.category;
-  var highRisk = deaths.filter(function(d){ return d.prob >= 0.5 });
-  document.getElementById('riskSummary').textContent = highRisk.length > 0
-    ? '☠️ 高风险死亡路径 ' + highRisk.length + ' 条 · 生存率 ' + (profit.survivalAdjusted * 100).toFixed(1) + '%'
-    : '✅ 低风险结构 · 生存率 ' + (profit.survivalAdjusted * 100).toFixed(1) + '%';
+  document.getElementById('sScore').innerText=score;
+  document.getElementById('sScore').style.color=color;
+  document.getElementById('sGrade').innerHTML='<span style="background:'+bg+';color:'+color+';padding:5px 16px;border-radius:20px;font-weight:700">'+grade+' 级</span>';
+  document.getElementById('sVerdict').innerHTML='<span style="color:'+color+'">'+recText+'</span>';
+  document.getElementById('sPrice').innerText='¥'+p.price;
+  document.getElementById('sMargin').innerText=(p.mr*100|0)+'%';
+  document.getElementById('sProfit').innerText='¥'+Math.round(p.dp*cm);
+  document.getElementById('sPayback').innerText=p.pb+'月';
+  document.getElementById('sRisk').innerHTML='⚠️ 最大风险：'+risk;
 
-  var gridHtml = '';
-  deaths.forEach(function(d){
-    var color = deathColor(d.prob);
-    var barW = (d.prob * 100).toFixed(0);
-    var riskTag = d.prob >= 0.5 ? '⚠️ 高风险' : d.prob >= 0.3 ? '⚡ 中风险' : '✅ 低风险';
-    gridHtml += '<div class="death-item" style="border-color:' + color + '">'
-      + '<div class="d-icon">' + d.icon + '</div>'
-      + '<div class="d-pct">' + riskTag + '</div>'
-      + '<div class="d-name">' + d.name + '</div>'
-      + '<div style="font-size:9px;color:#6b7a8a">' + d.desc + '</div>'
-      + '<div class="d-bar-wrap"><div class="d-bar" style="width:' + barW + '%;background:' + color + '"></div></div>'
-      + '</div>';
+  var h='';
+  p.cs.forEach(function(c){
+    h+='<a class="prod-card" href="'+c.l+'" onclick="trackClick(\''+c.n+'\')">';
+    h+='<div class="top"><span class="name">'+c.n+'</span><span class="tag" style="background:'+(c.t==='母卡'?'rgba(0,255,136,.15)':'rgba(77,184,255,.15)')+';color:'+(c.t==='母卡'?'#00ff88':'#4db8ff')+'">'+c.t+'</span></div>';
+    h+='<div class="reason">'+c.r+'</div><div class="link">'+c.p+' → 查看详情</div></a>';
   });
-  document.getElementById('deathGrid').innerHTML = gridHtml;
+  document.getElementById('sProducts').innerHTML=h;
 
-  // —— 盈利预测
-  if(profit){
-    var profitColor = profit.profit > 0 ? '#00ff88' : '#ff4d4d';
-    document.getElementById('profitRow').innerHTML = ''
-      + '<div class="profit-item"><div class="val" style="color:' + profitColor + '">¥' + profit.profit.toLocaleString() + '</div><div class="lbl">月利润</div></div>'
-      + '<div class="profit-item"><div class="val">¥' + profit.revenue.toLocaleString() + '</div><div class="lbl">月营收</div></div>'
-      + '<div class="profit-item"><div class="val">' + (profit.grossMargin * 100).toFixed(0) + '%</div><div class="lbl">毛利率</div></div>'
-      + '<div class="profit-item"><div class="val">' + profit.breakEven + '月</div><div class="lbl">回本周期</div></div>';
-
-    var survPct = (profit.survivalAdjusted * 100).toFixed(1);
-    var survColor = profit.survivalAdjusted >= 0.6 ? '#00ff88' : profit.survivalAdjusted >= 0.4 ? '#ffaa33' : '#ff4d4d';
-    document.getElementById('survivalBar').innerHTML = ''
-      + '<div style="display:flex;justify-content:space-between;font-size:9px;color:#6b7a8a;margin-bottom:2px">'
-      + '<span>存活概率</span><span style="color:' + survColor + ';font-weight:700">' + survPct + '%</span></div>'
-      + '<div style="height:6px;background:#1a1f2a;border-radius:3px;overflow:hidden">'
-      + '<div style="height:100%;border-radius:3px;width:' + survPct + '%;background:' + survColor + ';transition:width .8s ease"></div></div>';
-  }
-
-  // —— 多方案对比
-  var compHtml = '<tr><th>品类</th><th style="text-align:right">生存率</th><th style="text-align:right">月利润</th><th style="text-align:right">风险数</th></tr>';
-  results.forEach(function(r, i){
-    var cls = i === 0 ? 'highlight' : '';
-    var profitCls = r.profit > 0 ? 'highlight' : 'warning';
-    var survPct = (r.survival * 100).toFixed(1);
-    var deathCountDisplay = r.deathCount > 0 ? '<span class="warning">☠️' + r.deathCount + '</span>' : '✅0';
-    compHtml += '<tr>'
-      + '<td' + (i === 0 ? ' class="highlight"' : '') + '>' + (i === 0 ? '🏆 ' : '') + r.category + '</td>'
-      + '<td style="text-align:right;color:' + (i === 0 ? '#00ff88' : '#6b7a8a') + '">' + survPct + '%</td>'
-      + '<td style="text-align:right;color:' + (r.profit > 0 ? '#00ff88' : '#ff4d4d') + '">¥' + r.profit.toLocaleString() + '</td>'
-      + '<td style="text-align:right">' + deathCountDisplay + '</td>'
-      + '</tr>';
-  });
-  document.getElementById('compTable').innerHTML = compHtml;
-
-  // —— 最终决策
-  var finalBox = document.getElementById('finalBox');
-  if(best.survival >= 0.6){
-    finalBox.querySelector('.fb-icon').textContent = '🏆';
-    document.getElementById('finalTitle').textContent = '✅ 建议进入：' + best.category;
-    document.getElementById('finalDesc').textContent = '具备结构性优势，当前城市+品类组合的风险可控。建议按产品卡启动。';
-  } else if(best.survival >= 0.4){
-    finalBox.querySelector('.fb-icon').textContent = '⚠️';
-    document.getElementById('finalTitle').textContent = '⚠️ 谨慎进入：' + best.category;
-    document.getElementById('finalDesc').textContent = '依赖运营能力，建议先从小规模（摆摊/外卖）验证模型，跑通后再扩。';
-  } else {
-    finalBox.querySelector('.fb-icon').textContent = '❌';
-    document.getElementById('finalTitle').textContent = '❌ 不建议在当前条件下进入';
-    document.getElementById('finalDesc').textContent = '死亡概率过高。建议换品类、城市或增加预算后再试。';
-  }
-
-  // 推荐产品卡链接 — 匹配品类到实际卡片
-  var cardLinks = {
-    '炸鸡小吃': '/catalog/NR/NR_T01%20%E6%BD%AE%E6%B1%95%E5%8D%97%E4%B9%B3%E7%82%B8%E9%B8%A1%E6%80%BB%E7%BA%B2.html',
-    '卤味熟食': '/catalog/LW/LW001%20%E5%8D%A4%E9%B8%AD%E8%84%96%EF%BC%88%E6%AF%8D%EF%BC%89LW_001.html',
-    '奶茶饮品': '/catalog/其他/TS_065%20%E4%BA%94%E6%8C%87%E6%AF%9B%E6%A1%83%E6%A4%B0%E4%B9%B3%EF%BC%88%E6%AF%8D%EF%BC%89.html',
-    '烧烤夜宵': '/catalog/BBQ/BBQ_T01_%E4%B8%AD%E5%BC%8F%E7%83%A7%E7%83%A4%E6%80%BB%E7%BA%B2.html',
-    '预制菜外卖': '/catalog/其他/LC_001%20%E5%86%B7%E5%90%83%E7%BA%A2%E6%B2%B9%E5%88%9B%E4%B8%9A%E6%AF%8D%E5%8D%A1.html'
-  };
-  var link = cardLinks[best.category] || '/';
-  document.getElementById('finalCTA').href = link;
-
-  // —— 分享链接
-  var shareUrl = window.location.href.split('?')[0] + '?src=share&cat=' + encodeURIComponent(best.category) + '&surv=' + (best.survival * 100).toFixed(0);
-  document.getElementById('shareLink').value = shareUrl;
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({top:0});
 }
 
-// —— 工具函数
-function checkReady(){
-  var cat = document.getElementById('category').value;
-  var bud = document.getElementById('budget').value;
-  document.getElementById('submitBtn').disabled = !cat || !bud;
-}
-
-['category','city','budget','exp','scene','team'].forEach(function(id){
-  document.getElementById(id).addEventListener('change', checkReady);
-});
+function track(c){try{var l=JSON.parse(localStorage.getItem('fi_events')||'[]');l.push({ev:'check',cat:c,ts:Date.now()});localStorage.setItem('fi_events',JSON.stringify(l))}catch(e){}}
+function trackClick(n){try{var l=JSON.parse(localStorage.getItem('fi_events')||'[]');l.push({ev:'click',cat:n,ts:Date.now()});localStorage.setItem('fi_events',JSON.stringify(l))}catch(e){}}
 
 function restart(){
   document.getElementById('resultPage').classList.remove('show');
-  document.getElementById('inputPage').style.display = 'block';
-  document.getElementById('category').value = '';
-  document.getElementById('budget').value = '';
-  document.getElementById('submitBtn').disabled = true;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('inputPage').style.display='block';
+  document.getElementById('category').value='';
+  document.getElementById('budget').value='';
+  document.getElementById('submitBtn').disabled=true;
+  window.scrollTo({top:0});
 }
-
-function copyLink(){
-  var input = document.getElementById('shareLink');
-  input.select();
-  try { document.execCommand('copy'); showToast('✅ 链接已复制'); } catch(e) { showToast('复制失败，请手动复制'); }
-}
-
-function showToast(msg){
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  setTimeout(function(){ t.style.display = 'none'; }, 2000);
-}
-
-// —— 来源追踪
-(function(){
-  var s = new URLSearchParams(window.location.search).get('from');
-  if(s) {
-    var tag = document.querySelector('.version');
-    if(tag) tag.textContent = 'V6 · 来自 ' + s;
-  }
-})();
+function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(function(){t.style.display='none'},2000)}
+function showWechat(){showToast('微信号 canglin1985（已复制）');var i=document.createElement('input');i.value='canglin1985';document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i)}
 </script>
 </body>
 </html>
