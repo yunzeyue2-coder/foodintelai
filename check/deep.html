@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>FoodIntelAI 快速开店体验</title>
+<title>快速开店体验 · FoodIntelAI</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#0b0f14;color:#e6e6e6;min-height:100vh}
@@ -15,11 +15,12 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 .sub{font-size:12px;color:#6b7a8a;margin-bottom:18px;line-height:1.4}
 
 .form-card{background:#121824;border-radius:14px;padding:16px;margin-bottom:14px}
+.form-card .card-title{font-size:12px;font-weight:700;color:#8b9aaa;margin-bottom:10px;letter-spacing:1px}
 .form-row{display:flex;gap:10px;margin-bottom:10px}
 .form-row:last-child{margin-bottom:0}
 .form-group{flex:1}
 .form-group label{display:block;font-size:10px;color:#6b7a8a;margin-bottom:3px;font-weight:600}
-.form-group select,.form-group input{width:100%;padding:9px 10px;background:#0b0f14;border:1px solid #2a3442;color:#e6e6e6;border-radius:8px;font-size:13px;outline:none;appearance:none;transition:.15s}
+.form-group select,.form-group input{width:100%;padding:9px 10px;background:#0b0f14;border:1px solid #2a3442;color:#e6e6e6;border-radius:8px;font-size:13px;outline:none;appearance:none;transition:.15s;box-sizing:border-box}
 .form-group select:focus,.form-group input:focus{border-color:#00ff88}
 .form-group select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7a8a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:24px}
 
@@ -38,6 +39,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 .rs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
 .rs-card{background:#121824;border-radius:10px;padding:14px;text-align:center}
 .rs-card .val{font-size:22px;font-weight:800;color:#00ff88}
+.rs-card .val2{font-size:15px;font-weight:700;color:#4db8ff}
 .rs-card .lbl{font-size:10px;color:#6b7a8a;margin-top:2px}
 .radar-wrap{background:#121824;border-radius:14px;padding:10px;margin:12px 0;text-align:center}
 .radar-wrap canvas{width:100%;max-width:300px;height:auto}
@@ -66,10 +68,16 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 .suggest-box li.ok{color:#b0c0b0}
 .suggest-box li.no{color:#8b6a6a}
 
+.derive-box{background:#121824;border-radius:14px;padding:16px;margin:10px 0}
+.derive-box h3{font-size:12px;font-weight:700;margin-bottom:8px;color:#4db8ff;letter-spacing:1px}
+.derive-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.derive-item{background:#0b0f14;border-radius:8px;padding:10px;text-align:center}
+.derive-item .dv{font-size:17px;font-weight:700;color:#00ff88;margin-bottom:2px}
+.derive-item .dv2{font-size:14px;font-weight:600;color:#ff884d}
+.derive-item .dl{font-size:10px;color:#6b7a8a}
+
 .action-box{text-align:center;padding:12px 0}
-.action-box .deep-link{display:inline-block;padding:10px 30px;background:transparent;border:1px solid #00ff88;color:#00ff88;border-radius:10px;font-size:12px;font-weight:600;text-decoration:none;margin-bottom:4px;transition:.15s}
-.action-box .deep-link:hover{background:#00ff8815}
-.action-box .re-btn{display:inline-block;padding:7px 16px;background:transparent;border:1px solid #2a3442;color:#6b7a8a;border-radius:8px;font-size:11px;cursor:pointer;margin-top:6px}
+.action-box .re-btn{display:inline-block;padding:7px 16px;background:transparent;border:1px solid #2a3442;color:#6b7a8a;border-radius:8px;font-size:11px;cursor:pointer;margin-top:4px}
 </style>
 </head>
 <body>
@@ -77,15 +85,16 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 <div class="container">
   <div class="brand">
     <div class="name">🥘 FoodIntelAI</div>
-    <div class="tag">12项快筛</div>
+    <div class="tag" id="sourceTag">快速开店体验</div>
   </div>
 
   <h1>快速开店体验</h1>
-  <p class="sub">填12项基础信息 · 基于品类真实数据 · 出完整雷达报告</p>
+  <p class="sub">填写12项基础信息 · 基于真实经营模型 · 输出生存/盈利/风险报告</p>
 
   <!-- Form -->
   <div id="formArea">
     <div class="form-card">
+      <div class="card-title">🏗 项目基础</div>
       <div class="form-row">
         <div class="form-group">
           <label>品类</label>
@@ -94,7 +103,6 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
             <option value="卤味">卤味</option>
             <option value="冷吃红油">冷吃红油</option>
             <option value="潮汕南乳炸鸡">潮汕南乳炸鸡</option>
-            <option value="韩式炸鸡">韩式炸鸡</option>
             <option value="炒鸡">炒鸡店</option>
             <option value="酸汤">贵州酸汤</option>
             <option value="早餐面点">早餐面点</option>
@@ -104,143 +112,133 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
           </select>
         </div>
         <div class="form-group">
-          <label>城市</label>
+          <label>城市等级</label>
           <select id="f2">
-            <option value="1">一线城市</option>
-            <option value="2">二线城市</option>
-            <option value="3">三线及以下</option>
+            <option value="4">县城·乡镇</option>
+            <option value="3">二三线</option>
+            <option value="2">新一线</option>
+            <option value="1">一线</option>
           </select>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>总投资预算</label>
+          <label>商圈类型</label>
           <select id="f3">
-            <option value="1"><5万</option>
-            <option value="2" selected>5-10万</option>
-            <option value="3">10-30万</option>
-            <option value="4">30-80万</option>
-            <option value="5">>80万</option>
+            <option value="">请选择</option>
+            <option value="社区">社区</option>
+            <option value="写字楼">写字楼</option>
+            <option value="商场">商场/美食城</option>
+            <option value="学校">学校</option>
+            <option value="夜市">夜市/步行街</option>
+            <option value="景区">景区</option>
           </select>
         </div>
         <div class="form-group">
-          <label>餐饮经验</label>
-          <select id="f4">
-            <option value="0">零经验</option>
-            <option value="1">1年以下</option>
-            <option value="2" selected>1-3年</option>
-            <option value="3">3年以上</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>经营形式</label>
-          <select id="f5">
-            <option value="stall" selected>摆摊/档口</option>
-            <option value="store">实体门店</option>
-            <option value="delivery">纯外卖</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>经营时间</label>
-          <select id="f6">
-            <option value="0">兼职（<4h/天）</option>
-            <option value="1" selected>半全职（4-8h）</option>
-            <option value="2">全职（8-12h）</option>
-            <option value="3">超全职（>12h）</option>
+          <label>门店面积</label>
+          <select id="f9">
+            <option value="1" selected>摆摊/移动档口</option>
+            <option value="2"><10㎡</option>
+            <option value="3">10-20㎡</option>
+            <option value="4">20-50㎡</option>
+            <option value="5">>50㎡</option>
           </select>
         </div>
       </div>
     </div>
 
     <div class="form-card">
+      <div class="card-title">👤 经营者能力</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>餐饮经验</label>
+          <select id="f4">
+            <option value="0">无经验</option>
+            <option value="1"><1年</option>
+            <option value="2" selected>1-3年</option>
+            <option value="3">3-5年</option>
+            <option value="4">5年以上</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>每天可投入时间</label>
+          <select id="f5">
+            <option value="0">＜2h</option>
+            <option value="1" selected>2-4h</option>
+            <option value="2">4-8h</option>
+            <option value="3">全职</option>
+            <option value="4">全天（>12h）</option>
+          </select>
+        </div>
+      </div>
       <div class="form-row">
         <div class="form-group">
           <label>启动团队</label>
-          <select id="f7">
-            <option value="0">独自一人</option>
-            <option value="1" selected>2人（夫妻/搭档）</option>
-            <option value="2">3人</option>
-            <option value="3">4人及以上</option>
+          <select id="f6">
+            <option value="0" selected>一个人</option>
+            <option value="1">两人</option>
+            <option value="2">3-5人</option>
+            <option value="3">5人以上</option>
           </select>
         </div>
         <div class="form-group">
           <label>线上运营能力</label>
+          <select id="f7">
+            <option value="0">不会</option>
+            <option value="1" selected>基础（会发朋友圈）</option>
+            <option value="2">熟悉（外卖+团购）</option>
+            <option value="3">熟练（短视频+直播）</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="card-title">💰 资金与执行</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>总投资预算</label>
           <select id="f8">
-            <option value="0">完全不会</option>
-            <option value="1" selected>会基础（发朋友圈）</option>
-            <option value="2">会运营（外卖+团购）</option>
-            <option value="3">精通（短视频+直播+私域）</option>
+            <option value="1">＜5万</option>
+            <option value="2" selected>5-10万</option>
+            <option value="3">10-20万</option>
+            <option value="4">20-50万</option>
+            <option value="5">＞50万</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>流动资金可撑</label>
+          <select id="f10" style="border-color:#ff884d">
+            <option value="1"><1个月</option>
+            <option value="2" selected>1-3个月</option>
+            <option value="3">3-6个月</option>
+            <option value="4">>6个月</option>
           </select>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
           <label>供应链熟悉度</label>
-          <select id="f9">
-            <option value="0">不熟悉</option>
-            <option value="1" selected>一般了解</option>
-            <option value="2">比较熟悉</option>
-            <option value="3">精通（有渠道资源）</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>门店面积</label>
-          <select id="f10">
-            <option value="1"><10㎡</option>
-            <option value="2" selected>10-20㎡</option>
-            <option value="3">20-50㎡</option>
-            <option value="4">>50㎡</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>目标月营收</label>
           <select id="f11">
-            <option value="1"><1万</option>
-            <option value="2" selected>1-3万</option>
-            <option value="3">3-5万</option>
-            <option value="4">>5万</option>
+            <option value="0">完全不了解</option>
+            <option value="1" selected>一般了解</option>
+            <option value="2">有渠道资源</option>
+            <option value="3">非常熟悉</option>
           </select>
         </div>
         <div class="form-group">
-          <label>期望回本周期</label>
-          <select id="f12">
-            <option value="1"><3个月</option>
-            <option value="2" selected>3-6个月</option>
-            <option value="3">6-12个月</option>
-            <option value="4">>12个月/无所谓</option>
+          <label>最大可接受亏损</label>
+          <select id="f12" style="border-color:#ff6b6b">
+            <option value="0">不能亏</option>
+            <option value="1" selected>1-3万</option>
+            <option value="2">3-10万</option>
+            <option value="3">>10万</option>
           </select>
         </div>
       </div>
     </div>
 
-    <div class="form-card">
-      <div class="form-row">
-        <div class="form-group">
-          <label>在当地测试过了吗</label>
-          <select id="f13">
-            <option value="0">完全没试过</option>
-            <option value="1" selected>自己做过·朋友说还行</option>
-            <option value="2">摆摊/试吃过·有反馈数据</option>
-            <option value="3">长期测试过·验证可行</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>计划上架几个单品</label>
-          <select id="f14">
-            <option value="1">1-3个（极致精简）</option>
-            <option value="2" selected>4-6个（夫妻档合理）</option>
-            <option value="3">7-10个（需更多人手）</option>
-            <option value="4">>10个（品控挑战大）</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <button class="btn-submit" onclick="run()">📊 生成评估报告</button>
+    <button class="btn-submit" onclick="run()" id="runBtn">📊 生成评估报告</button>
   </div>
 
   <!-- Result -->
@@ -249,230 +247,222 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 
 <script>
 // ============================================================
-// 品类基础数据（权重 由我们配）
+// 品类基础数据（权重由我们配）
 // ============================================================
 const CAT_DATA = {
-  '卤味': {growth:75, margin:72, standard:78, scale:70, risk:55, season:80, supply:75, sku:2},
-  '冷吃红油': {growth:82, margin:88, standard:80, scale:75, risk:45, season:75, supply:72, sku:2},
-  '潮汕南乳炸鸡': {growth:90, margin:78, standard:82, scale:80, risk:50, season:65, supply:78, sku:2},
-  '韩式炸鸡': {growth:65, margin:68, standard:90, scale:82, risk:55, season:60, supply:85, sku:2},
-  '炒鸡': {growth:60, margin:65, standard:65, scale:68, risk:65, season:78, supply:68, sku:2},
-  '贵州酸汤': {growth:88, margin:70, standard:62, scale:65, risk:50, season:72, supply:55, sku:2},
-  '早餐面点': {growth:70, margin:78, standard:72, scale:75, risk:35, season:85, supply:72, sku:1},
-  '饮品甜品': {growth:82, margin:85, standard:92, scale:85, risk:50, season:50, supply:80, sku:3},
-  '小吃烤串': {growth:72, margin:75, standard:68, scale:65, risk:55, season:55, supply:70, sku:3},
-  '傣舂舂菜': {growth:78, margin:88, standard:55, scale:50, risk:40, season:60, supply:45, sku:2},
+  '卤味': {g:75,m:72,st:78,sc:70,risk:55,se:75,sp:75,sku:2,rev:[800,1500],cost:[300,600],pb:[6,12]},
+  '冷吃红油': {g:82,m:88,st:80,sc:75,risk:45,se:72,sp:72,sku:2,rev:[1000,2000],cost:[350,700],pb:[4,8]},
+  '潮汕南乳炸鸡': {g:90,m:78,st:82,sc:80,risk:50,se:65,sp:78,sku:2,rev:[1200,2500],cost:[450,900],pb:[4,7]},
+  '炒鸡': {g:60,m:65,st:65,sc:68,risk:65,se:78,sp:68,sku:2,rev:[1500,3000],cost:[500,1200],pb:[8,15]},
+  '贵州酸汤': {g:88,m:70,st:62,sc:65,risk:50,se:72,sp:55,sku:3,rev:[2000,4000],cost:[700,1500],pb:[8,14]},
+  '早餐面点': {g:70,m:78,st:72,sc:75,risk:35,se:85,sp:72,sku:2,rev:[600,1200],cost:[200,500],pb:[3,8]},
+  '饮品甜品': {g:82,m:85,st:92,sc:85,risk:50,se:50,sp:80,sku:2,rev:[800,1800],cost:[250,550],pb:[3,7]},
+  '小吃烤串': {g:72,m:75,st:68,sc:65,risk:55,se:55,sp:70,sku:3,rev:[1000,2500],cost:[350,800],pb:[6,12]},
+  '傣舂舂菜': {g:78,m:88,st:55,sc:50,risk:40,se:60,sp:45,sku:3,rev:[700,1500],cost:[200,500],pb:[4,10]},
 };
 
-function getVal(id){return document.getElementById(id).value}
+function v(id){return document.getElementById(id)}
 
 function run(){
-  const cat = getVal('f1');
-  if(!cat){alert('请先选择品类');return}
+  const cat = v('f1').value, biz = v('f3').value;
+  if(!cat||!biz){alert('请选择品类和商圈类型');return}
 
   const cd = CAT_DATA[cat];
   if(!cd){alert('该品类数据暂缺');return}
 
-  const city = parseInt(getVal('f2'));
-  const bud = parseInt(getVal('f3'));
-  const exp = parseInt(getVal('f4'));
-  const scene = getVal('f5');
-  const time = parseInt(getVal('f6'));
-  const team = parseInt(getVal('f7'));
-  const online = parseInt(getVal('f8'));
-  const supply = parseInt(getVal('f9'));
-  const area = parseInt(getVal('f10'));
-  const revenue = parseInt(getVal('f11'));
-  const payback = parseInt(getVal('f12'));
-  const testVal = parseInt(getVal('f13'));
-  const skuVal = parseInt(getVal('f14'));
+  const city = parseInt(v('f2').value);
+  const exp = parseInt(v('f4').value);
+  const time = parseInt(v('f5').value);
+  const team = parseInt(v('f6').value);
+  const online = parseInt(v('f7').value);
+  const bud = parseInt(v('f8').value);
+  const area = parseInt(v('f9').value);
+  const cash = parseInt(v('f10').value);
+  const supply = parseInt(v('f11').value);
+  const loss = parseInt(v('f12').value);
 
-  // 城市系数
-  const cm = [1.0, 0.85, 0.72][city-1] || 0.85;
+  // 商圈系数
+  const bz = {社区:1.0,写字楼:0.95,商场:0.85,学校:1.1,夜市:1.15,景区:0.75}[biz]||0.9;
+  // 城市系数: 一线=1.2, 新一线=1.0, 二三线=0.85, 县城=0.7, 乡镇=0.55
+  const cm = [1.2, 1.0, 0.85, 0.7, 0.55][city]||1.0;
   // 预算系数
-  const bm = [0.5, 0.8, 1.0, 1.15, 1.25][bud-1] || 0.8;
+  const bm = [0.5, 0.75, 1.0, 1.15, 1.25][bud]||0.8;
   // 经验系数
-  const em = [0.6, 0.8, 1.0, 1.2][exp] || 0.8;
-  // 经营形式系数
-  const sm = {stall:1.0, store:0.9, delivery:0.75}[scene] || 1.0;
+  const em = [0.5, 0.7, 0.9, 1.1, 1.25][exp]||0.8;
   // 时间投入系数
-  const tm = [0.5, 0.85, 1.0, 1.1][time] || 0.85;
+  const tm = [0.35, 0.6, 0.85, 1.05, 1.15][time]||0.85;
   // 团队系数
-  const teem = [0.6, 0.9, 1.0, 1.1][team] || 0.8;
+  const teamm = [0.35, 0.85, 1.0, 1.15][team]||0.8;
   // 线上能力
-  const om = [0.6, 0.85, 1.0, 1.15][online] || 0.8;
-  // 供应链系数
-  const sfm = [0.6, 0.85, 1.0, 1.1][supply] || 0.8;
+  const om = [0.5, 0.8, 1.0, 1.15][online]||0.8;
   // 面积系数
-  const am = [0.7, 0.95, 1.0, 0.85][area-1] || 0.85;
-  // 营收系数
-  const rm = [0.5, 0.85, 1.0, 1.05][revenue-1] || 0.8;
-  // 回本期望系数
-  const pbm = [1.15, 1.0, 0.85, 0.7][payback-1] || 0.85;
-  // 测试验证系数
-  const testm = [0.6, 0.85, 1.0, 1.15][testVal] || 0.85;
-  // SKU合理度系数（与品类推荐SKU数对比）
-  const skuDiff = Math.abs(skuVal - cd.sku);
-  const skum = skuDiff === 0 ? 1.1 : skuDiff <= 1 ? 1.0 : skuDiff <= 2 ? 0.85 : 0.65;
+  const am = [0.6, 0.7, 0.95, 1.0, 0.85][area]||0.85;
+  // 现金流系数
+  const cashm = [0.35, 0.65, 0.9, 1.15][cash]||0.65;
+  // 供应链系数
+  const sfm = [0.5, 0.8, 1.05, 1.15][supply]||0.8;
+  // 亏损承受系数
+  const lossm = [0.4, 0.75, 1.0, 1.1][loss]||0.75;
 
-  // 综合经营能力因子
-  const opFactor = (em * 0.2 + tm * 0.15 + teem * 0.1 + om * 0.15 + sfm * 0.1 + testm * 0.15 + skum * 0.15);
+  // 综合经营因子
+  const op = (em*0.2 + tm*0.18 + teamm*0.12 + om*0.18 + sfm*0.12 + cashm*0.2);
 
-  // 计算8维评分
+  // 8维评分
   const dims = [
-    {label:'品类时机', score: Math.round(cd.growth * cm * 1.0), color:'#00ff88'},
-    {label:'选址匹配', score: Math.round(75 * cm * am * sm * 0.9 + 15), color:'#4db8ff'},
-    {label:'市场需求', score: Math.round(cd.scale * cm * rm * 0.85 + 10), color:'#ffcc00'},
-    {label:'经营能力', score: Math.round(opFactor * 70 + 15), color:'#ff884d'},
-    {label:'资金结构', score: Math.round(bm * pbm * 70 + 10), color:'#00ff88'},
-    {label:'供应链', score: Math.round(cd.supply * sfm * 0.85 + 10), color:'#4db8ff'},
-    {label:'运营体系', score: Math.round(om * sm * cd.standard * 0.75 + 10), color:'#ffcc00'},
-    {label:'抗风险', score: Math.round(cd.risk * bm * pbm * 0.45 + 20), color:'#ff6b6b'},
+    {l:'品类时机', s:Math.round(Math.min(100, cd.g * cm * bz * 0.85 + 8)), c:'#00ff88'},
+    {l:'选址匹配', s:Math.round(Math.min(100, bz * cm * 90 * 0.55 + cd.sc * 0.2 + 12)), c:'#4db8ff'},
+    {l:'市场需求', s:Math.round(Math.min(100, cd.sc * cm * bz * 0.6 + cd.g * 0.2 + 10)), c:'#ffcc00'},
+    {l:'经营能力', s:Math.round(Math.min(100, op * 65 + 18)), c:'#ff884d'},
+    {l:'资金结构', s:Math.round(Math.min(100, bm * cashm * lossm * 80 + 8)), c:'#00ff88'},
+    {l:'供应链', s:Math.round(Math.min(100, cd.sp * sfm * 0.5 + sfm * 35 + 8)), c:'#4db8ff'},
+    {l:'运营体系', s:Math.round(Math.min(100, om * cd.st * 0.4 + online*8 + time*5 + 10)), c:'#ffcc00'},
+    {l:'抗风险', s:Math.round(Math.min(100, lossm * cashm * cm * 50 + cd.risk * 0.35 + 10)), c:'#ff6b6b'},
   ];
-
-  // 各维度限100分
-  dims.forEach(d => d.score = Math.min(100, Math.max(10, d.score)));
+  dims.forEach(d => d.s = Math.min(100, Math.max(8, d.s)));
 
   // 综合分
-  const weights = [0.13, 0.18, 0.12, 0.16, 0.14, 0.08, 0.10, 0.09];
-  let total = 0;
-  dims.forEach((d,i) => total += d.score * weights[i]);
-  total = Math.round(total);
+  const w = [0.13, 0.18, 0.12, 0.16, 0.14, 0.08, 0.10, 0.09];
+  let total = 0; dims.forEach((d,i)=>total+=d.s*w[i]); total=Math.round(total);
 
-  // 等级
-  let grade, gColor, gLabel;
-  if(total>=80){grade='A';gColor='#00ff88';gLabel='强烈推荐'}
-  else if(total>=65){grade='B';gColor='#88ddaa';gLabel='推荐'}
-  else if(total>=50){grade='C';gColor='#ddaa44';gLabel='谨慎'}
-  else{grade='D';gColor='#ff6b6b';gLabel='不建议'}
+  let grd, gc, gl;
+  if(total>=80){grd='A';gc='#00ff88';gl='推荐进入'}
+  else if(total>=65){grd='B';gc='#88ddaa';gl='谨慎进入'}
+  else if(total>=50){grd='C';gc='#ddaa44';gl='暂不建议'}
+  else{grd='D';gc='#ff6b6b';gl='不建议'}
 
-  // 生存/盈利/扩张概率
-  const survival = Math.round(Math.min(95, total * 0.85 + 8));
-  const profit = Math.round(Math.min(90, total * 0.75 + 10));
-  const expand = Math.round(Math.min(85, total * 0.50 + 5));
+  // 推导营收和回本
+  const baseRev = cd.rev[0] + (cd.rev[1]-cd.rev[0]) * (total/100) * 0.6;
+  const revFactor = cm * bz * bm * op;
+  const avgRev = Math.round(baseRev * revFactor);
+  const revLow = Math.round(avgRev * 0.75);
+  const revHigh = Math.round(avgRev * 1.15);
+  const costLow = Math.round(cd.cost[0] * revFactor);
+  const costHigh = Math.round(cd.cost[1] * revFactor);
+  const marginLow = revLow - costHigh;
+  const marginHigh = revHigh - costLow;
+  const invest = [5000, 8000, 15000, 35000, 80000][bud-1]||20000;
+  const pbLow = Math.round(invest / Math.max(1, marginHigh));
+  const pbHigh = Math.round(invest / Math.max(1, marginLow*(bud>=4?0.6:0.8)));
 
-  // 找短板
-  const短板 = dims.filter(d => d.score < 55).sort((a,b)=>a.score-b.score);
-  const优势 = dims.filter(d => d.score >= 75);
+  // 生存概率
+  const survival = Math.round(Math.min(95, total*0.7 + cashm*12 + em*5 + 10));
+  const profit = Math.round(Math.min(90, total*0.6 + om*4 + sfm*4 + 8));
+  const expand = Math.round(Math.min(85, total*0.4 + teamm*5 + bm*5 + cashm*3 + 5));
+
+  // 系统脆弱度
+  let fragile = '低';
+  if(dims.filter(d=>d.s<50).length>=3 || cash<=1 || loss<=0) fragile='高';
+  else if(dims.filter(d=>d.s<55).length>=2 || cash<=2) fragile='中';
+
+  // 死亡路径
+  let death = '';
+  const weak = dims.filter(d=>d.s<55).sort((a,b)=>a.s-b.s);
+  if(cash<=1) death = '☠️ 第2-3个月现金流断裂风险极高（流动资金不足1个月）';
+  else if(cash<=2 && dims[4].s<50) death = '☠️ 第4-6个月资金链紧张风险（流动资金偏少+资金评分低）';
+  else if(weak.length>=2) death = '☠️ 多个维度存在短板（'+weak.map(d=>d.l).join('+')+'），中后期运营压力大';
+  else death = '⚠️ 无明显致命风险，但建议关注'+weak[0].l+'维度的改善';
+
+  // 短板和优势
+  const bad = dims.filter(d=>d.s<55).sort((a,b)=>a.s-b.s);
+  const good = dims.filter(d=>d.s>=75);
 
   // 渲染
-  renderResult(total, grade, gColor, gLabel, survival, profit, expand, dims, 短板, 优势, cat);
+  render(total, grd, gc, gl, survival, profit, expand, dims, bad, good, cat,
+    revLow, revHigh, marginLow, marginHigh, pbLow, pbHigh, fragile, death);
 }
 
-function renderResult(total, grade, gColor, gLabel, survival, profit, expand, dims, 短板, 优势, cat){
-  document.getElementById('formArea').style.display = 'none';
-  const area = document.getElementById('resultArea');
-  area.className = 'result show';
+function render(total,grd,gc,gl,survival,profit,expand,dims,bad,good,cat,
+  revL,revH,marginL,marginH,pbL,pbH,fragile,death){
+  v('formArea').style.display='none';
+  const a=v('resultArea');a.className='result show';
 
-  let riskHTML = '';
-  if(短板.length){
-    riskHTML = 短板.map(d => `<div class="risk-box"><div class="rt">⚠️ ${d.label}（${d.score}/100）</div><div class="rd">该维度是主要短板，可能成为制约门店存活的关键因素</div></div>`).join('');
-  }
+  let badH='',goodH='';
+  if(bad.length) badH=bad.map(d=>`<div class="risk-box"><div class="rt">⚠️ ${d.l}（${d.s}/100）</div><div class="rd">主要短板，持续关注</div></div>`).join('');
+  if(good.length) goodH=good.map(d=>`<div class="strength-box"><div class="st">⭐ ${d.l}（${d.s}/100）</div><div class="rd">核心优势</div></div>`).join('');
 
-  let strengthHTML = '';
-  if(优势.length){
-    strengthHTML = 优势.map(d => `<div class="strength-box"><div class="st">⭐ ${d.label}（${d.score}/100）</div><div class="sd">该维度评分较高，是本项目的核心优势</div></div>`).join('');
-  }
+  let sugH='';
+  const sl=[];
+  if(total>=65) sl.push({t:'小店模型可行',c:'ok'});
+  else sl.push({t:'缩小规模再验证',c:'no'});
+  if(online>=2) sl.push({t:'可借助线上引流拓客',c:'ok'});
+  else sl.push({t:'线上运营需补强',c:'no'});
+  if(cash>=3) sl.push({t:'现金流充裕·可稳健推进',c:'ok'});
+  else sl.push({t:'流动资金偏紧·注意控制前期投入',c:'no'});
+  if(dims.filter(d=>d.s<50).length>=2) sl.push({t:'补齐短板前不建议扩店',c:'no'});
+  else sl.push({t:'未来有扩张潜力',c:'ok'});
+  sugH=sl.map(s=>`<li class="${s.c}">${s.t}</li>`).join('');
 
-  let suggestHTML = '';
-  const slist = [];
-  if(total>=55) slist.push({text:'小店模型可行',class:'ok'});
-  else slist.push({text:'不建议直接开实体店',class:'no'});
-  if(total>=65) slist.push({text:'可考虑外卖优先拓客',class:'ok'});
-  else slist.push({text:'线上运营能力需补强',class:'no'});
-  if(短板.length>0) slist.push({text:'先补齐短板再考虑扩店',class:'no'});
-  else slist.push({text:'未来可持续扩张',class:'ok'});
-  suggestHTML = slist.map(s => `<li class="${s.class}">${s.text}</li>`).join('');
+  const pbRange = pbL>0&&pbH>0?`${Math.min(pbL,pbH)}-${Math.max(pbL,pbH)}`:'待定';
 
-  area.innerHTML = `
+  a.innerHTML=`
     <div class="rs-header">
-      <div class="grade" style="color:${gColor}">${gLabel}</div>
-      <div class="score" style="color:${gColor}">${total}</div>
-      <div class="sub2">综合评分 / 100</div>
+      <div class="grade" style="color:${gc}">${gl}</div>
+      <div class="score" style="color:${gc}">${total}</div>
+      <div class="sub2">综合评分 / 100 &nbsp;|&nbsp; ${grd} 级</div>
     </div>
-    <div class="rs-grid">
-      <div class="rs-card"><div class="val">${survival}%</div><div class="lbl">生存概率</div></div>
-      <div class="rs-card"><div class="val">${profit}%</div><div class="lbl">盈利概率</div></div>
-      <div class="rs-card"><div class="val">${expand}%</div><div class="lbl">扩张可能</div></div>
-      <div class="rs-card"><div class="val">${cat.split('').slice(0,4).join('')}</div><div class="lbl">当前品类</div></div>
+
+    <div class="derive-box">
+      <h3>📊 系统推导 · 经营预测</h3>
+      <div class="derive-grid">
+        <div class="derive-item"><div class="dv">¥${revL.toLocaleString()}-${revH.toLocaleString()}</div><div class="dl">预计月营收</div></div>
+        <div class="derive-item"><div class="dv2">¥${marginL.toLocaleString()}-${marginH.toLocaleString()}</div><div class="dl">预计月净利润</div></div>
+        <div class="derive-item"><div class="dv">${pbRange}个月</div><div class="dl">预计回本周期</div></div>
+        <div class="derive-item"><div class="dv" style="color:${fragile==='高'?'#ff6b6b':fragile==='中'?'#ddaa44':'#00ff88'}">${fragile}</div><div class="dl">系统脆弱度</div></div>
+      </div>
     </div>
+
+    <div class="derive-box" style="border-left:3px solid ${survival>=70?'#00ff88':survival>=55?'#ddaa44':'#ff6b6b'}">
+      <h3>🎯 核心指标</h3>
+      <div class="derive-grid">
+        <div class="derive-item"><div class="dv" style="color:${survival>=70?'#00ff88':survival>=55?'#ddaa44':'#ff6b6b'}">${survival}%</div><div class="dl">生存概率</div></div>
+        <div class="derive-item"><div class="dv" style="color:"#00ff88">${profit}%</div><div class="dl">盈利概率</div></div>
+        <div class="derive-item"><div class="dv" style="color:"#00ff88">${expand}%</div><div class="dl">扩张可能</div></div>
+        <div class="derive-item"><div class="dv" style="color:#4db8ff">${cat}</div><div class="dl">当前品类</div></div>
+      </div>
+    </div>
+
+    <div class="risk-box" style="font-size:12px">${death}</div>
+
     <div class="radar-wrap"><canvas id="rdChart" width="300" height="300"></canvas></div>
-    <div class="dim-list">${dims.map(d => {
-      const c = d.score>=70?'#00ff88':d.score>=55?'#ddaa44':'#ff6b6b';
-      return `<div class="dim-item"><div class="dn">${d.label.slice(0,4)}</div><div class="db"><div class="df" style="width:${d.score}%;background:${c}"></div></div><div class="ds" style="color:${c}">${d.score}</div></div>`;
+
+    <div class="dim-list">${dims.map(d=>{
+      const c=d.s>=70?'#00ff88':d.s>=55?'#ddaa44':'#ff6b6b';
+      return `<div class="dim-item"><div class="dn">${d.l.slice(0,4)}</div><div class="db"><div class="df" style="width:${d.s}%;background:${c}"></div></div><div class="ds" style="color:${c}">${d.s}</div></div>`;
     }).join('')}</div>
-    ${riskHTML}
-    ${strengthHTML}
-    <div class="suggest-box"><h3>建议的经营方式</h3>${suggestHTML}</div>
+
+    ${badH}${goodH}
+
+    <div class="suggest-box"><h3>建议的经营方式</h3>${sugH}</div>
+
     <div class="action-box">
-      <a class="deep-link" href="https://foodintelai.com/check/deep.html" target="_blank">📋 获取完整68项深度评估</a>
-      <div class="sub2" style="font-size:10px;color:#5a6a7a;margin-top:2px">加微信·获取定制版报告</div>
       <button class="re-btn" onclick="restart()">🔄 重新评估</button>
     </div>
   `;
 
-  setTimeout(() => drawRadar(dims), 100);
+  setTimeout(()=>drawRadar(dims),100);
   window.scrollTo({top:0});
 }
 
 function drawRadar(dims){
-  const c = document.getElementById('rdChart');
-  if(!c) return;
-  const ctx = c.getContext('2d');
-  const cx = 150, cy = 150, r = 120, n = dims.length, as = 2*Math.PI/n;
-
+  const c=v('rdChart');if(!c)return;
+  const ctx=c.getContext('2d'), cx=150, cy=150, r=120, n=dims.length, as=2*Math.PI/n;
   ctx.clearRect(0,0,300,300);
-
-  // Grid
-  for(let l=0.25; l<=1; l+=0.25){
-    ctx.beginPath(); ctx.strokeStyle='#1a2835'; ctx.lineWidth=0.5;
-    for(let i=0; i<n; i++){
-      const a = -Math.PI/2 + i*as;
-      const x = cx + r*l*Math.cos(a), y = cy + r*l*Math.sin(a);
-      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-    }
-    ctx.closePath(); ctx.stroke();
-  }
-
-  // Axes
-  for(let i=0; i<n; i++){
-    const a = -Math.PI/2 + i*as;
-    ctx.beginPath(); ctx.moveTo(cx,cy);
-    ctx.lineTo(cx + r*Math.cos(a), cy + r*Math.sin(a));
-    ctx.strokeStyle='#1a2835'; ctx.lineWidth=0.5; ctx.stroke();
-  }
-
-  // Data
+  for(let l=0.25;l<=1;l+=0.25){ctx.beginPath();ctx.strokeStyle='#1a2835';ctx.lineWidth=0.5;
+    for(let i=0;i<n;i++){const a=-Math.PI/2+i*as,x=cx+r*l*Math.cos(a),y=cy+r*l*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}
+    ctx.closePath();ctx.stroke()}
+  for(let i=0;i<n;i++){const a=-Math.PI/2+i*as;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));ctx.strokeStyle='#1a2835';ctx.lineWidth=0.5;ctx.stroke()}
   ctx.beginPath();
-  for(let i=0; i<n; i++){
-    const a = -Math.PI/2 + i*as, v = dims[i].score/100;
-    const x = cx + r*v*Math.cos(a), y = cy + r*v*Math.sin(a);
-    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-  }
-  ctx.closePath(); ctx.fillStyle='rgba(0,255,136,.08)'; ctx.fill();
-  ctx.strokeStyle='#00ff88'; ctx.lineWidth=2; ctx.stroke();
-
-  // Labels
-  ctx.font='9px -apple-system,PingFang SC,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  for(let i=0; i<n; i++){
-    const a = -Math.PI/2 + i*as;
-    const lx = cx + (r+18)*Math.cos(a), ly = cy + (r+18)*Math.sin(a);
-    ctx.fillStyle = '#6b7a8a';
-    ctx.fillText(dims[i].label.slice(0,5), lx, ly);
-
-    const v = dims[i].score/100;
-    const px = cx + r*v*Math.cos(a), py = cy + r*v*Math.sin(a);
-    ctx.beginPath(); ctx.arc(px,py,3,0,2*Math.PI);
-    ctx.fillStyle = dims[i].score>=70?'#00ff88':dims[i].score>=55?'#ddaa44':'#ff6b6b'; ctx.fill();
-  }
+  for(let i=0;i<n;i++){const a=-Math.PI/2+i*as,v=dims[i].s/100,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}
+  ctx.closePath();ctx.fillStyle='rgba(0,255,136,.08)';ctx.fill();ctx.strokeStyle='#00ff88';ctx.lineWidth=2;ctx.stroke();
+  ctx.font='9px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  for(let i=0;i<n;i++){const a=-Math.PI/2+i*as,lx=cx+(r+18)*Math.cos(a),ly=cy+(r+18)*Math.sin(a);ctx.fillStyle='#6b7a8a';ctx.fillText(dims[i].l.slice(0,5),lx,ly);
+    const v=dims[i].s/100,px=cx+r*v*Math.cos(a),py=cy+r*v*Math.sin(a);ctx.beginPath();ctx.arc(px,py,3,0,2*Math.PI);ctx.fillStyle=dims[i].s>=70?'#00ff88':dims[i].s>=55?'#ddaa44':'#ff6b6b';ctx.fill()}
 }
 
-function restart(){
-  document.getElementById('formArea').style.display = 'block';
-  document.getElementById('resultArea').className = 'result';
-  document.getElementById('resultArea').innerHTML = '';
-  window.scrollTo({top:0});
-}
+function restart(){v('formArea').style.display='block';v('resultArea').className='result';v('resultArea').innerHTML='';window.scrollTo({top:0})}
+
+// URL source tracking
+(function(){const s=new URLSearchParams(location.search).get('from');if(s)v('sourceTag').textContent='来自：'+s})();
 </script>
 </body>
 </html>
