@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FoodIntelAI 创业深度评估 · 9维雷达报告</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#0b0f14;color:#e6e6e6;padding:0;min-height:100vh}
+.container{max-width:600px;margin:0 auto;padding:16px}
+
+/* progress */
+.progress{display:flex;gap:4px;margin-bottom:18px}
+.progress .dot{flex:1;height:4px;border-radius:2px;background:#1e2a38;transition:.3s}
+.progress .dot.active{background:#00ff88}
+.progress .dot.done{background:#00cc6a}
+
+/* header */
+.step-header{margin-bottom:18px}
+.step-header .step-num{font-size:11px;color:#6b7a8a;letter-spacing:2px;margin-bottom:4px;font-weight:600}
+.step-header h2{font-size:20px;font-weight:700;margin-bottom:3px}
+.step-header p{font-size:12px;color:#6b7a8a;line-height:1.4}
+.step-header .weight{display:inline-block;background:#00ff8815;color:#00ff88;font-size:10px;padding:2px 10px;border-radius:8px;margin-top:4px;font-weight:600}
+
+/* survey card */
+.survey-card{background:#121824;border-radius:14px;padding:16px;margin-bottom:12px}
+.survey-card .q-label{font-size:12px;color:#8b9aaa;margin-bottom:8px;font-weight:600}
+.survey-card select{width:100%;padding:10px 12px;background:#0b0f14;border:1px solid #2a3442;color:#e6e6e6;border-radius:8px;font-size:13px;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7a8a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+.survey-card select:focus{border-color:#00ff88}
+
+/* nav buttons */
+.nav{display:flex;gap:10px;margin:20px 0}
+.nav button{flex:1;padding:13px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:.15s}
+.btn-prev{background:transparent;border:1px solid #2a3442;color:#6b7a8a}
+.btn-prev:hover{background:#1a2535}
+.btn-next{background:#00ff88;color:#000}
+.btn-next:hover{background:#00cc6a}
+.btn-next:disabled{opacity:.3;cursor:not-allowed}
+.btn-submit{background:#00ff88;color:#000;font-size:15px;padding:14px;width:100%;border-radius:10px;font-weight:700;border:none;cursor:pointer;transition:.15s}
+.btn-submit:hover{background:#00cc6a}
+
+/* pages */
+.page{display:none}
+.page.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* result page */
+.result{display:none}
+.result.show{display:block;animation:fadeIn .5s ease}
+.rs-header{text-align:center;padding:20px 0 10px}
+.rs-header .score{font-size:60px;font-weight:900;line-height:1;margin-bottom:4px}
+.rs-header .grade{font-size:14px;font-weight:600;margin-bottom:2px}
+.rs-header .sub{font-size:11px;color:#6b7a8a}
+.rs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.rs-card{background:#121824;border-radius:10px;padding:12px;text-align:center}
+.rs-card .val{font-size:24px;font-weight:800;color:#00ff88}
+.rs-card .lbl{font-size:11px;color:#6b7a8a;margin-top:2px}
+.radar-wrap{background:#121824;border-radius:14px;padding:12px;margin:12px 0;text-align:center}
+.radar-wrap canvas{width:100%;max-width:320px;height:auto}
+
+.breakdown{margin:12px 0}
+.br-item{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid #1a2835}
+.br-item:last-child{border-bottom:none}
+.br-item .dim{width:56px;font-size:11px;font-weight:600;color:#8b9aaa;flex-shrink:0}
+.br-item .bar-wrap{flex:1;height:6px;background:#1a2835;border-radius:3px;margin:0 10px}
+.br-item .bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.br-item .br-score{font-size:11px;font-weight:700;width:30px;text-align:right}
+
+.risk-box{margin:12px 0}
+.risk-item{padding:10px 12px;background:#1e0f0f;border-radius:8px;margin-bottom:6px;border:1px solid rgba(255,75,75,.15)}
+.risk-item .r-title{font-size:12px;font-weight:700;color:#ff6b6b;margin-bottom:2px}
+.risk-item .r-desc{font-size:11px;color:#8b7a7a;line-height:1.4}
+.risk-item .r-prob{font-size:10px;color:#6b5a5a;margin-top:2px}
+
+.strength-box{margin:12px 0}
+.s-item{padding:10px 12px;background:#0f1f1a;border-radius:8px;margin-bottom:6px;border:1px solid rgba(0,255,136,.12)}
+.s-item .s-title{font-size:12px;font-weight:700;color:#00ff88;margin-bottom:2px}
+.s-item .s-desc{font-size:11px;color:#7a9a8a;line-height:1.4}
+
+.suggest-box{background:#121824;border-radius:14px;padding:14px;margin:12px 0}
+.suggest-box h3{font-size:13px;font-weight:700;margin-bottom:8px;color:#00ff88}
+.suggest-box ul{list-style:none;padding:0}
+.suggest-box li{padding:5px 0;font-size:12px;color:#b0c0b0;line-height:1.5}
+.suggest-box li::before{content:'✓ ';color:#00ff88;font-weight:700}
+.suggest-box li.no::before{content:'✗ ';color:#ff6b6b}
+.suggest-box li.no{color:#8b6a6a}
+
+.action-box{text-align:center;padding:16px 0}
+.action-box .btn-copy{display:inline-block;padding:10px 24px;background:transparent;border:1px solid #00ff88;color:#00ff88;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:6px;transition:.15s}
+.action-box .btn-copy:hover{background:#00ff8815}
+.action-box .note{font-size:10px;color:#5a6a7a}
+
+.page-enter{opacity:0;transform:translateY(20px);animation:enter .4s ease forwards}
+@keyframes enter{to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="container" id="app">
+
+<!-- Progress bar (only show during survey) -->
+<div class="progress" id="progressBar"></div>
+
+<!-- Step header -->
+<div id="stepHeader" class="step-header"></div>
+
+<!-- Survey pages -->
+<div id="surveyArea"></div>
+
+<!-- Navigation buttons (only show during survey) -->
+<div id="navArea" class="nav"></div>
+
+<!-- Result page -->
+<div id="resultArea" class="result"></div>
+
+</div>
+
+<script>
+// ============================================================
+// 9维68项评估数据
+// ============================================================
+const DIMS = [
+  {
+    id:'tian', label:'天·品类时机', weight:0.12, desc:'做的是上升品类还是衰退品类？',
+    questions:[
+      {id:'t1', q:'品类当前处于什么生命周期？', opts:['爆发期(快速增长)', '成长期(平稳上升)', '成熟期(竞争激烈)', '衰退期(下滑)']},
+      {id:'t2', q:'品类未来3-5年的市场增长趋势？', opts:['高增长(年增>15%)', '稳定增长(年增5-15%)', '持平', '下滑']},
+      {id:'t3', q:'品类受季节影响程度？', opts:['几乎无影响', '轻微波动(±20%)', '明显波动(±40%)', '严重影响(>±40%)']},
+    ]
+  },
+  {
+    id:'di', label:'地·选址', weight:0.18, desc:'有没有持续且足够的人流？',
+    questions:[
+      {id:'d1', q:'门店周边固定客流（社区/写字楼/学校常驻人口）？', opts:['>5000人/天', '2000-5000人/天', '500-2000人/天', '<500人/天']},
+      {id:'d2', q:'高峰期时段结构？', opts:['三餐+夜宵四高峰', '两餐双高峰', '单一时段高峰', '无明确高峰']},
+      {id:'d3', q:'商圈属性？', opts:['核心商圈', '次级商圈', '社区底商', '偏远/非商圈']},
+      {id:'d4', q:'周边餐饮生态？', opts:['互补业态多·聚客效应强', '同类竞品多·引流好', '餐饮稀少·需自己引流', '全是竞品·内卷严重']},
+      {id:'d5', q:'门头可见度？', opts:['主路临街·视野开阔', '次路·需留意', '巷内·需引导', '无门头/二楼']},
+      {id:'d6', q:'停车便利性？', opts:['方便停车', '路边可停', '停车位少', '无停车条件']},
+      {id:'d7', q:'当天人流动线合理性？', opts:['必经之路', '顺路可达', '需绕路', '犄角旮旯']},
+    ]
+  },
+  {
+    id:'renhe', label:'人和·市场需求', weight:0.12, desc:'周边人群会不会持续消费？',
+    questions:[
+      {id:'rh1', q:'周边目标客群数量？', opts:['>3000人', '1000-3000人', '300-1000人', '<300人']},
+      {id:'rh2', q:'客群年龄结构与品类匹配度？', opts:['高度匹配', '基本匹配', '部分匹配', '不匹配']},
+      {id:'rh3', q:'客群收入水平？', opts:['高收入(人均>8000/月)', '中等收入(4000-8000)', '偏低(2000-4000)', '低收入(<2000)']},
+      {id:'rh4', q:'客群消费习惯与品类匹配？', opts:['高度吻合(日常高频)', '基本吻合', '需培养', '不吻合']},
+      {id:'rh5', q:'客群3-5年长期稳定性？', opts:['稳定(常住人口)', '较稳定', '流动性大', '即将迁出/衰退']},
+    ]
+  },
+  {
+    id:'ren', label:'人·经营能力', weight:0.16, desc:'能不能真正把店经营起来？',
+    questions:[
+      {id:'r1', q:'餐饮行业从业经验？', opts:['3年以上', '1-3年', '<1年', '零经验']},
+      {id:'r2', q:'每天能投入的经营时间？', opts:['>12小时/天(全职)', '8-12小时', '4-8小时', '<4小时']},
+      {id:'r3', q:'线下运营能力（面销·服务·出品）？', opts:['强(能快速成交)', '中等', '一般', '完全不会']},
+      {id:'r4', q:'线上运营能力（外卖·团购·直播·短视频）？', opts:['精通', '会基础操作', '听说过不会', '完全不会']},
+      {id:'r5', q:'人员管理能力（排班·培训·绩效）？', opts:['强', '中等', '一般', '不会']},
+      {id:'r6', q:'招聘和用工能力（在当地招人难易）？', opts:['容易招·成本低', '一般', '不好招·成本高', '极难招']},
+    ]
+  },
+  {
+    id:'cai', label:'财·资金结构', weight:0.14, desc:'能不能扛过前期亏损？',
+    questions:[
+      {id:'c1', q:'含周转金的总投资额？', opts:['>50万', '20-50万', '8-20万', '<8万']},
+      {id:'c2', q:'扣除启动投入后，流动资金能撑几个月？', opts:['>6个月', '3-6个月', '1-3个月', '<1个月']},
+      {id:'c3', q:'每月固定支出（租金+人工+水电+其他）占比预算？', opts:['<30%', '30-50%', '50-70%', '>70%']},
+      {id:'c4', q:'预期回本周期？', opts:['<6个月', '6-12个月', '12-18个月', '>18个月/不确定']},
+      {id:'c5', q:'能接受的亏损/抗风险期限？', opts:['>12个月', '6-12个月', '3-6个月', '<3个月']},
+    ]
+  },
+  {
+    id:'liao', label:'料·供应链', weight:0.08, desc:'原料供应的稳定性和成本',
+    questions:[
+      {id:'l1', q:'核心原料价格波动幅度？', opts:['稳定(波动<5%)', '小幅波动(5-15%)', '明显波动(15-30%)', '剧烈波动(>30%)']},
+      {id:'l2', q:'核心原料供应稳定性？', opts:['多供应商·竞争充分', '供应商充足', '单一供应商', '依赖特定产区/季节']},
+      {id:'l3', q:'核心原料是否有可替代品？', opts:['多种替代方案', '有替代但风味有差异', '可替代但成本高', '无法替代']},
+      {id:'l4', q:'行业平均出品损耗率？', opts:['<5%', '5-10%', '10-20%', '>20%']},
+    ]
+  },
+  {
+    id:'fa', label:'法·运营体系', weight:0.10, desc:'有没有可复制的方法论？',
+    questions:[
+      {id:'f1', q:'产品展示能力（陈列·拍照·呈现）？', opts:['强(能吸引进店)', '中等', '一般', '不太会']},
+      {id:'f2', q:'线下成交/面销能力？', opts:['强(试吃转化率高)', '中等', '一般', '不会推']},
+      {id:'f3', q:'产品适不适合做外卖？', opts:['非常适合(30分钟口感不变)', '适合', '一般(需特殊包装)', '不适合(出锅即食)']},
+      {id:'f4', q:'私域运营能力（加微信·社群·复购）？', opts:['精通', '会基础操作', '知道但不做', '完全不做']},
+      {id:'f5', q:'出品标准化程度？', opts:['全标准化(新手也能做)', '半标准化(关键环节固定)', '依赖个人手艺', '全靠师傅经验']},
+    ]
+  },
+  {
+    id:'ji', label:'机·设备与门店', weight:0.04, desc:'启动门槛和效率',
+    questions:[
+      {id:'j1', q:'门店面积与品类匹配度？', opts:['刚好合适', '略大/略小但可用', '过大(浪费空间)', '过小(无法操作)']},
+      {id:'j2', q:'设备投入占总投资比例？', opts:['合理(<20%)', '偏高(20-35%)', '过高(35-50%)', '严重不合理(>50%)']},
+    ]
+  },
+  {
+    id:'huan', label:'环·风险环境', weight:0.06, desc:'外部变化来了，扛不扛得住？',
+    questions:[
+      {id:'h1', q:'当地租金近3年变化趋势？', opts:['稳定', '小幅上涨(<10%)', '明显上涨(10-30%)', '暴涨(>30%)']},
+      {id:'h2', q:'周边正在或计划开发/改造？', opts:['无变化', '轻微变动', '有施工或改造', '大规模拆迁/改造']},
+      {id:'h3', q:'当地餐饮相关政策法规？', opts:['支持鼓励', '正常监管', '趋严', '有针对性限制']},
+      {id:'h4', q:'周边半年内新增同类竞品数量？', opts:['无新增', '1-2家', '3-5家', '>5家']},
+      {id:'h5', q:'不可抗因素（天气·疫情·经济波动等）影响评估？', opts:['低风险', '中等风险', '高风险', '极高风险']},
+    ]
+  }
+];
+
+// ============================================================
+// 应用逻辑
+// ============================================================
+let step = 0;
+const answers = {};
+
+function init() {
+  renderProgress();
+  renderStep(0);
+}
+
+function renderProgress() {
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = DIMS.map((d,i) =>
+    `<div class="dot ${i < step ? 'done' : i === step ? 'active' : ''}"></div>`
+  ).join('');
+}
+
+function renderStep(idx) {
+  step = idx;
+  const dim = DIMS[idx];
+  
+  // Header
+  document.getElementById('stepHeader').innerHTML = `
+    <div class="step-num page-enter" style="animation-delay:0s">第 ${idx+1} 维 / 共 9 维</div>
+    <h2 class="page-enter" style="animation-delay:.05s">${dim.label}</h2>
+    <p class="page-enter" style="animation-delay:.1s">${dim.desc}</p>
+    <div class="weight page-enter" style="animation-delay:.15s">权重 ${Math.round(dim.weight*100)}%</div>
+  `;
+
+  // Questions
+  const qHTML = dim.questions.map((q,qi) => `
+    <div class="survey-card page-enter" style="animation-delay:${.12 + qi*.06}s">
+      <div class="q-label">${q.q}</div>
+      <select id="${q.id}" onchange="saveAnswer('${q.id}',this.value)">
+        <option value="">— 请选择 —</option>
+        ${q.opts.map((o,i) =>
+          `<option value="${4-i}" ${answers[q.id] === `${4-i}` ? 'selected' : ''}>${o}</option>`
+        ).join('')}
+      </select>
+    </div>
+  `).join('');
+  
+  document.getElementById('surveyArea').innerHTML = qHTML;
+
+  // Nav
+  const isLast = idx === DIMS.length - 1;
+  const allAnswered = dim.questions.every(q => answers[q.id] !== undefined);
+  document.getElementById('navArea').innerHTML = `
+    ${idx > 0 ? `<button class="btn-prev" onclick="goStep(${idx-1})">← 上一维</button>` : '<div></div>'}
+    ${isLast
+      ? `<button class="btn-submit" onclick="submit()" ${!allAnswered ? 'disabled' : ''}>${allAnswered ? '📊 生成完整评估报告' : '请完成所有问题'}</button>`
+      : `<button class="btn-next" onclick="goStep(${idx+1})" ${!allAnswered ? 'disabled' : ''}>${allAnswered ? '下一维 →' : '请完成本维所有问题'}</button>`
+    }
+  `;
+
+  renderProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function saveAnswer(id, val) {
+  if (val === '') {
+    delete answers[id];
+  } else {
+    answers[id] = parseInt(val);
+  }
+}
+
+function goStep(idx) {
+  if (idx >= 0 && idx < DIMS.length) renderStep(idx);
+}
+
+// ============================================================
+// 权重评分计算
+// ============================================================
+function calcScore() {
+  let total = 0;
+  const detail = [];
+  let maxRisk = {name:'',prob:0,reason:''};
+  let maxStrengths = [];
+
+  DIMS.forEach((dim, di) => {
+    let sum = 0;
+    const n = dim.questions.length;
+    dim.questions.forEach(q => {
+      const val = answers[q.id] !== undefined ? answers[q.id] : 2.5; // 默认中值
+      // Map 4-1 to 0-100 score
+      // 4(最优)=100, 3=75, 2=50, 1(最差)=25
+      const score = ((val - 1) / 3) * 100;
+      sum += score;
+    });
+    const avg = sum / n;
+    const weighted = avg * dim.weight;
+    total += weighted;
+    detail.push({label:dim.label,score:Math.round(avg),weight:dim.weight});
+
+    // 找短板 (score < 50) 作为风险来源
+    if (avg < 50 && dim.weight >= 0.08) { // 只按权重高的维度推风险
+      const prob = Math.round((1 - avg/100) * 80 + 20);
+      if (prob > maxRisk.prob) {
+        maxRisk = {
+          name: dim.label,
+          prob: prob,
+          reason: dim.desc
+        };
+      }
+    }
+    
+    // 找优势 (score >= 75)
+    if (avg >= 75) {
+      maxStrengths.push({label:dim.label,score:Math.round(avg)});
+    }
+  });
+
+  // 增长系数（简化版：根据产品标准化+复购潜力估算）
+  const faScore = answers['f5'] ? ((answers['f5'] - 1) / 3) * 100 : 50; // 标准化
+  const l2Score = answers['l2'] ? ((answers['l2'] - 1) / 3) * 100 : 50; // 供应链
+  const f4Score = answers['f4'] ? ((answers['f4'] - 1) / 3) * 100 : 50; // 私域(复购)
+  const r3Score = answers['r3'] ? ((answers['r3'] - 1) / 3) * 100 : 50; // 线下能力(营销)
+  
+  const growthCoef = (
+    (f4Score/100 * 0.3) +     // 复购率
+    (faScore/100 * 0.3) +     // 标准化
+    (l2Score/100 * 0.2) +     // 供应链
+    (r3Score/100 * 0.2)       // 营销
+  );
+  
+  // growthCoef range ~0.25-1.0, adjusted to 0.85-1.15 multiplier
+  const growthMul = 0.85 + growthCoef * 0.3;
+
+  finalScore = Math.round(total * growthMul);
+  const survivalP = Math.round(Math.min(95, finalScore * 0.85 + 10));
+  const profitP = Math.round(Math.min(90, finalScore * 0.78 + 8));
+  const expandP = Math.round(Math.min(85, finalScore * 0.55 + 5));
+
+  return {
+    finalScore,
+    growthMul: Math.round(growthMul * 100) / 100,
+    survivalP,
+    profitP,
+    expandP,
+    detail,
+    maxRisk,
+    maxStrengths
+  };
+}
+
+// ============================================================
+// 提交生成报告
+// ============================================================
+function submit() {
+  const result = calcScore();
+
+  // Hide survey
+  document.getElementById('progressBar').style.display = 'none';
+  document.getElementById('stepHeader').style.display = 'none';
+  document.getElementById('surveyArea').style.display = 'none';
+  document.getElementById('navArea').style.display = 'none';
+
+  // Show result
+  const area = document.getElementById('resultArea');
+  area.className = 'result show';
+
+  let grade = 'D';
+  let gradeLabel = '谨慎考虑';
+  let color = '#ff6b6b';
+  if (result.finalScore >= 85) { grade = 'A'; gradeLabel = '强烈推荐'; color = '#00ff88'; }
+  else if (result.finalScore >= 70) { grade = 'B'; gradeLabel = '推荐'; color = '#88ddaa'; }
+  else if (result.finalScore >= 55) { grade = 'C'; gradeLabel = '可尝试'; color = '#ddaa44'; }
+
+  // Grade color bar
+  const gradeColors = {A:'#00ff88',B:'#88ddaa',C:'#ddaa44',D:'#ff6b6b'};
+
+  // 死亡路径
+  const risks = [];
+  result.detail.forEach(d => {
+    if (d.score < 50 && d.weight >= 0.06) {
+      let reason = '';
+      let tl = '';
+      if (d.label.includes('资金')) { reason = '现金流断裂风险较高'; tl = '前期投入偏高·回本周期过长'; }
+      else if (d.label.includes('经营')) { reason = '经营者能力不足风险'; tl = '无餐饮经验·运营能力薄弱'; }
+      else if (d.label.includes('选址')) { reason = '流量不足风险'; tl = '选址客流不足以支撑营收'; }
+      else if (d.label.includes('品类')) { reason = '品类下行风险'; tl = '品类进入成熟/衰退期'; }
+      else { reason = `${d.label}维度短板`; tl = '该维度评分偏低，需重点补强'; }
+      risks.push({name:reason,desc:tl,prob:`${d.score < 30 ? '高风险' : '中风险'}`});
+    }
+  });
+  if (risks.length === 0) {
+    risks.push({name:'整体风险较低',desc:'各维度评估相对均衡',prob:'低风险'});
+  }
+
+  // Build report HTML
+  area.innerHTML = `
+    <div class="rs-header">
+      <div style="font-size:18px;font-weight:600;margin-bottom:2px;">${gradeLabel}</div>
+      <div class="score" style="color:${gradeColors[grade]}">${result.finalScore}</div>
+      <div style="font-size:11px;color:#6b7a8a">综合评分 / 100</div>
+    </div>
+
+    <div class="rs-grid">
+      <div class="rs-card"><div class="val">${result.survivalP}%</div><div class="lbl">生存概率</div></div>
+      <div class="rs-card"><div class="val">${result.profitP}%</div><div class="lbl">盈利概率</div></div>
+      <div class="rs-card"><div class="val">${result.expandP}%</div><div class="lbl">扩张可能</div></div>
+      <div class="rs-card"><div class="val">×${result.growthMul}</div><div class="lbl">增长系数</div></div>
+    </div>
+
+    <div class="radar-wrap">
+      <canvas id="radarChart" width="320" height="320"></canvas>
+    </div>
+
+    <div class="breakdown">
+      ${result.detail.map(d =>
+        `<div class="br-item">
+          <div class="dim">${d.label.slice(0,4)}</div>
+          <div class="bar-wrap"><div class="bar-fill" style="width:${d.score}%;background:${d.score >= 70 ? '#00ff88' : d.score >= 50 ? '#ddaa44' : '#ff6b6b'}"></div></div>
+          <div class="br-score">${d.score}</div>
+        </div>`
+      ).join('')}
+    </div>
+
+    ${risks.length ? `<div class="risk-box">
+      <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:#ff6b6b">☠️ 死亡路径预测</div>
+      ${risks.map(r =>
+        `<div class="risk-item">
+          <div class="r-title">${r.name}</div>
+          <div class="r-desc">${r.desc}</div>
+          <div class="r-prob">风险等级：${r.prob}</div>
+        </div>`
+      ).join('')}
+    </div>` : ''}
+
+    ${result.maxStrengths.length ? `<div class="strength-box">
+      <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:#00ff88">⭐ 核心优势</div>
+      ${result.maxStrengths.map(s =>
+        `<div class="s-item"><div class="s-title">${s.label}</div><div class="s-desc">评分 ${s.score}/100，是本项目的显著优势</div></div>`
+      ).join('')}
+    </div>` : ''}
+
+    <div class="suggest-box">
+      <h3>建议的经营方式</h3>
+      <ul>
+        ${result.survivalP >= 60 ? '<li>✅ 小店模型可行' : '<li class="no">❌ 不建议开实体店'}
+        ${result.f3Score ? '<li>✅ 适合外卖优先' : '<li>✅ 建议走线下为主'}
+        ${result.finalScore < 60 ? '<li class="no">❌ 不建议直接加盟' : '<li>✅ 可考虑加盟模式'}
+        ${result.expandP < 50 ? '<li class="no">❌ 不建议直接扩店' : '<li>✅ 未来可持续扩张'}
+      </ul>
+    </div>
+
+    <div class="action-box">
+      <button class="btn-copy" onclick="copyResult()">📋 复制报告摘要</button>
+      <div class="note">分享给合伙人或创业顾问·做进一步决策</div>
+      <button class="btn-submit" style="margin-top:12px" onclick="location.reload()">🔄 重新评估</button>
+    </div>
+  `;
+
+  // Draw radar chart
+  setTimeout(()=>drawRadar(result.detail),100);
+}
+
+// ============================================================
+// 雷达图
+// ============================================================
+function drawRadar(detail) {
+  const canvas = document.getElementById('radarChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = 160, cy = 160, r = 130;
+  const n = detail.length;
+  const angleStep = (2 * Math.PI) / n;
+
+  ctx.clearRect(0, 0, 320, 320);
+
+  // Background grid (4 levels)
+  for (let level = 0.25; level <= 1; level += 0.25) {
+    ctx.beginPath();
+    ctx.strokeStyle = '#1a2835';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i < n; i++) {
+      const angle = -Math.PI/2 + i * angleStep;
+      const x = cx + r * level * Math.cos(angle);
+      const y = cy + r * level * Math.sin(angle);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  // Axis lines
+  for (let i = 0; i < n; i++) {
+    const angle = -Math.PI/2 + i * angleStep;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+    ctx.strokeStyle = '#1a2835';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  // Data area
+  ctx.beginPath();
+  const colors = detail.map(d => d.score >= 70 ? '#00ff88' : d.score >= 50 ? '#ddaa44' : '#ff6b6b');
+  for (let i = 0; i < n; i++) {
+    const angle = -Math.PI/2 + i * angleStep;
+    const val = detail[i].score / 100;
+    const x = cx + r * val * Math.cos(angle);
+    const y = cy + r * val * Math.sin(angle);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(0,255,136,.08)';
+  ctx.fill();
+  ctx.strokeStyle = '#00ff88';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Data points + labels
+  ctx.font = '10px -apple-system, PingFang SC, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i < n; i++) {
+    const angle = -Math.PI/2 + i * angleStep;
+    const val = detail[i].score / 100;
+    const x = cx + r * val * Math.cos(angle);
+    const y = cy + r * val * Math.sin(angle);
+    
+    ctx.beginPath();
+    ctx.arc(x, y, 3, 0, 2 * Math.PI);
+    ctx.fillStyle = colors[i];
+    ctx.fill();
+
+    // Label outside
+    const lx = cx + (r + 22) * Math.cos(angle);
+    const ly = cy + (r + 22) * Math.sin(angle);
+    ctx.fillStyle = '#8b9aaa';
+    ctx.fillText(detail[i].label.slice(0,5), lx, ly);
+  }
+}
+
+// ============================================================
+// 复制结果
+// ============================================================
+function copyResult() {
+  const result = calcScore();
+  let grade = '';
+  if (result.finalScore >= 85) grade = 'A·强烈推荐';
+  else if (result.finalScore >= 70) grade = 'B·推荐';
+  else if (result.finalScore >= 55) grade = 'C·可尝试';
+  else grade = 'D·谨慎考虑';
+
+  let txt = `FoodIntelAI 开店深度评估报告\n`;
+  txt += `━━━━━━━━━━━━━━━━━━\n`;
+  txt += `综合评分：${result.finalScore}/100（${grade}）\n`;
+  txt += `生存概率：${result.survivalP}%\n`;
+  txt += `盈利概率：${result.profitP}%\n`;
+  txt += `扩张可能：${result.expandP}%\n`;
+  txt += `增长系数：×${result.growthMul}\n\n`;
+  txt += `维度评分：\n`;
+  result.detail.forEach(d => txt += `  ${d.label}：${d.score}/100\n`);
+  txt += `\n${result.maxRisk.name ? `最大风险：${result.maxRisk.name}（${result.maxRisk.prob}%）` : ''}\n`;
+  txt += `━━━━━━━━━━━━━━━━━━\n`;
+  txt += `由 FoodIntelAI 创业决策系统生成\n`;
+  txt += `foodintelai.com/check`;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(()=>{
+      alert('✅ 报告摘要已复制，可分享给合伙人或顾问');
+    });
+  } else {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = txt;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('✅ 报告摘要已复制');
+  }
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
