@@ -386,7 +386,7 @@ function run(){
   ];
   dims.forEach(d => d.s = Math.min(100, Math.max(8, d.s)));
 
-  const w = [0.13, 0.18, 0.12, 0.16, 0.14, 0.08, 0.10, 0.09];
+  const w = [0.10, 0.30, 0.08, 0.15, 0.20, 0.05, 0.05, 0.07];
   let total = 0; dims.forEach((d,i)=>total+=d.s*w[i]); total=Math.round(total);
 
   let grd, gc, gl;
@@ -409,9 +409,9 @@ function run(){
   const pbLow = Math.round(invest / Math.max(1, marginHigh));
   const pbHigh = Math.round(invest / Math.max(1, marginLow*0.7));
 
-  const survival = Math.round(Math.min(95, total*0.65 + cashm*12 + em*5 + techm*4 + 8));
-  const profit = Math.round(Math.min(90, total*0.55 + om*4 + sfm*4 + 8));
-  const expand = Math.round(Math.min(85, total*0.35 + teamm*5 + bm*5 + cashm*3 + 5));
+  const survival = Math.round(Math.min(95, total*0.55 + cashm*15 + em*6 + techm*4 + 8));
+  const profit = Math.round(Math.min(90, total*0.50 + om*5 + sfm*5 + 8));
+  const expand = Math.round(Math.min(85, total*0.30 + teamm*5 + bm*6 + cashm*4 + 5));
 
   let fragile = '低';
   if(dims.filter(d=>d.s<50).length>=3 || f.f10<=1 || f.f12<=0) fragile='高';
@@ -427,27 +427,82 @@ function run(){
   if(f.f14>=2) risks.push({l:'竞争风险', d:'周边'+['','','3-5家同类','竞争饱和'][f.f14]+'，利润会被挤压', s:'m'});
   if(f.f15<=0) risks.push({l:'合规风险', d:'不了解证照/消防/排烟门槛，可能开了被查', s:'m'});
   if(f.f11<=0) risks.push({l:'供应链风险', d:'完全不了解供应渠道，成本和质量不可控', s:'m'});
-  if(f.f7<=0) risks.push({l:'线上断层', d:'无线上运营能力，纯线下获客在当下很难走远', s:'m'});
   if(f.f4<=0 && cd.level>=2) risks.push({l:'经验不匹配', d:'零经验+品类难度'+cd.level+'级（3级最难），失败率高', s:'m'});
   if(invest > 50000 && f.f10<=2) risks.push({l:'资金错配', d:'大投入+紧现金流=账面看着有钱但周转不开', s:'m'});
 
-  // 死亡路径
-  let death = '';
+  // 死亡路径（基于行业调研4条主线）
+  let death = '', deathIcon='⚠️';
   const fatal = risks.filter(r=>r.s==='h');
-  if(fatal.length>=2) death = '☠️ 多个致命风险同时存在（'+fatal.map(r=>r.l).join(' · ')+'），建议暂缓开店计划，先补齐短板。';
-  else if(fatal.length===1) death = '☠️ 致命风险：'+fatal[0].l+'。'+fatal[0].d;
-  else if(risks.filter(r=>r.s==='m').length>=3) death = '⚠️ 中等级别风险较多（'+risks.filter(r=>r.s==='m').map(r=>r.l).join(' · ')+'），经营难度偏大，建议做好预案。';
-  else if(risks.length===0) death = '✅ 当前各项风险较低，可以按计划推进。持续关注品类市场变化。';
-  else death = '⚠️ 存在'+risks.length+'项风险，建议逐项确认并准备应对方案。';
+  // 路径1: 资金枯竭型
+  if(f.f10<=1 || (f.f10<=2 && invest > 30000)) {
+    death = '☠️ 资金枯竭路径 — 行业数据显示50%以上倒闭源于资金链断裂。流动资金不足'+['1个月','1-3个月'][f.f10-1]+'，实际回本周期可能比预期更长，建议预留至少6个月运营资金。';
+    deathIcon='☠️';
+  }
+  // 路径2: 选址错位型
+  else if(dims[1].s<55 && (f.f9<=2)) {
+    death = '☠️ 选址错位路径 — 行业调研显示选址匹配度可贡献30-40%的成功概率。当前选址评分偏低，建议实地做分时段人流计数再确认。';
+    deathIcon='☠️';
+  }
+  // 路径3+4: 成本失控/同质化竞争
+  else if(fatal.length>=1) {
+    death = '☠️ 致命风险：'+fatal[0].l+'。'+fatal[0].d;
+    deathIcon='☠️';
+  } else if(risks.filter(r=>r.s==='m').length>=3) {
+    death = '⚠️ 中等级别风险较多（'+risks.filter(r=>r.s==='m').map(r=>r.l).join(' · ')+'），经营难度偏大。建议做好成本预案和差异化定位。';
+  } else if(risks.length===0) {
+    death = '✅ 当前各项风险较低，可以按计划推进。建议保持6个月现金流储备应对波动。';
+  } else {
+    death = '⚠️ 存在'+risks.length+'项风险，主要关注资金和选址两个核心维度。';
+  }
+
+  // ========== 4. 产品推荐 ==========
+  const prodData = {
+    '卤味':[
+      {n:'卤鸭脖创业母卡',p:'¥39',l:'catalog/LW/LW001%20卤鸭脖（母）LW_001.html',r:'标准化高·新手友好'},
+      {n:'卤鸭翅（母）',p:'¥39',l:'catalog/LW/LW002%20卤鸭翅（母）LW_002.html',r:'出品率高·利润稳'},
+    ],
+    '冷吃红油':[
+      {n:'冷吃红油创业母卡',p:'¥39',l:'catalog/其他/LC_001%20冷吃红油创业母卡.html',r:'毛利高·适合摆摊'},
+      {n:'冷吃牛肉条（子）',p:'¥19',l:'catalog/其他/LC_002%20冷吃牛肉条（子）.html',r:'头牌产品'},
+    ],
+    '潮汕南乳炸鸡':[
+      {n:'潮汕南乳炸鸡总纲',p:'¥9.9',l:'catalog/NR/NR_T01%20潮汕南乳炸鸡总纲.html',r:'先看品类全貌'},
+      {n:'南乳大鸡腿（子）',p:'¥19',l:'catalog/NR/NR_01%20南乳大鸡腿（子）.html',r:'流量核心·毛利56%+'},
+    ],
+    '炒鸡':[
+      {n:'炒鸡创业母卡',p:'¥39',l:'catalog/CJ/CJ_M01_炒鸡创业母卡.html',r:'需后厨经验'},
+    ],
+    '酸汤':[
+      {n:'贵州酸汤总纲',p:'¥9.9',l:'catalog/其他/ST_T01_贵州酸汤总纲.html',r:'酸汤热度高'},
+      {n:'贵州酸汤创业母卡',p:'¥39',l:'catalog/其他/ST_M01_贵州酸汤创业母卡.html',r:'完整商业模型'},
+    ],
+    '早餐面点':[
+      {n:'鲜肉包（母）',p:'¥39',l:'catalog/MP/MP_001%20鲜肉包（母）.html',r:'早餐刚需回本快'},
+      {n:'煎饼果子（母）',p:'¥39',l:'catalog/MP/MP_008%20煎饼果子（母）.html',r:'单品利润高'},
+    ],
+    '饮品甜品':[
+      {n:'五指毛桃椰乳（母）',p:'¥39',l:'catalog/TS/TS_065%20五指毛桃椰乳（母）.html',r:'毛利极高'},
+      {n:'斑斓冻（母）',p:'¥39',l:'catalog/TS/TS_003%20斑斓冻（母）.html',r:'网红属性'},
+    ],
+    '小吃烤串':[
+      {n:'烤鱼总纲',p:'¥9.9',l:'catalog/其他/KY_T01_烤鱼总纲.html',r:'夜市爆品'},
+      {n:'烧烤创业母卡',p:'¥39',l:'catalog/其他/BBQ_M01_中式烧烤创业母卡.html',r:'完整烤串模型'},
+    ],
+    '傣舂舂菜':[
+      {n:'傣舂鸡脚（母）',p:'¥39',l:'catalog/DC/DC_001%20傣舂鸡脚（母）.html',r:'视觉强·适合短视频'},
+      {n:'傣舂大虾（母）',p:'¥39',l:'catalog/DC/DC_003%20傣舂大虾（母）.html',r:'客单高利润大'},
+    ],
+  };
+  const products = prodData[cat]||[];
 
   render(f, checks, mustScore, mustBlocked, cat, cd, total, grd, gc, gl,
     survival, profit, expand, dims, risks, death,
-    revLow, revHigh, marginLow, marginHigh, pbLow, pbHigh, fragile);
+    revLow, revHigh, marginLow, marginHigh, pbLow, pbHigh, fragile, products, deathIcon);
 }
 
 function render(f, checks, mustScore, mustBlocked, cat, cd, total, grd, gc, gl,
   survival, profit, expand, dims, risks, death,
-  revL, revH, marginL, marginH, pbL, pbH, fragile){
+  revL, revH, marginL, marginH, pbL, pbH, fragile, products, deathIcon){
 
   v('formArea').style.display='none';
   const a=v('resultArea');a.className='result show';
@@ -501,54 +556,50 @@ function render(f, checks, mustScore, mustBlocked, cat, cd, total, grd, gc, gl,
       <div class="sub">综合评分 / 100 · ${grd} 级</div>
     </div>
 
-    <div style="margin:10px 0;padding:10px 12px;background:#0f1a25;border-radius:10px;font-size:10px;color:#6b7a8a;line-height:1.5;text-align:center;border:1px solid #1a2835">
-      ⚠️ 以上结果为理论模型推导，仅供参考。
-      实际经营受选址、原材料波动、个人执行力等多重因素影响，可能与理论值存在偏差。请结合实际情况综合判断。
+    <div style="margin:10px 0;padding:8px 10px;background:#0f1a25;border-radius:8px;font-size:9px;color:#6b7a8a;text-align:center;border:1px solid #1a2835;line-height:1.4">
+      ⚠️ 理论模型推导，仅供参考。实际经营以实际为准。
     </div>
 
     <!-- 必要条件 -->
     <div class="block must-block">
       <div class="block-title">🔴 必要条件 · 缺一不可</div>
       ${checkH}
-      <div style="margin-top:6px;font-size:11px;color:${mustScore>=80?'#00ff88':mustScore>=60?'#ddaa44':'#ff6b6b'};font-weight:600">
+      <div style="margin-top:5px;font-size:11px;color:${mustScore>=80?'#00ff88':mustScore>=60?'#ddaa44':'#ff6b6b'};font-weight:600">
         ${mustScore>=80?'✅ 必要条件基本满足':mustScore>=60?'⚠️ 部分条件欠缺，建议补齐再动手':'🛑 多项条件不满足，不建议此时开店'}
       </div>
     </div>
 
-    <!-- 客观条件 -->
+    <!-- 客观条件 + 推导数据合并 -->
     <div class="block obj-block">
       <div class="block-title">🔵 客观条件 · 你的牌</div>
       <div class="obj-grid">${objH}</div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid #1a2835">
+        <div class="derive-grid">
+          <div class="derive-item"><div class="dv">¥${revL.toLocaleString()}-${revH.toLocaleString()}</div><div class="dl">预计月营收</div></div>
+          <div class="derive-item"><div class="dv2" style="font-size:13px">¥${marginL.toLocaleString()}-${marginH.toLocaleString()}</div><div class="dl">预计月净利润</div></div>
+          <div class="derive-item"><div class="dv" style="font-size:15px">${pbRange}个月</div><div class="dl">预计回本周期</div></div>
+          <div class="derive-item"><div class="dv" style="font-size:15px;color:${fragile==='高'?'#ff6b6b':fragile==='中'?'#ddaa44':'#00ff88'}">${fragile}</div><div class="dl">系统脆弱度</div></div>
+        </div>
+      </div>
     </div>
 
-    <!-- 风险信号 -->
+    <!-- 风险信号 + 死亡路径合并 -->
     <div class="block risk-block">
       <div class="block-title">🟡 风险信号 · 预警清单</div>
       ${riskH}
+      <div class="death-box" style="margin-top:8px;font-size:11px">${deathIcon} ${death}</div>
     </div>
 
-    <!-- 推导数据 -->
-    <div class="derive-box">
-      <h3>📊 系统推导 · 经营预测</h3>
-      <div class="derive-grid">
-        <div class="derive-item"><div class="dv">¥${revL.toLocaleString()}-${revH.toLocaleString()}</div><div class="dl">预计月营收</div></div>
-        <div class="derive-item"><div class="dv2">¥${marginL.toLocaleString()}-${marginH.toLocaleString()}</div><div class="dl">预计月净利润</div></div>
-        <div class="derive-item"><div class="dv">${pbRange}个月</div><div class="dl">预计回本周期</div></div>
-        <div class="derive-item"><div class="dv" style="color:${fragile==='高'?'#ff6b6b':fragile==='中'?'#ddaa44':'#00ff88'}">${fragile}</div><div class="dl">系统脆弱度</div></div>
-      </div>
-    </div>
-
+    <!-- 核心指标 -->
     <div class="derive-box" style="border-left:3px solid ${survival>=70?'#00ff88':survival>=55?'#ddaa44':'#ff6b6b'}">
       <h3>🎯 核心指标</h3>
       <div class="derive-grid">
-        <div class="derive-item"><div class="dv" style="color:${survival>=70?'#00ff88':survival>=55?'#ddaa44':'#ff6b6b'}">${survival}%</div><div class="dl">生存概率</div></div>
-        <div class="derive-item"><div class="dv" style="color:#00ff88">${profit}%</div><div class="dl">盈利概率</div></div>
-        <div class="derive-item"><div class="dv" style="color:#00ff88">${expand}%</div><div class="dl">扩张可能</div></div>
-        <div class="derive-item"><div class="dv" style="color:#4db8ff">${cat}</div><div class="dl">当前品类</div></div>
+        <div class="derive-item"><div class="dv" style="color:${survival>=70?'#00ff88':survival>=55?'#ddaa44':'#ff6b6b'};font-size:15px">${survival}%</div><div class="dl">生存概率</div></div>
+        <div class="derive-item"><div class="dv" style="color:#00ff88;font-size:15px">${profit}%</div><div class="dl">盈利概率</div></div>
+        <div class="derive-item"><div class="dv" style="font-size:15px;color:#4db8ff">${expand}%</div><div class="dl">扩张可能</div></div>
+        <div class="derive-item"><div class="dv" style="font-size:12px;color:#8b9aaa">${cat}</div><div class="dl">当前品类</div></div>
       </div>
     </div>
-
-    <div class="death-box">${death}</div>
 
     <div class="radar-wrap"><canvas id="rdChart" width="300" height="300"></canvas></div>
 
@@ -557,8 +608,24 @@ function render(f, checks, mustScore, mustBlocked, cat, cd, total, grd, gc, gl,
       return `<div class="dim-item"><div class="dn">${d.l.slice(0,4)}</div><div class="db"><div class="df" style="width:${d.s}%;background:${c}"></div></div><div class="ds" style="color:${c}">${d.s}</div></div>`;
     }).join('')}</div>
 
-    ${badH?`<div class="block must-block">${badH}</div>`:''}
-    ${goodH?`<div class="block obj-block">${goodH}</div>`:''}
+    ${badH?`<div class="block must-block"><div class="block-title">⚠️ 主要短板</div>${badH}</div>`:''}
+    ${goodH?`<div class="block obj-block"><div class="block-title">⭐ 核心优势</div>${goodH}</div>`:''}
+
+    <!-- 产品推荐 -->
+    ${products.length?`
+    <div class="derive-box">
+      <h3>📖 该品类推荐产品卡</h3>
+      ${products.map(p=>`
+        <a class="prod-card" href="${p.l}" style="display:block;padding:10px 12px;background:#0b0f14;border-radius:8px;margin-bottom:6px;text-decoration:none;color:inherit;border:1px solid #2a3442">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:13px;font-weight:600">${p.n}</span>
+            <span style="font-size:10px;color:#00ff88">${p.p} →</span>
+          </div>
+          <div style="font-size:10px;color:#6b7a8a;margin-top:2px">${p.r}</div>
+        </a>
+      `).join('')}
+    </div>
+    `:''}
 
     <div class="action-box">
       <button class="re-btn" onclick="restart()">🔄 重新评估</button>
