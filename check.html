@@ -295,15 +295,15 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 // 品类基础数据
 // ============================================================
 const CAT_DATA = {
-  '卤味': {g:75,m:72,st:78,sc:70,risk:55,se:75,sp:75,rev:[800,1500],cost:[300,600],pb:[6,12],minBud:2,minCash:2,level:2},
-  '冷吃红油': {g:82,m:88,st:80,sc:75,risk:45,se:72,sp:72,rev:[1000,2000],cost:[350,700],pb:[4,8],minBud:1,minCash:2,level:2},
-  '潮汕南乳炸鸡': {g:90,m:78,st:82,sc:80,risk:50,se:65,sp:78,rev:[1200,2500],cost:[450,900],pb:[4,7],minBud:2,minCash:2,level:1},
-  '炒鸡': {g:60,m:65,st:65,sc:68,risk:65,se:78,sp:68,rev:[1500,3000],cost:[500,1200],pb:[8,15],minBud:3,minCash:3,level:3},
-  '酸汤': {g:88,m:70,st:62,sc:65,risk:50,se:72,sp:55,rev:[2000,4000],cost:[700,1500],pb:[8,14],minBud:3,minCash:3,level:3},
-  '早餐面点': {g:70,m:78,st:72,sc:75,risk:35,se:85,sp:72,rev:[600,1200],cost:[200,500],pb:[3,8],minBud:1,minCash:1,level:1},
-  '饮品甜品': {g:82,m:85,st:92,sc:85,risk:50,se:50,sp:80,rev:[800,1800],cost:[250,550],pb:[3,7],minBud:1,minCash:2,level:1},
-  '小吃烤串': {g:72,m:75,st:68,sc:65,risk:55,se:55,sp:70,rev:[1000,2500],cost:[350,800],pb:[6,12],minBud:2,minCash:2,level:2},
-  '傣舂舂菜': {g:78,m:88,st:55,sc:50,risk:40,se:60,sp:45,rev:[700,1500],cost:[200,500],pb:[4,10],minBud:1,minCash:1,level:1},
+  '卤味': {g:75,m:72,st:78,sc:70,risk:55,se:75,sp:75,rev:[800,1500],cost:[300,600],pb:[6,12],minBud:2,minCash:2,level:2,avgSurvival:38,refPb:'6-12'},
+  '冷吃红油': {g:82,m:88,st:80,sc:75,risk:45,se:72,sp:72,rev:[1000,2000],cost:[350,700],pb:[4,8],minBud:1,minCash:2,level:2,avgSurvival:38,refPb:'4-8'},
+  '潮汕南乳炸鸡': {g:90,m:78,st:82,sc:80,risk:50,se:65,sp:78,rev:[1200,2500],cost:[450,900],pb:[4,7],minBud:2,minCash:2,level:1,avgSurvival:25,refPb:'4-7'},
+  '炒鸡': {g:60,m:65,st:65,sc:68,risk:65,se:78,sp:68,rev:[1500,3000],cost:[500,1200],pb:[8,15],minBud:3,minCash:3,level:3,avgSurvival:35,refPb:'8-15'},
+  '酸汤': {g:88,m:70,st:62,sc:65,risk:50,se:72,sp:55,rev:[2000,4000],cost:[700,1500],pb:[8,14],minBud:3,minCash:3,level:3,avgSurvival:42,refPb:'8-14'},
+  '早餐面点': {g:70,m:78,st:72,sc:75,risk:35,se:85,sp:72,rev:[600,1200],cost:[200,500],pb:[3,8],minBud:1,minCash:1,level:1,avgSurvival:45,refPb:'3-8'},
+  '饮品甜品': {g:82,m:85,st:92,sc:85,risk:50,se:50,sp:80,rev:[800,1800],cost:[250,550],pb:[3,7],minBud:1,minCash:2,level:1,avgSurvival:25,refPb:'3-7'},
+  '小吃烤串': {g:72,m:75,st:68,sc:65,risk:55,se:55,sp:70,rev:[1000,2500],cost:[350,800],pb:[6,12],minBud:2,minCash:2,level:2,avgSurvival:38,refPb:'6-12'},
+  '傣舂舂菜': {g:78,m:88,st:55,sc:50,risk:40,se:60,sp:45,rev:[700,1500],cost:[200,500],pb:[4,10],minBud:1,minCash:1,level:1,avgSurvival:38,refPb:'4-10'},
 };
 
 function v(id){return document.getElementById(id)}
@@ -610,6 +610,19 @@ function render(f, checks, mustScore, mustBlocked, cat, cd, total, grd, gc, gl,
 
     ${badH?`<div class="block must-block"><div class="block-title">⚠️ 主要短板</div>${badH}</div>`:''}
     ${goodH?`<div class="block obj-block"><div class="block-title">⭐ 核心优势</div>${goodH}</div>`:''}
+
+    <!-- 行业参照 -->
+    <div class="derive-box" style="font-size:10px">
+      <h3>📊 行业参照（供对比）</h3>
+      <div class="derive-grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="derive-item"><div class="dv" style="font-size:13px;color:#6b7a8a">${cd.avgSurvival||'35'}%</div><div class="dl">品类首年存活率</div></div>
+        <div class="derive-item"><div class="dv" style="font-size:13px;color:#6b7a8a">${['—','32%','38%','45%','52%'][f.f2]||'40%'}</div><div class="dl">所在城市首年存活率</div></div>
+        <div class="derive-item"><div class="dv" style="font-size:13px;color:#6b7a8a">${cd.refPb||'6-12'}个月</div><div class="dl">行业平均回本周期</div></div>
+      </div>
+      <div style="margin-top:5px;color:#4a5a6a;font-size:9px;line-height:1.4">
+        数据来源：美团研究院2025·红餐网2024·餐饮老板内参2025·中国饭店协会2024
+      </div>
+    </div>
 
     <!-- 产品推荐 -->
     ${products.length?`
