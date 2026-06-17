@@ -169,7 +169,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
       <div class="form-row">
         <div class="form-group" style="flex:1.6">
           <label>品类</label>
-          <select id="f1">
+          <select id="f1" onchange="hideWarn()">
             <option value="">请选择品类</option>
             <option value="卤味">卤味</option>
             <option value="冷吃红油">冷吃红油</option>
@@ -195,8 +195,8 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
       <div class="form-row">
         <div class="form-group">
           <label>商圈类型</label>
-          <select id="f3">
-            <option value="">请选择</option>
+          <select id="f3" onchange="hideWarn()">
+            <option value="" selected>请选择</option>
             <option value="社区">社区</option>
             <option value="写字楼">写字楼</option>
             <option value="商场">商场/美食城</option>
@@ -283,6 +283,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
     </div>
 
     <button class="btn-submit" onclick="run()" id="runBtn">📊 生成评估报告</button>
+    <div id="pageWarn" style="display:none;margin-top:8px;padding:8px 12px;background:#1e0f0f;border-radius:8px;font-size:11px;color:#ff6b6b;text-align:center;border:1px solid rgba(255,75,75,.15)"></div>
   </div>
 
   <!-- Result -->
@@ -306,12 +307,16 @@ const CAT_DATA = {
 };
 
 function v(id){return document.getElementById(id)}
+function showWarn(m){var w=v('pageWarn');if(!w)return;w.textContent=m;w.style.display='block';w.scrollIntoView({behavior:'smooth',block:'center'})}
+function hideWarn(){var w=v('pageWarn');if(w)w.style.display='none'}
 
 function run(){
   const cat = v('f1').value, biz = v('f3').value;
-  if(!cat||!biz){alert('请选择品类和商圈类型');return}
+  hideWarn();
+  if(!cat){showWarn('请先选择品类');return}
+  if(!biz){showWarn('请先选择商圈类型');return}
   const cd = CAT_DATA[cat];
-  if(!cd){alert('该品类数据暂缺');return}
+  if(!cd){showWarn('该品类数据暂缺，请刷新重试');return}
 
   // 读取所有数值
   const f = {
