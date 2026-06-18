@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>摆摊试水评估 · FoodIntelAI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#0b0f14;color:#e6e6e6;min-height:100vh}
+.container{max-width:520px;margin:0 auto;padding:16px}
+.brand{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.brand .name{font-size:14px;font-weight:700;color:#ff884d}
+.brand .tag{font-size:10px;color:#6b7a8a;background:#1e2a38;padding:3px 10px;border-radius:10px}
+.brand .link{font-size:10px;color:#4db8ff;text-decoration:none;background:#0f1a25;padding:3px 10px;border-radius:10px}
+h1{font-size:20px;font-weight:700;margin-bottom:4px}
+.sub{font-size:11px;color:#6b7a8a;margin-bottom:18px;line-height:1.4}
+/* Form cards */
+.form-card{background:#121824;border-radius:14px;padding:14px;margin-bottom:12px}
+.card-hdr{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:10px;letter-spacing:1px}
+.card-hdr .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.card-hdr .note{font-size:10px;font-weight:400;color:#6b7a8a;margin:0}
+.form-row{display:flex;gap:8px;margin-bottom:8px}
+.form-row:last-child{margin-bottom:0}
+.form-group{flex:1}
+.form-group label{display:block;font-size:9px;color:#6b7a8a;margin-bottom:2px;font-weight:600}
+.form-group select,.form-group input{width:100%;padding:8px 9px;background:#0b0f14;border:1px solid #2a3442;color:#e6e6e6;border-radius:8px;font-size:12px;outline:none;appearance:none;transition:.15s;box-sizing:border-box}
+.form-group select:focus,.form-group input:focus{border-color:#ff884d}
+.form-group select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7a8a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:24px}
+.btn-submit{width:100%;padding:14px;background:#ff884d;border:none;color:#000;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:.15s;margin-top:4px}
+.btn-submit:hover{background:#e6732e}
+.btn-submit:disabled{opacity:.3;cursor:not-allowed}
+/* Result */
+.result{display:none;animation:fadeIn .5s ease}
+.result.show{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.rs-hdr{text-align:center;padding:16px 0 8px}
+.rs-hdr .grade{font-size:14px;font-weight:600;margin-bottom:2px}
+.rs-hdr .big{font-size:56px;font-weight:900;line-height:1}
+.rs-hdr .sub{font-size:11px;color:#6b7a8a}
+/* Score blocks */
+.block{margin:10px 0;border-radius:12px;padding:14px;animation:fadeIn .5s ease}
+.block-title{font-size:11px;font-weight:700;margin-bottom:6px;letter-spacing:1px}
+.match-block{background:#0f1a25;border-left:3px solid #4db8ff}
+.match-block .block-title{color:#4db8ff}
+.risk-block{background:#1e1a0f;border-left:3px solid #ddaa44}
+.risk-block .block-title{color:#ddaa44}
+.check-item{display:flex;align-items:center;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,.04)}
+.check-item:last-child{border-bottom:none}
+.check-item .icon{width:20px;font-size:14px;text-align:center}
+.check-item .label{flex:1;color:#b0c0c0}
+.check-item .val{font-size:11px;font-weight:700}
+/* Tips */
+.tip-box{background:#121824;border-radius:12px;padding:12px;margin:10px 0}
+.tip-box .tip-title{font-size:11px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.tip-box .tip-text{font-size:11px;color:#b0c0c0;line-height:1.5}
+/* Card rec */
+.card-rec{background:#121824;border-radius:14px;padding:14px;margin:12px 0}
+.card-rec h3{font-size:11px;font-weight:700;margin-bottom:8px;color:#ff884d;letter-spacing:1px}
+.card-rec a{display:block;padding:8px 10px;margin-bottom:4px;background:#0b0f14;border-radius:8px;color:#e6e6e6;text-decoration:none;font-size:12px;transition:.15s}
+.card-rec a:hover{background:#1a2433;color:#ff884d}
+.card-rec a:last-child{margin-bottom:0}
+.action-box{text-align:center;padding:8px 0}
+.action-box .re-btn{display:inline-block;padding:7px 16px;background:transparent;border:1px solid #2a3442;color:#6b7a8a;border-radius:8px;font-size:11px;cursor:pointer;margin-top:4px}
+/* Red tags */
+.risk-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin:2px 4px 2px 0;font-weight:600}
+.risk-h{color:#ff6b6b;border:1px solid rgba(255,75,75,.2);background:rgba(255,75,75,.06)}
+.risk-m{color:#ddaa44;border:1px solid rgba(255,204,0,.15);background:rgba(255,204,0,.05)}
+.risk-l{color:#6b7a8a;border:1px solid rgba(100,100,100,.15);background:rgba(100,100,100,.05)}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="brand">
+    <div class="name">🛵 FoodIntelAI</div>
+    <a href="check.html" class="link">想开店？→</a>
+  </div>
+
+  <h1>摆摊试水评估</h1>
+  <p class="sub">两层评估 · 基本条件 → 摆摊匹配 · 适合几百到3000块的小摊创业</p>
+
+  <!-- Form -->
+  <div id="formArea">
+
+    <!-- Section 1: 基本条件 -->
+    <div class="form-card" style="border-left:3px solid #ff884d">
+      <div class="card-hdr"><span class="dot" style="background:#ff884d"></span>🟠 基本条件 <span class="note">— 你手上有多少牌</span></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>总投资预算</label>
+          <select id="fBudget">
+            <option value="">请选择</option>
+            <option value="1">＜500元（折叠桌就能干）</option>
+            <option value="2" selected>500-1000元</option>
+            <option value="3">1000-2000元</option>
+            <option value="4">2000-3000元</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>几个人干</label>
+          <select id="fPeople">
+            <option value="1" selected>1个人</option>
+            <option value="2">2个人（夫妻/朋友）</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>餐饮经验</label>
+          <select id="fExp">
+            <option value="0" selected>没有</option>
+            <option value="1">自己做过一点</option>
+            <option value="2">有经验</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>出摊时间</label>
+          <select id="fTime">
+            <option value="0">下班后/周末</option>
+            <option value="1" selected>白天有空就干</option>
+            <option value="2">全职（天天出摊）</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: 摆摊匹配 -->
+    <div class="form-card" style="border-left:3px solid #4db8ff">
+      <div class="card-hdr"><span class="dot" style="background:#4db8ff"></span>🔵 摆摊匹配 <span class="note">— 在哪里卖、卖什么</span></div>
+      <div class="form-row">
+        <div class="form-group" style="flex:1.6">
+          <label>想做什么品类</label>
+          <select id="fCat">
+            <option value="">请选择</option>
+            <option value="烤肠">烤肠/烤面筋</option>
+            <option value="煎饼">煎饼/杂粮饼</option>
+            <option value="炸鸡">炸鸡/炸串</option>
+            <option value="炒饭">炒饭/炒面/炒粉</option>
+            <option value="柠檬茶">手打柠檬茶/饮品</option>
+            <option value="卤串">卤串/冷吃</option>
+            <option value="酸辣粉">酸辣粉/凉皮</option>
+            <option value="烧烤">烧烤（电烤）</option>
+            <option value="早餐">早餐（包子/饭团/煎饼）</option>
+            <option value="烤串">烤串/肉串</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>摆摊位置</label>
+          <select id="fLoc">
+            <option value="">请选择</option>
+            <option value="夜市">夜市/小吃街</option>
+            <option value="学校">学校门口</option>
+            <option value="社区">社区门口</option>
+            <option value="工地">工地/工业区</option>
+            <option value="商业街">商业街/地铁口</option>
+            <option value="流动">流动/赶集</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>目标日收入</label>
+          <select id="fTarget">
+            <option value="1">够本就行</option>
+            <option value="2" selected>100-300元</option>
+            <option value="3">300-500元</option>
+            <option value="4">500元以上</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="evalBtn" onclick="evaluate()">🔍 看看能不能干</button>
+  </div>
+
+  <!-- Result -->
+  <div class="result" id="resultArea">
+
+    <div class="rs-hdr">
+      <div class="grade" id="rGrade"></div>
+      <div class="big" id="rScore"></div>
+      <div class="sub" id="rSub"></div>
+    </div>
+
+    <div id="rBlocks"></div>
+
+    <div class="action-box">
+      <button class="re-btn" onclick="resetForm()">← 重新填</button>
+    </div>
+
+    <div style="margin-top:12px;padding:10px;text-align:center;font-size:10px;color:#6b7a8a;border-top:1px solid #1a2835">
+      FoodIntelAI · 食品决策库 · 少走弯路 快人一步
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 品类数据 =====
+var CATS = {
+  '烤肠':{min:1,name:'烤肠/烤面筋',cards:'烤肠摆摊',match:{夜市:5,学校:5,社区:4,工地:3,商业街:3,流动:5}},
+  '煎饼':{min:2,name:'煎饼/杂粮饼',cards:'MP_015 山东杂粮煎饼',match:{夜市:4,学校:5,社区:5,工地:5,商业街:3,流动:4}},
+  '炸鸡':{min:3,name:'炸鸡/炸串',cards:'HZ_042 美式炸鸡',match:{夜市:5,学校:4,社区:3,工地:3,商业街:4,流动:2}},
+  '炒饭':{min:2,name:'炒饭/炒面/炒粉',cards:'炒饭创业母卡',match:{夜市:5,学校:4,社区:3,工地:5,商业街:3,流动:3}},
+  '柠檬茶':{min:2,name:'手打柠檬茶',cards:'LM_004 柠檬茶',match:{夜市:5,学校:4,社区:3,工地:2,商业街:5,流动:3}},
+  '卤串':{min:2,name:'卤串/冷吃',cards:'冷吃体系',match:{夜市:5,学校:3,社区:4,工地:3,商业街:3,流动:3}},
+  '酸辣粉':{min:2,name:'酸辣粉/凉皮',cards:'ST_M01 贵州酸汤母卡',match:{夜市:5,学校:4,社区:3,工地:4,商业街:3,流动:2}},
+  '烧烤':{min:3,name:'烧烤（电烤）',cards:'BBQ_M01 烧烤母卡',match:{夜市:5,学校:2,社区:3,工地:4,商业街:3,流动:2}},
+  '早餐':{min:2,name:'早餐（包子/饭团）',cards:'早餐体系总纲',match:{夜市:1,学校:5,社区:5,工地:5,商业街:4,流动:2}},
+  '烤串':{min:2,name:'烤串/肉串',cards:'烤串母卡',match:{夜市:5,学校:3,社区:4,工地:4,商业街:3,流动:4}}
+};
+
+// ===== 地段名称映射 =====
+var LOC_NAMES = {
+  '夜市':'夜市/小吃街','学校':'学校门口','社区':'社区门口',
+  '工地':'工地/工业区','商业街':'商业街/地铁口','流动':'流动/赶集'
+};
+
+function getVal(id){var e=document.getElementById(id);return e?e.value:''}
+
+function evaluate(){
+  var budget = parseInt(getVal('fBudget'))||0;
+  var people = parseInt(getVal('fPeople'))||1;
+  var exp = parseInt(getVal('fExp'))||0;
+  var time = parseInt(getVal('fTime'))||0;
+  var cat = getVal('fCat');
+  var loc = getVal('fLoc');
+  var target = parseInt(getVal('fTarget'))||1;
+
+  // Validate
+  if(!cat||!loc){alert('请选择品类和摆摊位置');return}
+
+  var cdata = CATS[cat];
+  if(!cdata){alert('品类数据异常');return}
+
+  // ==== 计算 ====
+  var score = 0;
+  var maxScore = 100;
+  var details = [];
+
+  // 1. 资金匹配（30分）
+  var budgetMatch = budget >= cdata.min ? 30 : (budget==0?0:15);
+  score += budgetMatch;
+  if(budgetMatch===30) details.push({icon:'✅',label:'资金：'+['＜500','500-1000','1000-2000','2000-3000'][budget-1]+'元',val:'够','cls':'','tag':'够','tcls':'risk-l'});
+  else if(budgetMatch===15) details.push({icon:'⚠️',label:'资金有点紧，选更低门槛的品类更稳',val:'偏紧','cls':'','tag':'注意','tcls':'risk-m'});
+  else details.push({icon:'❌',label:'请选择资金预算',val:'','cls':'','tag':'','tcls':''});
+
+  // 2. 品类×地段匹配（30分）
+  var locScore = cdata.match[loc]||0;
+  var matchPts = locScore * 6; // max 30
+  score += matchPts;
+  var locName = LOC_NAMES[loc]||loc;
+  var matchStars = '★'.repeat(locScore)+'☆'.repeat(5-locScore);
+  details.push({icon:'📍',label:cat+'在'+locName,match:matchStars,val:locScore+'/5','cls':'','tag':'','tcls':''});
+
+  // 3. 经验加分（15分）
+  var expPts = [0,8,15][exp];
+  score += expPts;
+  var expLabel = ['没有','做过一点','有经验'][exp];
+  details.push({icon:expPts>0?'✅':'⚪',label:'经验：'+expLabel,val:expPts+'/15','cls':'','tag':'','tcls':''});
+
+  // 4. 团队+时间（15分）
+  var teamPts = people==2?8:5;
+  var timePts = [5,8,10][time];
+  score += teamPts + timePts;
+  var timeLabel = ['下班后/周末','白天有空就干','全职天天出摊'][time];
+  details.push({icon:'👥',label:'团队：'+(people==1?'1人':people+'人')+' · '+timeLabel,val:(teamPts+timePts)+'/15','cls':'','tag':'','tcls':''});
+
+  // 5. 目标合理性（10分）
+  var targetPts = 0;
+  if(target===1) targetPts=10; // 够本就行-最合理
+  else if(target===2) targetPts=8; // 100-300
+  else if(target===3) targetPts=5; // 300-500
+  else targetPts=2; // 500以上，小摊难达到
+  score += targetPts;
+  var targetLabel = ['够本就行','100-300元','300-500元','500元以上'][target-1];
+  details.push({icon:'🎯',label:'目标：日入'+targetLabel,val:targetPts+'/10','cls':'','tag':'','tcls':''});
+
+  // ==== 结果判定 ====
+  var pct = Math.round(score/maxScore*100);
+  var grade,gradeColor,subText,advice;
+
+  if(pct>=70){
+    grade='✅ 适合摆摊';
+    gradeColor='#00ff88';
+    subText='你的条件跟这个品类×地段组合比较匹配，可以试。';
+    advice='注意：前期不要投太多，先用最低方案验证3-7天。能稳定日均'+(['','','100-200','200-300','300'][target]||'')+'再考虑升级。';
+  }else if(pct>=50){
+    grade='⚠️ 可以试试';
+    gradeColor='#ddaa44';
+    subText='有几个条件不够理想，但不是不能干。建议先小规模试，别一次把预算花完。';
+    advice='建议先买个折叠桌+最低配置干3天看看反应。不行就换个位置或品类，反正投得少，亏也亏不到哪。';
+  }else{
+    grade='❌ 不太建议';
+    gradeColor='#ff6b6b';
+    subText='你的条件跟这个选择匹配度不高。不是说不能摆摊，是建议换个品类或位置。';
+    advice='试试烤肠/烤面筋——这个品类在哪都有人买，启动成本最低（500以内），最适合没经验的人试水。';
+  }
+
+  // Render
+  document.getElementById('formArea').style.display='none';
+  var ra=document.getElementById('resultArea');
+  ra.classList.add('show');
+
+  document.getElementById('rGrade').textContent=grade;
+  document.getElementById('rGrade').style.color=gradeColor;
+  document.getElementById('rScore').textContent=pct+'分';
+  document.getElementById('rScore').style.color=gradeColor;
+  document.getElementById('rSub').textContent=subText;
+
+  // Detail blocks
+  var html='';
+  // Matching block
+  html+='<div class="block match-block"><div class="block-title">📊 条件评估</div>';
+  details.forEach(function(d){
+    html+='<div class="check-item">';
+    html+='<span class="icon">'+(d.icon||'')+'</span>';
+    html+='<span class="label">'+d.label+(d.match?' <span style="color:#ddaa44;font-size:10px">'+d.match+'</span>':'')+'</span>';
+    if(d.val) html+='<span class="val" style="color:'+(d.tcls==='risk-l'?'#6b7a8a':d.tcls==='risk-m'?'#ddaa44':'#ff6b6b')+'">'+d.val+'</span>';
+    html+='</div>';
+  });
+  html+='</div>';
+
+  // Advice block
+  html+='<div class="tip-box">';
+  html+='<div class="tip-title">💡 建议</div>';
+  html+='<div class="tip-text">'+advice+'</div>';
+  html+='</div>';
+
+  // Risk signal
+  var risks=[];
+  if(budget<cat.min) risks.push('⚠️ 预算低于该品类最低启动资金');
+  if(exp===0&&cat==='烧烤') risks.push('⚠️ 无经验做烧烤，火候和腌料需要练习');
+  if(loc==='学校'&&cat==='烧烤') risks.push('⚠️ 学校门口禁明火，电烤可以但注意城管');
+  if(people===1&&time===0) risks.push('💡 一个人下班后干，选出餐快的品类（烤肠/煎饼/柠檬茶）');
+  if(risks.length){
+    html+='<div class="block risk-block"><div class="block-title">⚠️ 注意</div>';
+    risks.forEach(function(r){
+      var cls=r.indexOf('⚠️')>=0?'risk-h':'risk-m';
+      html+='<span class="risk-tag '+cls+'">'+r+'</span>';
+    });
+    html+='</div>';
+  }
+
+  // Card rec
+  html+='<div class="card-rec"><h3>📌 推荐去看看</h3>';
+  html+='<a href="https://foodintelai.com/catalog/其他/'+encodeURIComponent(cdata.cards||'')+'.html" target="_blank">→ '+cdata.name+' · 完整数据包</a>';
+  html+='<a href="https://foodintelai.com/check.html" target="_blank">→ 想干大的？试试开店评估</a>';
+  html+='</div>';
+
+  document.getElementById('rBlocks').innerHTML=html;
+}
+
+function resetForm(){
+  document.getElementById('formArea').style.display='block';
+  document.getElementById('resultArea').classList.remove('show');
+  document.getElementById('rBlocks').innerHTML='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
