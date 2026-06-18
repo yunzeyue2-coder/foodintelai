@@ -17,7 +17,7 @@
     }
 
     var targets = document.querySelectorAll(
-      '.fold-content, .recipe-box, .cost-grid, .pw-protect'
+      '.fold-content, .recipe-box, .cost-grid, .pw-protect, .pay-content'
     );
     if (targets.length === 0) return;
 
@@ -37,6 +37,11 @@
   function wrapWithBlur(el) {
     var wrapper = document.createElement('div');
     wrapper.className = 'paywall-blur';
+
+    // 如果包裹的是pay-content容器，标记最小高度（防塌陷）
+    if (el.classList && el.classList.contains('pay-content')) {
+      wrapper.classList.add('pw-has-pay-content');
+    }
 
     var contentDiv = document.createElement('div');
     contentDiv.className = 'pw-content';
@@ -178,8 +183,49 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', onReady);
   } else {
+    onReady();
+  }
+
+  function onReady() {
     init();
+    hookRecipeLoader();
+  }
+
+  /**
+   * 劫持 window.loadRecipeData，在动态加载数据后自动加blur遮罩
+   * 覆盖所有V5.1母卡（数据从 recipes_all.js 动态读取的场景）
+   */
+  function hookRecipeLoader() {
+    var _orig = window.loadRecipeData;
+    if (typeof _orig !== 'function') {
+      // 有些卡片没定义loadRecipeData，延迟再试一次
+      setTimeout(function() {
+        _orig = window.loadRecipeData;
+        if (typeof _orig === 'function') {
+          window.loadRecipeData = makeBlurredLoader(_orig);
+        }
+      }, 100);
+      return;
+    }
+    window.loadRecipeData = makeBlurredLoader(_orig);
+  }
+
+  function makeBlurredLoader(original) {
+    return function(cardId) {
+      original(cardId);
+
+      // 数据加载完成后，对pay-content上blur（如果还没上）
+      var pc = document.getElementById('payContent');
+      if (!pc || pc.closest('.paywall-blur')) return;
+
+      // 如果内容已显示，立即应用blur
+      if (pc.style.display !== 'none' || pc.classList.contains('show')) {
+        wrapWithBlur(pc);
+        // 给wrapper最小高度，即使内容还没渲染也有遮罩占位
+        pc.closest('.paywall-blur').style.minHeight = '120px';
+      }
+    };
   }
 })();
