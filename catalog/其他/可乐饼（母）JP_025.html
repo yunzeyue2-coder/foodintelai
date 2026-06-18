@@ -57,6 +57,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .ftr{text-align:center;font-size:9px;color:#bc9a70;padding:16px}
 </style>
 <link rel="stylesheet" href="../../paywall.css">
+
+<script>
+// 防顺手复制：禁用右键菜单 + F12/开发者工具快捷键
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))
+    e.preventDefault();
+});
+</script>
 </head>
 <body>
 <div class="card">
@@ -192,20 +201,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <div class="recipe-line"><span>示例利润模型</span><span>日售80个(均价¥9) → 日毛利¥384，月净利¥7,000(出摊22天，单品)</span></div></div></div>
 
 <!-- 15 完整出摊包 付费区7模块 -->
-<div class="pay-area"><div class="lock-icon">🥔</div><h3>📦 完整可乐饼出摊包</h3>
-<div class="p-sub">7大模块：土豆泥标准配方·肉馅炒制要点·整形防裂技巧·裹粉三层法·批量预制冷冻SOP·变体(咖喱/芝士/玉米)·伍斯特酱自制配方</div>
-<div class="price-tag">¥68 <small>母卡永久解锁</small></div>
-  <button class="btn" onclick="var p=document.getElementById('payContent');p.classList.toggle('show');this.textContent=this.textContent==='🔓 展开完整出摊包'?'收起':'🔓 展开完整出摊包'">🔓 展开完整出摊包</button>
-  <div class="note">点开展示完整配方数据（带模糊保护）</div>
-  <div id="payContent" class="pay-content">
-<div class="recipe-box"><strong>11️⃣ 基础馅料配方(30个量)</strong><br>土豆2kg(蒸前) · 猪肉末400g · 洋葱300g · 盐8g · 黑胡椒4g · 蛋黄酱50g(可选)</div>
-<div class="recipe-box"><strong>2️⃣ 裹粉三层标准</strong> — 面粉(低筋) → 蛋液(全蛋+水1:1) → 面包糠(细粒)。每层均匀覆盖，尤其面包糠需压实。</div>
-<div class="recipe-box"><strong>3️⃣ 冷冻预制SOP</strong> — 整形裹粉后平铺冷冻，冻硬后装袋保存。出餐时无需解冻，170℃炸3-4分钟，口感接近现做。</div>
-<div class="recipe-box"><strong>4️⃣ 防裂技巧</strong> — 土豆泥水分过多可加2勺土豆淀粉；整形时双手沾水防粘；裹粉前冷藏20分钟定形。</div>
-<div class="recipe-box"><strong>5️⃣ 变体配方</strong> — 咖喱可乐饼(炒馅时加咖喱粉10g+咖喱块5g) / 芝士流心(包入马苏里拉芝士5g) / 玉米可乐饼(加玉米粒50g)。</div>
-<div class="recipe-box"><strong>6️⃣ 伍斯特酱(自制商用版)</strong> — 番茄酱200g+伍斯特辣酱油100g+酱油30g+白糖40g+醋20g+苹果泥50g，小火煮稠。</div>
-<div class="recipe-box"><strong>7️⃣ 批量出餐方案(高峰60个/小时)</strong> — 提前炸好半成品(170℃炸1分钟)，出餐时复炸1分钟，外皮更酥脆且不压单。</div>
-<div class="badge" style="margin-top:10px">以上数据来自可乐饼档口实测，付费区严禁外传</div>
+<div class="pay-area">
+  <div class="lock-icon">[保护]</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥68 <small>永久解锁</small></div>
+  <button class="btn" onclick="loadRecipeData("JP_025 \u53ef\u4e50\u997c \u00b7 \u521b\u4e1a\u9879\u76ee\u6d4b\u8bc4 V5.1")">🔓 加载完整出摊包</button>
+  <div class="note">配方数据经保护处理，点击加载</div>
+  <div id="payContent" class="pay-content" style="display:none;min-height:100px">
+    <div style="text-align:center;padding:20px;color:#b5aaa0;font-size:12px">⏳ 数据加载中...</div>
+  </div>
 </div></div>
 
 <!-- 16 关联产品（同赛道优先已发布卡片） -->
@@ -224,6 +229,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 </div></div>
 <div class="ftr">FoodIntel AI V5.1 · 可乐饼 母卡 JP_025 · 决策先于工艺 · 日式炸物利润核心</div>
 </div>
+
+<script>
+(function(){
+  // 配方数据动态加载器（保护层）
+  window.RECIPE_CACHE = window.RECIPE_CACHE || {};
+  window.loadRecipeData = function(cardId) {
+    var btn = document.querySelector('.pay-area .btn');
+    var pc = document.getElementById('payContent');
+    if (!pc) return;
+    if (pc.dataset.loaded === '1') {
+      var show = pc.style.display === 'none';
+      pc.style.display = show ? 'block' : 'none';
+      if (btn) btn.textContent = show ? '收起' : '🔓 加载完整出摊包';
+      return;
+    }
+    var f = atob('ZGF0YS9yZWNpcGVfSlBfMDI1X+WPr+S5kOmlvF/liJvkuJrpobnnm67mtYvor4RfVjVfMS5qcw==');
+    var s = document.createElement('script');
+    s.src = f;
+    s.onload = function() {
+      var d = window._RD && window._RD[cardId];
+      if (d) {
+        pc.innerHTML = d;
+        pc.style.display = 'block';
+        pc.dataset.loaded = '1';
+        if (btn) btn.textContent = '收起';
+      } else {
+        pc.innerHTML = '<div style="text-align:center;padding:20px;color:#b53b3b">数据加载失败，请刷新页面重试</div>';
+      }
+    };
+    s.onerror = function() {
+      pc.innerHTML = '<div style="text-align:center;padding:20px;color:#b53b3b">数据加载失败，请刷新页面重试</div>';
+    };
+    document.body.appendChild(s);
+  };
+})();
+</script>
 <script src="../../paywall.js"></script>
 </body>
 </html>

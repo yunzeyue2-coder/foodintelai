@@ -57,6 +57,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .ftr{text-align:center;font-size:9px;color:#bc9a70;padding:16px}
 </style>
 <link rel="stylesheet" href="../../paywall.css">
+
+<script>
+// 防顺手复制：禁用右键菜单 + F12/开发者工具快捷键
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))
+    e.preventDefault();
+});
+</script>
 </head>
 <body>
 <div class="card">
@@ -190,20 +199,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <div class="recipe-line"><span>示例利润模型</span><span>日售25串(均价¥18) → 日毛利¥330，月净利¥5,500(出摊22天)</span></div></div></div>
 
 <!-- 15 完整出摊包 付费区7模块 -->
-<div class="pay-area"><div class="lock-icon">🍗</div><h3>📦 完整鸡翅串出摊包</h3>
-<div class="p-sub">7大模块：鸡翅选品标准·划刀手法·双阶段炭温表·盐烧酱烧双配方·防焦铝箔技巧·批量串制SOP·拍照摆盘方案</div>
-<div class="price-tag">¥68 <small>母卡永久解锁</small></div>
-  <button class="btn" onclick="var p=document.getElementById('payContent');p.classList.toggle('show');this.textContent=this.textContent==='🔓 展开完整出摊包'?'收起':'🔓 展开完整出摊包'">🔓 展开完整出摊包</button>
-  <div class="note">点开展示完整配方数据（带模糊保护）</div>
-  <div id="payContent" class="pay-content">
-<div class="recipe-box"><strong>11️⃣ 精确配方(10串/20只量)</strong><br>整鸡翅20只(约1000g) · 清酒30g · 盐8g · 白胡椒3g · 姜汁10g · 竹签(25cm)10根 · 酱烧版额外:生抽50g+味醂25g+白糖15g+蜂蜜12g+清水30g</div>
-<div class="recipe-box"><strong>2️⃣ 鸡翅选品标准</strong> — 选用新鲜鸡全翅，重量45-55g/只，表皮无淤血、无残羽。冷冻鸡翅需完全解冻并吸干水分。</div>
-<div class="recipe-box"><strong>3️⃣ 防焦翅尖技巧</strong> — 烤制3分钟后用铝箔包裹翅尖；或提前将翅尖剪掉1cm，避免烧焦苦味。</div>
-<div class="recipe-box"><strong>4️⃣ 炭温分段表</strong> — 0-4min:170-180℃慢烤(离火源20cm) → 4-6min:190-200℃上色 → 6-8min:刷酱后200℃收汁，每面30秒翻一次。</div>
-<div class="recipe-box"><strong>5️⃣ 批量预制SOP</strong> — 提前2小时腌制，串好冷藏；高峰前可预串30串，用保鲜膜覆盖防止表面风干。</div>
-<div class="recipe-box"><strong>6️⃣ 变体方案(3款)</strong> — 柚子胡椒鸡翅(腌制加柚子胡椒酱3g) / 蜂蜜芥末鸡翅(烤后刷蜂蜜芥末酱) / 麻辣鸡翅(撒辣椒粉+花椒粉+孜然)。</div>
-<div class="recipe-box"><strong>7️⃣ 拍照摆盘方案</strong> — 使用木质托盘或日式竹编，鸡翅立插于盐板上，搭配柠檬角、七味粉碟、紫苏叶，用暖色灯光照射油光。</div>
-<div class="badge" style="margin-top:10px">以上数据来自烧鸟摊实测，付费区严禁外传</div>
+<div class="pay-area">
+  <div class="lock-icon">[保护]</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥68 <small>永久解锁</small></div>
+  <button class="btn" onclick="loadRecipeData("JP_010 \u9e21\u7fc5\u4e32 \u00b7 \u521b\u4e1a\u9879\u76ee\u6d4b\u8bc4 V5.1")">🔓 加载完整出摊包</button>
+  <div class="note">配方数据经保护处理，点击加载</div>
+  <div id="payContent" class="pay-content" style="display:none;min-height:100px">
+    <div style="text-align:center;padding:20px;color:#b5aaa0;font-size:12px">⏳ 数据加载中...</div>
+  </div>
 </div></div>
 
 <!-- 16 关联产品（同赛道优先已发布卡片） -->
@@ -222,6 +227,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 </div></div>
 <div class="ftr">FoodIntel AI V5.1 · 鸡翅串 母卡 JP_010 · 决策先于工艺 · 传播款单品</div>
 </div>
+
+<script>
+(function(){
+  // 配方数据动态加载器（保护层）
+  window.RECIPE_CACHE = window.RECIPE_CACHE || {};
+  window.loadRecipeData = function(cardId) {
+    var btn = document.querySelector('.pay-area .btn');
+    var pc = document.getElementById('payContent');
+    if (!pc) return;
+    if (pc.dataset.loaded === '1') {
+      var show = pc.style.display === 'none';
+      pc.style.display = show ? 'block' : 'none';
+      if (btn) btn.textContent = show ? '收起' : '🔓 加载完整出摊包';
+      return;
+    }
+    var f = atob('ZGF0YS9yZWNpcGVfSlBfMDEwX+m4oee/heS4sl/liJvkuJrpobnnm67mtYvor4RfVjVfMS5qcw==');
+    var s = document.createElement('script');
+    s.src = f;
+    s.onload = function() {
+      var d = window._RD && window._RD[cardId];
+      if (d) {
+        pc.innerHTML = d;
+        pc.style.display = 'block';
+        pc.dataset.loaded = '1';
+        if (btn) btn.textContent = '收起';
+      } else {
+        pc.innerHTML = '<div style="text-align:center;padding:20px;color:#b53b3b">数据加载失败，请刷新页面重试</div>';
+      }
+    };
+    s.onerror = function() {
+      pc.innerHTML = '<div style="text-align:center;padding:20px;color:#b53b3b">数据加载失败，请刷新页面重试</div>';
+    };
+    document.body.appendChild(s);
+  };
+})();
+</script>
 <script src="../../paywall.js"></script>
 </body>
 </html>

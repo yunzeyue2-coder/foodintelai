@@ -57,6 +57,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .ftr{text-align:center;font-size:9px;color:#bc9a70;padding:16px}
 </style>
 <link rel="stylesheet" href="../../paywall.css">
+
+<script>
+// 防顺手复制：禁用右键菜单 + F12/开发者工具快捷键
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))
+    e.preventDefault();
+});
+</script>
 </head>
 <body>
 <div class="card">
@@ -190,21 +199,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <div class="recipe-line"><span>示例利润模型</span><span>日售30碗(均价¥26) → 日毛利¥468，月净利¥7,800(出摊22天)</span></div></div></div>
 
 <!-- 15 完整出摊包 付费区7模块 -->
-<div class="pay-area"><div class="lock-icon">🐔</div><h3>📦 完整鸡白汤拉面出摊包</h3>
-<div class="p-sub">7大模块：汤底骨水比·乳化时间轴·鸡叉烧低温慢煮法·批量预制SOP·柚子胡椒/松露油配方·外卖汤面分离方案·与烧鸟串套餐组合策略</div>
-<div class="price-tag">¥68 <small>母卡永久解锁</small></div>
-<button class="btn" id="unlockBtn">🔓 解锁完整数据包</button>
-  <button class="btn" onclick="var p=document.getElementById('payContent');p.classList.toggle('show');this.textContent=this.textContent==='🔓 展开完整出摊包'?'收起':'🔓 展开完整出摊包'">🔓 展开完整出摊包</button>
-  <div class="note">点开展示完整配方数据（带模糊保护）</div>
-  <div id="payContent" class="pay-content">
-<div class="recipe-box"><strong>11️⃣ 汤底精确配方(10L)</strong><br>鸡架6kg · 鸡爪2kg · 水16L(熬后剩10L) · 姜50g · 大葱80g · 昆布10g(最后30分钟加)</div>
-<div class="recipe-box"><strong>2️⃣ 乳化关键点</strong> — 鸡爪富含胶质，帮助乳化。大火翻滚40分钟后，用搅拌机打1分钟，再中火熬1小时，汤白度提升30%。</div>
-<div class="recipe-box"><strong>3️⃣ 鸡叉烧精修</strong> — 鸡腿肉去骨后，用肉锤拍平，卷成紧实卷，棉线间距1cm。卤汁冷却后浸泡过夜，切片用喷枪炙烤至微焦。</div>
-<div class="recipe-box"><strong>4️⃣ 盐味汁(10碗量)</strong> — 盐30g · 薄口酱油20g · 味醂15g · 鸡精5g · 清水30g，小火煮化即可。</div>
-<div class="recipe-box"><strong>5️⃣ 批量出餐SOP(高峰30碗/小时)</strong> — 汤底保温80℃，面分装120g/袋，单锅煮2碗，节拍2分钟/碗。鸡叉烧提前切好保温。</div>
-<div class="recipe-box"><strong>6️⃣ 变体方案(3款)</strong> — 柚子胡椒鸡白汤(加柚子胡椒酱5g) / 松露鸡白汤(加松露油2滴) / 辣鸡白汤(加辣油+辣椒丝)。</div>
-<div class="recipe-box"><strong>7️⃣ 烧鸟+拉面套餐策略</strong> — 鸡白汤拉面+鸡皮串+鸡腿串，定价¥48-55，共享“全鸡宴”概念，提升客单价。</div>
-<div class="badge" style="margin-top:10px">以上数据来自日式拉面档口实测，付费区严禁外传</div>
+<div class="pay-area">
+  <div class="lock-icon">[保护]</div>
+  <h3>📦 完整出摊包 · 数据全开</h3>
+  <div class="p-sub">7大模块：精确配方 · 精确克数 · 温度曲线 · 批量SOP · 翻车处理 · 变体方案 · 规模化方案</div>
+  <div class="price-tag">¥68 <small>永久解锁</small></div>
+  <button class="btn" onclick="loadRecipeData("JP_017 \u9e21\u767d\u6c64\u62c9\u9762 \u00b7 \u521b\u4e1a\u9879\u76ee\u6d4b\u8bc4 V5.1")">🔓 加载完整出摊包</button>
+  <div class="note">配方数据经保护处理，点击加载</div>
+  <div id="payContent" class="pay-content" style="display:none;min-height:100px">
+    <div style="text-align:center;padding:20px;color:#b5aaa0;font-size:12px">⏳ 数据加载中...</div>
+  </div>
 </div></div>
 
 <!-- 16 关联产品（同赛道优先已发布卡片） -->
@@ -224,6 +228,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 <div class="ftr">FoodIntel AI V5.1 · 鸡白汤拉面 母卡 JP_017 · 决策先于工艺 · 健康细分之选</div>
 </div>
 <script>document.getElementById('unlockBtn').addEventListener('click',function(){document.getElementById('payContent').classList.toggle('show');this.textContent=this.textContent.includes('解锁')?'🔒 收起完整包':'🔓 解锁完整数据包';});</script>
+
+<script>
+(function(){
+  // 配方数据动态加载器（保护层）
+  window.RECIPE_CACHE = window.RECIPE_CACHE || {};
+  window.loadRecipeData = function(cardId) {
+    var btn = document.querySelector('.pay-area .btn');
+    var pc = document.getElementById('payContent');
+    if (!pc) return;
+    if (pc.dataset.loaded === '1') {
+      var show = pc.style.display === 'none';
+      pc.style.display = show ? 'block' : 'none';
+      if (btn) btn.textContent = show ? '收起' : '🔓 加载完整出摊包';
+      return;
+    }
+    var f = atob('ZGF0YS9yZWNpcGVfSlBfMDE3X+m4oeeZveaxpOaLiemdol/liJvkuJrpobnnm67mtYvor4RfVjVfMS5qcw==');
+    var s = document.createElement('script');
+    s.src = f;
+    s.onload = function() {
+      var d = window._RD && window._RD[cardId];
+      if (d) {
+        pc.innerHTML = d;
+        pc.style.display = 'block';
+        pc.dataset.loaded = '1';
+        if (btn) btn.textContent = '收起';
+      } else {
+        pc.innerHTML = '<div style="text-align:center;padding:20px;color:#b53b3b">数据加载失败，请刷新页面重试</div>';
+      }
+    };
+    s.onerror = function() {
+      pc.innerHTML = '<div style="text-align:center;padding:20px;color:#b53b3b">数据加载失败，请刷新页面重试</div>';
+    };
+    document.body.appendChild(s);
+  };
+})();
+</script>
 <script src="../../paywall.js"></script>
 </body>
 </html>
