@@ -103,6 +103,13 @@ const STALL_DATA = [
     {f:"catalog/其他/LC_004 折耳根豆干（子）.html",n:"LC_004 折耳根豆干（子）"},
     {f:"catalog/其他/LC_005 冷吃鸡副（子）.html",n:"LC_005 冷吃鸡副（子）"}
   ]},
+  {p:"LL",n:"擂辣椒系列",e:"🌶️",c:[
+    {f:"catalog/其他/LL_M01 擂辣椒·街头档口创业母卡.html",n:"LL_M01 擂辣椒·街头档口创业母卡"},
+    {f:"catalog/其他/LL_01 擂辣椒皮蛋（子）.html",n:"LL_01 擂辣椒皮蛋"},
+    {f:"catalog/其他/LL_02 擂辣椒茄子（子）.html",n:"LL_02 擂辣椒茄子"},
+    {f:"catalog/其他/LL_03 擂辣椒土豆泥（子）.html",n:"LL_03 擂辣椒土豆泥"},
+    {f:"catalog/其他/LL_VC01 创意变体·芝士火焰-百香果酸辣-牛油果双吃.html",n:"LL_VC01 创意变体"}
+  ]},
   {p:"TY",n:"限免体验卡",e:"🎁",c:[
     {f:"catalog/其他/TY_001 手搓冰粉（体验卡）.html",n:"手搓冰粉·体验卡"},
     {f:"catalog/其他/TY_002 暴打柠檬茶（体验卡）.html",n:"暴打柠檬茶·体验卡"},
@@ -121,6 +128,7 @@ const STALL_DATA = [
 // 添加新品时push到数组末尾，旧的定期轮换
 // 排除类目：GF裹粉、FL粉料、JL_酱料、PC_拌菜、KF_咖啡
 var HOT_PICKS = [
+  {name:"🔥 擂辣椒·街头档口创业母卡",shortName:"擂辣椒",file:"catalog/其他/LL_M01 擂辣椒·街头档口创业母卡.html",emoji:"🌶️",cat:"街头档口"},
   {name:"五指毛桃椰乳（母）TS_065",shortName:"五指毛桃椰乳",file:"catalog/其他/五指毛桃椰乳（母）TS_065.html",emoji:"🌿",cat:"甜品饮品"},
   {name:"冰菠萝（母）TS_005",shortName:"冰菠萝",file:"catalog/其他/冰菠萝（母）TS_005.html",emoji:"🍍",cat:"甜品饮品"},
   {name:"厚椰冻冻（母）TS_083",shortName:"厚椰冻冻",file:"catalog/其他/厚椰冻冻（母）TS_083.html",emoji:"🥥",cat:"甜品饮品"},
