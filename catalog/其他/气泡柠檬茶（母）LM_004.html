@@ -349,9 +349,8 @@ document.addEventListener('keydown',function(e){
       return;
     }
     var f = atob('ZGF0YS9yZWNpcGVzX2FsbC5qcw==');
-    var s = document.createElement('script');
-    s.src = f;
-    s.onload = function() {
+    fetch(f).then(function(r){return r.text()}).then(function(js){
+      (new Function(js))();
       var d = window._RD && window._RD[cardId];
       if (d) {
         pc.innerHTML = d;
@@ -359,13 +358,11 @@ document.addEventListener('keydown',function(e){
         pc.dataset.loaded = '1';
         if (btn) btn.textContent = '收起';
       } else {
-        pc.innerHTML = '<div style="text-align:center;padding:20px;color:#b53b3b">数据加载失败，请刷新页面重试</div>';
+        pc.innerHTML = '<div style="text-align:center;padding:20px;color:#b53b3b">数据加载失败</div>';
       }
-    };
-    s.onerror = function() {
-      pc.innerHTML = '<div style="text-align:center;padding:20px;color:#b53b3b">数据加载失败，请刷新页面重试</div>';
-    };
-    document.body.appendChild(s);
+    }).catch(function(){
+      pc.innerHTML = '<div style="text-align:center;padding:20px;color:#b53b3b">数据加载失败，请刷新重试</div>';
+    });
   };
 })();
 </script>
