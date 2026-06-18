@@ -36,21 +36,17 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 .rs-hdr .grade{font-size:14px;font-weight:600;margin-bottom:2px}
 .rs-hdr .big{font-size:52px;font-weight:900;line-height:1}
 .rs-hdr .sub{font-size:11px;color:#6b7a8a}
-/* Block styles */
 .block{margin:8px 0;border-radius:12px;padding:12px;animation:fadeIn .5s ease}
 .block-title{font-size:10px;font-weight:700;margin-bottom:6px;letter-spacing:1px}
 .match-block{background:#0f1a25;border-left:3px solid #4db8ff}
 .match-block .block-title{color:#4db8ff}
 .risk-block{background:#1e1a0f;border-left:3px solid #ddaa44}
 .risk-block .block-title{color:#ddaa44}
-.stick-block{background:#1a1210;border-left:3px solid #ff6b6b}
-.stick-block .block-title{color:#ff6b6b}
 .check-item{display:flex;align-items:center;padding:4px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.04)}
 .check-item:last-child{border-bottom:none}
 .check-item .icon{width:18px;font-size:13px;text-align:center}
 .check-item .label{flex:1;color:#b0c0c0}
 .check-item .val{font-size:10px;font-weight:700}
-/* Radar & dims */
 .radar-wrap{background:#121824;border-radius:14px;padding:10px;margin:12px 0;text-align:center}
 .radar-wrap canvas{width:100%;max-width:260px;height:auto}
 .dim-list{margin:12px 0}
@@ -60,7 +56,6 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 .dim-item .db{flex:1;height:8px;background:#1a2835;border-radius:4px;margin:0 6px}
 .dim-item .df{height:100%;border-radius:4px;transition:width .6s}
 .dim-item .ds{width:26px;text-align:right;font-weight:700;font-size:10px}
-/* Derive metrics */
 .derive-box{background:#121824;border-radius:14px;padding:14px;margin:10px 0}
 .derive-box h3{font-size:11px;font-weight:700;margin-bottom:8px;color:#ff884d;letter-spacing:1px}
 .derive-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -81,7 +76,6 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 .risk-h{color:#ff6b6b;border:1px solid rgba(255,75,75,.2);background:rgba(255,75,75,.06)}
 .risk-m{color:#ddaa44;border:1px solid rgba(255,204,0,.15);background:rgba(255,204,0,.05)}
 .risk-l{color:#6b7a8a;border:1px solid rgba(100,100,100,.15);background:rgba(100,100,100,.05)}
-.info-tag{font-size:9px;padding:2px 6px;border-radius:4px;background:#1a2835;color:#6b7a8a;display:inline-block}
 </style>
 </head>
 <body>
@@ -97,170 +91,151 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 
 <div id="formArea">
 
-  <!-- 1. 硬件准备 -->
   <div class="form-card" style="border-left:3px solid #ff884d">
     <div class="card-hdr"><span class="dot" style="background:#ff884d"></span>🛠️ 硬件准备</div>
-
     <div class="field">
       <span class="fl">有没有三轮车？</span>
-      <div class="opt-group" id="gTricycle">
-        <span class="opt sel" data-val="3" onclick="pick('gTricycle',this)">有·新车（7000-8000）</span>
-        <span class="opt" data-val="2" onclick="pick('gTricycle',this)">有·旧车改造（3000-4000）</span>
-        <span class="opt" data-val="1" onclick="pick('gTricycle',this)">没有，准备买</span>
-        <span class="opt" data-val="0" onclick="pick('gTricycle',this)">不用车，折叠桌干</span>
+      <div class="opt-group" data-id="tricycle">
+        <span class="opt sel" data-v="3">有·新车（7000-8000）</span>
+        <span class="opt" data-v="2">有·旧车改造（3000-4000）</span>
+        <span class="opt" data-v="1">没有，准备买</span>
+        <span class="opt" data-v="0">不用车，折叠桌干</span>
       </div>
     </div>
-
     <div class="field">
       <span class="fl">总预算（含车+设备+首批料钱）</span>
-      <div class="opt-group" id="gBudget">
-        <span class="opt" data-val="1" onclick="pick('gBudget',this)">＜1000</span>
-        <span class="opt sel" data-val="2" onclick="pick('gBudget',this)">1000-3000</span>
-        <span class="opt" data-val="3" onclick="pick('gBudget',this)">3000-5000</span>
-        <span class="opt" data-val="4" onclick="pick('gBudget',this)">5000-8000</span>
-        <span class="opt" data-val="5" onclick="pick('gBudget',this)">＞8000</span>
+      <div class="opt-group" data-id="budget">
+        <span class="opt" data-v="1">＜1000</span>
+        <span class="opt sel" data-v="2">1000-3000</span>
+        <span class="opt" data-v="3">3000-5000</span>
+        <span class="opt" data-v="4">5000-8000</span>
+        <span class="opt" data-v="5">＞8000</span>
       </div>
     </div>
   </div>
 
-  <!-- 2. 场地条件 -->
   <div class="form-card" style="border-left:3px solid #4db8ff">
     <div class="card-hdr"><span class="dot" style="background:#4db8ff"></span>📍 场地条件</div>
-
     <div class="field">
       <span class="fl">摆摊位置</span>
-      <div class="opt-group" id="gLoc">
-        <span class="opt" data-val="夜市" onclick="pick('gLoc',this)">夜市/小吃街</span>
-        <span class="opt" data-val="学校" onclick="pick('gLoc',this)">学校门口</span>
-        <span class="opt" data-val="社区" onclick="pick('gLoc',this)">社区门口</span>
-        <span class="opt" data-val="工地" onclick="pick('gLoc',this)">工地/工业区</span>
-        <span class="opt" data-val="商业街" onclick="pick('gLoc',this)">商业街/地铁口</span>
-        <span class="opt" data-val="流动" onclick="pick('gLoc',this)">流动/赶集</span>
+      <div class="opt-group" data-id="loc">
+        <span class="opt" data-v="夜市">夜市/小吃街</span>
+        <span class="opt" data-v="学校">学校门口</span>
+        <span class="opt" data-v="社区">社区门口</span>
+        <span class="opt" data-v="工地">工地/工业区</span>
+        <span class="opt" data-v="商业街">商业街/地铁口</span>
+        <span class="opt" data-v="流动">流动/赶集</span>
       </div>
     </div>
-
     <div class="field">
       <span class="fl">摊位有没有固定位置？</span>
-      <div class="opt-group" id="gSpot">
-        <span class="opt sel" data-val="2" onclick="pick('gSpot',this)">有固定位</span>
-        <span class="opt" data-val="1" onclick="pick('gSpot',this)">有目标但不固定</span>
-        <span class="opt" data-val="0" onclick="pick('gSpot',this)">还没找位置</span>
+      <div class="opt-group" data-id="spot">
+        <span class="opt sel" data-v="2">有固定位</span>
+        <span class="opt" data-v="1">有目标但不固定</span>
+        <span class="opt" data-v="0">还没找位置</span>
       </div>
     </div>
-
     <div class="field">
       <span class="fl">摊位有没有费用？</span>
-      <div class="opt-group" id="gFee">
-        <span class="opt sel" data-val="1" onclick="pick('gFee',this)">免费（野摊）</span>
-        <span class="opt" data-val="0" onclick="pick('gFee',this)">收费（摊位费/管理费）</span>
+      <div class="opt-group" data-id="fee">
+        <span class="opt sel" data-v="1">免费（野摊）</span>
+        <span class="opt" data-v="0">收费（摊位费/管理费）</span>
       </div>
     </div>
-
     <div class="field">
       <span class="fl">电源怎么解决？</span>
-      <div class="opt-group" id="gPower">
-        <span class="opt sel" data-val="2" onclick="pick('gPower',this)">摊位有电源（直接220V）</span>
-        <span class="opt" data-val="1" onclick="pick('gPower',this)">三轮车电瓶+逆变器（便宜）</span>
-        <span class="opt" data-val="0" onclick="pick('gPower',this)">买移动电源/户外电源（贵）</span>
+      <div class="opt-group" data-id="power">
+        <span class="opt sel" data-v="2">摊位有电源（直接220V）</span>
+        <span class="opt" data-v="1">三轮车电瓶+逆变器（便宜）</span>
+        <span class="opt" data-v="0">买移动电源/户外电源（贵）</span>
       </div>
       <p style="font-size:9px;color:#6b7a8a;margin-top:3px">三轮车自带电池，照明用低压灯即可。需要220V就加逆变器（便宜）或买移动电源（贵）</p>
     </div>
-
     <div class="field">
       <span class="fl">有健康证吗？</span>
-      <div class="opt-group" id="gHealth">
-        <span class="opt sel" data-val="1" onclick="pick('gHealth',this)">有</span>
-        <span class="opt" data-val="0" onclick="pick('gHealth',this)">没有</span>
+      <div class="opt-group" data-id="health">
+        <span class="opt sel" data-v="1">有</span>
+        <span class="opt" data-v="0">没有</span>
       </div>
     </div>
   </div>
 
-  <!-- 3. 出摊规划 -->
   <div class="form-card" style="border-left:3px solid #2a9d8f">
     <div class="card-hdr"><span class="dot" style="background:#2a9d8f"></span>📋 出摊规划</div>
-
     <div class="field">
       <span class="fl">想做什么品类</span>
-      <div class="opt-group" id="gCat">
-        <span class="opt" data-val="炒鸡" onclick="pick('gCat',this)">炒鸡</span>
-        <span class="opt" data-val="烤肠" onclick="pick('gCat',this)">烤肠/烤面筋</span>
-        <span class="opt" data-val="煎饼" onclick="pick('gCat',this)">煎饼/杂粮饼</span>
-        <span class="opt" data-val="炸鸡" onclick="pick('gCat',this)">炸鸡/炸串</span>
-        <span class="opt" data-val="炒饭" onclick="pick('gCat',this)">炒饭/炒面</span>
-        <span class="opt" data-val="柠檬茶" onclick="pick('gCat',this)">手打柠檬茶</span>
-        <span class="opt" data-val="卤串" onclick="pick('gCat',this)">卤串/冷吃</span>
-        <span class="opt" data-val="酸辣粉" onclick="pick('gCat',this)">酸辣粉/凉皮</span>
-        <span class="opt" data-val="烧烤" onclick="pick('gCat',this)">烧烤（碳烤/燃气）</span>
-        <span class="opt" data-val="早餐" onclick="pick('gCat',this)">早餐/包子饭团</span>
-        <span class="opt" data-val="烤串" onclick="pick('gCat',this)">烤串/肉串</span>
+      <div class="opt-group" data-id="cat">
+        <span class="opt" data-v="炒鸡">炒鸡</span>
+        <span class="opt" data-v="烤肠">烤肠/烤面筋</span>
+        <span class="opt" data-v="煎饼">煎饼/杂粮饼</span>
+        <span class="opt" data-v="炸鸡">炸鸡/炸串</span>
+        <span class="opt" data-v="炒饭">炒饭/炒面</span>
+        <span class="opt" data-v="柠檬茶">手打柠檬茶</span>
+        <span class="opt" data-v="卤串">卤串/冷吃</span>
+        <span class="opt" data-v="酸辣粉">酸辣粉/凉皮</span>
+        <span class="opt" data-v="烧烤">烧烤（碳烤/燃气）</span>
+        <span class="opt" data-v="早餐">早餐/包子饭团</span>
+        <span class="opt" data-v="烤串">烤串/肉串</span>
       </div>
     </div>
-
     <div class="field">
       <span class="fl">出摊时间</span>
-      <div class="opt-group" id="gTime">
-        <span class="opt" data-val="2" onclick="pick('gTime',this)">下午4点-8点（晚高峰）</span>
-        <span class="opt" data-val="3" onclick="pick('gTime',this)">中午+晚上都干</span>
-        <span class="opt" data-val="1" onclick="pick('gTime',this)">不定时，有空就干</span>
+      <div class="opt-group" data-id="time">
+        <span class="opt" data-v="2">下午4点-8点（晚高峰）</span>
+        <span class="opt" data-v="3">中午+晚上都干</span>
+        <span class="opt" data-v="1">不定时，有空就干</span>
       </div>
     </div>
-
     <div class="field">
       <span class="fl">目标日收入</span>
-      <div class="opt-group" id="gTarget">
-        <span class="opt" data-val="1" onclick="pick('gTarget',this)">够本就行</span>
-        <span class="opt sel" data-val="2" onclick="pick('gTarget',this)">100-300元</span>
-        <span class="opt" data-val="3" onclick="pick('gTarget',this)">300-500元</span>
-        <span class="opt" data-val="4" onclick="pick('gTarget',this)">500元以上</span>
+      <div class="opt-group" data-id="target">
+        <span class="opt" data-v="1">够本就行</span>
+        <span class="opt sel" data-v="2">100-300元</span>
+        <span class="opt" data-v="3">300-500元</span>
+        <span class="opt" data-v="4">500元以上</span>
       </div>
     </div>
-
     <div class="field">
       <span class="fl">开不开抖音/自媒体引流？</span>
-      <div class="opt-group" id="gLive">
-        <span class="opt sel" data-val="1" onclick="pick('gLive',this)">不开，先埋头干</span>
-        <span class="opt" data-val="2" onclick="pick('gLive',this)">开，记录摆摊日常</span>
-        <span class="opt" data-val="3" onclick="pick('gLive',this)">开，打算做技术培训</span>
+      <div class="opt-group" data-id="live">
+        <span class="opt sel" data-v="1">不开，先埋头干</span>
+        <span class="opt" data-v="2">开，记录摆摊日常</span>
+        <span class="opt" data-v="3">开，打算做技术培训</span>
       </div>
     </div>
   </div>
 
-  <!-- 4. 风险评估 -->
   <div class="form-card" style="border-left:3px solid #ddaa44">
     <div class="card-hdr"><span class="dot" style="background:#ddaa44"></span>⚠️ 风险承受</div>
-
     <div class="field">
       <span class="fl">能坚持天天出摊吗？</span>
-      <div class="opt-group" id="gStick">
-        <span class="opt sel" data-val="2" onclick="pick('gStick',this)">能，全职干</span>
-        <span class="opt" data-val="1" onclick="pick('gStick',this)">试试看，不行就撤</span>
-        <span class="opt" data-val="0" onclick="pick('gStick',this)">有空就干，没空拉倒</span>
+      <div class="opt-group" data-id="stick">
+        <span class="opt sel" data-v="2">能，全职干</span>
+        <span class="opt" data-v="1">试试看，不行就撤</span>
+        <span class="opt" data-v="0">有空就干，没空拉倒</span>
       </div>
     </div>
-
     <div class="field">
       <span class="fl">卖不掉的东西能接受扔掉吗？</span>
-      <div class="opt-group" id="gWaste">
-        <span class="opt sel" data-val="1" onclick="pick('gWaste',this)">能，损耗正常</span>
-        <span class="opt" data-val="0" onclick="pick('gWaste',this)">尽量不浪费，心疼</span>
+      <div class="opt-group" data-id="waste">
+        <span class="opt sel" data-v="1">能，损耗正常</span>
+        <span class="opt" data-v="0">尽量不浪费，心疼</span>
       </div>
     </div>
-
     <div class="field">
       <span class="fl">刮风下雨不能出摊，接受吗？</span>
-      <div class="opt-group" id="gRain">
-        <span class="opt sel" data-val="1" onclick="pick('gRain',this)">接受，就当休息</span>
-        <span class="opt" data-val="0" onclick="pick('gRain',this)">不接受，天天想着出摊</span>
+      <div class="opt-group" data-id="rain">
+        <span class="opt sel" data-v="1">接受，就当休息</span>
+        <span class="opt" data-v="0">不接受，天天想着出摊</span>
       </div>
     </div>
   </div>
 
-  <button class="btn-submit" id="evalBtn" onclick="evaluate()" disabled>🔍 看看能不能干</button>
-  <p id="hintMsg" style="font-size:10px;color:#ddaa44;text-align:center;margin-top:6px">请先选择品类和摆摊位置</p>
+  <button class="btn-submit" id="evalBtn">🔍 看看能不能干</button>
+  <div id="hintMsg" style="font-size:10px;color:#ddaa44;text-align:center;margin-top:6px">请先选择品类和摆摊位置</div>
   <p style="font-size:9px;color:#6b7a8a;text-align:center;margin-top:2px">小摊优势：投资小、灵活换位、时间不对可以停，亏也只亏料钱和人工</p>
 </div>
 
-<!-- Result -->
 <div class="result" id="resultArea">
   <div class="rs-hdr">
     <div class="grade" id="rGrade"></div>
@@ -268,7 +243,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
     <div class="sub" id="rSub"></div>
   </div>
   <div id="rBlocks"></div>
-  <div class="action-box"><button class="re-btn" onclick="resetForm()">← 重新填</button></div>
+  <div class="action-box"><button class="re-btn" id="resetBtn">← 重新填</button></div>
   <div style="margin-top:12px;padding:10px;text-align:center;font-size:10px;color:#6b7a8a;border-top:1px solid #1a2835">
     FoodIntelAI · 食品决策库 · 少走弯路 快人一步
   </div>
@@ -277,6 +252,9 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 </div>
 
 <script>
+(function() {
+'use strict';
+
 var CATS = {
   '烤肠':{min:1,name:'铁板烤肠',cards:'铁板烤肠XC_126',path:'其他',needPower:0,match:{夜市:5,学校:5,社区:4,工地:3,商业街:3,流动:5},dailyRev:[200,500],costRate:0.35},
   '煎饼':{min:2,name:'山东杂粮煎饼',cards:'MP_015 山东杂粮煎饼（母）MP_015',path:'其他',needPower:1,match:{夜市:4,学校:5,社区:5,工地:5,商业街:3,流动:4},dailyRev:[300,600],costRate:0.3},
@@ -292,277 +270,316 @@ var CATS = {
 };
 var LOC_NAMES = {'夜市':'夜市/小吃街','学校':'学校门口','社区':'社区门口','工地':'工地/工业区','商业街':'商业街/地铁口','流动':'流动/赶集'};
 
-function pick(grp,el){
-  var p=document.getElementById(grp); if(!p) return;
-  p.querySelectorAll('.opt').forEach(function(o){o.classList.remove('sel')});
-  el.classList.add('sel');
-  checkReady();
+var $ = function(id) { return document.getElementById(id); };
+
+function getVal(grp) {
+  var g = document.querySelector('.opt-group[data-id="' + grp + '"]');
+  if (!g) return '';
+  var s = g.querySelector('.opt.sel');
+  return s ? (s.getAttribute('data-v') || '') : '';
 }
-function checkReady(){
-  var cat=getVal('gCat'), loc=getVal('gLoc');
-  var btn=document.getElementById('evalBtn'), hint=document.getElementById('hintMsg');
-  if(cat&&loc){
-    btn.disabled=false;
-    hint.textContent='✅ 选好了，点橙色按钮出结果';
-    hint.style.color='#6b7a8a';
-    hint.style.fontSize='9px';
-  }else{
-    btn.disabled=true;
-    var msg='请选择';
-    if(!cat) msg+='品类';
-    if(!cat&&!loc) msg+='和';
-    if(!loc) msg+='摆摊位置';
-    hint.textContent=msg;
-    hint.style.color='#ddaa44';
+
+function getLabel(grp) {
+  var g = document.querySelector('.opt-group[data-id="' + grp + '"]');
+  if (!g) return '';
+  var s = g.querySelector('.opt.sel');
+  return s ? s.textContent.trim() : '';
+}
+
+function updateButton() {
+  var cat = getVal('cat');
+  var loc = getVal('loc');
+  var btn = $('evalBtn');
+  var hint = $('hintMsg');
+  if (cat && loc) {
+    btn.disabled = false;
+    hint.textContent = '已选 ' + getLabel('cat').split('（')[0] + ' · ' + (LOC_NAMES[loc]||loc);
+    hint.style.color = '#6b7a8a';
+    hint.style.fontSize = '9px';
+  } else {
+    btn.disabled = true;
+    var msg = '请选择';
+    if (!cat) msg += '品类';
+    if (!cat && !loc) msg += '和';
+    if (!loc) msg += '摆摊位置';
+    hint.textContent = msg;
+    hint.style.color = '#ddaa44';
+    hint.style.fontSize = '10px';
   }
 }
-function getVal(grp){
-  var p=document.getElementById(grp); if(!p) return '';
-  var s=p.querySelector('.opt.sel'); return s?s.getAttribute('data-val')||'':'';
-}
-function getLabel(grp){
-  var p=document.getElementById(grp); if(!p) return '';
-  var s=p.querySelector('.opt.sel'); return s?s.textContent.trim():'';
-}
 
-function evaluate(){
-  var tricycle = parseInt(getVal('gTricycle'))||0;
-  var budget = parseInt(getVal('gBudget'))||0;
-  var loc = getVal('gLoc');
-  var spot = parseInt(getVal('gSpot'))||0;
-  var fee = parseInt(getVal('gFee'))||0;
-  var power = parseInt(getVal('gPower'))||0;
-  var health = parseInt(getVal('gHealth'))||0;
-  var cat = getVal('gCat');
-  var time = parseInt(getVal('gTime'))||0;
-  var target = parseInt(getVal('gTarget'))||1;
-  var live = parseInt(getVal('gLive'))||1;
-  var stick = parseInt(getVal('gStick'))||0;
-  var waste = parseInt(getVal('gWaste'))||0;
-  var rain = parseInt(getVal('gRain'))||0;
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.opt-group').forEach(function(g) {
+    g.addEventListener('click', function(e) {
+      var opt = e.target.closest('.opt');
+      if (!opt) return;
+      g.querySelectorAll('.opt').forEach(function(o) { o.classList.remove('sel'); });
+      opt.classList.add('sel');
+      updateButton();
+    });
+  });
 
-  if(!cat||!loc){
-    document.getElementById('hintMsg').textContent='⚠️ 请选择品类和摆摊位置';
-    document.getElementById('hintMsg').style.color='#ff6b6b';
+  $('evalBtn').addEventListener('click', evaluate);
+
+  $('resetBtn').addEventListener('click', function() {
+    $('formArea').style.display = 'block';
+    $('resultArea').classList.remove('show');
+    $('rBlocks').innerHTML = '';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+
+  updateButton();
+});
+
+function evaluate() {
+  var tricycle = parseInt(getVal('tricycle')) || 0;
+  var budget = parseInt(getVal('budget')) || 0;
+  var loc = getVal('loc');
+  var spot = parseInt(getVal('spot')) || 0;
+  var fee = parseInt(getVal('fee')) || 0;
+  var power = parseInt(getVal('power')) || 0;
+  var health = parseInt(getVal('health')) || 0;
+  var cat = getVal('cat');
+  var time = parseInt(getVal('time')) || 0;
+  var target = parseInt(getVal('target')) || 1;
+  var live = parseInt(getVal('live')) || 1;
+  var stick = parseInt(getVal('stick')) || 0;
+  var waste = parseInt(getVal('waste')) || 0;
+  var rain = parseInt(getVal('rain')) || 0;
+
+  if (!cat || !loc) {
+    $('hintMsg').textContent = '⚠️ 请选择品类和摆摊位置';
+    $('hintMsg').style.color = '#ff6b6b';
+    $('hintMsg').style.fontSize = '10px';
     return;
   }
-  var cdata = CATS[cat]; if(!cdata){alert('品类数据异常');return}
 
-  var score = 0, details = [], risks = [];
+  var cdata = CATS[cat];
+  if (!cdata) { $('hintMsg').textContent = '品类数据异常'; return; }
 
-  // 1. 预算够不够（25分）
-  var needBudget = cdata.min + (tricycle>=2?2:0);
-  var budgetOk = budget >= needBudget ? 25 : (budget>0 ? 10 : 0);
+  var score = 0;
+  var details = [];
+  var risks = [];
+
+  // 1. 预算（25分）
+  var needBudget = cdata.min + (tricycle >= 2 ? 2 : 0);
+  var budgetOk = budget >= needBudget ? 25 : (budget > 0 ? 10 : 0);
   score += budgetOk;
-  details.push({icon:budgetOk>=25?'✅':'⚠️',label:'预算：'+getLabel('gBudget').split('（')[0],val:budgetOk+'/25','tcls':budgetOk>=25?'risk-l':'risk-m'});
-  if(budgetOk<25) risks.push('⚠️ 预算偏低，'+cdata.name+(tricycle>=2?'加三轮车费用可能不够':'建议先折叠桌起步'));
+  details.push({icon: budgetOk >= 25 ? '✅' : '⚠️', label: '预算：' + getLabel('budget').split('（')[0], val: budgetOk + '/25', cls: budgetOk >= 25 ? 'risk-l' : 'risk-m'});
+  if (budgetOk < 25) risks.push('预算偏低，' + cdata.name + (tricycle >= 2 ? '加三轮车费用可能不够' : '建议先折叠桌起步'));
 
   // 2. 位置固定度（15分）
-  var spotPts = [0,8,15][spot];
+  var spotPts = [0, 8, 15][spot];
   score += spotPts;
-  details.push({icon:spotPts>0?'✅':'❌',label:'位置：'+['还没找','有目标但不固定','有固定位'][spot],val:spotPts+'/15','tcls':spotPts>=15?'risk-l':spotPts>0?'risk-m':'risk-h'});
-  if(spot===0) risks.push('⚠️ 还没找位置——建议先确定能摆在哪再买设备');
-  if(spot===1) risks.push('⚠️ 位置不固定——城管风险高，建议先摸清能不能长期摆');
+  details.push({icon: spotPts > 0 ? '✅' : '❌', label: '位置：' + ['还没找', '有目标但不固定', '有固定位'][spot], val: spotPts + '/15', cls: spotPts >= 15 ? 'risk-l' : spotPts > 0 ? 'risk-m' : 'risk-h'});
+  if (spot === 0) risks.push('还没找位置——建议先确定能摆在哪再买设备');
+  if (spot === 1) risks.push('位置不固定——城管风险高，建议先摸清能不能长期摆');
 
   // 3. 品类×地段匹配（20分）
-  var locScore = cdata.match[loc]||0;
-  var matchPts = locScore * 4;
+  var locScoreV = cdata.match[loc] || 0;
+  var matchPts = locScoreV * 4;
   score += matchPts;
-  details.push({icon:matchPts>=12?'✅':'⚠️',label:getLabel('gCat').split('（')[0]+' × '+LOC_NAMES[loc],val:locScore+'/5·'+matchPts+'/20','tcls':matchPts>=12?'risk-l':'risk-m'});
-  if(matchPts<8) risks.push('⚠️ 这个品类跟这个位置匹配度低，换个位置或品类试试');
+  details.push({icon: matchPts >= 12 ? '✅' : '⚠️', label: getLabel('cat').split('（')[0] + ' × ' + LOC_NAMES[loc], val: locScoreV + '/5·' + matchPts + '/20', cls: matchPts >= 12 ? 'risk-l' : 'risk-m'});
+  if (matchPts < 8) risks.push('这个品类跟这个位置匹配度低，换个位置或品类试试');
 
   // 4. 电源+健康证（15分）
-  var powerPts = power==2 ? 8 : (power==1 ? 5 : 3);
-  if(power<2 && cdata.needPower) { powerPts = 1; }
+  var powerPts = power === 2 ? 8 : (power === 1 ? 5 : 3);
+  if (power < 2 && cdata.needPower) powerPts = 1;
   var healthPts = health ? 7 : 0;
   var infraPts = powerPts + healthPts;
   score += infraPts;
-  var powerLabels = ['移动电源','电瓶+逆变器','摊位220V'];
-  details.push({icon:infraPts>=10?'✅':'⚠️',label:'电源：'+(powerLabels[power]||'')+' · '+(health?'健康证✅':'无健康证'),val:infraPts+'/15','tcls':infraPts>=10?'risk-l':'risk-m'});
-  if(power<2&&cdata.needPower) risks.push('⚠️ '+cdata.name+'需要用电，你的电源方案会增加成本，建议确认总预算够不够');
-  if(!health) risks.push('⚠️ 摆摊食品需要健康证，几十块钱办一个');
+  var powerLabels = ['移动电源', '电瓶+逆变器', '摊位220V'];
+  details.push({icon: infraPts >= 10 ? '✅' : '⚠️', label: '电源：' + (powerLabels[power] || '') + ' · ' + (health ? '健康证✅' : '无健康证'), val: infraPts + '/15', cls: infraPts >= 10 ? 'risk-l' : 'risk-m'});
+  if (power < 2 && cdata.needPower) risks.push(cdata.name + '需要用电，你的电源方案会增加成本');
+  if (!health) risks.push('摆摊食品需要健康证，几十块钱办一个');
 
   // 5. 出摊时间+坚持（15分）
-  var timePts = [0,5,10,12][time]||0;
-  var stickPts = [0,5,10][stick]||0;
+  var timePts = [0, 5, 10, 12][time] || 0;
+  var stickPts = [0, 5, 10][stick] || 0;
   score += timePts + stickPts;
-  var timeLabels = ['不定时','下午4-8点','中午+晚上'][time-1]||'下午4-8点';
-  var stickLabels = ['有空就干','试试看','全职干'][stick];
-  details.push({icon:timePts+stickPts>=10?'✅':'⚠️',label:timeLabels+' · '+stickLabels,val:(timePts+stickPts)+'/15','tcls':timePts+stickPts>=10?'risk-l':'risk-m'});
-  if(stick<2) risks.push('⚠️ 摆摊前3个月最难熬，很多人干一周就放弃了。想清楚再投钱');
-  if(time<2) risks.push('💡 出摊时间不固定，客流不稳定，建议固定时间段出摊培养老客');
+  var timeLabels = ['不定时', '下午4-8点', '中午+晚上'][time - 1] || '下午4-8点';
+  var stickLabels = ['有空就干', '试试看', '全职干'][stick];
+  details.push({icon: timePts + stickPts >= 10 ? '✅' : '⚠️', label: timeLabels + ' · ' + stickLabels, val: (timePts + stickPts) + '/15', cls: timePts + stickPts >= 10 ? 'risk-l' : 'risk-m'});
+  if (stick < 2) risks.push('摆摊前3个月最难熬，很多人干一周就放弃了。想清楚再投钱');
+  if (time < 2) risks.push('出摊时间不固定，客流不稳定，建议固定时间段出摊培养老客');
 
   // 6. 损耗+天气接受度（10分）
-  var lossPts = (waste?5:0) + (rain?5:0);
+  var lossPts = (waste ? 5 : 0) + (rain ? 5 : 0);
   score += lossPts;
-  details.push({icon:lossPts>=10?'✅':'⚠️',label:'损耗接受度+天气接受度',val:lossPts+'/10','tcls':lossPts>=10?'risk-l':'risk-m'});
-  if(!waste) risks.push('💡 摆摊一定有损耗，卖不掉就得扔，备料别太多');
-  if(!rain) risks.push('💡 刮风下雨没法出摊，心态要调整好');
+  details.push({icon: lossPts >= 10 ? '✅' : '⚠️', label: '损耗接受度+天气接受度', val: lossPts + '/10', cls: lossPts >= 10 ? 'risk-l' : 'risk-m'});
+  if (!waste) risks.push('摆摊一定有损耗，卖不掉就得扔，备料别太多');
+  if (!rain) risks.push('刮风下雨没法出摊，心态要调整好');
 
   // 总分
   var pct = Math.min(100, Math.round(score));
   var grade, gradeColor, subText, advice;
-
-  if(pct>=75){
-    grade='✅ 适合摆摊';
-    gradeColor='#00ff88';
-    subText='你的条件比较成熟，这个品类×位置组合可以干。';
-    advice='建议：先试3-7天最低配置，稳定了再升级。摆摊核心是坚持，前两周最难熬。';
-  }else if(pct>=55){
-    grade='⚠️ 可以试试';
-    gradeColor='#ddaa44';
-    subText='有几项条件不理想但不致命。小摊的好处是投资小、灵活，亏也亏不到哪。';
-    advice='建议：（1）先把位置确认好再买设备（2）首批备料别太多（3）给自己定2周试水期，不行就换品换位置。';
-  }else{
-    grade='❌ 条件不成熟';
-    gradeColor='#ff6b6b';
-    subText='几个关键条件还没准备好。不是不能摆摊，是现在这个情况干可能亏。';
-    advice='建议：先搞定位置和健康证，选个启动成本最低的品类（烤肠500以内），试3天看看反应。';
+  if (pct >= 75) {
+    grade = '✅ 适合摆摊'; gradeColor = '#00ff88';
+    subText = '你的条件比较成熟，这个品类×位置组合可以干。';
+    advice = '建议：先试3-7天最低配置，稳定了再升级。摆摊核心是坚持，前两周最难熬。';
+  } else if (pct >= 55) {
+    grade = '⚠️ 可以试试'; gradeColor = '#ddaa44';
+    subText = '有几项条件不理想但不致命。小摊的好处是投资小、灵活，亏也亏不到哪。';
+    advice = '建议：（1）先把位置确认好再买设备（2）首批备料别太多（3）给自己定2周试水期，不行就换品换位置。';
+  } else {
+    grade = '❌ 条件不成熟'; gradeColor = '#ff6b6b';
+    subText = '几个关键条件还没准备好。不是不能摆摊，是现在这个情况干可能亏。';
+    advice = '建议：先搞定位置和健康证，选个启动成本最低的品类（烤肠500以内），试3天看看反应。';
   }
 
-  // ===== 计算维度分数（供雷达图和维度条使用） =====
-  // 6个维度：
+  // 维度
   var dims = [];
-  // d1: 硬件配置 —— 车+预算
-  var hwScore = Math.min(100, (tricycle/3*50 + (budget/5*50)) );
-  dims.push({l:'硬件配置', s:Math.round(hwScore)});
-
-  // d2: 场地条件 —— 位置固定度+费用+电源
-  var locScoreD = Math.min(100, (spot/2*40 + fee*30 + (power/2*30)) );
-  dims.push({l:'场地条件', s:Math.round(locScoreD)});
-
-  // d3: 品类匹配 —— 品类×地段匹配分 + 出摊时间
-  var catD = cdata.match[loc]||0;
-  var catMatch = Math.min(100, (catD/5*60 + (time/3*20) + (target/4*20)));
-  dims.push({l:'品类匹配', s:Math.round(catMatch)});
-
-  // d4: 经营耐力 —— 坚持+时间+自媒体
-  var stamina = Math.min(100, (stick/2*50 + (time/3*30) + ((live-1)/2*20)));
-  dims.push({l:'经营耐力', s:Math.round(stamina)});
-
-  // d5: 合规基础 —— 健康证+电源
-  var compScore = Math.min(100, (health?60:0) + (fee?40:0));
-  dims.push({l:'合规基础', s:Math.round(compScore)});
-
-  // d6: 风险承受 —— 损耗+天气+预算余量
-  var riskD = Math.min(100, (waste?25:0)+(rain?25:0)+(budget>=3?30:budget==2?15:0)+(stick>=2?20:stick==1?10:0));
-  dims.push({l:'风险承受', s:Math.round(riskD)});
-
-  // ===== 推导指标 =====
-  var baseRev = cdata.dailyRev[0] + (cdata.dailyRev[1]-cdata.dailyRev[0]) * (pct/100) * 0.6;
-  var revFactor = (spot/2 * 0.2) + (time/3 * 0.3) + (pct/100 * 0.5);
-  var avgDailyRev = Math.round(baseRev * Math.max(0.3, revFactor * 0.8 + 0.4));
-  var revLow = Math.round(avgDailyRev * 0.7);
-  var revHigh = Math.round(avgDailyRev * 1.2);
-  var dailyCost = Math.round(avgDailyRev * cdata.costRate);
-  var dailyProfit = Math.round(avgDailyRev - dailyCost);
-  // 回本：投资/日利
-  var investAmt = [500, 1500, 3000, 6000, 10000][budget-1]||1500;
-  var pbDays = investAmt / Math.max(1, dailyProfit);
-  var stTxt = dailyProfit>=50 ? Math.round(pbDays)+'天' : '待定（日利偏低）';
-  var stVal = dailyProfit>=50 ? Math.round(pbDays)+'天' : '—';
-
-  // ===== 短板优势 =====
-  var badD = dims.filter(function(d){return d.s<55}).sort(function(a,b){return a.s-b.s});
-  var goodD = dims.filter(function(d){return d.s>=75});
-  var badH='', goodH='';
-  if(badD.length) badH=badD.map(function(d){return '<div class="check-item"><div class="icon">⚠️</div><div class="label" style="color:#ddaa44">'+d.l+'（'+d.s+'/100）— 主要短板</div></div>'}).join('');
-  if(goodD.length) goodH=goodD.map(function(d){return '<div class="check-item"><div class="icon">⭐</div><div class="label" style="color:#00ff88">'+d.l+'（'+d.s+'/100）— 核心优势</div></div>'}).join('');
-
-  // ===== 渲染结果 =====
-  document.getElementById('formArea').style.display='none';
-  var ra=document.getElementById('resultArea');
-  ra.classList.add('show');
-  document.getElementById('rGrade').textContent=grade;
-  document.getElementById('rGrade').style.color=gradeColor;
-  document.getElementById('rScore').textContent=pct+'分';
-  document.getElementById('rScore').style.color=gradeColor;
-  document.getElementById('rSub').textContent=subText;
-
-  var html='';
+  dims.push({l: '硬件配置', s: Math.min(100, Math.round(tricycle / 3 * 50 + budget / 5 * 50))});
+  var locD = Math.min(100, Math.round(spot / 2 * 40 + fee * 30 + power / 2 * 30));
+  dims.push({l: '场地条件', s: locD});
+  var catD = cdata.match[loc] || 0;
+  dims.push({l: '品类匹配', s: Math.min(100, Math.round(catD / 5 * 60 + time / 3 * 20 + target / 4 * 20))});
+  dims.push({l: '经营耐力', s: Math.min(100, Math.round(stick / 2 * 50 + time / 3 * 30 + (live - 1) / 2 * 20))});
+  dims.push({l: '合规基础', s: health ? 100 : 60});
+  dims.push({l: '风险承受', s: Math.min(100, Math.round((waste ? 25 : 0) + (rain ? 25 : 0) + (budget >= 3 ? 30 : budget === 2 ? 15 : 0) + (stick >= 2 ? 20 : stick === 1 ? 10 : 0)))});
 
   // 推导指标
-  html+='<div class="derive-box" style="border-left:3px solid '+(dailyProfit>=200?'#00ff88':dailyProfit>=80?'#ddaa44':'#ff6b6b')+'">'+
-    '<h3>🎯 预计日收益</h3><div class="derive-grid">'+
-    '<div class="derive-item"><div class="dv" style="color:'+gradeColor+'">¥'+revLow+'-'+revHigh+'</div><div class="dl">预计日营收</div></div>'+
-    '<div class="derive-item"><div class="dv" style="color:'+(dailyProfit>=200?'#00ff88':dailyProfit>=80?'#ddaa44':'#ff6b6b')+'">¥'+dailyProfit+'</div><div class="dl">预计日净利</div></div>'+
-    '<div class="derive-item"><div class="dv" style="font-size:13px;color:#4db8ff">¥'+investAmt+'</div><div class="dl">预估总投入</div></div>'+
-    '<div class="derive-item"><div class="dv" style="font-size:13px;color:'+(dailyProfit>=80?'#00ff88':'#6b7a8a')+'">'+stVal+'</div><div class="dl">预计回本周期</div></div>'+
+  var baseRev = cdata.dailyRev[0] + (cdata.dailyRev[1] - cdata.dailyRev[0]) * (pct / 100) * 0.6;
+  var avgRev = Math.round(baseRev * (0.4 + (spot / 2 * 0.2 + time / 3 * 0.2 + pct / 100 * 0.2)));
+  var revLow = Math.round(avgRev * 0.7);
+  var revHigh = Math.round(avgRev * 1.2);
+  var dailyProfit = Math.round(avgRev * (1 - cdata.costRate));
+  var investAmt = [500, 1500, 3000, 6000, 10000][budget - 1] || 1500;
+  var pbDays = dailyProfit >= 50 ? Math.round(investAmt / dailyProfit) + '天' : '待定';
+
+  var badD = dims.filter(function(d) { return d.s < 55; }).sort(function(a, b) { return a.s - b.s; });
+  var goodD = dims.filter(function(d) { return d.s >= 75; });
+  var bh = badD.map(function(d) { return '<div class="check-item"><div class="icon">⚠️</div><div class="label" style="color:#ddaa44">' + d.l + '（' + d.s + '/100）— 主要短板</div></div>'; }).join('');
+  var gh = goodD.map(function(d) { return '<div class="check-item"><div class="icon">⭐</div><div class="label" style="color:#00ff88">' + d.l + '（' + d.s + '/100）— 核心优势</div></div>'; }).join('');
+
+  // 渲染
+  $('formArea').style.display = 'none';
+  var ra = $('resultArea');
+  ra.classList.add('show');
+  $('rGrade').textContent = grade;
+  $('rGrade').style.color = gradeColor;
+  $('rScore').textContent = pct + '分';
+  $('rScore').style.color = gradeColor;
+  $('rSub').textContent = subText;
+
+  var html = '';
+  html += '<div class="derive-box" style="border-left:3px solid ' + (dailyProfit >= 200 ? '#00ff88' : dailyProfit >= 80 ? '#ddaa44' : '#ff6b6b') + '">' +
+    '<h3>🎯 预计日收益</h3><div class="derive-grid">' +
+    '<div class="derive-item"><div class="dv" style="color:' + gradeColor + '">¥' + revLow + '-' + revHigh + '</div><div class="dl">预计日营收</div></div>' +
+    '<div class="derive-item"><div class="dv" style="color:' + (dailyProfit >= 200 ? '#00ff88' : dailyProfit >= 80 ? '#ddaa44' : '#ff6b6b') + '">¥' + dailyProfit + '</div><div class="dl">预计日净利</div></div>' +
+    '<div class="derive-item"><div class="dv" style="font-size:13px;color:#4db8ff">¥' + investAmt + '</div><div class="dl">预估总投入</div></div>' +
+    '<div class="derive-item"><div class="dv" style="font-size:13px;color:' + (dailyProfit >= 80 ? '#00ff88' : '#6b7a8a') + '">' + pbDays + '</div><div class="dl">预计回本周期</div></div>' +
     '</div></div>';
 
-  // 条件评估
-  html+='<div class="block match-block"><div class="block-title">📊 条件评估</div>';
-  details.forEach(function(d){
-    html+='<div class="check-item"><span class="icon">'+d.icon+'</span><span class="label">'+d.label+'</span>';
-    html+='<span class="val" style="color:'+(d.tcls||'#6b7a8a')+'">'+d.val+'</span></div>';
+  html += '<div class="block match-block"><div class="block-title">📊 条件评估</div>';
+  details.forEach(function(d) {
+    html += '<div class="check-item"><span class="icon">' + d.icon + '</span><span class="label">' + d.label + '</span><span class="val" style="color:' + (d.cls || '#6b7a8a') + '">' + d.val + '</span></div>';
   });
-  html+='</div>';
+  html += '</div>';
 
-  // 雷达图
-  html+='<div class="radar-wrap"><canvas id="rdChart" width="280" height="280"></canvas></div>';
+  html += '<div class="radar-wrap"><canvas id="rdChart" width="280" height="280"></canvas></div>';
+  html += '<div class="dim-list">' + dims.map(function(d) {
+    var c = d.s >= 70 ? '#00ff88' : d.s >= 55 ? '#ddaa44' : '#ff6b6b';
+    return '<div class="dim-item"><div class="dn">' + d.l.slice(0, 4) + '</div><div class="db"><div class="df" style="width:' + d.s + '%;background:' + c + '"></div></div><div class="ds" style="color:' + c + '">' + d.s + '</div></div>';
+  }).join('') + '</div>';
 
-  // 维度条
-  html+='<div class="dim-list">'+dims.map(function(d){
-    var c=d.s>=70?'#00ff88':d.s>=55?'#ddaa44':'#ff6b6b';
-    return '<div class="dim-item"><div class="dn">'+d.l.slice(0,4)+'</div><div class="db"><div class="df" style="width:'+d.s+'%;background:'+c+'"></div></div><div class="ds" style="color:'+c+'">'+d.s+'</div></div>';
-  }).join('')+'</div>';
+  if (bh) html += '<div class="block" style="background:#1a1210;border-left:3px solid #ff6b6b"><div class="block-title" style="color:#ff6b6b">⚠️ 主要短板</div>' + bh + '</div>';
+  if (gh) html += '<div class="block" style="background:#0f1a25;border-left:3px solid #00ff88"><div class="block-title" style="color:#00ff88">⭐ 核心优势</div>' + gh + '</div>';
 
-  // 短板优势
-  if(badH) html+='<div class="block" style="background:#1a1210;border-left:3px solid #ff6b6b"><div class="block-title" style="color:#ff6b6b">⚠️ 主要短板</div>'+badH+'</div>';
-  if(goodH) html+='<div class="block" style="background:#0f1a25;border-left:3px solid #00ff88"><div class="block-title" style="color:#00ff88">⭐ 核心优势</div>'+goodH+'</div>';
+  html += '<div class="tip-box"><div class="tip-title">💡 建议</div><div class="tip-text">' + advice + '</div></div>';
 
-  // 建议
-  html+='<div class="tip-box"><div class="tip-title">💡 建议</div><div class="tip-text">'+advice+'</div></div>';
-
-  // 风险
-  if(risks.length){
-    html+='<div class="block risk-block"><div class="block-title">⚠️ 需要注意</div>';
-    risks.forEach(function(r){
-      html+='<div class="check-item"><span class="icon">'+(r.indexOf('⚠️')>=0?'🔴':'🟡')+'</span><span class="label">'+r.replace('⚠️ ','').replace('💡 ','')+'</span></div>';
+  if (risks.length) {
+    html += '<div class="block risk-block"><div class="block-title">⚠️ 需要注意</div>';
+    risks.forEach(function(r) {
+      html += '<div class="check-item"><span class="icon">🔴</span><span class="label">' + r + '</span></div>';
     });
-    html+='</div>';
+    html += '</div>';
   }
 
-  // 推荐产品
-  html+='<div class="card-rec"><h3>📌 推荐去看</h3>';
-  var cardPath = cdata.path||'其他';
-  if(cdata.cards){
-    html+='<a href="https://foodintelai.com/catalog/'+cardPath+'/'+encodeURIComponent(cdata.cards)+'.html" target="_blank">→ '+cdata.name+' · 完整数据包</a>';
+  var cardPath = cdata.path || '其他';
+  html += '<div class="card-rec"><h3>📌 推荐去看</h3>';
+  if (cdata.cards) {
+    html += '<a href="https://foodintelai.com/catalog/' + cardPath + '/' + encodeURIComponent(cdata.cards) + '.html" target="_blank">→ ' + cdata.name + ' · 完整数据包</a>';
   }
-  html+='<a href="https://foodintelai.com/stall-check.html" target="_blank">→ 重新评估</a>';
-  html+='<a href="https://foodintelai.com/check.html" target="_blank">→ 想干大的？试试开店评估</a></div>';
+  html += '<a href="https://foodintelai.com/stall-check.html" target="_blank">→ 重新评估</a>';
+  html += '<a href="https://foodintelai.com/check.html" target="_blank">→ 想干大的？试试开店评估</a></div>';
 
-  document.getElementById('rBlocks').innerHTML=html;
+  $('rBlocks').innerHTML = html;
 
-  // 画雷达图
-  setTimeout(function(){drawRadar(dims);},100);
+  setTimeout(function() {
+    drawRadar(dims);
+  }, 100);
 }
 
-function drawRadar(dims){
-  var c=document.getElementById('rdChart');if(!c)return;
-  var ctx=c.getContext('2d'), cx=140, cy=140, r=110, n=dims.length, as=2*Math.PI/n;
-  ctx.clearRect(0,0,280,280);
-  for(var l=0.25;l<=1;l+=0.25){
-    ctx.beginPath();ctx.strokeStyle='#1a2835';ctx.lineWidth=0.5;
-    for(var i=0;i<n;i++){var a=-Math.PI/2+i*as,x=cx+r*l*Math.cos(a),y=cy+r*l*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
-    ctx.closePath();ctx.stroke();
+function drawRadar(dims) {
+  var c = $('rdChart');
+  if (!c) return;
+  var ctx = c.getContext('2d');
+  var cx = 140, cy = 140, r = 110;
+  var n = dims.length;
+  var as = 2 * Math.PI / n;
+
+  ctx.clearRect(0, 0, 280, 280);
+  // Grid
+  for (var l = 0.25; l <= 1; l += 0.25) {
+    ctx.beginPath();
+    ctx.strokeStyle = '#1a2835';
+    ctx.lineWidth = 0.5;
+    for (var i = 0; i < n; i++) {
+      var a = -Math.PI / 2 + i * as;
+      var x = cx + r * l * Math.cos(a);
+      var y = cy + r * l * Math.sin(a);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
   }
-  for(var i=0;i<n;i++){var a=-Math.PI/2+i*as;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));ctx.strokeStyle='#1a2835';ctx.lineWidth=0.5;ctx.stroke();}
+  // Spokes
+  for (var i = 0; i < n; i++) {
+    var a = -Math.PI / 2 + i * as;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+    ctx.strokeStyle = '#1a2835';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+  // Data area
   ctx.beginPath();
-  for(var i=0;i<n;i++){var a=-Math.PI/2+i*as,v=dims[i].s/100,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
-  ctx.closePath();ctx.fillStyle='rgba(255,136,77,.08)';ctx.fill();ctx.strokeStyle='#ff884d';ctx.lineWidth=2;ctx.stroke();
-  ctx.font='9px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  for(var i=0;i<n;i++){var a=-Math.PI/2+i*as,lx=cx+(r+18)*Math.cos(a),ly=cy+(r+18)*Math.sin(a);ctx.fillStyle='#6b7a8a';ctx.fillText(dims[i].l.slice(0,6),lx,ly);
-    var v=dims[i].s/100,px=cx+r*v*Math.cos(a),py=cy+r*v*Math.sin(a);ctx.beginPath();ctx.arc(px,py,3,0,2*Math.PI);ctx.fillStyle=dims[i].s>=70?'#00ff88':dims[i].s>=55?'#ddaa44':'#ff6b6b';ctx.fill();}
+  for (var i = 0; i < n; i++) {
+    var a = -Math.PI / 2 + i * as;
+    var v = dims[i].s / 100;
+    var x = cx + r * v * Math.cos(a);
+    var y = cy + r * v * Math.sin(a);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(255,136,77,.08)';
+  ctx.fill();
+  ctx.strokeStyle = '#ff884d';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  // Labels & dots
+  ctx.font = '9px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (var i = 0; i < n; i++) {
+    var a = -Math.PI / 2 + i * as;
+    var lx = cx + (r + 18) * Math.cos(a);
+    var ly = cy + (r + 18) * Math.sin(a);
+    ctx.fillStyle = '#6b7a8a';
+    ctx.fillText(dims[i].l.slice(0, 6), lx, ly);
+    var v = dims[i].s / 100;
+    var px = cx + r * v * Math.cos(a);
+    var py = cy + r * v * Math.sin(a);
+    ctx.beginPath();
+    ctx.arc(px, py, 3, 0, 2 * Math.PI);
+    ctx.fillStyle = dims[i].s >= 70 ? '#00ff88' : dims[i].s >= 55 ? '#ddaa44' : '#ff6b6b';
+    ctx.fill();
+  }
 }
 
-function resetForm(){
-  document.getElementById('formArea').style.display='block';
-  document.getElementById('resultArea').classList.remove('show');
-  document.getElementById('rBlocks').innerHTML='';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-checkReady();
+})();
 </script>
 </body>
 </html>
