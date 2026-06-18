@@ -235,8 +235,9 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
     </div>
   </div>
 
-  <button class="btn-submit" onclick="evaluate()">🔍 看看能不能干</button>
-  <p style="font-size:9px;color:#6b7a8a;text-align:center;margin-top:6px">小摊优势：投资小、灵活换位、时间不对可以停，亏也只亏料钱和人工</p>
+  <button class="btn-submit" id="evalBtn" onclick="evaluate()" disabled>🔍 看看能不能干</button>
+  <p id="hintMsg" style="font-size:10px;color:#ddaa44;text-align:center;margin-top:6px">请先选择品类和摆摊位置</p>
+  <p style="font-size:9px;color:#6b7a8a;text-align:center;margin-top:2px">小摊优势：投资小、灵活换位、时间不对可以停，亏也只亏料钱和人工</p>
 </div>
 
 <!-- Result -->
@@ -275,6 +276,24 @@ function pick(grp,el){
   var p=document.getElementById(grp); if(!p) return;
   p.querySelectorAll('.opt').forEach(function(o){o.classList.remove('sel')});
   el.classList.add('sel');
+  checkReady();
+}
+function checkReady(){
+  var cat=getVal('gCat'), loc=getVal('gLoc');
+  var btn=document.getElementById('evalBtn'), hint=document.getElementById('hintMsg');
+  if(cat&&loc){
+    btn.disabled=false;
+    hint.textContent='✅ 可以评估了，点下方按钮';
+    hint.style.color='#00ff88';
+  }else{
+    btn.disabled=true;
+    var msg='请选择';
+    if(!cat) msg+='品类';
+    if(!cat&&!loc) msg+='和';
+    if(!loc) msg+='摆摊位置';
+    hint.textContent=msg;
+    hint.style.color='#ddaa44';
+  }
 }
 function getVal(grp){
   var p=document.getElementById(grp); if(!p) return '';
@@ -301,7 +320,11 @@ function evaluate(){
   var waste = parseInt(getVal('gWaste'))||0;
   var rain = parseInt(getVal('gRain'))||0;
 
-  if(!cat||!loc){alert('请选择品类和摆摊位置');return}
+  if(!cat||!loc){
+    document.getElementById('hintMsg').textContent='⚠️ 请选择品类和摆摊位置';
+    document.getElementById('hintMsg').style.color='#ff6b6b';
+    return;
+  }
   var cdata = CATS[cat]; if(!cdata){alert('品类数据异常');return}
 
   var score = 0, details = [], risks = [];
@@ -417,6 +440,7 @@ function resetForm(){
   document.getElementById('rBlocks').innerHTML='';
   window.scrollTo({top:0,behavior:'smooth'});
 }
+checkReady();
 </script>
 </body>
 </html>
