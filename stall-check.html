@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>摆摊试水评估 · FoodIntelAI</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -231,8 +234,9 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
     </div>
   </div>
 
-  <button class="btn-submit" id="evalBtn">🔍 看看能不能干</button>
+  <button class="btn-submit" id="evalBtn" onclick="evaluate()">🔍 看看能不能干</button>
   <div id="hintMsg" style="font-size:10px;color:#ddaa44;text-align:center;margin-top:6px">请先选择品类和摆摊位置</div>
+  <div id="jsFail" style="display:none;margin-top:8px;padding:10px;background:#1e0f0f;border-radius:8px;font-size:11px;color:#ff6b6b;text-align:center">脚本未加载，请刷新页面重试</div>
   <p style="font-size:9px;color:#6b7a8a;text-align:center;margin-top:2px">小摊优势：投资小、灵活换位、时间不对可以停，亏也只亏料钱和人工</p>
 </div>
 
@@ -308,28 +312,28 @@ function updateButton() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.opt-group').forEach(function(g) {
-    g.addEventListener('click', function(e) {
-      var opt = e.target.closest('.opt');
-      if (!opt) return;
-      g.querySelectorAll('.opt').forEach(function(o) { o.classList.remove('sel'); });
-      opt.classList.add('sel');
-      updateButton();
-    });
+// 脚本在body底部运行，DOM已就绪，直接绑定
+document.querySelectorAll('.opt-group').forEach(function(g) {
+  g.addEventListener('click', function(e) {
+    var opt = e.target.closest('.opt');
+    if (!opt) return;
+    g.querySelectorAll('.opt').forEach(function(o) { o.classList.remove('sel'); });
+    opt.classList.add('sel');
+    updateButton();
   });
-
-  $('evalBtn').addEventListener('click', evaluate);
-
-  $('resetBtn').addEventListener('click', function() {
-    $('formArea').style.display = 'block';
-    $('resultArea').classList.remove('show');
-    $('rBlocks').innerHTML = '';
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  });
-
-  updateButton();
 });
+
+$('evalBtn').addEventListener('click', evaluate);
+
+$('resetBtn').addEventListener('click', function() {
+  $('formArea').style.display = 'block';
+  $('resultArea').classList.remove('show');
+  $('rBlocks').innerHTML = '';
+  window.scrollTo({top: 0, behavior: 'smooth'});
+});
+
+updateButton();
+try { document.getElementById('jsFail').style.display = 'none'; } catch(e){}
 
 function evaluate() {
   var tricycle = parseInt(getVal('tricycle')) || 0;
