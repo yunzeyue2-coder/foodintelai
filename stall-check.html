@@ -28,6 +28,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 .opt.wide{flex:1;text-align:center}
 .btn-submit{width:100%;padding:14px;background:#ff884d;border:none;color:#000;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:.15s;margin-top:4px}
 .btn-submit:hover{background:#e6732e}
+.btn-submit:disabled{opacity:.3;cursor:not-allowed}
 .result{display:none;animation:fadeIn .5s ease}
 .result.show{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
@@ -35,6 +36,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 .rs-hdr .grade{font-size:14px;font-weight:600;margin-bottom:2px}
 .rs-hdr .big{font-size:52px;font-weight:900;line-height:1}
 .rs-hdr .sub{font-size:11px;color:#6b7a8a}
+/* Block styles */
 .block{margin:8px 0;border-radius:12px;padding:12px;animation:fadeIn .5s ease}
 .block-title{font-size:10px;font-weight:700;margin-bottom:6px;letter-spacing:1px}
 .match-block{background:#0f1a25;border-left:3px solid #4db8ff}
@@ -48,6 +50,23 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 .check-item .icon{width:18px;font-size:13px;text-align:center}
 .check-item .label{flex:1;color:#b0c0c0}
 .check-item .val{font-size:10px;font-weight:700}
+/* Radar & dims */
+.radar-wrap{background:#121824;border-radius:14px;padding:10px;margin:12px 0;text-align:center}
+.radar-wrap canvas{width:100%;max-width:260px;height:auto}
+.dim-list{margin:12px 0}
+.dim-item{display:flex;align-items:center;padding:5px 0;border-bottom:1px solid #1a2835;font-size:11px}
+.dim-item:last-child{border-bottom:none}
+.dim-item .dn{width:52px;color:#8b9aaa;font-weight:600;flex-shrink:0;font-size:10px}
+.dim-item .db{flex:1;height:8px;background:#1a2835;border-radius:4px;margin:0 6px}
+.dim-item .df{height:100%;border-radius:4px;transition:width .6s}
+.dim-item .ds{width:26px;text-align:right;font-weight:700;font-size:10px}
+/* Derive metrics */
+.derive-box{background:#121824;border-radius:14px;padding:14px;margin:10px 0}
+.derive-box h3{font-size:11px;font-weight:700;margin-bottom:8px;color:#ff884d;letter-spacing:1px}
+.derive-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.derive-item{background:#0b0f14;border-radius:8px;padding:10px;text-align:center}
+.derive-item .dv{font-size:17px;font-weight:700;color:#ff884d;margin-bottom:2px}
+.derive-item .dl{font-size:10px;color:#6b7a8a}
 .tip-box{background:#121824;border-radius:12px;padding:12px;margin:8px 0}
 .tip-box .tip-title{font-size:11px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px}
 .tip-box .tip-text{font-size:11px;color:#b0c0c0;line-height:1.5}
@@ -62,6 +81,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 .risk-h{color:#ff6b6b;border:1px solid rgba(255,75,75,.2);background:rgba(255,75,75,.06)}
 .risk-m{color:#ddaa44;border:1px solid rgba(255,204,0,.15);background:rgba(255,204,0,.05)}
 .risk-l{color:#6b7a8a;border:1px solid rgba(100,100,100,.15);background:rgba(100,100,100,.05)}
+.info-tag{font-size:9px;padding:2px 6px;border-radius:4px;background:#1a2835;color:#6b7a8a;display:inline-block}
 </style>
 </head>
 <body>
@@ -179,7 +199,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
     <div class="field">
       <span class="fl">出摊时间</span>
       <div class="opt-group" id="gTime">
-        <span class="opt" data-val="2" onclick="pick('gTime',this)">下午4点-8点（晚高峰两班）</span>
+        <span class="opt" data-val="2" onclick="pick('gTime',this)">下午4点-8点（晚高峰）</span>
         <span class="opt" data-val="3" onclick="pick('gTime',this)">中午+晚上都干</span>
         <span class="opt" data-val="1" onclick="pick('gTime',this)">不定时，有空就干</span>
       </div>
@@ -258,17 +278,17 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 
 <script>
 var CATS = {
-  '烤肠':{min:1,name:'铁板烤肠',cards:'铁板烤肠XC_126',path:'其他',needPower:0,match:{夜市:5,学校:5,社区:4,工地:3,商业街:3,流动:5}},
-  '煎饼':{min:2,name:'山东杂粮煎饼',cards:'MP_015 山东杂粮煎饼（母）MP_015',path:'其他',needPower:1,match:{夜市:4,学校:5,社区:5,工地:5,商业街:3,流动:4}},
-  '炸鸡':{min:3,name:'美式炸鸡',cards:'HZ_042 美式炸鸡（母）HZ_042',path:'其他',needPower:1,match:{夜市:5,学校:4,社区:3,工地:3,商业街:4,流动:2}},
-  '炒饭':{min:2,name:'炒饭/炒面',cards:'',path:'',needPower:1,match:{夜市:5,学校:4,社区:3,工地:5,商业街:3,流动:3}},
-  '炒鸡':{min:3,name:'炒鸡摆摊',cards:'',path:'',needPower:1,match:{夜市:5,学校:3,社区:3,工地:4,商业街:3,流动:2}},
-  '柠檬茶':{min:2,name:'手打柠檬茶',cards:'LM_004 气泡柠檬茶（母）LM_004',path:'其他',needPower:0,match:{夜市:5,学校:4,社区:3,工地:2,商业街:5,流动:3}},
-  '卤串':{min:2,name:'卤串/冷吃',cards:'LC_005 冷吃鸡副（子）',path:'其他',needPower:0,match:{夜市:5,学校:3,社区:4,工地:3,商业街:3,流动:3}},
-  '酸辣粉':{min:2,name:'贵州酸汤',cards:'ST_M01 贵州酸汤创业母卡',path:'其他',needPower:1,match:{夜市:5,学校:4,社区:3,工地:4,商业街:3,流动:2}},
-  '烧烤':{min:3,name:'中式烧烤',cards:'BBQ_M01_中式烧烤创业母卡',path:'BBQ',needPower:0,match:{夜市:5,学校:2,社区:3,工地:4,商业街:3,流动:2}},
-  '早餐':{min:2,name:'早餐体系',cards:'',path:'',needPower:1,match:{夜市:1,学校:5,社区:5,工地:5,商业街:4,流动:2}},
-  '烤串':{min:2,name:'烤串/肉串',cards:'',path:'',needPower:0,match:{夜市:5,学校:3,社区:4,工地:4,商业街:3,流动:4}}
+  '烤肠':{min:1,name:'铁板烤肠',cards:'铁板烤肠XC_126',path:'其他',needPower:0,match:{夜市:5,学校:5,社区:4,工地:3,商业街:3,流动:5},dailyRev:[200,500],costRate:0.35},
+  '煎饼':{min:2,name:'山东杂粮煎饼',cards:'MP_015 山东杂粮煎饼（母）MP_015',path:'其他',needPower:1,match:{夜市:4,学校:5,社区:5,工地:5,商业街:3,流动:4},dailyRev:[300,600],costRate:0.3},
+  '炸鸡':{min:3,name:'美式炸鸡',cards:'HZ_042 美式炸鸡（母）HZ_042',path:'其他',needPower:1,match:{夜市:5,学校:4,社区:3,工地:3,商业街:4,流动:2},dailyRev:[350,700],costRate:0.4},
+  '炒饭':{min:2,name:'炒饭/炒面',cards:'',path:'',needPower:1,match:{夜市:5,学校:4,社区:3,工地:5,商业街:3,流动:3},dailyRev:[250,550],costRate:0.35},
+  '炒鸡':{min:3,name:'炒鸡摆摊',cards:'',path:'',needPower:1,match:{夜市:5,学校:3,社区:3,工地:4,商业街:3,流动:2},dailyRev:[350,700],costRate:0.4},
+  '柠檬茶':{min:2,name:'手打柠檬茶',cards:'LM_004 气泡柠檬茶（母）LM_004',path:'其他',needPower:0,match:{夜市:5,学校:4,社区:3,工地:2,商业街:5,流动:3},dailyRev:[200,450],costRate:0.25},
+  '卤串':{min:2,name:'卤串/冷吃',cards:'LC_005 冷吃鸡副（子）',path:'其他',needPower:0,match:{夜市:5,学校:3,社区:4,工地:3,商业街:3,流动:3},dailyRev:[200,500],costRate:0.3},
+  '酸辣粉':{min:2,name:'贵州酸汤',cards:'ST_M01 贵州酸汤创业母卡',path:'其他',needPower:1,match:{夜市:5,学校:4,社区:3,工地:4,商业街:3,流动:2},dailyRev:[250,550],costRate:0.3},
+  '烧烤':{min:3,name:'中式烧烤',cards:'BBQ_M01_中式烧烤创业母卡',path:'BBQ',needPower:0,match:{夜市:5,学校:2,社区:3,工地:4,商业街:3,流动:2},dailyRev:[400,900],costRate:0.4},
+  '早餐':{min:2,name:'早餐体系',cards:'',path:'',needPower:1,match:{夜市:1,学校:5,社区:5,工地:5,商业街:4,流动:2},dailyRev:[200,500],costRate:0.3},
+  '烤串':{min:2,name:'烤串/肉串',cards:'',path:'',needPower:0,match:{夜市:5,学校:3,社区:4,工地:4,商业街:3,流动:4},dailyRev:[300,650],costRate:0.35}
 };
 var LOC_NAMES = {'夜市':'夜市/小吃街','学校':'学校门口','社区':'社区门口','工地':'工地/工业区','商业街':'商业街/地铁口','流动':'流动/赶集'};
 
@@ -330,10 +350,10 @@ function evaluate(){
   var score = 0, details = [], risks = [];
 
   // 1. 预算够不够（25分）
-  var needBudget = cdata.min + (tricycle>=2?2:0); // 有三轮车需要更多预算
+  var needBudget = cdata.min + (tricycle>=2?2:0);
   var budgetOk = budget >= needBudget ? 25 : (budget>0 ? 10 : 0);
   score += budgetOk;
-  details.push({icon:budgetOk>=25?'✅':'⚠️',label:'预算：'+getLabel('gBudget').split('（')[0],val:budgetOk+ '/25','tcls':budgetOk>=25?'risk-l':'risk-m'});
+  details.push({icon:budgetOk>=25?'✅':'⚠️',label:'预算：'+getLabel('gBudget').split('（')[0],val:budgetOk+'/25','tcls':budgetOk>=25?'risk-l':'risk-m'});
   if(budgetOk<25) risks.push('⚠️ 预算偏低，'+cdata.name+(tricycle>=2?'加三轮车费用可能不够':'建议先折叠桌起步'));
 
   // 2. 位置固定度（15分）
@@ -352,7 +372,7 @@ function evaluate(){
 
   // 4. 电源+健康证（15分）
   var powerPts = power==2 ? 8 : (power==1 ? 5 : 3);
-  if(power<2 && cdata.needPower) { powerPts = 1; } // 需要用电但电源方案不方便
+  if(power<2 && cdata.needPower) { powerPts = 1; }
   var healthPts = health ? 7 : 0;
   var infraPts = powerPts + healthPts;
   score += infraPts;
@@ -365,7 +385,9 @@ function evaluate(){
   var timePts = [0,5,10,12][time]||0;
   var stickPts = [0,5,10][stick]||0;
   score += timePts + stickPts;
-  details.push({icon:timePts+stickPts>=10?'✅':'⚠️',label:['不定时','下午4-8点','中午+晚上'][time-1]||'下午4-8点'+' · '+['有空就干','试试看','全职干'][stick],val:(timePts+stickPts)+'/15','tcls':timePts+stickPts>=10?'risk-l':'risk-m'});
+  var timeLabels = ['不定时','下午4-8点','中午+晚上'][time-1]||'下午4-8点';
+  var stickLabels = ['有空就干','试试看','全职干'][stick];
+  details.push({icon:timePts+stickPts>=10?'✅':'⚠️',label:timeLabels+' · '+stickLabels,val:(timePts+stickPts)+'/15','tcls':timePts+stickPts>=10?'risk-l':'risk-m'});
   if(stick<2) risks.push('⚠️ 摆摊前3个月最难熬，很多人干一周就放弃了。想清楚再投钱');
   if(time<2) risks.push('💡 出摊时间不固定，客流不稳定，建议固定时间段出摊培养老客');
 
@@ -397,6 +419,56 @@ function evaluate(){
     advice='建议：先搞定位置和健康证，选个启动成本最低的品类（烤肠500以内），试3天看看反应。';
   }
 
+  // ===== 计算维度分数（供雷达图和维度条使用） =====
+  // 6个维度：
+  var dims = [];
+  // d1: 硬件配置 —— 车+预算
+  var hwScore = Math.min(100, (tricycle/3*50 + (budget/5*50)) );
+  dims.push({l:'硬件配置', s:Math.round(hwScore)});
+
+  // d2: 场地条件 —— 位置固定度+费用+电源
+  var locScoreD = Math.min(100, (spot/2*40 + fee*30 + (power/2*30)) );
+  dims.push({l:'场地条件', s:Math.round(locScoreD)});
+
+  // d3: 品类匹配 —— 品类×地段匹配分 + 出摊时间
+  var catD = cdata.match[loc]||0;
+  var catMatch = Math.min(100, (catD/5*60 + (time/3*20) + (target/4*20)));
+  dims.push({l:'品类匹配', s:Math.round(catMatch)});
+
+  // d4: 经营耐力 —— 坚持+时间+自媒体
+  var stamina = Math.min(100, (stick/2*50 + (time/3*30) + ((live-1)/2*20)));
+  dims.push({l:'经营耐力', s:Math.round(stamina)});
+
+  // d5: 合规基础 —— 健康证+电源
+  var compScore = Math.min(100, (health?60:0) + (fee?40:0));
+  dims.push({l:'合规基础', s:Math.round(compScore)});
+
+  // d6: 风险承受 —— 损耗+天气+预算余量
+  var riskD = Math.min(100, (waste?25:0)+(rain?25:0)+(budget>=3?30:budget==2?15:0)+(stick>=2?20:stick==1?10:0));
+  dims.push({l:'风险承受', s:Math.round(riskD)});
+
+  // ===== 推导指标 =====
+  var baseRev = cdata.dailyRev[0] + (cdata.dailyRev[1]-cdata.dailyRev[0]) * (pct/100) * 0.6;
+  var revFactor = (spot/2 * 0.2) + (time/3 * 0.3) + (pct/100 * 0.5);
+  var avgDailyRev = Math.round(baseRev * Math.max(0.3, revFactor * 0.8 + 0.4));
+  var revLow = Math.round(avgDailyRev * 0.7);
+  var revHigh = Math.round(avgDailyRev * 1.2);
+  var dailyCost = Math.round(avgDailyRev * cdata.costRate);
+  var dailyProfit = Math.round(avgDailyRev - dailyCost);
+  // 回本：投资/日利
+  var investAmt = [500, 1500, 3000, 6000, 10000][budget-1]||1500;
+  var pbDays = investAmt / Math.max(1, dailyProfit);
+  var stTxt = dailyProfit>=50 ? Math.round(pbDays)+'天' : '待定（日利偏低）';
+  var stVal = dailyProfit>=50 ? Math.round(pbDays)+'天' : '—';
+
+  // ===== 短板优势 =====
+  var badD = dims.filter(function(d){return d.s<55}).sort(function(a,b){return a.s-b.s});
+  var goodD = dims.filter(function(d){return d.s>=75});
+  var badH='', goodH='';
+  if(badD.length) badH=badD.map(function(d){return '<div class="check-item"><div class="icon">⚠️</div><div class="label" style="color:#ddaa44">'+d.l+'（'+d.s+'/100）— 主要短板</div></div>'}).join('');
+  if(goodD.length) goodH=goodD.map(function(d){return '<div class="check-item"><div class="icon">⭐</div><div class="label" style="color:#00ff88">'+d.l+'（'+d.s+'/100）— 核心优势</div></div>'}).join('');
+
+  // ===== 渲染结果 =====
   document.getElementById('formArea').style.display='none';
   var ra=document.getElementById('resultArea');
   ra.classList.add('show');
@@ -406,15 +478,42 @@ function evaluate(){
   document.getElementById('rScore').style.color=gradeColor;
   document.getElementById('rSub').textContent=subText;
 
-  var html='<div class="block match-block"><div class="block-title">📊 条件评估</div>';
+  var html='';
+
+  // 推导指标
+  html+='<div class="derive-box" style="border-left:3px solid '+(dailyProfit>=200?'#00ff88':dailyProfit>=80?'#ddaa44':'#ff6b6b')+'">'+
+    '<h3>🎯 预计日收益</h3><div class="derive-grid">'+
+    '<div class="derive-item"><div class="dv" style="color:'+gradeColor+'">¥'+revLow+'-'+revHigh+'</div><div class="dl">预计日营收</div></div>'+
+    '<div class="derive-item"><div class="dv" style="color:'+(dailyProfit>=200?'#00ff88':dailyProfit>=80?'#ddaa44':'#ff6b6b')+'">¥'+dailyProfit+'</div><div class="dl">预计日净利</div></div>'+
+    '<div class="derive-item"><div class="dv" style="font-size:13px;color:#4db8ff">¥'+investAmt+'</div><div class="dl">预估总投入</div></div>'+
+    '<div class="derive-item"><div class="dv" style="font-size:13px;color:'+(dailyProfit>=80?'#00ff88':'#6b7a8a')+'">'+stVal+'</div><div class="dl">预计回本周期</div></div>'+
+    '</div></div>';
+
+  // 条件评估
+  html+='<div class="block match-block"><div class="block-title">📊 条件评估</div>';
   details.forEach(function(d){
     html+='<div class="check-item"><span class="icon">'+d.icon+'</span><span class="label">'+d.label+'</span>';
     html+='<span class="val" style="color:'+(d.tcls||'#6b7a8a')+'">'+d.val+'</span></div>';
   });
   html+='</div>';
 
+  // 雷达图
+  html+='<div class="radar-wrap"><canvas id="rdChart" width="280" height="280"></canvas></div>';
+
+  // 维度条
+  html+='<div class="dim-list">'+dims.map(function(d){
+    var c=d.s>=70?'#00ff88':d.s>=55?'#ddaa44':'#ff6b6b';
+    return '<div class="dim-item"><div class="dn">'+d.l.slice(0,4)+'</div><div class="db"><div class="df" style="width:'+d.s+'%;background:'+c+'"></div></div><div class="ds" style="color:'+c+'">'+d.s+'</div></div>';
+  }).join('')+'</div>';
+
+  // 短板优势
+  if(badH) html+='<div class="block" style="background:#1a1210;border-left:3px solid #ff6b6b"><div class="block-title" style="color:#ff6b6b">⚠️ 主要短板</div>'+badH+'</div>';
+  if(goodH) html+='<div class="block" style="background:#0f1a25;border-left:3px solid #00ff88"><div class="block-title" style="color:#00ff88">⭐ 核心优势</div>'+goodH+'</div>';
+
+  // 建议
   html+='<div class="tip-box"><div class="tip-title">💡 建议</div><div class="tip-text">'+advice+'</div></div>';
 
+  // 风险
   if(risks.length){
     html+='<div class="block risk-block"><div class="block-title">⚠️ 需要注意</div>';
     risks.forEach(function(r){
@@ -423,6 +522,7 @@ function evaluate(){
     html+='</div>';
   }
 
+  // 推荐产品
   html+='<div class="card-rec"><h3>📌 推荐去看</h3>';
   var cardPath = cdata.path||'其他';
   if(cdata.cards){
@@ -432,6 +532,27 @@ function evaluate(){
   html+='<a href="https://foodintelai.com/check.html" target="_blank">→ 想干大的？试试开店评估</a></div>';
 
   document.getElementById('rBlocks').innerHTML=html;
+
+  // 画雷达图
+  setTimeout(function(){drawRadar(dims);},100);
+}
+
+function drawRadar(dims){
+  var c=document.getElementById('rdChart');if(!c)return;
+  var ctx=c.getContext('2d'), cx=140, cy=140, r=110, n=dims.length, as=2*Math.PI/n;
+  ctx.clearRect(0,0,280,280);
+  for(var l=0.25;l<=1;l+=0.25){
+    ctx.beginPath();ctx.strokeStyle='#1a2835';ctx.lineWidth=0.5;
+    for(var i=0;i<n;i++){var a=-Math.PI/2+i*as,x=cx+r*l*Math.cos(a),y=cy+r*l*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+    ctx.closePath();ctx.stroke();
+  }
+  for(var i=0;i<n;i++){var a=-Math.PI/2+i*as;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));ctx.strokeStyle='#1a2835';ctx.lineWidth=0.5;ctx.stroke();}
+  ctx.beginPath();
+  for(var i=0;i<n;i++){var a=-Math.PI/2+i*as,v=dims[i].s/100,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+  ctx.closePath();ctx.fillStyle='rgba(255,136,77,.08)';ctx.fill();ctx.strokeStyle='#ff884d';ctx.lineWidth=2;ctx.stroke();
+  ctx.font='9px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  for(var i=0;i<n;i++){var a=-Math.PI/2+i*as,lx=cx+(r+18)*Math.cos(a),ly=cy+(r+18)*Math.sin(a);ctx.fillStyle='#6b7a8a';ctx.fillText(dims[i].l.slice(0,6),lx,ly);
+    var v=dims[i].s/100,px=cx+r*v*Math.cos(a),py=cy+r*v*Math.sin(a);ctx.beginPath();ctx.arc(px,py,3,0,2*Math.PI);ctx.fillStyle=dims[i].s>=70?'#00ff88':dims[i].s>=55?'#ddaa44':'#ff6b6b';ctx.fill();}
 }
 
 function resetForm(){
