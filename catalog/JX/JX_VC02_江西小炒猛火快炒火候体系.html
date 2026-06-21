@@ -1,0 +1,537 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>JX_VC02 猛火快炒火候体系 — 锅气参数·各菜火力曲线·翻车解决 · FoodIntelAI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e8e0;color:#1a1a1a;padding:20px 14px;line-height:1.7}
+.card{max-width:540px;margin:0 auto;background:#fdfaf7;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.header{background:linear-gradient(135deg,#8b1a1a,#c0392b,#e74c3c);padding:22px 22px 18px;color:#fff}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.header-code{font-size:11px;opacity:.7;font-weight:600;letter-spacing:2px}
+.header-level{display:flex;gap:6px}.header-level span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.12)}
+.header h1{font-size:24px;font-weight:800;margin:4px 0 2px;letter-spacing:-.5px}
+.header .subtitle{font-size:12px;opacity:.8;line-height:1.4}
+.header-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.header-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #ede0d0}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.section{padding:16px 18px;border-bottom:1px solid #ede0d0}
+.s-title{font-size:13px;font-weight:700;color:#8b1a1a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.s-title::after{content:'';flex:1;height:1px;background:#ede0d0}
+.recipe-box{background:#faf0e8;border-radius:10px;padding:14px;margin:8px 0;border:1px solid #ede0d0}
+.recipe-box .rb-title{font-size:14px;font-weight:800;color:#8b1a1a;margin-bottom:6px}
+.recipe-box .rb-sub{font-size:10px;color:#b5aaa0;margin-bottom:10px;font-weight:400}
+.recipe-line{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #ede0d0;font-size:11px;color:#3a2a1a}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .rl-value{font-weight:700;color:#C0392B}
+.spec-card{background:#faf0e8;border-radius:8px;padding:12px;margin:6px 0;border:1px solid #ede0d0}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#8b1a1a;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#3a2a1a;line-height:1.6}
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+.tb th{background:#8b1a1a;color:#fff;padding:6px 8px;text-align:left;font-weight:600}
+.tb td{padding:5px 8px;border-bottom:1px solid #ede0d0;color:#3a2a1a}
+.tb tr:nth-child(even) td{background:#faf5f0}
+.tip-box{background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#c0392b;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#3a2a1a;line-height:1.6}
+.iron-law{background:#faf0e8;border-radius:10px;padding:12px 14px;margin:6px 0;border:1px solid #ede0d0}
+.iron-law .il-number{font-size:10px;color:#c0392b;font-weight:700}
+.iron-law .il-title{font-size:13px;font-weight:800;color:#8b1a1a;margin-bottom:2px}
+.iron-law .il-body{font-size:12px;color:#3a2a1a;line-height:1.6}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}.judge-box .j-text strong{color:#C0392B}
+.comp-box{background:#fff;border-radius:10px;padding:12px;margin:6px 0;border:1px solid #ede0d0}
+.comp-box .c-title{font-size:11px;font-weight:700;color:#8b1a1a;margin-bottom:4px}
+.comp-box .c-body{font-size:11px;color:#3a2a1a;line-height:1.6}
+.comp-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #f0e8e0;font-size:11px;color:#3a2a1a}
+.comp-line:last-child{border-bottom:none}
+.comp-line .cl-label{color:#666}
+.comp-line .cl-value{font-weight:700;color:#8b1a1a}
+/* ¥39 Paywall Toggle */
+.paywall-wrap{margin:16px 0;border-radius:12px;overflow:hidden}
+.paywall-checkbox{display:none}
+.paywall-label{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;background:linear-gradient(135deg,#fdf8f0,#faf0e8);border:2px dashed #8b1a1a;border-radius:12px;user-select:none}
+.paywall-label .pw-lock{font-size:20px}
+.paywall-label .pw-text{font-size:14px;font-weight:800;color:#8b1a1a;flex:1;margin-left:10px}
+.paywall-label .pw-badge{font-size:13px;font-weight:700;color:#fff;background:#c0392b;padding:4px 14px;border-radius:20px}
+.paywall-label .pw-arrow{font-size:12px;color:#8b1a1a;margin-left:8px;transition:transform .3s ease}
+.paywall-checkbox:checked+.paywall-label{border-radius:12px 12px 0 0;border-bottom:none}
+.paywall-checkbox:checked+.paywall-label .pw-arrow{transform:rotate(180deg)}
+.paywall-content{max-height:0;overflow:hidden;transition:max-height .5s ease}
+.paywall-checkbox:checked~.paywall-content{max-height:8000px}
+.paywall-inner{border:2px dashed #8b1a1a;border-top:none;border-radius:0 0 12px 12px;padding:0 14px 14px;background:#fdfaf7}
+.data-note{font-size:10px;color:#999;line-height:1.8;padding:12px 18px}
+.footer-brand{background:#3a2a1a;color:#fff;text-align:center;padding:20px}
+.footer-brand .fb-name{font-size:18px;font-weight:700;margin-bottom:2px}
+.footer-brand .fb-tagline{font-size:11px;opacity:.7;margin-bottom:10px}
+.footer-brand .fb-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.footer-brand .fb-links span{background:rgba(255,255,255,.12);padding:4px 12px;border-radius:16px;font-size:11px}
+</style></head><body><div class="card">
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-code">JX_VC02 · 工艺卡</div>
+    <div class="header-level"><span>🧪 VC工艺卡</span><span>❤️ 付费内容</span></div>
+  </div>
+  <h1>🔥 江西小炒·猛火快炒火候体系</h1>
+  <div class="subtitle">锅气参数·各菜火力曲线·油温监测·翻车解决方案</div>
+  <div class="header-tags">
+    <span>🔥 锅气临界点</span><span>🌡️ 油温曲线</span><span>⏱️ 秒级SOP</span><span>🛠️ 翻车解决</span><span>♨️ 铁锅养护</span><span>📊 批量生产</span>
+  </div>
+</div>
+
+<!-- ===== 模块1：锅气原理（加深） ===== -->
+<div class="section">
+  <div class="s-title">🔥 锅气原理 · 物理化学拆解</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>锅气不是玄学，是物理化学。</b>食材在≥200°C的油温中入锅，表面水分瞬间蒸发（＜1秒），细胞壁破裂处发生美拉德反应与焦糖化反应，产生吡嗪类、呋喃类、吡咯类等焦香风味物质。<br><br>
+      <b>锅气三要素：</b><br>
+      • <b>油温≥200°C：</b>低于此温度→食材缓慢升温→细胞壁逐步破裂出水→变成水煮菜。200°C是锅气的「临界点」。<br>
+      • <b>10秒窗口：</b>食材入锅后前10秒是美拉德反应黄金窗口——表面温度须在此时间内越过140°C启动反应。<br>
+      • <b>猛火持续：</b>全程大火不关小。火一关小→锅底温度骤降→食材出水→锅气消失。<br><br>
+      <b>为何江西小炒特别强调猛火？</b><br>
+      江西菜发源于赣南山区，传统土灶柴火灶火力猛、温度高，形成了「快炒即出」的烹饪基因。区别于湘菜的油重味厚、川菜的复合调味，江西小炒的核心竞争力=猛火快炒带来的外焦里嫩口感。<br><br>
+      <b>温度对照表：</b><br>
+      100°C → 水沸腾，食材出水（❌ 水煮状态）<br>
+      140-160°C → 美拉德反应启动（✅ 开始产生香气）<br>
+      180-200°C → 锅气临界区间（✅ 焦香物质大量生成）<br>
+      220-240°C → 理想爆炒区间（✅ 10秒内完成表面焦化）<br>
+      ≥250°C → 油烟点以上（⚠️ 油烟过重，有害物质生成）
+    </div>
+  </div>
+</div>
+
+<!-- ===== 模块2：辣椒炒肉（加深） ===== -->
+<div class="section">
+  <div class="s-title">🌡️ 一、辣椒炒肉（五花肉300g基准）</div>
+  <div class="recipe-box">
+    <div class="rb-title">火候参数 · 火力曲线</div>
+    <div class="recipe-line"><span>滑锅油温</span><span class="rl-value">220°C（锅面冒青烟）</span></div>
+    <div class="recipe-line"><span>煸肉出油</span><span class="rl-value">大火60s·至五花肉卷曲出油</span></div>
+    <div class="recipe-line"><span>爆香酱料</span><span class="rl-value">中火40s·鲜辣酱炒出红油</span></div>
+    <div class="recipe-line"><span>下椒翻炒</span><span class="rl-value">大火40s·辣椒断生起虎皮</span></div>
+    <div class="recipe-line"><span>碗汁激发</span><span class="rl-value">沿锅边淋入·大火8s</span></div>
+    <div class="recipe-line"><span>总出餐</span><span class="rl-value">约2分30秒</span></div>
+    <div class="recipe-line"><span>热灶至出锅总时长</span><span class="rl-value">约3分30秒（含热锅）</span></div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">工艺详解 · 温度监测点</div>
+    <div class="sc-body">
+      <strong>① 滑锅：</strong>空锅大火烧30秒至锅底220°C（手离锅面10cm感觉灼热），下冷油滑锅，油温七成热约200°C。<br>
+      <strong>② 煸肉：</strong>下五花肉片，大火煸60s。温度监测：肉片入锅时油温降至约180°C，30秒后回升至200°C，此时肉片开始卷曲出油——这是"锅气声"最响的阶段。继续煸至油出尽、肉片边缘焦黄。<br>
+      <strong>③ 爆酱：</strong>火力调至中火，油温降至约140°C下复合鲜辣酱40g+蒜末+豆豉，慢炒40秒至红油渗出——这一步控温很重要：酱料在140-160°C最易释放风味，超过180°C会焦。<br>
+      <strong>④ 下椒：</strong>转大火至油温回升200°C，下螺丝椒段，大火40秒。辣椒表面起虎皮斑（焦化斑）=锅气达标信号。<br>
+      <strong>⑤ 碗汁：</strong>预调碗汁（生抽15g+老抽3g+蚝油10g+糖3g+水10g）沿锅边淋入，大火8秒收汁——锅边温度比锅中央高60-80°C，液体瞬间汽化产生蒸汽裹香。<br>
+      <strong>⑥ 出锅：</strong>加蒜苗段翻匀即出。全程不盖盖。总用时2分30秒±15秒。<br>
+      <span style="color:#c0392b;font-weight:700">⚠️ 关键温度曲线：220°C（滑锅）→180°C（下肉）→200°C（回升）→140°C（爆酱）→200°C（下椒）→220°C（碗汁激发）</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 模块3：小炒牛肉（加深） ===== -->
+<div class="section">
+  <div class="s-title">🥩 二、小炒牛肉（牛里脊250g基准）</div>
+  <div class="recipe-box">
+    <div class="rb-title">火候参数 · 火力曲线</div>
+    <div class="recipe-line"><span>滑锅油温</span><span class="rl-value">220°C</span></div>
+    <div class="recipe-line"><span>牛肉滑油</span><span class="rl-value">大火20s·变色即捞出</span></div>
+    <div class="recipe-line"><span>爆香酱料</span><span class="rl-value">中火30s·140°C控温</span></div>
+    <div class="recipe-line"><span>牛肉回锅</span><span class="rl-value">大火15s·翻匀即出</span></div>
+    <div class="recipe-line"><span>总出餐</span><span class="rl-value">约1分30秒</span></div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">工艺详解 · 嫩度控制</div>
+    <div class="sc-body">
+      <strong>① 牛肉腌制：</strong>牛里脊逆纹切薄片3mm→清水100g+生抽20g+老抽5g+料酒15g+白胡椒粉2g→抓匀至水分吸收→加玉米淀粉15g→最后封油15g→腌制10分钟。牛肉嫩度=80%腌制+20%火候。<br>
+      <strong>② 滑油（关键控时）：</strong>220°C油温下牛肉片，大火滑20秒——变色立刻捞出。牛肉从入锅到捞出温差曲线：220°C→入锅后降至190°C→15秒后回升至200°C→捞出。超过25秒牛肉开始失水变老。<br>
+      <strong>③ 爆酱：</strong>底油降至140°C，下鲜辣酱35g+姜蒜末，中火30秒。<br>
+      <strong>④ 回锅：</strong>转大火至200°C，牛肉回锅+碗汁1份+香菜段50g+小米辣圈20g，大火15秒翻匀出锅——从回锅到出锅≤15秒，超过则老。<br>
+      <strong>⑤ 总时间：</strong>1分30秒是黄金线，超过2分钟牛肉一定老。<br>
+      <span style="color:#c0392b;font-weight:700">⏱️ 嫩度口诀："20秒滑油、15秒回锅、总时不超2分钟"</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 模块4：江西炒粉（加深） ===== -->
+<div class="section">
+  <div class="s-title">🍜 三、江西炒粉（干米粉300g基准）</div>
+  <div class="recipe-box">
+    <div class="rb-title">火候参数 · 火力曲线</div>
+    <div class="recipe-line"><span>滑锅油温</span><span class="rl-value">180°C（炒粉油温低于炒菜）</span></div>
+    <div class="recipe-line"><span>鸡蛋/肉煸炒</span><span class="rl-value">中火40s</span></div>
+    <div class="recipe-line"><span>米粉翻炒</span><span class="rl-value">大火90s·至米粉微焦</span></div>
+    <div class="recipe-line"><span>调味翻炒</span><span class="rl-value">中大火30s</span></div>
+    <div class="recipe-line"><span>总出餐</span><span class="rl-value">约2分30秒</span></div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">工艺详解 · 锅巴香气控制</div>
+    <div class="sc-body">
+      <strong>① 米粉预处理：</strong>干米粉冷水泡3小时（或温水泡1小时）→沥干至8分硬→加老抽5ml+食用油10ml拌匀上色防粘。泡发标准：掐断米粉见白芯——8分硬即可，泡过头一炒就断。<br>
+      <strong>② 炒蛋/肉：</strong>180°C油温，鸡蛋炒散盛出（或肉丝滑油30秒捞出）。<br>
+      <strong>③ 炒粉（锅气关键）：</strong>底油+蒜末+小米辣爆香→下米粉大火翻炒90秒。炒粉的锅气来自米粉在锅底短暂停留产生的焦化——每15-20秒停一下让粉接触锅底2-3秒，再翻动。持续翻动=永远不会有锅巴香。<br>
+      <strong>④ 调味合并：</strong>沿锅边淋入生抽15g+老抽3g+蚝油10g+糖2g→中大火翻炒30秒→加炒好的蛋/肉+豆芽+韭菜段→翻匀出锅。<br>
+      <strong>⑤ 火候曲线：</strong>180°C（滑锅）→170°C（下粉）→190°C（焦化阶段）→180°C（调味合匀）。<br>
+      <span style="color:#c0392b;font-weight:700">🔥 锅气信号：米粉表面出现金色焦斑、闻到类似锅巴的焦香、米粉变得有嚼劲不黏牙。</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 模块5：酸辣土豆丝（加深） ===== -->
+<div class="section">
+  <div class="s-title">🥬 四、酸辣土豆丝（土豆丝350g基准）</div>
+  <div class="recipe-box">
+    <div class="rb-title">火候参数 · 火力曲线</div>
+    <div class="recipe-line"><span>滑锅油温</span><span class="rl-value">200°C</span></div>
+    <div class="recipe-line"><span>爆香干椒蒜末</span><span class="rl-value">中火20s·辣椒变深红即好</span></div>
+    <div class="recipe-line"><span>快炒土豆丝</span><span class="rl-value">大火60s·至透亮</span></div>
+    <div class="recipe-line"><span>锅边醋激发</span><span class="rl-value">大火10s·收汁</span></div>
+    <div class="recipe-line"><span>总出餐</span><span class="rl-value">约1分30秒</span></div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">工艺详解 · 脆爽关键</div>
+    <div class="sc-body">
+      <strong>① 预处理：</strong>土豆丝切好后冷水浸泡10分钟去淀粉→换水一次→沥干。去淀粉=不黏锅=爽脆。⚠️ 不去淀粉=土豆丝入锅就糊。<br>
+      <strong>② 爆香：</strong>200°C油温，下干辣椒段+蒜末中火20秒——辣椒变深红但未焦前下土豆丝。干辣椒焦了整锅菜发苦。<br>
+      <strong>③ 快炒：</strong>下土豆丝保持大火60秒。土豆丝从入锅到透亮（半透明状）是口感最佳状态。全程大火不停翻——火小→土豆丝出水→变成"焖土豆丝"。<br>
+      <strong>④ 锅边醋：</strong>沿锅边烹入醋10g（白醋或米醋）=醋遇高温锅壁瞬间汽化→醋香蒸汽包裹土豆丝而非液体浸泡。再加盐3g+糖2g→翻匀10秒出锅。<br>
+      <span style="color:#c0392b;font-weight:700">💡 脆度测试：出锅后夹一根土豆丝，弯折不断=脆度达标。</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 模块6：核心铁律（4条→6条） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 核心铁律（六条）</div>
+  <div class="iron-law">
+    <div class="il-number">铁律一</div>
+    <div class="il-title">锅气不足=油温不够</div>
+    <div class="il-body">食材入锅时油温低于180°C→食材缓慢升温→细胞壁破裂出水→变成水煮。不是调味能救的——油温不够这道菜就废了。新手常见错误：怕油烟不敢开大火。解决方案：宁可油烟大一点，不可油温低一点。</div>
+  </div>
+  <div class="iron-law">
+    <div class="il-number">铁律二</div>
+    <div class="il-title">同一锅菜不盖盖</div>
+    <div class="il-body">盖盖=蒸汽回流=食材表面湿度增加=锅气消失。江西小炒所有菜全程不盖盖（红烧鸡块等需焖煮的除外）。盖盖是家庭烹饪习惯，不是猛火快炒的做法。</div>
+  </div>
+  <div class="iron-law">
+    <div class="il-number">铁律三</div>
+    <div class="il-title">锅边醋/碗汁是灵魂</div>
+    <div class="il-body">所有调味液必须沿锅边淋入，不可直接倒在菜上。锅边温度比菜面高60-80°C，液体瞬间蒸发产生蒸汽——酱香被蒸汽带入菜里，而不是被菜吸收后变咸。碗汁要在锅中温度最高点淋入。</div>
+  </div>
+  <div class="iron-law">
+    <div class="il-number">铁律四</div>
+    <div class="il-title">铁锅养好才不粘</div>
+    <div class="il-body">新铁锅：洗洁精洗去出厂油膜→烧热至200°C→涂食用油→冷却→重复三次形成油膜。日常养锅：炒完菜热水冲（不用洗洁精）→烧干水分→抹薄油。铁锅不粘靠油膜不是涂层。油膜越厚越不粘，但需要时间积累。</div>
+  </div>
+  <div class="iron-law">
+    <div class="il-number">铁律五</div>
+    <div class="il-title">食材量不超锅容量的1/3</div>
+    <div class="il-body">食材一次性下太多→锅底温度骤降→温度拉不回来→出水。标准：家用32cm炒锅最多炒300g主料+200g配料。超出分两次炒。专业后厨炒锅只炒1份菜的量，从不多炒。</div>
+  </div>
+  <div class="iron-law">
+    <div class="il-number">铁律六</div>
+    <div class="il-title">锅铲不停是假快炒</div>
+    <div class="il-body">真正的猛火快炒不是锅铲不停翻动。适当让食材在锅底停留1-2秒产生焦化再翻动——锅气来自"停"而非"动"。不停翻=食材始终接触不到高温锅底=没有焦香=没有锅气。</div>
+  </div>
+</div>
+
+<!-- ===== 模块7：翻车解决方案（4→6个场景） ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 翻车解决方案（六大场景）</div>
+  <div class="spec-card">
+    <div class="sc-title">🆘 场景一：肉片粘锅/炒老</div>
+    <div class="sc-body">原因：锅不够热/油不够多/肉片没封油。解决：空锅烧到220°C再下油→油温200°C下肉→肉片变色即翻。铁律：热锅冷油（滑锅后倒出热油换冷油）是防粘的终极方案。</div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">🆘 场景二：蔬菜出水变成水煮</div>
+    <div class="sc-body">原因：油温低于180°C/菜太多一次性下完。解决：大火热油→分两次下菜→每次翻炒10秒→炒完第一批锅底恢复到200°C再下第二批。</div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">🆘 场景三：粉面炒不散/黏成一团</div>
+    <div class="sc-body">原因：泡发过度/油不够/下锅前没拌油。解决：泡到8分硬就捞出沥干→拌老抽+食用油防粘→大火快炒。如果是炒饭黏成一团→米饭要隔夜冷藏、炒前用手捏散。</div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">🆘 场景四：酱料炒糊整锅报废</div>
+    <div class="sc-body">原因：豆瓣酱/鲜辣酱下锅时油温太高（>180°C）。解决：油温降到120-140°C再下酱→小火炒出红油再转大火。顺序很重要：先下鲜辣椒再下豆瓣酱——鲜辣椒含水多能降温保护酱料。</div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">🆘 场景五：肉腥味没去除干净</div>
+    <div class="sc-body">原因：腌制时去血水不彻底/料酒量不够/火候不够猛。解决：肉片切好后清水浸泡10分钟去血水→挤干→腌制时加足量料酒和白胡椒粉→猛火爆炒让腥味随蒸汽挥发。</div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">🆘 场景六：辣椒不辣/不香</div>
+    <div class="sc-body">原因：辣椒品种不对/炒制时间不够/油温不够高。解决：螺丝椒或二荆条+朝天椒按3:1搭配→大火煸至表面起虎皮（焦化斑）→辣椒素在200°C以上才充分释放。</div>
+  </div>
+</div>
+
+<!-- ===== 模块8：沧林判断（加深） ===== -->
+<div class="section">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      江西小炒的锅气没有秘密——<b>就是油温够高、动作够快。</b>猛火灶火力≥5.0kW是底线，低于这个火力炒什么都白搭。<br><br>
+      很多新手怕油烟，不敢把锅烧到冒青烟。但<b>220°C才是锅气的起点</b>。油烟可以装个好点的排烟机解决——一盘没有锅气的菜排烟再好也救不了。<br><br>
+      <b>一句话：</b>锅气不是技术问题——是敢不敢开大火的问题。<br><br>
+      <b>进阶判断：</b>一道江西小炒的锅气是否到位，听声音就能判断——食材入锅时"滋啦"声响亮持续≥3秒=油温够；声音弱、短促如"嗞"一声就没了=油温不够、食材已经出水。炒菜时可以"以声判温"。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 模块9：与母卡差异 ===== -->
+<div class="section">
+  <div class="s-title">📋 与母卡差异 · 火候体系vs通用烹饪</div>
+  <div class="comp-box">
+    <div class="c-title">火候体系（VC卡） vs 通用烹饪（母卡）</div>
+    <div class="comp-line"><span class="cl-label">时间精度</span><span class="cl-value">秒级（±5秒）vs 分钟级（±1分）</span></div>
+    <div class="comp-line"><span class="cl-label">温度控制</span><span class="cl-value">精确油温+视检信号 vs 模糊"七成热"</span></div>
+    <div class="comp-line"><span class="cl-label">火候曲线</span><span class="cl-value">各阶段明确温度升降 vs 全程大火/全程小火</span></div>
+    <div class="comp-line"><span class="cl-label">翻车预案</span><span class="cl-value">6大场景+根因分析 vs 无专门预案</span></div>
+    <div class="comp-line"><span class="cl-label">批量能力</span><span class="cl-value">30/50/100份SOP vs 单份或小批量</span></div>
+    <div class="comp-line"><span class="cl-label">设备要求</span><span class="cl-value">明确kW/锅具/排烟 vs 通用厨具</span></div>
+    <div class="comp-line"><span class="cl-label">成本核算</span><span class="cl-value">燃料/食材损耗量化 vs 无成本数据</span></div>
+    <div class="comp-line"><span class="cl-label">判断体系</span><span class="cl-value">颜色+声音+触感3维 vs 经验模糊判断</span></div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>核心差异一句话：</b>母卡告诉你"做什么"，VC卡告诉你"做到什么程度、怎么把控、出问题怎么办"。母卡是菜谱，VC卡是工艺工程文档。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 模块10：设备方案 ===== -->
+<div class="section">
+  <div class="s-title">🔧 设备方案 · 铁锅/灶具/排烟</div>
+  <div class="spec-card">
+    <div class="sc-title">铁锅选择标准</div>
+    <div class="sc-body">
+      <b>① 材质：</b>熟铁锅（精铁锅）首选——导热快、重量轻、适合颠锅。铸铁锅太重不适合猛火快炒。<br>
+      <b>② 尺寸：</b>家用33-36cm，商用40-45cm。锅越大食材摊得越开、锅气越足。<br>
+      <b>③ 厚度：</b>1.2-1.5mm最佳——太薄易变形、太厚升温慢。<br>
+      <b>④ 品牌参考：</b>陈枝记（香港）、章丘铁锅（传统）、极铁（日本）——预算200-500元即可。
+    </div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">灶具火力对比</div>
+    <div class="sc-body">
+      <b>家用燃气灶：</b>火力3.8-5.0kW→适合1-2人份，炒菜时间延长50-80%。建议选5.0kW以上的猛火灶头。<br>
+      <b>商用猛火灶：</b>火力8-15kW→锅气完全释放，30秒油温即可到220°C。后厨标配。<br>
+      <b>电磁炉/电灶：</b>不适合猛火快炒——持续加热能力弱、温度波动大。但电陶炉（红外炉）配平底熟铁锅勉强可用。<br>
+      <b>柴火灶（传统）：</b>火力极猛（10-20kW）+火焰包裹锅底面积大→锅气最佳。但排烟和环保是硬伤。
+    </div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">排烟方案</div>
+    <div class="sc-body">
+      <b>家用：</b>排量≥20m³/min的侧吸或顶吸油烟机。安装高度距灶台65-75cm最佳。使用猛火快炒时提前3分钟开排烟。<br>
+      <b>商用：</b>不锈钢排烟罩+离心风机（风量≥6000m³/h）+油烟净化器（过滤效率≥95%）。<br>
+      <b>成本提示：</b>排烟系统投资≈3000-8000元（家用）或1-3万元（商用），但这是做猛火快炒的刚性成本、不能省。
+    </div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">设备配置成本对比</div>
+    <div class="sc-body">
+      • 家用入门（3.8kW灶+33cm铁锅+20m³排烟）≈ 2000-4000元<br>
+      • 家用进阶（5.0kW猛火灶+36cm熟铁锅+大排量排烟）≈ 5000-8000元<br>
+      • 商用单灶（12kW商用灶+45cm铁锅+排烟净化）≈ 8000-15000元<br>
+      • 商用全套（3灶+排烟系统+不锈钢台面）≈ 2-5万元
+    </div>
+  </div>
+</div>
+
+<!-- ===== ¥39 付费区 Toggle ===== -->
+<div class="paywall-wrap">
+  <input type="checkbox" id="paywall-toggle" class="paywall-checkbox">
+  <label for="paywall-toggle" class="paywall-label">
+    <span class="pw-lock">🔒</span>
+    <span class="pw-text">付费内容 · 批量/风险/误区/成本</span>
+    <span class="pw-badge">¥39 解锁</span>
+    <span class="pw-arrow">▼</span>
+  </label>
+  <div class="paywall-content">
+    <div class="paywall-inner">
+
+      <!-- ===== 模块11：批量SOP（付费） ===== -->
+      <div class="section" style="border-bottom:1px solid #ede0d0;padding:16px 0">
+        <div class="s-title">📦 批量SOP · 30/50/100份</div>
+        <div class="spec-card">
+          <div class="sc-title">预处理（所有批量共用）</div>
+          <div class="sc-body">
+            <b>① 切配集中化：</b>所有主料按份称重分装→保鲜盒密封冷藏（4°C）。配菜/小料也按份分装。<br>
+            <b>② 酱汁预调：</b>复合鲜辣酱、碗汁按批量预调分装——每份用独立小碗装好，炒菜时直接倒。<br>
+            <b>③ 肉类腌制：</b>牛肉/猪肉按总量腌制（腌料比例不变）→分装→冷藏备用。<br>
+            <b>④ 米粉/面预处理：</b>按批次泡发→沥干→拌老抽+油防粘→分装。
+          </div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">30份批量·用1口45cm商用锅·单锅出3份</div>
+          <div class="sc-body">
+            • 每锅菜量：3份=900g主料+600g配料（锅容量上限）<br>
+            • 单锅炒制时间：4-5分钟（比单份延长约2分钟，因锅底食材多温度恢复慢）<br>
+            • 总出餐时间：约40-50分钟（10锅，含备料）<br>
+            • 操作提示：每锅之间空锅烧30秒恢复锅温
+          </div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">50份批量·用2口45cm商用锅·双灶并行</div>
+          <div class="sc-body">
+            • 双灶配置：1号灶炒肉类（牛肉/猪肉），2号灶炒蔬菜/粉面类<br>
+            • 单锅出3份，双锅同时：约6份/次<br>
+            • 总出餐时间：约45-60分钟（17锅双灶并行）<br>
+            • 需2名炒锅师傅+1名配菜手
+          </div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">100份批量·用3口商用锅·流水线配置</div>
+          <div class="sc-body">
+            • 3灶流水线：灶1→肉类预炒（滑油至七成熟），灶2→蔬菜/配料爆香，灶3→合锅+碗汁出锅<br>
+            • 每灶专人负责：师傅A负责肉类预炒，师傅B负责蔬菜配料，师傅C负责合锅收汁<br>
+            • 单份出餐时间：约2分钟/份（流水线效率）<br>
+            • 总出餐时间：约2.5-3小时（含切配）<br>
+            • 人员配置：3名炒锅师傅+2名配菜手+1名出餐员<br>
+            • 设备要求：3台商用猛火灶（12kW+）+3口45cm熟铁锅+大型排烟系统
+          </div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">批量生产·火候调整要诀</div>
+          <div class="sc-body">
+            • 单锅出3-4份时：滑锅油温提升至230°C（比单份高10°C）——抵消食材多带来的降温<br>
+            • 翻炒频率：每锅多翻20-30%——确保食材受热均匀<br>
+            • 碗汁用量：按比例增加15%（批量做需额外补蒸汽损失）<br>
+            • 关键：批量做时宁可欠火候不可过火——过火无法补，欠火可回锅补10秒
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 模块12：专属风险（付费） ===== -->
+      <div class="section" style="border-bottom:1px solid #ede0d0;padding:16px 0">
+        <div class="s-title">⚠️ 专属风险 · 火候翻车点</div>
+        <div class="spec-card">
+          <div class="sc-title">🔥 风险点一：油烟积碳火灾</div>
+          <div class="sc-body">猛火快炒产生大量油烟，长期不清理排烟系统→油垢积碳→火灾风险。预防：排烟罩每周清洗一次、管道每月检查一次。后厨必备灭火毯+干粉灭火器。</div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">🔥 风险点二：铁锅烧穿变形</div>
+          <div class="sc-body">长时猛火空烧→锅底温度超过400°C→熟铁锅软化变形（锅底凸起）。预防：空锅烧不超过45秒、每次空锅烧后立刻下油降温。已变形的锅底会导致受热不均。</div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">🔥 风险点三：高温烫伤事故</div>
+          <div class="sc-body">220°C油温+高频颠锅=油溅烫伤高风险。预防：厨师服长袖、围裙覆盖到膝盖、防滑鞋、灶台旁备一盆冷水（被烫立即冲）。不穿短袖操作猛火灶。</div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">🔥 风险点四：调味料变质变色</div>
+          <div class="sc-body">预调酱汁在高温灶台旁存放超过2小时→发酵变质。预防：预调酱汁冷藏保存、出餐前按需取用。蚝油开盖后冷藏、当天用完。</div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">🔥 风险点五：批量生产品质波动</div>
+          <div class="sc-body">同批次前几锅和后几锅品质差异大——后几锅师傅疲劳、火力下降。预防：每2锅轮换师傅位置、每4锅休息5分钟。严格定时器控制每锅炒制时间。</div>
+        </div>
+      </div>
+
+      <!-- ===== 模块13：常见误区（付费） ===== -->
+      <div class="section" style="border-bottom:1px solid #ede0d0;padding:16px 0">
+        <div class="s-title">🚫 常见误区 · 火候认知破执</div>
+        <div class="spec-card">
+          <div class="sc-title">误区一：油越多锅气越足</div>
+          <div class="sc-body"><b>❌ 错误认知：</b>多放油=锅气好。<b>✅ 真相：</b>锅气来自高温+短时，多油只会让食材在油里炸而不是炒。正确做法：油量刚好能覆盖锅底一层（约15-30g），让食材直接接触高温锅壁。</div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">误区二：不粘锅也能做猛火快炒</div>
+          <div class="sc-body"><b>❌ 错误认知：</b>不粘锅方便、猛火快炒一样用。<b>✅ 真相：</b>不粘锅涂层耐温≤260°C，猛火灶空烧可超350°C→涂层分解释放有毒物质。猛火快炒只能用无涂层熟铁锅或碳钢锅。</div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">误区三：锅铲越勤快、炒得越好</div>
+          <div class="sc-body"><b>❌ 错误认知：</b>不停翻动=防止糊锅=炒得好。<b>✅ 真相：</b>不停翻=食材接触不到高温锅底=没有焦化=没有锅气。正确节奏：翻2-3下→停1秒→再翻。让食材在锅底短暂"煎"一下。</div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">误区四：大火从头烧到尾就可以</div>
+          <div class="sc-body"><b>❌ 错误认知：</b>猛火快炒=全程最大火。<b>✅ 真相：</b>爆酱料阶段需要中火（120-140°C），酱料在高油温下会焦糊发苦。正确火力曲线：大火滑锅→中火爆酱→大火快炒→中大火收汁。</div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">误区五：电磁炉/电陶炉也可以做</div>
+          <div class="sc-body"><b>❌ 错误认知：</b>现在的电磁炉功率很大了、做猛火菜没问题。<b>✅ 真相：</b>电磁炉加热是间歇式（工作→停→工作），锅底温度波动大、无法持续保持220°C。电陶炉虽能持续加热但升温慢。家用条件下首选5.0kW以上燃气猛火灶。</div>
+        </div>
+      </div>
+
+      <!-- ===== 模块14：成本对比（付费） ===== -->
+      <div class="section" style="border-bottom:1px solid #ede0d0;padding:16px 0">
+        <div class="s-title">💰 成本对比 · 不同燃料的燃耗成本</div>
+        <div class="spec-card">
+          <div class="sc-title">燃料类型 · 每餐成本估算（以每天100份计算）</div>
+          <div class="sc-body">
+            <b>① 液化石油气（LPG）：</b><br>
+            • 单价：约7-9元/kg<br>
+            • 每份消耗：约0.15-0.25kg（猛火快炒耗气量大）<br>
+            • 每份成本：1.1-2.3元<br>
+            • 月成本（3000份）：3300-6900元<br>
+            • ⚠️ 气价波动大，旺季可能上涨30%<br><br>
+            <b>② 管道天然气：</b><br>
+            • 单价：约3-4元/m³<br>
+            • 每份消耗：约0.2-0.3m³<br>
+            • 每份成本：0.6-1.2元<br>
+            • 月成本（3000份）：1800-3600元<br>
+            • ✅ 长期成本最低，商业用户还有优惠<br><br>
+            <b>③ 电磁炉/电灶：</b><br>
+            • 单价：约0.6-0.8元/度（商业用电）<br>
+            • 每份消耗：约0.6-0.9度<br>
+            • 每份成本：0.4-0.7元<br>
+            • 月成本（3000份）：1200-2100元<br>
+            • ⚠️ 但无法达到理想锅气效果，适用于低档快餐<br><br>
+            <b>④ 生物质颗粒（某些农村地区）：</b><br>
+            • 单价：约1.2-1.5元/kg<br>
+            • 每份消耗：约0.5-0.8kg<br>
+            • 每份成本：0.6-1.2元<br>
+            • 月成本（3000份）：1800-3600元<br>
+            • ⚠️ 排烟大、环保检查风险高
+          </div>
+        </div>
+        <div class="spec-card">
+          <div class="sc-title">成本优化建议</div>
+          <div class="sc-body">
+            • 首选：管道天然气——长期综合成本最低+火力最稳<br>
+            • 次选：液化石油气（商业瓶装）——如无管道，选5kg装商用气瓶，避免家用小瓶频繁换气<br>
+            • 不建议：电磁炉做猛火快炒——省下的燃气费不够补差评损失<br>
+            • 节能技巧：炒菜前先开大火热锅→下食材后适当关小（保留60%火力）→出锅前再开大火收汁。全程大火浪费约30%燃气
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /paywall-inner -->
+  </div><!-- /paywall-content -->
+</div><!-- /paywall-wrap -->
+
+<!-- ===== 模块15：关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品 · 体系联动</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>JX系列工艺卡完整体系：</b><br><br>
+      🟤 <b>JX_VC01 — 江西小炒锅气还原术</b><br>
+      · 家用场景下的锅气还原方案、5.0kW以下灶具的火力补偿策略<br><br>
+      🟤 <b>JX_VC02 — 猛火快炒火候体系</b> ← 你在这里<br>
+      · 商用级别火候参数、火力曲线、批量生产SOP<br><br>
+      🟤 <b>JX_VC03 — 赣味调味汁配方库</b><br>
+      · 复合鲜辣酱配方、碗汁比例、批量预调方案（研发中）<br><br>
+      🟤 <b>JX_VC04 — 江西小炒供应链品控</b><br>
+      · 食材标准、验收规范、供应商管理（研发中）<br><br>
+      <b>使用建议：</b>VC01+VC02搭配使用——家用用VC01方案，商用用VC02方案。两套配合能覆盖99%的江西小炒场景。
+    </div>
+  </div>
+</div>
+
+<div class="footer-brand">
+  <div class="fb-name">FoodIntelAI · 食品决策库</div>
+  <div class="fb-tagline">少走弯路 · 快人一步</div>
+  <div class="fb-links"><span>单品拆解</span><span>落地路径</span><span>品类研判</span></div>
+  <div class="fb-series">JX系列 · 江西小炒体系 · 2026年</div>
+</div>
+
+<div class="data-note">
+📊 数据说明<br>
+• 所有温度/时间参数据行业估算及实操经验<br>
+• 油温数值对应商用猛火灶（火力≥5.0kW），家用灶时间延长50-100%<br>
+• 批量SOP基于3-5年经验后厨产能估算，实际因设备/人员不同有差异<br>
+• 燃料价格为2026年6月参考价，各地存在差异<br>
+• 数据采集截止：2026年6月
+</div>
+
+</div></body></html>
