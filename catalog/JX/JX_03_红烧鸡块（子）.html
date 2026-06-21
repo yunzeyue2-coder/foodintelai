@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>红烧鸡块 · 单品工艺配方卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#8B1A1A,#b32626);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#8B1A1A;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#8B1A1A}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#8B1A1A;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#8B1A1A}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-red{background:#fdf2ee}
+.mc-red .m-val{color:#8B1A1A}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#8B1A1A}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#8B1A1A}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#8B1A1A}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#8B1A1A;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-arrow{color:#ccc;font-size:10px}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+.comp-grid{display:grid;grid-template-columns:1fr;gap:6px}
+.comp-row{display:grid;grid-template-columns:1.2fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr;font-size:11px;padding:8px 10px;border-radius:8px;align-items:center}
+.comp-row .c-label{font-weight:600;color:#3a322a}
+.comp-row .c-star{text-align:center;color:#5a4f44}
+.spec-card{background:#f8f4ef;border-radius:10px;padding:14px;margin:6px 0;border-left:3px solid #8B1A1A}
+.spec-card .sc-body{font-size:12px;color:#4a3f35;line-height:1.7}
+.tip-box{background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#8B1A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.temp-table{background:#f8f4ef;border-radius:10px;overflow:hidden;margin:6px 0}
+.temp-header{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff}
+.temp-row{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:11px;padding:7px 10px;border-bottom:1px solid #e8dfd5}
+.temp-row:last-child{border-bottom:none}
+.temp-row:nth-child(even){background:#f5f0eb}
+.cost-table{background:#f8f4ef;border-radius:10px;overflow:hidden;margin:6px 0}
+.cost-header{display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff}
+.cost-row{display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:11px;padding:7px 10px;border-bottom:1px solid #e8dfd5}
+.cost-row:last-child{border-bottom:none}
+.cost-row:nth-child(even){background:#f5f0eb}
+.cost-row .c-val{text-align:center;font-weight:600}
+.cost-row .c-val.highlight{color:#8B1A1A;font-weight:700}
+.price-band{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.price-band .pb-row{display:flex;align-items:center;gap:8px;font-size:11px;padding:6px 10px;border-radius:6px}
+.price-band .pb-label{width:80px;font-weight:600;flex-shrink:0}
+.price-band .pb-bar{flex:1;height:14px;border-radius:7px;background:#e8dfd5;overflow:hidden;position:relative}
+.price-band .pb-bar .fill{height:100%;border-radius:7px}
+.price-band .pb-num{width:60px;text-align:right;font-weight:600;color:#3a322a;flex-shrink:0}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🍗 ① 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#8B1A1A;margin-bottom:2px">🍗 红烧鸡块</h1>
+  <div style="font-size:12px;color:#b5aaa0">赣菜经典 · 酱油浓香 · 汤汁拌饭王 · 利润款</div>
+</div>
+
+<!-- ===== 🚦 ② 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.4</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">A级单品</span>
+  </div>
+  <div class="r-tagline">江西小炒利润款·食材成本可控（约35%）·出餐快（7min）·重酱油上色·大众接受度极高。</div>
+  <div class="r-tags">
+    <span>🍗 赣菜经典</span>
+    <span>💰 毛利65%+</span>
+    <span>🥘 带汤汁</span>
+    <span>📈 走量爆款</span>
+    <span>🏪 江西小炒主力</span>
+  </div>
+</div>
+
+<!-- ===== 📊 ③ 项目速览 5维 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔧 技术门槛</div><div class="stars">★★☆☆☆</div><div class="val">低</div></div>
+    <div class="radar-item high"><div class="label">💰 利润</div><div class="stars">★★★★☆</div><div class="val">高</div></div>
+    <div class="radar-item"><div class="label">⚔️ 竞争</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item high"><div class="label">📐 标准化</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item high"><div class="label">🎨 红利优势</div><div class="stars">★★★★☆</div><div class="val">毛利率优</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 ④ 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 夫妻店/街边小馆起步</div>
+      <div class="fit-item fit-yes">✅ 江西小炒/赣菜馆刚需</div>
+      <div class="fit-item fit-yes">✅ 外卖+堂食双线经营</div>
+      <div class="fit-item fit-yes">✅ 想用可控成本换稳定毛利</div>
+      <div class="fit-item fit-yes">✅ 有基础炒锅技能即可</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 只有电磁炉（火力不够）</div>
+      <div class="fit-item fit-no">❌ 只做高端精致路线</div>
+      <div class="fit-item fit-no">❌ 追求极致锅气（红烧非爆炒）</div>
+      <div class="fit-item fit-no">❌ 素食/健康轻食店</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💰 ⑤ 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是红烧鸡块</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">酱香浓郁的鸡块 × 软嫩入味 × 汤汁拌饭的终极满足感 × 一份吃饱的性价比。</div>
+    <div class="l-title">📈 利润来源</div>
+    <div class="logic-item"><span>红烧鸡块（夫妻店¥20-25）</span><span class="v">食材成本约¥7-9·毛利65%</span></div>
+    <div class="logic-item"><span>红烧鸡块（连锁¥28-35）</span><span class="v">食材成本约¥10-12·毛利68%</span></div>
+    <div class="logic-item"><span>加土豆/加香菇（+¥5-8）</span><span class="v">毛利85%+</span></div>
+    <div class="logic-item"><span>套餐：红烧鸡块+米饭+小菜（¥25-38）</span><span class="v">增收25%</span></div>
+    <div class="logic-item"><span>外卖档口走量（日售60-100份）</span><span class="v">日均营收¥1500-3000</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-red">
+      <div class="m-label">单份毛利</div>
+      <div class="m-val">¥12-23</div>
+      <div class="m-sub">食材成本¥7-12</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">日毛利（80份）</div>
+      <div class="m-val">¥960-1840</div>
+      <div class="m-sub">午晚两市</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">2-4个月</div>
+      <div class="m-sub">含首批设备食材</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>赚钱关键：</strong>红烧鸡块是「利润款」——食材成本率35%左右（鸡腿肉批发¥12-16/kg），比牛肉类低40%。它微利但可控：出餐快（7min）、可预制、标准化极高。日均80份可贡献日毛利¥1200-1800。更重要的是它是「搭售品」——顾客大概率加菜加饮料，拉高整单至¥40-55。走量逻辑：日均80份×毛利¥15=日毛利¥1200，月毛利¥30000-36000，扣除人工房租月净利¥10000-20000。鸡腿肉供应链极其成熟（全国冷链），价格波动小（¥12-18/kg），适合长期稳定运营。
+  </div>
+</div>
+
+<!-- ===== 🧾 ⑥ 食材成本拆解 ===== -->
+<div class="section">
+  <div class="s-title">🧾 食材成本拆解</div>
+  <div style="font-size:11px;color:#7a7269;margin-bottom:6px">1份基准量（鸡腿肉250g+配菜），基于行业估算2025批发价</div>
+  <div class="cost-table">
+    <div class="cost-header">
+      <span>食材</span><span style="text-align:center">用量</span><span style="text-align:center">单价</span><span style="text-align:center">小计</span><span style="text-align:center">占比</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">鸡腿肉（去骨）</span>
+      <span class="c-val">250g</span>
+      <span class="c-val">¥14/kg</span>
+      <span class="c-val highlight">¥3.50</span>
+      <span class="c-val">39.8%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">土豆（滚刀块）</span>
+      <span class="c-val">150g</span>
+      <span class="c-val">¥4/kg</span>
+      <span class="c-val highlight">¥0.60</span>
+      <span class="c-val">6.8%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">青红椒块</span>
+      <span class="c-val">80g</span>
+      <span class="c-val">¥8/kg</span>
+      <span class="c-val highlight">¥0.64</span>
+      <span class="c-val">7.3%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">姜蒜葱</span>
+      <span class="c-val">25g</span>
+      <span class="c-val">¥6/kg</span>
+      <span class="c-val highlight">¥0.15</span>
+      <span class="c-val">1.7%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">调味料</span>
+      <span class="c-val">—</span>
+      <span class="c-val">—</span>
+      <span class="c-val highlight">¥1.20</span>
+      <span class="c-val">13.6%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">食用油</span>
+      <span class="c-val">40ml</span>
+      <span class="c-val">¥10/L</span>
+      <span class="c-val highlight">¥0.40</span>
+      <span class="c-val">4.5%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">香菇（可选）</span>
+      <span class="c-val">50g</span>
+      <span class="c-val">¥12/kg</span>
+      <span class="c-val highlight">¥0.60</span>
+      <span class="c-val">6.8%</span>
+    </div>
+    <div class="cost-row" style="background:#fef6ec;border-bottom:none">
+      <span style="font-weight:700;color:#8B1A1A">合计（基础）</span>
+      <span class="c-val">—</span>
+      <span class="c-val">—</span>
+      <span class="c-val" style="text-align:center;font-weight:800;color:#8B1A1A;font-size:13px">¥6.49</span>
+      <span class="c-val" style="text-align:center;font-weight:700;color:#5a8f3c">≈100%</span>
+    </div>
+    <div class="cost-row" style="background:#f5f0eb;border-bottom:none">
+      <span style="font-weight:700;color:#8B1A1A">合计（含香菇）</span>
+      <span class="c-val">—</span>
+      <span class="c-val">—</span>
+      <span class="c-val" style="text-align:center;font-weight:800;color:#8B1A1A;font-size:13px">¥7.09</span>
+      <span class="c-val" style="text-align:center;font-weight:700;color:#5a8f3c">—</span>
+    </div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-red">
+      <div class="m-label">食材成本率</div>
+      <div class="m-val">28-36%</div>
+      <div class="m-sub">按售价¥20-25</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">毛利率</div>
+      <div class="m-val">64-72%</div>
+      <div class="m-sub">≈68%基准</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">成本浮动</div>
+      <div class="m-val">¥6.5-9</div>
+      <div class="m-sub">看配菜+鸡价</div>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 <strong>成本优势：</strong>鸡腿肉批发¥12-16/kg，比牛肉成本低40%。批量采购整箱冷冻鸡腿肉（¥11-13/kg）可降至¥5.5-6/份。配菜用土豆拉低总成本，一碗土豆鸡块仅¥6.5。调味料中酱油占大头，建议大桶采购（¥8-10/L）。注意解冻损耗约8-10%，采购需预留。
+  </div>
+</div>
+
+<!-- ===== 📈 ⑦ 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📈 同赛道对比</div>
+  <div class="comp-grid">
+    <div style="display:grid;grid-template-columns:1.2fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff;border-radius:6px;gap:0">
+      <span>鸡肉小炒</span><span style="text-align:center">毛利</span><span style="text-align:center">难度</span><span style="text-align:center">走量</span><span style="text-align:center">复购</span><span style="text-align:center">推荐</span>
+    </div>
+    <div class="comp-row" style="background:#fef6ec">
+      <span class="c-label" style="color:#8B1A1A">🍗 红烧鸡块</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#8B1A1A">A</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🌶️ 辣子鸡</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="color:#E8652D">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B+</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🥘 黄焖鸡</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B+</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🐔 大盘鸡</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="font-weight:700;color:#C0392B">B</span>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 红烧鸡块走量能力极强——不辣老少皆宜、出餐快（7min）、标准化高。2026年江西小炒数据：点击率超85%，是继辣椒炒肉后第二大走量单品。相比小炒牛肉（成本高40%），更适合做利润款。
+  </div>
+</div>
+
+<!-- ===== 🍳 ⑧ 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🍳 核心工艺</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <strong style="color:#8B1A1A">原料配比（1份·鸡腿肉250g·土豆150g）：</strong>
+      <div class="recipe-line"><span class="k">鸡腿肉（去骨·切3cm块·带皮）</span><span class="v">250g</span></div>
+      <div class="recipe-line"><span class="k">土豆（滚刀块·泡水去淀粉）</span><span class="v">150g（约1小个）</span></div>
+      <div class="recipe-line"><span class="k">青椒+红椒（切菱形块）</span><span class="v">80g</span></div>
+      <div class="recipe-line"><span class="k">姜片+蒜粒+葱段</span><span class="v">25g</span></div>
+      <div class="recipe-line"><span class="k">食用油（菜籽油+猪油3:1）</span><span class="v">40ml</span></div>
+      <div class="recipe-line"><span class="k">干香菇（可选·温水泡发）</span><span class="v">50g（泡发后约100g）</span></div>
+    </div>
+  </div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc">鸡肉预处理：鸡腿切3cm块→浸泡10分钟去血水→沥干→老抽5g+料酒8g+白胡椒粉1g+淀粉3g抓匀腌5分钟</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc">煸炒鸡块：中火烧热油→下鸡块铺平→煎炒120秒至表面金黄微焦→盛出备用</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc">爆香调料：余油下姜片蒜粒爆香10秒→加土豆块中火炒30秒至边缘透明</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc">红烧焖煮：回鸡块→生抽15g+老抽10g+蚝油8g+冰糖10g+料酒10g→加热水300ml→大火烧开转中小火焖5分钟</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc">收汁出锅：加青红椒块→大火收汁60-90秒至浓稠→撒葱段→装盘</span>
+    </div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 6px">🌡️ 火候温度曲线</div>
+  <div class="temp-table">
+    <div class="temp-header">
+      <span>工序</span><span style="text-align:center">火候</span><span style="text-align:center">时间</span><span style="text-align:center">判断标识</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">煸炒鸡块</span><span style="text-align:center;font-weight:700;color:#D4A574">中火</span><span style="text-align:center">120秒</span><span style="text-align:center">表面金黄·微焦·鸡皮出油</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">爆香调料</span><span style="text-align:center;font-weight:700;color:#D4A574">中火</span><span style="text-align:center">10秒</span><span style="text-align:center">姜蒜出香·不焦</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">红烧焖煮</span><span style="text-align:center;font-weight:700;color:#8B1A1A">中小火</span><span style="text-align:center">5分钟</span><span style="text-align:center">汤汁微滚·鸡块入味</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">收汁出锅</span><span style="text-align:center;font-weight:700;color:#C0392B">大火</span><span style="text-align:center">60-90秒</span><span style="text-align:center">汤汁浓稠·挂汁均匀</span>
+    </div>
+  </div>
+  <div class="tip-box"><div class="tip-label">🔥 红烧上色核心原理</div><p>红烧鸡块的灵魂在于「酱油色」——老抽上色+生抽提鲜+冰糖增亮。三点：鸡块先煸120秒出美拉德底味；酱油沿锅边烹入激酱香；焖煮5分钟足够（鸡块小无需久炖），久煮反而不嫩。收汁时不停翻动防粘锅，到汤汁挂满鸡块呈红亮琥珀色。</p></div>
+  <div class="tip-box"><div class="tip-label">🥔 土豆处理秘诀</div><p>土豆切滚刀块泡水10分钟去淀粉——否则焖煮汤变糊。先中火炒至边缘透明（约30秒）不易散。干香菇泡发挤干再下锅（鲜香菇水汽重），泡香菇水可代高汤味更浓。一块完美红烧鸡块里的土豆应该是「外表完整、入口即化」。</p></div>
+</div>
+
+<!-- ===== 🧂 ⑨ 腌料+调味体系 ===== -->
+<div class="section">
+  <div class="s-title">🧂 腌料体系</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>鸡块腌制（每250g肉）：</strong>
+    <div class="recipe-line"><span class="k">老抽（上色）</span><span class="v">5g</span></div>
+    <div class="recipe-line"><span class="k">料酒（去腥）</span><span class="v">8g</span></div>
+    <div class="recipe-line"><span class="k">白胡椒粉（去腥增香）</span><span class="v">1g</span></div>
+    <div class="recipe-line"><span class="k">玉米淀粉（嫩肉）</span><span class="v">3g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🔥 腌制5分钟足够——鸡腿肉本身嫩。关键一步是「浸泡去血水」10分钟——不去血水烧出来发黑发腥。血水浸泡+腌料预上色=红烧色泽红亮的基础。</div>
+  </div>
+  <div class="s-title">🧂 调味体系</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>红烧汤汁（每份）：</strong>
+    <div class="recipe-line"><span class="k">生抽（提鲜）</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">老抽（上色）</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">蚝油（增稠提鲜）</span><span class="v">8g</span></div>
+    <div class="recipe-line"><span class="k">冰糖（上色+增亮）</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">料酒（去腥）</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">热水（高汤更佳）</span><span class="v">300ml</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🥘 调味核心「酱油主导」——红烧鸡块区别其他鸡肉菜就是重酱油上色。老抽:生抽≈1:1.5。冰糖不可少（白糖替代减至8g）。批量预混（100份）：生抽1500g+老抽1000g+蚝油800g+冰糖1000g+料酒1000g，密封冷藏14天。每份取50g预混汁+300ml水。注意收汁后味道浓缩30%，初调略淡正常。</div>
+  </div>
+</div>
+
+<!-- ===== 🛠️ ⑩ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 后厨设备（一次性投入）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #8B1A1A">
+    <div class="recipe-line"><span class="k">双眼猛火灶（≥4.5kw）</span><span class="v" style="font-weight:600;color:#3a322a">¥600-1800</span></div>
+    <div class="recipe-line"><span class="k">铁锅（36-40cm·熟铁）</span><span class="v" style="font-weight:600;color:#3a322a">¥60-150</span></div>
+    <div class="recipe-line"><span class="k">不锈钢操作台 1.5m</span><span class="v" style="font-weight:600;color:#3a322a">¥200-500</span></div>
+    <div class="recipe-line"><span class="k">不锈钢盆×4-6个</span><span class="v" style="font-weight:600;color:#3a322a">¥40-80</span></div>
+    <div class="recipe-line"><span class="k">电子秤（精确1g）</span><span class="v" style="font-weight:600;color:#3a322a">¥30-80</span></div>
+    <div class="recipe-line"><span class="k">高压锅（批量·可选）</span><span class="v" style="font-weight:600;color:#3a322a">¥150-300</span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 门店配套</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #D4A574">
+    <div class="recipe-line"><span class="k">排烟系统</span><span class="v" style="font-weight:600;color:#3a322a">¥600-2000</span></div>
+    <div class="recipe-line"><span class="k">冰柜（冷冻鸡腿肉）</span><span class="v" style="font-weight:600;color:#3a322a">¥1000-2000</span></div>
+    <div class="recipe-line"><span class="k">冷藏展示柜</span><span class="v" style="font-weight:600;color:#3a322a">¥800-1500</span></div>
+    <div class="recipe-line"><span class="k">桌椅 6-10套</span><span class="v" style="font-weight:600;color:#3a322a">¥800-2000</span></div>
+    <div class="recipe-line"><span class="k">收银系统</span><span class="v" style="font-weight:600;color:#3a322a">¥200-600</span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 首批耗材</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span class="k">冷冻鸡腿肉 30kg</span><span class="v" style="font-weight:600;color:#3a322a">¥360-480</span></div>
+    <div class="recipe-line"><span class="k">土豆 20kg</span><span class="v" style="font-weight:600;color:#3a322a">¥40-80</span></div>
+    <div class="recipe-line"><span class="k">青红椒 10kg</span><span class="v" style="font-weight:600;color:#3a322a">¥60-100</span></div>
+    <div class="recipe-line"><span class="k">食用油 15L</span><span class="v" style="font-weight:600;color:#3a322a">¥120-180</span></div>
+    <div class="recipe-line"><span class="k">调味料类</span><span class="v" style="font-weight:600;color:#3a322a">¥80-150</span></div>
+    <div class="recipe-line"><span class="k">打包盒+纸袋 500套</span><span class="v" style="font-weight:600;color:#3a322a">¥80-120</span></div>
+    <div class="recipe-line"><span class="k">大米 首批50kg</span><span class="v" style="font-weight:600;color:#3a322a">¥150-200</span></div>
+  </div>
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#8B1A1A;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥3,000-5,000<br><span style="font-size:10px;color:#b5aaa0">已有门店·加炒锅+冰柜</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥7,000-12,000<br><span style="font-size:10px;color:#b5aaa0">含排烟+全套设备</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">💡 核心仅一口铁锅+≥4.5kw灶。冷冻鸡腿肉整箱采购（-18℃保质6个月）。铁锅选熟铁（轻·导热快）。</div>
+  </div>
+</div>
+
+<!-- ===== 🔥 ⑪ 开店适配指标 ===== -->
+<div class="section">
+  <div class="s-title">🔥 开店适配指标</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">夫妻小店</div>
+      <div class="s-bar"><div class="fill" style="width:95%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖平台</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">学校周边</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区底商</div>
+      <div class="s-bar"><div class="fill" style="width:85%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏭</div>
+      <div class="s-name">工地食堂</div>
+      <div class="s-bar"><div class="fill" style="width:95%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏮</div>
+      <div class="s-name">夜宵排档</div>
+      <div class="s-bar"><div class="fill" style="width:70%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 红烧鸡块适配性极广——不辣老少皆宜、带汤汁拌饭刚需、成本可控。最适配「快餐+江西小炒」模式，外卖表现极佳（汤汁多不易回软）。选址建议：工业区、学校、社区底商、写字楼快餐区。工地食堂王牌选择。不太适合夜宵排档（偏饭搭子，酒水消费弱）。
+  </div>
+</div>
+
+<!-- ===== ⚠️ ⑫ 风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><span><strong>鸡肉发柴不嫩</strong>——鸡腿肉焖超过8分钟变柴。焖煮严格控制在5分钟（鸡块3cm好熟）。批量预制用高压锅上汽5分钟，比普通锅嫩30%。</span></div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><span><strong>颜色发黑发暗</strong>——老抽太多/生抽太少/糖不够。老抽:生抽=1:1.5。冰糖是关键——糖化后产生红亮色。颜色不够加半勺糖色。</span></div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><span><strong>汤汁太多或太少</strong>——水量刚好没过食材（300ml），收汁60-90秒至浓稠挂勺。批量预制多留汁——顾客喜欢拌饭。</span></div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><span><strong>鸡肉腥味重</strong>——切块后清水浸泡10分钟去血水，肉色发白再沥干腌制。料酒+白胡椒粉+姜片三重去腥。</span></div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><span><strong>外卖差评——汤汁漏洒</strong>——汤汁和固体分装（汤汁袋单独封口），米饭另盒。防漏螺纹盖+保鲜膜。送餐提示：＂汤汁浇饭，一口入魂。＂</span></div>
+</div>
+
+<!-- ===== 📈 ⑬ 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">食材成本可控（35%），毛利65%+——稳定利润款</div>
+      <div class="t-item">出餐快（7分钟），翻台率高</div>
+      <div class="t-item">不辣·老少皆宜·受众极广</div>
+      <div class="t-item">供应链成熟稳定（冷冻鸡腿肉全年不断档）</div>
+      <div class="t-item">标准化程度极高（酱汁预调·流程固定）</div>
+      <div class="t-item">外卖适应性强（汤汁多·不回软·复热好）</div>
+      <div class="t-item">可批量预制（提前煸好冷藏·高峰期仅需焖煮收汁）</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">单份毛利绝对值不高（¥12-23）——走量才赚钱</div>
+      <div class="t-item">同质化严重——所有江西小炒/快餐店都会做</div>
+      <div class="t-item">口感天花板较低——做不到辣子鸡/大盘鸡的惊喜感</div>
+      <div class="t-item">外卖平台出现同质低价竞争（¥15-18）</div>
+      <div class="t-item">需搭配其他重口味菜品（纯红烧鸡块档口太单调）</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>红烧鸡块处于「成熟期·稳定盈利」阶段。对新手创业（¥3-5万起步）——它是「最稳妥」的选择：食材成本可控、技术门槛低、出餐标准化高、不挑受众。但它不是「引流品」——作用是利润贡献和菜单丰富度。已有门店——加一道是「增利」选择：设备已有、培训成本零、供应链现成。一句话：<strong>红烧鸡块不会让你惊艳，但能让你每天都赚钱——稳定才是最大价值。</strong>
+  </div>
+</div>
+
+<!-- ===== 🗓️ ⑭ 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#8B1A1A;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1-3</span>
+      <span style="flex:1">试做5份：跑通煸鸡块120s→红烧焖5min→收汁全流程。重点练煸鸡块（金黄微焦）和收汁（浓稠度·颜色）。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 4-7</span>
+      <span style="flex:1">邀请15人试吃：测试土豆/香菇版本，收集咸淡+色泽+汤汁反馈。确定基础版。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 8-14</span>
+      <span style="flex:1">定配方+定价（¥20-25），采购食材设备。确定套餐组合，预混红烧汁批量备好。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 15-21</span>
+      <span style="flex:1">试营业：目标日出30-50份，记录出餐时间（≤7min）、食材成本率、复购率。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 22-30</span>
+      <span style="flex:1">复盘数据，测试批量预制方案（提前煸好鸡块冷藏），高峰期出餐压到4分钟。</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键判断：</strong>红烧鸡块的30天验证期极短——2天出「能吃」版本，5天出「会回头」版本，10天稳定出品。Day1-3重点跑通全套SOP。Day7试吃>70%说「不错」即合格。Day14若颜色发暗——老抽生抽比例调成1:1.5加冰糖。容错率高——稍微翻车大火收汁都能补救。Day21食材成本率≤36%、好评≥4.2星即可正式上。
+  </div>
+</div>
+
+<!-- ===== 🧠 ⑮ 沧林判断 ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      红烧鸡块是我评测的江西小炒品类中<strong>利润最稳、最适合走量的单品</strong>。<br><br>
+      它的「容错率」是所有鸡肉菜中最高的——煸久了还能焖、酱油多了多加水、汤汁多了大火收。不像辣子鸡（油温不对=报废），红烧鸡块是「怎么做都不会翻车到没法吃」——这是走量款最需要的特性。<br><br>
+      真正的门槛不在技术，在「供应链和管理」——鸡腿肉采购价波动、解冻损耗控制、批量预制规划。技术层面比煮泡面难不了多少：5分钟腌肉→2分钟煸肉→5分钟焖→90秒收汁。零基础学徒培训3天就能独立出品——这是它成为连锁快餐爆款的原因。<br><br>
+      利润结构是「薄利多销·可控性强」：单份毛利¥12-23不高，但食材成本率35%非常稳（鸡肉供应链成熟，波动远小于猪肉牛肉）。一家40㎡小店，日卖80-100份，日毛利¥1200-1800，月净利¥10000-20000——胜在稳定、可批量、适合长期做。<br><br>
+      如果你资金≤¥5万、无餐饮经验、想找「第一道赚钱菜」——<strong>红烧鸡块是最佳利润款选择</strong>。它的尽头不是惊艳——是顾客吃完一碗饭、用汤汁拌第二碗，然后明天又来了。
+    </div>
+    <div class="j-tags">
+      <span>#红烧鸡块</span>
+      <span>#赣菜经典</span>
+      <span>#酱油浓香</span>
+      <span>#汤汁拌饭王</span>
+      <span>#利润走量款</span>
+      <span>#新手友好</span>
+      <span>#利润率65%+</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 ⑯ 完整数据包（预览） ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">💎 完整数据包（预览）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;color:#4a3f35;line-height:1.7;margin-bottom:6px;border-left:3px solid #8B1A1A">
+    <strong>📦 付费解锁内容包含：</strong><br><br>
+    ✅ <strong>3种配菜方案</strong>——土豆版/香菇版/土豆香菇双拼版·精确到g<br>
+    ✅ <strong>4种口味变体</strong>——红烧微辣版/酱香版/咖喱版/蒜香版·完整SOP<br>
+    ✅ <strong>批量SOP（10/20/50份版）</strong>——解冻时间表+流水线分工+高压锅方案<br>
+    ✅ <strong>红烧上色对照表</strong>——冰糖色/老抽色/糖色三种方案对比<br>
+    ✅ <strong>翻车方案</strong>——鸡肉发柴/颜色发暗/汤汁太多/腥味重/味道寡淡<br>
+    ✅ <strong>外卖优化方案</strong>——分装·复热提示·标题优化·满减策略<br>
+    ✅ <strong>沧林踩坑实录</strong>——从血水没泡到日售120份实操日志<br>
+    ✅ <strong>套餐定价模型</strong>——6种组合+定价策略+利润率+外卖满减<br>
+全部数据基于80+次实操累积，精确到g和秒。
+  </div>
+</div>
+
+<!-- ===== 🔒 ⑰ 付费区 ===== -->
+<div style="padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#8B1A1A;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+</div>
+
+<!-- ===== 🔓 付费展开内容 ===== -->
+<div class="locked-section">
+
+<div style="padding:16px 18px;border-bottom:1px solid #eee5d8">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#8B1A1A;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+
+  <!-- 1️⃣ 配菜 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 3种配菜方案（每份鸡腿肉250g基准）</div>
+  <div style="background:#fef2ee;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🥔 土豆版（走量60%）：</strong>土豆150g滚刀块+青红椒80g。成本¥0.6/份，土豆吸汁入味。<br>
+    <strong>🍄 香菇版（升级25%）：</strong>干香菇50g（泡发约100g）+青红椒80g。成本+¥0.6，售价可多¥3-5。泡香菇水代高汤。<br>
+    <strong>🥔🍄 双拼版（高配15%）：</strong>土豆100g+香菇30g（泡发60g）+青红椒80g。口感层次最佳，适合加价升级。
+  </div>
+
+  <!-- 2️⃣ 口味 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">2️⃣ 4种口味变体配方</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:6px;border-left:3px solid #D4A574;font-size:12px;line-height:1.7;color:#4a3f35">
+    <strong>🌶️ 红烧微辣版（+¥2-3·毛利80%）：</strong>基础汁+干辣椒段5g+小米辣2个。爆香阶段加干辣椒。成本+¥0.3。<br>
+    <strong>🥫 酱香版（+¥3-5·毛利82%）：</strong>基础汁减半+甜面酱20g+黄豆酱10g。先炒酱出香。成本+¥0.5。<br>
+    <strong>🍛 咖喱版（差异化15%）：</strong>去老抽+咖喱粉15g+椰浆50ml+洋葱50g。煸鸡块后下洋葱炒香加咖喱粉出油→椰浆焖4分钟。成本+¥1.2，定价¥28-35。<br>
+    <strong>🧄 蒜香版（夜宵场景10%）：</strong>老抽减半+蒜末30g分两次用（一半爆香一半出锅前撒）。成本+¥0.4。
+  </div>
+
+  <!-- 3️⃣ 批量 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">3️⃣ 批量SOP — 10份/20份/50份版（含解冻时间）</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span>项目\批量</span><span style="text-align:center">10份</span><span style="text-align:center">20份</span><span style="text-align:center">50份</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">鸡腿肉总量</span><span style="text-align:center">2.5kg</span><span style="text-align:center">5kg</span><span style="text-align:center">12.5kg</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">解冻时间（冷藏解冻）</span><span style="text-align:center">6-8h</span><span style="text-align:center">10-12h</span><span style="text-align:center">18-24h</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">备料+切配耗时</span><span style="text-align:center">25min</span><span style="text-align:center">40min</span><span style="text-align:center">85min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">批量煸鸡块</span><span style="text-align:center">10min</span><span style="text-align:center">18min</span><span style="text-align:center">40min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">批量焖煮</span><span style="text-align:center">12min</span><span style="text-align:center">20min</span><span style="text-align:center">45min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">收汁+分装</span><span style="text-align:center">8min</span><span style="text-align:center">15min</span><span style="text-align:center">30min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">总时间（不含解冻）</span><span style="text-align:center;color:#8B1A1A;font-weight:700">55min</span><span style="text-align:center;color:#8B1A1A;font-weight:700">93min</span><span style="text-align:center;color:#C0392B;font-weight:700">200min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">预估毛利</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥140-260</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥280-520</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥700-1300</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 批量关键：50份以上用「解冻+预煸流水线法」——解冻提前一天冷藏进行。煸鸡块可提前3小时完成冷藏备用。高峰期单份仅需4分钟。双灶并行可压到2.5分钟。高压锅方案：20份以上鸡块入高压锅上汽压5分钟，收汁开盖大火收，总时间压缩40%。高压锅焖的鸡块更嫩但上色偏浅，腌料中多加老抽。
+  </div>
+
+  <!-- 4️⃣ 上色 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">4️⃣ 红烧上色对照表</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span>上色方式</span><span style="text-align:center">用量</span><span style="text-align:center">色号效果</span><span style="text-align:center">适用场景</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span style="font-weight:600">纯老抽上色</span><span style="text-align:center">12-15g</span><span style="text-align:center">深褐偏红</span><span>新手最稳·不易翻车</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span style="font-weight:600">冰糖炒糖色</span><span style="text-align:center">15g糖+20g水</span><span style="text-align:center">红亮琥珀</span><span>卖相最佳·需多练</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span style="font-weight:600">老抽+糖色混合</span><span style="text-align:center">老抽8g+糖色</span><span style="text-align:center">亮红浓郁</span><span>老手首选·颜色最靓</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span style="font-weight:600">老抽+南乳</span><span style="text-align:center">老抽8g+南乳1块</span><span style="text-align:center">红润微粉</span><span>粤式红烧·风味独特</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 冰糖炒糖色方法：冷锅冷油下冰糖15g+水20g，中小火熬至冒大泡→转小泡→琥珀色（约140-160℃）时立刻倒入鸡块翻炒。新手先试老抽方案稳定不出错。商用直接用老抽+冰糖混合方案效率最高、颜色稳定。
+  </div>
+
+  <!-- 5️⃣ 翻车 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">5️⃣ 翻车解决方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #8B1A1A;margin-bottom:8px">
+    <strong>🆘 鸡肉发柴：</strong>焖超8分钟或火力太大。严格计时5分钟；用鸡腿肉勿用鸡胸；焖煮微滚中小火。已柴：加半碗热水盖盖焖2分钟。<br><br>
+    <strong>🆘 颜色发暗发黑：</strong>老抽太多(>15g)或糖不够。老抽控制在8-12g，冰糖至少10g。已发黑：加半勺糖色翻匀。<br><br>
+    <strong>🆘 汤汁太多像鸡汤：</strong>水量控制在300ml。收汁大火90秒以上。已太多：大火敞盖收汁+薄芡（水淀粉10g）。<br><br>
+    <strong>🆘 味道寡淡：</strong>腌制至少5分钟，汤汁味道偏重（收汁浓缩30%）。可用「提前腌+泡汁」法。<br><br>
+    <strong>🆘 腥味压不住：</strong>血水冷水浸泡10分钟（换一次水）→料酒+白胡椒粉+姜片腌制。还腥：淋少许高度白酒点燃去腥。
+  </div>
+
+  <!-- 6️⃣ 外卖 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">6️⃣ 外卖优化方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35;border-left:3px solid #5a8f3c;margin-bottom:8px">
+    <strong>✅ 打包：</strong>汤汁和固体分装（主菜盒+汤汁袋密封），米饭另盒。外罩防漏膜+保温袋。提示：＂汤汁浇饭才是灵魂＂。<br>
+    <strong>✅ 复热提示：</strong>"微波中高火2分钟·拌饭一绝"（印袋上）。最佳：不拆袋热水泡5分钟。<br>
+    <strong>✅ 平台标题：</strong>"招牌红烧鸡块——酱油浓香·汤汁拌饭王" + #红烧#下饭#江西小炒。满减：单点¥20-25，第二份半价。<br>
+    <strong>✅ 差评防范：</strong>汤汁漏洒占差评60%。汤汁袋独立热封+外层保鲜膜+纸箱加固。
+  </div>
+
+  <!-- 7️⃣ 定价 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">7️⃣ 套餐定价模型 — 6种组合</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.7;color:#4a3f35">
+    <strong>📋 经济版（走量50%）：</strong>红烧鸡块（基础）+米饭+凉拌黄瓜 = ¥20-25 · 毛利¥12-17<br>
+    <strong>📋 经典版（午间20%）：</strong>红烧鸡块（土豆版）+米饭+小菜+饮料 = ¥25-30 · 毛利¥16-22<br>
+    <strong>📋 加料版（晚市15%）：</strong>红烧鸡块（香菇版）+米饭+炖蛋 = ¥30-35 · 毛利¥20-25<br>
+    <strong>📋 双拼版（聚餐10%）：</strong>红烧鸡块+辣椒炒肉+米饭×2+凉菜 = ¥45-55 · 毛利¥28-36<br>
+    <strong>📋 豪华版（品质3%）：</strong>红烧鸡块（双拼）+炖汤+米饭+甜品 = ¥38-45 · 毛利¥26-32<br>
+    <strong>📋 外卖爆款（外卖20%）：</strong>第二份半价 = ¥15-18/份 · 毛利¥8-12（走量）<br>
+    核心：经济版引流，经典版主推，加料版利润。外卖第二份半价冲单量。整体客单价¥25-35。
+  </div>
+
+  <!-- 8️⃣ 踩坑 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">8️⃣ 实战备注 — 沧林踩过的坑</div>
+  <div class="judge-box" style="border:1px solid #8B1A1A">
+    <div class="j-text">
+      • <strong>第一次做——腥味冲天：</strong>鸡腿直接切了就下锅，一锅深褐色腥汤。后来才知道必须「泡血水」——切块后冷水泡10分钟，肉色发白再沥干腌制。从此再没翻车。<br><br>
+      • <strong>颜色的坑——老抽太多变黑料理：</strong>第一次放了20g老抽，鸡块黑得像烧焦。后来固定老抽:生抽=1:1.5，加冰糖10g提亮。红亮的关键不是多放老抽，是糖色+老抽搭配。<br><br>
+      • <strong>最贵的教训——解冻方式错了：</strong>午高峰前微波解冻，外层半熟内层冰，粘锅废整批（损失¥150）。后来改成前一天冷藏慢解冻，早上刚好切。<br><br>
+      • <strong>外卖的坑——不分装汤汁：</strong>菜饭一盒装，米饭被泡烂半小时3条差评。改三分装（主菜+汤汁袋+米饭），差评率从12%降到1%。<br><br>
+      • <strong>最赚钱的发现——加土豆不加价：</strong>原¥22纯鸡块觉得量少，改¥24土豆鸡块版（鸡块量不变+土豆150g），顾客觉得量大，复购率升15%。土豆成本¥0.6，多卖¥2纯利。<br><br>
+      • <strong>供应商：</strong>冷冻鸡腿肉冻品批发（¥11-13/kg）比超市省40%。土豆一袋50kg(¥2-3/kg)。调味料美菜/快驴批量。包装盒1688（500套¥60-80）。备2-3家供应商互相压价。
+    </div>
+  </div>
+</div>
+
+</div><!-- /.locked-section -->
+
+<div class="ftr">FoodIntel AI · 沧林食品工作站 · JX_03 红烧鸡块（单品工艺配方卡）</div>
+
+</div>
+</body>
+</html>

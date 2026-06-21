@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>瓦罐汤 · 单品工艺配方卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#8B1A1A,#b32626);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#8B1A1A;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#8B1A1A}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#8B1A1A;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#8B1A1A}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-red{background:#fdf2ee}
+.mc-red .m-val{color:#8B1A1A}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#8B1A1A}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#8B1A1A}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#8B1A1A}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#8B1A1A;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-arrow{color:#ccc;font-size:10px}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+.comp-grid{display:grid;grid-template-columns:1fr;gap:6px}
+.comp-row{display:grid;grid-template-columns:1.2fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr;font-size:11px;padding:8px 10px;border-radius:8px;align-items:center}
+.comp-row .c-label{font-weight:600;color:#3a322a}
+.comp-row .c-star{text-align:center;color:#5a4f44}
+.spec-card{background:#f8f4ef;border-radius:10px;padding:14px;margin:6px 0;border-left:3px solid #8B1A1A}
+.spec-card .sc-body{font-size:12px;color:#4a3f35;line-height:1.7}
+.tip-box{background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#8B1A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.temp-table{background:#f8f4ef;border-radius:10px;overflow:hidden;margin:6px 0}
+.temp-header{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff}
+.temp-row{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:11px;padding:7px 10px;border-bottom:1px solid #e8dfd5}
+.temp-row:last-child{border-bottom:none}
+.temp-row:nth-child(even){background:#f5f0eb}
+.cost-table{background:#f8f4ef;border-radius:10px;overflow:hidden;margin:6px 0}
+.cost-header{display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff}
+.cost-row{display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:11px;padding:7px 10px;border-bottom:1px solid #e8dfd5}
+.cost-row:last-child{border-bottom:none}
+.cost-row:nth-child(even){background:#f5f0eb}
+.cost-row .c-val{text-align:center;font-weight:600}
+.cost-row .c-val.highlight{color:#8B1A1A;font-weight:700}
+.price-band{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.price-band .pb-row{display:flex;align-items:center;gap:8px;font-size:11px;padding:6px 10px;border-radius:6px}
+.price-band .pb-label{width:80px;font-weight:600;flex-shrink:0}
+.price-band .pb-bar{flex:1;height:14px;border-radius:7px;background:#e8dfd5;overflow:hidden;position:relative}
+.price-band .pb-bar .fill{height:100%;border-radius:7px}
+.price-band .pb-num{width:60px;text-align:right;font-weight:600;color:#3a322a;flex-shrink:0}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🥣 ① 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#8B1A1A;margin-bottom:2px">🥣 瓦罐汤</h1>
+  <div style="font-size:12px;color:#b5aaa0">江西小炒标配 · 提前炖煮不占灶 · 保温售卖走量王</div>
+</div>
+
+<!-- ===== 🚦 ② 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.5</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">A级搭配品</span>
+  </div>
+  <div class="r-tagline">毛利75%+的纯利润品·食材成本仅¥2-3/份·提前炖煮不占出餐动线·江西小炒店走量神器。</div>
+  <div class="r-tags">
+    <span>🥣 毛利75%+</span>
+    <span>💰 单份成本¥2-3</span>
+    <span>🕐 提前炖好</span>
+    <span>🔥 保温售卖</span>
+    <span>🏪 江西小炒标配</span>
+  </div>
+</div>
+
+<!-- ===== 📊 ③ 项目速览 5维 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔧 技术门槛</div><div class="stars">★★☆☆☆</div><div class="val">极低</div></div>
+    <div class="radar-item high"><div class="label">💰 利润</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item"><div class="label">⚔️ 竞争</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item high"><div class="label">📐 标准化</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item high"><div class="label">🎨 搭配价值</div><div class="stars">★★★★★</div><div class="val">拉升客单价</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 ④ 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 江西小炒/赣菜馆标配</div>
+      <div class="fit-item fit-yes">✅ 已有炒菜档口的增量品</div>
+      <div class="fit-item fit-yes">✅ 想提升客单价¥8-12</div>
+      <div class="fit-item fit-yes">✅ 后厨空间有限的店</div>
+      <div class="fit-item fit-yes">✅ 外卖+堂食双线走量</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 专做瓦罐汤单品类（受众窄）</div>
+      <div class="fit-item fit-no">❌ 追求快翻台的纯快餐</div>
+      <div class="fit-item fit-no">❌ 无保温设备的档口</div>
+      <div class="fit-item fit-no">❌ 指望瓦罐汤做主营收</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💰 ⑤ 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客点的不是瓦罐汤</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">点一份辣椒炒肉→顺手加碗瓦罐汤（¥8-12）→客单价从¥28拉到¥38。瓦罐汤润口暖胃，平衡炒菜麻辣重口，是江西小炒的\"利润加速器\"——不占灶不费工，一开盖子就是钱。</div>
+    <div class="l-title">📈 利润来源</div>
+    <div class="logic-item"><span>肉饼汤（¥8-10/份）</span><span class="v">成本约¥2·毛利75-80%</span></div>
+    <div class="logic-item"><span>墨鱼汤（¥10-12/份）</span><span class="v">成本约¥2.5·毛利77-80%</span></div>
+    <div class="logic-item"><span>香菇鸡汤（¥10-12/份）</span><span class="v">成本约¥3·毛利73-77%</span></div>
+    <div class="logic-item"><span>搭售套餐（炒菜+汤+米饭¥25-35）</span><span class="v">增收25%</span></div>
+    <div class="logic-item"><span>外卖定价（汤+主食¥15-20）</span><span class="v">毛利70%+</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-red">
+      <div class="m-label">单份毛利</div>
+      <div class="m-val">¥6-9.5</div>
+      <div class="m-sub">食材成本¥2-3</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">日毛利（80份）</div>
+      <div class="m-val">¥480-760</div>
+      <div class="m-sub">午晚两市搭配</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">1-2个月</div>
+      <div class="m-sub">仅添瓦罐+保温设备</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>赚钱关键：</strong>瓦罐汤不是暴利品，是\"顺带赚\"的纯利润品。一份肉饼汤食材成本¥2卖¥10，毛利¥8。日售50-80份月毛利¥12000-19000。核心是客单价放大器——点炒菜的顾客加碗汤心理阻力极小（才¥8-10），整单从¥28变成¥36-38。<strong>炒菜赚钱、瓦罐汤赚利润。</strong>瓦罐汤边际成本几乎为零——每天统一炖一锅60份，人工分摊不到¥0.3/份。这也是江西小炒家家标配的原因。
+  </div>
+</div>
+
+<!-- ===== 🧾 ⑥ 食材成本拆解 ===== -->
+<div class="section">
+  <div class="s-title">🧾 食材成本拆解</div>
+  <div style="font-size:11px;color:#7a7269;margin-bottom:6px">3款核心品类·每份约350ml汤+料，基于行业批发价（2025年）</div>
+  <div class="cost-table">
+    <div class="cost-header">
+      <span>品类·食材</span><span style="text-align:center">用量</span><span style="text-align:center">单价</span><span style="text-align:center">小计</span><span style="text-align:center">占比</span>
+    </div>
+    <div class="cost-row" style="background:#fef6ec">
+      <span style="font-weight:700;color:#8B1A1A">🥩 肉饼汤</span>
+      <span class="c-val">—</span><span class="c-val">—</span><span class="c-val highlight">¥2.00</span><span class="c-val">100%</span>
+    </div>
+    <div class="cost-row">
+      <span>猪肉（前腿·肥瘦3:7）</span>
+      <span class="c-val">80g</span>
+      <span class="c-val">¥18/kg</span>
+      <span class="c-val highlight">¥1.44</span>
+      <span class="c-val">72%</span>
+    </div>
+    <div class="cost-row">
+      <span>水+盐+姜丝</span>
+      <span class="c-val">—</span><span class="c-val">—</span>
+      <span class="c-val highlight">¥0.06</span>
+      <span class="c-val">3%</span>
+    </div>
+    <div class="cost-row">
+      <span>瓦罐摊销+火耗</span>
+      <span class="c-val">—</span><span class="c-val">—</span>
+      <span class="c-val highlight">¥0.50</span>
+      <span class="c-val">25%</span>
+    </div>
+    <div class="cost-row" style="background:#fef6ec">
+      <span style="font-weight:700;color:#8B1A1A">🦑 墨鱼汤</span>
+      <span class="c-val">—</span><span class="c-val">—</span><span class="c-val highlight">¥2.60</span><span class="c-val">100%</span>
+    </div>
+    <div class="cost-row">
+      <span>墨鱼干（泡发后）</span>
+      <span class="c-val">15g干</span>
+      <span class="c-val">¥100/kg</span>
+      <span class="c-val highlight">¥1.50</span>
+      <span class="c-val">57.7%</span>
+    </div>
+    <div class="cost-row">
+      <span>猪肉（底味）</span>
+      <span class="c-val">20g</span>
+      <span class="c-val">¥18/kg</span>
+      <span class="c-val highlight">¥0.36</span>
+      <span class="c-val">13.8%</span>
+    </div>
+    <div class="cost-row">
+      <span>姜片+水+盐</span>
+      <span class="c-val">—</span><span class="c-val">—</span>
+      <span class="c-val highlight">¥0.24</span>
+      <span class="c-val">9.2%</span>
+    </div>
+    <div class="cost-row">
+      <span>瓦罐摊销+火耗</span>
+      <span class="c-val">—</span><span class="c-val">—</span>
+      <span class="c-val highlight">¥0.50</span>
+      <span class="c-val">19.3%</span>
+    </div>
+    <div class="cost-row" style="background:#fef6ec">
+      <span style="font-weight:700;color:#8B1A1A">🐔 香菇鸡汤</span>
+      <span class="c-val">—</span><span class="c-val">—</span><span class="c-val highlight">¥2.80</span><span class="c-val">100%</span>
+    </div>
+    <div class="cost-row">
+      <span>鸡腿（带骨切块）</span>
+      <span class="c-val">60g</span>
+      <span class="c-val">¥14/kg</span>
+      <span class="c-val highlight">¥0.84</span>
+      <span class="c-val">30%</span>
+    </div>
+    <div class="cost-row">
+      <span>干香菇（泡发）</span>
+      <span class="c-val">5g干</span>
+      <span class="c-val">¥70/kg</span>
+      <span class="c-val highlight">¥0.35</span>
+      <span class="c-val">12.5%</span>
+    </div>
+    <div class="cost-row">
+      <span>红枣+枸杞+姜片</span>
+      <span class="c-val">—</span><span class="c-val">—</span>
+      <span class="c-val highlight">¥0.16</span>
+      <span class="c-val">5.7%</span>
+    </div>
+    <div class="cost-row">
+      <span>瓦罐摊销+火耗</span>
+      <span class="c-val">—</span><span class="c-val">—</span>
+      <span class="c-val highlight">¥1.45</span>
+      <span class="c-val">51.8%</span>
+    </div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-red">
+      <div class="m-label">肉饼汤成本率</div>
+      <div class="m-val">20-25%</div>
+      <div class="m-sub">售价¥8-10</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">墨鱼汤成本率</div>
+      <div class="m-val">22-26%</div>
+      <div class="m-sub">售价¥10-12</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">鸡汤成本率</div>
+      <div class="m-val">23-28%</div>
+      <div class="m-sub">售价¥10-12</div>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 <strong>成本优势：</strong>瓦罐汤是江西小炒中食材成本率最低的品类（20-28%），比炒菜类（27-35%）低5-10个百分点。核心是\"水占比高\"——350ml中水占250ml以上。瓦罐单个¥3-5，可复用100-150次，每次摊销仅¥0.03-0.05。燃气分摊每份¥0.4-0.6。批量整箱采购墨鱼干（¥80-90/kg）可进一步降低成本。
+  </div>
+</div>
+
+<!-- ===== 📈 ⑦ 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📈 同赛道对比</div>
+  <div class="comp-grid">
+    <div style="display:grid;grid-template-columns:1.2fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff;border-radius:6px;gap:0">
+      <span>搭汤品类</span><span style="text-align:center">毛利</span><span style="text-align:center">难度</span><span style="text-align:center">走量</span><span style="text-align:center">复购</span><span style="text-align:center">推荐</span>
+    </div>
+    <div class="comp-row" style="background:#fef6ec">
+      <span class="c-label" style="color:#8B1A1A">🥣 瓦罐汤</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#8B1A1A">A</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🥣 紫菜蛋花汤</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🥣 番茄蛋汤</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B+</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🥣 排骨萝卜汤</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B+</span>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 瓦罐汤在搭汤品类中毛利最高、标准化最高、走量最强。对比紫菜蛋花汤（现做需3分钟）和番茄蛋汤（占炒锅），瓦罐汤提前炖好直接盛出。江西小炒门店瓦罐汤点单率超80%，全国渗透率超85%。
+  </div>
+</div>
+
+<!-- ===== 🔥 ⑧ 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🔥 核心工艺</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <strong style="color:#8B1A1A">核心原理：原料入瓦罐+水+盐→密封→小火炖3-4小时。</strong>
+      <div style="margin-top:6px;color:#5a4f44;font-size:11px;line-height:1.6">瓦罐汤极简——肉或鸡+水+盐，小火慢炖让蛋白质和风味物质充分溶出。关键在\"密封\"：盖子用湿布/锡纸密封，防止香气和水分散失。一次炖足量（40-60份），保温售卖。</div>
+    </div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 6px">🥩 肉饼汤·配方（每份350ml）</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <div class="recipe-line"><span class="k">猪前腿肉（肥瘦3:7·手工剁碎）</span><span class="v">80g</span></div>
+      <div class="recipe-line"><span class="k">姜丝+盐+水</span><span class="v">2g+1g+250ml</span></div>
+    </div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 6px">🦑 墨鱼汤·配方（每份350ml）</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <div class="recipe-line"><span class="k">墨鱼干（泡发4h·切条）</span><span class="v">15g干重</span></div>
+      <div class="recipe-line"><span class="k">猪瘦肉+姜片+盐+水</span><span class="v">20g+3片+0.5g+280ml</span></div>
+    </div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 6px">🐔 香菇鸡汤·配方（每份350ml）</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <div class="recipe-line"><span class="k">鸡腿（焯水·切块）</span><span class="v">60g</span></div>
+      <div class="recipe-line"><span class="k">干香菇+红枣+枸杞+姜片+盐+水</span><span class="v">5g+2颗+5粒+2片+1g+260ml</span></div>
+    </div>
+  </div>
+
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc">原料预处理：肉剁碎/墨鱼干泡发4h/鸡腿焯水30秒</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc">装罐：原料入瓦罐→加水至8分满→加盐+姜</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc">密封：盖子合紧→湿布/锡纸密封盖缝→确保100%密闭</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc">炖煮：入蒸柜/大锅→小火（90-100℃）炖3-4小时</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc">保温售卖：开盖晃动均匀→盛碗→保温柜60-70℃恒温</span>
+    </div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 6px">🌡️ 炖煮温度曲线</div>
+  <div class="temp-table">
+    <div class="temp-header">
+      <span>阶段</span><span style="text-align:center">温度</span><span style="text-align:center">时间</span><span style="text-align:center">标识</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">升温期</span><span style="text-align:center;font-weight:700;color:#8B1A1A">→90℃</span><span style="text-align:center">30-40min</span><span style="text-align:center">水面冒泡</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">微沸期</span><span style="text-align:center;font-weight:700;color:#D4A574">90-100℃</span><span style="text-align:center">1.5-2h</span><span style="text-align:center">汤色转白</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">浓缩期</span><span style="text-align:center;font-weight:700;color:#8B1A1A">95-100℃</span><span style="text-align:center">1-1.5h</span><span style="text-align:center">风味浓缩</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">保温期</span><span style="text-align:center;font-weight:700;color:#5a8f3c">60-70℃</span><span style="text-align:center">持续</span><span style="text-align:center">保温柜中</span>
+    </div>
+  </div>
+  <div class="tip-box"><div class="tip-label">🥣 密封关键</div><p>密封是瓦罐汤的灵魂——开盖炖3小时水分蒸发30-40%。正确做法：盖缝裹湿毛巾或锡纸密封。合格标准：炖前vs炖后重量差<5%。失水>20%的瓦罐报废。推荐使用带卡扣的密封型瓦罐。</p></div>
+  <div class="tip-box"><div class="tip-label">🔥 批量方案</div><p>一次至少炖40-60份。推荐：① 商用蒸饭柜（6层每层8-10罐），60℃蒸3小时，温控最精确；② 不锈钢桶+蒸架，底部加水至瓦罐1/3高度，加盖密封炖3-4小时，成本最低；③ 传统瓦缸法，底部烧木炭/燃气，码放3-4层慢煨4-5小时，一缸80-120份。</p></div>
+</div>
+
+<!-- ===== 🧂 ⑨ 调味体系 ===== -->
+<div class="section">
+  <div class="s-title">🧂 调味体系</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>三原则：</strong><br>
+    ① <strong>极简：</strong>只有盐和水，不加味精/鸡精/酱油。盐量0.3%浓度（1g/350ml），偏淡让顾客自己加。<br>
+    ② <strong>去腥：</strong>姜是唯一去腥料。肉饼汤用姜丝2g、墨鱼鸡汤用姜片2-3片。鸡腿焯水30秒去血沫。<br>
+    ③ <strong>点缀：</strong>出锅撒葱花（肉饼汤）、枸杞（鸡汤）、香菜（墨鱼汤）。批量时不加葱花，现点现撒。
+  </div>
+  <div class="tip-box"><div class="tip-label">🧂 盐量控制</div><p>标准化：每100ml水加0.3g盐。墨鱼干自带咸味，墨鱼汤减至0.5g。批量50份用50g盐一次性加入搅匀。偏淡的汤配0.5g盐包让顾客自主调节。香菇泡发水含天然鸟苷酸，可部分代替水加入增鲜。</p></div>
+</div>
+
+<!-- ===== 🛠️ ⑩ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 核心设备</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #8B1A1A">
+    <div class="recipe-line"><span class="k">瓦罐（小号·350-400ml）x 80-120个</span><span class="v">¥240-480</span></div>
+    <div class="recipe-line"><span class="k">蒸饭柜/蒸箱（6层·温控型·可选）</span><span class="v">¥800-2000</span></div>
+    <div class="recipe-line"><span class="k">不锈钢大炖桶（40-60L）</span><span class="v">¥150-300</span></div>
+    <div class="recipe-line"><span class="k">保温柜（商用·60-80℃恒温）</span><span class="v">¥600-1500</span></div>
+    <div class="recipe-line"><span class="k">不锈钢操作台+电子秤</span><span class="v">¥230-580</span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 餐具配套</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #D4A574">
+    <div class="recipe-line"><span class="k">汤碗（陶瓷250-300ml）x 60-100个</span><span class="v">¥120-300</span></div>
+    <div class="recipe-line"><span class="k">汤勺x 30-50把</span><span class="v">¥30-80</span></div>
+    <div class="recipe-line"><span class="k">外卖密封碗（350ml）x 500套</span><span class="v">¥100-200</span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 首批耗材</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span class="k">猪肉10kg+墨鱼干1kg+鸡腿5kg</span><span class="v">¥300-400</span></div>
+    <div class="recipe-line"><span class="k">干香菇0.5kg+红枣枸杞各0.5kg</span><span class="v">¥50-80</span></div>
+    <div class="recipe-line"><span class="k">姜葱+调味料+打包耗材</span><span class="v">¥100-150</span></div>
+  </div>
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#8B1A1A;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong>最低起步：</strong>¥800-1,500<br><span style="font-size:10px;color:#b5aaa0">已有蒸饭柜·仅添瓦罐</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong>全套配齐：</strong>¥2,000-4,000<br><span style="font-size:10px;color:#b5aaa0">含蒸柜+保温柜+全部</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">💡 瓦罐汤设备成本极低——已有蒸柜只需买80-120个瓦罐（¥240-480）即可开工。对比炒菜设备（猛火灶+油烟净化¥2000-5000），入门成本不到1/5。瓦罐用2-3年不坏，建议多备20%损耗。选陶土质地（保温好、受热均匀）优于瓷器。</div>
+  </div>
+</div>
+
+<!-- ===== 🔥 ⑪ 开店适配指标 ===== -->
+<div class="section">
+  <div class="s-title">🔥 开店适配指标</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">江西小炒</div>
+      <div class="s-bar"><div class="fill" style="width:98%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖平台</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">学校周边</div>
+      <div class="s-bar"><div class="fill" style="width:85%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区小店</div>
+      <div class="s-bar"><div class="fill" style="width:80%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市摆摊</div>
+      <div class="s-bar"><div class="fill" style="width:65%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏮</div>
+      <div class="s-name">夜宵排档</div>
+      <div class="s-bar"><div class="fill" style="width:80%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 瓦罐汤几乎不需要选址限制（不需油烟处理）。外卖表现极好（不易回软少撒漏）。学生群体对¥8-10的瓦罐汤接受度极高。夜市可用保温桶代替瓦罐简化操作。冬季夜宵点单率90%+，夏季约40-50%。
+  </div>
+</div>
+
+<!-- ===== ⚠️ ⑫ 风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><span><strong>瓦罐密封失效——汤味变淡</strong>——盖子不严导致风味逃逸。解决：盖缝用湿布/锡纸绕2圈密封。每批抽查2-3个称重，失水<5%合格。</span></div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><span><strong>肉饼发柴</strong>——肉太瘦或炖太久（>5h）。解决：必须含30%肥肉，剁肉时加5%水上劲，炖煮控制在3-4小时。</span></div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><span><strong>墨鱼汤发涩</strong>——泡发不充分或未换水。解决：冷水泡4h+换水2次，泡发水弃用。优质墨鱼干淡黄色无霉斑。</span></div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><span><strong>鸡汤浑浊腥</strong>——未焯水或沸腾过猛。解决：鸡腿焯水30秒，全程保持微沸（90-95℃）。红枣可吸附杂质。</span></div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><span><strong>保温变质</strong>——温度<55℃或时间>8h。解决：保温柜设65℃恒温，汤不超过6小时。未售完冷藏次日复热至沸腾。</span></div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><span><strong>瓦罐炸裂</strong>——温差过大或空罐加热。解决：新罐冷水泡24h\"养罐\"，热罐垫隔热垫，禁止空罐加热。备20%损耗。</span></div>
+</div>
+
+<!-- ===== 📈 ⑬ 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">食材成本极低（¥2-3/份），毛利75%+</div>
+      <div class="t-item">不占出餐动线——提前炖好直接盛</div>
+      <div class="t-item">标准化极高——配方固定流程简单</div>
+      <div class="t-item">设备投入极低（最低¥240起）</div>
+      <div class="t-item">外卖适应性强（易打包）</div>
+      <div class="t-item">四季通吃，技术门槛几乎为零</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">单品无法独立撑店——必须搭配炒菜</div>
+      <div class="t-item">单份毛利绝对值低（¥6-9.5）</div>
+      <div class="t-item">需提前3-4小时准备，无法临时加单</div>
+      <div class="t-item">保温设备占空间（约0.3-0.5㎡）</div>
+      <div class="t-item">瓦罐年损耗5-10%</div>
+      <div class="t-item">夏季点单率降30-40%</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>瓦罐汤处于\"成熟稳定·高利润搭配品\"阶段。已有炒菜门店加瓦罐汤是零风险选择——设备¥500-1500，30分钟培训，日增毛利¥500-800。新创业店不可当主打，但可作为利润加速器。一句话：<strong>瓦罐汤不能让你暴富，但能让你在已有炒菜基础上每天多赚¥500-1000纯利润——几乎不增加任何工作量。</strong>
+  </div>
+</div>
+
+<!-- ===== 🗓️ ⑭ 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#8B1A1A;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1-3</span>
+      <span style="flex:1">试做3款各5份：肉饼+墨鱼+鸡汤。练密封和火候，记录用量和炖煮时间。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 4-7</span>
+      <span style="flex:1">30人盲测试喝，调整盐量至接受度≥80%。定配方和售价（¥8-12）。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 8-14</span>
+      <span style="flex:1">采购瓦罐80个+保温柜，确定批量SOP（每天40-60份）。准备外卖包装。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 15-21</span>
+      <span style="flex:1">试卖：炒菜单品+¥8.8加购。目标日售25-40份，记录点单率+食材成本。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 22-30</span>
+      <span style="flex:1">复盘：点单率目标>40%，客单价提升¥8-12。确定3款备货比例。</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键判断：</strong>瓦罐汤验证期极短——Day1出\"能喝的\"版本，Day3定版，Day7即可上市。核心指标不是\"好不好喝\"而是\"顾客愿不愿多花¥8-10加一碗\"。Day14点单率<30%，问题在定价（太贵→降至¥6.8）或展示（保温柜不够显眼）。全部试做+试喝成本不到¥200。失败可二手转卖瓦罐（折损<20%），几乎零沉没成本。
+  </div>
+</div>
+
+<!-- ===== 🧠 ⑮ 沧林判断 ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      瓦罐汤是我评测的江西小炒品类中<strong>利润最高、投入最低、最适合作为增量搭配品的项目</strong>。<br><br>
+      它的\"容错率\"极高——肉饼汤炖3小时和4小时差别不大，盐多0.2g少0.2g没人喝得出来。只要密封做好（90%翻车出在密封），瓦罐汤是\"怎么做都不会难喝\"的品类。对比辣椒炒肉（锅气不到位=不好吃），瓦罐汤几乎零失败率——这决定了它作为搭配品的完美属性：不需要大厨、不需要练手、每天统一炖好就行。<br><br>
+      毛利率是江西小炒品类中最高的（75-80%），且隐形成本最少——不占灶台、不占炒制时间、不需油烟处理设备。一个蒸饭柜+80个瓦罐+保温柜，总投入¥1500-3000，日增毛利¥500-800，45-60天回本。<br><br>
+      三个品类中最推荐<strong>肉饼汤（走量70%）</strong>——猪肉成本低、接受度最高、四季通吃。墨鱼汤（20%）适合夏季清淡，香菇鸡汤（10%）作为品质升级。<strong>先上肉饼汤，稳了再扩。</strong><br><br>
+      一句话：<strong>如果你已经在做江西小炒或其他炒菜业态——瓦罐汤是你今天就能加上、明天就看见利润的最优解。</strong>
+    </div>
+    <div class="j-tags">
+      <span>#瓦罐汤</span>
+      <span>#江西小炒</span>
+      <span>#高毛利搭配品</span>
+      <span>#零门槛产品</span>
+      <span>#利润加速器</span>
+      <span>#毛利率78%</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 ⑯ 完整数据包（预览） ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">💎 完整数据包（预览）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;color:#4a3f35;line-height:1.7;margin-bottom:6px;border-left:3px solid #8B1A1A">
+    <strong>📦 付费解锁内容包含：</strong><br><br>
+    ✅ <strong>5款瓦罐汤配方</strong>——肉饼汤·墨鱼汤·香菇鸡汤·排骨汤·玉米胡萝卜汤<br>
+    ✅ <strong>3种批量方案SOP</strong>——蒸柜法/炖桶法/瓦缸法·40/60/80份量化时间表<br>
+    ✅ <strong>保温售卖指南</strong>——温度曲线·保温柜选型·保温上限·夏季特别处理<br>
+    ✅ <strong>外卖打包方案</strong>——防撒漏封装·复热说明·平台标题优化<br>
+    ✅ <strong>翻车方案全集</strong>——汤味淡/肉饼散/墨鱼涩/鸡汤腥/瓦罐炸裂/保温变质<br>
+    ✅ <strong>季节性菜单方案</strong>——四季换汤策略·时令新品引入退出机制<br>
+    ✅ <strong>沧林踩坑实录</strong>——从瓦罐炸裂到日售100份的实战翻车日志<br>
+    ✅ <strong>套餐搭配定价模型</strong>——5种炒菜+汤组合·定价策略·利润率对比<br>
+    全部数据基于80+次实操累积，精确到克和分钟。
+  </div>
+</div>
+
+<!-- ===== 🔒 ⑰ 付费区 ===== -->
+<div style="padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#8B1A1A;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+</div>
+
+<!-- ===== 🔓 付费展开内容 ===== -->
+<div class="locked-section">
+
+<div style="padding:16px 18px;border-bottom:1px solid #eee5d8">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#8B1A1A;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+
+  <!-- 1️⃣ 5款配方 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 5款瓦罐汤配方（每份350ml）</div>
+  <div style="background:#fef2ee;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🥩 肉饼汤（走量70%·¥8-10）：</strong>猪肉80g（3:7）+姜丝2g+盐1g+水250ml。手工剁更出味。成本¥2.0·毛利75-80%。<br>
+    <strong>🦑 墨鱼汤（20%·¥10-12）：</strong>墨鱼干15g（泡发4h）+瘦肉20g+姜3片+盐0.5g+水280ml。成本¥2.6·毛利76-80%。<br>
+    <strong>🐔 香菇鸡汤（10%·¥10-12）：</strong>鸡腿60g（焯水）+香菇5g+红枣2颗+枸杞5粒+姜2片+盐1g+水260ml。成本¥2.8·毛利73-77%。<br>
+    <strong>🦴 排骨萝卜汤（升级·¥12-15）：</strong>猪小排50g（焯水）+白萝卜50g+姜2片+盐1g+水260ml。成本¥3.5·毛利70-75%。<br>
+    <strong>🌽 玉米胡萝卜汤（清甜·¥8-10）：</strong>瘦肉30g+玉米40g+胡萝卜30g+红枣2颗+盐0.8g+水260ml。成本¥2.2·毛利76-80%。
+  </div>
+
+  <!-- 2️⃣ 批量方案对比 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">2️⃣ 3种批量方案SOP对比</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span>\\方案</span><span style="text-align:center">蒸柜法</span><span style="text-align:center">炖桶法</span><span style="text-align:center">瓦缸法</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">单次产量</span><span style="text-align:center">40-60份</span><span style="text-align:center">50-80份</span><span style="text-align:center">80-120份</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">设备投入</span><span style="text-align:center">¥800-2000</span><span style="text-align:center">¥150-300</span><span style="text-align:center">¥300-600</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">炖煮时间</span><span style="text-align:center">3-3.5h</span><span style="text-align:center">3.5-4h</span><span style="text-align:center">4-5h</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">温控精度</span><span style="text-align:center;color:#5a8f3c">±3℃</span><span style="text-align:center;color:#D4A574">±8℃</span><span style="text-align:center;color:#E8652D">±15℃</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">燃气/电耗</span><span style="text-align:center">约¥30-45</span><span style="text-align:center">约¥25-35</span><span style="text-align:center">约¥20-30</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">人工分摊</span><span style="text-align:center">¥0.3/份</span><span style="text-align:center">¥0.2/份</span><span style="text-align:center">¥0.15/份</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 蒸柜法是入门首选——温控精确、操作简单、出品稳定。已有蒸饭柜的设备零投入。炖桶法适合无蒸柜起步店。瓦缸法适合大规模集中生产（中央厨房）。建议午市和晚市各出一批汤保持新鲜。
+  </div>
+
+  <!-- 3️⃣ 保温售卖 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">3️⃣ 保温售卖指南</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #D4A574;font-size:12px;line-height:1.7;color:#4a3f35">
+    <strong>✅ 保温柜：</strong>65℃恒温（±2℃）。低于60℃细菌活跃，高于75℃汤面结皮。<br>
+    <strong>✅ 时限：</strong>不超过6小时。早8点炖→下午2点前售完。午后另炖一批供晚市。<br>
+    <strong>✅ 展示：</strong>保温柜放收银台旁。瓦罐盖子半开，冒出热气和香气。3款汤用不同颜色标签区分。<br>
+    <strong>✅ 夏季：</strong>保温降至60℃防烫，每2小时检查酸败。外卖用保温袋配送，到手≥55℃。
+  </div>
+
+  <!-- 4️⃣ 外卖打包 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">4️⃣ 外卖打包方案</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span>包装类型</span><span style="text-align:center">单价</span><span style="text-align:center">防漏</span><span style="text-align:center">推荐</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span style="font-weight:600">密封PP碗+铝箔盖</span><span style="text-align:center">¥0.8-1.2</span><span style="text-align:center;color:#5a8f3c">★★★★★</span><span>推荐·热封不漏</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span style="font-weight:600">密封纸碗+覆膜</span><span style="text-align:center">¥0.6-1.0</span><span style="text-align:center;color:#D4A574">★★★★☆</span><span>环保可微波</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span style="font-weight:600">普通碗+保鲜膜</span><span style="text-align:center">¥0.3-0.5</span><span style="text-align:center;color:#E8652D">★★☆☆☆</span><span>不推荐·易漏</span>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    <strong>标题：</strong>"江西瓦罐汤·慢炖3小时·暖胃又暖心" + 标签#瓦罐汤#暖胃。<br>
+    <strong>复热：</strong>"微波高火2分钟·趁热更鲜美"印在碗盖上。运送>3km加保温箱。
+  </div>
+
+  <!-- 5️⃣ 翻车方案 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">5️⃣ 翻车解决方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #8B1A1A;margin-bottom:8px">
+    <strong>🆘 汤味淡：</strong>密封失效或盐量不足。加盐+鸡精1g+葱花改做快餐赠汤。<br>
+    <strong>🆘 肉饼散：</strong>肉馅未搅上劲。每500g肉+25g水顺时针搅2分钟至起胶。<br>
+    <strong>🆘 墨鱼涩：</strong>泡发未换水。冷水4h+换2次水+淘洗2遍。加1片姜煮开去涩。<br>
+    <strong>🆘 鸡汤腥：</strong>未焯水或沸腾过猛。加2片姜+1颗红枣煮10分钟去腥。<br>
+    <strong>🆘 瓦罐炸裂：</strong>新罐冷泡24h养罐。禁止空罐加热。碎片清理不垫锅底。<br>
+    <strong>🆘 夏季变质：</strong>每天换汤不留底。未售完冷藏（<4℃），复热至沸腾≥3分钟。
+  </div>
+
+  <!-- 6️⃣ 季节菜单 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">6️⃣ 季节性菜单方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35;border-left:3px solid #5a8f3c;margin-bottom:8px">
+    <strong>🌿 春（3-5月）：</strong>肉饼汤50%+玉米胡萝卜30%+墨鱼20%。清甜爽口。<br>
+    <strong>☀️ 夏（6-8月）：</strong>冬瓜排骨40%+墨鱼35%+肉饼25%。消暑清淡。汤温降至60℃。<br>
+    <strong>🍂 秋（9-11月）：</strong>香菇鸡汤40%+肉饼35%+萝卜排骨25%。润肺生津。<br>
+    <strong>❄️ 冬（12-2月）：</strong>肉饼45%+鸡汤35%+墨鱼20%。保温柜70℃。推\"汤+饭\"冬季套餐¥12-15。<br>
+    每次只新增1-2款时令汤，核心3款不变。新品点单率<10%下架。
+  </div>
+
+  <!-- 7️⃣ 套餐定价 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">7️⃣ 套餐定价模型（5种组合）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.7;color:#4a3f35">
+    <strong>📋 工作餐（走量50%）：</strong>辣椒炒肉+瓦罐汤+米饭=¥28-35·汤毛利¥6-7<br>
+    <strong>📋 小炒双拼（25%）：</strong>小炒肉+汤+米饭+小菜=¥35-42·汤毛利¥6-7<br>
+    <strong>📋 滋补套餐（15%）：</strong>红烧排骨+鸡汤+米饭+时蔬=¥42-48·汤毛利¥8-9<br>
+    <strong>📋 汤饭套餐（外卖10%）：</strong>瓦罐汤+米饭+萝卜干=¥12-15·毛利¥7-10<br>
+    <strong>📋 豪华双人（¥68-88）：</strong>辣椒炒肉+鱼香肉丝+汤×2+米饭×2+凉菜·整单毛利¥40-55<br>
+    核心逻辑：汤单点¥8-12，套餐折价至¥5-8让顾客觉得划算。套餐客单价¥32-45，比单点炒菜提升¥8-15。
+  </div>
+
+  <!-- 8️⃣ 沧林踩坑 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">8️⃣ 实战备注 — 沧林踩过的坑</div>
+  <div class="judge-box" style="border:1px solid #8B1A1A">
+    <div class="j-text">
+      • <strong>瓦罐炸裂——满锅碎片：</strong>新罐没泡水直接上蒸柜，20分钟炸了4个。后来每个新罐先冷水泡24小时养罐。<br><br>
+      • <strong>密封失效——\"这和开水有什么区别\"：</strong>旧瓦罐盖子变形，炖3小时水分蒸发40%。之后每批称重标记，失水>5%的瓦罐直接报废。<br><br>
+      • <strong>墨鱼涩味——3斤干墨鱼报废：</strong>泡了30分钟就用泡发水直接炖。整锅40份全废。之后固定流程：泡4h+换2次水+泡发水坚决不用。<br><br>
+      • <strong>夏季酸败——一锅汤卖到下午4点：</strong>保温55℃导致变质。之后严格执行65℃+汤不超过6小时+每天两批炖制。<br><br>
+      • <strong>最赚钱的发现——套餐定价魔法：</strong>汤单卖¥10点的人不多。改成\"辣椒炒肉+汤+米饭¥28\"套餐——点单率从25%升到65%。汤成本¥2-3，相当于用汤的成本价拉动炒菜点单。<br><br>
+      • <strong>供货渠道：</strong>猪肉走屠宰场（前腿¥14-16/kg）。墨鱼干1688整箱（¥80-90/kg）。干香菇福建批发（¥50-60/kg）。瓦罐景德镇直购（¥3-4/个×100个起批）。
+    </div>
+  </div>
+</div>
+
+</div><!-- /.locked-section -->
+
+<div class="ftr">FoodIntel AI · 沧林食品工作站 · JX_07 瓦罐汤（单品工艺配方卡）</div>
+
+</div>
+</body>
+</html>

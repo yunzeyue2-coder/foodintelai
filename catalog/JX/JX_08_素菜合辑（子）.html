@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>素菜合辑 · 四品工艺配方卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#8B1A1A,#b32626);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#8B1A1A;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#8B1A1A}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#8B1A1A;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#8B1A1A}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-red{background:#fdf2ee}
+.mc-red .m-val{color:#8B1A1A}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#8B1A1A}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#8B1A1A}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#8B1A1A}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#8B1A1A;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-arrow{color:#ccc;font-size:10px}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+.comp-grid{display:grid;grid-template-columns:1fr;gap:6px}
+.comp-row{display:grid;grid-template-columns:1.2fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr;font-size:11px;padding:8px 10px;border-radius:8px;align-items:center}
+.comp-row .c-label{font-weight:600;color:#3a322a}
+.comp-row .c-star{text-align:center;color:#5a4f44}
+.spec-card{background:#f8f4ef;border-radius:10px;padding:14px;margin:6px 0;border-left:3px solid #8B1A1A}
+.spec-card .sc-body{font-size:12px;color:#4a3f35;line-height:1.7}
+.tip-box{background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#8B1A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.temp-table{background:#f8f4ef;border-radius:10px;overflow:hidden;margin:6px 0}
+.temp-header{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff}
+.temp-row{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:11px;padding:7px 10px;border-bottom:1px solid #e8dfd5}
+.temp-row:last-child{border-bottom:none}
+.temp-row:nth-child(even){background:#f5f0eb}
+.cost-table{background:#f8f4ef;border-radius:10px;overflow:hidden;margin:6px 0}
+.cost-header{display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff}
+.cost-row{display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:11px;padding:7px 10px;border-bottom:1px solid #e8dfd5}
+.cost-row:last-child{border-bottom:none}
+.cost-row:nth-child(even){background:#f5f0eb}
+.cost-row .c-val{text-align:center;font-weight:600}
+.cost-row .c-val.highlight{color:#8B1A1A;font-weight:700}
+.price-band{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.price-band .pb-row{display:flex;align-items:center;gap:8px;font-size:11px;padding:6px 10px;border-radius:6px}
+.price-band .pb-label{width:80px;font-weight:600;flex-shrink:0}
+.price-band .pb-bar{flex:1;height:14px;border-radius:7px;background:#e8dfd5;overflow:hidden;position:relative}
+.price-band .pb-bar .fill{height:100%;border-radius:7px}
+.price-band .pb-num{width:60px;text-align:right;font-weight:600;color:#3a322a;flex-shrink:0}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ① 产品头部 -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#8B1A1A;margin-bottom:2px">🥬 素菜合辑 · 四品集</h1>
+  <div style="font-size:12px;color:#b5aaa0">手撕包菜 · 酸辣土豆丝 · 干煸豆角 · 清炒时蔬</div>
+</div>
+
+<!-- ② 项目评级 -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.5</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">A级素菜矩阵</span>
+  </div>
+  <div class="r-tagline">四道经典素菜·蔬菜成本极低（¥1.5-3/份）·毛利70-80%·出餐2-3min·利润调节器。</div>
+  <div class="r-tags">
+    <span>🥬 成本¥1.5-3</span><span>💰 毛利75%+</span><span>🔥 大火快炒</span><span>⚡ 出餐2-3min</span><span>📈 走量王牌</span><span>🏪 坪效利器</span>
+  </div>
+</div>
+
+<!-- ③ 项目速览 5维 -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔧 技术门槛</div><div class="stars">★★☆☆☆</div><div class="val">极低</div></div>
+    <div class="radar-item high"><div class="label">💰 利润</div><div class="stars">★★★★☆</div><div class="val">极高</div></div>
+    <div class="radar-item"><div class="label">⚔️ 竞争</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item high"><div class="label">📐 标准化</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item high"><div class="label">🎨 锅气呈现</div><div class="stars">★★★★☆</div><div class="val">🔥大火·2min</div></div>
+  </div>
+</div>
+
+<!-- ④ 适合谁 / 不适合谁 -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 夫妻店/快餐小馆起步</div>
+      <div class="fit-item fit-yes">✅ 外卖档口/专做走量</div>
+      <div class="fit-item fit-yes">✅ 无餐饮经验新手</div>
+      <div class="fit-item fit-yes">✅ 想用极低食材成本换高毛利</div>
+      <div class="fit-item fit-yes">✅ 食堂/自助餐/盒饭场景</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 纯高端精致路线</div>
+      <div class="fit-item fit-no">❌ 指望单品撑整店</div>
+      <div class="fit-item fit-no">❌ 无猛火灶（<4kw）</div>
+      <div class="fit-item fit-no">❌ 不愿洗切大量蔬菜</div>
+    </div>
+  </div>
+</div>
+
+<!-- ⑤ 赚钱逻辑 -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客点的不是素菜</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">大火快炒的锅气 × 蔬菜的脆爽 × 极致的性价比。素菜是菜单的\"利润矫正器\"——顾客不会因为素菜贵而放弃点，也不会因为便宜而觉得不值。</div>
+    <div class="l-title">📈 四品利润拆解</div>
+    <div class="logic-item"><span>手撕包菜（¥12-16）</span><span class="v">成本¥1.5-2.5·毛利84-88%</span></div>
+    <div class="logic-item"><span>酸辣土豆丝（¥12）</span><span class="v">成本¥1.2-1.8·毛利85-90%</span></div>
+    <div class="logic-item"><span>干煸豆角（¥14-18）</span><span class="v">成本¥2-3·毛利79-86%</span></div>
+    <div class="logic-item"><span>清炒时蔬（¥10-14）</span><span class="v">成本¥1.5-2.5·毛利78-85%</span></div>
+    <div class="logic-item"><span>素菜+米饭套餐</span><span class="v">毛利80-85%·出餐3min</span></div>
+    <div class="logic-item"><span>素菜搭配荤菜套餐</span><span class="v">拉高整单至¥30-45</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-red"><div class="m-label">单份毛利</div><div class="m-val">¥8-15</div><div class="m-sub">食材成本¥1.2-3</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">日毛利（150份）</div><div class="m-val">¥1500-2250</div><div class="m-sub">午晚两市</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">1-2个月</div><div class="m-sub">设备极简</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>赚钱关键：</strong>素菜的食材成本率仅12-22%，远低于荤菜（30-45%），是调节整体利润平衡的核心杠杆。一家日均卖120-180份素菜的小馆，素菜单品可贡献日均¥1200-2400毛利。更重要的是素菜是\"荤菜的点缀\"——顾客点一份¥38的荤菜再加一份¥12的酸辣土豆丝毫无压力，瞬间拉高整体客单价。外卖场景更是利润王：酸辣土豆丝食材成本¥1.5，外卖售价¥12-15，成本率仅10-12%。2026年餐饮大数据：快餐素菜点击率超85%，酸辣土豆丝常年霸占外卖TOP20。
+  </div>
+</div>
+
+<!-- ⑥ 食材成本拆解 -->
+<div class="section">
+  <div class="s-title">🧾 食材成本拆解 · 四品对比</div>
+  <div style="font-size:11px;color:#7a7269;margin-bottom:6px">1份基准量，基于行业估算2025-2026批发价</div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 4px">🥬 手撕包菜（包菜300g）</div>
+  <div class="cost-table">
+    <div class="cost-header"><span>食材</span><span style="text-align:center">用量</span><span style="text-align:center">单价</span><span style="text-align:center">小计</span><span style="text-align:center">占比</span></div>
+    <div class="cost-row"><span style="font-weight:600">包菜（牛心菜）</span><span class="c-val">300g</span><span class="c-val">¥4/kg</span><span class="c-val highlight">¥1.20</span><span class="c-val">48.0%</span></div>
+    <div class="cost-row"><span style="font-weight:600">干辣椒段+蒜片</span><span class="c-val">5g+10g</span><span class="c-val">—</span><span class="c-val highlight">¥0.14</span><span class="c-val">5.6%</span></div>
+    <div class="cost-row"><span style="font-weight:600">调味料（醋/生抽/蚝油等）</span><span class="c-val">—</span><span class="c-val">—</span><span class="c-val highlight">¥0.40</span><span class="c-val">16.0%</span></div>
+    <div class="cost-row"><span style="font-weight:600">食用油</span><span class="c-val">25ml</span><span class="c-val">¥10/L</span><span class="c-val highlight">¥0.25</span><span class="c-val">10.0%</span></div>
+    <div class="cost-row" style="background:#fef6ec;border-bottom:none"><span style="font-weight:700;color:#8B1A1A">合计</span><span class="c-val">—</span><span class="c-val">—</span><span class="c-val" style="text-align:center;font-weight:800;color:#8B1A1A;font-size:13px">¥1.99</span><span class="c-val" style="text-align:center;font-weight:700;color:#5a8f3c">100%</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 4px">🥔 酸辣土豆丝（土豆300g）</div>
+  <div class="cost-table">
+    <div class="cost-header"><span>食材</span><span style="text-align:center">用量</span><span style="text-align:center">单价</span><span style="text-align:center">小计</span><span style="text-align:center">占比</span></div>
+    <div class="cost-row"><span style="font-weight:600">土豆（黄心）</span><span class="c-val">300g</span><span class="c-val">¥3/kg</span><span class="c-val highlight">¥0.90</span><span class="c-val">58.4%</span></div>
+    <div class="cost-row"><span style="font-weight:600">干辣椒/花椒+蒜末</span><span class="c-val">5g+10g</span><span class="c-val">—</span><span class="c-val highlight">¥0.14</span><span class="c-val">9.1%</span></div>
+    <div class="cost-row"><span style="font-weight:600">白醋/盐/调味</span><span class="c-val">—</span><span class="c-val">—</span><span class="c-val highlight">¥0.30</span><span class="c-val">19.5%</span></div>
+    <div class="cost-row"><span style="font-weight:600">食用油</span><span class="c-val">20ml</span><span class="c-val">¥10/L</span><span class="c-val highlight">¥0.20</span><span class="c-val">13.0%</span></div>
+    <div class="cost-row" style="background:#fef6ec;border-bottom:none"><span style="font-weight:700;color:#8B1A1A">合计</span><span class="c-val">—</span><span class="c-val">—</span><span class="c-val" style="text-align:center;font-weight:800;color:#8B1A1A;font-size:13px">¥1.54</span><span class="c-val" style="text-align:center;font-weight:700;color:#5a8f3c">100%</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 4px">🫘 干煸豆角（四季豆250g+肉末30g）</div>
+  <div class="cost-table">
+    <div class="cost-header"><span>食材</span><span style="text-align:center">用量</span><span style="text-align:center">单价</span><span style="text-align:center">小计</span><span style="text-align:center">占比</span></div>
+    <div class="cost-row"><span style="font-weight:600">四季豆</span><span class="c-val">250g</span><span class="c-val">¥8/kg</span><span class="c-val highlight">¥2.00</span><span class="c-val">55.1%</span></div>
+    <div class="cost-row"><span style="font-weight:600">猪肉末（可选）</span><span class="c-val">30g</span><span class="c-val">¥22/kg</span><span class="c-val highlight">¥0.66</span><span class="c-val">18.2%</span></div>
+    <div class="cost-row"><span style="font-weight:600">干辣椒/花椒+蒜姜</span><span class="c-val">8g+15g</span><span class="c-val">—</span><span class="c-val highlight">¥0.22</span><span class="c-val">6.1%</span></div>
+    <div class="cost-row"><span style="font-weight:600">调味料+食用油</span><span class="c-val">35ml</span><span class="c-val">—</span><span class="c-val highlight">¥0.75</span><span class="c-val">20.6%</span></div>
+    <div class="cost-row" style="background:#fef6ec;border-bottom:none"><span style="font-weight:700;color:#8B1A1A">合计</span><span class="c-val">—</span><span class="c-val">—</span><span class="c-val" style="text-align:center;font-weight:800;color:#8B1A1A;font-size:13px">¥3.63</span><span class="c-val" style="text-align:center;font-weight:700;color:#5a8f3c">100%</span></div>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric-card mc-red"><div class="m-label">食材成本率</div><div class="m-val">12-22%</div><div class="m-sub">四品平均</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">综合毛利率</div><div class="m-val">78-88%</div><div class="m-sub">≈80%基准</div></div>
+    <div class="metric-card mc-green"><div class="m-label">成本浮动</div><div class="m-val">¥0.5-1</div><div class="m-sub">季节波动极小</div></div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 素菜成本率碾压荤菜（荤菜30-45%）。酸辣土豆丝成本最低（¥1.54/份·毛利87%），干煸豆角含肉末最高（¥3.63·毛利79%）。大宗蔬菜全年供应稳定，价格波动<15%。批量采购可再降15-20%。核心秘诀：素菜不看单品利润绝对值，看出餐速度——熟练厨师2-3分钟出一份，双灶并行可达40份/小时。
+  </div>
+</div>
+
+<!-- ⑦ 同赛道对比 -->
+<div class="section">
+  <div class="s-title">📈 同赛道对比</div>
+  <div class="comp-grid">
+    <div style="display:grid;grid-template-columns:1.2fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff;border-radius:6px;gap:0">
+      <span>素菜品</span><span style="text-align:center">毛利</span><span style="text-align:center">难度</span><span style="text-align:center">走量</span><span style="text-align:center">复购</span><span style="text-align:center">推荐</span>
+    </div>
+    <div class="comp-row" style="background:#fef6ec"><span class="c-label" style="color:#8B1A1A">🥬 手撕包菜</span><span class="c-star" style="color:#5a8f3c">★★★★★</span><span class="c-star" style="color:#5a8f3c">★☆☆☆☆</span><span class="c-star" style="color:#5a8f3c">★★★★★</span><span class="c-star" style="color:#5a8f3c">★★★★★</span><span class="c-star" style="font-weight:700;color:#8B1A1A">A+</span></div>
+    <div class="comp-row" style="background:#fef6ec"><span class="c-label" style="color:#8B1A1A">🥔 酸辣土豆丝</span><span class="c-star" style="color:#5a8f3c">★★★★★</span><span class="c-star" style="color:#5a8f3c">★☆☆☆☆</span><span class="c-star" style="color:#5a8f3c">★★★★★</span><span class="c-star" style="color:#5a8f3c">★★★★★</span><span class="c-star" style="font-weight:700;color:#8B1A1A">A+</span></div>
+    <div class="comp-row" style="background:#f8f4ef"><span class="c-label">🫘 干煸豆角</span><span class="c-star" style="color:#5a8f3c">★★★★★</span><span class="c-star" style="color:#D4A574">★★☆☆☆</span><span class="c-star" style="color:#5a8f3c">★★★★</span><span class="c-star" style="color:#5a8f3c">★★★★</span><span class="c-star" style="font-weight:700;color:#D4A574">A</span></div>
+    <div class="comp-row" style="background:#f8f4ef"><span class="c-label">🌿 清炒时蔬</span><span class="c-star" style="color:#5a8f3c">★★★★</span><span class="c-star" style="color:#5a8f3c">★★☆☆☆</span><span class="c-star" style="color:#5a8f3c">★★★★</span><span class="c-star" style="color:#5a8f3c">★★★★</span><span class="c-star" style="font-weight:700;color:#D4A574">A</span></div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 素菜赛道不存\"垄断\"——每家都在做，但做好吃、做稳定的仍是少数。手撕包菜和酸辣土豆丝作为\"国民素菜\"，所有中餐门店必备，点击率超85%。核心壁垒不在配方，在火候和速度——2分钟脆嫩出锅就是竞争力。
+  </div>
+</div>
+
+<!-- ⑧ 核心工艺 · 四品 -->
+<div class="section">
+  <div class="s-title">🔥 核心工艺 · 四品</div>
+
+  <div style="background:#fdf8f0;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;color:#5a4f44;line-height:1.7;border:1px solid #ede0d0">
+    <strong>🥬 素菜心法：大火快炒不出水。三大铁律：</strong><br>
+    🔥 <strong>油温≥200°C</strong>——锅烧到冒青烟再下油，油温不够=出水=水煮菜。<br>
+    🥬 <strong>菜分批下</strong>——一锅只炒1份，食材过多会降温<150°C。<br>
+    🚫 <strong>不盖盖</strong>——盖盖=蒸菜，全程敞口爆炒。<br>
+    从下锅到出锅2-3分钟，蔬菜必须保持脆嫩口感。
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:8px 0 4px">🥬 手撕包菜</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">包菜手撕3-4cm片，洗净沥干（有水必出水）</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">锅冒青烟→油25ml→干辣椒段+蒜片爆香5秒</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">下包菜大火爆炒30秒→淋生抽10ml+香醋8ml</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">加蚝油5g+糖2g+盐1g→大火15秒至断生微透明→出锅（约2min）</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:8px 0 4px">🥔 酸辣土豆丝</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">土豆切细丝2mm→泡冷水10min去淀粉→沥干（不泡=糊锅）</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">锅烧热下油→小火炸花椒至变色捞出→下辣椒蒜末爆香</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">转大火→下土豆丝翻炒20秒→沿锅边淋白醋10ml</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">加盐2g+糖1g→大火30秒至半透明→淋明油撒葱花→出锅（约2.5min）</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:8px 0 4px">🫘 干煸豆角</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">四季豆掐头去筋切5cm段→油温180°C煸炸2-3min至表皮起皱→捞出</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">留底油→肉末30g煸至酥香→加姜蒜干辣椒花椒爆香</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">下四季豆大火翻炒→加生抽10ml+蚝油5g+糖2g+盐1g</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">大火30秒至调味均匀→淋香油→出锅（约3min）</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:8px 0 4px">🌿 清炒时蔬（广东菜心）</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">菜心洗净沥干，梗叶分离（梗先下锅）</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">锅烧热下油→蒜末爆香5秒</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">先下菜梗大火20秒→再下菜叶大火15秒</span><span class="ps-arrow">→</span></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">加盐2g+糖1g→翻炒10秒至翠绿→出锅（约1.5-2min）</span></div>
+  </div>
+
+  <div class="tip-box"><div class="tip-label">🔥 四品锅气心法</div><p>油温≥200°C是底线——锅冒青烟(约250°C)再下油。关键：蔬菜必须彻底沥干（脱水机最佳）；下菜后10秒内不翻动；全程最大火力不调小。一份\"脆嫩锅气\"素菜=2分钟+200°C+不盖盖+一次一份。</p></div>
+  <div class="tip-box"><div class="tip-label">🥬 四季豆安全警告</div><p>四季豆必须完全熟透！生四季豆含皂苷和血球凝集素可致中毒。安全做法：先焯水2分钟再煸炸，或煸炸至暗绿起皱（3-4分钟）。宁过不生。</p></div>
+</div>
+
+<!-- ⑨ 调味体系 -->
+<div class="section">
+  <div class="s-title">🧂 调味体系 · 四品对照</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:6px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.7;color:#4a3f35">
+    <strong>🥬 手撕包菜：</strong>生抽10ml+香醋8ml+蚝油5g+白糖2g+盐1g。醋沿锅边淋入激香。<br>
+    <strong>🥔 酸辣土豆丝：</strong>白醋10ml+盐2g+白糖1g+明油3ml。预混调味汁500ml:盐100g:糖50g，每份挤30ml。<br>
+    <strong>🫘 干煸豆角：</strong>生抽10ml+蚝油5g+白糖2g+盐1g+香油3ml。肉末煸酥香是点睛。<br>
+    <strong>🌿 清炒时蔬：</strong>盐2g+白糖1g+可选蘑菇精1g。吃的是蔬菜本味，蒜末是灵魂。四种口味须差异鲜明：酸辣/酸爽/麻辣/清鲜。
+  </div>
+</div>
+
+<!-- ⑩ 设备清单 -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 后厨设备（素菜极简·一次性投入）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #8B1A1A">
+    <div class="recipe-line"><span class="k">猛火灶（单眼·≥4.5kw）</span><span class="v" style="font-weight:600;color:#3a322a">¥300-800</span></div>
+    <div class="recipe-line"><span class="k">铁锅（熟铁·34-38cm）</span><span class="v" style="font-weight:600;color:#3a322a">¥50-120</span></div>
+    <div class="recipe-line"><span class="k">蔬菜切丝器/切片器（批量加工）</span><span class="v" style="font-weight:600;color:#3a322a">¥80-200</span></div>
+    <div class="recipe-line"><span class="k">蔬菜脱水机（手摇/电动·核心设备）</span><span class="v" style="font-weight:600;color:#3a322a">¥60-150</span></div>
+    <div class="recipe-line"><span class="k">不锈钢盆×6-8个+操作台</span><span class="v" style="font-weight:600;color:#3a322a">¥200-500</span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 首批耗材+配套</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span class="k">蔬菜（包菜20kg+土豆30kg+四季豆15kg+时蔬20kg）</span><span class="v" style="font-weight:600;color:#3a322a">¥270-410</span></div>
+    <div class="recipe-line"><span class="k">食用油20L+调味料+肉末5kg</span><span class="v" style="font-weight:600;color:#3a322a">¥330-470</span></div>
+    <div class="recipe-line"><span class="k">打包盒+纸袋500套</span><span class="v" style="font-weight:600;color:#3a322a">¥80-120</span></div>
+    <div class="recipe-line"><span class="k">排烟系统+冷藏柜</span><span class="v" style="font-weight:600;color:#3a322a">¥1300-3000</span></div>
+  </div>
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#8B1A1A;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong>最低起步¥2,000-3,000</strong><br><span style="font-size:10px;color:#b5aaa0">已有门店·加灶+锅</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong>全套配齐¥5,000-8,000</strong><br><span style="font-size:10px;color:#b5aaa0">含排烟+全套设备</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px">💡 素菜设备投入最低——核心仅铁锅+≥4.5kw猛火灶。脱水机是品质秘密武器，切丝器必备。</div>
+  </div>
+</div>
+
+<!-- ⑪ 开店适配指标 -->
+<div class="section">
+  <div class="s-title">🔥 开店适配指标</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-icon">🏪</div><div class="s-name">正餐门店</div><div class="s-bar"><div class="fill" style="width:90%;background:#8B1A1A"></div></div><div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-icon">📱</div><div class="s-name">外卖平台</div><div class="s-bar"><div class="fill" style="width:95%;background:#8B1A1A"></div></div><div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-icon">🏫</div><div class="s-name">学校周边</div><div class="s-bar"><div class="fill" style="width:95%;background:#8B1A1A"></div></div><div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-icon">🏠</div><div class="s-name">社区小店</div><div class="s-bar"><div class="fill" style="width:90%;background:#8B1A1A"></div></div><div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-icon">🌙</div><div class="s-name">夜市摆摊</div><div class="s-bar"><div class="fill" style="width:65%;background:#D4A574"></div></div><div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-icon">🏮</div><div class="s-name">快餐档口</div><div class="s-bar"><div class="fill" style="width:95%;background:#8B1A1A"></div></div><div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div></div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">💡 素菜通吃所有场景。外卖是最大优势：成本率10-15%+出餐2-3min。酸辣土豆丝霸占外卖TOP10。学校+社区最佳选址。</div>
+</div>
+
+<!-- ⑫ 风险 -->
+<div class="section">
+  <div class="s-title">⚠️ 风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><span><strong>蔬菜出水—菜变汤：</strong>油温<200°C或菜不干。解决：脱水机沥干+油温≥200°C+每锅1份。已出水：大火收汁10秒+薄芡。</span></div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><span><strong>四季豆未熟—食物中毒：</strong>生豆含皂苷。解决：焯水2分钟再煸，或煸至暗绿起皱3-4分钟。宁过不生。</span></div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><span><strong>土豆丝不脆/糊锅：</strong>淀粉没泡干净。解决：切2mm丝→泡10分钟换2次水→沥干再炒。</span></div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><span><strong>包菜发苦：</strong>菜梗太厚或炒太久。解决：去厚梗+大火≤60秒+加糖2g。</span></div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><span><strong>价格天花板低(¥10-18)：</strong>走套餐路线（素+饭¥12-18）或拼盘路线（三素拼¥18-25）。</span></div>
+</div>
+
+<!-- ⑬ 赛道判断 -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">食材成本极低（¥1.2-3/份），毛利78-88%——全餐饮顶级</div>
+      <div class="t-item">出餐超快（2-3分钟），翻台率极高</div>
+      <div class="t-item">技术门槛极低，新手2天可上手</div>
+      <div class="t-item">供应链稳定，蔬菜全年不断档</div>
+      <div class="t-item">标准化极高，调味汁可预混</div>
+      <div class="t-item">设备投入极低（¥2,000起步）</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">单品售价低（¥10-18），不走量赚不到钱</div>
+      <div class="t-item">蔬菜保鲜期短（2-3天），损耗5-10%</div>
+      <div class="t-item">独立撑店能力弱，必须搭配荤菜</div>
+      <div class="t-item">外卖配送中蔬菜继续出水影响口感</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>素菜处于\"全民刚需·利润调节器\"的稳定阶段。它不是主角，但没有素菜的菜单不完整。新手创业（¥2-5万起步）素菜是最安全的品类。已有门店加3-4道素菜是零风险选择。<strong>素菜不会让你暴富，但能拉高整体利润5-8个点——是最好的利润调节器。</strong>
+  </div>
+</div>
+
+<!-- ⑭ 30天验证路线 -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#8B1A1A;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1-3</span>
+      <span style="flex:1">试做四品各3份：跑通全流程，重点练控水（脱水机）和火候（2-3min出锅）。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 4-7</span>
+      <span style="flex:1">邀20人试吃：测试各品调味平衡（咸淡酸辣），收集口感反馈，确定标准配方。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 8-14</span>
+      <span style="flex:1">定菜单定价（¥10-18），采购批量食材+切丝器/脱水机，确定套餐组合。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 15-21</span>
+      <span style="flex:1">试营业首周：日出四品合计80-120份，追踪出餐时间(≤3min)+成本率+复购。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 22-30</span>
+      <span style="flex:1">复盘各品销量+反馈，砍掉表现差的品，优化TOP2的SOP，决定是否增加变体。</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键：</strong>素菜验证期最短——2天能吃的版本，5天顾客回头的版本。核心是\"控水+火候\"两个基本功。Day7试吃>80%说\"脆嫩好吃\"即合格。Day30保留TOP2-3品，简化备料。
+  </div>
+</div>
+
+<!-- ⑮ 沧林判断 -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      素菜合辑是我评测的所有品类中<strong>门槛最低、风险最小、利润调节能力最强的品类组合</strong>。<br><br>
+      它的\"容错率\"极高——手撕包菜醋多放点也酸爽、土豆丝炒软了也能吃、干煸豆角煸过了反而更香。素菜是\"怎么做都不会难吃\"的品类——这是新手创业最安全的起点。<br><br>
+      但真正的壁垒在\"速度×品质\"——2分钟出一份锅气喷香的素菜，和5分钟出一份水汪汪的素菜，翻台率差2倍、复购率差40%。素菜不靠酱料配方取胜，拼的是厨房效率：备料速度、控水标准、火候肌肉记忆。<br><br>
+      利润结构是典型的\"走量逻辑\"：单份毛利¥8-15看似微薄，但一个熟练厨师高峰期一小时能出30-40份——时毛利¥240-600。加上蔬菜成本仅12-22%，素菜是门店利润率最高的品类。<br><br>
+      如果你资金≤¥3万、零餐饮经验——<strong>素菜合辑是最佳入门选择</strong>。先在档口或外卖专做4-6道素菜+米饭，跑通后逐步加荤菜。最好的广告不是营销——是路过的人看到桌上那盘翠绿油亮的包菜就走不动了。记住：<strong>做素菜不追求\"惊艳\"，追求\"稳定\"——每一份脆嫩、每一份2分钟上桌、每一份让顾客觉得\"这¥12花得值\"。</strong>
+    </div>
+    <div class="j-tags">
+      <span>#素菜合辑</span><span>#手撕包菜</span><span>#酸辣土豆丝</span><span>#干煸豆角</span><span>#清炒时蔬</span><span>#利润调节器</span><span>#毛利率80%</span><span>#新手友好</span>
+    </div>
+  </div>
+</div>
+
+<!-- ⑯ 完整数据包（预览） -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">💎 完整数据包（预览）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;color:#4a3f35;line-height:1.7;margin-bottom:6px;border-left:3px solid #8B1A1A">
+    <strong>📦 付费解锁内容包含：</strong><br><br>
+    ✅ 三品3档辣度配方——微辣/标准/重辣，精确到g<br>
+    ✅ 6种升级变体——加肉末/加鸡蛋/加腊肉/加粉丝/加木耳/加虾皮·完整SOP<br>
+    ✅ 批量SOP（10/20/50份版）——量化时间表+流水线分工<br>
+    ✅ 控水对照表——蔬菜脱水标准+湿度检测方法<br>
+    ✅ 翻车急救方案——出水/不脆/糊锅/发苦/豆角中毒预防<br>
+    ✅ 外卖优化方案——防出水打包·复热·平台标题优化<br>
+    ✅ 沧林踩坑实录——从一锅水到日售200份翻车日志<br>
+    ✅ 套餐定价模型——8种组合+定价策略+利润率<br>
+    ✅ 四季菜单轮换方案——春夏秋冬时蔬替换表<br>
+    全部数据基于200+次实操累积，精确到g和秒。
+  </div>
+</div>
+
+<!-- ⑰ 付费区 -->
+<div style="padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#8B1A1A;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+</div>
+
+<!-- 🔓 付费展开内容 -->
+<div class="locked-section">
+
+<div style="padding:16px 18px;border-bottom:1px solid #eee5d8">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#8B1A1A;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+
+  <!-- 1️⃣ 3档辣度 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 三品3档辣度配方</div>
+  <div style="background:#fef2ee;border-radius:10px;padding:12px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.7;color:#4a3f35">
+    <strong>🥬 手撕包菜：</strong>微辣(干辣椒2g去籽)·标准(5g·走量主力)·重辣(8g+小米辣2个)<br>
+    <strong>🥔 酸辣土豆丝：</strong>微辣(干辣椒2g+花椒1g)·标准(3g+2g)·重辣(6g+3g+野山椒水15ml)<br>
+    <strong>🫘 干煸豆角：</strong>微辣(3g+花椒2g)·标准(5g+3g)·重辣(8g+4g+小米辣3个)。成本仅多¥0.3，售价可多¥3-5。
+  </div>
+
+  <!-- 2️⃣ 6种变体 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">2️⃣ 6种升级变体配方</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:6px;border-left:3px solid #D4A574;font-size:12px;line-height:1.7;color:#4a3f35">
+    <strong>🥩 加肉末版(+¥4-6·毛利75%)：</strong>猪肉末30g先煸酥香。成本+¥0.6。<br>
+    <strong>🥚 加煎蛋版(+¥3-5·毛利90%)：</strong>出锅前锅边煎蛋。成本+¥0.8。<br>
+    <strong>🥓 加腊肉版(+¥6-8·毛利70%)：</strong>干煸豆角+腊肉30g。成本+¥3-4。<br>
+    <strong>🍜 加粉丝版(+¥3-4·毛利85%)：</strong>手撕包菜+泡发粉丝50g。成本+¥0.5。<br>
+    <strong>🍄 加木耳版(+¥4-5·毛利85%)：</strong>清炒时蔬+黑木耳30g。成本+¥0.5。<br>
+    <strong>🦐 加虾皮版(+¥3-5·毛利80%)：</strong>清炒时蔬+虾皮5g。成本+¥0.8。
+  </div>
+
+  <!-- 3️⃣ 批量SOP -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">3️⃣ 批量SOP — 10/20/50份版（手撕包菜为例）</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1fr 1fr 1fr 1fr"><span>项目\批量</span><span style="text-align:center">10份</span><span style="text-align:center">20份</span><span style="text-align:center">50份</span></div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="font-weight:600">包菜总量</span><span style="text-align:center">3kg</span><span style="text-align:center">6kg</span><span style="text-align:center">15kg</span></div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="font-weight:600">备料+沥干</span><span style="text-align:center">25min</span><span style="text-align:center">45min</span><span style="text-align:center">90min</span></div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="font-weight:600">预混调味汁</span><span style="text-align:center">3min</span><span style="text-align:center">5min</span><span style="text-align:center">10min</span></div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="font-weight:600">出餐（爆炒）</span><span style="text-align:center">12min</span><span style="text-align:center">22min</span><span style="text-align:center">50min</span></div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="font-weight:600">总时间</span><span style="text-align:center;color:#8B1A1A;font-weight:700">40min</span><span style="text-align:center;color:#8B1A1A;font-weight:700">72min</span><span style="text-align:center;color:#C0392B;font-weight:700">150min</span></div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="font-weight:600">预估毛利</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥100-140</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥200-280</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥500-700</span></div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">💡 素菜备料占60%时间，建议提前1天备好。脱水机必备。双灶并行：一处专炒素菜，高峰1-1.5min/份。</div>
+
+  <!-- 4️⃣ 锅气温度 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">4️⃣ 锅气温度对照表</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr"><span>锅温区间</span><span style="text-align:center">火力</span><span style="text-align:center">工序</span><span style="text-align:center">食材状态</span></div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr"><span style="font-weight:600">120-150℃</span><span style="text-align:center;color:#D4A574">中小火</span><span style="text-align:center">煸肉末/炸花椒</span><span>肉末缓慢出油</span></div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr"><span style="font-weight:600">160-180℃</span><span style="text-align:center;color:#D4A574">中火</span><span style="text-align:center">煸炸豆角</span><span>表皮起皱微焦</span></div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr"><span style="font-weight:600">180-200℃</span><span style="text-align:center;color:#8B1A1A">中大火</span><span style="text-align:center">爆香蒜椒</span><span>蒜香辣椒出味</span></div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr"><span style="font-weight:600">200-250℃</span><span style="text-align:center;color:#C0392B">猛火</span><span style="text-align:center">爆炒蔬菜</span><span>锅气·脆嫩</span></div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">💡 油温≥200°C蔬菜下锅。判断：油下锅看到\"油纹\"，蒜末浮起剧烈冒泡。素菜锅气比荤菜更难——蔬菜含水量高，锅温不够=出水=回不去。</div>
+
+  <!-- 5️⃣ 翻车方案 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">5️⃣ 翻车解决方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;font-size:12px;line-height:1.7;color:#4a3f35;border-left:3px solid #8B1A1A;margin-bottom:8px">
+    <strong>🆘 蔬菜出水：</strong>脱水机+油温≥200°C+每锅1份。已出水：大火收汁+薄芡。<br>
+    <strong>🆘 包菜不脆发苦：</strong>去厚梗+大火≤60秒+加糖2g。选牛心菜。<br>
+    <strong>🆘 土豆丝糊锅：</strong>淀粉泡10分钟换2次水，沥干再炒。已糊：重做别硬炒。<br>
+    <strong>🆘 豆角太油腻：</strong>油温160-180°C炸3-4分钟，出锅控油15秒。<br>
+    <strong>🆘 时蔬变黄：</strong>全程猛火+梗叶分离。翠绿即出锅，总时间≤1.5min。
+  </div>
+
+  <!-- 6️⃣ 外卖优化 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">6️⃣ 外卖优化方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;font-size:12px;line-height:1.7;color:#4a3f35;border-left:3px solid #5a8f3c;margin-bottom:8px">
+    <strong>✅ 防出水打包：</strong>素菜米饭分装，盒底垫吸油纸，宽口浅盘。成本+¥0.2/份。<br>
+    <strong>✅ 复热提示：</strong>\"微波中火1分钟·脆嫩如初\"印在盒上。素菜复热损失<20%。<br>
+    <strong>✅ 平台标题：</strong>\"招牌手撕包菜——酸辣脆爽·下饭神器\"。¥12是最佳锚点。<br>
+    <strong>✅ 外卖套餐：</strong>双素拼盘¥16-22、三素拼盘¥22-28。素菜是凑单神器。
+  </div>
+
+  <!-- 7️⃣ 套餐定价 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">7️⃣ 套餐定价模型 — 8种组合</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.7;color:#4a3f35">
+    <strong>📋 基础素饭(走量40%)：</strong>素菜1份+米饭=¥12-18·毛利¥9-14<br>
+    <strong>📋 双素拼盘(午间主力25%)：</strong>任选2素+米饭=¥18-22·毛利¥14-17<br>
+    <strong>📋 三素拼盘(晚餐10%)：</strong>任选3素+米饭=¥22-28·毛利¥18-22<br>
+    <strong>📋 加蛋套餐(15%)：</strong>素菜+煎蛋+米饭=¥15-20·毛利¥11-15<br>
+    <strong>📋 加肉套餐(5%)：</strong>素菜肉末版+米饭=¥18-24·毛利¥13-18<br>
+    <strong>📋 荤素套餐A(引流5%)：</strong>辣椒炒肉+手撕包菜+米饭×2=¥30-38·毛利¥19-25<br>
+    <strong>📋 荤素套餐B(主推3%)：</strong>小炒肉+土豆丝+米饭+小菜=¥35-42·毛利¥22-28<br>
+    <strong>📋 家庭套餐(2%)：</strong>3荤3素+米饭×4=¥68-88·毛利¥42-56<br>
+    核心逻辑：基础素饭引流，双素拼盘主推，荤素套餐拉客单价。整体客单价可达¥25-32。
+  </div>
+
+  <!-- 8️⃣ 实战备注 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">8️⃣ 实战备注 — 沧林踩过的坑</div>
+  <div class="judge-box" style="border:1px solid #8B1A1A">
+    <div class="j-text">
+      • <strong>第一次手撕包菜——一锅水：</strong>刀切没手撕、没沥干、油温不够。后来明白：手撕的断面更粗糙更容易挂汁；包菜必须沥到\"不滴水\"。<br><br>
+      • <strong>土豆丝淀粉陷阱：</strong>泡3分钟就下锅，炒成浆糊。后来切丝→泡10min→换水再泡5min→沥干→厨房纸吸一遍。从此粒粒分明。<br><br>
+      • <strong>干煸豆角——差点食物中毒：</strong>煸2分钟上桌，吃完上吐下泻。从此规矩：先焯水2分钟再煸3分钟，中心温度≥75°C。<br><br>
+      • <strong>最赚钱发现——\"加量¥2\"：</strong>酸辣土豆丝推出大份(300g=¥14)，食材仅+¥0.3，大份销量占60%，客单价+¥2。从此所有素菜设大小份。<br><br>
+      • <strong>供应商策略：</strong>批发市场凌晨5点拿货便宜20%。包菜整车买(¥1.5-2.5/kg)。土豆产地直发(¥1.5-2/kg)。夏季多买囤本地小冷库(月租¥300-500)。<br><br>
+      • <strong>外卖分装：</strong>第一次菜饭一盒，米饭被泡烂，差评率40%。分装后好评率90%。成本+¥0.2/份，值得。
+    </div>
+  </div>
+</div>
+
+</div><!-- /.locked-section -->
+
+<div class="ftr">FoodIntel AI · 沧林食品工作站 · JX_08 素菜合辑（四品工艺配方卡）</div>
+
+</div>
+</body>
+</html>

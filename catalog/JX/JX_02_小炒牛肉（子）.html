@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>小炒牛肉 · 创业项目测评（子卡）</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5ede5;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 顶部评级（暗红基调 #8B1A1A） ===== */
+.rating-bar{background:linear-gradient(135deg,#5a1a1a,#8B1A1A);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+/* ===== 公共模块 ===== */
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#5a1a1a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#8B1A1A}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#5a1a1a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#8B1A1A}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-red{background:#fef2ee}
+.mc-red .m-val{color:#8B1A1A}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#8B1A1A}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#8B1A1A}
+
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#8B1A1A}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#8B1A1A;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-arrow{color:#ccc;font-size:10px}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+
+.comp-grid{display:grid;grid-template-columns:1fr;gap:6px}
+.comp-row{display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:11px;padding:8px 10px;border-radius:8px;align-items:center}
+.comp-row .c-label{font-weight:600;color:#3a322a}
+.comp-row .c-star{text-align:center;color:#5a4f44}
+
+/* ===== 工艺框架 ===== */
+.spec-card{background:#f8f4ef;border-radius:10px;padding:14px;margin:6px 0;border-left:3px solid #8B1A1A}
+.spec-card .sc-body{font-size:12px;color:#4a3f35;line-height:1.7}
+.tip-box{background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#8B1A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.temp-table{background:#f8f4ef;border-radius:10px;overflow:hidden;margin:6px 0}
+.temp-header{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:10px;font-weight:700;padding:6px 10px;background:#5a1a1a;color:#fff}
+.temp-row{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:11px;padding:7px 10px;border-bottom:1px solid #e8dfd5}
+.temp-row:last-child{border-bottom:none}
+.temp-row:nth-child(even){background:#f5f0eb}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#8B1A1A;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+/* ===== 切割方案图示 ===== */
+.cut-diagram{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.cut-card{background:#f8f4ef;border-radius:10px;padding:12px;text-align:center}
+.cut-card .c-icon{font-size:22px;margin-bottom:4px}
+.cut-card .c-name{font-size:11px;font-weight:700;color:#3a322a}
+.cut-card .c-desc{font-size:10px;color:#7a7269;margin-top:2px;line-height:1.4}
+.cut-card.active{border:2px solid #8B1A1A;background:#fef2ee}
+
+/* ===== 油温对照表 ===== */
+.oil-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.oil-card{padding:10px 8px;border-radius:8px;text-align:center;font-size:12px}
+.oil-card .o-temp{font-size:18px;font-weight:800}
+.oil-card .o-label{font-size:9px;color:#7a7269;margin-top:2px}
+.oil-card .o-result{font-size:10px;color:#5a4f44;margin-top:2px}
+.oc-correct{background:#f0f6ec;border:1px solid #c8d8be}
+.oc-correct .o-temp{color:#5a8f3c}
+.oc-warn{background:#fef6ec;border:1px solid #e8d8c0}
+.oc-warn .o-temp{color:#D4A574}
+.oc-danger{background:#fef2ee;border:1px solid #e8c8be}
+.oc-danger .o-temp{color:#8B1A1A}
+
+/* ===== 时间轴 ===== */
+.timeline-bar{display:flex;align-items:center;gap:4px;margin:10px 0;padding:8px 10px;background:#f8f4ef;border-radius:10px;overflow-x:auto}
+.timeline-seg{flex:1;text-align:center;padding:6px 4px;border-radius:6px;font-size:9px;min-width:60px}
+.timeline-seg .tl-time{font-size:11px;font-weight:700}
+.timeline-seg.tl-red{background:#fef2ee}
+.timeline-seg.tl-red .tl-time{color:#8B1A1A}
+.timeline-seg.tl-green{background:#f0f6ec}
+.timeline-seg.tl-green .tl-time{color:#5a8f3c}
+
+/* ===== 付费区 ===== */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#8B1A1A;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#8B1A1A;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ============================================================ -->
+<!-- 维度 1/17：产品头部 -->
+<!-- ============================================================ -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#5a1a1a;margin-bottom:2px">🥩 小炒牛肉</h1>
+  <div style="font-size:12px;color:#b5aaa0">湘式爆炒 · 滑油工艺 · 2分钟出餐</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 2/17：项目评级 -->
+<!-- ============================================================ -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.2</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">滑油控温是核心壁垒——20秒即捞、回锅15秒、全程≤2分钟。超过时间一定老。技术好≈利润稳，但劝退率也高。</div>
+  <div class="r-tags">
+    <span>🔥 湘菜经典</span>
+    <span>💰 毛利约65%</span>
+    <span>⏱️ 2分钟出餐</span>
+    <span>🔪 逆纹切3mm</span>
+    <span>📈 客单¥28-48</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 3/17：项目速览（5维雷达） -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔧 技术门槛</div><div class="stars">★★★★☆</div><div class="val">较高</div></div>
+    <div class="radar-item"><div class="label">💰 利润</div><div class="stars">★★★★☆</div><div class="val">中高</div></div>
+    <div class="radar-item high"><div class="label">⚔️ 竞争</div><div class="stars">★★★★☆</div><div class="val">激烈</div></div>
+    <div class="radar-item"><div class="label">📐 标准化</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item high"><div class="label">🎨 视觉冲击</div><div class="stars">★★★★☆</div><div class="val">较强</div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 4/17：适合谁 / 不适合谁 -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 湘菜馆/米饭快餐店</div>
+      <div class="fit-item fit-yes">✅ 有滑油经验者</div>
+      <div class="fit-item fit-yes">✅ 能做盖浇饭/套餐</div>
+      <div class="fit-item fit-yes">✅ 午晚快餐型门店</div>
+      <div class="fit-item fit-yes">✅ 有控温习惯的人</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 纯新手（必老）</div>
+      <div class="fit-item fit-no">❌ 不用温度计的人</div>
+      <div class="fit-item fit-no">❌ 摆摊（火候难控）</div>
+      <div class="fit-item fit-no">❌ 极致低价路线</div>
+      <div class="fit-item fit-no">❌ 追求零厨艺速成</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 5/17：赚钱逻辑 -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是小炒牛肉</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">顾客买的是：滑油的嫩滑口感 × 辣椒爆炒的锅气 × 米饭杀手的下饭体验 × 一份肉菜=满足感</div>
+    <div class="l-title">📈 利润来源</div>
+    <div class="logic-item"><span>小炒牛肉（堂食）</span><span class="v">毛利60-68%</span></div>
+    <div class="logic-item"><span>小炒牛肉盖浇饭（套餐）</span><span class="v">毛利65-72%</span></div>
+    <div class="logic-item"><span>加辣/加量升级</span><span class="v">加¥5-8</span></div>
+    <div class="logic-item"><span>搭售汤品/饮品</span><span class="v">增收15-20%</span></div>
+    <div class="logic-item"><span>配菜加料（香菜/芹菜/蒜苗）</span><span class="v">加¥3-5</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-red">
+      <div class="m-label">日营收</div>
+      <div class="m-val">¥800-2000</div>
+      <div class="m-sub">午晚两市</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">月净利</div>
+      <div class="m-val">¥5000-15000</div>
+      <div class="m-sub">出摊26天</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">3-6个月</div>
+      <div class="m-sub">含设备食材</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>赚钱关键：</strong>小炒牛肉是技术换利润的品类。牛里脊批发¥50-70/kg，每份用牛肉150g（食材成本¥7.5-10.5）+配菜调料≈总食材成本¥10-12/份。夫妻店售价¥28-35，连锁店¥38-48，毛利率约65%。提高利润三个杠杆：①选准部位（牛里脊/黄瓜条价差¥20/kg）；②滑油技术好=缩水少（差手艺一份肉缩水20-30%）；③做套餐提升客单（小炒牛肉+米饭+小菜=¥35-45）。关键：牛肉不能提前大量切，高峰期需现切现腌现炒。日均30-50份→日营收¥1000-2000→月净利¥5000-15000→3-6个月回本。
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 6/17：同赛道对比（牛肉爆炒品类） -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">📈 同赛道对比</div>
+  <div class="comp-grid">
+    <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:10px;font-weight:700;padding:6px 10px;background:#5a1a1a;color:#fff;border-radius:6px;gap:0">
+      <span>爆炒牛肉品类</span><span style="text-align:center">利润</span><span style="text-align:center">难度</span><span style="text-align:center">卖相</span><span style="text-align:center">复购</span><span style="text-align:center">推荐</span>
+    </div>
+    <div class="comp-row" style="background:#fef6ec">
+      <span class="c-label">🥩 湘式小炒牛肉</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="color:#8B1A1A">★★★★</span>
+      <span class="c-star" style="color:#8B1A1A">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#8B1A1A">A-</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🌶️ 小炒黄牛肉</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="color:#8B1A1A">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B+</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🥘 水煮牛肉</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="color:#8B1A1A">★★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🍜 牛肉盖浇饭</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#7a7269">★★</span>
+      <span class="c-star" style="color:#7a7269">★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#5a8f3c">A</span>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 湘式小炒牛肉是"爆炒嫩滑派"——靠滑油+大火爆炒实现嫩滑。小炒黄牛肉更重腌料，水煮牛肉视觉强但复购低，牛肉盖浇饭利润薄。湘式小炒牛肉定位中端牛肉快餐，出餐快、客单¥28-48。缺点是竞争激烈（全国10万+湘菜馆）。
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 7/17：30天验证路线 -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#8B1A1A;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1-3</span>
+      <span style="flex:1">试做5份：跑通全流程，记录油温+时间+口感</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 4-7</span>
+      <span style="flex:1">邀请15人试吃，测试3种辣椒配比，收集嫩滑度+辣度反馈</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 8-14</span>
+      <span style="flex:1">定味型+定价，备齐牛肉、辣椒、腌料供应链</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 15-21</span>
+      <span style="flex:1">正式营业第1周：测试出餐速度（目标≤3分钟），优化备料节奏</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 22-30</span>
+      <span style="flex:1">复盘数据：日均营收、食材成本率、客单价、复购率，决定调整方向</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键判断：</strong>前30天是"滑油定型期"——每天至少做10份练习。目标：每份滑油20秒±2秒，回锅15秒±2秒，全程≤2分钟。做不到"牛肉嫩滑一致"说明技术未稳。真正赚钱从第2个月开始。
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 8/17：开店适配指标 -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">🔥 开店适配指标</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">正餐门店</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">学校周边</div>
+      <div class="s-bar"><div class="fill" style="width:85%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖平台</div>
+      <div class="s-bar"><div class="fill" style="width:65%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市摆摊</div>
+      <div class="s-bar"><div class="fill" style="width:30%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★☆☆☆</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 小炒牛肉适合堂食+外卖混合模式。滑油牛肉配送中口感保持良好，外卖适应性中等偏上。最佳场景：快餐型门店或学校周边（复购频次高）。
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 9/17：核心工艺（滑油体系） -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">🔥 核心工艺</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <strong style="color:#8B1A1A">原料配比（1份基准·牛肉150g）：</strong>
+      <div class="recipe-line"><span class="k">牛里脊/黄瓜条（逆纹切薄片3mm）</span><span class="v">150g</span></div>
+      <div class="recipe-line"><span class="k">清水（补水用）</span><span class="v">100g</span></div>
+      <div class="recipe-line"><span class="k">生抽</span><span class="v">20g</span></div>
+      <div class="recipe-line"><span class="k">玉米淀粉</span><span class="v">15g</span></div>
+      <div class="recipe-line"><span class="k">食用油（封油）</span><span class="v">15g</span></div>
+      <div class="recipe-line"><span class="k">鲜小米辣+杭椒</span><span class="v">50g</span></div>
+      <div class="recipe-line"><span class="k">蒜末+姜末</span><span class="v">各10g</span></div>
+      <div class="recipe-line"><span class="k">滑油用油</span><span class="v">约1L（宽油）</span></div>
+    </div>
+  </div>
+
+  <!-- 滑油时间轴 -->
+  <div style="font-size:12px;font-weight:700;color:#5a1a1a;margin:10px 0 6px">⏱️ 全程≤2分钟时间轴</div>
+  <div class="timeline-bar">
+    <div class="timeline-seg tl-green">
+      <div class="tl-time">0s</div>
+      <div style="color:#7a7269">备料完成</div>
+    </div>
+    <div class="timeline-seg" style="background:#f0e6e0">
+      <span style="font-size:18px;font-weight:800;color:#D4A574">→</span>
+    </div>
+    <div class="timeline-seg tl-red">
+      <div class="tl-time">20s</div>
+      <div style="color:#8B1A1A;font-weight:600">滑油</div>
+    </div>
+    <div class="timeline-seg" style="background:#f0e6e0">
+      <span style="font-size:18px;font-weight:800;color:#D4A574">→</span>
+    </div>
+    <div class="timeline-seg" style="background:#fef6ec">
+      <div class="tl-time">~25s</div>
+      <div style="color:#7a7269">爆香</div>
+    </div>
+    <div class="timeline-seg" style="background:#f0e6e0">
+      <span style="font-size:18px;font-weight:800;color:#D4A574">→</span>
+    </div>
+    <div class="timeline-seg tl-red">
+      <div class="tl-time">15s</div>
+      <div style="color:#8B1A1A;font-weight:600">回锅</div>
+    </div>
+    <div class="timeline-seg" style="background:#f0e6e0">
+      <span style="font-size:18px;font-weight:800;color:#D4A574">→</span>
+    </div>
+    <div class="timeline-seg tl-green">
+      <div class="tl-time">≤2min</div>
+      <div style="color:#5a8f3c;font-weight:600">出锅✓</div>
+    </div>
+  </div>
+
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc">逆纹切牛肉薄片3mm→清水100g抓匀吸水→生抽20g+淀粉15g抓至上浆→油封15g锁水</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc">滑油：油温120-140℃·牛肉下锅划散·变色即捞出（约20秒·八成熟）</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc">留底油·大火爆香姜蒜末+小米辣+杭椒（约5秒）</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc">回牛肉大火翻炒15秒→生抽5g+蚝油5g+盐1g+味精1g调味</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc">全程≤2分钟→出锅装盘→现做现吃</span>
+    </div>
+  </div>
+
+  <!-- 油温对照表 -->
+  <div style="font-size:12px;font-weight:700;color:#5a1a1a;margin:12px 0 6px">🌡️ 滑油温度曲线对照</div>
+  <div class="oil-grid">
+    <div class="oil-card oc-correct">
+      <div class="o-temp">120-140℃</div>
+      <div class="o-label">✅ 理想滑油温区</div>
+      <div class="o-result">牛肉变色即熟·嫩滑多汁</div>
+    </div>
+    <div class="oil-card oc-warn">
+      <div class="o-temp">100-120℃</div>
+      <div class="o-label">⚠️ 偏低</div>
+      <div class="o-result">牛肉出水·口感发面</div>
+    </div>
+    <div class="oil-card oc-warn">
+      <div class="o-temp">140-160℃</div>
+      <div class="o-label">⚠️ 偏高</div>
+      <div class="o-result">表面焦·内部8成熟→回锅后变老</div>
+    </div>
+    <div class="oil-card oc-danger">
+      <div class="o-temp">>160℃</div>
+      <div class="o-label">❌ 过高</div>
+      <div class="o-result">牛肉直接变老·不可逆</div>
+    </div>
+  </div>
+
+  <div class="tip-box"><div class="tip-label">🔥 滑油核心原理</div><p>120-140℃滑油是让牛肉在温油中"泡熟"——这个温度下内部肉汁和补进的100g水被锁住，形成嫩滑口感。油温>140℃时牛肉表面蛋白质瞬间凝固变硬，回锅15秒就老了。油温<100℃时牛肉出水、淀粉脱落。<br><br>判断标准：下锅后油面平静微冒小泡（不是翻滚）→油温在120-140℃。牛肉变色即捞（约20秒、八成熟）。回锅15秒刚好全熟。超过2分钟一定老——铁律。</p></div>
+
+  <div class="tip-box"><div class="tip-label">🔪 逆纹切3mm的底层逻辑</div><p>牛肉肌肉纤维纵向排列，顺纹切=咬长纤维=嚼不动。逆纹切（刀刃与纤维呈90°）把长纤维切断成短段，口感嫩滑的关键。厚度3mm：太薄（<2mm）滑油易碎；太厚（>4mm）20秒内部不熟。3mm是最佳平衡。<br><br>实操技巧：牛肉半冻状态（冷冻30分钟）最容易切出3mm均匀薄片。切片前先看肉纹走向——纤维方向为顺纹，垂直切为逆纹。</p></div>
+
+  <div style="font-size:11px;color:#b5aaa0;line-height:1.6;padding:8px 0 4px;text-align:center">
+    💡 以上工艺你看得明白，<br>精确到°C的油温对照表和补水量公式——解锁后查看。
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 10/17：腌制体系 -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">🧂 腌制体系</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>补水腌制法（每份150g牛肉·精确g）：</strong>
+    <div class="recipe-line"><span class="k">牛肉（逆纹切3mm薄片）</span><span class="v">150g</span></div>
+    <div class="recipe-line"><span class="k">清水（分3次加入抓匀）</span><span class="v">100g</span></div>
+    <div class="recipe-line"><span class="k">生抽（提鲜+上色）</span><span class="v">20g</span></div>
+    <div class="recipe-line"><span class="k">玉米淀粉（锁水）</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">食用油（油封）</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">白胡椒粉（去腥·可选）</span><span class="v">1g</span></div>
+    <div class="recipe-line"><span class="k">小苏打（嫩化·极少量）</span><span class="v">0.5g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      🔥 <strong>腌制顺序铁律：</strong><br>
+      ① 牛肉切好后先加清水（分3次）→朝一个方向抓匀至完全吸收（约2分钟）→牛肉膨胀湿润不滴水。<br>
+      ② 加生抽+白胡椒粉→抓匀。<br>
+      ③ 加淀粉→抓匀至表面挂薄浆不粘手。<br>
+      ④ 最后油封→抓匀→静置10-15分钟。<br><br>
+      <strong>补水量公式：</strong>肉重60-70%（150g牛肉≈100g水）。少于50%不够嫩、多于80%脱浆。<br>
+      <strong>检查：</strong>油封后表面无水渍→补水成功。还有水渍→过量→回锅必出水。
+    </div>
+  </div>
+
+  <div class="s-title">🌶️ 调味体系</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #D4A574;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>爆炒调味料（回锅时加入）：</strong>
+    <div class="recipe-line"><span class="k">生抽（二次调味）</span><span class="v">5g</span></div>
+    <div class="recipe-line"><span class="k">蚝油</span><span class="v">5g</span></div>
+    <div class="recipe-line"><span class="k">盐</span><span class="v">1g</span></div>
+    <div class="recipe-line"><span class="k">味精/鸡精</span><span class="v">1g</span></div>
+    <div class="recipe-line"><span class="k">白糖（提鲜中和辣味）</span><span class="v">1g</span></div>
+    <div class="recipe-line"><span class="k">老抽（上色·可选）</span><span class="v">2g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      🌶️ 建议把调味料提前混合成"碗芡"，一次倒入翻匀即起锅。蚝油易扒锅→倒前先跟生抽搅匀。盖浇饭版可在碗芡里加10g水淀粉（淀粉5g+水5g）勾薄芡挂汁。
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 11/17：牛肉部位选择 -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">🥩 牛肉部位选择</div>
+  <div class="cut-diagram">
+    <div class="cut-card active">
+      <div class="c-icon">🥩</div>
+      <div class="c-name">牛里脊（首选）</div>
+      <div class="c-desc">最嫩·无筋·批发¥60-70/kg<br>口感嫩滑标杆·损耗极小</div>
+    </div>
+    <div class="cut-card">
+      <div class="c-icon">🥩</div>
+      <div class="c-name">黄瓜条（次选）</div>
+      <div class="c-desc">偏瘦·有少量筋膜<br>批发¥50-60/kg·需去筋膜</div>
+    </div>
+    <div class="cut-card">
+      <div class="c-icon">🥩</div>
+      <div class="c-name">牛霖（经济型）</div>
+      <div class="c-desc">较粗纤维·价低<br>批发¥40-50/kg·需+小苏打嫩化</div>
+    </div>
+    <div class="cut-card">
+      <div class="c-icon">❌</div>
+      <div class="c-name">牛腱/牛腩/胸肉</div>
+      <div class="c-desc">不适合滑油<br>纤维粗/筋多·爆炒必老</div>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:4px;line-height:1.5">
+    💡 小炒牛肉的灵魂是"嫩"——部位选择直接影响成败。牛里脊首选（最嫩、不出水、不缩水），批发¥60-70/kg，每份150g成本¥9-10.5。黄瓜条次之（去筋膜后口感接近里脊），批发¥50-60/kg可节约15-20%。做¥28-30低价版可用牛霖（¥40-50/kg）+小苏打0.5g嫩化，但牛肉风味弱一些。绝对不能用牛腱/牛腩——滑油咬不动。
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 12/17：设备清单 -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+
+  <div style="font-size:12px;font-weight:700;color:#5a1a1a;margin-bottom:6px">🔸 后厨设备（一次性投入）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #8B1A1A">
+    <div class="recipe-line"><span class="k">猛火灶（单眼/双眼·配通风）</span><span class="v" style="font-weight:600;color:#3a322a">¥300-800</span></div>
+    <div class="recipe-line"><span class="k">炒锅 36-40cm（铁锅/不粘锅）</span><span class="v" style="font-weight:600;color:#3a322a">¥60-150</span></div>
+    <div class="recipe-line"><span class="k">探针式油温温度计</span><span class="v" style="font-weight:600;color:#3a322a">¥20-40</span></div>
+    <div class="recipe-line"><span class="k">不锈钢操作台 1.2-1.5m</span><span class="v" style="font-weight:600;color:#3a322a">¥200-500</span></div>
+    <div class="recipe-line"><span class="k">不锈钢盆×4-6个（腌制/配料/分装）</span><span class="v" style="font-weight:600;color:#3a322a">¥40-80</span></div>
+    <div class="recipe-line"><span class="k">漏勺/手勺/食品夹</span><span class="v" style="font-weight:600;color:#3a322a">¥30-60</span></div>
+    <div class="recipe-line"><span class="k">电子秤（精确到1g）</span><span class="v" style="font-weight:600;color:#3a322a">¥30-60</span></div>
+    <div class="recipe-line"><span class="k">切肉刀（中式片刀/西式主厨刀）</span><span class="v" style="font-weight:600;color:#3a322a">¥50-150</span></div>
+    <div class="recipe-line"><span class="k">砧板（塑料/木质·切肉专用）</span><span class="v" style="font-weight:600;color:#3a322a">¥30-80</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#5a1a1a;margin-bottom:6px">🔸 门店配套（选择项）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #D4A574">
+    <div class="recipe-line"><span class="k">排烟系统（爆炒油烟大·必备）</span><span class="v" style="font-weight:600;color:#3a322a">¥600-1500</span></div>
+    <div class="recipe-line"><span class="k">冰箱/冷柜（牛肉冷藏保鲜）</span><span class="v" style="font-weight:600;color:#3a322a">¥800-2000</span></div>
+    <div class="recipe-line"><span class="k">桌椅 6-10套（快餐型）</span><span class="v" style="font-weight:600;color:#3a322a">¥800-1800</span></div>
+    <div class="recipe-line"><span class="k">收银系统/扫码点餐</span><span class="v" style="font-weight:600;color:#3a322a">¥300-800</span></div>
+    <div class="recipe-line"><span class="k">高温消毒柜</span><span class="v" style="font-weight:600;color:#3a322a">¥500-1000</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#5a1a1a;margin-bottom:6px">🔸 首批耗材</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span class="k">牛里脊 10kg</span><span class="v" style="font-weight:600;color:#3a322a">¥500-700</span></div>
+    <div class="recipe-line"><span class="k">鲜辣椒（小米辣+杭椒）5kg</span><span class="v" style="font-weight:600;color:#3a322a">¥50-80</span></div>
+    <div class="recipe-line"><span class="k">滑油用油（大豆油/菜籽油）10L</span><span class="v" style="font-weight:600;color:#3a322a">¥80-120</span></div>
+    <div class="recipe-line"><span class="k">调味料（生抽/蚝油/淀粉/盐/糖等）</span><span class="v" style="font-weight:600;color:#3a322a">¥50-80</span></div>
+    <div class="recipe-line"><span class="k">一次性打包盒+纸袋 500套</span><span class="v" style="font-weight:600;color:#3a322a">¥100-150</span></div>
+    <div class="recipe-line"><span class="k">大米（每份配200g米饭）首批50kg</span><span class="v" style="font-weight:600;color:#3a322a">¥150-250</span></div>
+  </div>
+
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#8B1A1A;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥3,000-6,000<br><span style="font-size:10px;color:#b5aaa0">已有门店基础·加牛肉供应链</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥8,000-15,000<br><span style="font-size:10px;color:#b5aaa0">含排烟+全厨房设备+首批食材</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+      💡 小炒牛肉投资门槛低于辣子鸡（无需油炸锅、少排烟）。核心投入是猛火灶和温度计。温度计¥20-40搞定但决定滑油成功率——没有温度计前不要尝试。
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 13/17：风险 -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">⚠️ 风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><span><strong>牛肉炒老（最大风险·劝退率80%）</strong>——滑油>25秒或回锅>20秒，牛肉立即变老。超过2分钟一定老。解决方案：温度计控温120-140℃；计时器设滑油20秒+回锅15秒；宁少炒5秒也不要多炒——微生牛肉可被余温加热，老了无法复原。</span></div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><span><strong>补水量失控·滑油脱浆</strong>——补水>80%肉重则淀粉锁不住，滑油时淀粉脱落。解决方案：严格按60-70%补水（150g牛肉≈100g水），分3次加。已脱浆：捞出+淀粉5g+油5g补救，但口感下降20%。</span></div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><span><strong>牛肉缩水损耗</strong>——差手艺一份肉缩水20-30%。原因：滑油温>140℃挤出水；腌料盐太多渗透脱水。解决方案：控温120-140℃；盐只在回锅时加；选牛里脊（缩水率最低）。</span></div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><span><strong>牛肉切不好·口感断崖</strong>——顺纹切不管怎么腌都咬不动。解决：半冻状态切；刀刃要锋利；切3mm均匀薄片。切好放冷藏≤30分钟。</span></div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><span><strong>高峰期出餐崩盘</strong>——单份≥2分钟，5份同时点单卡死。解决方案：牛肉提前切好腌好（冷藏≤2小时）；调味料预混碗芡；双灶模式（一滑油一爆炒）；批量滑好第一批牛肉（八成熟），点单后10秒回锅。</span></div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 14/17：赛道判断 -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">滑油控温技术有壁垒，非3天学会</div>
+      <div class="t-item">出餐快（单份≤2分钟），翻台率高</div>
+      <div class="t-item">牛肉=高感知价值，顾客愿意溢价</div>
+      <div class="t-item">配米饭/盖浇饭拉高客单价</div>
+      <div class="t-item">外卖适应性好，回软问题不严重</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">竞争极度激烈（全国10万+湘菜馆）</div>
+      <div class="t-item">牛肉价格波动大（影响毛利率）</div>
+      <div class="t-item">对温度计依赖强，新手翻车率高</div>
+      <div class="t-item">高峰期出餐速度受限（单灶最多20份/小时）</div>
+      <div class="t-item">品质一致性难控（不同师傅出品差异大）</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>小炒牛肉处于"饱和竞争+存量替换"阶段。机会点在：①品质升级（牛里脊+精准控温+显性化"嫩滑"卖点）→客单¥38-48；②快餐连锁（标准化碗芡+中央厨房配送）→单店月净利¥1-2万；③差异化味型（湘式+云贵风味混搭）避开直接竞争。<br>
+    弱点是牛肉价格波动大（批发¥50-70/kg，2026年可能涨15-20%）。有稳定供应链（月购100kg+可谈至¥50/kg以下）可做。<br>
+    一句话：<strong>能控住滑油温控+有牛肉供应链优势——入。凭感觉滑油+市场价买牛肉——别碰。</strong>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 15/17：沧林判断 -->
+<!-- ============================================================ -->
+<div class="section">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      小炒牛肉<strong>技术门槛和利润最不匹配</strong>——滑油不难学（3天掌握温度+7天稳手感），但利润天花板明显（牛肉成本高、竞争激烈）。<br><br>
+      评分8.2而非更高因为<strong>品类太拥挤</strong>——任何美食街都有3家以上卖小炒牛肉的。除非把"嫩滑"做到极致才能从红海中杀出。<br><br>
+      三个核心壁垒：①温度计+计时器的使用习惯；②补水腌制的量化能力（精确到g而非"适量"）；③高峰期出餐节奏（单灶一次来8份就崩）。<br><br>
+      建议走<strong>"高客单价路线"</strong>——牛里脊+精确控温+现切现炒+精致摆盘，卖¥38-48。不要跟街边店打¥28的价格战。公式：¥45/份×50份/天=¥2250日营收，食材成本率35%=日毛利¥1462，月净利¥15,000+。<br><br>
+      如果只能做到¥28-35的标准品——<strong>不推荐。</strong>同样的努力，做黄焖鸡/爆炒鸡杂回报率更高。
+    </div>
+    <div class="j-tags">
+      <span>#小炒牛肉</span>
+      <span>#湘式爆炒</span>
+      <span>#滑油工艺</span>
+      <span>#嫩滑牛肉</span>
+      <span>#米饭杀手</span>
+      <span>#技术换利润</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 16/17：完整数据包（预览） -->
+<!-- ============================================================ -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">💎 完整数据包（预览）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;color:#4a3f35;line-height:1.7;margin-bottom:6px;border-left:3px solid #8B1A1A">
+    <strong>📦 付费解锁内容包含：</strong><br><br>
+    ✅ 精确滑油温度曲线——每10℃油温对牛肉状态对照表，连续出餐20份的恢复策略<br>
+    ✅ 补水腌制量化公式——不同牛肉部位的补水+淀粉+油封精确比例<br>
+    ✅ 3档牛肉部位替代方案——牛里脊/黄瓜条/牛霖的腌制参数差异和成本对比<br>
+    ✅ 批量SOP（5/10/20份版）——切肉、腌制、滑油、爆炒的量化时间表<br>
+    ✅ 翻车方案——牛肉老/脱浆/缩水/切不好/出餐慢·5套解决方案<br>
+    ✅ 高峰期出餐动线——双灶流水线岗位分工和节奏控制<br>
+    ✅ 沧林实操笔记——从第一次翻车到日售80份的完整踩坑日志<br>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 维度 17/17：付费区 -->
+<!-- ============================================================ -->
+<div style="padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#8B1A1A;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 🔓 付费展开内容 -->
+<!-- ============================================================ -->
+<div class="locked-section">
+
+<div style="padding:16px 18px;border-bottom:1px solid #eee5d8">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#8B1A1A;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+
+  <!-- 1️⃣ 滑油温度曲线 -->
+  <div style="font-size:12px;font-weight:700;color:#5a1a1a;margin:12px 0 4px">1️⃣ 精确滑油温度曲线 — 连续出餐对照表</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>出餐轮次</span><span style="text-align:center">油温状态</span><span style="text-align:center">滑油时间</span><span style="text-align:center">回锅时间</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>第1-3份</span><span style="text-align:center">新油</span><span style="text-align:center">20s·嫩滑</span><span style="text-align:center">15s</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>第4-6份</span><span style="text-align:center">油温升高+5℃</span><span style="text-align:center">18s（缩短2s）</span><span style="text-align:center">15s</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>第7-10份</span><span style="text-align:center">需加冷油50ml降温</span><span style="text-align:center">20s</span><span style="text-align:center">15s</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>第11-15份</span><span style="text-align:center">油色变深·需过滤</span><span style="text-align:center">20s</span><span style="text-align:center">18s（延长3s）</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>第16-20份</span><span style="text-align:center">建议换油40%</span><span style="text-align:center">22s</span><span style="text-align:center">20s</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 连续出餐时油温会逐渐升高，需每3-4份加冷油50ml降回120-140℃温区。油温偏高时缩短滑油时间（20s→18s），回锅时间不变。宽油（≥2L）温度缓冲更好，每10份过滤油渣。
+  </div>
+
+  <!-- 2️⃣ 补水腌制量化公式 -->
+  <div style="font-size:12px;font-weight:700;color:#5a1a1a;margin:12px 0 4px">2️⃣ 补水腌制量化公式 — 不同部位精确参数</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+      <span>参数/牛肉部位</span><span style="text-align:center">牛里脊</span><span style="text-align:center">黄瓜条</span><span style="text-align:center">牛霖</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+      <span style="font-weight:600">补水量（%肉重）</span><span style="text-align:center;font-weight:700;color:#5a8f3c">65-70%</span><span style="text-align:center">60-65%</span><span style="text-align:center">50-55%</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+      <span style="font-weight:600">淀粉量（%肉重）</span><span style="text-align:center;font-weight:700;color:#5a8f3c">10%</span><span style="text-align:center">12%</span><span style="text-align:center">15%</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+      <span style="font-weight:600">油封量（%肉重）</span><span style="text-align:center;font-weight:700;color:#5a8f3c">10%</span><span style="text-align:center">10%</span><span style="text-align:center">12%</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+      <span style="font-weight:600">生抽量（%肉重）</span><span style="text-align:center;font-weight:700;color:#5a8f3c">13%</span><span style="text-align:center">13%</span><span style="text-align:center">15%</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+      <span style="font-weight:600">小苏打（嫩化）</span><span style="text-align:center;font-weight:400;color:#b5aaa0">0.3g/150g</span><span style="text-align:center;font-weight:400;color:#b5aaa0">0.4g/150g</span><span style="text-align:center;font-weight:700;color:#8B1A1A">0.5g/150g</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+      <span style="font-weight:600">腌制时间</span><span style="text-align:center;font-weight:700;color:#5a8f3c">10-15min</span><span style="text-align:center">15-20min</span><span style="text-align:center">20-30min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.5fr 1fr 1fr 1fr">
+      <span style="font-weight:600">每份食材成本</span><span style="text-align:center;font-weight:700;color:#8B1A1A">¥10.5-11.5</span><span style="text-align:center;font-weight:700;color:#D4A574">¥9-10</span><span style="text-align:center;font-weight:700;color:#5a8f3c">¥7.5-8.5</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 牛里脊最佳——补水量高、淀粉少、口感嫩滑、缩水最少。牛霖需更多淀粉+小苏打，缩水率高。黄瓜条性价比最优，口感接近里脊、便宜¥10-15/kg。
+  </div>
+
+  <!-- 3️⃣ 3档牛肉部位替代方案 -->
+  <div style="font-size:12px;font-weight:700;color:#5a1a1a;margin:12px 0 4px">3️⃣ 3档部位替代方案 — 成本与口感对比</div>
+
+  <div style="background:#fef2ee;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🥇 优选方案·牛里脊（售价¥38-48·高端定位）：</strong>
+    <div class="recipe-line"><span class="k">批发价</span><span class="v">¥60-70/kg</span></div>
+    <div class="recipe-line"><span class="k">每份成本（150g）</span><span class="v">¥9.5-10.5</span></div>
+    <div class="recipe-line"><span class="k">口感评级</span><span class="v">★★★★★·嫩滑标杆</span></div>
+    <div class="recipe-line"><span class="k">缩水率</span><span class="v">≤8%（几乎不缩）</span></div>
+    <div class="recipe-line"><span class="k">推荐场景</span><span class="v">正餐店/高客单外卖</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🔥 牛里脊做小炒牛肉是"满分配置"——补水量最高（70%）、口感最嫩、缩水最少。适合客单¥38-48。无需小苏打。批量采购（月100kg+）可谈到¥55-60/kg。</div>
+  </div>
+
+  <div style="background:#fef6ec;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #D4A574;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🥈 性价比方案·黄瓜条（售价¥32-38·中端定位）：</strong>
+    <div class="recipe-line"><span class="k">批发价</span><span class="v">¥50-60/kg</span></div>
+    <div class="recipe-line"><span class="k">每份成本（150g）</span><span class="v">¥8.5-9.5（含损耗）</span></div>
+    <div class="recipe-line"><span class="k">口感评级</span><span class="v">★★★★·接近里脊</span></div>
+    <div class="recipe-line"><span class="k">缩水率</span><span class="v">约10-12%</span></div>
+    <div class="recipe-line"><span class="k">推荐场景</span><span class="v">快餐店/外卖主打</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🔥 黄瓜条是"性价比之王"——批发价比里脊便宜¥10-15/kg，口感差距很小。关键要去掉表面筋膜。适合日售50份以上的快餐店。加0.3-0.4g小苏打可进一步提升嫩滑度。</div>
+  </div>
+
+  <div style="background:#f0e6e0;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🥉 经济方案·牛霖（售价¥28-32·低价定位）：</strong>
+    <div class="recipe-line"><span class="k">批发价</span><span class="v">¥40-50/kg</span></div>
+    <div class="recipe-line"><span class="k">每份成本（150g）</span><span class="v">¥7.5-8.5（含损耗+小苏打）</span></div>
+    <div class="recipe-line"><span class="k">口感评级</span><span class="v">★★★·需小苏打嫩化</span></div>
+    <div class="recipe-line"><span class="k">缩水率</span><span class="v">约15-18%</span></div>
+    <div class="recipe-line"><span class="k">推荐场景</span><span class="v">低价走量/学生店</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🔥 牛霖方案食材成本低20-25%，但口感差距明显。小苏打精确用量：150g牛肉配0.5g（约1/8茶匙），多则有碱味、少则老。建议清水浸泡10分钟去血水再腌制。</div>
+  </div>
+
+  <!-- 4️⃣ 批量SOP -->
+  <div style="font-size:12px;font-weight:700;color:#5a1a1a;margin:12px 0 4px">4️⃣ 批量SOP — 5份/10份/20份版</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span>项目\\批量</span><span style="text-align:center">5份</span><span style="text-align:center">10份</span><span style="text-align:center">20份</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">牛肉总量</span><span style="text-align:center">750g</span><span style="text-align:center">1.5kg</span><span style="text-align:center">3kg</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">切肉耗时</span><span style="text-align:center">10min</span><span style="text-align:center">18min</span><span style="text-align:center">35min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">腌制耗时</span><span style="text-align:center">10min</span><span style="text-align:center">15min</span><span style="text-align:center">25min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">滑油耗时</span><span style="text-align:center">8min</span><span style="text-align:center">15min</span><span style="text-align:center">28min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">爆炒出餐</span><span style="text-align:center">8min</span><span style="text-align:center">14min</span><span style="text-align:center">28min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">总耗时</span><span style="text-align:center;color:#8B1A1A;font-weight:700">36min</span><span style="text-align:center;color:#8B1A1A;font-weight:700">62min</span><span style="text-align:center;color:#8B1A1A;font-weight:700">116min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">预估净利</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥80-150</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥160-300</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥320-600</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 切肉是最大耗时环节（20份需35分钟），建议提前1-2小时切好冷藏。腌制完成≤30分钟。滑油分批进行（每次200g、20秒一批）。出餐时每份独立回锅15秒。20份以上建议两人协作。
+  </div>
+
+  <!-- 5️⃣ 翻车方案 -->
+  <div style="font-size:12px;font-weight:700;color:#5a1a1a;margin:12px 0 4px">5️⃣ 翻车解决方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #8B1A1A;margin-bottom:8px">
+    <strong>🆘 牛肉炒老了（最致命）：</strong><br>
+    原因：滑油>25秒/回锅>20秒/油温>140℃/全程>2分钟<br>
+    解决A（轻度老）：加10g水淀粉快速翻炒+5g油（恢复30%）<br>
+    解决B（中度老）：夹出牛肉→小苏打水（0.2g+10g水）抓一下→重新滑10秒（恢复50%）<br>
+    解决C（重度老）：重切一份·老牛肉改做牛肉末<br><br>
+    <strong>🆘 滑油脱浆：</strong><br>
+    原因：补水>80%/淀粉<8%/油温<100℃/油封不够<br>
+    解决：捞出→沥干→加淀粉5g+油5g+蛋清10g重新抓匀→再滑一次<br>
+    预防：严格按65%补水；淀粉≥10%；油封不可省略<br><br>
+    <strong>🆘 牛肉缩水严重·量少差评：</strong><br>
+    原因：油温太高/盐放腌料里/选牛霖<br>
+    解决A：每份多放20g生肉（成本+¥1-1.5）<br>
+    解决B：切3mm大片而非小片，同样重量视觉更大<br>
+    解决C：加芹菜段/蒜苗段增加视觉体积<br><br>
+    <strong>🆘 牛肉切太差/口感有筋：</strong><br>
+    原因：顺纹切/刀不快/筋膜没去/厚度不均<br>
+    解决：有筋膜部分挑出切碎或拍松；厚度不均的肉片拍扁至3mm<br><br>
+    <strong>🆘 高峰期出餐崩盘：</strong><br>
+    原因：单灶能力有限（最多20份/小时）<br>
+    方案A：提前切好腌好所有牛肉（冷藏≤2小时）<br>
+    方案B：提前滑好牛肉（八成熟放60℃保温，点单后10秒回锅）<br>
+    方案C：双灶双人流水线（A滑油→B爆炒），目标1.5分钟/份<br>
+    方案D：高峰期只做固定套餐（盖浇饭），节省配菜和调味时间<br>
+  </div>
+
+  <!-- 6️⃣ 高峰期出餐动线 → 已融合至翻车方案中 -->
+  <div style="font-size:12px;font-weight:700;color:#5a1a1a;margin:12px 0 4px">7️⃣ 实战备注 — 沧林踩过的坑</div>
+  <div class="judge-box" style="border:1px solid #8B1A1A">
+    <div class="j-text">
+      • <strong>第一次滑油翻车——没温度计直接做成牛肉干。</strong>觉得"大概知道油温"，实际160℃+，滑油25秒已老。教训：20块钱的温度计就是分水岭。<br><br>
+      • <strong>补水翻车——150g牛肉加150g水直接成糊。</strong>淀粉锁不住、滑油脱浆。从此严格65%补水，分3次加。<br><br>
+      • <strong>顺纹切教训——顾客说咬不动。</strong>腌制完美、控温精确——但顺纹切=咬不动。从此刀刃与纤维呈90°下刀。<br><br>
+      • <strong>高峰期崩盘——12份外卖卡死退单4份。</strong>改双灶+提前滑好牛肉，15分钟出12份。<br><br>
+      • <strong>供应链发现：</strong>凌晨去肉类批发市场找专供餐厅的批发商，月购50kg+可谈至¥50-55/kg。牛肉当天用完最佳，冷藏最多1天。冷冻牛肉不适合小炒牛肉。
+    </div>
+  </div>
+</div>
+
+</div><!-- /.locked-section -->
+
+<div class="ftr">FoodIntel AI · 沧林食品工作站 · JX_02 小炒牛肉（子卡）</div>
+
+</div>
+</body>
+</html>

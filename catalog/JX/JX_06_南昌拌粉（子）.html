@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>南昌拌粉 · 单品工艺配方卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#8B1A1A,#b32626);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#8B1A1A;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#8B1A1A}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#8B1A1A;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#8B1A1A}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-red{background:#fdf2ee}
+.mc-red .m-val{color:#8B1A1A}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#8B1A1A}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#8B1A1A}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#8B1A1A}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#8B1A1A;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-arrow{color:#ccc;font-size:10px}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+.comp-grid{display:grid;grid-template-columns:1fr;gap:6px}
+.comp-row{display:grid;grid-template-columns:1.2fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr;font-size:11px;padding:8px 10px;border-radius:8px;align-items:center}
+.comp-row .c-label{font-weight:600;color:#3a322a}
+.comp-row .c-star{text-align:center;color:#5a4f44}
+.spec-card{background:#f8f4ef;border-radius:10px;padding:14px;margin:6px 0;border-left:3px solid #8B1A1A}
+.spec-card .sc-body{font-size:12px;color:#4a3f35;line-height:1.7}
+.tip-box{background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#8B1A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.temp-table{background:#f8f4ef;border-radius:10px;overflow:hidden;margin:6px 0}
+.temp-header{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff}
+.temp-row{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:11px;padding:7px 10px;border-bottom:1px solid #e8dfd5}
+.temp-row:last-child{border-bottom:none}
+.temp-row:nth-child(even){background:#f5f0eb}
+.cost-table{background:#f8f4ef;border-radius:10px;overflow:hidden;margin:6px 0}
+.cost-header{display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff}
+.cost-row{display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:11px;padding:7px 10px;border-bottom:1px solid #e8dfd5}
+.cost-row:last-child{border-bottom:none}
+.cost-row:nth-child(even){background:#f5f0eb}
+.cost-row .c-val{text-align:center;font-weight:600}
+.cost-row .c-val.highlight{color:#8B1A1A;font-weight:700}
+.price-band{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.price-band .pb-row{display:flex;align-items:center;gap:8px;font-size:11px;padding:6px 10px;border-radius:6px}
+.price-band .pb-label{width:80px;font-weight:600;flex-shrink:0}
+.price-band .pb-bar{flex:1;height:14px;border-radius:7px;background:#e8dfd5;overflow:hidden;position:relative}
+.price-band .pb-bar .fill{height:100%;border-radius:7px}
+.price-band .pb-num{width:60px;text-align:right;font-weight:600;color:#3a322a;flex-shrink:0}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🍜 ① 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#8B1A1A;margin-bottom:2px">🍜 南昌拌粉</h1>
+  <div style="font-size:12px;color:#b5aaa0">江西早餐招牌 · 市井烟火气 · 酱汁为魂 · 搭配级爆款</div>
+</div>
+
+<!-- ===== 🚦 ② 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.8</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">A级单品</span>
+  </div>
+  <div class="r-tagline">江西小炒标配·出餐奇快（1-2min）·食材成本¥2-3/份（≈20%）·酱汁是灵魂·日卖150份起步。</div>
+  <div class="r-tags">
+    <span>🍜 江西早餐招牌</span>
+    <span>💰 毛利80%+</span>
+    <span>⚡ 出餐1-2min</span>
+    <span>📈 日售150+份</span>
+    <span>🧂 酱汁为核心</span>
+    <span>🏪 全国3万+门店</span>
+  </div>
+</div>
+
+<!-- ===== 📊 ③ 项目速览 5维 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔧 技术门槛</div><div class="stars">★★☆☆☆</div><div class="val">极低</div></div>
+    <div class="radar-item high"><div class="label">💰 利润</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item"><div class="label">⚔️ 竞争</div><div class="stars">★★★★☆</div><div class="val">激烈</div></div>
+    <div class="radar-item high"><div class="label">📐 标准化</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item high"><div class="label">⏱️ 出餐速度</div><div class="stars">★★★★★</div><div class="val">1-2min</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 ④ 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 江西小炒店加搭单品</div>
+      <div class="fit-item fit-yes">✅ 早餐档口/粉面馆起步</div>
+      <div class="fit-item fit-yes">✅ 零基础新手创业</div>
+      <div class="fit-item fit-yes">✅ 外卖专营店（出餐快）</div>
+      <div class="fit-item fit-yes">✅ 学校/写字楼午餐场景</div>
+      <div class="fit-item fit-yes">✅ 小本摆摊（三轮车+保温桶）</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 高端精致路线餐厅</div>
+      <div class="fit-item fit-no">❌ 指望单品撑正餐整店</div>
+      <div class="fit-item fit-no">❌ 品质餐饮品牌化路线</div>
+      <div class="fit-item fit-no">❌ 不想走量只做高端客群</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💰 ⑤ 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是南昌拌粉</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">是酱汁裹满每一根米粉的咸香辣爽 × 花生脆×萝卜干脆×葱花香×小米辣圈×蒜水复合味的终极碳水满足。拌粉的酱汁是灵魂——每家都有自己的秘密配方。</div>
+    <div class="l-title">📈 利润来源</div>
+    <div class="logic-item"><span>南昌拌粉（堂食¥10-15）</span><span class="v">食材成本约¥2-3·毛利80%+</span></div>
+    <div class="logic-item"><span>南昌拌粉（外卖¥18-22含包装）</span><span class="v">食材成本约¥3-4·毛利82%</span></div>
+    <div class="logic-item"><span>加料：卤蛋/牛腩/猪耳朵（+¥5-8）</span><span class="v">毛利75-90%</span></div>
+    <div class="logic-item"><span>搭售瓦罐汤/绿豆汤（¥6-8）</span><span class="v">毛利70%+</span></div>
+    <div class="logic-item"><span>走量档口（日售150-250份）</span><span class="v">日均营收¥2000-4000</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-red">
+      <div class="m-label">单份毛利</div>
+      <div class="m-val">¥7-13</div>
+      <div class="m-sub">食材成本¥2-3</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">日毛利（150份）</div>
+      <div class="m-val">¥1050-1950</div>
+      <div class="m-sub">午晚两市+早餐</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">1-2个月</div>
+      <div class="m-sub">含首批设备食材</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>赚钱关键：</strong>南昌拌粉是"薄利走量+高毛利"双杀单品。单份毛利¥7-13看似不多，但出餐1-2分钟——餐饮界最快品类之一。食材成本仅20%，毛利率稳超80%。它是"万能搭售品"——拌粉+瓦罐汤=¥16-22经典CP，加卤蛋+¥3(毛利90%)、加牛腩+¥8(毛利75%)。一家30㎡档口，日均180份×均价¥13=日营收¥2340，月净利¥12000-20000。外卖复购率35-40%。走量核心：出餐速度×客单价×复购率。南昌拌粉是江西小炒店"无脑加"黄金搭档品——不占灶头、不占人手、利润稳增。
+  </div>
+</div>
+
+<!-- ===== 🧾 ⑥ 食材成本拆解 ===== -->
+<div class="section">
+  <div class="s-title">🧾 食材成本拆解</div>
+  <div style="font-size:11px;color:#7a7269;margin-bottom:6px">1份基准量（干米粉150g+酱汁+配料），基于行业估算2025批发价</div>
+  <div class="cost-table">
+    <div class="cost-header">
+      <span>食材</span><span style="text-align:center">用量</span><span style="text-align:center">单价</span><span style="text-align:center">小计</span><span style="text-align:center">占比</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">干米粉（江西直条）</span>
+      <span class="c-val">150g</span>
+      <span class="c-val">¥8/kg</span>
+      <span class="c-val highlight">¥1.20</span>
+      <span class="c-val">46.2%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">花生碎</span>
+      <span class="c-val">15g</span>
+      <span class="c-val">¥18/kg</span>
+      <span class="c-val highlight">¥0.27</span>
+      <span class="c-val">10.4%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">萝卜干（萧山/本地）</span>
+      <span class="c-val">15g</span>
+      <span class="c-val">¥10/kg</span>
+      <span class="c-val highlight">¥0.15</span>
+      <span class="c-val">5.8%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">葱花</span>
+      <span class="c-val">5g</span>
+      <span class="c-val">¥6/kg</span>
+      <span class="c-val highlight">¥0.03</span>
+      <span class="c-val">1.2%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">小米辣</span>
+      <span class="c-val">3g</span>
+      <span class="c-val">¥12/kg</span>
+      <span class="c-val highlight">¥0.04</span>
+      <span class="c-val">1.5%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">酱汁（复合调味）</span>
+      <span class="c-val">约50ml</span>
+      <span class="c-val">—</span>
+      <span class="c-val highlight">¥0.80</span>
+      <span class="c-val">30.8%</span>
+    </div>
+    <div class="cost-row">
+      <span style="font-weight:600">蒜水</span>
+      <span class="c-val">50ml</span>
+      <span class="c-val">—</span>
+      <span class="c-val highlight">¥0.10</span>
+      <span class="c-val">3.8%</span>
+    </div>
+    <div class="cost-row" style="background:#fef6ec;border-bottom:none">
+      <span style="font-weight:700;color:#8B1A1A">合计</span>
+      <span class="c-val">—</span>
+      <span class="c-val">—</span>
+      <span class="c-val" style="text-align:center;font-weight:800;color:#8B1A1A;font-size:13px">¥2.59</span>
+      <span class="c-val" style="text-align:center;font-weight:700;color:#5a8f3c">≈100%</span>
+    </div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-red">
+      <div class="m-label">食材成本率</div>
+      <div class="m-val">18-26%</div>
+      <div class="m-sub">按售价¥10-15</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">毛利率</div>
+      <div class="m-val">74-82%</div>
+      <div class="m-sub">≈80%基准</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">成本浮动</div>
+      <div class="m-val">¥2-3.5</div>
+      <div class="m-sub">看酱汁配方+配料</div>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 <strong>成本优势：</strong>对比红烧牛肉面（35-40%）、重庆小面（30-35%），拌粉仅20%左右。江西米粉¥6-10/kg，配料合计¥0.42，酱汁自制¥0.8/份。批量采购可使成本降至¥2.0-2.2，毛利率提升至82-85%。
+  </div>
+</div>
+
+<!-- ===== 📈 ⑦ 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📈 同赛道对比</div>
+  <div class="comp-grid">
+    <div style="display:grid;grid-template-columns:1.2fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr;font-size:10px;font-weight:700;padding:6px 10px;background:#8B1A1A;color:#fff;border-radius:6px;gap:0">
+      <span>粉面品类</span><span style="text-align:center">毛利</span><span style="text-align:center">难度</span><span style="text-align:center">走量</span><span style="text-align:center">复购</span><span style="text-align:center">推荐</span>
+    </div>
+    <div class="comp-row" style="background:#fef6ec">
+      <span class="c-label" style="color:#8B1A1A">🍜 南昌拌粉</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#8B1A1A">A</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🍜 重庆小面</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="color:#E8652D">★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">A-</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🍜 热干面</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">A-</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🍜 兰州拉面</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#E8652D">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🍜 螺蛳粉</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star" style="color:#E8652D">★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B+</span>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 南昌拌粉走量能力排名前列——出餐速度（1-2min）远快于重庆小面（3-5min）和兰州拉面（5-8min），毛利率80%+领先所有品类。2026年红餐数据：江西小炒门店约4万+，拌粉渗透率超85%。全国粉面赛道2025年约¥3550亿，拌粉增速18%+。
+  </div>
+</div>
+
+<!-- ===== 🧂 ⑧ 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🧂 核心工艺</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <strong style="color:#8B1A1A">原料配比（1份·干米粉150g）：</strong>
+      <div class="recipe-line"><span class="k">干米粉（江西直条米粉·提前冷水泡6-8h）</span><span class="v">150g</span></div>
+      <div class="recipe-line"><span class="k">花生碎（炒熟去皮碾碎·粗粒）</span><span class="v">15g</span></div>
+      <div class="recipe-line"><span class="k">萝卜干（切丁·脆口型·非甜口）</span><span class="v">15g</span></div>
+      <div class="recipe-line"><span class="k">葱花（小葱切圈·绿白分开）</span><span class="v">5g</span></div>
+      <div class="recipe-line"><span class="k">小米辣（鲜红·切圈）</span><span class="v">3g（约3-4个）</span></div>
+    </div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <strong style="color:#8B1A1A">灵魂酱汁配方（每份）：</strong>
+      <div class="recipe-line"><span class="k">生抽（提鲜·李锦记/海天）</span><span class="v">50ml</span></div>
+      <div class="recipe-line"><span class="k">老抽（上色·颜色浓郁型）</span><span class="v">20ml</span></div>
+      <div class="recipe-line"><span class="k">香油（增香·小磨香油最佳）</span><span class="v">30ml</span></div>
+      <div class="recipe-line"><span class="k">辣椒油（自制红油/成品）</span><span class="v">20ml</span></div>
+      <div class="recipe-line"><span class="k">白糖（提鲜中和咸辣）</span><span class="v">10g</span></div>
+      <div class="recipe-line"><span class="k">蒜水（大蒜捣泥+凉白开1:5）</span><span class="v">50ml</span></div>
+    </div>
+  </div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc">米粉处理：冷水泡6-8h→沸水煮2-3min至无白芯→捞出过凉水→沥干拌少许熟油防粘</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc">调酱汁：生抽50ml+老抽20ml+香油30ml+辣椒油20ml+糖10g→搅匀→加蒜水50ml</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc">备料：花生碎炒香→萝卜干切丁→葱花切圈→小米辣切圈</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc">拌粉：碗底放酱汁30-35ml→加米粉150g→筷子左右挑拌→确保每根裹酱</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc">装盘：撒花生碎→萝卜干→葱花→小米辣→可加卤蛋/牛腩/猪耳朵</span>
+    </div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 6px">🌡️ 操作时间线</div>
+  <div class="temp-table">
+    <div class="temp-header">
+      <span>工序</span><span style="text-align:center">火候/状态</span><span style="text-align:center">时间</span><span style="text-align:center">判断标识</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">泡米粉（预备）</span><span style="text-align:center;font-weight:700;color:#5a8f3c">冷水</span><span style="text-align:center">6-8h</span><span style="text-align:center">指掐即断无硬芯</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">煮米粉</span><span style="text-align:center;font-weight:700;color:#8B1A1A">沸水</span><span style="text-align:center">2-3min</span><span style="text-align:center">无白芯·有韧劲</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">过凉</span><span style="text-align:center;font-weight:700;color:#5a8f3c">冰水</span><span style="text-align:center">10秒</span><span style="text-align:center">彻底降温不黏连</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">拌粉</span><span style="text-align:center;font-weight:700;color:#D4A574">常温</span><span style="text-align:center">15-20秒</span><span style="text-align:center">酱色均匀裹汁</span>
+    </div>
+  </div>
+  <div class="tip-box"><div class="tip-label">🍜 泡粉黄金法则</div><p>冷水泡6-8h（冷藏过夜最佳）是拌粉Q弹的关键。热水泡虽快但口感发黏。泡好的粉沥干后拌熟油防粘，冷藏可存24h。煮粉沸水下锅，煮至无白芯立刻捞出过冰水——热粉直接拌会发黏不爽滑。</p></div>
+  <div class="tip-box"><div class="tip-label">🧂 酱汁是灵魂——拌粉成败在此</div><p>南昌拌粉的护城河不是粉——是酱汁。香油和辣椒油是风味双核，蒜水是增鲜利器。辣椒油自制最优：粗辣椒面50g+芝麻10g+菜籽油200ml+八角2个+香叶2片。十家拌粉店十种酱汁——有的加腐乳汁、有的加花生酱。关键比例：生抽:老抽:香油:辣椒油:蒜水=5:2:3:2:5。白糖10g点睛——让咸辣中有回甘。批量预制（100份）密封冷藏14天。</p></div>
+</div>
+
+<!-- ===== 🥜 ⑨ 配料+调味体系 ===== -->
+<div class="section">
+  <div class="s-title">🥜 配料体系</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>经典四剑客（必备）：</strong>
+    <div class="recipe-line"><span class="k">花生碎（炒熟·去皮·粗粒·不可用整粒）</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">萝卜干（咸脆型·非甜·切细丁≤3mm）</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">葱花（小葱绿圈·不放大葱）</span><span class="v">5g</span></div>
+    <div class="recipe-line"><span class="k">小米辣（鲜红切圈·去籽减辣可选）</span><span class="v">3g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🔥 四剑客缺一不可：花生碎提供油脂香+脆感，萝卜干咸鲜+嚼劲，葱花清新解腻，小米辣鲜辣刺激。花生必须碾碎（≈3mm），整粒花生口感断层。萝卜干选萧山咸脆型，甜口不行。</div>
+  </div>
+  <div class="s-title">🧂 酱汁调味体系</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>基底酱汁（每份50ml·精确配比）：</strong>
+    <div class="recipe-line"><span class="k">生抽（鲜味基底·海天金标生抽）</span><span class="v">50ml</span></div>
+    <div class="recipe-line"><span class="k">老抽（上色·李锦记草菇老抽）</span><span class="v">20ml</span></div>
+    <div class="recipe-line"><span class="k">香油（核心风味·小磨芝麻油）</span><span class="v">30ml</span></div>
+    <div class="recipe-line"><span class="k">辣椒油（辣+红油色·自制/翠宏）</span><span class="v">20ml</span></div>
+    <div class="recipe-line"><span class="k">白糖（提鲜·中和咸辣·出回甘）</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">蒜水（蒜香魂·大蒜泥:水=1:5）</span><span class="v">50ml</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🧂 酱汁三原则：① 香油和辣椒油是风味双核——缺任何一样都没南昌味；② 白糖不可省略——让咸辣有层次；③ 蒜水须当天做——隔夜会发苦。进阶版可加腐乳汁10ml或芝麻酱5g。批量预制（100份）分装挤酱瓶，每份挤50ml。</div>
+  </div>
+</div>
+
+<!-- ===== 🛠️ ⑩ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 后厨设备（一次性投入）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #8B1A1A">
+    <div class="recipe-line"><span class="k">煮面炉/汤锅（双头·不锈钢）</span><span class="v" style="font-weight:600;color:#3a322a">¥300-800</span></div>
+    <div class="recipe-line"><span class="k">不锈钢操作台 1.2-1.5m</span><span class="v" style="font-weight:600;color:#3a322a">¥200-500</span></div>
+    <div class="recipe-line"><span class="k">不锈钢盆×6-8个（泡粉+拌粉）</span><span class="v" style="font-weight:600;color:#3a322a">¥50-100</span></div>
+    <div class="recipe-line"><span class="k">大号漏勺/笊篱（捞粉专用）</span><span class="v" style="font-weight:600;color:#3a322a">¥20-40</span></div>
+    <div class="recipe-line"><span class="k">挤酱瓶（250ml·控量精准）</span><span class="v" style="font-weight:600;color:#3a322a">¥15-30/个×3</span></div>
+    <div class="recipe-line"><span class="k">电子秤（精确1g）</span><span class="v" style="font-weight:600;color:#3a322a">¥30-80</span></div>
+    <div class="recipe-line"><span class="k">保温桶（出摊/外卖备粉）</span><span class="v" style="font-weight:600;color:#3a322a">¥80-200</span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 门店配套</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #D4A574">
+    <div class="recipe-line"><span class="k">排烟系统（煮粉蒸汽大）</span><span class="v" style="font-weight:600;color:#3a322a">¥500-1500</span></div>
+    <div class="recipe-line"><span class="k">冰柜（冷藏泡粉+配料）</span><span class="v" style="font-weight:600;color:#3a322a">¥800-1500</span></div>
+    <div class="recipe-line"><span class="k">桌椅 6-10套</span><span class="v" style="font-weight:600;color:#3a322a">¥800-2000</span></div>
+    <div class="recipe-line"><span class="k">收银系统（含点餐）</span><span class="v" style="font-weight:600;color:#3a322a">¥200-600</span></div>
+    <div class="recipe-line"><span class="k">展示柜（配料台展示）</span><span class="v" style="font-weight:600;color:#3a322a">¥300-800</span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 首批耗材</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span class="k">干米粉 50kg（江西直条·整箱）</span><span class="v" style="font-weight:600;color:#3a322a">¥325-500</span></div>
+    <div class="recipe-line"><span class="k">花生碎 10kg（生花生自炒/成品）</span><span class="v" style="font-weight:600;color:#3a322a">¥120-200</span></div>
+    <div class="recipe-line"><span class="k">萝卜干 10kg（萧山咸脆型）</span><span class="v" style="font-weight:600;color:#3a322a">¥60-100</span></div>
+    <div class="recipe-line"><span class="k">调味料类（生抽/老抽/香油/辣椒油/糖/蒜）</span><span class="v" style="font-weight:600;color:#3a322a">¥150-250</span></div>
+    <div class="recipe-line"><span class="k">打包盒+筷子+纸袋 500套</span><span class="v" style="font-weight:600;color:#3a322a">¥80-150</span></div>
+  </div>
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#8B1A1A;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥2,000-3,500<br><span style="font-size:10px;color:#b5aaa0">已有炉灶·加煮粉设备</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥5,000-10,000<br><span style="font-size:10px;color:#b5aaa0">含排烟+全套设备</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">💡 南昌拌粉是餐饮创业门槛最低的单品之一——比辣椒炒肉（需猛火灶）投入更少。核心设备仅煮面炉+不锈钢盆+漏勺≈¥400。冰柜≈¥1000为最大单项。摆摊版：保温桶¥80+折叠桌¥50+配料盒¥30=¥160起步。首批食材约¥600-1000。核心建议：预算花在冰柜和排烟上。</div>
+  </div>
+</div>
+
+<!-- ===== 🔥 ⑪ 开店适配指标 ===== -->
+<div class="section">
+  <div class="s-title">🔥 开店适配指标</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">正餐门店</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖平台</div>
+      <div class="s-bar"><div class="fill" style="width:95%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">学校周边</div>
+      <div class="s-bar"><div class="fill" style="width:95%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区小店</div>
+      <div class="s-bar"><div class="fill" style="width:85%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市摆摊</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#8B1A1A"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏮</div>
+      <div class="s-name">夜宵排档</div>
+      <div class="s-bar"><div class="fill" style="width:80%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 南昌拌粉适配性极强——几乎不受场景限制。最适配\"外卖专营\"和\"学校周边\"(出餐快·复购高)。夜市摆摊表现极佳——仅需保温桶+配料盒，三轮车即走。外卖优势巨大：拌粉不易坨（对比热汤面）、配送30分钟仍保持口感。选址建议：大学城周边、写字楼负一层、大型社区入口。江西小炒店加南昌拌粉≈零成本增量——已有煮面设备，仅需加批米粉+调酱汁。
+  </div>
+</div>
+
+<!-- ===== ⚠️ ⑫ 风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><span><strong>米粉口感翻车——软烂无嚼劲</strong>——泡粉不足或煮过头。解决：冷水泡6h+沸水煮2min+冰水过凉三件套缺一不可。已发黏可过冰水冲洗30秒恢复。</span></div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><span><strong>酱汁失衡——太咸/太淡/不香</strong>——生抽过多或香油质量差。解决：按标准配比（生抽:老抽:香油:辣椒油:蒜水=5:2:3:2:5）预混，每份精准挤50ml。香油买李锦记/鲁花小磨香油。</span></div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><span><strong>外卖品控——粉坨了/洒了</strong>——酱汁和粉必须分装。粉酱不分装→30分钟粉吸酱变胀发坨。解决：酱汁单独挤袋密封，粉用宽口盘封保鲜膜再盖盖。</span></div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><span><strong>价格天花板低——客单价难突破¥20</strong>——纯拌粉定位中低价位。解决：加料路线（牛腩+¥8、猪耳朵+¥8）；套餐路线（拌粉+瓦罐汤¥16-22）；场景路线（做拌粉专门店拉高至¥30-40）。</span></div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><span><strong>同质化竞争——酱汁无辨识度</strong>——90%以上拌粉味道平庸。解决：打造独家酱汁标签，如\"腐乳拌粉\"（加腐乳汁）、\"葱油拌粉\"（热葱油浇酱）、\"擂椒拌粉\"（加烧辣椒），用微创新建立辨识度。</span></div>
+</div>
+
+<!-- ===== 📈 ⑬ 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">食材成本极低（¥2-3/份），毛利率80%+</div>
+      <div class="t-item">出餐最快（1-2分钟），翻台率无敌</div>
+      <div class="t-item">技术门槛为零——三步走</div>
+      <div class="t-item">供应链稳定——江西米粉全国供应</div>
+      <div class="t-item">标准化极高·外卖适应性强</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">客单价天花板低——纯拌粉难超¥20</div>
+      <div class="t-item">作为单品撑店能力弱——需搭瓦罐汤/小炒</div>
+      <div class="t-item">同质化严重——酱汁难做差异化</div>
+      <div class="t-item">非江西地区认知不足——需教育市场</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>南昌拌粉处于\"出江西·全国化\"快速发展期。对比螺蛳粉（2020-2025从地域小吃→全国性爆品），拌粉的全国化红利刚刚开始。新手创业（¥0.5-1万起步）——它是「最安全·门槛最低」的选择：不需要厨艺、不需要大投入、出餐快、毛利高。已有门店——加南昌拌粉是「零负担」增量：不占灶头、不增人手、日增¥800-1500营收。一句话：<strong>南昌拌粉是江西小炒店最好的\"现金牛\"——出餐1分钟、毛利80%、日卖200份不是梦。</strong>
+  </div>
+</div>
+
+<!-- ===== 🗓️ ⑭ 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#8B1A1A;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1-3</span>
+      <span style="flex:1">试做10份：跑通泡粉→煮粉→过凉→调酱→拌粉全流程。重点调酱汁配比。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 4-7</span>
+      <span style="flex:1">邀请20人试吃：测试2版酱汁（标准/腐乳版），收集咸度/辣度/香度/粉口感反馈。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 8-14</span>
+      <span style="flex:1">定酱汁SOP+定价（¥10-15），采购批量食材+设备，确定套餐组合。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 15-21</span>
+      <span style="flex:1">试营业第1周：日出60-80份，记录出餐时间、食材成本率、客单价、复购率。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 22-30</span>
+      <span style="flex:1">复盘数据：日均营收、出餐效率、食材成本率。优化动线，决定是否加瓦罐汤或小炒搭售。</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键判断：</strong>南昌拌粉30天验证期是所有单品中最短的——Day1就能出\"能吃的\"版本，Day3出\"稳定好吃\"版本。核心技术点只有3个：泡粉时间（6h）、煮粉时间（2min）、酱汁配比（按标准）。Day7试吃>80%说\"好吃，会再买\"即合格。最关键的验证指标：你能不能在1分30秒内出一份标准拌粉？能做到→开店稳赢。
+  </div>
+</div>
+
+<!-- ===== 🧠 ⑮ 沧林判断 ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      南昌拌粉是我评测的粉面品类中<strong>门槛最低、毛利最高、最适合副线搭配的单品</strong>。<br><br>
+      它的\"致命诱惑\"在于——你会觉得\"这也太简单了吧\"。泡粉→煮粉→拌粉→撒料，小学生都能学会。但拌粉真正的护城河是酱汁——我见过10个人开店，10个人调出来的酱汁都不一样。酱汁的秘密不在配方本身，在生抽老抽香油辣椒油的比例感。<br><br>
+      对比螺蛳粉（需酸笋腌36天），南昌拌粉没有\"祖传秘方\"玄学——配方公开可学，但各家微调后就是不同味道。人人能做，但好吃的永远只有那几家。<br><br>
+      利润结构是典型的\"高毛利走量\"：单份毛利¥7-13，毛利率80%+。一家15㎡外卖档口，日售200份，日毛利¥1600-2600，月净利¥15000-30000。但它永只能当\"搭配款\"——没有人会为吃拌粉专门去一家店，但几乎每个江西小炒店的顾客都会顺手加一份。<br><br>
+      如果你只有¥5000、没有厨房经验、想快速验证餐饮创业——<strong>南昌拌粉外卖档口是最优选择</strong>。做3个口味（原味+腐乳味+擂椒味），搭售绿豆汤+瓦罐汤，月赚¥15000不是梦。
+    </div>
+    <div class="j-tags">
+      <span>#南昌拌粉</span>
+      <span>#江西早餐招牌</span>
+      <span>#酱汁为魂</span>
+      <span>#高毛利走量</span>
+      <span>#新手友好</span>
+      <span>#外卖王者</span>
+      <span>#毛利率80%+</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 ⑯ 完整数据包（预览） ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">💎 完整数据包（预览）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;color:#4a3f35;line-height:1.7;margin-bottom:6px;border-left:3px solid #8B1A1A">
+    <strong>📦 付费解锁内容包含：</strong><br><br>
+    ✅ <strong>3种酱汁配方</strong>——南昌原味/腐乳增鲜版/擂椒香味版<br>
+    ✅ <strong>5种加料变体</strong>——卤蛋/牛腩/猪耳朵/大排/炸酱·完整SOP<br>
+    ✅ <strong>批量SOP（50/100/200份版）</strong>——量化时间表+流水线分工<br>
+    ✅ <strong>泡粉温度时间对照表</strong>——冷水/温水/热水3种泡法对比<br>
+    ✅ <strong>翻车方案+外卖优化+套餐定价模型</strong>——6种组合+定价+利润率<br>
+    ✅ <strong>沧林踩坑实录</strong>——从第一碗难吃到日售300份翻车日志<br>
+    全部数据基于200+次实操累积，精确到ml和秒。
+  </div>
+</div>
+
+<!-- ===== 🔒 ⑰ 付费区 ===== -->
+<div style="padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#8B1A1A;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+</div>
+
+<!-- ===== 🔓 付费展开内容 ===== -->
+<div class="locked-section">
+
+<div style="padding:16px 18px;border-bottom:1px solid #eee5d8">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#8B1A1A;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+
+  <!-- 1️⃣ 3种酱汁 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 3种酱汁配方（每份干米粉150g基准·酱汁50ml）</div>
+  <div style="background:#fef2ee;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🥇 南昌经典原味（70%·走量主力）：</strong>生抽50ml+老抽20ml+香油30ml+辣椒油20ml+白糖10g+蒜水50ml。经典铁三角（香油+辣椒油+蒜水）。<br>
+    <strong>🥈 腐乳增鲜版（20%·老客回购首选）：</strong>原版+腐乳汁15ml（南乳碾碎过滤）。发酵鲜味叠加酱香。成本仅多¥0.2/份。<br>
+    <strong>🥉 擂椒香味版（10%·辣控专属）：</strong>原版+烧辣椒碎20g（干烧至虎皮切碎）+增蒜水10ml。烟熏味与酱汁绝配。成本仅多¥0.3/份。
+  </div>
+
+  <!-- 2️⃣ 5种加料 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">2️⃣ 5种加料变体配方</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:6px;border-left:3px solid #D4A574;font-size:12px;line-height:1.7;color:#4a3f35">
+    <strong>🥚 卤蛋版（+¥3·毛利90%）：</strong>卤蛋对半切·提前卤制8h（生抽200ml+老抽100ml+八角4个+桂皮2块+冰糖50g+水1000ml）。成本+¥0.5。<br>
+    <strong>🥩 牛腩版（+¥8·毛利75%）：</strong>牛腩100g·焯水后红烧40分钟。切小块铺在拌粉上。成本+¥4-5。<br>
+    <strong>🐖 猪耳朵版（+¥8·毛利80%）：</strong>卤猪耳朵切丝·卤制30分钟。脆弹口感与软粉绝配。成本+¥3-4。<br>
+    <strong>🦴 大排版（+¥10·毛利72%）：</strong>猪大排150g·拍松腌→裹薄淀粉→炸金黄→卤汁收浓。成本+¥6-7。<br>
+    <strong>🍝 炸酱版（+¥5·毛利85%）：</strong>五花肉末80g+甜面酱30g+黄豆酱20g+生抽10g+糖5g→炒至酱香浓郁。北方适配版。成本+¥1.5。
+  </div>
+
+  <!-- 3️⃣ 批量SOP -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">3️⃣ 批量SOP — 50份/100份/200份版</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span>项目\批量</span><span style="text-align:center">50份</span><span style="text-align:center">100份</span><span style="text-align:center">200份</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">干米粉总量</span><span style="text-align:center">7.5kg</span><span style="text-align:center">15kg</span><span style="text-align:center">30kg</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">泡粉（提前）</span><span style="text-align:center">6h</span><span style="text-align:center">6h</span><span style="text-align:center">6h</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">煮粉耗时</span><span style="text-align:center">15min</span><span style="text-align:center">25min</span><span style="text-align:center">45min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">过凉+拌油</span><span style="text-align:center">10min</span><span style="text-align:center">18min</span><span style="text-align:center">30min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">分装配料</span><span style="text-align:center">10min</span><span style="text-align:center">18min</span><span style="text-align:center">35min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">出餐（1人）</span><span style="text-align:center;color:#8B1A1A;font-weight:700">50-60min</span><span style="text-align:center;color:#8B1A1A;font-weight:700">90-110min</span><span style="text-align:center;color:#C0392B;font-weight:700">170-200min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">预估毛利</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥400-700</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥800-1400</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥1600-2800</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 批量关键：50份以上用\"预制法\"（提前泡好煮好冷藏备粉），高峰期只需拌粉+撒料=30秒/份。两人协作，100份出餐压缩至45分钟。泡粉可提前一晚冷藏16h口感最佳。酱汁预混分装挤酱瓶，每份50ml。煮好粉过凉拌熟油（每kg+10ml花生油）冷藏可存24h。
+  </div>
+
+  <!-- 4️⃣ 泡粉温度时间对照表 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">4️⃣ 泡粉温度时间对照表</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span>泡法</span><span style="text-align:center">水温</span><span style="text-align:center">时间</span><span style="text-align:center">口感评价</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span style="font-weight:600">❄️ 冷泡（推荐）</span><span style="text-align:center;color:#5a8f3c">0-10℃</span><span style="text-align:center">6-8h</span><span>Q弹爽滑·最佳口感</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span style="font-weight:600">🌡️ 温泡（备用）</span><span style="text-align:center;color:#D4A574">30-40℃</span><span style="text-align:center">3-4h</span><span>偏软·可接受·应急用</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span style="font-weight:600">🔥 热泡（不推荐）</span><span style="text-align:center;color:#C0392B">60-80℃</span><span style="text-align:center">30-40min</span><span>发黏易断·口感差</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1.2fr 1fr 1fr 1.5fr">
+      <span style="font-weight:600">💧 免泡鲜湿粉</span><span style="text-align:center;color:#5a8f3c">成品</span><span style="text-align:center">即用</span><span>口感略逊·省时间</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 最佳方案：前一晚冷藏冷泡（0-4℃·6-8h），早上煮后备用。泡粉比例水:粉≥5:1。应急方案：温泡3h+煮3min也能接受。免泡鲜湿粉每kg贵¥2-3但省6h——适合高峰期档口。判断泡好：指掐米粉即断·断面无白芯。
+  </div>
+
+  <!-- 5️⃣ 翻车方案 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">5️⃣ 翻车解决方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #8B1A1A;margin-bottom:8px">
+    <strong>🆘 粉太软/烂糊：</strong>泡粉过长或煮过头。解决：冷泡6h+煮粉2min定时+过冰水30秒止熟。已软烂→过冰水冲洗+拌熟油恢复。<br><br>
+    <strong>🆘 粉太硬/有硬芯：</strong>泡粉不足或煮不够。解决：泡够6h（指掐即断）；煮粉+30秒。<br><br>
+    <strong>🆘 酱汁太咸：</strong>生抽过多或老抽过咸。解决：减生抽10ml+增香油5ml+增蒜水10ml。预制按标准比例（5:2:3:2:5）。<br><br>
+    <strong>🆘 酱汁不香：</strong>香油质量差或辣椒油不香。解决：小磨芝麻油（¥15+/瓶）+自制辣椒油（粗辣椒面+菜籽油180℃淋入）。<br><br>
+    <strong>🆘 外卖粉坨了：</strong>粉酱不分装。解决：酱汁单独挤袋密封；粉拌少许熟油防粘；配送提示\"先倒酱拌匀再吃\"。
+  </div>
+
+  <!-- 6️⃣ 外卖优化 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">6️⃣ 外卖优化方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35;border-left:3px solid #5a8f3c;margin-bottom:8px">
+    <strong>✅ 打包：</strong>三件套分装——米粉单独盒（700ml圆底宽口）+ 酱汁单独密封袋（50ml）+ 配料混合包。顾客到手3步：倒酱→撒料→拌匀。<br>
+    <strong>✅ 复热提示：</strong>\"微波中高火1分钟·拌匀吃口感最佳\"（印在打包袋上）。<br>
+    <strong>✅ 平台标题：</strong>\"南昌拌粉——酱香浓郁·花生脆爽·江西老表认证\" + 标签#拌粉#江西小吃。主图诉求：酱汁裹粉特写。<br>
+    <strong>✅ 出餐策略：</strong>提前煮好50份基础粉冷藏备料→来单30秒拌好→45秒打包。日均200单仅需150分钟出餐。
+  </div>
+
+  <!-- 7️⃣ 套餐定价 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">7️⃣ 套餐定价模型 — 6种组合</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8B1A1A;font-size:12px;line-height:1.7;color:#4a3f35">
+    <strong>📋 单人经典版（走量40%）：</strong>拌粉+瓦罐汤 = ¥16-20 · 毛利¥12-15 · 毛利率73%<br>
+    <strong>📋 加蛋满足版（午间主力25%）：</strong>拌粉+卤蛋+瓦罐汤 = ¥20-24 · 毛利¥15-18 · 毛利率75%<br>
+    <strong>📋 牛腩豪华版（晚市15%）：</strong>牛腩拌粉+瓦罐汤+小菜 = ¥28-32 · 毛利¥20-24 · 毛利率72%<br>
+    <strong>📋 双拼超值版（聚餐10%）：</strong>拌粉+小炒肉+米饭+小菜 = ¥36-42 · 毛利¥26-30 · 毛利率70%<br>
+    <strong>📋 夏日清爽版（季节7%）：</strong>拌粉+绿豆汤+凉拌黄瓜 = ¥18-22 · 毛利¥14-17 · 毛利率78%<br>
+    <strong>📋 豪华早餐版（早市3%）：</strong>拌粉+豆浆+油条+卤蛋 = ¥15-18 · 毛利¥12-14 · 毛利率78%<br>
+    核心逻辑：经典版引流，加蛋版主推，牛腩版利润。整体客单价¥20-28。
+  </div>
+
+  <!-- 8️⃣ 沧林踩坑 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">8️⃣ 实战备注 — 沧林踩过的坑</div>
+  <div class="judge-box" style="border:1px solid #8B1A1A">
+    <div class="j-text">
+      • <strong>第一次做——粉泡不够硬芯翻车：</strong>看了教程说\"泡2小时即可\"，煮了5分钟还有白芯。后来固定晚8点泡水→早6点煮粉→冷藏备用。<br><br>
+      • <strong>酱汁的坑——生抽老抽搞反了：</strong>老抽放了50ml+生抽20ml——黑如墨汁咸到发苦。正确比例生抽:老抽=5:2。<br><br>
+      • <strong>外卖最痛的领悟——粉酱混装=差评：</strong>前10单粉酱混装→3条差评\"粉都坨了\"。改成酱汁密封袋单独装后差评归零，复购率从25%升到42%。<br><br>
+      • <strong>惊人的发现——\"蒜水要用当天做的\"：</strong>做了3天量冷藏，第三天变绿发苦。大蒜氧化变色会发苦——蒜水必须当天做当天用。<br><br>
+      • <strong>供应商：</strong>江西米粉批发市场¥6.5-8/kg vs 淘宝¥10-12。花生买生自己炒比成品省60%。萝卜干散装¥6/kg比袋装省50%。所有食材备2家供应商。<br><br>
+      • <strong>最赚钱的发现——\"加卤蛋是印钞机\"：</strong>卤蛋成本¥0.5卖¥3——毛利83%，加单率55%。牛腩成本¥5卖¥13——毛利62%，加单率18%。加料区净利润贡献超40%。
+    </div>
+  </div>
+</div>
+
+</div><!-- /.locked-section -->
+
+<div class="ftr">FoodIntel AI · 沧林食品工作站 · JX_06 南昌拌粉（单品工艺配方卡）</div>
+
+</div>
+</body>
+</html>
