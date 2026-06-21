@@ -79,6 +79,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 .risk-h{color:#ff6b6b;border:1px solid rgba(255,75,75,.2);background:rgba(255,75,75,.06)}
 .risk-m{color:#ddaa44;border:1px solid rgba(255,204,0,.15);background:rgba(255,204,0,.05)}
 .risk-l{color:#6b7a8a;border:1px solid rgba(100,100,100,.15);background:rgba(100,100,100,.05)}
+.disclaimer{font-size:9px;color:#4a5a6a;text-align:center;margin:12px 0 0;padding:8px;border-top:1px solid #1a2835;line-height:1.6}
 </style>
 </head>
 <body>
@@ -90,7 +91,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 </div>
 
 <h1>摆摊试水评估</h1>
-<p class="sub">4个维度评估你的摆摊条件 · 看看这个品类×位置干不干得过</p>
+<p class="sub">7个维度评估你的条件 · 看看这个品类能不能撑起你的收入目标</p>
 
 <div id="formArea">
 
@@ -182,11 +183,38 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
       </div>
     </div>
     <div class="field">
-      <span class="fl">出摊时间</span>
+      <span class="fl">你的技术来源？</span>
+      <div class="opt-group" data-id="tech">
+        <span class="opt sel" data-v="2">有经验（厨师/开过店/摆过摊）</span>
+        <span class="opt" data-v="1">跟人学过/花钱培训过</span>
+        <span class="opt" data-v="0">自己琢磨，没跟人学过</span>
+      </div>
+      <p style="font-size:9px;color:#4a5a6a;margin-top:3px">※ 技术来源决定试错成本——有经验的人成功率高，自学的路费时费料</p>
+    </div>
+    <div class="field">
+      <span class="fl">出摊时段</span>
       <div class="opt-group" data-id="time">
-        <span class="opt" data-v="2">下午4点-8点（晚高峰）</span>
-        <span class="opt" data-v="3">中午+晚上都干</span>
         <span class="opt" data-v="1">不定时，有空就干</span>
+        <span class="opt" data-v="2">早上+中午时段</span>
+        <span class="opt" data-v="3">下午4点-8点（晚高峰）</span>
+        <span class="opt" data-v="4">中午+晚上都干</span>
+      </div>
+    </div>
+    <div class="field">
+      <span class="fl">每天大概出摊多久？</span>
+      <div class="opt-group" data-id="hours">
+        <span class="opt" data-v="0">2小时以内</span>
+        <span class="opt sel" data-v="1">2-4小时</span>
+        <span class="opt" data-v="2">4-6小时</span>
+        <span class="opt" data-v="3">6-8小时</span>
+        <span class="opt" data-v="4">8小时以上</span>
+      </div>
+    </div>
+    <div class="field">
+      <span class="fl">这个品类受季节影响大吗？</span>
+      <div class="opt-group" data-id="season">
+        <span class="opt sel" data-v="0">全年都能做，不受季节影响</span>
+        <span class="opt" data-v="1">季节性明显，旺季半年左右</span>
       </div>
     </div>
     <div class="field">
@@ -197,6 +225,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
         <span class="opt" data-v="3">300-500元</span>
         <span class="opt" data-v="4">500元以上</span>
       </div>
+      <p style="font-size:9px;color:#4a5a6a;margin-top:3px">※ 收入预期越高，需要的条件门槛也越高，缺项扣分越重</p>
     </div>
     <div class="field">
       <span class="fl">开不开抖音/自媒体引流？</span>
@@ -247,6 +276,10 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
     <div class="sub" id="rSub"></div>
   </div>
   <div id="rBlocks"></div>
+  <div class="disclaimer">
+    ⚠️ 以上为平均数评估，受地段、客流、消费水平、经营不确定性等因素影响，实际收入会有较大浮动。<br>
+    数据仅提供多维度视角参考，不代表实际经营结果。
+  </div>
   <div class="action-box"><button class="re-btn" id="resetBtn">← 重新填</button></div>
   <div style="margin-top:12px;padding:10px;text-align:center;font-size:10px;color:#6b7a8a;border-top:1px solid #1a2835">
     FoodIntelAI · 食品决策库 · 少走弯路 快人一步
@@ -260,19 +293,48 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
 'use strict';
 
 var CATS = {
-  '烤肠':{min:1,name:'铁板烤肠',cards:'铁板烤肠XC_126',path:'其他',needPower:0,match:{夜市:5,学校:5,社区:4,工地:3,商业街:3,流动:5},dailyRev:[200,500],costRate:0.35},
-  '煎饼':{min:2,name:'山东杂粮煎饼',cards:'MP_015 山东杂粮煎饼（母）MP_015',path:'其他',needPower:1,match:{夜市:4,学校:5,社区:5,工地:5,商业街:3,流动:4},dailyRev:[300,600],costRate:0.3},
-  '炸鸡':{min:3,name:'美式炸鸡',cards:'HZ_042 美式炸鸡（母）HZ_042',path:'其他',needPower:1,match:{夜市:5,学校:4,社区:3,工地:3,商业街:4,流动:2},dailyRev:[350,700],costRate:0.4},
-  '炒饭':{min:2,name:'炒饭/炒面',cards:'',path:'',needPower:1,match:{夜市:5,学校:4,社区:3,工地:5,商业街:3,流动:3},dailyRev:[250,550],costRate:0.35},
-  '炒鸡':{min:3,name:'炒鸡摆摊',cards:'',path:'',needPower:1,match:{夜市:5,学校:3,社区:3,工地:4,商业街:3,流动:2},dailyRev:[350,700],costRate:0.4},
-  '柠檬茶':{min:2,name:'手打柠檬茶',cards:'LM_004 气泡柠檬茶（母）LM_004',path:'其他',needPower:0,match:{夜市:5,学校:4,社区:3,工地:2,商业街:5,流动:3},dailyRev:[200,450],costRate:0.25},
-  '卤串':{min:2,name:'卤串/冷吃',cards:'LC_005 冷吃鸡副（子）',path:'其他',needPower:0,match:{夜市:5,学校:3,社区:4,工地:3,商业街:3,流动:3},dailyRev:[200,500],costRate:0.3},
-  '酸辣粉':{min:2,name:'贵州酸汤',cards:'ST_M01 贵州酸汤创业母卡',path:'其他',needPower:1,match:{夜市:5,学校:4,社区:3,工地:4,商业街:3,流动:2},dailyRev:[250,550],costRate:0.3},
-  '烧烤':{min:3,name:'中式烧烤',cards:'BBQ_M01_中式烧烤创业母卡',path:'BBQ',needPower:0,match:{夜市:5,学校:2,社区:3,工地:4,商业街:3,流动:2},dailyRev:[400,900],costRate:0.4},
-  '早餐':{min:2,name:'早餐体系',cards:'',path:'',needPower:1,match:{夜市:1,学校:5,社区:5,工地:5,商业街:4,流动:2},dailyRev:[200,500],costRate:0.3},
-  '烤串':{min:2,name:'烤串/肉串',cards:'',path:'',needPower:0,match:{夜市:5,学校:3,社区:4,工地:4,商业街:3,流动:4},dailyRev:[300,650],costRate:0.35}
+  '烤肠':{min:1,name:'铁板烤肠',cards:'铁板烤肠XC_126',path:'其他',needPower:0,
+    match:{夜市:5,学校:5,社区:4,工地:3,商业街:3,流动:5},
+    dailyRev:[200,500],costRate:0.35,bestTime:'any',seasonal:0,incomeCap:3},
+  '煎饼':{min:2,name:'山东杂粮煎饼',cards:'MP_015 山东杂粮煎饼（母）MP_015',path:'其他',needPower:1,
+    match:{夜市:4,学校:5,社区:5,工地:5,商业街:3,流动:4},
+    dailyRev:[300,600],costRate:0.3,bestTime:'morning',seasonal:0,incomeCap:3},
+  '炸鸡':{min:3,name:'美式炸鸡',cards:'HZ_042 美式炸鸡（母）HZ_042',path:'其他',needPower:1,
+    match:{夜市:5,学校:4,社区:3,工地:3,商业街:4,流动:2},
+    dailyRev:[350,700],costRate:0.4,bestTime:'evening',seasonal:0,incomeCap:4},
+  '炒饭':{min:2,name:'炒饭/炒面',cards:'',path:'',needPower:1,
+    match:{夜市:5,学校:4,社区:3,工地:5,商业街:3,流动:3},
+    dailyRev:[250,550],costRate:0.35,bestTime:'evening',seasonal:0,incomeCap:3},
+  '炒鸡':{min:3,name:'炒鸡摆摊',cards:'',path:'',needPower:1,
+    match:{夜市:5,学校:3,社区:3,工地:4,商业街:3,流动:2},
+    dailyRev:[350,700],costRate:0.4,bestTime:'evening',seasonal:0,incomeCap:3},
+  '柠檬茶':{min:2,name:'手打柠檬茶',cards:'LM_004 气泡柠檬茶（母）LM_004',path:'其他',needPower:0,
+    match:{夜市:5,学校:4,社区:3,工地:2,商业街:5,流动:3},
+    dailyRev:[200,450],costRate:0.25,bestTime:'any',seasonal:1,incomeCap:2},
+  '卤串':{min:2,name:'卤串/冷吃',cards:'LC_005 冷吃鸡副（子）',path:'其他',needPower:0,
+    match:{夜市:5,学校:3,社区:4,工地:3,商业街:3,流动:3},
+    dailyRev:[200,500],costRate:0.3,bestTime:'evening',seasonal:0,incomeCap:3},
+  '酸辣粉':{min:2,name:'贵州酸汤',cards:'ST_M01 贵州酸汤创业母卡',path:'其他',needPower:1,
+    match:{夜市:5,学校:4,社区:3,工地:4,商业街:3,流动:2},
+    dailyRev:[250,550],costRate:0.3,bestTime:'both',seasonal:0,incomeCap:3},
+  '烧烤':{min:3,name:'中式烧烤',cards:'BBQ_M01_中式烧烤创业母卡',path:'BBQ',needPower:0,
+    match:{夜市:5,学校:2,社区:3,工地:4,商业街:3,流动:2},
+    dailyRev:[400,900],costRate:0.4,bestTime:'evening',seasonal:0,incomeCap:4},
+  '早餐':{min:2,name:'早餐体系',cards:'',path:'',needPower:1,
+    match:{夜市:1,学校:5,社区:5,工地:5,商业街:4,流动:2},
+    dailyRev:[200,500],costRate:0.3,bestTime:'morning',seasonal:0,incomeCap:2},
+  '烤串':{min:2,name:'烤串/肉串',cards:'',path:'',needPower:0,
+    match:{夜市:5,学校:3,社区:4,工地:4,商业街:3,流动:4},
+    dailyRev:[300,650],costRate:0.35,bestTime:'evening',seasonal:0,incomeCap:3}
 };
 var LOC_NAMES = {'夜市':'夜市/小吃街','学校':'学校门口','社区':'社区门口','工地':'工地/工业区','商业街':'商业街/地铁口','流动':'流动/赶集'};
+
+// 时段类型映射
+var TIME_TYPES = {1:'irregular',2:'morning',3:'evening',4:'both'};
+
+// 时长×收入等级对照（多久的出摊时长能撑起什么收入目标）
+// hours等级: 0=<2h,1=2-4h,2=4-6h,3=6-8h,4=8h+
+var HOURS_MAX_TIER = [1, 2, 3, 4, 4];
 
 var $ = function(id) { return document.getElementById(id); };
 
@@ -312,7 +374,6 @@ function updateButton() {
   }
 }
 
-// 脚本在body底部运行，DOM已就绪，直接绑定
 document.querySelectorAll('.opt-group').forEach(function(g) {
   g.addEventListener('click', function(e) {
     var opt = e.target.closest('.opt');
@@ -344,12 +405,15 @@ function evaluate() {
   var power = parseInt(getVal('power')) || 0;
   var health = parseInt(getVal('health')) || 0;
   var cat = getVal('cat');
-  var time = parseInt(getVal('time')) || 0;
+  var time = parseInt(getVal('time')) || 1;
+  var hours = parseInt(getVal('hours')) || 0;
+  var season = parseInt(getVal('season')) || 0;
   var target = parseInt(getVal('target')) || 1;
   var live = parseInt(getVal('live')) || 1;
   var stick = parseInt(getVal('stick')) || 0;
   var waste = parseInt(getVal('waste')) || 0;
   var rain = parseInt(getVal('rain')) || 0;
+  var tech = parseInt(getVal('tech')); if (isNaN(tech)) tech = 2;
 
   if (!cat || !loc) {
     $('hintMsg').textContent = '⚠️ 请选择品类和摆摊位置';
@@ -361,94 +425,232 @@ function evaluate() {
   var cdata = CATS[cat];
   if (!cdata) { $('hintMsg').textContent = '品类数据异常'; return; }
 
-  var score = 0;
+  // ====== Step 1: Base capability score (same logic, max 100) ======
+  var baseScore = 0;
   var details = [];
   var risks = [];
+  var gapRisks = [];
 
-  // 1. 预算（25分）
+  // 1. Budget (25)
   var needBudget = cdata.min + (tricycle >= 2 ? 2 : 0);
   var budgetOk = budget >= needBudget ? 25 : (budget > 0 ? 10 : 0);
-  score += budgetOk;
+  baseScore += budgetOk;
   details.push({icon: budgetOk >= 25 ? '✅' : '⚠️', label: '预算：' + getLabel('budget').split('（')[0], val: budgetOk + '/25', cls: budgetOk >= 25 ? 'risk-l' : 'risk-m'});
   if (budgetOk < 25) risks.push('预算偏低，' + cdata.name + (tricycle >= 2 ? '加三轮车费用可能不够' : '建议先折叠桌起步'));
 
-  // 2. 位置固定度（15分）
+  // 2. Spot fixity (15)
   var spotPts = [0, 8, 15][spot];
-  score += spotPts;
+  baseScore += spotPts;
   details.push({icon: spotPts > 0 ? '✅' : '❌', label: '位置：' + ['还没找', '有目标但不固定', '有固定位'][spot], val: spotPts + '/15', cls: spotPts >= 15 ? 'risk-l' : spotPts > 0 ? 'risk-m' : 'risk-h'});
   if (spot === 0) risks.push('还没找位置——建议先确定能摆在哪再买设备');
   if (spot === 1) risks.push('位置不固定——城管风险高，建议先摸清能不能长期摆');
 
-  // 3. 品类×地段匹配（20分）
+  // 3. Category × location (20)
   var locScoreV = cdata.match[loc] || 0;
   var matchPts = locScoreV * 4;
-  score += matchPts;
+  baseScore += matchPts;
   details.push({icon: matchPts >= 12 ? '✅' : '⚠️', label: getLabel('cat').split('（')[0] + ' × ' + LOC_NAMES[loc], val: locScoreV + '/5·' + matchPts + '/20', cls: matchPts >= 12 ? 'risk-l' : 'risk-m'});
   if (matchPts < 8) risks.push('这个品类跟这个位置匹配度低，换个位置或品类试试');
 
-  // 4. 电源+健康证（15分）
+  // 4. Power + health (15)
   var powerPts = power === 2 ? 8 : (power === 1 ? 5 : 3);
   if (power < 2 && cdata.needPower) powerPts = 1;
   var healthPts = health ? 7 : 0;
   var infraPts = powerPts + healthPts;
-  score += infraPts;
+  baseScore += infraPts;
   var powerLabels = ['移动电源', '电瓶+逆变器', '摊位220V'];
   details.push({icon: infraPts >= 10 ? '✅' : '⚠️', label: '电源：' + (powerLabels[power] || '') + ' · ' + (health ? '健康证✅' : '无健康证'), val: infraPts + '/15', cls: infraPts >= 10 ? 'risk-l' : 'risk-m'});
   if (power < 2 && cdata.needPower) risks.push(cdata.name + '需要用电，你的电源方案会增加成本');
   if (!health) risks.push('摆摊食品需要健康证，几十块钱办一个');
 
-  // 5. 出摊时间+坚持（15分）
-  var timePts = [0, 5, 10, 12][time] || 0;
+  // 5. Time + stick (15)
+  var timePts = [0, 5, 8, 12][time - 1] || 0;
   var stickPts = [0, 5, 10][stick] || 0;
-  score += timePts + stickPts;
-  var timeLabels = ['不定时', '下午4-8点', '中午+晚上'][time - 1] || '下午4-8点';
+  baseScore += timePts + stickPts;
+  var timeLabels = ['不定时', '早上+中午', '下午4-8点', '中午+晚上'][time - 1] || '下午4-8点';
   var stickLabels = ['有空就干', '试试看', '全职干'][stick];
   details.push({icon: timePts + stickPts >= 10 ? '✅' : '⚠️', label: timeLabels + ' · ' + stickLabels, val: (timePts + stickPts) + '/15', cls: timePts + stickPts >= 10 ? 'risk-l' : 'risk-m'});
   if (stick < 2) risks.push('摆摊前3个月最难熬，很多人干一周就放弃了。想清楚再投钱');
-  if (time < 2) risks.push('出摊时间不固定，客流不稳定，建议固定时间段出摊培养老客');
+  if (time === 1) risks.push('出摊不固定=客流不稳定。建议选固定时段培养老客');
 
-  // 6. 损耗+天气接受度（10分）
+  // 6. Loss + rain (10)
   var lossPts = (waste ? 5 : 0) + (rain ? 5 : 0);
-  score += lossPts;
+  baseScore += lossPts;
   details.push({icon: lossPts >= 10 ? '✅' : '⚠️', label: '损耗接受度+天气接受度', val: lossPts + '/10', cls: lossPts >= 10 ? 'risk-l' : 'risk-m'});
   if (!waste) risks.push('摆摊一定有损耗，卖不掉就得扔，备料别太多');
   if (!rain) risks.push('刮风下雨没法出摊，心态要调整好');
 
-  // 总分
-  var pct = Math.min(100, Math.round(score));
-  var grade, gradeColor, subText, advice;
-  if (pct >= 75) {
-    grade = '✅ 适合摆摊'; gradeColor = '#00ff88';
-    subText = '你的条件比较成熟，这个品类×位置组合可以干。';
-    advice = '建议：先试3-7天最低配置，稳定了再升级。摆摊核心是坚持，前两周最难熬。';
-  } else if (pct >= 55) {
-    grade = '⚠️ 可以试试'; gradeColor = '#ddaa44';
-    subText = '有几项条件不理想但不致命。小摊的好处是投资小、灵活，亏也亏不到哪。';
-    advice = '建议：（1）先把位置确认好再买设备（2）首批备料别太多（3）给自己定2周试水期，不行就换品换位置。';
-  } else {
-    grade = '❌ 条件不成熟'; gradeColor = '#ff6b6b';
-    subText = '几个关键条件还没准备好。不是不能摆摊，是现在这个情况干可能亏。';
-    advice = '建议：先搞定位置和健康证，选个启动成本最低的品类（烤肠500以内），试3天看看反应。';
+  // 7. 技术基础（±10分影响总能力分，幅度很大）
+  var techLabels = ['自己琢磨', '跟人学过', '有经验'];
+  var techPts = [ -8, 2, 10 ][tech];
+  baseScore += techPts;
+  details.push({icon: tech >= 2 ? '✅' : (tech === 1 ? '✅' : '⚠️'), label: '技术来源：' + techLabels[tech], val: (techPts >= 0 ? '+' : '') + techPts + '/10', cls: tech >= 2 ? 'risk-l' : (tech === 1 ? 'risk-m' : 'risk-h')});
+  if (tech === 0) {
+    risks.push('自己琢磨的风险很高——试错成本高、出品不稳定，建议先跟人学或买低配试水');
+    gapRisks.push('自学技术——无经验支撑，出品和效率打折扣');
+  } else if (tech === 2) {
+    gapRisks.push('有经验加分——出品稳定，经营决策靠谱');
   }
 
-  // 维度
+  // ====== Step 2: Determine capability tier from baseScore ======
+  var capTier;
+  if (baseScore >= 85) capTier = 4;
+  else if (baseScore >= 70) capTier = 3;
+  else if (baseScore >= 55) capTier = 2;
+  else capTier = 1;
+  var capTierNames = ['不足', '保本级', '200-300级', '300-500级', '500+级'];
+
+  // ====== Step 3: Income gap penalty ======
+  // target: 1=保本, 2=200-300, 3=300-500, 4=500+
+  var gap = target - capTier;
+  var gapPts = 0; // penalty points
+  var gapLabel = '';
+  if (gap <= 0) {
+    gapPts = 0;
+    gapLabel = '目标在条件范围内';
+  } else if (gap === 1) {
+    gapPts = 10;
+    gapLabel = '目标比条件高1级，难度上升';
+  } else if (gap === 2) {
+    gapPts = 25;
+    gapLabel = '目标比条件高2级，够呛';
+  } else {
+    gapPts = 40;
+    gapLabel = '目标远超现有条件，建议降档';
+  }
+  details.push({icon: gap <= 0 ? '✅' : (gap === 1 ? '⚠️' : '❌'), label: '收入目标：' + ['够本就行', '100-300元', '300-500元', '500元以上'][target - 1] + '（' + capTierNames[capTier] + '）', val: '-' + gapPts + '/40', cls: gap <= 0 ? 'risk-l' : (gap === 1 ? 'risk-m' : 'risk-h')});
+  if (gap > 1) gapRisks.push('收入目标偏高——你的条件目前撑不起' + ['够本就行', '100-300', '300-500', '500+'][target - 1] + '的目标，建议先降档试水');
+
+  // ====== Step 4: Duration check ======
+  // hours: 0=<2h,1=2-4h,2=4-6h,3=6-8h,4=8h+
+  var hoursMaxTier = HOURS_MAX_TIER[hours];
+  var hrsPts = 0;
+  var hrsLabels = ['<2小时', '2-4小时', '4-6小时', '6-8小时', '8小时+'];
+  if (target > hoursMaxTier) {
+    var hrsGap = target - hoursMaxTier;
+    hrsPts = hrsGap * 8;
+    gapRisks.push('出摊' + hrsLabels[hours] + '撑不起' + ['', '100-300', '300-500', '500+'][target - 1] + '的目标，至少需要' + hrsLabels[hoursMaxTier] + '以上');
+  }
+  details.push({icon: hrsPts === 0 ? '✅' : '⚠️', label: '出摊时长：' + hrsLabels[hours] + ' · 目标需要≥' + hrsLabels[hoursMaxTier], val: hrsPts === 0 ? '时长充足' : '-' + hrsPts, cls: hrsPts === 0 ? 'risk-l' : 'risk-m'});
+
+  // ====== Step 5: Time fit (product × period) ======
+  var userTimeType = TIME_TYPES[time] || 'irregular';
+  var bestT = cdata.bestTime;
+  var timePts = 0;
+  var timeFitLabel = '';
+  // Match rules
+  if (bestT === 'any' || userTimeType === 'irregular') {
+    timePts = 0;
+    timeFitLabel = '时段适配：可灵活安排';
+  } else if (bestT === userTimeType) {
+    timePts = 2; // bonus
+    timeFitLabel = '时段适配：完美匹配';
+  } else if ((bestT === 'morning' && userTimeType === 'both') ||
+             (bestT === 'evening' && userTimeType === 'both') ||
+             (bestT === 'both' && (userTimeType === 'morning' || userTimeType === 'evening'))) {
+    timePts = 0;
+    timeFitLabel = '时段适配：基本匹配';
+  } else if (bestT === 'morning' && userTimeType === 'evening') {
+    timePts = -8;
+    timeFitLabel = '时段适配：不匹配（早餐类不适合晚上干）';
+  } else if (bestT === 'evening' && userTimeType === 'morning') {
+    timePts = -8;
+    timeFitLabel = '时段适配：不匹配（夜市类不适合早上干）';
+  } else {
+    timePts = -4;
+    timeFitLabel = '时段适配：部分匹配';
+  }
+  if (timePts < 0) gapRisks.push(timeFitLabel);
+
+  // ====== Step 6: Seasonality penalty ======
+  var seasonPts = 0;
+  if (cdata.seasonal && target >= 3) {
+    seasonPts = -10;
+    gapRisks.push('季节风险——柠檬茶旺季半年，淡季收入降幅大，建议算全年均摊收入');
+  } else if (cdata.seasonal && target === 2) {
+    seasonPts = -5;
+    gapRisks.push('这个品类受季节影响，全年均摊后实际日收入可能低于预期');
+  }
+
+  // ====== Step 7: Final score ======
+  // Positive bonuses first, then penalize
+  var finalScore = baseScore + (timePts > 0 ? timePts : 0);
+  finalScore = finalScore - gapPts - hrsPts - (timePts < 0 ? Math.abs(timePts) : 0) - Math.abs(seasonPts);
+  var pct = Math.min(100, Math.max(0, Math.round(finalScore)));
+
+  // 等级判定 - target-aware grade
+  var grade, gradeColor, subText, advice;
+  if (pct >= 75) {
+    grade = '✅ 适合'; gradeColor = '#00ff88';
+    subText = '条件成熟，你大概率能撑起这个收入目标。';
+    advice = '建议：先试3-7天最低配置，稳定了再升级。摆摊核心是坚持，前两周最难熬。';
+  } else if (pct >= 55) {
+    grade = '⚠️ 可以试试但调低预期'; gradeColor = '#ddaa44';
+    subText = '条件不算差，但要实现目标收入有难度，建议先保本再冲量。';
+    advice = '建议：（1）先把位置确认好再买设备（2）首批备料别太多（3）给2周试水期，不行就换品换位置（4）收入目标调低一档更稳妥。';
+  } else if (pct >= 35) {
+    grade = '⚠️ 条件不匹配你定的小目标'; gradeColor = '#ddaa44';
+    subText = '当前条件距离你设定的收入目标差距较大。调低目标或改善条件。';
+    advice = '建议：收入目标降一档，或者补齐短板（位置/出摊时长/预算）再冲。小摊的好处是调整灵活，亏也亏不了多少。';
+  } else {
+    grade = '❌ 差距大'; gradeColor = '#ff6b6b';
+    subText = '你现在这个条件加上这个收入目标，基本不可行。';
+    advice = '建议：先搞定位置和健康证，选个启动成本最低的品类（烤肠500以内），目标先定保本。试3天看看。收入目标等跑顺了再调。';
+  }
+
+  // ====== Step 8: Dimensions (7维度) ======
   var dims = [];
   dims.push({l: '硬件配置', s: Math.min(100, Math.round(tricycle / 3 * 50 + budget / 5 * 50))});
   var locD = Math.min(100, Math.round(spot / 2 * 40 + fee * 30 + power / 2 * 30));
   dims.push({l: '场地条件', s: locD});
   var catD = cdata.match[loc] || 0;
-  dims.push({l: '品类匹配', s: Math.min(100, Math.round(catD / 5 * 60 + time / 3 * 20 + target / 4 * 20))});
-  dims.push({l: '经营耐力', s: Math.min(100, Math.round(stick / 2 * 50 + time / 3 * 30 + (live - 1) / 2 * 20))});
-  dims.push({l: '合规基础', s: health ? 100 : 60});
+  dims.push({l: '品类匹配', s: Math.min(100, Math.round(catD / 5 * 60 + time / 4 * 20 + target / 4 * 20))});
+  dims.push({l: '经营耐力', s: Math.min(100, Math.round(stick / 2 * 40 + time / 4 * 15 + hours / 4 * 10 + (live - 1) / 2 * 10 + tech / 2 * 25))});
+  // Income match: how realistic is the target given capability + hours
+  var incMatch = 60; // base
+  if (gap <= 0) incMatch += 40;
+  else if (gap === 1) incMatch += 15;
+  else if (gap === 2) incMatch -= 10;
+  else incMatch -= 30;
+  if (target > HOURS_MAX_TIER[hours]) incMatch -= 15;
+  if (cdata.seasonal && target >= 3) incMatch -= 15;
+  incMatch = Math.max(10, Math.min(100, incMatch));
+  dims.push({l: '收入匹配', s: incMatch});
+  // Time fit
+  var tf = 75;
+  if (bestT === 'any' || userTimeType === 'irregular') tf = 85;
+  else if (bestT === userTimeType) tf = 100;
+  else if (timePts === -8) tf = 40;
+  else tf = 65;
+  dims.push({l: '时段适配', s: tf});
+  // Risk tolerance
   dims.push({l: '风险承受', s: Math.min(100, Math.round((waste ? 25 : 0) + (rain ? 25 : 0) + (budget >= 3 ? 30 : budget === 2 ? 15 : 0) + (stick >= 2 ? 20 : stick === 1 ? 10 : 0)))});
 
-  // 推导指标
+  // ====== Step 9: Derived metrics ======
+  // Revenue calculation adjusted by hours factor and tech factor
+  var hrsFactor = [0.3, 0.6, 0.85, 1.0, 1.1][hours] || 0.6;
+  var techFactor = [0.7, 0.9, 1.1][tech]; // 自学打7折, 有经验+10%
   var baseRev = cdata.dailyRev[0] + (cdata.dailyRev[1] - cdata.dailyRev[0]) * (pct / 100) * 0.6;
-  var avgRev = Math.round(baseRev * (0.4 + (spot / 2 * 0.2 + time / 3 * 0.2 + pct / 100 * 0.2)));
-  var revLow = Math.round(avgRev * 0.7);
-  var revHigh = Math.round(avgRev * 1.2);
+  var avgRev = Math.round(baseRev * hrsFactor * techFactor * (0.4 + (spot / 2 * 0.2 + (time >= 3 ? 0.2 : time === 2 ? 0.1 : 0) + pct / 100 * 0.2)));
+  var revLow = Math.round(avgRev * 0.65);
+  var revHigh = Math.round(avgRev * 1.15);
   var dailyProfit = Math.round(avgRev * (1 - cdata.costRate));
-  var investAmt = [500, 1500, 3000, 6000, 10000][budget - 1] || 1500;
+
+  // ====== 总投资 = 三轮车 + 改装 + 桌椅 + 设备 + 物料 + 杂费 + 学费 + 电源 ======
+  var trikeCost = [0, 3000, 4000, 7500][tricycle]; // 0=不用车,1=准备买,2=旧车,3=新车
+  var modCost = tricycle >= 1 ? 1000 : 0;           // 三轮车改装
+  var furnCost = 600;                                // 桌子+凳子
+  var equipCost = 500;                                // 锅碗瓢盆+炉具
+  var ingredCost = Math.min(1000, 300 + budget * 120); // 首批原料
+  var miscCost = 300;                                  // 包装袋/佐料盒等杂项
+  var trainCost = tech === 1 ? 3000 : 0;               // 学费
+  var trialCost = tech === 0 ? 300 : 0;                // 自学试错
+  var powerCost = (tricycle >= 1 && power === 0) ? 2000 : 0; // 自备移动电源
+
+  var investAmt = trikeCost + modCost + furnCost + equipCost + ingredCost + miscCost + trainCost + trialCost + powerCost;
+  // 如果低于2000说明是折叠桌极简配置，接受
+  if (investAmt < 1500) investAmt = 1500;
+
   var pbDays = dailyProfit >= 50 ? Math.round(investAmt / dailyProfit) + '天' : '待定';
 
   var badD = dims.filter(function(d) { return d.s < 55; }).sort(function(a, b) { return a.s - b.s; });
@@ -456,7 +658,7 @@ function evaluate() {
   var bh = badD.map(function(d) { return '<div class="check-item"><div class="icon">⚠️</div><div class="label" style="color:#ddaa44">' + d.l + '（' + d.s + '/100）— 主要短板</div></div>'; }).join('');
   var gh = goodD.map(function(d) { return '<div class="check-item"><div class="icon">⭐</div><div class="label" style="color:#00ff88">' + d.l + '（' + d.s + '/100）— 核心优势</div></div>'; }).join('');
 
-  // 渲染
+  // ====== Render ======
   $('formArea').style.display = 'none';
   var ra = $('resultArea');
   ra.classList.add('show');
@@ -473,9 +675,28 @@ function evaluate() {
     '<div class="derive-item"><div class="dv" style="color:' + (dailyProfit >= 200 ? '#00ff88' : dailyProfit >= 80 ? '#ddaa44' : '#ff6b6b') + '">¥' + dailyProfit + '</div><div class="dl">预计日净利</div></div>' +
     '<div class="derive-item"><div class="dv" style="font-size:13px;color:#4db8ff">¥' + investAmt + '</div><div class="dl">预估总投入</div></div>' +
     '<div class="derive-item"><div class="dv" style="font-size:13px;color:' + (dailyProfit >= 80 ? '#00ff88' : '#6b7a8a') + '">' + pbDays + '</div><div class="dl">预计回本周期</div></div>' +
+    '</div>' +
+    '<div style="margin-top:6px;padding:6px 8px;background:#0b0f14;border-radius:6px;font-size:8px;color:#4a5a6a;line-height:1.5">' +
+    '总投资含：' +
+    (tricycle >= 1 ? '三轮车¥' + trikeCost + '+改装¥' + modCost + '·' : '') +
+    '桌椅¥' + furnCost + '+设备¥' + equipCost + '+物料¥' + ingredCost + '+杂项¥' + miscCost +
+    (trainCost ? '+学费¥' + trainCost : '') +
+    (trialCost ? '+试错¥' + trialCost : '') +
+    (powerCost ? '+移动电源¥' + powerCost : '') +
+    '<br>注：总投资不含隐性成本（损耗、流动摊位费、交通费等）' +
     '</div></div>';
 
-  html += '<div class="block match-block"><div class="block-title">📊 条件评估</div>';
+  // 收入匹配分析
+  html += '<div class="block" style="background:#0f1a25;border-left:3px solid #ff884d"><div class="block-title" style="color:#ff884d">📊 收入目标 × 条件分析</div>' +
+    '<div class="check-item"><div class="icon">🎯</div><div class="label">你设定的目标</div><div class="val" style="color:#ff884d">' + ['保本', '日入100-300', '日入300-500', '日入500+'][target - 1] + '</div></div>' +
+    '<div class="check-item"><div class="icon">📈</div><div class="label">你的条件能撑到</div><div class="val" style="color:#4db8ff">' + capTierNames[capTier] + '</div></div>' +
+    (gap > 0 ? '<div class="check-item"><div class="icon">📉</div><div class="label">收入差距</div><div class="val" style="color:#ff6b6b">差' + gap + '级 · 扣' + gapPts + '分</div></div>' : '') +
+    (hrsPts > 0 ? '<div class="check-item"><div class="icon">⏰</div><div class="label">时长制约</div><div class="val" style="color:#ddaa44">出摊' + hrsLabels[hours] + '不足</div></div>' : '') +
+    (seasonPts < 0 ? '<div class="check-item"><div class="icon">🌦️</div><div class="label">季节风险</div><div class="val" style="color:#ddaa44">淡旺季差异大</div></div>' : '') +
+    '<div class="check-item"><div class="icon">👨‍🍳</div><div class="label">技术基础</div><div class="val" style="color:' + (tech >= 2 ? '#00ff88' : tech === 1 ? '#ddaa44' : '#ff6b6b') + '">' + techLabels[tech] + (techPts >= 0 ? ' +' : ' ') + techPts + '</div></div>' +
+    '</div>';
+
+  html += '<div class="block match-block"><div class="block-title">📊 基础条件评估</div>';
   details.forEach(function(d) {
     html += '<div class="check-item"><span class="icon">' + d.icon + '</span><span class="label">' + d.label + '</span><span class="val" style="color:' + (d.cls || '#6b7a8a') + '">' + d.val + '</span></div>';
   });
@@ -492,10 +713,22 @@ function evaluate() {
 
   html += '<div class="tip-box"><div class="tip-title">💡 建议</div><div class="tip-text">' + advice + '</div></div>';
 
+  // Gap-specific risks
+  var allRisks = [];
+  if (gapRisks.length) {
+    gapRisks.forEach(function(r) {
+      allRisks.push({icon: '🔴', text: r});
+    });
+  }
   if (risks.length) {
-    html += '<div class="block risk-block"><div class="block-title">⚠️ 需要注意</div>';
     risks.forEach(function(r) {
-      html += '<div class="check-item"><span class="icon">🔴</span><span class="label">' + r + '</span></div>';
+      allRisks.push({icon: '⚠️', text: r});
+    });
+  }
+  if (allRisks.length) {
+    html += '<div class="block risk-block"><div class="block-title">⚠️ 需要注意</div>';
+    allRisks.forEach(function(r) {
+      html += '<div class="check-item"><span class="icon">' + r.icon + '</span><span class="label">' + r.text + '</span></div>';
     });
     html += '</div>';
   }
@@ -504,6 +737,30 @@ function evaluate() {
   html += '<div class="card-rec"><h3>📌 推荐去看</h3>';
   if (cdata.cards) {
     html += '<a href="https://foodintelai.com/catalog/' + encodeURIComponent(cardPath) + '/' + encodeURIComponent(cdata.cards) + '.html" target="_blank" rel="noopener">→ ' + cdata.name + ' · 完整数据包</a>';
+  }
+  // 同类推荐
+  var recMap = {
+    '烧烤':['烤鱼','炸串','卤串'],
+    '烤肠':['炸鸡','炸串','柠檬茶'],
+    '煎饼':['早餐','柠檬茶','炸鸡'],
+    '炸鸡':['烤肠','柠檬茶','卤串'],
+    '炒饭':['卤串','炒鸡','酸辣粉'],
+    '炒鸡':['酸辣粉','卤串','烧烤'],
+    '柠檬茶':['饮品甜品','炸鸡','烤肠'],
+    '卤串':['烤肠','烧烤','酸辣粉'],
+    '酸辣粉':['炒鸡','卤串','烧烤'],
+    '早餐':['煎饼','柠檬茶','烤肠']
+  };
+  var recs = recMap[cat]||[];
+  if (recs.length) {
+    html += '<h3 style="font-size:11px;font-weight:700;margin:10px 0 6px;color:#ff884d;letter-spacing:1px">📌 同类推荐</h3>';
+    recs.forEach(function(r) {
+      var rd = CATS[r];
+      if (rd && rd.cards) {
+        var rp = rd.path || '其他';
+        html += '<a href="https://foodintelai.com/catalog/' + encodeURIComponent(rp) + '/' + encodeURIComponent(rd.cards) + '.html" target="_blank" rel="noopener">→ ' + rd.name + '</a>';
+      }
+    });
   }
   html += '<a href="https://foodintelai.com/stall-check.html">→ 重新评估</a>';
   html += '<a href="https://foodintelai.com/check.html">→ 想干大的？试试开店评估</a></div>';
@@ -524,7 +781,6 @@ function drawRadar(dims) {
   var as = 2 * Math.PI / n;
 
   ctx.clearRect(0, 0, 280, 280);
-  // Grid
   for (var l = 0.25; l <= 1; l += 0.25) {
     ctx.beginPath();
     ctx.strokeStyle = '#1a2835';
@@ -538,7 +794,6 @@ function drawRadar(dims) {
     ctx.closePath();
     ctx.stroke();
   }
-  // Spokes
   for (var i = 0; i < n; i++) {
     var a = -Math.PI / 2 + i * as;
     ctx.beginPath();
@@ -548,7 +803,6 @@ function drawRadar(dims) {
     ctx.lineWidth = 0.5;
     ctx.stroke();
   }
-  // Data area
   ctx.beginPath();
   for (var i = 0; i < n; i++) {
     var a = -Math.PI / 2 + i * as;
@@ -563,7 +817,6 @@ function drawRadar(dims) {
   ctx.strokeStyle = '#ff884d';
   ctx.lineWidth = 2;
   ctx.stroke();
-  // Labels & dots
   ctx.font = '9px sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';

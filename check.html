@@ -754,7 +754,38 @@ function render(f, checks, mustScore, mustBlocked, cat, cd, total, grd, gc, gl,
       `).join('')}
     </div>
     `:''}
-
+    
+    <!-- 同类推荐 -->
+    ${function(){
+      var recMap = {
+        '卤味':['卤牛肉','卤鹅','卤猪系列'],
+        '冷吃红油':['擂辣椒','炒鸡'],
+        '潮汕南乳炸鸡':['韩式炸鸡','炸串'],
+        '炒鸡':['酸汤','麻辣烫冒菜'],
+        '酸汤':['炒鸡','火锅'],
+        '火锅':['酸汤','麻辣烫冒菜'],
+        '烧烤':['烤鱼','炸串','小吃烤串'],
+        '烤鱼':['烧烤','炸串'],
+        '炸串':['烧烤','小吃烤串'],
+        '小吃烤串':['烧烤','烤鱼','炸串'],
+        '早餐面点':['云南米线','饮品甜品'],
+        '饮品甜品':['早餐面点','柠檬茶'],
+        '韩式烤肉':['韩式快餐','拌菜泡菜']
+      };
+      var rc = recMap[cat]||[];
+      if(!rc.length) return '';
+      var html = '<div class="derive-box"><h3>📌 同类推荐</h3>';
+      rc.forEach(function(r){
+        var pd = prodData[r];
+        if(pd && pd.length){
+          html += '<a class="prod-card" href="'+pd[0].l+'" style="display:block;padding:10px 12px;background:#0b0f14;border-radius:8px;margin-bottom:6px;text-decoration:none;color:inherit;border:1px solid #2a3442">';
+          html += '<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;font-weight:600">'+pd[0].n+'</span><span style="font-size:10px;color:#00ff88">'+pd[0].p+' →</span></div>';
+          html += '<div style="font-size:10px;color:#6b7a8a;margin-top:2px">'+r+'</div></a>';
+        }
+      });
+      return html + '</div>';
+    }()}
+    
     <div class="action-box">
       <button class="re-btn" onclick="restart()">🔄 重新评估</button>
     </div>
