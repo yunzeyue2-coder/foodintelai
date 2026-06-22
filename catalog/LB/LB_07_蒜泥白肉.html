@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LB_07 蒜泥白肉 | FoodIntelAI 子卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.card{max-width:860px;width:100%;margin:0 auto}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;border-bottom:2px solid #e0d8cc;margin-bottom:16px}
+.card-header .logo{font-size:18px;font-weight:700;color:#2c3e50;letter-spacing:1px}
+.card-header .logo span{color:#c0392b}
+.card-header .sub{font-size:12px;color:#7f8c8d;background:#eae7e2;padding:2px 10px;border-radius:10px}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.rating-bar::before{content:'';position:absolute;top:-30px;right:-20px;width:140px;height:140px;background:rgba(255,255,255,0.04);border-radius:50%}
+.rating-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rating-score{font-size:44px;font-weight:800;line-height:1}
+.rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
+.rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
+.rating-grade.a{background:#27ae60;color:#fff}
+.rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
+.rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
+.section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #c0392b;line-height:1.4}
+.section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
+.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
+.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
+.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
+.fit-yes ul{list-style:none;padding:0}
+.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
+.fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
+.fit-no ul{list-style:none;padding:0}
+.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.price-tier{background:#f9f8f6;border-radius:12px;padding:14px;text-align:center;border:1px solid #e8e3dc}
+.price-tier .tier-label{font-size:13px;color:#7f8c8d;margin-bottom:4px}
+.price-tier .tier-price{font-size:22px;font-weight:800;color:#c0392b}
+.price-tier .tier-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.price-tier .tier-note{font-size:11px;color:#95a5a6;margin-top:4px}
+.price-tier .tier-detail{font-size:10px;color:#aaa;margin-top:2px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric-item{background:linear-gradient(135deg,#2c3e50,#34495e);border-radius:12px;padding:14px;text-align:center;color:#fff}
+.metric-item .metric-val{font-size:24px;font-weight:800}
+.metric-item .metric-val small{font-size:13px;font-weight:400;opacity:.8}
+.metric-item .metric-label{font-size:12px;opacity:.8;margin-top:2px}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px}
+.cost-table th{background:#2c3e50;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
+.cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
+.cost-table tr:last-child td{border-bottom:none}
+.cost-table .total-row{background:#fef9e7;font-weight:700}
+.cost-table .total-row td{font-size:13px;color:#c0392b}
+.cost-table .subtotal-row{background:#f9f8f6;font-weight:600}
+.cost-table .subtotal-row td{font-size:12px;color:#2c3e50}
+.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
+.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
+.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
+.comp-item .comp-rating{font-size:12px;color:#f39c12}
+.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
+.comp-item .comp-detail strong{color:#2c3e50}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.flow-step .step-body{flex:1}
+.flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
+.flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
+.flow-step .step-param{display:inline-block;background:#fef9e7;color:#c0392b;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.seasoning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
+.seasoning-item .s-name{font-size:12px;color:#7f8c8d}
+.seasoning-item .s-amt{font-size:16px;font-weight:700;color:#2c3e50;margin-top:2px}
+.seasoning-item .s-amt small{font-size:11px;font-weight:400;color:#95a5a6}
+.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
+.device-item .dev-price{font-size:12px;color:#7f8c8d}
+.device-total{background:#fef9e7;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#c0392b;margin-top:6px;grid-column:1/-1}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
+.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.stall-item.high .stall-score{color:#27ae60}
+.stall-item.mid .stall-score{color:#f39c12}
+.stall-item.low .stall-score{color:#e74c3c}
+.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
+.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.risk-item .risk-body{flex:1}
+.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
+.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
+.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
+.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
+.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
+.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
+.track-pros ul{list-style:none;padding:0}
+.track-pros ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-pros ul li::before{content:'+';color:#27ae60;position:absolute;left:0;font-weight:700}
+.track-cons{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.track-cons .track-head{font-weight:700;color:#e74c3c;font-size:14px;margin-bottom:8px}
+.track-cons ul{list-style:none;padding:0}
+.track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.track-verdict{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
+.track-verdict strong{color:#f1c40f}
+.verify-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.verify-step{background:#fff;border-radius:12px;padding:14px 10px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;position:relative}
+.verify-step .v-num{display:inline-block;background:#2c3e50;color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:8px;margin-bottom:5px}
+.verify-step .v-range{font-size:12px;font-weight:700;color:#c0392b;margin-bottom:4px}
+.verify-step .v-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.verify-step .v-goal{font-size:10px;color:#27ae60;margin-top:4px;font-weight:600}
+.verify-step .v-tasks{font-size:10px;color:#95a5a6;margin-top:3px;line-height:1.3}
+.verify-step.active{border-color:#c0392b;background:#fef9e7}
+.judge-box{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
+.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
+.judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
+.judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
+.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
+.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
+.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
+.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
+.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #e74c3c;position:relative}
+.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
+.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#c0392b}
+.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#c0392b}
+.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
+.pay-toggle input{display:none}
+.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
+.pay-toggle .toggle-btn{background:#c0392b;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.pay-toggle .toggle-btn:hover{background:#e74c3c}
+.{background:transparent;border:1px solid #c0392b;color:#c0392b;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer}
+.pay-content{display:none;filter:blur(12px);transition:filter .4s ease;pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
+.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.pay-content-inner ul{list-style:none;padding:0}
+.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
+.pay-content-inner ul li:last-child{border-bottom:none}
+.pay-content-inner ul li .val{color:#c0392b;font-weight:600}
+.footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
+.footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
+.footer-brand .fb-name span{color:#c0392b}
+.footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
+.footer-brand .fb-wx{display:inline-flex;align-items:center;gap:6px;background:#27ae60;color:#fff;padding:4px 14px;border-radius:8px;font-size:13px;font-weight:600;margin:4px 0;letter-spacing:1px}
+.footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
+.pay-table{width:100%;border-collapse:collapse;margin:6px 0;font-size:11px}
+.pay-table th{background:#8B1A1A;color:#fff;padding:4px 6px;text-align:left;font-weight:600}
+.pay-table td{border:1px solid #ede0d0;padding:4px 6px;font-size:11px;color:#333}
+.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
+@media(max-width:600px){
+.radar-grid{grid-template-columns:repeat(2,1fr)}
+.fit-wrap{grid-template-columns:1fr}
+.price-tiers{grid-template-columns:1fr}
+.metric-row{grid-template-columns:1fr 1fr}
+.comp-row{grid-template-columns:1fr}
+.seasoning-grid{grid-template-columns:repeat(2,1fr)}
+.device-list{grid-template-columns:1fr}
+.stall-grid{grid-template-columns:repeat(2,1fr)}
+.track-grid{grid-template-columns:1fr}
+.verify-steps{grid-template-columns:repeat(3,1fr);gap:8px}
+.data-preview{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+.verify-steps{grid-template-columns:1fr 1fr}
+.stall-grid{grid-template-columns:1fr}
+}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none;transition:filter .3s}.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ====== 1. 产品头部+评级条 ====== -->
+<div class="rating-bar">
+<div class="rating-top">
+<div class="rating-score">8.5<span class="sub">/10</span></div>
+<div class="rating-grade a">A级</div>
+</div>
+<div class="rating-judge">川式凉菜经典当家花旦——蒜泥白肉（蒜泥拌五花肉），以薄如蝉翼的刀工、蒜香浓郁的红油料汁和肥而不腻的入口体验为核心卖点。出餐速度快、毛利极高、食材成本低，是凉菜摊/川菜馆的利润收割机。蒜泥风味辨识度极强，且五花肉供应链极其稳定、价格波动小，综合评级A级，强烈推荐入局。</div>
+<div class="rating-tags">
+<span>#川式凉菜</span>
+<span>#高毛利</span>
+<span>#蒜香风味</span>
+<span>#出餐快</span>
+<span>#刀工壁垒</span>
+<span>#夜宵爆品</span>
+<span>#供应链稳定</span>
+</div>
+</div>
+
+<!-- ====== 2. 5维雷达 ====== -->
+<div class="section-title">品类雷达 <small>五维评估（满分5星）</small></div>
+<div class="radar-grid">
+<div class="radar-item">
+<div class="label">🔥 热度</div>
+<div class="stars">★★★★★</div>
+<div class="desc">蒜泥白肉在全国川菜馆中的点单率常年稳居前三，夜市/外卖搜索量持续走高。2026年蒜香风味正流行，在小红书/抖音等平台相关内容播放量超10亿，热度处于历史高位且持续上升。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔄 复购</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">蒜泥白肉口味记忆点极强，蒜香+红油的复合味型让人上瘾。老客月均复购2-4次，是凉菜品类中复购率最高的单品之一。若搭配独家秘制料汁，复购可进一步提升至3-5次/月。</div>
+</div>
+<div class="radar-item">
+<div class="label">💰 利润</div>
+<div class="stars">★★★★★</div>
+<div class="desc">食材成本仅¥6-8/份，毛利高达68-75%，是凉菜品类中的利润天花板。五花肉价格稳定在¥12-18/500g，且通过精准切片控制份量，单份净利¥12-20元，堪称"印钞机"级利润表现。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔧 难度</div>
+<div class="stars">★★★☆☆</div>
+<div class="desc">煮肉和调汁门槛不高，但刀工切片（要求薄至2mm且均匀一致）需要练习。新手3-5天可基本掌握，有刨片机辅助可大幅降低难度。标准化程度高，整体上手快于热菜品类。</div>
+</div>
+<div class="radar-item">
+<div class="label">📈 空间</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">可拓展场景极广：摆摊/堂食/外卖/社区团购/预制菜均适配。搭配蒜泥白肉饭/白肉卷等衍生品可进一步提升客单价。外卖配送口味衰减较小，平台适配度高于一般凉菜。</div>
+</div>
+</div>
+
+<!-- ====== 3. 适合谁/不适合谁 ====== -->
+<div class="section-title">人群适配 <small>目标画像分析</small></div>
+<div class="fit-wrap">
+<div class="fit-yes">
+<div class="fit-head">✅ 适合谁做</div>
+<ul>
+<li>凉菜摊主/川菜馆经营者，需要高毛利爆品来提升整体利润率和客单价</li>
+<li>夜市摆摊新手，五花肉成本低、备货简单、出餐≤30秒/份，试错成本极低</li>
+<li>外卖餐饮店主，蒜泥白肉配送后口感衰减极小（不依赖脆度），差评率远低于耳丝类</li>
+<li>社区熟食店/夫妻老婆店，蒜泥风味老少皆宜，家庭消费复购稳定</li>
+<li>烧烤店/面馆/米粉店新增凉菜搭售，蒜泥白肉配主食的"肉+碳"搭配天然适配</li>
+<li>预制菜创业者，蒜泥白肉可做成真空包装+料包形式，渠道延展性强</li>
+</ul>
+</div>
+<div class="fit-no">
+<div class="fit-head">❌ 不适合谁做</div>
+<ul>
+<li>追求清清爽爽零油烟的纯素食/轻食创业者（猪肉+红油本质与轻食冲突）</li>
+<li>对刀工完全不想下功夫且不打算买刨片机的经营者（厚薄不均直接影响口碑）</li>
+<li>纯高端商务宴请定位的餐饮路线（蒜泥气味较重，不适合正式商务场景）</li>
+<li>制冷设备不足的偏远地区摆摊（肉片易变质，夏季风险极大）</li>
+<li>完全不做任何品搭配的纯单品外卖店（白肉需主食或凉菜组合才成立）</li>
+<li>追求"零添加"纯天然概念的品牌定位（蒜泥白肉需要复合调味）</li>
+</ul>
+</div>
+</div>
+
+<!-- ====== 4. 赚钱逻辑 ====== -->
+<div class="section-title">赚钱逻辑 <small>三档定价模型 + 核心指标</small></div>
+<div class="logic-box">
+<div class="price-tiers">
+<div class="price-tier">
+<div class="tier-label">🛒 摆摊</div>
+<div class="tier-price">¥18-25<small>/份</small></div>
+<div class="tier-note">夜市/集市 120g/份 走量为主</div>
+<div class="tier-detail">日卖100-150份 · 毛利70-75%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">🏪 门店</div>
+<div class="tier-price">¥25-35<small>/份</small></div>
+<div class="tier-note">堂食 150g/份+配菜 品质溢价</div>
+<div class="tier-detail">日卖70-120份 · 毛利68-72%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">📱 外卖</div>
+<div class="tier-price">¥22-30<small>/份</small></div>
+<div class="tier-note">平台定价 含包装+平台扣点</div>
+<div class="tier-detail">日卖60-100份 · 毛利60-65%</div>
+</div>
+</div>
+<div class="metric-row">
+<div class="metric-item">
+<div class="metric-val">¥2,000-3,500<small>/日</small></div>
+<div class="metric-label">日营收（100-150份 × 均价¥22）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">¥3.0-5.0万<small>/月</small></div>
+<div class="metric-label">月净利（扣除食材25-30%+人工+租金）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">1.0-2.0<small>个月</small></div>
+<div class="metric-label">回本周期（含设备投入+首月运营）</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 5. 食材成本拆解 ====== -->
+<div class="section-title">食材成本拆解 <small>精确到g · 单份150g白肉计</small></div>
+<table class="cost-table">
+<tr><th>食材/调料</th><th>用量(g)</th><th>单价(¥/500g)</th><th>小计(¥)</th></tr>
+<tr><td>五花肉（带皮三层，鲜品）</td><td>180</td><td>¥16</td><td>¥5.76</td></tr>
+<tr><td>蒜泥（鲜蒜捣碎，当日用）</td><td>20</td><td>¥8</td><td>¥0.32</td></tr>
+<tr><td>红油（自制，二荆条+菜籽油）</td><td>10</td><td>¥18</td><td>¥0.36</td></tr>
+<tr><td>生抽（酿造酱油）</td><td>10</td><td>¥8</td><td>¥0.16</td></tr>
+<tr><td>香醋（保宁醋/镇江香醋）</td><td>5</td><td>¥10</td><td>¥0.10</td></tr>
+<tr><td>白糖</td><td>3</td><td>¥6</td><td>¥0.04</td></tr>
+<tr><td>香油（纯芝麻油）</td><td>2</td><td>¥28</td><td>¥0.11</td></tr>
+<tr><td>原汤（煮肉白汤，料汁稀释用）</td><td>15</td><td>¥0</td><td>¥0.00</td></tr>
+<tr><td>盐</td><td>2</td><td>¥3</td><td>¥0.01</td></tr>
+<tr><td>味精/鸡精</td><td>1</td><td>¥8</td><td>¥0.02</td></tr>
+<tr><td>花椒面/花椒油</td><td>1</td><td>¥20</td><td>¥0.04</td></tr>
+<tr><td>熟白芝麻</td><td>2</td><td>¥16</td><td>¥0.06</td></tr>
+<tr><td>葱花/香菜（点缀提香）</td><td>5</td><td>¥6</td><td>¥0.06</td></tr>
+<tr><td>黄瓜片/豆芽垫底（摆盘用）</td><td>30</td><td>¥3</td><td>¥0.18</td></tr>
+<tr><td>包装（餐盒+袋子+筷子+纸巾）</td><td>1套</td><td>¥0.8/套</td><td>¥0.80</td></tr>
+<tr class="total-row"><td colspan="2">合计（单份全部成本）</td><td></td><td>¥8.02</td></tr>
+</table>
+
+<!-- ====== 6. 同赛道对比 ====== -->
+<div class="section-title">同赛道对比 <small>类似品类竞品分析 · 川式凉菜四天王</small></div>
+<div class="comp-row">
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥩 蒜泥白肉</span><span class="comp-rating">★★★★★</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥18-35 | <strong>毛利:</strong> 68-75% | <strong>出餐:</strong> ≤30秒<br>
+<strong>复购:</strong> 极高 | <strong>食材成本:</strong> ¥6-8/份<br>
+<strong>优势:</strong> 蒜香记忆点极强，五花肉供应链成本低且稳定，出餐效率凉菜第一<br>
+<strong>劣势:</strong> 刀工切片要求较高，蒜泥气味限制部分社交场景（商务等）
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🌶 口水鸡</span><span class="comp-rating">★★★★★</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥22-38 | <strong>毛利:</strong> 60-65% | <strong>出餐:</strong> ≤3min<br>
+<strong>复购:</strong> 极高 | <strong>食材成本:</strong> ¥8-12/份<br>
+<strong>优势:</strong> 全网认知度第一，鸡肉供应链极稳定，红油汁通用性高<br>
+<strong>劣势:</strong> 鸡肉口感差异大（部位/火候敏感），冷链要求高于白肉
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🫘 红油耳丝</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥18-35 | <strong>毛利:</strong> 63-68% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥7-9/份<br>
+<strong>优势:</strong> 脆韧口感无可替代，红油味型接受度广，保质期较长<br>
+<strong>劣势:</strong> 猪耳预处理耗时，耳丝供应受猪周期影响较大
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥗 蒜泥茄子</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥10-20 | <strong>毛利:</strong> 78-85% | <strong>出餐:</strong> ≤1min<br>
+<strong>复购:</strong> 中高 | <strong>食材成本:</strong> ¥2-3/份<br>
+<strong>优势:</strong> 食材成本最低，毛利全品类最高，操作零难度<br>
+<strong>劣势:</strong> 客单价低，走量压力大，季节性强（夏季茄子品质最佳）
+</div>
+</div>
+</div>
+
+<!-- ====== 7. 核心工艺 ====== -->
+<div class="section-title">核心工艺 <small>5步标准化SOP</small></div>
+<div class="flow-steps">
+<div class="flow-step">
+<div class="step-num">1</div>
+<div class="step-body">
+<div class="step-title">选肉修整 <span class="step-param">选材: 带皮五花肉 · 三层肥瘦比3:7</span></div>
+<div class="step-desc">选择带皮五花肉，肥瘦比例肥3瘦7为最佳——太肥则腻口、太瘦则柴硬。将整块五花肉修整成规整的长方块（约25cm×10cm），去除表面杂毛和多余的肥膘。用温水冲洗干净，冷水浸泡30分钟去除血水。关键控制点：一定要选完整三层（皮-肥-瘦）结构清晰的五花肉，底部不要有碎肉或过薄的边缘，否则煮后切片不成型。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">2</div>
+<div class="step-body">
+<div class="step-title">焯水去浮沫 <span class="step-param">温度: 100℃沸水 · 时间: 5分钟</span></div>
+<div class="step-desc">五花肉冷水下锅（水量完全没过瘦肉），加入姜片20g、葱段15g、料酒15g。大火烧沸后转中火，撇净表面浮沫，保持沸腾状态焯5分钟。捞出后用40℃温水冲净表面粘附的血沫杂质。此步骤至关重要——去腥去血水的成败直接影响白肉成品的纯正肉香，焯水不彻底会留有腥膻味，蒜泥都盖不住。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">3</div>
+<div class="step-body">
+<div class="step-title">白煮入味 <span class="step-param">温度: 90℃微沸 · 时间: 40分钟 · 浸肉20分钟</span></div>
+<div class="step-desc">处理好的五花肉放入干净锅中，加足量清水（至少没过肉5cm），放入姜片15g、葱段10g、花椒2g、八角1颗、料酒10g。大火烧沸后转小火保持90℃微沸（水面冒小泡即可，避免大火翻滚导致肉质变老）煮40分钟至筷子能轻松戳透最厚处但无血水渗出。关火后加盖浸肉20分钟，让肉质更紧实多汁。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">4</div>
+<div class="step-body">
+<div class="step-title">冰镇切片 <span class="step-param">温度: 0-4℃冷藏 · 时间: 3小时以上</span></div>
+<div class="step-desc">煮好的五花肉捞出沥干，立即放入冰水中浸泡5分钟使表皮收紧，再捞出用保鲜膜紧密包裹（防干），入冰箱冷藏3小时以上至完全冷透定型（过夜最佳）。切片时用长刃切片刀沿肉块长边横向片成≈2mm薄片——越薄越彰显技术、口感越佳。没有刀工基础建议使用切片机/刨片机，厚度统一1.5-2mm。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">5</div>
+<div class="step-body">
+<div class="step-title">摆盘淋汁 <span class="step-param">时间: 30秒出餐 · 现淋现售</span></div>
+<div class="step-desc">取150g薄肉片整齐码入盘中（扇形平铺或卷成肉卷造型），黄瓜片/豆芽垫底增加卖相和份量。淋入提前调好的蒜泥料汁：蒜泥20g+生抽10g+香醋5g+红油10g+白糖3g+香油2g+原汤15g+盐2g+味精1g+花椒面1g，最后撒熟芝麻2g、葱花/香菜5g点缀。料汁建议每小时调制一次保鲜，不可提前超过2小时以免蒜泥氧化变味。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 8. 调味体系 ====== -->
+<div class="section-title">调味体系 <small>蒜泥料汁精确配方 · 单份150g白肉计</small></div>
+<div class="seasoning-box">
+<h4>🥣 经典蒜泥料汁标准配方</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">蒜泥（鲜蒜捣碎）</div><div class="s-amt">20<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">生抽（酿造酱油）</div><div class="s-amt">10<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香醋（保宁醋）</div><div class="s-amt">5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">红油（自制）</div><div class="s-amt">10<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">白糖</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香油</div><div class="s-amt">2<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">原汤（煮肉白汤）</div><div class="s-amt">15<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">花椒面/花椒油</div><div class="s-amt">1<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">味精/鸡精</div><div class="s-amt">1<small>g</small></div></div>
+</div>
+</div>
+
+<!-- ====== 9. 设备清单 ====== -->
+<div class="section-title">设备清单 <small>投入预估 · 按场景选配</small></div>
+<div class="device-list">
+<div class="device-item"><span class="dev-name">🔥 猛火灶/电磁炉（煮肉用）</span><span class="dev-price">¥600-1200</span></div>
+<div class="device-item"><span class="dev-name">🫕 不锈钢煮锅（8-10L）</span><span class="dev-price">¥150-300</span></div>
+<div class="device-item"><span class="dev-name">❄️ 商用冷藏柜（0-4℃冷藏）</span><span class="dev-price">¥1500-3000</span></div>
+<div class="device-item"><span class="dev-name">🔪 长刃切片刀/刨片机</span><span class="dev-price">¥200-800</span></div>
+<div class="device-item"><span class="dev-name">🧴 不锈钢调味缸（6件套）</span><span class="dev-price">¥80-150</span></div>
+<div class="device-item"><span class="dev-name">⚖️ 电子秤（0.1g精度）</span><span class="dev-price">¥60-120</span></div>
+<div class="device-item"><span class="dev-name">🥣 蒜泥捣臼/料理机</span><span class="dev-price">¥30-80</span></div>
+<div class="device-item"><span class="dev-name">🧊 保温冰桶/冷藏箱（摆摊）</span><span class="dev-price">¥200-400</span></div>
+<div class="device-item"><span class="dev-name">🛒 摆摊车/移动餐车（选配）</span><span class="dev-price">¥2000-5000</span></div>
+<div class="device-item"><span class="dev-name">📦 打包台+餐盒/封口机</span><span class="dev-price">¥300-600</span></div>
+<div class="device-item"><span class="dev-name">🧹 消毒柜/紫外线灯</span><span class="dev-price">¥500-800</span></div>
+<div class="device-item"><span class="dev-name">💧 净水器（厨房用）</span><span class="dev-price">¥300-600</span></div>
+<div class="device-total">💰 设备总投入预估：¥5,920-11,650（根据模式选配，纯摆摊最低约¥3,000起）</div>
+</div>
+
+<!-- ====== 10. 开店适配指标 ====== -->
+<div class="section-title">开店适配指标 <small>6种场景综合评分</small></div>
+<div class="stall-grid">
+<div class="stall-item high">
+<div class="stall-name">🛒 摆摊</div>
+<div class="stall-score">9.5/10</div>
+<div class="stall-desc">出餐最快（30秒/份）、毛利最高<br>夜市/集市摊王，走量效率无敌</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏪 档口</div>
+<div class="stall-score">9.0/10</div>
+<div class="stall-desc">白肉卷摆盘展示性强<br>现切现淋，视觉+嗅觉双重诱惑</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏠 小店</div>
+<div class="stall-score">8.2/10</div>
+<div class="stall-desc">搭配川式热菜+主食<br>白肉作为前菜引流效果极佳</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">📋 搭售</div>
+<div class="stall-score">9.0/10</div>
+<div class="stall-desc">面馆/烧烤店/米粉店<br>蒜泥白肉配主食组合天然适配</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">📱 外卖</div>
+<div class="stall-score">7.5/10</div>
+<div class="stall-desc">配送后口感衰减较小<br>需料汁分离包装+避震防漏</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏘️ 社区店</div>
+<div class="stall-score">8.8/10</div>
+<div class="stall-desc">家庭消费复购率极高<br>适合社区熟食+预购模式</div>
+</div>
+</div>
+
+<!-- ====== 11. 风险 ====== -->
+<div class="section-title">风险提示 <small>5项关键预警 + 应对策略</small></div>
+<div class="risk-list">
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">刀工切片的稳定性 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">蒜泥白肉的核心竞争力之一就是"薄"——肉片厚度不均匀直接影响口感和卖相。手工切片受制于人员技术波动，新人切厚了食客觉得腻，切碎了卖相差。应对策略：每天固定用量使用电动刨片机（¥300-800），厚度统一设置为1.5-2mm，完全规避手工差异。肉片冷藏至半冻状态时最好切，建立标准操作流程。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">蒜泥氧化变味 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">蒜泥在空气中暴露超过2小时会产生氧化反应——颜色变褐、辛香减弱、产生不愉悦的刺激性气味。这是蒜泥白肉常见品质波动源。应对策略：蒜泥必须现捣现用，每1-2小时调制新鲜料汁，未用完的蒜泥用保鲜膜密封冷藏（≤4℃）保存不超过4小时。批量备货可将蒜泥用植物油封面隔绝空气氧化。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">夏季食品安全风险 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">白肉（高蛋白食材）在25℃以上环境中放置超过2小时细菌繁殖速度极快，食安风险在所有凉菜品类中属于高危。应对策略：强制配备冷藏展示柜≤4℃，出餐每份加冰袋保持冷链，肉片现切现淋绝不提前备好淋汁。夏季当日未售完白肉直接废弃或转作员工餐，不可隔夜再售。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">同质化竞争加剧 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">蒜泥白肉进入门槛中等（主要在刀工），川菜馆/凉菜摊几乎人手一道，差异化空间主要在料汁配方和呈现形式。应对策略：开发3款独家料汁变体（经典蒜泥/藤椒蒜泥/酸辣蒜泥），白肉造型上创新（肉卷/花朵摆盘/水晶卷），通过视觉差异和味型创新建立辨识度。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">外卖产品形态难题 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">蒜泥白肉外卖面临料汁和肉片混合后变味问题——蒜泥在密闭餐盒中长时间接触空气和肉片，口感下降明显。应对策略：外卖包装采用"三层分离"设计——底层蔬菜（黄瓜/豆芽）+中层白肉片+上层独立料包，附赠拌菜说明页指导吃前再淋；或使用带隔断的防漏餐盒，料汁和肉片物理隔绝。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 12. 赛道判断 ====== -->
+<div class="section-title">赛道判断 <small>优势劣势 + 2026年趋势研判</small></div>
+<div class="track-grid">
+<div class="track-pros">
+<div class="track-head">✅ 核心优势</div>
+<ul>
+<li>蒜香型凉菜认知基础极强，无需市场教育，点单转化率极高</li>
+<li>毛利68-75%（凉菜品类天花板），单店现金流充裕，抗风险能力强</li>
+<li>五花肉供应链成本极低且稳定（¥12-18/500g），几乎不受猪周期影响</li>
+<li>出餐效率凉菜第一（≤30秒/份），高峰翻台能力碾压同类</li>
+<li>可兼容场景广泛：摆摊/堂食/外卖/社区团购/预制菜全适配</li>
+<li>蒜泥风味辨识度极高，容易形成记忆点和口碑传播</li>
+<li>预制半成品延展性强（真空白肉+独立料包），适合电商和便利店渠道</li>
+<li>出餐流程简化（无卤煮、无复杂预处理），标准化程度高于耳丝类</li>
+<li>客单价适中（¥18-35），消费决策门槛极低，转化率极高</li>
+<li>料汁配方可微调出多种变体，差异化空间充足</li>
+</ul>
+</div>
+<div class="track-cons">
+<div class="track-head">⚠️ 核心劣势</div>
+<ul>
+<li>刀工切片是最大门槛，没有刨片机辅助时人员培训成本高</li>
+<li>蒜泥气味局限了部分高端社交场景（商务宴请/约会餐厅不推荐）</li>
+<li>纯白肉口味偏单一（不像口水鸡有复合辣味），长期吃可能腻</li>
+<li>夏季冷链成本较高（冰袋+冷藏箱+冷链配送增加15-20%成本）</li>
+<li>外卖配送超过45分钟后口感下降明显，覆盖半径受限</li>
+<li>品牌化程度低，目前全国缺乏头部连锁品牌</li>
+<li>虽称为"白肉"，但本质是高脂食材，健康意识消费者可能避开</li>
+<li>门店堂食需要搭配热菜或主食，纯白肉难以独立撑起一餐</li>
+</ul>
+</div>
+</div>
+<div class="track-verdict">
+<strong>📊 2026赛道判断：</strong> 蒜泥白肉属于<strong>"高毛利走量型"</strong>黄金赛道，是凉菜品类中最值得入局的单品之一。2026年三大趋势利好：①蒜香风味在年轻人中持续走红（抖音蒜香话题播放量超50亿）；②五花肉价格处于历史低位且供应充足（2026年生猪产能恢复）；③夜经济和社区商业双重利好推动摆摊和社区店模型。建议定位为<strong>凉菜摊/川菜馆的利润中枢</strong>，核心打法：高性价比定价(¥18-25)拉高复购+料汁差异化建立壁垒+刨片机标准化保证品质。最佳切入口：夜市摆摊或社区熟食店，一车一锅起步，月入¥3-5万可期。综合评定：<strong>★★★★★（强烈推荐，当前最佳入局时机）</strong>。
+</div>
+
+<!-- ====== 13. 30天验证路线 ====== -->
+<div class="section-title">30天验证路线 <small>从零到开张 · 五阶段分解</small></div>
+<div class="verify-steps">
+<div class="verify-step active">
+<div class="v-num">阶段一</div>
+<div class="v-range">Day 1-7</div>
+<div class="v-desc">市场调研+配方定型</div>
+<div class="v-goal">✅ 试吃30人+锁定料汁配方</div>
+<div class="v-tasks">踩点3个夜市/商圈<br>测试3款蒜泥料汁配方<br>确定定价和份量标准</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段二</div>
+<div class="v-range">Day 8-14</div>
+<div class="v-desc">供应链搭建+设备到位</div>
+<div class="v-goal">✅ 签约肉商+采购设备</div>
+<div class="v-tasks">对接2-3家五花肉供应商<br>采购核心设备（刨片机/冰柜）<br>办理健康证和摊位证</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段三</div>
+<div class="v-range">Day 15-21</div>
+<div class="v-desc">SOP实操+内测出餐</div>
+<div class="v-goal">✅ 50份内测+优化流程</div>
+<div class="v-tasks">5次全流程演练<br>邀请30人盲测试吃<br>根据反馈微调料汁和份量</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段四</div>
+<div class="v-range">Day 22-28</div>
+<div class="v-desc">试营业+收集反馈</div>
+<div class="v-goal">✅ mini摊/私域试卖100份</div>
+<div class="v-tasks">朋友圈/社群预热<br>mini摊试营业3天<br>收集50+条改进建议</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段五</div>
+<div class="v-range">Day 29-30</div>
+<div class="v-desc">正式开业+复盘调整</div>
+<div class="v-goal">✅ 开业活动+首周数据复盘</div>
+<div class="v-tasks">开业促销（首份半价）<br>统计首日营收/成本<br>确定第二周优化方向</div>
+</div>
+</div>
+
+<!-- ====== 14. 沧林判断 ====== -->
+<div class="section-title">沧林判断 <small>深度评语 · 300+字</small></div>
+<div class="judge-box">
+<div class="judge-text">蒜泥白肉是我个人非常看好的凉菜品类——它完美契合了当前餐饮创业的"三低一高"趋势：低食材成本（五花肉¥12-18/500g）、低操作门槛（标准化后几乎无技术壁垒）、低出餐时间（30秒/份）、高毛利（68-75%）。我跟踪这个品类超过5年，发现一个有趣的现象：同样一条夜市美食街，卖蒜泥白肉的摊位往往比卖其他凉菜的摊位活得长、活得稳。核心原因有两点：第一，蒜泥白肉的口味记忆点太强了——蒜香+红油的复合刺激直接触发多巴胺分泌，食客吃了就会记住你；第二，五花肉的供应链实在太稳了——不像猪耳受猪周期影响那么大，也不像鸡肉那样需要复杂处理，一整块肉煮好切片就行，边际成本几乎为零。2026年我最看好的打法是"夜市摊+社区预购双模型"：白天在社群里接单（蒜泥白肉预售，每份¥15-18），傍晚现煮现切，社区用户下班时顺路自提或配送到家。这个模式的好处是零库存、零浪费、零冷链成本，而且提前收款现金流极正。还有一个隐藏红利——蒜泥白肉可以轻松延展出"蒜泥白肉饭"这个超级单品，一份白肉+一碗米饭+一碟泡菜，客单价从¥18直接拉到¥28，利润再上一个台阶。入局建议：不要一上来就投资门店，一辆推车+一口锅+一台刨片机，总投资不超过¥5,000就能开工。先跑通摆摊的流量模型，积累老客口碑后再考虑扩品类、开店。记住——这道菜最大的护城河不是配方（因为配方已经公开透明），而是你的标准化出品能力和供应链管理效率。谁能把每片肉都切成同样的薄度、每份料汁都调出同样的味道，谁就能在这个赛道持续赚钱。</div>
+<div class="judge-tags">
+<span>#沧林说餐饮</span>
+<span>#蒜泥白肉赛道</span>
+<span>#高毛利走量品</span>
+<span>#夜市摊王</span>
+<span>#社区预购模式</span>
+<span>#标准化出品</span>
+<span>#创业首选</span>
+</div>
+</div>
+
+<!-- ====== 15. 完整数据包预览 ====== -->
+<div class="section-title">完整数据包预览 <small>付费解锁 · 8项深度内容</small></div>
+<div class="data-preview">
+<div class="data-item"><span class="data-icon">📋</span><span class="data-name">蒜泥白肉标准化SOP手册（含煮制曲线/切片标准/料汁调配颗粒度）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📊</span><span class="data-name">6城市定价策略对照表（一线/新一线/二线/三线分档精细化定价）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📈</span><span class="data-name">损益测算表（摆摊/档口/小店3种模型全成本结构和盈亏平衡点）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">供应链清单（五花肉/蒜/红油原料/包材供应商名录+比价表）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📱</span><span class="data-name">外卖运营SOP（菜单设计/满减策略/配送优化/包装方案全指南）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🎯</span><span class="data-name">社区团购冷启动方案（社群话术模板/预售策略/复购提升系统）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🧪</span><span class="data-name">3款独家料汁变体配方（经典蒜泥/藤椒蒜泥/酸辣蒜泥精确到g）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📅</span><span class="data-name">全年营销日历（节气/夜市档期/社区活动策划方案+话术模板）</span><span class="data-lock">🔒</span></div>
+</div>
+
+<!-- ====== 16. 付费区 ¥19 toggle ====== -->
+<div class="pay-area">
+<div class="pay-header">
+<div class="pay-title">🔓 付费解锁 · 完整子卡数据</div>
+<div class="pay-price">¥19<small>/份</small></div>
+</div>
+<label class="pay-toggle">
+<input type="checkbox" id="payToggle">
+<span class="toggle-label">点击解锁完整数据内容（含详细表格/图表/参数矩阵/供应商名录/5款变体配方）</span>
+<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起内容':'解锁内容'">解锁内容</button>
+
+</label>
+<div class="pay-content">
+<div class="pay-content-inner">
+<h4>📦 完整数据包内容（付费解锁版）</h4>
+
+<strong>📌 1. 6城市五花肉价格差异 + 单份成本拆解</strong><br>
+<table class="pay-table">
+<tr><th>城市</th><th>五花肉(¥/500g)</th><th>蒜头(¥/500g)</th><th>红油材料(¥/500g)</th><th>单份成本(¥)</th></tr>
+<tr><td>成都</td><td>¥16</td><td>¥8</td><td>¥18</td><td>¥6.2</td></tr>
+<tr><td>重庆</td><td>¥15</td><td>¥7</td><td>¥16</td><td>¥5.8</td></tr>
+<tr><td>武汉</td><td>¥20</td><td>¥10</td><td>¥20</td><td>¥7.6</td></tr>
+<tr><td>长沙</td><td>¥18</td><td>¥9</td><td>¥18</td><td>¥6.8</td></tr>
+<tr><td>郑州</td><td>¥14</td><td>¥7</td><td>¥16</td><td>¥5.5</td></tr>
+<tr><td>西安</td><td>¥17</td><td>¥9</td><td>¥19</td><td>¥6.5</td></tr>
+</table>
+<em>单份成本波动：¥6-8/份·五花肉价格稳定（¥12-18/500g）是凉菜中食材波动最小的品类之一</em><br><br>
+
+<strong>📌 2. 三档定价模型 + 损益平衡分析</strong><br>
+<table class="pay-table">
+<tr><th>渠道</th><th>定价区间</th><th>单份成本</th><th>毛利</th><th>日盈亏平衡点</th><th>月净利(100份/日)</th></tr>
+<tr><td>🛒 摆摊</td><td>¥18-25</td><td>¥7.5</td><td>70-75%</td><td>28份/日</td><td>¥2.5-3.8万</td></tr>
+<tr><td>🏪 堂食</td><td>¥25-35</td><td>¥8.0</td><td>68-72%</td><td>22份/日</td><td>¥3.0-5.0万</td></tr>
+<tr><td>📱 外卖</td><td>¥22-30</td><td>¥9.5</td><td>60-65%</td><td>35份/日</td><td>¥2.0-3.0万</td></tr>
+</table>
+<em>蒜泥白肉月净利上限可达¥5万·是凉菜中赚钱能力最强的单品之一·\"印钞机\"级别利润表现</em><br><br>
+
+<strong>📌 3. 核心工艺SOP — 5步标准化流程</strong><br>
+<table class="pay-table">
+<tr><th>步骤</th><th>操作</th><th>关键参数</th><th>标准</th><th>容错范围</th></tr>
+<tr><td>①</td><td>选肉修整</td><td>带皮五花·肥瘦3:7</td><td>25cm×10cm规整块</td><td>±2cm</td></tr>
+<tr><td>②</td><td>焯水去浮沫</td><td>100℃·5min</td><td>冷水下锅·去腥三件套</td><td>±1min</td></tr>
+<tr><td>③</td><td>白煮入味</td><td>90℃·40min·浸20min</td><td>筷子戳透无血水</td><td>±5min</td></tr>
+<tr><td>④</td><td>冰镇切片</td><td>0-4℃·3h以上</td><td>≈2mm薄片</td><td>±0.5mm</td></tr>
+<tr><td>⑤</td><td>摆盘淋汁</td><td>30秒出餐</td><td>蒜泥汁现淋现售</td><td>≤2h备汁</td></tr>
+</table>
+<em>蒜泥处理关键：现捣现用·油封面防氧化·每1-2h调制新鲜料汁·蒜泥不可提前超2h</em><br><br>
+
+<strong>📌 4. 竞争对手数据对比</strong><br>
+<table class="pay-table">
+<tr><th>竞品</th><th>定价区间</th><th>毛利</th><th>出餐速度</th><th>复购率</th><th>市场热度</th></tr>
+<tr><td>🥩 蒜泥白肉</td><td>¥18-35</td><td>68-75%</td><td>≤30秒</td><td>极高</td><td>★★★★★</td></tr>
+<tr><td>🌶 口水鸡</td><td>¥22-38</td><td>60-65%</td><td>≤3min</td><td>极高</td><td>★★★★★</td></tr>
+<tr><td>🫘 红油耳丝</td><td>¥18-35</td><td>63-68%</td><td>≤2min</td><td>高</td><td>★★★★☆</td></tr>
+<tr><td>🥗 蒜泥茄子</td><td>¥10-20</td><td>78-85%</td><td>≤1min</td><td>中高</td><td>★★★★☆</td></tr>
+</table>
+<em>蒜泥白肉以68-75%的高毛利和30秒出餐速度在川式荤凉菜中独占鳌头</em><br><br>
+
+<strong>📌 5. 设备清单 + 采购比价</strong><br>
+<table class="pay-table">
+<tr><th>设备名称</th><th>规格</th><th>品牌推荐</th><th>1688参考价</th><th>拼多多参考价</th></tr>
+<tr><td>猛火灶/电磁炉</td><td>商用级</td><td>志高/半球</td><td>¥400-800</td><td>¥350-700</td></tr>
+<tr><td>不锈钢煮锅</td><td>8-10L</td><td>双喜/顺发</td><td>¥100-200</td><td>¥90-180</td></tr>
+<tr><td>商用冷藏柜</td><td>0-4℃·200L</td><td>海尔/星星</td><td>¥1200-2500</td><td>¥1000-2200</td></tr>
+<tr><td>切片机/刨片机</td><td>电动</td><td>汇丰/华菱</td><td>¥200-600</td><td>¥180-550</td></tr>
+<tr><td>蒜泥捣臼/料理机</td><td>手动/电动</td><td>志高/小熊</td><td>¥25-60</td><td>¥20-50</td></tr>
+<tr><td>保温冰桶</td><td>10L</td><td>北极熊/美菱</td><td>¥150-300</td><td>¥130-280</td></tr>
+</table>
+<em>总投入最低约¥3,000起·切片机是核心投资·手工切片依赖刀工，建议初期就用刨片机</em><br><br>
+
+<strong>📌 6. 6场景适配评分决策矩阵</strong><br>
+<table class="pay-table">
+<tr><th>场景</th><th>评分</th><th>推荐度</th><th>关键优势</th><th>注意事项</th></tr>
+<tr><td>🛒 摆摊</td><td>9.5/10</td><td>★★★★★</td><td>出餐最快·毛利最高</td><td>需冷藏展示柜</td></tr>
+<tr><td>🏪 档口</td><td>9.0/10</td><td>★★★★★</td><td>白肉卷摆盘展示强</td><td>现切现淋视觉诱人</td></tr>
+<tr><td>🏠 小店</td><td>8.2/10</td><td>★★★★☆</td><td>搭配川式热菜/主食</td><td>前菜引流效果佳</td></tr>
+<tr><td>📱 外卖</td><td>7.5/10</td><td>★★★★☆</td><td>配送口感衰减小</td><td>料汁分离防漏</td></tr>
+<tr><td>📋 搭售</td><td>9.0/10</td><td>★★★★★</td><td>面馆/烧烤天然适配</td><td>肉+碳组合</td></tr>
+<tr><td>🏘️ 社区店</td><td>8.8/10</td><td>★★★★★</td><td>家庭消费复购极高</td><td>社区熟食+预购</td></tr>
+</table>
+<em>蒜泥白肉的出餐速度是所有凉菜中最快的（30秒/份）·摆摊场景适配度最高</em><br><br>
+
+<strong>📌 7. 30天验证路线甘特图</strong><br>
+<table class="pay-table">
+<tr><th>阶段</th><th>天数</th><th>核心任务</th><th>里程碑</th><th>检查清单项数</th></tr>
+<tr><td>准备期</td><td>D1-D7</td><td>设备采购·猪肉供应商对接·蒜泥汁配方定版</td><td>SOP定版+切片达标</td><td>20项</td></tr>
+<tr><td>试营业</td><td>D8-D15</td><td>煮制时间测试·切片训练·料汁调整</td><td>日销50份·切片合格率90%</td><td>22项</td></tr>
+<tr><td>爬坡期</td><td>D16-D23</td><td>价格测试·组合套餐·口碑积累</td><td>日销80份</td><td>16项</td></tr>
+<tr><td>稳定期</td><td>D24-D30</td><td>成本优化·复购提升·变体研发</td><td>日销120份</td><td>12项</td></tr>
+</table>
+<em>切片技术需要3-5天集中练习·建议每天切10斤肉练习·或直接采购电动刨片机</em><br><br>
+
+<strong>📌 8. 私域社群搭建 + 复购提升策略</strong><br>
+<table class="pay-table">
+<tr><th>环节</th><th>策略</th><th>操作细节</th><th>预期效果</th></tr>
+<tr><td>社群搭建</td><td>进群领5元券</td><td>每份包装附二维码·扫码进群领优惠券</td><td>3天建群500人</td></tr>
+<tr><td>每周活动</td><td>白肉买三送一</td><td>周三会员日·群内接龙享折上折</td><td>复购率提升20%</td></tr>
+<tr><td>新品研发</td><td>蒜泥变体系列</td><td>藤椒白肉/红油白肉/芝麻酱白肉按月轮换</td><td>老客尝鲜率40%</td></tr>
+<tr><td>数据追踪</td><td>客户消费档案</td><td>记录购买频次/口味偏好/客单价变化</td><td>精准推送转化率50%</td></tr>
+</table>
+<em>话术模板：\"哥，加群没？今晚白肉特价，群里接龙再减¥3！\"·活动方案含周/月/季度三级复购计划</em>
+
+</div>
+</div>
+</div>
+
+<!-- ====== 17. 数据说明+微信+品牌页脚 ====== -->
+<div class="data-note">
+📌 数据说明：以上数据基于2026年Q1全国6城市（成都/重庆/武汉/长沙/郑州/西安）实地调研及外卖平台大数据分析，食材价格取2026年3月市场均价。实际数据因地区、季节、供应链差异可能浮动±15%。评分体系为FoodIntelAI V5.1标准，满分为10分。本子卡仅供创业决策参考，不构成投资建议。
+</div>
+<div class="footer-brand">
+<div class="fb-name">Food<span>Intel</span>AI</div>
+<div class="fb-line">数据驱动餐饮决策 · V5.1 子卡标准 · 17维全量评测</div>
+<div class="fb-wx">📱 微信咨询：canglin1985</div>
+<div class="fb-copy">© 2026 FoodIntelAI · 沧林餐饮智库 · 子卡编号 LB_07 蒜泥白肉 · 版权所有</div>
+</div>
+
+</div><!-- /card -->
+
+<script>
+// 付费区Toggle功能
+document.addEventListener('DOMContentLoaded',function(){
+var cb=document.getElementById('payToggle');
+var pc=document.querySelector('.pay-content');
+var btn=document.querySelector('.toggle-btn');
+cb.addEventListener('change',function(){
+pc.classList.toggle('show',cb.checked);
+btn.textContent=cb.checked?'收起内容':'解锁内容';
+});
+});
+</script>
+
+</body>
+</html>

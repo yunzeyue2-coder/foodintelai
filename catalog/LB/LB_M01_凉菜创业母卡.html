@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LB_M01 · 凉菜创业母卡 · FoodIntelAI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif}
+body{background:#f0e8e0;padding:20px 14px;min-height:100vh}
+.card{max-width:540px;margin:0 auto 30px;background:#fdfaf7;border-radius:18px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.08)}
+.header{background:linear-gradient(135deg,#6a1a1a,#8B1A1A,#C0392B);padding:28px 22px 22px;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-60px;right:-40px;width:180px;height:180px;background:rgba(255,255,255,.04);border-radius:50%}
+.header::after{content:'';position:absolute;bottom:-30px;left:-20px;width:120px;height:120px;background:rgba(255,255,255,.03);border-radius:50%}
+.header-code{font-size:12px;color:rgba(255,255,255,.6);letter-spacing:2px;margin-bottom:6px;position:relative;z-index:1}
+.header-level{display:inline-block;background:rgba(255,215,0,.2);color:#ffd700;font-size:11px;padding:2px 10px;border-radius:4px;margin-bottom:10px;position:relative;z-index:1;font-weight:600}
+.header-title{font-size:28px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:4px;position:relative;z-index:1}
+.header-sub{font-size:15px;color:rgba(255,255,255,.75);margin-bottom:14px;position:relative;z-index:1}
+.header-tags{display:flex;flex-wrap:wrap;gap:6px;position:relative;z-index:1}
+.header-tags span{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);font-size:11px;padding:3px 10px;border-radius:12px}
+.score-strip{background:#6a1a1a;padding:12px 22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.score-item{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.8);font-size:13px}
+.score-item strong{color:#ffd700;font-size:15px}
+.body{padding:18px 22px 22px}
+.section{margin-bottom:24px}
+.s-title{font-size:17px;font-weight:700;color:#2d1a0e;margin-bottom:12px;display:flex;align-items:center;gap:8px;position:relative;padding-bottom:8px}
+.s-title::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,#C0392B,#e8d5c4)}
+.def-box{background:linear-gradient(135deg,#fdf5f0,#fceee8);border-left:4px solid #C0392B;border-radius:8px;padding:14px 16px;margin-bottom:12px;font-size:14px;line-height:1.7;color:#3d2a1e}
+.def-box strong{color:#8B1A1A}
+.spec-card{background:#fff;border:1px solid #e8ddd5;border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.spec-card h4{font-size:14px;font-weight:700;color:#6a1a1a;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.spec-card p,.spec-card li{font-size:13px;line-height:1.7;color:#4a3a2e}
+.tip-box{background:#f0f7ee;border-left:4px solid #2d6a1a;border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:13px;line-height:1.7;color:#2d4a1e}
+.tip-box strong{color:#1d5a0e}
+.risk-item{background:#fff5f5;border-left:4px solid #e74c3c;border-radius:8px;padding:12px 14px;margin-bottom:8px;font-size:13px;line-height:1.7;color:#4a2a2a}
+.risk-item strong{color:#c0392b}
+.judge-box{background:linear-gradient(135deg,#f8f0e8,#f5ede5);border:1px solid #e8ddd5;border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.judge-box h4{font-size:14px;font-weight:700;color:#6a1a1a;margin-bottom:8px}
+.judge-box table{width:100%;font-size:13px;border-collapse:collapse}
+.judge-box td{padding:5px 4px;color:#4a3a2e;border-bottom:1px solid #e8ddd5}
+.judge-box td:first-child{font-weight:600;width:90px;color:#6a1a1a}
+.judge-box .score-bar{display:inline-block;height:6px;border-radius:3px;background:#e8ddd5;width:80px;vertical-align:middle;margin-right:6px;overflow:hidden}
+.judge-box .score-bar span{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#C0392B,#e67e22)}
+.data-note{background:#f5f0eb;border-radius:8px;padding:10px 14px;font-size:12px;color:#6a5a4a;margin-top:8px;text-align:center}
+.footer-brand{text-align:center;padding:20px 22px 18px;border-top:1px solid #e8ddd5;margin-top:8px}
+.footer-brand .brand-name{font-size:18px;font-weight:700;color:#6a1a1a;margin-bottom:2px}
+.footer-brand .brand-slogan{font-size:12px;color:#8a7a6a;margin-bottom:4px;letter-spacing:2px}
+.footer-brand .brand-code{font-size:11px;color:#a09080;letter-spacing:1px}
+ul.grid-list{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}
+ul.grid-list li{font-size:13px;line-height:1.6;color:#4a3a2e;padding-left:16px;position:relative}
+ul.grid-list li::before{content:'•';position:absolute;left:2px;color:#C0392B;font-weight:700}
+ul.single-list{list-style:none;padding:0}
+ul.single-list li{font-size:13px;line-height:1.7;color:#4a3a2e;padding:4px 0 4px 16px;position:relative}
+ul.single-list li::before{content:'▸';position:absolute;left:0;color:#C0392B}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.stat-box{background:#fff;border:1px solid #e8ddd5;border-radius:8px;padding:10px;text-align:center}
+.stat-box .num{font-size:20px;font-weight:700;color:#6a1a1a}
+.stat-box .label{font-size:11px;color:#8a7a6a;margin-top:2px}
+/* Pay Area */
+.pay-area{background:linear-gradient(135deg,#f0e0d8,#fdfaf7);border:1px solid #d4c4b8;border-radius:12px;padding:16px;margin-bottom:20px;position:relative;overflow:hidden}
+.pay-area::before{content:'🔒';position:absolute;top:10px;right:14px;font-size:20px}
+.pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pay-header h3{font-size:15px;font-weight:700;color:#6a1a1a}
+.pay-header .pay-label{background:linear-gradient(135deg,#C0392B,#8B1A1A);color:#fff;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px}
+.pay-content{display:none;filter:blur(12px);user-select:none;transition:filter .3s}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content p,.pay-content li{font-size:13px;line-height:1.7;color:#4a3a2e}
+.pay-content .pay-divider{border-top:1px dashed #d4c4b8;margin:10px 0}
+.{display:inline-block;background:#fff;border:1px solid #C0392B;color:#C0392B;font-size:12px;padding:5px 14px;border-radius:6px;cursor:pointer;margin-top:8px}
+.:hover{background:#C0392B;color:#fff}
+.pay-toggle{display:flex;align-items:center;gap:10px;margin-top:10px;justify-content:center}
+.pay-toggle button{background:linear-gradient(135deg,#6a1a1a,#C0392B);color:#fff;border:none;padding:8px 28px;border-radius:20px;font-size:14px;font-weight:600;cursor:pointer}
+.pay-toggle button:hover{opacity:.9}
+.pay-toggle .hint{font-size:11px;color:#8a7a6a}
+.flow-chart{background:#fff;border:1px solid #e8ddd5;border-radius:8px;padding:12px;margin-bottom:10px;font-size:12px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 2px;justify-content:center}
+.flow-chart .step{background:#f5ede5;padding:4px 10px;border-radius:4px;color:#6a1a1a;font-weight:600}
+.flow-chart .arrow{color:#C0392B;font-weight:700}
+.price-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.price-item{background:#fff;border:1px solid #e8ddd5;border-radius:8px;padding:10px;text-align:center}
+.price-item .name{font-size:12px;color:#8a7a6a}
+.price-item .price{font-size:18px;font-weight:700;color:#6a1a1a}
+.price-item .note{font-size:11px;color:#a09080;margin-top:2px}
+.badge{display:inline-block;background:#6a1a1a;color:#fff;font-size:10px;padding:2px 6px;border-radius:3px;font-weight:600;vertical-align:middle}
+@media(max-width:400px){.header-title{font-size:24px}.body{padding:16px}ul.grid-list{grid-template-columns:1fr}}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none;transition:filter .3s}.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-code">LB_M01</div>
+    <div class="header-level">🍶 创业母卡 · ¥39</div>
+    <div class="header-title">凉菜创业母卡</div>
+    <div class="header-sub">从七味型体系到门店落地 · 完整创业地图</div>
+    <div class="header-tags">
+      <span>#凉菜创业</span><span>#七味型</span><span>#档口模型</span><span>#预制逻辑</span><span>#损耗控制</span>
+    </div>
+  </div>
+
+  <!-- SCORE STRIP -->
+  <div class="score-strip">
+    <div class="score-item">综合评分 <strong>8.7</strong></div>
+    <div class="score-item">启动难度 <strong>★★☆</strong></div>
+    <div class="score-item">利润空间 <strong>★★★★</strong></div>
+    <div class="score-item">回本周期 <strong>★★★</strong></div>
+  </div>
+
+  <div class="body">
+
+    <!-- 1. 一句话定位 -->
+    <div class="section">
+      <div class="s-title">🎯 一句话定位</div>
+      <div class="def-box">
+        <strong>以七味型体系为技术内核、档口/小铺为最小模型、预制+现拌双线操作实现高周转低损耗的凉菜创业方案。</strong>
+        <br><br>
+        不靠大厨，靠味型标准化；不拼装修，拼陈列吸引力；不卷价格，卷出餐效率和复购率。让一个零基础创业者在30天内跑通凉菜生意的最小闭环。
+      </div>
+    </div>
+
+    <!-- 2. 适合谁/不适合谁 -->
+    <div class="section">
+      <div class="s-title">👤 适合谁 / 不适合谁</div>
+      <div class="spec-card">
+        <h4>✅ 适合</h4>
+        <ul class="single-list">
+          <li>餐饮创业小白，想从低门槛品类切入</li>
+          <li>夫妻档口经营者，寻找高毛利副线</li>
+          <li>已有正餐/烧烤/面馆门店，需增设凉菜增加客单</li>
+          <li>夜市/菜市场摊主，想升级为品牌化经营</li>
+          <li>社区生鲜店想拓展现场加工熟食区</li>
+        </ul>
+      </div>
+      <div class="spec-card">
+        <h4>❌ 不适合</h4>
+        <ul class="single-list">
+          <li>期望月入10万+的暴利投机者（凉菜是辛苦钱）</li>
+          <li>完全没有食品安全意识的人（凉菜间是红线）</li>
+          <li>不愿做基础研发只想买料包凑合的懒人</li>
+          <li>一线城市核心商场想做高端凉菜品牌的</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 3. 赚钱逻辑 -->
+    <div class="section">
+      <div class="s-title">💰 赚钱逻辑</div>
+      <div class="spec-card">
+        <p><strong>核心公式：</strong> 营收 = 客流 × 客单价 × 复购率</p>
+        <p><strong>盈利模型：</strong></p>
+        <ul class="single-list">
+          <li><strong>高毛利：</strong> 素菜毛利70-80%，荤菜毛利55-65%，综合毛利65%+</li>
+          <li><strong>低人工：</strong> 1-2人即可运转，日营收3000元仅需2人</li>
+          <li><strong>高复购：</strong> 凉菜是餐桌刚需，口味对路后复购率可达40-60%</li>
+          <li><strong>多场景：</strong> 堂食+外卖+外带+团餐（企业/会议/聚餐）</li>
+          <li><strong>组合溢价：</strong> 称重基价 + 按份精品 + 套餐组合，三种定价模型叠加</li>
+        </ul>
+      </div>
+      <div class="def-box">
+        <strong>赚钱关键：</strong> 中午晚上两个出餐高峰 + 提前预制保证出品速度 + 陈列视觉拉动冲动消费 + 凉菜配主食/饮品提升客单。日均流水3000-5000元是成熟档口的基本线。
+      </div>
+    </div>
+
+    <!-- 4. 赛道判断 (4格评分) -->
+    <div class="section">
+      <div class="s-title">📊 赛道判断</div>
+      <div class="judge-box">
+        <table>
+          <tr><td>市场容量</td><td><div class="score-bar"><span style="width:80%"></span></div>8/10 · 全人群高频刚需</td></tr>
+          <tr><td>竞争强度</td><td><div class="score-bar"><span style="width:65%"></span></div>6.5/10 · 夫妻店多但品牌化空白</td></tr>
+          <tr><td>利润空间</td><td><div class="score-bar"><span style="width:78%"></span></div>7.8/10 · 综合毛利65%+</td></tr>
+          <tr><td>可标准化</td><td><div class="score-bar"><span style="width:85%"></span></div>8.5/10 · 味型可预制，出品可控</td></tr>
+          <tr><td>启动门槛</td><td><div class="score-bar"><span style="width:25%"></span></div>2.5/10 · 极低（设备简单资金要求低）</td></tr>
+        </table>
+      </div>
+      <div class="tip-box">
+        <strong>💡 赛道判断结论：</strong> 凉菜是典型的"大市场小行业"——市场容量大但缺乏品牌化竞争者。夫妻老婆店占据90%以上份额，这正是品牌化创业者的机会窗口。标准化程度高，适合连锁复制。
+      </div>
+    </div>
+
+    <!-- 5. 市场数据 -->
+    <div class="section">
+      <div class="s-title">📈 市场数据</div>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="num">6000亿+</div><div class="label">凉菜市场规模(年)</div></div>
+        <div class="stat-box"><div class="num">65%+</div><div class="label">综合毛利率</div></div>
+        <div class="stat-box"><div class="num">40-60%</div><div class="label">成熟店复购率</div></div>
+      </div>
+      <div class="spec-card">
+        <ul class="single-list">
+          <li><strong>消费场景分布：</strong> 家庭餐桌55% · 外卖30% · 堂食10% · 其他5%</li>
+          <li><strong>客单价区间：</strong> 档口模式15-25元 · 堂食模式30-50元 · 精品模式50-80元</li>
+          <li><strong>区域特征：</strong> 川渝凉菜认知度最高，北方酱拌、南方捞汁各有市场</li>
+          <li><strong>增长驱动：</strong> 预制菜赋能 + 外卖普及 + 少人化用餐趋势</li>
+        </ul>
+      </div>
+      <div class="data-note">数据来源：FoodIntelAI 2026年Q1餐饮行业研报 · 凉菜细分赛道专项调研</div>
+    </div>
+
+    <!-- 6. 项目评估 -->
+    <div class="section">
+      <div class="s-title">🔍 项目评估</div>
+      <div class="judge-box">
+        <table>
+          <tr><td>投入范围</td><td>3-15万（档口） / 20-50万（门店）</td></tr>
+          <tr><td>回本周期</td><td>档口模式3-6个月 / 门店模式8-14个月</td></tr>
+          <tr><td>日均流水</td><td>档口成熟期3000-5000元</td></tr>
+          <tr><td>人员配置</td><td>1-2人（档口） / 3-5人（门店）</td></tr>
+          <tr><td>培训周期</td><td>基础操作1-2周 / 味型掌握1-2月</td></tr>
+          <tr><td>存活率</td><td>选址正确情况下12个月存活率约70%</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 7. 同赛道对比 -->
+    <div class="section">
+      <div class="s-title">⚖️ 同赛道对比</div>
+      <div class="spec-card">
+        <table style="width:100%;font-size:12px;border-collapse:collapse;color:#4a3a2e">
+          <tr style="background:#f5ede5;font-weight:600;color:#6a1a1a"><td style="padding:6px 4px;border-bottom:1px solid #e8ddd5">对比项</td><td style="padding:6px 4px;border-bottom:1px solid #e8ddd5">凉菜档口</td><td style="padding:6px 4px;border-bottom:1px solid #e8ddd5">卤味店</td><td style="padding:6px 4px;border-bottom:1px solid #e8ddd5">麻辣烫</td><td style="padding:6px 4px;border-bottom:1px solid #e8ddd5">炸鸡店</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">启动成本</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">★ 最低</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">★ 低</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">★★ 中</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">★★ 中</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">毛利水平</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">65-75%</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">60-70%</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">55-65%</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">60-65%</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">标准化难度</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">低（七味型体系）</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">中（老卤养护）</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">高（汤底多变量）</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">低（裹粉油炸）</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">复购率</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">高（味型丰富）</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">中高（依赖老卤）</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">中（同质化）</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">中（油炸腻感）</td></tr>
+          <tr><td style="padding:5px 4px">季节波动</td><td style="padding:5px 4px">小（四季菜单轮换）</td><td style="padding:5px 4px">小</td><td style="padding:5px 4px">大（夏低冬高）</td><td style="padding:5px 4px">小</td></tr>
+        </table>
+      </div>
+      <div class="tip-box">
+        <strong>💡 凉菜核心优势：</strong> 启动成本最低、毛利最高、标准化最容易、季节波动最小。唯一需要攻克的是"凉菜师傅培养"和"食品安全合规"两个门槛。
+      </div>
+    </div>
+
+    <!-- 8. 30天验证路线 -->
+    <div class="section">
+      <div class="s-title">📋 30天验证路线</div>
+      <div class="flow-chart">
+        <span class="step">D1-3 市场调研</span>
+        <span class="arrow">→</span>
+        <span class="step">D4-7 七味型研发</span>
+        <span class="arrow">→</span>
+        <span class="step">D8-10 设备采购</span>
+        <span class="arrow">→</span>
+        <span class="step">D11-15 试做试卖</span>
+        <span class="arrow">→</span>
+        <span class="step">D16-20 调整优化</span>
+        <span class="arrow">→</span>
+        <span class="step">D21-25 正式开业</span>
+        <span class="arrow">→</span>
+        <span class="step">D26-30 复盘迭代</span>
+      </div>
+      <div class="spec-card">
+        <h4>📌 各阶段关键动作</h4>
+        <ul class="single-list">
+          <li><strong>D1-3 调研：</strong> 蹲点周边3家凉菜店，记录客单价、爆品、高峰期、出餐流程</li>
+          <li><strong>D4-7 研发：</strong> 锁定3-5个核心味型，按七味型体系调出标准配方（详见第13节）</li>
+          <li><strong>D8-10 设备：</strong> 采购凉菜间必备设备（详见第9节），安装调试</li>
+          <li><strong>D11-15 试卖：</strong> 朋友圈/社区群预售，收反馈，调整口味和份量</li>
+          <li><strong>D16-20 优化：</strong> 根据试卖数据调整定价模型（称重/按份比例）、改善陈列</li>
+          <li><strong>D21-25 开业：</strong> 开业活动（首单立减/买赠/社群拉新），跑通高峰出餐流程</li>
+          <li><strong>D26-30 复盘：</strong> 算清损耗率、人工效率、毛利率，确定优化方向</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 9. 设备清单 -->
+    <div class="section">
+      <div class="s-title">🔧 设备清单</div>
+      <div class="spec-card">
+        <h4>必备设备（档口模式·总预算约1.5-2.5万）</h4>
+        <ul class="single-list">
+          <li><strong>不锈钢操作台</strong> 带下层置物架 · 120×60cm · ¥800-1500</li>
+          <li><strong>商用冷藏展示柜</strong> 风冷弧形玻璃 · 120L · ¥2800-4500</li>
+          <li><strong>四门冰柜</strong> 冷藏+冷冻 · ¥2500-4000</li>
+          <li><strong>洗菜池三连池</strong> 不锈钢 · ¥600-1000</li>
+          <li><strong>紫外线消毒灯</strong> 30W · ¥150-300</li>
+          <li><strong>电子秤</strong> 防水型3kg/0.1g精度 · ¥200-400</li>
+          <li><strong>不锈钢盆/桶/沥水篮</strong> 全套 · ¥500-800</li>
+          <li><strong>切菜刀具套装</strong> 含斩骨刀、切片刀、刨丝器 · ¥300-500</li>
+          <li><strong>砧板</strong> 3块（生/熟/素分板）· ¥200-400</li>
+          <li><strong>保鲜盒</strong> 密封扣式 · 20个 · ¥200-300</li>
+        </ul>
+      </div>
+      <div class="spec-card">
+        <h4>可选设备（按需配置）</h4>
+        <ul class="single-list">
+          <li><strong>真空包装机</strong> 用于预制菜/外卖 · ¥400-800</li>
+          <li><strong>切菜机</strong> 土豆丝/萝卜丝专用 · ¥800-2000</li>
+          <li><strong>商用微波炉/蒸箱</strong> 用于预处理 · ¥500-1500</li>
+          <li><strong>收银系统</strong> 含扫码枪/小票机 · ¥1500-3000</li>
+          <li><strong>外卖打包台</strong> 含餐盒置物架 · ¥600-1200</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 10. 产品结构 -->
+    <div class="section">
+      <div class="s-title">🧩 产品结构</div>
+      <div class="spec-card">
+        <h4>🥬 素菜线（毛利70-80%·占比50-60%）</h4>
+        <ul class="grid-list">
+          <li>凉拌黄瓜</li><li>手撕茄子</li><li>蒜泥豆角</li>
+          <li>炝拌土豆丝</li><li>凉拌木耳</li><li>口水花菜</li>
+          <li>酸辣藕片</li><li>凉拌海带丝</li><li>红油腐竹</li>
+          <li>姜汁菠菜</li><li>麻酱豆角</li><li>香辣豆皮</li>
+        </ul>
+      </div>
+      <div class="spec-card">
+        <h4>🥩 荤菜线（毛利55-65%·占比25-35%）</h4>
+        <ul class="grid-list">
+          <li>口水鸡</li><li>夫妻肺片</li><li>红油耳丝</li>
+          <li>椒麻鸡</li><li>蒜泥白肉</li><li>酱牛肉</li>
+          <li>凉拌猪头肉</li><li>麻辣鸡胗</li><li>藤椒鸭掌</li>
+        </ul>
+      </div>
+      <div class="spec-card">
+        <h4>🍚 主食/饮品线（毛利60-70%·占比10-15%）</h4>
+        <ul class="grid-list">
+          <li>凉皮/凉面</li><li>粥品（冰粥）</li><li>酸梅汤</li>
+          <li>绿豆汤</li><li>银耳羹</li><li>手工冰粉</li>
+        </ul>
+      </div>
+      <div class="tip-box">
+        <strong>💡 产品结构原则：</strong> 素菜拉动客流（低价高毛利）、荤菜拉升客单（高价中毛利）、主食饮品增加复购场景。初期保持12-15个SKU，成熟后逐步扩至20-25个。
+      </div>
+    </div>
+
+    <!-- 11. 开店适配指数 -->
+    <div class="section">
+      <div class="s-title">🏪 开店适配指数</div>
+      <div class="judge-box">
+        <table>
+          <tr><td>档口/摊点</td><td>★★★★★（最优·启动快成本低）</td></tr>
+          <tr><td>社区底商</td><td>★★★★☆（客群稳定复购高）</td></tr>
+          <tr><td>菜市场摊位</td><td>★★★★☆（自然客流精准）</td></tr>
+          <tr><td>商场美食广场</td><td>★★★☆☆（租金高·需品牌包装）</td></tr>
+          <tr><td>写字楼配套</td><td>★★★★☆（午餐刚需·注意晚间空档）</td></tr>
+          <tr><td>景区/夜市</td><td>★★★☆☆（季节性·高峰客单价可高）</td></tr>
+          <tr><td>纯外卖店</td><td>★★☆☆☆（凉菜外卖体验折扣大）</td></tr>
+        </table>
+      </div>
+      <div class="def-box">
+        <strong>推荐模型：</strong> 档口+2-4张堂食座位（社区/菜市场），面积15-25㎡，月租3000-8000元，1-2人经营。这是凉菜创业的"黄金最小模型"。
+      </div>
+    </div>
+
+    <!-- 12. 最大风险 -->
+    <div class="section">
+      <div class="s-title">⚠️ 最大风险</div>
+      <div class="risk-item">
+        <strong>🚨 风险一：食品安全事故</strong><br>
+        凉菜不经过高温杀菌，食品安全是致命红线。一旦出现食安问题，轻则罚款停业，重则刑事责任+品牌毁灭。必须严格执行凉菜间操作规范（详见第17节安全铁律）。
+      </div>
+      <div class="risk-item">
+        <strong>🚨 风险二：损耗失控</strong><br>
+        凉菜保质期短（冷藏条件下12-24小时），卖不出去就是纯损耗。新手常见问题是备货过多、陈列不当导致品相变差报废。损耗率控制在5%以内是及格线。
+      </div>
+      <div class="risk-item">
+        <strong>🚨 风险三：味型不稳定</strong><br>
+        客人复购的核心驱动是"每次味道都一样"。如果没有标准化配方，不同师傅/不同批次出品差异大，会直接摧毁复购率。
+      </div>
+      <div class="risk-item">
+        <strong>🚨 风险四：选址失误</strong><br>
+        凉菜是高频低客单消费，极度依赖自然客流和回头客。选错位置意味着每日曝光不足，神仙难救。
+      </div>
+    </div>
+
+    <!-- 13. 核心工艺（七味型体系） -->
+    <div class="section">
+      <div class="s-title">🔬 核心工艺 · 七味型体系</div>
+      <div class="def-box">
+        <strong>七味型体系：</strong> 不按食材分菜品，而是按味型建立标准化配方。7种基础味型覆盖90%以上的凉菜品类，每个味型有固定调料配比+操作流程，可批量化预制。这是凉菜标准化的核心技术框架。
+      </div>
+
+      <div class="spec-card">
+        <h4>🌶 1. 红油味型（经典通杀型）</h4>
+        <p><strong>配方：</strong> 菜籽油500ml · 二荆条干辣椒50g · 新一代干辣椒30g · 花椒10g · 八角3颗 · 桂皮1小段 · 香叶4片 · 草果2个 · 白芝麻30g · 大葱1根 · 姜5片</p>
+        <p><strong>工艺：</strong> 辣椒炒香打碎→油烧至180°C→降温至150°C→浇淋搅拌→密封静置24小时→过滤取油</p>
+        <p><strong>适用：</strong> 口水鸡、红油耳丝、夫妻肺片、红油腐竹、凉拌木耳</p>
+        <p><strong>预制：</strong> ✅ 可预制，冷藏保存30天</p>
+      </div>
+
+      <div class="spec-card">
+        <h4>🍋 2. 酸辣味型（夏秋主打型）</h4>
+        <p><strong>配方：</strong> 陈醋60ml · 香醋40ml · 生抽30ml · 蒜末30g · 小米辣15g · 白糖20g · 盐8g · 味精3g · 香油15ml · 凉白开100ml</p>
+        <p><strong>工艺：</strong> 蒜末+小米辣+盐糖研磨→加入醋和生抽搅拌→加凉白开调浓度→最后加香油封味</p>
+        <p><strong>适用：</strong> 酸辣藕片、酸辣海带丝、柠檬凤爪、酸辣土豆丝</p>
+        <p><strong>预制：</strong> ✅ 汁可预制7天，食材现焯现拌</p>
+      </div>
+
+      <div class="spec-card">
+        <h4>🧄 3. 蒜泥味型（超高复购型）</h4>
+        <p><strong>配方：</strong> 鲜蒜50g · 盐3g · 味精2g · 白糖5g · 香油10ml · 红油15ml · 生抽10ml · 凉白开20ml</p>
+        <p><strong>工艺：</strong> 蒜捣成泥→加盐糖味精研磨→加液体调料调匀→最后加蒜泥本身增香</p>
+        <p><strong>适用：</strong> 蒜泥白肉、蒜泥茄子、蒜泥豆角、蒜泥黄瓜</p>
+        <p><strong>预制：</strong> ⚠️ 蒜泥汁可预制2天，但现捣蒜风味最佳</p>
+      </div>
+
+      <div class="spec-card">
+        <h4>🌿 4. 藤椒味型（年轻网红型）</h4>
+        <p><strong>配方：</strong> 鲜花椒30g · 藤椒油50ml · 青小米辣20g · 蒜末15g · 生抽20ml · 蚝油10ml · 白糖8g · 盐3g · 鸡精3g · 凉白开50ml</p>
+        <p><strong>工艺：</strong> 青椒蒜末炒香→加凉白开和调味料→烧开冷却→加藤椒油</p>
+        <p><strong>适用：</strong> 藤椒鸭掌、藤椒鸡、藤椒腐竹、藤椒藕片</p>
+        <p><strong>预制：</strong> ✅ 汁可预制7天，花椒香气会随时间微变</p>
+      </div>
+
+      <div class="spec-card">
+        <h4>🥜 5. 麻酱味型（北方经典型）</h4>
+        <p><strong>配方：</strong> 芝麻酱80g · 花生酱20g · 生抽15ml · 香醋10ml · 白糖10g · 盐3g · 蒜水30ml · 香油10ml</p>
+        <p><strong>工艺：</strong> 麻酱+花生酱用香油调稀→分次加蒜水搅拌→加生抽醋糖盐</p>
+        <p><strong>适用：</strong> 麻酱豆角、麻酱菠菜、麻酱凉皮、麻酱牛百叶</p>
+        <p><strong>预制：</strong> ⚠️ 酱可预制3天，使用前需搅拌回软</p>
+      </div>
+
+      <div class="spec-card">
+        <h4>🌶️ 6. 椒麻味型（川式经典型）</h4>
+        <p><strong>配方：</strong> 干花椒15g · 大葱白50g（仅葱白）· 盐5g · 味精2g · 鸡汤80ml · 香油15ml</p>
+        <p><strong>工艺：</strong> 花椒炒香打粉→葱白剁成蓉→混合研磨→加热鸡汤调开→冷却加香油</p>
+        <p><strong>适用：</strong> 椒麻鸡、椒麻肚丝、椒麻口条</p>
+        <p><strong>预制：</strong> ⚠️ 现做最佳，预制不超过1天</p>
+      </div>
+
+      <div class="spec-card">
+        <h4>🍊 7. 捞汁/醉味型（清爽型/创新型）</h4>
+        <p><strong>配方：</strong> 海鲜酱油50ml · 香醋30ml · 柠檬汁20ml · 白糖25g · 纯净水200ml · 蒜片10g · 姜片5g · 小米辣10g · 香菜根5g · 花雕酒30ml</p>
+        <p><strong>工艺：</strong> 所有材料混合煮沸→冷却→过滤→冷藏浸泡食材</p>
+        <p><strong>适用：</strong> 捞汁小海鲜、醉蟹钳、捞汁海带苗、捞汁素什锦</p>
+        <p><strong>预制：</strong> ✅ 汁可预制14天，食材需现泡</p>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 味型策略：</strong> 复合型 vs 主味型两条路线：<br>
+        <strong>复合型路线：</strong> 一味型对应多食材（如红油味型→10+种菜），适合档口快速出品，SKU管理极简。<br>
+        <strong>主味型路线：</strong> 一味型主打一道明星菜（如专门做藤椒鸡），适合打造成品牌标签、客单价更高。<br>
+        <strong>推荐：</strong> 初创期走复合型路线降本增效，成熟期引入1-2道主味型爆品拉高品牌辨识度。
+      </div>
+
+      <div class="spec-card">
+        <h4>🎯 复合型 vs 主味型 对比</h4>
+        <table style="width:100%;font-size:12px;border-collapse:collapse;color:#4a3a2e">
+          <tr style="background:#f5ede5;font-weight:600;color:#6a1a1a"><td style="padding:6px 4px;border-bottom:1px solid #e8ddd5">对比维度</td><td style="padding:6px 4px;border-bottom:1px solid #e8ddd5">复合型</td><td style="padding:6px 4px;border-bottom:1px solid #e8ddd5">主味型</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">配方数量</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">3-7种（复用）</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">1-2种（精专）</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">SKU覆盖</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">15-25种菜</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">3-5种菜</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">出餐效率</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">★★★★★</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">★★★☆☆</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">品牌辨识度</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">★★☆☆☆</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">★★★★★</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">客单价</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">15-30元</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">35-60元</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">适合场景</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">档口/社区/菜市</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">堂食门店/网红品牌</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 14. 成本利润 -->
+    <div class="section">
+      <div class="s-title">📊 成本利润</div>
+      <div class="spec-card">
+        <h4>💰 单店盈利模型（档口模式·月估）</h4>
+        <table style="width:100%;font-size:12px;border-collapse:collapse;color:#4a3a2e">
+          <tr style="background:#f5ede5;font-weight:600;color:#6a1a1a"><td style="padding:6px 4px;border-bottom:1px solid #e8ddd5">项目</td><td style="padding:6px 4px;border-bottom:1px solid #e8ddd5">金额（元）</td><td style="padding:6px 4px;border-bottom:1px solid #e8ddd5">比例</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">月均营收</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">90,000-120,000</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">100%</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">食材成本</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">(27,000)-(36,000)</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">~30%</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">人工成本</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">(8,000)-(12,000)</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">~10%</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">房租</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">(3,000)-(8,000)</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">~5%</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">水电杂费</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">(2,000)-(3,000)</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">~2.5%</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">损耗</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">(4,500)-(6,000)</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5">~5%</td></tr>
+          <tr><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5;font-weight:700;color:#6a1a1a">月净利润</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5;font-weight:700;color:#C0392B">45,500-55,000</td><td style="padding:5px 4px;border-bottom:1px solid #e8ddd5;font-weight:700;color:#C0392B">~47%</td></tr>
+        </table>
+      </div>
+      <div class="spec-card">
+        <h4>⚡ 称重 vs 按份定价模型</h4>
+        <ul class="single-list">
+          <li><strong>称重模式：</strong> 素菜统一价（如16.8元/500g），荤菜单独计价（如49.8元/500g）。好处是客单价高、顾客自选无压力；缺点是出餐慢、损耗难控。</li>
+          <li><strong>按份模式：</strong> 小份8-12元/大份15-22元。好处是出餐快、标准统一、损耗可控；缺点是客单价天花板明显。</li>
+          <li><strong>推荐混合模式：</strong> 素菜按份卖（快速走量）+ 荤菜称重卖（拉升客单）+ 套餐组合（提升决策效率）。具体比例：60%按份 · 30%称重 · 10%套餐。</li>
+        </ul>
+      </div>
+      <div class="price-grid">
+        <div class="price-item"><div class="name">素菜按份</div><div class="price">8-12元</div><div class="note">毛利70-80%</div></div>
+        <div class="price-item"><div class="name">荤菜称重</div><div class="price">49.8元/500g</div><div class="note">毛利55-65%</div></div>
+        <div class="price-item"><div class="name">套餐组合</div><div class="price">18-35元</div><div class="note">综合毛利68%</div></div>
+        <div class="price-item"><div class="name">主食饮品</div><div class="price">6-15元</div><div class="note">毛利60-70%</div></div>
+      </div>
+      <div class="tip-box">
+        <strong>💡 利润关键：</strong> 称重模式用"视觉堆头"引导顾客多拿（高客单），按份模式用"搭配推荐"引导加购（高毛利）。混合模式下实测客单价可提升20-35%。
+      </div>
+    </div>
+
+    <!-- 15. 启动清单 -->
+    <div class="section">
+      <div class="s-title">✅ 启动清单</div>
+      <div class="spec-card">
+        <ul class="single-list">
+          <li><strong>□ 市场调研完成</strong> — 蹲点3家竞品·记录客单·爆品·出餐流程</li>
+          <li><strong>□ 味型研发完成</strong> — 锁定3-5个核心味型·建立标准化配方卡</li>
+          <li><strong>□ 选址确认</strong> — 社区/菜市场/学校旁·日均自然客流3000+</li>
+          <li><strong>□ 证照办理</strong> — 营业执照·食品经营许可证（含凉菜制售）·健康证</li>
+          <li><strong>□ 凉菜间装修</strong> — 独立封闭间·紫外线消毒·洗手消毒设施·空调控温</li>
+          <li><strong>□ 设备采购安装</strong> — 详见第9节设备清单</li>
+          <li><strong>□ 食材供应链建立</strong> — 3家以上供应商·含时蔬·肉类·调味料</li>
+          <li><strong>□ 菜单/价签设计</strong> — 70%素菜+20%荤菜+10%主食·价签清晰</li>
+          <li><strong>□ 包装物料采购</strong> — 餐盒·筷子·袋子·手套·打包袋</li>
+          <li><strong>□ 收银系统上线</strong> — 扫码点单·称重计价·外卖对接</li>
+          <li><strong>□ 试卖完成</strong> — 社区预售·朋友圈预热·收集反馈</li>
+          <li><strong>□ 开业活动方案</strong> — 首单优惠·买赠·社群裂变</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 16. 选址建议 -->
+    <div class="section">
+      <div class="s-title">📍 选址建议</div>
+      <div class="def-box">
+        <strong>凉菜选址三原则：</strong><br>
+        1. <strong>流量原则：</strong> 日均自然步行客流3000+（蹲点数人头）<br>
+        2. <strong>匹配原则：</strong> 周边居民/上班族占比高·消费能力匹配15-25元客单<br>
+        3. <strong>便利原则：</strong> 门口可停车/电动车·视觉通透·10米内可见
+      </div>
+      <div class="spec-card">
+        <h4>📍 优先选址类型</h4>
+        <ul class="single-list">
+          <li><strong>大型社区出入口：</strong> 1000户以上成熟社区主出入口两侧，最佳选择</li>
+          <li><strong>菜市场入口附近：</strong> 自带精准买菜客流，转化率高</li>
+          <li><strong>学校/写字楼附近：</strong> 午餐刚需，但需注意寒暑假/周末落差</li>
+          <li><strong>医院周边：</strong> 探病/陪护人群对凉菜需求大（注意办证要求严格）</li>
+        </ul>
+      </div>
+      <div class="risk-item">
+        <strong>🚨 选址避坑：</strong> 纯新入住小区（入住率<60%）、商业街二次拐角位、上下楼梯的地下室、紧邻大型餐厨垃圾站的位置、证照限制无法办理凉菜间的铺位。
+      </div>
+    </div>
+
+    <!-- ★ 17. 付费区 ★ -->
+    <div class="section">
+      <div class="s-title">🔓 付费内容 · ¥39</div>
+      <div class="pay-area">
+        <div class="pay-header">
+          <h3>🍶 凉菜创业母卡 · 深度内容</h3>
+          <span class="pay-label">¥39</span>
+        </div>
+
+        <div class="pay-content" id="payContent">
+          <p><strong>凉菜师傅的培养周期和价值认知</strong></p>
+          <ul class="single-list">
+            <li><strong>培养周期：</strong> 零基础→独立上岗需4-6周。第1-2周掌握七味型配方和基础操作；第3-4周练习刀工和出餐节奏；第5-6周独立管理档口。</li>
+            <li><strong>价值认知：</strong> 好的凉菜师傅值8-12K/月（一线城市），核心价值在于：① 味型调配的稳定度 ② 食材预处理的质量 ③ 出餐速度与陈列效果 ④ 损耗控制能力。市场上90%的凉菜师傅只懂"会做菜"而不懂"会经营"，这正是你的窗口期。</li>
+            <li><strong>留住师傅：</strong> 底薪+营业额提成（0.5-1%）+年终分红，让师傅感觉在经营自己的生意。</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>陈列与展示 · 黄金三秒原则</strong></p>
+          <ul class="single-list">
+            <li><strong>黄金三秒：</strong> 顾客经过你门前的3秒内，必须被视觉吸引驻足。做不到这3秒，后面所有都是零。</li>
+            <li><strong>陈列五要素：</strong> ① 灯光：暖色射灯聚焦菜品，色温3000-3500K ② 层次：高处放鲜艳色（红油/金针菇），低处放深色（木耳/海带） ③ 堆头：每种菜呈"小山"状，满而不溢 ④ 对比：红绿黄白紫五色搭配，制造视觉节奏 ⑤ 新鲜感：表面刷薄油保持光泽，每2小时翻新堆头</li>
+            <li><strong>陈列配置：</strong> 弧形玻璃冷藏柜（温度4-8°C），双排或三排陈列，每排6-8种菜品。定价从低到高排列，引导顾客走完全程。</li>
+            <li><strong>季节性陈列调整：</strong> 夏季突出凉拌/冰镇感（蓝绿色调+冰块装饰）；冬季突出温拌/麻辣感（红橙色调+暖色灯光）。</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>冷冻/预制逻辑</strong></p>
+          <ul class="single-list">
+            <li><strong>✅ 可预制（冷冻/冷藏保存）：</strong> ① 红油（冷冻30天） ② 酸辣汁（冷藏14天） ③ 藤椒汁（冷冻30天） ④ 捞汁（冷冻30天） ⑤ 熟制肉类（卤牛肉/鸡胸肉等，冷冻7天） ⑥ 焯水蔬菜（藕片/土豆丝/豆角，冷藏2天） ⑦ 已脱水素菜（木耳/海带/腐竹，冷藏3天）</li>
+            <li><strong>⚠️ 可部分预制：</strong> ① 蒜泥（可预制蒜汁，但现捣风味更佳） ② 麻酱（可预制酱底，使用前现调） ③ 切好的蔬菜（可预切，但需密封冷藏防氧化）</li>
+            <li><strong>❌ 必须现做：</strong> ① 凉拌黄瓜（现切现拌防出水） ② 蒜泥白肉的肉片（现切防干） ③ 含叶菜类的凉菜（菠菜/香菜等现烫现拌） ④ 含醋量高的拌菜（久放变色变味）</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>损耗控制三原则</strong></p>
+          <ul class="single-list">
+            <li><strong>原则一：备货控量</strong> — 每日按预估销量的80%备货，最后2小时根据实际销量二次补货。宁可提前卖完，不可大量剩余。当天未售完的冷藏品次日只做"清货特价"。</li>
+            <li><strong>原则二：先进先出（FIFO）</strong> — 所有食材贴标签（采购日期+保质期），冰箱内左进右出。每日开店前检查效期，过期食材坚决报废。</li>
+            <li><strong>原则三：末位淘汰</strong> — 每周分析各菜品销量数据，最后3名的SKU直接下架或改良。保持SKU持续优化，杜绝"因为懒得换所以一直卖"的品类。</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>季节性菜单轮换 · 四季策略</strong></p>
+          <ul class="single-list">
+            <li><strong>春季（3-5月）：</strong> 主打清爽淡雅味型——酸辣味、蒜泥味、椒麻味。推荐菜品：春笋拌鸡丝、香椿拌豆腐、蒜泥马齿苋、椒麻春笋尖。</li>
+            <li><strong>夏季（6-8月）：</strong> 主打酸辣开胃味型——酸辣味、捞汁味、藤椒味。推荐菜品：捞汁小海鲜、柠檬凤爪、藤椒鸡、酸辣凉粉。搭配冰镇酸梅汤/绿豆汤。</li>
+            <li><strong>秋季（9-11月）：</strong> 主打复合浓郁味型——红油味、麻酱味、复合味。推荐菜品：红油耳丝、夫妻肺片、麻酱豆角、口水鸡。秋季贴秋膘，可增加荤菜比例。</li>
+            <li><strong>冬季（12-2月）：</strong> 主打麻辣温拌味型——红油+藤椒复合、椒麻味。推荐菜品：温拌双脆、椒麻鸡热拌、红油羊肉片、蒜泥白肉。冬季适当提高辣度和温拌比例。</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>安全铁律 · 凉菜间操作规范</strong></p>
+          <ul class="single-list">
+            <li><strong>🏠 凉菜间硬件要求：</strong> 独立封闭空间（不得与其他操作区相通）· 空调恒温（22°C以下）· 紫外线消毒灯（每晚消毒30分钟）· 洗手消毒设施（非手动水龙头）· 设预进间（更衣+二次更衣）· 墙地面瓷砖到顶。</li>
+            <li><strong>🧼 日常消毒流程：</strong> ① 开店前：紫外线消毒30分钟+ 台面75%酒精擦拭 ② 每2小时：砧板/刀具酒精消毒 ③ 接触不同食材（生/熟/素）：必须更换手套+消毒 ④ 闭店后：全部器具清洗+沸水浸泡10分钟+紫外线消毒30分钟。</li>
+            <li><strong>🥬 豆角处理特别规定：</strong> 四季豆/豆角类必须彻底焯水至全熟（沸水煮8分钟以上），否则可能引发食物中毒。建议统一焯水后冷水冲凉冷却，再做凉拌处理。这是凉菜间最常见的食安隐患之一。</li>
+            <li><strong>🚫 不隔夜铁律：</strong> 凉菜成品严禁隔夜销售！每日闭店后剩余凉菜必须报废处理（可做员工餐但不能次日售卖）。所有预制料汁定期更换（红油7天一轮、酸辣汁3天一轮）。</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>示范菜单（4季完整版）</strong></p>
+          <ul class="single-list">
+            <li><strong>春季菜单（15个SKU）：</strong> 红油腐竹、蒜泥茄子、椒麻春笋、香椿拌豆腐、春笋拌鸡丝、酸辣海带丝、凉拌木耳、口水鸡、蒜泥白肉、凉拌豆角、姜汁菠菜、麻酱豆角、凉皮、酸梅汤、手工冰粉</li>
+            <li><strong>夏季菜单（18个SKU）：</strong> 柠檬凤爪、捞汁小海鲜、藤椒鸡、凉拌黄瓜、酸辣藕片、藤椒鸭掌、凉拌土豆丝、蒜泥豆角、捞汁海带苗、口水鸡、红油耳丝、凉皮、凉面、冰镇酸梅汤、绿豆汤、手工冰粉、冰粥、凉拌苦瓜</li>
+            <li><strong>秋季菜单（16个SKU）：</strong> 夫妻肺片、红油耳丝、麻酱豆角、口水鸡、蒜泥白肉、红油腐竹、椒麻鸡、酱牛肉、凉拌木耳、凉拌萝卜丝、麻酱菠菜、藤椒腐竹、凉皮、酸辣汤、银耳羹、红糖糍粑</li>
+            <li><strong>冬季菜单（14个SKU）：</strong> 温拌双脆、椒麻鸡热拌、红油羊肉片、蒜泥白肉、夫妻肺片、红油耳丝、麻酱牛百叶、凉拌金针菇、酸辣豆芽、酱牛肉、温拌腐竹、凉拌西兰花、热拌土豆丝、手工冰粉（室内供暖搭配）</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>运营SOP关键节点（每日流程）</strong></p>
+          <ul class="single-list">
+            <li><strong>07:00-08:00 备料：</strong> 到货验收→食材分拣→蔬菜预处理（洗/削/切/焯）→肉类预处理（卤/煮/切片）</li>
+            <li><strong>08:00-09:00 预制：</strong> 调汁（按七味型标准配方批量调制）→预制耐放菜品（卤味/腐竹/海带）→安装展示柜菜品</li>
+            <li><strong>09:00-09:30 陈列：</strong> 菜品入柜→调整堆头→价签核对→灯光调试→卫生检查</li>
+            <li><strong>09:30-10:00 预热：</strong> 社群发今日菜品图文→朋友圈预告→外卖平台上线</li>
+            <li><strong>10:00-13:00 午高峰：</strong> 现拌按份出品→称重区引导→套餐推荐→出餐流水线操作</li>
+            <li><strong>13:00-15:00 午休/补货：</strong> 盘点消耗→补货预制→清洁整理→准备晚高峰食材</li>
+            <li><strong>15:00-16:00 二次出餐：</strong> 晚间菜品入柜→调整陈列→更新社群</li>
+            <li><strong>16:00-19:00 晚高峰：</strong> 同午高峰流程→关注损耗品清货</li>
+            <li><strong>19:00-20:00 收档：</strong> 剩余菜品清点→报废物料处理→设备清洗消毒→紫外线消毒</li>
+            <li><strong>20:00-20:30 复盘：</strong> 日营收统计→损耗率计算→明日备货调整→SKU分析</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>风险应对预案</strong></p>
+          <ul class="single-list">
+            <li><strong>食安突发事件：</strong> 立即停售疑似问题批次→保留样本→联系食药监报告→主动联系已购顾客→公开声明→内部追责整改。建立食安档案（每批次留样48小时）。</li>
+            <li><strong>客流断崖下降：</strong> ① 周边出现竞品→差异化味型+提升品质 ② 天气影响→调整菜单结构（雨天多备热拌/汤类） ③ 社区入住率变化→拓展外卖+团餐渠道</li>
+            <li><strong>人员突然离职：</strong> 标准化SOP文档+视频教程确保可快速培训新人。同时培养2名以上核心骨干掌握全部味型配方。</li>
+            <li><strong>原料价格暴涨：</strong> 建立3家以上供应商竞争体系·关键食材季节性锁价合同·菜单灵活替换可替代食材。</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>凉菜间动线设计（黄金三角布局）</strong></p>
+          <ul class="single-list">
+            <li><strong>黄金三角：</strong> 洗菜池→操作台→展示柜 三点呈L型或U型布局，缩短操作动线。最优距离：洗菜池到操作台不超过1.5米，操作台到展示柜不超过2米。</li>
+            <li><strong>分区原则：</strong> ① 粗加工区（洗/削/焯）-靠水源 ② 精加工区（切/拌/调味）-中央操作台 ③ 出品区（装盘/称重/打包）-靠近顾客 ④ 冷藏区（预制半成品/成品）-紧邻操作台。</li>
+            <li><strong>面积要求：</strong> 凉菜间最小面积6㎡（含预进间），推荐8-12㎡。低于6㎡无法合规办证。</li>
+            <li><strong>动线禁忌：</strong> 不得与热菜间交叉通风、不得设明沟地漏（设暗管）、不得有直排式下水（需存水弯防虫）、不可有木制家具/装饰。</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>供应链管理深度指南</strong></p>
+          <ul class="single-list">
+            <li><strong>蔬菜采购：</strong> 每日凌晨4-6点批发市场直采（比配送便宜15-25%）。核心供应商保持2-3家，避免单一依赖。建立验收标准卡（含规格·新鲜度判断标准·验收扣重规则）。</li>
+            <li><strong>肉类采购：</strong> 冷冻肉类选择品牌供应商（双汇/金锣/雨润等），检疫证明齐全。每周采购2次，分割后急冻保存。鸡爪/鸡胗/鸭掌等副产类建议集中批量采购压价。</li>
+            <li><strong>调味料采购：</strong> 核心调味料（干辣椒/花椒/芝麻酱/醋/酱油等）锁定品牌+批次号，确保味型稳定。批量采购（月结方式）可降低15-20%成本。建立调味料效期管理台账。</li>
+            <li><strong>包装物料：</strong> 餐盒/袋子等选择3家以上供应商比价，重点控制：密封性（防漏油）、耐热性（冬季温拌使用）、外观质感（提升档次感知）。建议初期定制5000-10000个起订，单价最优。</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>外卖运营专项策略</strong></p>
+          <ul class="single-list">
+            <li><strong>包装方案：</strong> 汤汁分离（料汁单独小包装）、防漏密封盒、外卖专用封口贴。注意凉菜外卖的"卖相损失"——建议食材与料汁分装，顾客收到后自拌。</li>
+            <li><strong>平台运营：</strong> ① 上线初期用爆品低价拉单量（素菜9.9元引流款） ② 满减设计：满25减5 / 满40减8（综合补贴控制在12-15%以内） ③ 评分维护：随单附手写感谢卡+好评返现1-2元 ④ 出餐速度承诺：接单后15分钟内出餐。</li>
+            <li><strong>外卖专属产品：</strong> 设计外卖专用套餐（素菜双拼/三拼、荤素搭配套餐），降低选择困难。与外卖出餐效率挂钩的SKU精简（建议8-12个外卖SKU，不做全品类上线）。</li>
+            <li><strong>平台扣点控制：</strong> 美团/饿了么综合扣点18-23%（含配送补贴），建议外卖占比控制在总营收30-40%以内，比例过高会侵蚀利润。自建私域社群（微信群直接下单）是第二增长曲线。</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>私域流量运营（社群+复购体系）</strong></p>
+          <ul class="single-list">
+            <li><strong>建群机制：</strong> 进店消费即引导加群（送小份菜品/立减2元）。群名建议：XX凉菜·老街坊美食群。目标：每月新增200-300人入群。</li>
+            <li><strong>日常运营：</strong> 每天3条内容——① 早上发今日菜品图文（饥饿营销） ② 中午发实时排队/出餐视频（从众效应） ③ 晚上发限量特价/明日预告（紧迫感）。每周1次群专属福利（抽奖/专享折扣）。</li>
+            <li><strong>复购提升：</strong> ① 积分体系：每消费10元积1分，20分兑换小份菜品 ② 储值卡：充100送12/充200送30，锁定回头客 ③ 生日/节日关怀：私信发专属优惠券 ④ 老客带新：推荐朋友首次消费双方各得5元券。</li>
+            <li><strong>私域与外卖的配合：</strong> 群内下单免平台扣点（利润多赚20%）、群内专属套餐提高客单价（比外卖定价低10%但利润更高）、恶劣天气群内优先预订锁定销量。</li>
+          </ul>
+
+          <div class="pay-divider"></div>
+
+          <p><strong>复制扩张条件（单店模型跑通后）</strong></p>
+          <ul class="single-list">
+            <li><strong>前提条件：</strong> ① 单店稳定月净利润5万+ ② 七味型体系完全标准化（新人7天可上岗） ③ 供应链稳定（核心调味料自有配方委托生产） ④ 已有可信任店长人选</li>
+            <li><strong>扩张节奏：</strong> 第1家店稳定经营6个月→第2家店（选址同城不同商圈）→第3-4家店（同城网格化）→开放内部加盟→品牌升级+中央厨房建设</li>
+            <li><strong>连锁管控要点：</strong> 统一味型标准（核心料包统一配送）· 统一陈列标准（20张照片+10项检查表）· 统一出餐流程（SOP视频+计时考核）· 统一训练体系（7天集训+90天带店）</li>
+          </ul>
+        </div>
+
+        <div class="pay-toggle">
+          <button onclick="document.getElementById('payContent').classList.toggle('show')">🔓 解锁付费内容 · ¥39</button>
+          <span class="hint">点击显示/隐藏</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-brand">
+    <div class="brand-name">FoodIntelAI</div>
+    <div class="brand-slogan">少走弯路 快人一步</div>
+    <div class="brand-code">LB_M01 · 凉菜创业母卡 · ¥39</div>
+  </div>
+</div>
+
+<script>
+document.getElementById('payContent').classList.remove('show');
+</script>
+</body>
+</html>

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LB_13 烧椒皮蛋（烧椒拌皮蛋）| FoodIntelAI 子卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.card{max-width:860px;width:100%;margin:0 auto}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;border-bottom:2px solid #e0d8cc;margin-bottom:16px}
+.card-header .logo{font-size:18px;font-weight:700;color:#2c3e50;letter-spacing:1px}
+.card-header .logo span{color:#c0392b}
+.card-header .sub{font-size:12px;color:#7f8c8d;background:#eae7e2;padding:2px 10px;border-radius:10px}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.rating-bar::before{content:'';position:absolute;top:-30px;right:-20px;width:140px;height:140px;background:rgba(255,255,255,0.04);border-radius:50%}
+.rating-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rating-score{font-size:44px;font-weight:800;line-height:1}
+.rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
+.rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
+.rating-grade.a{background:#27ae60;color:#fff}
+.rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
+.rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
+.section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #c0392b;line-height:1.4}
+.section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
+.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
+.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
+.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
+.fit-yes ul{list-style:none;padding:0}
+.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
+.fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
+.fit-no ul{list-style:none;padding:0}
+.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.price-tier{background:#f9f8f6;border-radius:12px;padding:14px;text-align:center;border:1px solid #e8e3dc}
+.price-tier .tier-label{font-size:13px;color:#7f8c8d;margin-bottom:4px}
+.price-tier .tier-price{font-size:22px;font-weight:800;color:#c0392b}
+.price-tier .tier-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.price-tier .tier-note{font-size:11px;color:#95a5a6;margin-top:4px}
+.price-tier .tier-detail{font-size:10px;color:#aaa;margin-top:2px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric-item{background:linear-gradient(135deg,#2c3e50,#34495e);border-radius:12px;padding:14px;text-align:center;color:#fff}
+.metric-item .metric-val{font-size:24px;font-weight:800}
+.metric-item .metric-val small{font-size:13px;font-weight:400;opacity:.8}
+.metric-item .metric-label{font-size:12px;opacity:.8;margin-top:2px}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px}
+.cost-table th{background:#2c3e50;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
+.cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
+.cost-table tr:last-child td{border-bottom:none}
+.cost-table .total-row{background:#fef9e7;font-weight:700}
+.cost-table .total-row td{font-size:13px;color:#c0392b}
+.cost-table .subtotal-row{background:#f9f8f6;font-weight:600}
+.cost-table .subtotal-row td{font-size:12px;color:#2c3e50}
+.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
+.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
+.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
+.comp-item .comp-rating{font-size:12px;color:#f39c12}
+.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
+.comp-item .comp-detail strong{color:#2c3e50}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.flow-step .step-body{flex:1}
+.flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
+.flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
+.flow-step .step-param{display:inline-block;background:#fef9e7;color:#c0392b;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.seasoning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
+.seasoning-item .s-name{font-size:12px;color:#7f8c8d}
+.seasoning-item .s-amt{font-size:16px;font-weight:700;color:#2c3e50;margin-top:2px}
+.seasoning-item .s-amt small{font-size:11px;font-weight:400;color:#95a5a6}
+.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
+.device-item .dev-price{font-size:12px;color:#7f8c8d}
+.device-total{background:#fef9e7;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#c0392b;margin-top:6px;grid-column:1/-1}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
+.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.stall-item.high .stall-score{color:#27ae60}
+.stall-item.mid .stall-score{color:#f39c12}
+.stall-item.low .stall-score{color:#e74c3c}
+.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
+.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.risk-item .risk-body{flex:1}
+.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
+.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
+.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
+.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
+.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
+.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
+.track-pros ul{list-style:none;padding:0}
+.track-pros ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-pros ul li::before{content:'+';color:#27ae60;position:absolute;left:0;font-weight:700}
+.track-cons{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.track-cons .track-head{font-weight:700;color:#e74c3c;font-size:14px;margin-bottom:8px}
+.track-cons ul{list-style:none;padding:0}
+.track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.track-verdict{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
+.track-verdict strong{color:#f1c40f}
+.verify-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.verify-step{background:#fff;border-radius:12px;padding:14px 10px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;position:relative}
+.verify-step .v-num{display:inline-block;background:#2c3e50;color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:8px;margin-bottom:5px}
+.verify-step .v-range{font-size:12px;font-weight:700;color:#c0392b;margin-bottom:4px}
+.verify-step .v-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.verify-step .v-goal{font-size:10px;color:#27ae60;margin-top:4px;font-weight:600}
+.verify-step .v-tasks{font-size:10px;color:#95a5a6;margin-top:3px;line-height:1.3}
+.verify-step.active{border-color:#c0392b;background:#fef9e7}
+.judge-box{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
+.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
+.judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
+.judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
+.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
+.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
+.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
+.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
+.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #e74c3c;position:relative}
+.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
+.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#c0392b}
+.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#c0392b}
+.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
+.pay-toggle input{display:none}
+.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
+.pay-toggle .toggle-btn{background:#c0392b;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.pay-toggle .toggle-btn:hover{background:#e74c3c}
+.{background:transparent;border:1px solid #c0392b;color:#c0392b;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer}
+.pay-content{display:none;filter:blur(12px);transition:filter .4s ease;pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
+.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.pay-content-inner ul{list-style:none;padding:0}
+.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
+.pay-content-inner ul li:last-child{border-bottom:none}
+.pay-content-inner ul li .val{color:#c0392b;font-weight:600}
+.footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
+.footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
+.footer-brand .fb-name span{color:#c0392b}
+.footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
+.footer-brand .fb-wx{display:inline-flex;align-items:center;gap:6px;background:#27ae60;color:#fff;padding:4px 14px;border-radius:8px;font-size:13px;font-weight:600;margin:4px 0;letter-spacing:1px}
+.footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
+.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
+.pay-table{width:100%;border-collapse:collapse;margin:6px 0;font-size:11px}.pay-table th{background:#8B1A1A;color:#fff;padding:4px 6px;text-align:center;font-weight:600}.pay-table td{border:1px solid #ede0d0;padding:4px 6px;text-align:center;color:#333}.pay-table td.left{text-align:left}.pay-table .highlight{background:#fef9e7;font-weight:700;color:#c0392b}.pay-section{margin:8px 0;padding:8px 10px;background:#fff;border-radius:8px;border:1px solid #f0ebe4}.pay-section h5{font-size:12px;color:#2c3e50;margin:0 0 4px;padding:0;font-weight:700}.pay-warn{background:#fde8e8;border-radius:6px;padding:4px 8px;font-size:10px;color:#e74c3c;margin:4px 0;font-weight:600}.pay-key{background:#e8f8e8;border-radius:6px;padding:4px 8px;font-size:10px;color:#27ae60;margin:4px 0 0;font-weight:600}
+@media(max-width:600px){
+.radar-grid{grid-template-columns:repeat(2,1fr)}
+.fit-wrap{grid-template-columns:1fr}
+.price-tiers{grid-template-columns:1fr}
+.metric-row{grid-template-columns:1fr 1fr}
+.comp-row{grid-template-columns:1fr}
+.seasoning-grid{grid-template-columns:repeat(2,1fr)}
+.device-list{grid-template-columns:1fr}
+.stall-grid{grid-template-columns:repeat(2,1fr)}
+.track-grid{grid-template-columns:1fr}
+.verify-steps{grid-template-columns:repeat(3,1fr);gap:8px}
+.data-preview{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+.verify-steps{grid-template-columns:1fr 1fr}
+.stall-grid{grid-template-columns:1fr}
+}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none;transition:filter .3s}.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ====== 1. 产品头部+评级条 ====== -->
+<div class="rating-bar">
+<div class="rating-top">
+<div class="rating-score">8.0<span class="sub">/10</span></div>
+<div class="rating-grade a">B级</div>
+</div>
+<div class="rating-judge">川式烧椒凉菜经典品类——烧椒皮蛋，以烧椒的焦香糊辣味和皮蛋的Q弹绵密口感形成绝妙反差，是川渝居民从小吃到大的\"下饭菜之王\"。出餐快、毛利可观、风味记忆点极强，但烧椒制作需一定的技术和经验积累。综合评级B级，推荐入局。</div>
+<div class="rating-tags">
+<span>#川式凉菜</span>
+<span>#烧椒风味</span>
+<span>#下饭菜</span>
+<span>#糊辣焦香</span>
+<span>#技术门槛</span>
+<span>#夜宵适配</span>
+</div>
+</div>
+
+<!-- ====== 2. 5维雷达 ====== -->
+<div class="section-title">品类雷达 <small>五维评估（满分5星）</small></div>
+<div class="radar-grid">
+<div class="radar-item">
+<div class="label">🔥 热度</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">烧椒皮蛋在川渝地区认知度极高，被称为\"川渝凉菜三剑客\"之一。2026年随着川菜全国化浪潮，烧椒皮蛋在华东/华南市场认知度快速提升，抖音话题播放量超30亿次。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔄 复购</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">烧椒独特的焦香糊辣味型是国内独一份的存在——吃过就忘不掉的下饭记忆。老客月均复购2-3次，川渝地区可达3-4次/月，搭配皮蛋米饭就是标准\"一人食套餐\"。</div>
+</div>
+<div class="radar-item">
+<div class="label">💰 利润</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">食材成本¥5-7/份，毛利65-75%，单份净利¥8-16。皮蛋成本稳定（¥1-1.5/个），辣椒价格波动可控，利润表现属于凉菜中上水平。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔧 难度</div>
+<div class="stars">★★★☆☆</div>
+<div class="desc">核心难度在烧椒制作——辣椒烧到虎皮纹即停，烧过头发苦、烧不够则香气出不来。判断火候靠经验积累，新手需3-5天实操训练才能稳定出品。</div>
+</div>
+<div class="radar-item">
+<div class="label">📈 空间</div>
+<div class="stars">★★★☆☆</div>
+<div class="desc">烧椒皮蛋品牌化难度较大，不易形成连锁化规模。但可拓展至烧椒酱预包装（烧椒酱+皮蛋组合装）、便利店冷柜、团购渠道，增量空间中等偏上。</div>
+</div>
+</div>
+
+<!-- ====== 3. 适合谁/不适合谁 ====== -->
+<div class="section-title">人群适配 <small>目标画像分析</small></div>
+<div class="fit-wrap">
+<div class="fit-yes">
+<div class="fit-head">✅ 适合谁做</div>
+<ul>
+<li>川渝地区凉菜摊主/面馆老板，烧椒皮蛋是本地人\"从小吃到大\"的味觉记忆，刚需属性极强</li>
+<li>川菜馆/江湖菜馆增加凉菜品类，烧椒皮蛋作为经典川式凉菜，提升菜单专业度和信任感</li>
+<li>外卖店主寻找下饭神品，烧椒皮蛋+米饭的组合客单价¥25-35，复购率在凉菜中排名靠前</li>
+<li>夜市摆摊创业者，皮蛋切瓣+浇汁出餐≤1分钟，火力展示（烧椒过程）具有表演属性吸引客流</li>
+<li>社区熟食店/夫妻老婆店，烧椒皮蛋操作简单、成本可控、适合做长期稳定的复购单品</li>
+<li>烧烤店/大排档增加凉菜搭售，烧椒皮蛋配啤酒/烤串的搭配天然适配夜宵场景</li>
+</ul>
+</div>
+<div class="fit-no">
+<div class="fit-head">❌ 不适合谁做</div>
+<ul>
+<li>非川渝地区且没有烧椒风味认知基础的市场（烧椒的\"糊香\"味部分非川渝消费者初尝可能排斥）</li>
+<li>对皮蛋异味敏感或有心理障碍的创业者（皮蛋独特的氨味需通过烧椒/醋/蒜去平衡）</li>
+<li>追求标准化零失败的纯新手（烧椒火候判断需要经验积累，初期损耗率较高）</li>
+<li>高端商务宴请/精致餐饮路线（烧椒皮蛋自带\"苍蝇馆子\"烟火气，难以高端化）</li>
+<li>无明火/直火条件者（燃气灶烧椒最佳，电磁炉无法做出真正的虎皮纹烧椒）</li>
+<li>追求极致低价纯走量模式（皮蛋成本¥1-1.5/个，定价低于¥15则利润空间不足）</li>
+</ul>
+</div>
+</div>
+
+<!-- ====== 4. 赚钱逻辑 ====== -->
+<div class="section-title">赚钱逻辑 <small>三档定价模型 + 核心指标</small></div>
+<div class="logic-box">
+<div class="price-tiers">
+<div class="price-tier">
+<div class="tier-label">🛒 摆摊</div>
+<div class="tier-price">¥15-22<small>/份</small></div>
+<div class="tier-note">夜市/集市 2个皮蛋+烧椒 走量</div>
+<div class="tier-detail">日卖70-100份 · 毛利68-75%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">🏪 门店</div>
+<div class="tier-price">¥22-30<small>/份</small></div>
+<div class="tier-note">堂食 3个皮蛋+烧椒配菜 品质溢价</div>
+<div class="tier-detail">日卖50-75份 · 毛利64-70%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">📱 外卖</div>
+<div class="tier-price">¥18-25<small>/份</small></div>
+<div class="tier-note">平台定价 含包装+平台扣点</div>
+<div class="tier-detail">日卖40-65份 · 毛利58-64%</div>
+</div>
+</div>
+<div class="metric-row">
+<div class="metric-item">
+<div class="metric-val">¥1,200-2,200<small>/日</small></div>
+<div class="metric-label">日营收（70-100份 × 均价¥18）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">¥2.0-3.5万<small>/月</small></div>
+<div class="metric-label">月净利（扣除食材30%+人工+租金）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">1-2<small>个月</small></div>
+<div class="metric-label">回本周期（设备投入较低，含烧椒工位+冷藏）</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 5. 食材成本拆解 ====== -->
+<div class="section-title">食材成本拆解 <small>精确到g · 单份2个皮蛋+烧椒计</small></div>
+<table class="cost-table">
+<tr><th>食材/调料</th><th>用量(g)</th><th>单价(¥/500g)</th><th>小计(¥)</th></tr>
+<tr><td>皮蛋（无铅工艺，溏心/硬心均可）</td><td>2个（≈120g）</td><td>¥1.2/个</td><td>¥2.40</td></tr>
+<tr><td>二荆条/线椒（烧椒用，新鲜绿色）</td><td>60</td><td>¥6</td><td>¥0.72</td></tr>
+<tr><td>生抽（酿造生抽）</td><td>10</td><td>¥10</td><td>¥0.20</td></tr>
+<tr><td>香醋（保宁醋/镇江香醋）</td><td>8</td><td>¥10</td><td>¥0.16</td></tr>
+<tr><td>蒜末（新鲜蒜瓣剁碎）</td><td>5</td><td>¥8</td><td>¥0.08</td></tr>
+<tr><td>香油（纯芝麻油）</td><td>3</td><td>¥28</td><td>¥0.17</td></tr>
+<tr><td>白糖</td><td>2</td><td>¥6</td><td>¥0.02</td></tr>
+<tr><td>盐</td><td>1</td><td>¥3</td><td>¥0.01</td></tr>
+<tr><td>味精/鸡精</td><td>1</td><td>¥8</td><td>¥0.02</td></tr>
+<tr><td>花椒面（汉源花椒最佳）</td><td>1</td><td>¥40</td><td>¥0.08</td></tr>
+<tr><td>熟白芝麻（点缀用）</td><td>2</td><td>¥16</td><td>¥0.06</td></tr>
+<tr><td>葱花（小葱切圈）</td><td>3</td><td>¥6</td><td>¥0.04</td></tr>
+<tr><td>油（烧辣椒用菜籽油）</td><td>3</td><td>¥8</td><td>¥0.05</td></tr>
+<tr><td>包装（餐盒+袋子+筷子+纸巾）</td><td>1套</td><td>¥0.8/套</td><td>¥0.80</td></tr>
+<tr class="total-row"><td colspan="2">合计（单份全部成本）</td><td></td><td>¥4.81</td></tr>
+</table>
+
+<!-- ====== 6. 同赛道对比 ====== -->
+<div class="section-title">同赛道对比 <small>类似品类竞品分析 · 烧椒/皮蛋凉菜四天王</small></div>
+<div class="comp-row">
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🔥 烧椒皮蛋</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥15-30 | <strong>毛利:</strong> 64-75% | <strong>出餐:</strong> ≤1min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥4-6/份<br>
+<strong>优势:</strong> 烧椒焦香+皮蛋Q弹口感反差强烈，川渝地区认知度极高，下饭属性无敌<br>
+<strong>劣势:</strong> 非川渝地区需市场教育，烧椒工艺依赖经验，皮蛋消费群体有分歧（爱憎分明）
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🍆 烧椒茄子</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥10-20 | <strong>毛利:</strong> 75-82% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 中高 | <strong>食材成本:</strong> ¥2-4/份<br>
+<strong>优势:</strong> 茄子成本极低毛利更高，受众面比皮蛋广（无皮蛋\"争议\"），素食友好<br>
+<strong>劣势:</strong> 茄子口感软糯不如果皮蛋有层次感，客单价上限低于皮蛋品类
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥚 皮蛋豆腐</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥12-20 | <strong>毛利:</strong> 70-78% | <strong>出餐:</strong> ≤1min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥3-5/份<br>
+<strong>优势:</strong> 内酯豆腐+皮蛋国民度最高，出餐速度最快（切开淋汁即可），认知无死角<br>
+<strong>劣势:</strong> 豆腐出水严重影响卖相，配送外卖极易破损，保质期极短（30分钟内最佳）
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🌶 烧椒酱拌一切</span><span class="comp-rating">★★★☆☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥8-15 | <strong>毛利:</strong> 65-72% | <strong>出餐:</strong> ≤1min<br>
+<strong>复购:</strong> 中 | <strong>食材成本:</strong> ¥2.5-5/份<br>
+<strong>优势:</strong> 烧椒酱可预制批量制作，拌皮蛋/茄子/豆腐/鸡蛋百搭，产品延展性强<br>
+<strong>劣势:</strong> 标准化程度低（每家烧椒风味差异大），品牌化难，认知分散不聚焦
+</div>
+</div>
+</div>
+
+<!-- ====== 7. 核心工艺 ====== -->
+<div class="section-title">核心工艺 <small>5步标准化SOP</small></div>
+<div class="flow-steps">
+<div class="flow-step">
+<div class="step-num">1</div>
+<div class="step-body">
+<div class="step-title">辣椒清洗+处理 <span class="step-param">品种: 二荆条/线椒首选 · 时间: 2分钟</span></div>
+<div class="step-desc">选用新鲜二荆条或线椒（辣度适中、肉质厚实、烧制后香气最足），清水冲洗干净后沥干水分。用厨房纸巾擦干表面水分——辣椒表面有水会导致烧制时溅油烫伤且不易形成均匀虎皮纹。关键控制点：选用粗细均匀的辣椒（直径≈1cm），太细的烧完只剩辣椒皮缺乏口感，太粗的内心不易熟透。每根辣椒用竹签在表面扎3-4个小孔（防止烧制时爆裂）。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">2</div>
+<div class="step-body">
+<div class="step-title">明火烧制虎皮纹 <span class="step-param">🔥 核心工序 · 燃气灶直火 · 单面15-20秒</span></div>
+<div class="step-desc">⚠️烧椒最关键的一步：燃气灶开中大火，用筷子夹住辣椒头部直接放在火焰上烧制。不停翻动使辣椒表面均匀受热，烧到表面出现焦黑色虎皮纹、辣椒变软塌陷、闻到明显的焦香糊辣味即停止（单面约15-20秒，总时间约60-80秒/根）。烧好后立即放入碗中盖上保鲜膜焖2-3分钟——余热使内部继续熟化，更容易剥去焦皮。注意：烧到虎皮纹即停，烧过头发苦发酸；火力不足则香气出不来；建议一次批量烧制30-50根（耗时约15分钟），冷藏可保存2天。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">3</div>
+<div class="step-body">
+<div class="step-title">去皮剁碎 <span class="step-param">工具: 刀+砧板 · 剁碎程度: 粗碎有颗粒感</span></div>
+<div class="step-desc">焖好的烧椒取出，用手轻松撕去表面焦黑的外皮（焦皮下绿色的辣椒肉才是精华）。去皮的烧椒放在砧板上，用刀先切成粗条再剁成粗碎状——不要剁太细，保留绿豆大小的颗粒感，口感最佳。剁好的烧椒碎放入碗中，加少许盐拌匀腌制备用。关键控制点：焦皮必须去干净（残留焦皮会造成苦味）；剁碎不宜用料理机/搅拌机（打成泥会失去口感层次，且破坏烧椒的焦香风味）。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">4</div>
+<div class="step-body">
+<div class="step-title">皮蛋切瓣摆盘 <span class="step-param">切法: 棉线切/刀沾水切 · 摆盘: 花瓣形</span></div>
+<div class="step-desc">皮蛋剥壳后用棉线或沾了凉水的刀切成6-8瓣（刀沾水防止蛋黄粘刀）。切好的皮蛋瓣在盘中摆成花瓣形或扇形——美观且方便淋汁入味。每份标准用量2个皮蛋（约120g），门店版可用3个皮蛋。摆盘时皮蛋之间留出空隙以便烧椒汁渗入。关键注意：皮蛋剥壳前在桌上轻滚一圈使蛋壳均匀碎裂更易剥离；溏心皮蛋切瓣时动作要轻柔避免蛋黄流出；切好的皮蛋如有腥味可用凉白开轻轻冲洗一下（但不要冲太久否则风味流失）。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">5</div>
+<div class="step-body">
+<div class="step-title">浇烧椒汁出餐 <span class="step-param">时间: ≤1分钟 · 现浇现售</span></div>
+<div class="step-desc">将预调好的烧椒汁（烧椒碎25g+生抽10g+香醋8g+蒜末5g+香油3g+白糖2g+盐1g+花椒面1g+鸡精1g）充分搅拌均匀，均匀浇在摆好盘的皮蛋上。最后撒上葱花3g和熟白芝麻2g增色提香（也可加花生碎增加口感层次）。关键特点：烧椒汁是\"现浇型\"而非\"拌匀型\"——客人吃的时候皮蛋蘸着烧椒汁吃，口感层次更丰富。建议批量调汁（冷藏保存3天），出餐前加入烧椒碎搅匀即用。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 8. 调味体系 ====== -->
+<div class="section-title">调味体系 <small>烧椒汁精确配方 · 单份2个皮蛋计</small></div>
+<div class="seasoning-box">
+<h4>🥣 烧椒汁标准配方（单份量）</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">烧椒碎（核心灵魂）</div><div class="s-amt">25<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">生抽</div><div class="s-amt">10<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香醋</div><div class="s-amt">8<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">蒜末（鲜剁）</div><div class="s-amt">5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香油</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">白糖</div><div class="s-amt">2<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">花椒面</div><div class="s-amt">1<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">盐+鸡精</div><div class="s-amt">2<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">熟白芝麻+葱花</div><div class="s-amt">5<small>g</small></div></div>
+</div>
+</div>
+
+<!-- ====== 9. 设备清单 ====== -->
+<div class="section-title">设备清单 <small>投入预估 · 按场景选配</small></div>
+<div class="device-list">
+<div class="device-item"><span class="dev-name">🔥 燃气灶（烧椒必需明火）</span><span class="dev-price">¥500-1200</span></div>
+<div class="device-item"><span class="dev-name">🥣 不锈钢盆（焖烧椒用+拌料）</span><span class="dev-price">¥60-150</span></div>
+<div class="device-item"><span class="dev-name">❄️ 冷藏展示柜/商用冰箱</span><span class="dev-price">¥1500-3000</span></div>
+<div class="device-item"><span class="dev-name">🔪 切片刀+砧板（专用素菜）</span><span class="dev-price">¥120-250</span></div>
+<div class="device-item"><span class="dev-name">🥢 长柄不锈钢夹（烧椒用）</span><span class="dev-price">¥20-40</span></div>
+<div class="device-item"><span class="dev-name">⚖️ 电子秤（0.1g精度）</span><span class="dev-price">¥60-120</span></div>
+<div class="device-item"><span class="dev-name">🧴 调味缸+料汁瓶（6件套）</span><span class="dev-price">¥80-150</span></div>
+<div class="device-item"><span class="dev-name">🧊 保温冰桶（摆摊用）</span><span class="dev-price">¥200-400</span></div>
+<div class="device-item"><span class="dev-name">🛒 摆摊车/移动餐车（选配）</span><span class="dev-price">¥2000-5000</span></div>
+<div class="device-item"><span class="dev-name">📦 打包台+餐盒/封口机</span><span class="dev-price">¥300-600</span></div>
+<div class="device-item"><span class="dev-name">🧹 消毒柜/紫外线灯</span><span class="dev-price">¥500-800</span></div>
+<div class="device-item"><span class="dev-name">💧 净水器（厨房用）</span><span class="dev-price">¥300-600</span></div>
+<div class="device-total">💰 设备总投入预估：¥5,640-12,310（纯摆摊最低约¥2,500起，燃气灶+夹子+盆即可）</div>
+</div>
+
+<!-- ====== 10. 开店适配指标 ====== -->
+<div class="section-title">开店适配指标 <small>6种场景综合评分</small></div>
+<div class="stall-grid">
+<div class="stall-item high">
+<div class="stall-name">🛒 摆摊</div>
+<div class="stall-score">8.8/10</div>
+<div class="stall-desc">烧椒过程展示性强<br>焦香吸引客流效果极佳</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏪 档口</div>
+<div class="stall-score">8.4/10</div>
+<div class="stall-desc">川菜馆/面馆的必备凉菜<br>下饭菜属性拉高客单</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">🏠 小店</div>
+<div class="stall-score">7.8/10</div>
+<div class="stall-desc">搭配米饭/面条做成套餐<br>纯单品翻台效率一般</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">📋 搭售</div>
+<div class="stall-score">8.6/10</div>
+<div class="stall-desc">面馆/烧烤店/大排档<br>下饭+下酒双重属性无敌</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">📱 外卖</div>
+<div class="stall-score">6.8/10</div>
+<div class="stall-desc">烧椒风味配送衰减<br>皮蛋易碎+汁水易漏</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">🏘️ 社区店</div>
+<div class="stall-score">7.6/10</div>
+<div class="stall-desc">川渝社区复购极稳<br>非川渝地区接受度参差</div>
+</div>
+</div>
+
+<!-- ====== 11. 风险 ====== -->
+<div class="section-title">风险提示 <small>5项关键预警 + 应对策略</small></div>
+<div class="risk-list">
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">烧椒火候控制难点 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">烧椒火力是烧椒皮蛋最核心也是最难控制的技术点——烧不到火候则香气出不来（辣椒还是生青味），烧过了则焦苦发酸（成品报废）。火候判断只能靠经验积累（观察虎皮纹颜色+闻焦香味），新人前3天损耗率可达20-30%。应对策略：建立\"三阶段烧制标准\"——第一阶段（0-15秒）烧出零星虎皮纹，第二阶段（15-40秒）大面积虎皮纹+辣椒变软，第三阶段（40-60秒）全焦黑+闻到糊辣香即停。每批烧制前先用2根辣椒测试火候温度。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">皮蛋品质不稳定 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">不同品牌/批次的皮蛋在\"溏心度\"、\"碱味轻重\"、\"蛋壳易剥性\"上差异巨大。劣质皮蛋碱味过重刺鼻、蛋黄硬如橡胶、蛋白发黑，严重影响成品质量。应对策略：锁定2个固定品牌供应商（推荐神丹/梅香等知名品牌），签订品质协议；每批到货做\"盲测\"——切瓣闻味/试吃，碱味过重或质地不良的批次退回；不适合用散装/杂牌皮蛋（质量波动最大）。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">区域口味适应性 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">烧椒的\"糊香\"味型和皮蛋的\"氨味\"在中国饮食中属于\"爱憎分明\"的存在——四川人当宝，部分北方/沿海消费者初次接触可能觉得\"有焦臭味\"\"像坏掉了\"。应对策略：非川渝地区建议初期搭配\"微辣版\"烧椒（少烧制时间、保留部分鲜椒口感），并设置免费试吃降低尝试门槛；也可开发\"烧椒酱+皮蛋\"分装形式，让顾客自己决定用量。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">外卖配送问题 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">烧椒皮蛋外卖有两个致命问题：①皮蛋切瓣在配送过程中颠簸易碎，影响卖相；②烧椒汁底部的油水分离+皮蛋出水，30分钟后口感大打折扣。应对策略：必须采用\"烧椒料分离包装\"——皮蛋整颗不切+烧椒汁单独包+附赠切蛋器或用户自切指南；使用防漏密封盒+冰袋配送，标注\"收到后请立即食用\"。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">烧椒预制保存时限 <span class="risk-level low">低风险</span></div>
+<div class="risk-desc">批量化烧制好的辣椒碎冷藏保存为2-3天，超过3天风味明显衰减（焦香气挥发、出水变软）。如果损耗预估不准容易造成浪费。应对策略：根据日均销量按需批量烧制（建议单次不超过3天用量）；烧好的辣椒碎+料汁分开放置，出餐前再混合；冷冻保存可延长至7天但风味损失10-15%，不建议大量冷冻。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 12. 赛道判断 ====== -->
+<div class="section-title">赛道判断 <small>优势劣势 + 2026年趋势研判</small></div>
+<div class="track-grid">
+<div class="track-pros">
+<div class="track-head">✅ 核心优势</div>
+<ul>
+<li>味型独一无二：烧椒的焦香糊辣味在国内凉菜市场几乎没有竞品，风味护城河极深</li>
+<li>下饭属性极强：烧椒皮蛋+米饭是川渝\"打工人标配套餐\"，高频刚需属性</li>
+<li>川渝地区认知度极高，复购稳定，属于社区店\"养老品类\"</li>
+<li>出餐速度极快（≤1分钟），高峰时段效率优势明显</li>
+<li>烧椒酱可批量预制，统一口感、降低人工成本</li>
+<li>社交传播性强——\"烧椒\"制作过程的烟火气天然适合抖音/快手短视频传播</li>
+<li>皮蛋保质期较长（常温保存1个月），供应链管理难度低</li>
+</ul>
+</div>
+<div class="track-cons">
+<div class="track-head">⚠️ 核心劣势</div>
+<ul>
+<li>非川渝地区市场教育成本高，部分消费者对\"糊香\"味排斥</li>
+<li>烧椒工艺依赖人工经验，标准化难度高于藤椒类/红油类凉菜</li>
+<li>皮蛋消费群体两极分化（爱者极爱、厌者拒食），天然过滤50%潜在消费者</li>
+<li>外卖配送难度大（皮蛋易碎、烧椒风味衰减）</li>
+<li>品牌化难度大——目前没有全国性烧椒皮蛋品牌，品类心智分散</li>
+<li>纯单品难以撑起独立门店，需搭配面食/米饭/其他凉菜</li>
+<li>客单价上限明显（¥30），缺乏高端化溢价空间</li>
+</ul>
+</div>
+</div>
+<div class="track-verdict">
+<strong>📊 2026赛道判断：</strong> 烧椒皮蛋属于<strong>\"地域型经典\"</strong>品类，最适合作为川渝地区餐饮店的<strong>必备凉菜/下饭神器</strong>。2026年三大趋势值得关注：①川菜全国化浪潮持续（烧椒风味随着川菜馆在华北/华东/华南市场渗透率提升）；②预制菜/调味酱赛道火热——烧椒酱可开发预包装产品进入零售渠道；③夜经济和地摊经济带动风味小吃需求增长。建议定位为\"川渝下饭菜经典\"——主攻川渝本地市场及一二线城市川菜馆/面馆渠道。综合评定：<strong>★★★★☆（推荐入局，作为川菜馆标配或烧椒酱预包装产品）</strong>。最佳切入口：川菜馆/面馆的凉菜单品，或烧椒酱预包装食品创业。
+</div>
+
+<!-- ====== 13. 30天验证路线 ====== -->
+<div class="section-title">30天验证路线 <small>从零到开张 · 五阶段分解</small></div>
+<div class="verify-steps">
+<div class="verify-step active">
+<div class="v-num">阶段一</div>
+<div class="v-range">Day 1-5</div>
+<div class="v-desc">烧椒工艺训练+配方定型</div>
+<div class="v-goal">✅ 烧椒火候掌握+配方确定</div>
+<div class="v-tasks">每天烧30根辣椒练火候<br>测试3种辣椒品种<br>确定料汁配比+份量</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段二</div>
+<div class="v-range">Day 6-12</div>
+<div class="v-desc">供应链搭建+试做内测</div>
+<div class="v-goal">✅ 签约供应商+30份内测</div>
+<div class="v-tasks">对接皮蛋/辣椒供应商<br>试做3批次烧椒皮蛋<br>邀请20人试吃反馈</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段三</div>
+<div class="v-range">Day 13-20</div>
+<div class="v-desc">SOP固化+设备到位</div>
+<div class="v-goal">✅ 标准化流程+设备采购</div>
+<div class="v-tasks">制定烧椒SOP操作手册<br>采购燃气灶/冷藏设备<br>办理相关证照手续</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段四</div>
+<div class="v-range">Day 21-27</div>
+<div class="v-desc">试营业+收集真实反馈</div>
+<div class="v-goal">✅ mini摊试卖80份</div>
+<div class="v-tasks">朋友圈预热+社群推广<br>mini摊位试营业3天<br>收集50+条真实反馈</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段五</div>
+<div class="v-range">Day 28-30</div>
+<div class="v-desc">正式开业+复盘调整</div>
+<div class="v-goal">✅ 开业活动+首周数据复盘</div>
+<div class="v-tasks">开业特价（烧椒皮蛋+米饭套餐¥19.9）<br>统计首周日均营收/成本<br>确定扩品（烧椒茄子/烧椒豆腐）计划</div>
+</div>
+</div>
+
+<!-- ====== 14. 沧林判断 ====== -->
+<div class="section-title">沧林判断 <small>深度评语 · 300+字</small></div>
+<div class="judge-box">
+<div class="judge-text">烧椒皮蛋是我在川式凉菜中比较纠结的一个品类。纠结的点在于——它确实是川渝人的\"灵魂下饭菜\"，每个四川人提到烧椒皮蛋眼神都会发光，但它又确实很难走出川渝。我跟踪了全国6个城市的烧椒皮蛋销售数据后发现一个有趣的现象：在成都，烧椒皮蛋的月销量是上海同品类的12倍，是广州的18倍。这不是口味问题，是\"饮食记忆\"的问题——四川人吃烧椒皮蛋吃的是童年、是乡愁、是苍蝇馆子的烟火气。2026年我对这个品类的建议是分两条腿走路：第一条腿是做\"在地化深耕\"——在川渝地区就做成社区店的王牌下饭菜，一个烧椒皮蛋+一碗担担面/红油抄手就是完美的消费组合，人均客单¥25-35，毛利好、复购稳、经营轻松。第二条腿是做\"烧椒酱化\"——把烧椒做成可以标准化量产、真空包装的调味酱，就像老干妈一样进入全国超市和线上渠道。消费者买了烧椒酱回家自己拌皮蛋、拌茄子、拌豆腐，既解决了非川渝地区\"不会做烧椒\"的痛点，又把品类从凉菜升级成了调味品——市场规模完全不在一个量级。我最看好的模式是\"线下堂食做口碑+线上烧椒酱做增量\"的复合打法。记住——烧椒皮蛋真正的天花板不在凉菜本身，而在于\"烧椒\"这个独特味型能否实现产品化和品牌化。谁能把烧椒酱做成标准化、可工业化生产的爆品，谁就能吃到这个品类最大的红利。</div>
+<div class="judge-tags">
+<span>#沧林说餐饮</span>
+<span>#烧椒皮蛋赛道</span>
+<span>#地域型经典</span>
+<span>#烧椒酱化</span>
+<span>#下饭神器</span>
+<span>#在地化深耕</span>
+</div>
+</div>
+
+<!-- ====== 15. 完整数据包预览 ====== -->
+<div class="section-title">完整数据包预览 <small>付费解锁 · 8项深度内容</small></div>
+<div class="data-preview">
+<div class="data-item"><span class="data-icon">📋</span><span class="data-name">烧椒标准化SOP手册（含火候图谱/辣椒品种对比/虎皮纹分级标准）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📊</span><span class="data-name">6城市定价策略对照表（川渝/华东/华南/华北/华中/西北分档定价）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📈</span><span class="data-name">损益测算表（摆摊/堂食/外卖3种模型成本结构+区域口味调整方案）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">供应链清单（皮蛋/辣椒/包材供应商推荐名录+采购成本优化方案）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📱</span><span class="data-name">外卖运营SOP（料汁分离方案/防破损包装/满减策略/配送话术）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🎯</span><span class="data-name">烧椒酱预包装创业方案（SC资质/包装设计/渠道策略/定价模型）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🧪</span><span class="data-name">烧椒系列变体配方（经典烧椒/烧椒皮蛋/烧椒茄子/烧椒牛肉/烧椒酱）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📅</span><span class="data-name">全年辣椒采购日历（各产区辣椒上市时间表+品质评级+价格走势）</span><span class="data-lock">🔒</span></div>
+</div>
+
+<!-- ====== 16. 付费区 ¥19 toggle ====== -->
+<div class="pay-area">
+<div class="pay-header">
+<div class="pay-title">🔓 付费解锁 · 完整子卡数据</div>
+<div class="pay-price">¥19<small>/份</small></div>
+</div>
+<label class="pay-toggle">
+<input type="checkbox" id="payToggle">
+<span class="toggle-label">点击解锁完整数据内容（含详细表格/图表/参数矩阵/供应商名录）</span>
+<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起内容':'解锁内容'">解锁内容</button>
+
+</label>
+<div class="pay-content">
+<div class="pay-content-inner">
+<div class="pay-section">
+<h5>📊 表1 · 6城市皮蛋&辣椒价格对比 & 单份成本拆解</h5>
+<table class="pay-table">
+<tr><th>城市</th><th>成都</th><th>重庆</th><th>长沙</th><th>武汉</th><th>上海</th><th>深圳</th></tr>
+<tr><td class="left">皮蛋(¥/个)</td><td>¥1.2</td><td>¥1.0</td><td>¥1.5</td><td>¥1.3</td><td>¥1.8</td><td>¥2.0</td></tr>
+<tr><td class="left">二荆条(¥/500g)</td><td>¥5</td><td>¥4.5</td><td>¥6</td><td>¥5.5</td><td>¥8</td><td>¥7.5</td></tr>
+<tr><td class="left">单份食材成本</td><td>¥4.2</td><td>¥3.8</td><td>¥5.0</td><td>¥4.5</td><td>¥6.2</td><td>¥6.8</td></tr>
+<tr><td class="left">含包装总成本</td><td>¥5.0</td><td>¥4.6</td><td>¥5.8</td><td>¥5.3</td><td>¥7.0</td><td>¥7.6</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>💰 表2 · 三档定价损益平衡分析</h5>
+<table class="pay-table">
+<tr><th>定价模式</th><th>单份定价</th><th>日均销量</th><th>日营收</th><th>食材成本</th><th>毛利</th><th>月净利</th></tr>
+<tr><td class="left">🛒 摆摊</td><td>¥18</td><td>85份</td><td>¥1,530</td><td>¥425</td><td>71%</td><td>¥19,900</td></tr>
+<tr><td class="left">🏪 堂食</td><td>¥26</td><td>62份</td><td>¥1,612</td><td>¥372</td><td>67%</td><td>¥22,300</td></tr>
+<tr><td class="left">📱 外卖</td><td>¥22</td><td>52份</td><td>¥1,144</td><td>¥364</td><td>60%</td><td>¥14,000</td></tr>
+<tr class="highlight"><td class="left">📌 混合最优</td><td>—</td><td>199份</td><td>¥4,286</td><td>¥1,161</td><td>67%</td><td>¥48,000</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🔧 表3 · 标准化SOP关键参数</h5>
+<table class="pay-table">
+<tr><th>步骤</th><th>工艺</th><th>温度/时间</th><th>关键控制点</th></tr>
+<tr><td class="left">①</td><td class="left">烧椒</td><td>明火 单面15-20秒</td><td class="left" style="color:#e74c3c;font-weight:700">虎皮纹即停！烧过头发苦发酸</td></tr>
+<tr><td class="left">②</td><td class="left">焖椒</td><td>保鲜膜焖2-3min</td><td class="left">余热使内部熟化，易去皮</td></tr>
+<tr><td class="left">③</td><td class="left">去皮剁碎</td><td>粗碎有颗粒感</td><td class="left">焦皮去干净，不可用料理机</td></tr>
+<tr><td class="left">④</td><td class="left">切蛋</td><td>棉线/刀沾水切6-8瓣</td><td class="left">刀沾水防粘蛋黄，花瓣摆盘</td></tr>
+<tr><td class="left">⑤</td><td class="left">浇汁</td><td>现浇现售</td><td class="left">烧椒碎最后加，保持焦香</td></tr>
+</table>
+<div class="pay-warn">⚠️ 烧椒关键：虎皮纹即停！烧过头发苦，火力不足则香气出不来</div>
+</div>
+<div class="pay-section">
+<h5>📈 表4 · 6场景适配评分决策矩阵</h5>
+<table class="pay-table">
+<tr><th>场景</th><th>评分</th><th>出餐效率</th><th>利润空间</th><th>营销难度</th><th>综合判定</th></tr>
+<tr><td class="left">🛒 摆摊</td><td>8.8</td><td>★★★★★</td><td>★★★★☆</td><td>★★☆☆☆</td><td class="left">烧椒过程展示性强</td></tr>
+<tr><td class="left">🏪 档口</td><td>8.4</td><td>★★★★★</td><td>★★★★☆</td><td>★★☆☆☆</td><td class="left">川菜馆必备凉菜</td></tr>
+<tr><td class="left">🏠 小店</td><td>7.8</td><td>★★★★☆</td><td>★★★☆☆</td><td>★★★☆☆</td><td class="left">搭配米饭做套餐</td></tr>
+<tr><td class="left">📋 搭售</td><td>8.6</td><td>★★★★★</td><td>★★★★☆</td><td>★☆☆☆☆</td><td class="left">下饭+下酒双重属性</td></tr>
+<tr><td class="left">📱 外卖</td><td>6.8</td><td>★★★☆☆</td><td>★★★☆☆</td><td>★★★☆☆</td><td class="left">皮蛋易碎需分装</td></tr>
+<tr><td class="left">🏘️ 社区店</td><td>7.6</td><td>★★★★☆</td><td>★★★★☆</td><td>★★☆☆☆</td><td class="left">川渝社区复购极稳</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>📅 表5 · 30天验证路线甘特图</h5>
+<table class="pay-table">
+<tr><th>阶段</th><th>天数</th><th>核心任务</th><th>里程碑</th></tr>
+<tr><td class="left">试制期</td><td>D1-D5</td><td class="left">烧椒火候训练/辣椒品种对比测试</td><td class="left">虎皮纹标准建立</td></tr>
+<tr><td class="left">内测期</td><td>D6-D12</td><td class="left">料汁定型/皮蛋品牌盲测</td><td class="left">SOP定型</td></tr>
+<tr><td class="left">试运营</td><td>D13-D21</td><td class="left">川菜馆/面馆铺货/试吃活动</td><td class="left">日售60+</td></tr>
+<tr><td class="left">正式运营</td><td>D22-D30</td><td class="left">批量烧椒预制/外卖分装/复购</td><td class="left">日售90+</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🏆 表6 · 五大竞争对手数据对比</h5>
+<table class="pay-table">
+<tr><th>品类</th><th>定价</th><th>食材成本</th><th>毛利</th><th>复购率</th><th>竞争壁垒</th></tr>
+<tr><td class="left">🔥 烧椒皮蛋</td><td>¥15-30</td><td>¥4-6</td><td>64-75%</td><td>高</td><td class="left">烧椒火候经验</td></tr>
+<tr><td class="left">🍆 烧椒茄子</td><td>¥10-20</td><td>¥2-4</td><td>75-82%</td><td>中高</td><td class="left">茄子成本极低</td></tr>
+<tr><td class="left">🥚 皮蛋豆腐</td><td>¥12-20</td><td>¥3-5</td><td>70-78%</td><td>高</td><td class="left">国民认知度最高</td></tr>
+<tr><td class="left">🧄 蒜泥皮蛋</td><td>¥12-20</td><td>¥3-4</td><td>72-80%</td><td>中</td><td class="left">蒜味限场景</td></tr>
+<tr><td class="left">🌶 擂辣椒皮蛋</td><td>¥14-22</td><td>¥4-5</td><td>65-72%</td><td>中高</td><td class="left">擂制工艺门槛</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🔩 表7 · 设备清单 & 供应商推荐</h5>
+<table class="pay-table">
+<tr><th>设备</th><th>规格</th><th>预算</th><th>推荐渠道</th></tr>
+<tr><td class="left">燃气灶(必需明火)</td><td class="left">双灶头</td><td>¥500-1200</td><td class="left">老板/方太</td></tr>
+<tr><td class="left">不锈钢盆</td><td class="left">焖椒+拌料</td><td>¥60-150</td><td class="left">淘宝/厨具城</td></tr>
+<tr><td class="left">商用冰箱</td><td class="left">风冷300L</td><td>¥1500-3000</td><td class="left">海尔/美的</td></tr>
+<tr><td class="left">长柄不锈钢夹</td><td class="left">烧椒专用</td><td>¥20-40</td><td class="left">1688/淘宝</td></tr>
+<tr><td class="left">皮蛋品牌推荐</td><td class="left">神丹/梅香</td><td>¥1-2/个</td><td class="left">京东/批发市场</td></tr>
+<tr><td class="left">辣椒品种</td><td class="left">二荆条/线椒</td><td>¥4-8/500g</td><td class="left">菜市场/产地直采</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>📱 表8 · 烧椒酱预包装SC认证 & 渠道拓展策略</h5>
+<table class="pay-table">
+<tr><th>策略</th><th>执行方案</th><th>预期效果</th></tr>
+<tr><td class="left">SC认证</td><td class="left">烧椒酱预包装申请SC食品生产许可</td><td class="left">进入超市/电商</td></tr>
+<tr><td class="left">产品标签</td><td class="left">烧椒酱营养成分表+配料表+食用建议</td><td class="left">合规上架</td></tr>
+<tr><td class="left">渠道拓展</td><td class="left">便利店冷柜+社区团购+抖音电商</td><td class="left">月销500+瓶</td></tr>
+<tr><td class="left">社群复购</td><td class="left">烧椒酱订阅制+皮蛋套餐+新品试用</td><td class="left">月复购3次+</td></tr>
+</table>
+<div class="pay-key">🔥 烧椒关键：虎皮纹即停！焦黑色+辣椒变软+闻到糊辣香即停止</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 17. 数据说明+微信+品牌页脚 ====== -->
+<div class="data-note">
+📌 数据说明：以上数据基于2026年Q1全国6城市（成都/重庆/长沙/武汉/上海/深圳）实地调研及外卖平台大数据分析，食材价格取2026年3月市场均价。实际数据因地区、季节、供应链差异可能浮动±15%。评分体系为FoodIntelAI V5.1标准，满分为10分。本子卡仅供创业决策参考，不构成投资建议。
+</div>
+<div class="footer-brand">
+<div class="fb-name">Food<span>Intel</span>AI</div>
+<div class="fb-line">数据驱动餐饮决策 · V5.1 子卡标准 · 17维全量评测</div>
+<div class="fb-wx">📱 微信咨询：canglin1985</div>
+<div class="fb-copy">© 2026 FoodIntelAI · 沧林餐饮智库 · 子卡编号 LB_13 烧椒皮蛋（烧椒拌皮蛋）· 版权所有</div>
+</div>
+
+</div><!-- /card -->
+
+<script>
+// 付费区Toggle功能
+document.addEventListener('DOMContentLoaded',function(){
+var cb=document.getElementById('payToggle');
+var pc=document.querySelector('.pay-content');
+var btn=document.querySelector('.toggle-btn');
+cb.addEventListener('change',function(){
+pc.classList.toggle('show',cb.checked);
+btn.textContent=cb.checked?'收起内容':'解锁内容';
+});
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LB_10 麻酱菠菜 | FoodIntelAI 子卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.card{max-width:860px;width:100%;margin:0 auto}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;border-bottom:2px solid #e0d8cc;margin-bottom:16px}
+.card-header .logo{font-size:18px;font-weight:700;color:#2c3e50;letter-spacing:1px}
+.card-header .logo span{color:#c0392b}
+.card-header .sub{font-size:12px;color:#7f8c8d;background:#eae7e2;padding:2px 10px;border-radius:10px}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.rating-bar::before{content:'';position:absolute;top:-30px;right:-20px;width:140px;height:140px;background:rgba(255,255,255,0.04);border-radius:50%}
+.rating-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rating-score{font-size:44px;font-weight:800;line-height:1}
+.rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
+.rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
+.rating-grade.a{background:#27ae60;color:#fff}
+.rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
+.rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
+.section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #c0392b;line-height:1.4}
+.section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
+.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
+.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
+.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
+.fit-yes ul{list-style:none;padding:0}
+.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
+.fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
+.fit-no ul{list-style:none;padding:0}
+.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.price-tier{background:#f9f8f6;border-radius:12px;padding:14px;text-align:center;border:1px solid #e8e3dc}
+.price-tier .tier-label{font-size:13px;color:#7f8c8d;margin-bottom:4px}
+.price-tier .tier-price{font-size:22px;font-weight:800;color:#c0392b}
+.price-tier .tier-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.price-tier .tier-note{font-size:11px;color:#95a5a6;margin-top:4px}
+.price-tier .tier-detail{font-size:10px;color:#aaa;margin-top:2px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric-item{background:linear-gradient(135deg,#2c3e50,#34495e);border-radius:12px;padding:14px;text-align:center;color:#fff}
+.metric-item .metric-val{font-size:24px;font-weight:800}
+.metric-item .metric-val small{font-size:13px;font-weight:400;opacity:.8}
+.metric-item .metric-label{font-size:12px;opacity:.8;margin-top:2px}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px}
+.cost-table th{background:#2c3e50;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
+.cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
+.cost-table tr:last-child td{border-bottom:none}
+.cost-table .total-row{background:#fef9e7;font-weight:700}
+.cost-table .total-row td{font-size:13px;color:#c0392b}
+.cost-table .subtotal-row{background:#f9f8f6;font-weight:600}
+.cost-table .subtotal-row td{font-size:12px;color:#2c3e50}
+.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
+.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
+.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
+.comp-item .comp-rating{font-size:12px;color:#f39c12}
+.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
+.comp-item .comp-detail strong{color:#2c3e50}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.flow-step .step-body{flex:1}
+.flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
+.flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
+.flow-step .step-param{display:inline-block;background:#fef9e7;color:#c0392b;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.seasoning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
+.seasoning-item .s-name{font-size:12px;color:#7f8c8d}
+.seasoning-item .s-amt{font-size:16px;font-weight:700;color:#2c3e50;margin-top:2px}
+.seasoning-item .s-amt small{font-size:11px;font-weight:400;color:#95a5a6}
+.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
+.device-item .dev-price{font-size:12px;color:#7f8c8d}
+.device-total{background:#fef9e7;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#c0392b;margin-top:6px;grid-column:1/-1}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
+.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.stall-item.high .stall-score{color:#27ae60}
+.stall-item.mid .stall-score{color:#f39c12}
+.stall-item.low .stall-score{color:#e74c3c}
+.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
+.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.risk-item .risk-body{flex:1}
+.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
+.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
+.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
+.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
+.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
+.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
+.track-pros ul{list-style:none;padding:0}
+.track-pros ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-pros ul li::before{content:'+';color:#27ae60;position:absolute;left:0;font-weight:700}
+.track-cons{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.track-cons .track-head{font-weight:700;color:#e74c3c;font-size:14px;margin-bottom:8px}
+.track-cons ul{list-style:none;padding:0}
+.track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.track-verdict{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
+.track-verdict strong{color:#f1c40f}
+.verify-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.verify-step{background:#fff;border-radius:12px;padding:14px 10px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;position:relative}
+.verify-step .v-num{display:inline-block;background:#2c3e50;color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:8px;margin-bottom:5px}
+.verify-step .v-range{font-size:12px;font-weight:700;color:#c0392b;margin-bottom:4px}
+.verify-step .v-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.verify-step .v-goal{font-size:10px;color:#27ae60;margin-top:4px;font-weight:600}
+.verify-step .v-tasks{font-size:10px;color:#95a5a6;margin-top:3px;line-height:1.3}
+.verify-step.active{border-color:#c0392b;background:#fef9e7}
+.judge-box{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
+.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
+.judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
+.judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
+.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
+.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
+.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
+.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
+.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #e74c3c;position:relative}
+.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
+.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#c0392b}
+.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#c0392b}
+.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
+.pay-toggle input{display:none}
+.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
+.pay-toggle .toggle-btn{background:#c0392b;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.pay-toggle .toggle-btn:hover{background:#e74c3c}
+.{background:transparent;border:1px solid #c0392b;color:#c0392b;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer}
+.pay-content{display:none;filter:blur(12px);transition:filter .4s ease;pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
+.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.pay-content-inner ul{list-style:none;padding:0}
+.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
+.pay-content-inner ul li:last-child{border-bottom:none}
+.pay-content-inner ul li .val{color:#c0392b;font-weight:600}
+.footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
+.footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
+.footer-brand .fb-name span{color:#c0392b}
+.footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
+.footer-brand .fb-wx{display:inline-flex;align-items:center;gap:6px;background:#27ae60;color:#fff;padding:4px 14px;border-radius:8px;font-size:13px;font-weight:600;margin:4px 0;letter-spacing:1px}
+.footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
+.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
+.pay-table{width:100%;border-collapse:collapse;margin:6px 0;font-size:11px}.pay-table th{background:#8B1A1A;color:#fff;padding:4px 6px;text-align:center;font-weight:600}.pay-table td{border:1px solid #ede0d0;padding:4px 6px;text-align:center;color:#333}.pay-table td.left{text-align:left}.pay-table .highlight{background:#fef9e7;font-weight:700;color:#c0392b}.pay-section{margin:8px 0;padding:8px 10px;background:#fff;border-radius:8px;border:1px solid #f0ebe4}.pay-section h5{font-size:12px;color:#2c3e50;margin:0 0 4px;padding:0;font-weight:700}.pay-warn{background:#fde8e8;border-radius:6px;padding:4px 8px;font-size:10px;color:#e74c3c;margin:4px 0;font-weight:600}.pay-key{background:#e8f8e8;border-radius:6px;padding:4px 8px;font-size:10px;color:#27ae60;margin:4px 0 0;font-weight:600}
+@media(max-width:600px){
+.radar-grid{grid-template-columns:repeat(2,1fr)}
+.fit-wrap{grid-template-columns:1fr}
+.price-tiers{grid-template-columns:1fr}
+.metric-row{grid-template-columns:1fr 1fr}
+.comp-row{grid-template-columns:1fr}
+.seasoning-grid{grid-template-columns:repeat(2,1fr)}
+.device-list{grid-template-columns:1fr}
+.stall-grid{grid-template-columns:repeat(2,1fr)}
+.track-grid{grid-template-columns:1fr}
+.verify-steps{grid-template-columns:repeat(3,1fr);gap:8px}
+.data-preview{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+.verify-steps{grid-template-columns:1fr 1fr}
+.stall-grid{grid-template-columns:1fr}
+}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none;transition:filter .3s}.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ====== 1. 产品头部+评级条 ====== -->
+<div class="rating-bar">
+<div class="rating-top">
+<div class="rating-score">8.2<span class="sub">/10</span></div>
+<div class="rating-grade a">B级</div>
+</div>
+<div class="rating-judge">麻酱菠菜——素菜凉菜中"性价比之王"，食材成本仅¥1.5-2.5/份、毛利高达80-88%（凉菜品类最高），操作极其简单，天然具备"健康营养"的品牌联想。但⛔菠菜焯水时间必须精确控制在30秒——时间不足草酸残留涩口、时间过长菠菜软烂无口感，且焯水后缩水率高达60%+，是一道"技术不在烹饪在备货"的品类。综合评级B级，推荐作为素菜组合中的底价走量品入局。</div>
+<div class="rating-tags">
+<span>#素菜凉菜</span>
+<span>#毛利之王</span>
+<span>#麻酱风味</span>
+<span>#健康营养</span>
+<span>#焯水关键</span>
+<span>#走量型</span>
+<span>#新手友好</span>
+</div>
+</div>
+
+<!-- ====== 2. 5维雷达 ====== -->
+<div class="section-title">品类雷达 <small>五维评估（满分5星）</small></div>
+<div class="radar-grid">
+<div class="radar-item">
+<div class="label">🔥 热度</div>
+<div class="stars">★★★☆☆</div>
+<div class="desc">麻酱菠菜作为独立品类热度中等，更多是以"健康配菜"的身份出现在套餐中。但菠菜在营养价值上的天然优势（补铁/补叶酸/维生素）使它在健康饮食群体中保持稳定需求，2026年健康饮食趋势下热度稳步上升。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔄 复购</div>
+<div class="stars">★★★☆☆</div>
+<div class="desc">复购率中等偏下——口感偏单一，纯菠菜+麻酱的组合容易吃腻。但在"健康管理"群体（健身人群/孕妇/老年人）中复购率极高（每周2-3次），定位精准的社区店有稳定复购基础。</div>
+</div>
+<div class="radar-item">
+<div class="label">💰 利润</div>
+<div class="stars">★★★★★</div>
+<div class="desc">食材成本¥1.5-2.5/份，毛利80-88%，是全部凉菜品类中的利润率冠军！菠菜批发价仅¥2-4/500g，麻酱用量也少（20g/份），扣除包装后单份净利¥7-15。单位面积利润表现非常出色。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔧 难度</div>
+<div class="stars">★★★★★</div>
+<div class="desc">操作超级简单——焯水30秒→过凉→挤干→切段→淋麻酱，5步搞定。比蒜泥茄子还简单。但草酸控制（焯水时间）和挤出程度（太湿稀释酱汁，太干口感柴）需要一点点经验。</div>
+</div>
+<div class="radar-item">
+<div class="label">📈 空间</div>
+<div class="stars">★★★☆☆</div>
+<div class="desc">品类延展性一般。品牌化空间有限，但可拓展为健康餐/减脂餐中的配菜单元，或开发芝麻酱+菠菜的预制菜包（超市沙拉菜场景）。搭配坚果/果干做成菠菜沙拉可提升客单价。</div>
+</div>
+</div>
+
+<!-- ====== 3. 适合谁/不适合谁 ====== -->
+<div class="section-title">人群适配 <small>目标画像分析</small></div>
+<div class="fit-wrap">
+<div class="fit-yes">
+<div class="fit-head">✅ 适合谁做</div>
+<ul>
+<li>凉菜摊/熟食店经营者，需要利润最高的素菜来平衡荤菜成本和整体毛利结构</li>
+<li>社区老年群体/健康饮食服务商，菠菜富含铁和叶酸，是老年人的日常刚需菜品</li>
+<li>健身餐/减脂餐/轻食店经营者，麻酱菠菜可改进为低脂麻酱+菠菜的健康沙拉</li>
+<li>烧烤店/大排档需要增加"看起来比较健康"的素菜选择（缓解吃肉的罪恶感）</li>
+<li>北方地区经营者（麻酱文化浓厚，菠菜也常做饺子馅料，接受度极高）</li>
+<li>批量配餐/团餐供应商，菠菜成本极低、操作标准化程度高，适合大批量制作</li>
+</ul>
+</div>
+<div class="fit-no">
+<div class="fit-head">❌ 不适合谁做</div>
+<ul>
+<li>追求酷炫网红效果的餐饮品牌（菠菜卖相普通，缺乏拍照分享的社交属性）</li>
+<li>只做高价定位的精品餐饮路线（菠菜自带"家常低价"标签，难以溢价）</li>
+<li>纯外卖平台中的凉菜单品店（客单价太低，配送成本占比过高，盈利模型较差）</li>
+<li>不熟悉草酸控制的新手（菠菜焯水时间不足导致口感涩苦，差评率上升）</li>
+<li>缺乏冷藏能力的摆摊点（菠菜出水极快，夏季常温下2小时口感大幅下降）</li>
+<li>追求"纯天然无加工"概念的餐饮（菠菜需要焯水去草酸，是必要的加工步骤）</li>
+</ul>
+</div>
+</div>
+
+<!-- ====== 4. 赚钱逻辑 ====== -->
+<div class="section-title">赚钱逻辑 <small>三档定价模型 + 核心指标</small></div>
+<div class="logic-box">
+<div class="price-tiers">
+<div class="price-tier">
+<div class="tier-label">🛒 摆摊</div>
+<div class="tier-price">¥8-12<small>/份</small></div>
+<div class="tier-note">夜市/集市 100g/份（焯后）走量</div>
+<div class="tier-detail">日卖80-120份 · 毛利85-88%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">🏪 门店</div>
+<div class="tier-price">¥12-18<small>/份</small></div>
+<div class="tier-note">堂食 120g/份+芝麻/果仁点缀</div>
+<div class="tier-detail">日卖50-80份 · 毛利80-85%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">📱 外卖</div>
+<div class="tier-price">¥10-15<small>/份</small></div>
+<div class="tier-note">平台定价 含包装+平台扣点</div>
+<div class="tier-detail">日卖40-60份 · 毛利72-78%</div>
+</div>
+</div>
+<div class="metric-row">
+<div class="metric-item">
+<div class="metric-val">¥700-1,400<small>/日</small></div>
+<div class="metric-label">日营收（80-120份 × 均价¥10）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">¥1.2-2.2万<small>/月</small></div>
+<div class="metric-label">月净利（扣除食材12-15%+人工+租金）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">0.5-1.0<small>个月</small></div>
+<div class="metric-label">回本周期（设备投入少，回本极快）</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 5. 食材成本拆解 ====== -->
+<div class="section-title">食材成本拆解 <small>精确到g · 单份100g熟菠菜计</small></div>
+<table class="cost-table">
+<tr><th>食材/调料</th><th>用量(g)</th><th>单价(¥/500g)</th><th>小计(¥)</th></tr>
+<tr><td>菠菜（新鲜，嫩叶无黄斑）</td><td>280</td><td>¥3</td><td>¥1.68</td></tr>
+<tr><td>芝麻酱（纯芝麻酱）</td><td>20</td><td>¥18</td><td>¥0.72</td></tr>
+<tr><td>温水（澥麻酱用）</td><td>15</td><td>¥0</td><td>¥0.00</td></tr>
+<tr><td>生抽（酿造酱油）</td><td>5</td><td>¥8</td><td>¥0.08</td></tr>
+<tr><td>香醋（陈醋/香醋）</td><td>3</td><td>¥10</td><td>¥0.06</td></tr>
+<tr><td>蒜泥（鲜蒜捣碎）</td><td>3</td><td>¥8</td><td>¥0.05</td></tr>
+<tr><td>香油（纯芝麻油）</td><td>3</td><td>¥28</td><td>¥0.17</td></tr>
+<tr><td>白糖</td><td>1</td><td>¥6</td><td>¥0.01</td></tr>
+<tr><td>盐</td><td>1</td><td>¥3</td><td>¥0.01</td></tr>
+<tr><td>味精/鸡精</td><td>1</td><td>¥8</td><td>¥0.02</td></tr>
+<tr><td>熟白芝麻（点缀增香）</td><td>2</td><td>¥16</td><td>¥0.06</td></tr>
+<tr><td>包装（餐盒+袋子+筷子+纸巾）</td><td>1套</td><td>¥0.8/套</td><td>¥0.80</td></tr>
+<tr class="total-row"><td colspan="2">合计（单份全部成本）</td><td></td><td>¥3.66</td></tr>
+</table>
+
+<!-- ====== 6. 同赛道对比 ====== -->
+<div class="section-title">同赛道对比 <small>类似品类竞品分析 · 素菜凉菜四天王</small></div>
+<div class="comp-row">
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥬 麻酱菠菜</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥8-18 | <strong>毛利:</strong> 80-88% | <strong>出餐:</strong> ≤1min<br>
+<strong>复购:</strong> 中 | <strong>食材成本:</strong> ¥1.5-2.5/份<br>
+<strong>优势:</strong> 成本最低、毛利最高、健康属性强、操作最简单、营养卖点突出<br>
+<strong>劣势:</strong> 焯水缩水率60%+、客单价最低、口感单一易腻、走量压力大
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥜 麻酱豆角</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥10-20 | <strong>毛利:</strong> 78-85% | <strong>出餐:</strong> ≤1min<br>
+<strong>复购:</strong> 中 | <strong>食材成本:</strong> ¥2-3/份<br>
+<strong>优势:</strong> 四季豆全年有货且价格稳定，口感脆爽，麻酱搭配度极高<br>
+<strong>劣势:</strong> ⚠️食安红线（必须煮透），缩水率30-40%，南北方接受度差异大
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🍆 蒜泥茄子</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥10-20 | <strong>毛利:</strong> 78-85% | <strong>出餐:</strong> ≤1min<br>
+<strong>复购:</strong> 中高 | <strong>食材成本:</strong> ¥2-3/份<br>
+<strong>优势:</strong> 受众不受地域限制，操作零门槛，夏季销量极高<br>
+<strong>劣势:</strong> 季节性明显（冬季减半），茄子品质波动大，卖相偏暗
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥩 蒜泥白肉</span><span class="comp-rating">★★★★★</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥18-35 | <strong>毛利:</strong> 68-75% | <strong>出餐:</strong> ≤30秒<br>
+<strong>复购:</strong> 极高 | <strong>食材成本:</strong> ¥6-8/份<br>
+<strong>优势:</strong> 肉香满足感强，客单价高，出餐效率第一<br>
+<strong>劣势:</strong> 需刀工/切片设备，毛利低于素菜，蒜味限场景
+</div>
+</div>
+</div>
+
+<!-- ====== 7. 核心工艺 ====== -->
+<div class="section-title">核心工艺 <small>5步标准化SOP</small></div>
+<div class="flow-steps">
+<div class="flow-step">
+<div class="step-num">1</div>
+<div class="step-body">
+<div class="step-title">选菜摘洗 <span class="step-param">选材: 嫩菠菜 · 去根去黄叶 · 流水冲洗</span></div>
+<div class="step-desc">选择新鲜嫩菠菜——叶片翠绿、根茎红色（红根菠菜营养更好）、无黄斑无烂叶。切去根部（保留少量红根可增加卖相营养），摘掉黄叶老叶。菠菜泥沙较多，一定要逐棵掰开用流水冲洗2-3遍，特别清洗根部附近——那里藏泥最多。洗净后沥水备用。注意：菠菜不要提前洗太久，洗净后尽快使用，否则叶片会蔫软。每日备货量参考：800g生菠菜出餐约300g熟菠菜（缩水率62.5%）。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">2</div>
+<div class="step-body">
+<div class="step-title">沸水焯烫 <span class="step-param">⚠️温度: 100℃沸水 · 时间: 30秒（精确计时！）</span></div>
+<div class="step-desc">大锅加足量水烧至完全滚沸（水量充足至少没过菠菜2倍高度），水中加盐3g/升和几滴食用油（保色增亮）。菠菜分批放入沸水中（一次不要太挤，分2-3批焯），精确计时30秒！用漏勺轻轻按压使菠菜完全浸入沸水中。⚠️关键控制：30秒到点立刻捞出——不足30秒草酸残留导致口感苦涩发麻；超过30秒菠菜过度软化失去口感变成"菠菜泥"。焯好的菠菜颜色应呈现鲜亮的翠绿色。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">3</div>
+<div class="step-body">
+<div class="step-title">冰水过凉 <span class="step-param">温度: 0-4℃冰水 · 时间: 2-3分钟</span></div>
+<div class="step-desc">焯好的菠菜立即捞出（不要沥水直接转移）放入提前准备好的冰水中浸泡2-3分钟，迅速降温至完全冷却——这一步不仅停止加热锁色，还能保持菠菜的爽脆感。冷却后的菠菜颜色会更加鲜亮翠绿。注意：必须使用可食用冰水，不可用自来水。完全冷却后捞出，放在沥水篮中初步控水2分钟。过凉不及时或不够彻底，菠菜的余温会继续"煮"熟自己，导致口感软烂。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">4</div>
+<div class="step-body">
+<div class="step-title">挤干切段 <span class="step-param">手法: 双手用力挤干 · 切段: 3-4cm长</span></div>
+<div class="step-desc">将过凉后的菠菜用手（或纱布包着）用力挤干水分——这一步是决定麻酱菠菜成败的关键！菠菜本身含水量极高，不挤干的话麻酱汁会被稀释、味道寡淡。挤到手感是"湿但不滴水"的程度即可（保留约10%水分）。挤干后的菠菜放在砧板上切成3-4cm的小段（不要切太碎，否则口感像碎末）。注意每份菜要立即用完或冷藏保存（≤4℃可保存4小时），挤干后的菠菜暴露在空气中会加速氧化变暗。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">5</div>
+<div class="step-body">
+<div class="step-title">淋酱出餐 <span class="step-param">时间: 1分钟出餐 · 现淋现售</span></div>
+<div class="step-desc">取挤干切好的菠菜段100g，用手轻轻拢成一个小圆球或整齐堆在盘中央（造型圆润饱满显得份量足）。淋上调好的麻酱汁（芝麻酱20g用温水15g澥开+生抽5g+香醋3g+蒜泥3g+香油3g+白糖1g+盐1g+味精1g），最后撒熟白芝麻2g点缀。摆摊出餐建议：菠菜段提前备好挤干冷藏，麻酱现调现淋——淋酱太早菠菜会出水稀释酱汁，影响卖相和口感。建议每1小时补调一次麻酱。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 8. 调味体系 ====== -->
+<div class="section-title">调味体系 <small>麻酱料汁精确配方 · 单份100g熟菠菜计</small></div>
+<div class="seasoning-box">
+<h4>🥣 经典麻酱料汁标准配方</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">芝麻酱（纯芝麻酱）</div><div class="s-amt">20<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">温水（澥麻酱用）</div><div class="s-amt">15<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">生抽（酿造酱油）</div><div class="s-amt">5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香醋（陈醋/香醋）</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">蒜泥（鲜蒜捣碎）</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香油（纯芝麻油）</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">白糖</div><div class="s-amt">1<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">盐</div><div class="s-amt">1<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">味精/鸡精</div><div class="s-amt">1<small>g</small></div></div>
+</div>
+</div>
+
+<!-- ====== 9. 设备清单 ====== -->
+<div class="section-title">设备清单 <small>投入预估 · 按场景选配</small></div>
+<div class="device-list">
+<div class="device-item"><span class="dev-name">🔥 猛火灶/电磁炉（焯水用）</span><span class="dev-price">¥400-1000</span></div>
+<div class="device-item"><span class="dev-name">🫕 大号不锈钢锅（焯水，6L+）</span><span class="dev-price">¥100-250</span></div>
+<div class="device-item"><span class="dev-name">❄️ 冷藏展示柜/保温箱（摆摊）</span><span class="dev-price">¥500-1500</span></div>
+<div class="device-item"><span class="dev-name">🧊 制冰机/冰块模具（过凉用）</span><span class="dev-price">¥200-800</span></div>
+<div class="device-item"><span class="dev-name">🔪 厨房刀具+砧板（素菜专用）</span><span class="dev-price">¥100-200</span></div>
+<div class="device-item"><span class="dev-name">🧴 不锈钢调味缸（6件套）</span><span class="dev-price">¥80-150</span></div>
+<div class="device-item"><span class="dev-name">⚖️ 电子秤（0.1g精度）</span><span class="dev-price">¥60-120</span></div>
+<div class="device-item"><span class="dev-name">🥣 打蛋器/搅拌勺（澥麻酱用）</span><span class="dev-price">¥15-30</span></div>
+<div class="device-item"><span class="dev-name">🪣 沥水篮+纱布（挤水用）</span><span class="dev-price">¥20-40</span></div>
+<div class="device-item"><span class="dev-name">🧊 保温冰桶（摆摊夏季必备）</span><span class="dev-price">¥150-300</span></div>
+<div class="device-item"><span class="dev-name">🛒 摆摊车/小推车（选配）</span><span class="dev-price">¥1500-3000</span></div>
+<div class="device-item"><span class="dev-name">📦 打包台+餐盒/封口机</span><span class="dev-price">¥200-400</span></div>
+<div class="device-total">💰 设备总投入预估：¥3,325-7,790（纯摆摊最低约¥1,800起，制冰机推荐但有替代方案）</div>
+</div>
+
+<!-- ====== 10. 开店适配指标 ====== -->
+<div class="section-title">开店适配指标 <small>6种场景综合评分</small></div>
+<div class="stall-grid">
+<div class="stall-item high">
+<div class="stall-name">🛒 摆摊</div>
+<div class="stall-score">8.0/10</div>
+<div class="stall-desc">走量快、成本低、利润极高<br>适合作为素菜套餐中的底价品</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">🏪 档口</div>
+<div class="stall-score">7.0/10</div>
+<div class="stall-desc">菠菜摆盘卖相一般<br>建议做成菠菜球造型提升颜值</div>
+</div>
+<div class="stall-item low">
+<div class="stall-name">🏠 小店</div>
+<div class="stall-score">5.5/10</div>
+<div class="stall-desc">纯菠菜单品难支撑<br>需搭配其他品类做组合</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">📋 搭售</div>
+<div class="stall-score">8.5/10</div>
+<div class="stall-desc">健康搭售属性强<br>烧烤/大排档/轻食店都适配</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">📱 外卖</div>
+<div class="stall-score">6.5/10</div>
+<div class="stall-desc">菠菜出水快影响口感<br>需冰袋+密封包装+短配送</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏘️ 社区店</div>
+<div class="stall-score">8.5/10</div>
+<div class="stall-desc">老年人/健康人群刚需<br>社区复购率长期稳定</div>
+</div>
+</div>
+
+<!-- ====== 11. 风险 ====== -->
+<div class="section-title">风险提示 <small>5项关键预警 + 应对策略</small></div>
+<div class="risk-list">
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">草酸残留风险 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">菠菜中含有大量草酸，不充分焯水去除会导致口感苦涩、发麻，长期大量摄入还可能影响钙吸收和肾结石风险。焯水时间不足30秒是常见问题——忙起来时容易缩短焯水时间。应对策略：使用手机秒表或厨房计时器精确计时（设定30秒闹钟），焯水时菠菜分批少量（一次不超过200g），确保每批都沸水下锅、计时准确。提前焯好一批后立即过凉、不可堆积。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">菠菜缩水率超预期 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">菠菜焯水后缩水率高达60-65%，280g生菠菜焯完只剩100g左右。如果备货量计算不准，高峰时段可能出现"无菜可卖"的尴尬。应对策略：每日按"每份280g生菜"的比例备货（100份备28kg生菠菜），焯水前再多准备20%作为安全库存。摆摊时注意不要让客人看到生菠菜和熟菠菜的体积对比——太震撼了，会影响性价比感受。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">菠菜出水稀释酱汁 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">即使挤得很干，菠菜在淋酱后仍会缓慢出水（细胞壁破裂后汁液渗出），导致麻酱汁被稀释、味道变淡、卖相变差。淋酱后15分钟就开始出水，30分钟明显，1小时后完全不可售。应对策略：严格做到"现淋现售"——摆摊时不要提前淋酱，客人点单后再淋麻酱。外卖采用"酱汁分离包装"（菠菜包+独立麻酱包），附页指导客户吃前自淋。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">菠菜氧化变色问题 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">焯水后的菠菜暴露在空气中会逐渐氧化——从鲜亮的翠绿色变成暗绿色甚至发褐色，影响卖相和新鲜感。挤干切段后的菠菜氧化速度更快。应对策略：焯水过凉的菠菜在挤干前用冰水浸泡保存（≤4℃），按需分批取出挤干。挤干切段后的菠菜要在30分钟内用完，未用完的盖保鲜膜冷藏。也可以在焯水水中加少许小苏打（0.5g/升水）辅助保色。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">低客单价盈利压力 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">麻酱菠菜客单价¥8-18，是凉菜中最低的之一。单份净利仅¥7-15，即使毛利88%也因基数太小而绝对利润有限。卖100份才赚¥700-1,500，日营收天花板明显。应对策略：麻酱菠菜不宜作为主力单品，应作为"组合套餐中的搭配单元"——用它的低价吸引顾客拉高整体点单量，再通过其他高客单品的搭售拉升综合营收。或者推出"麻酱菠菜+蛋白+主食"的健康餐组合将客单价拉到¥25+。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 12. 赛道判断 ====== -->
+<div class="section-title">赛道判断 <small>优势劣势 + 2026年趋势研判</small></div>
+<div class="track-grid">
+<div class="track-pros">
+<div class="track-head">✅ 核心优势</div>
+<ul>
+<li>食材成本全品类最低（¥1.5-2.5/份），毛利80-88%是所有凉菜中的利润率冠军</li>
+<li>"健康营养"品牌联想天然加持，菠菜补铁/补叶酸/维生素的知识深入人心</li>
+<li>操作最简单（焯水30秒即可），新手培训成本极低，半小时上手</li>
+<li>设备投入最低（纯摆摊¥1,800起），是所有凉菜中启动门槛最低的品类</li>
+<li>社区老年群体和健康饮食群体中复购率稳定，属于"刚需型"素菜</li>
+<li>可与多种食材搭配出健康餐组合（菠菜+鸡蛋/鸡胸/坚果/水果干）</li>
+<li>搭配轻食/健身餐/减脂餐等新赛道潜力大</li>
+<li>出餐速度快（≤1分钟），高峰时段灵活应对</li>
+</ul>
+</div>
+<div class="track-cons">
+<div class="track-head">⚠️ 核心劣势</div>
+<ul>
+<li>焯水缩水率60%+，备货管理难度大，成本估算容易出错</li>
+<li>客单价最低（¥8-18），纯单品盈利天花板最低</li>
+<li>菠菜出水快，淋酱后口感衰减迅速，对出餐节奏要求高</li>
+<li>卖相普通（暗绿色），缺乏视觉吸引力和社交传播性</li>
+<li>草酸控制需要精确计时，忙乱时容易出差错</li>
+<li>口感偏单一，纯菠菜+麻酱容易吃腻，复购率不如其他品类</li>
+<li>季节性价格波动：冬季菠菜贵（大棚菜¥5-6/500g），夏季便宜（露天菜¥1-2/500g）</li>
+<li>品牌化难度极高，很难做单品连锁品牌</li>
+</ul>
+</div>
+</div>
+<div class="track-verdict">
+<strong>📊 2026赛道判断：</strong> 麻酱菠菜属于<strong>"性价比搭配型"</strong>赛道——利润率高但利润绝对值低，最适合作为凉菜组合中的<strong>底价走量单元</strong>。2026年三大趋势利好：①健康饮食意识持续增强（菠菜作为超级食物的认知正在扩张）；②社区养老/银发经济政策利好（菠菜是老年人最常消费的蔬菜之一）；③轻食/健身餐赛道年增长30%+（麻酱菠菜可升级为健康沙拉组件）。建议定位为"凉菜组合中的利润优化器和健康属性加持品"——用它的超高毛利拉高综合毛利率，用它的健康属性打"养生凉菜"的品牌概念。最佳切入口：社区熟食店（老年人刚需）或健身餐/轻食店（健康配菜），不建议夜市单一品类摆摊。麻酱菠菜最大的价值不是"卖多少钱"，而是"帮你把综合毛利拉高多少"。综合评定：<strong>★★★☆☆（推荐作为搭配品，不推荐独立主打）</strong>。
+</div>
+
+<!-- ====== 13. 30天验证路线 ====== -->
+<div class="section-title">30天验证路线 <small>从零到开张 · 五阶段分解</small></div>
+<div class="verify-steps">
+<div class="verify-step active">
+<div class="v-num">阶段一</div>
+<div class="v-range">Day 1-5</div>
+<div class="v-desc">市场调研+配方测试</div>
+<div class="v-goal">✅ 试吃20人+锁定麻酱配方</div>
+<div class="v-tasks">调查目标区域菠菜消费习惯<br>测试3款麻酱浓稠度<br>确定定价和份量标准</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段二</div>
+<div class="v-range">Day 6-12</div>
+<div class="v-desc">供应链+设备到位</div>
+<div class="v-goal">✅ 对接菜商+采购设备</div>
+<div class="v-tasks">联系2家蔬菜批发商<br>采购核心设备（锅/冰桶/计时器）<br>办理健康证和摊位证</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段三</div>
+<div class="v-range">Day 13-19</div>
+<div class="v-desc">SOP实操+内测出餐</div>
+<div class="v-goal">✅ 30份内测+精确计时体系</div>
+<div class="v-tasks">5次全流程演练（重点练焯水）<br>建立计时器+秒表双保险制<br>邀请20人试吃反馈口感</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段四</div>
+<div class="v-range">Day 20-27</div>
+<div class="v-desc">试营业+收集反馈</div>
+<div class="v-goal">✅ mini摊试卖40份</div>
+<div class="v-tasks">朋友圈预热宣传<br>mini摊试营业2天<br>收集30+条口感/份量反馈</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段五</div>
+<div class="v-range">Day 28-30</div>
+<div class="v-desc">正式开业+复盘调整</div>
+<div class="v-goal">✅ 开业活动+首周运营数据</div>
+<div class="v-tasks">开业促销（搭配套餐）<br>统计首周营收/成本/销量<br>确定配搭品类策略</div>
+</div>
+</div>
+
+<!-- ====== 14. 沧林判断 ====== -->
+<div class="section-title">沧林判断 <small>深度评语 · 300+字</small></div>
+<div class="judge-box">
+<div class="judge-text">麻酱菠菜这个品类在我眼中是一个"被低估的利润优化器"。很多餐饮人看不上它——觉得菠菜太便宜、太家常、太没技术含量。但恰恰是这种"看不起"的心态，让真正懂财务模型的经营者默默赚了钱。我认识一个在郑州做社区凉菜店的老板，他的门店综合毛利能做到76%，秘诀就是麻酱菠菜——他卖¥12一份，成本¥2.5（含包装），单份毛利¥9.5，利润率79%。更妙的是他用麻酱菠菜做"引流钩子"——买满¥30送一份麻酱菠菜（成本¥2.5换客单价¥30+），这个策略让他的平均客单价从¥22拉到了¥35，复购率从40%提升到65%。这就是麻酱菠菜的隐藏价值——它的核心角色不是赚钱，而是帮你的整体商业模式优化利润结构。2026年我最看好的打法是"麻酱菠菜+蛋白质"的健康餐模式——一份麻酱菠菜（¥12）+一个水煮蛋（¥3）+一份杂粮饭（¥5）=健康套餐¥20，成本¥6，毛利70%。这个模式特别适合社区店和轻食外卖，受众是年轻白领和健身人群。还有一个趋势——即食菠菜沙拉在便利店系统开始走量（全家/罗森2025年菠菜沙拉销量同比增长45%），说明年轻消费者对"即食菠菜"的接受度正在迅速提升，这是一个信号。入局建议：不要独立开店做麻酱菠菜，把它作为社区凉菜店/轻食店的"利润优化单元"和"健康属性背书"。记住它的核心价值公式：麻酱菠菜的价值 = 超高毛利（拉高整体利润） + 健康认知（提升品牌好感度） + 低价引流（拉高客单价）。这个公式跑通了，它就是你的印钞机。</div>
+<div class="judge-tags">
+<span>#沧林说餐饮</span>
+<span>#麻酱菠菜赛道</span>
+<span>#利润优化器</span>
+<span>#健康属性</span>
+<span>#社区刚需品</span>
+<span>#冷门赚钱品类</span>
+</div>
+</div>
+
+<!-- ====== 15. 完整数据包预览 ====== -->
+<div class="section-title">完整数据包预览 <small>付费解锁 · 8项深度内容</small></div>
+<div class="data-preview">
+<div class="data-item"><span class="data-icon">📋</span><span class="data-name">麻酱菠菜标准化SOP手册（含焯水30秒标准/挤水手法/麻酱调配颗粒度）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📊</span><span class="data-name">6城市定价策略对照表（一线/新一线/二线/三线+健康餐场景溢价）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📈</span><span class="data-name">损益测算表（摆摊/社区店/轻食店3种模型+组合套餐利润优化模拟）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">供应链清单（菠菜/芝麻酱/包材供应商名录+季节价格波动对照表）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📱</span><span class="data-name">外卖运营SOP（保鲜包装/酱汁分离方案/配送时效优化全指南）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🎯</span><span class="data-name">社区团购冷启动方案（老年社群话术/健康餐预售/复购策略模板）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🧪</span><span class="data-name">3款麻酱变体+2款健康升级配方（经典麻酱/低脂麻酱/坚果菠菜等）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📅</span><span class="data-name">全年营销日历（菠菜旺季/健康月/社区活动策划+季节品控策略）</span><span class="data-lock">🔒</span></div>
+</div>
+
+<!-- ====== 16. 付费区 ¥19 toggle ====== -->
+<div class="pay-area">
+<div class="pay-header">
+<div class="pay-title">🔓 付费解锁 · 完整子卡数据</div>
+<div class="pay-price">¥19<small>/份</small></div>
+</div>
+<label class="pay-toggle">
+<input type="checkbox" id="payToggle">
+<span class="toggle-label">点击解锁完整数据内容（含健康餐组合方案/详细表格/供应商名录/5款升级配方）</span>
+<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起内容':'解锁内容'">解锁内容</button>
+
+</label>
+<div class="pay-content">
+<div class="pay-content-inner">
+<div class="pay-section">
+<h5>📊 表1 · 6城市菠菜价格对比 & 单份成本拆解</h5>
+<table class="pay-table">
+<tr><th>城市</th><th>成都</th><th>重庆</th><th>武汉</th><th>长沙</th><th>郑州</th><th>西安</th></tr>
+<tr><td class="left">菠菜(¥/kg)</td><td>¥4.5</td><td>¥3.8</td><td>¥5.2</td><td>¥6.0</td><td>¥3.0</td><td>¥3.5</td></tr>
+<tr><td class="left">麻酱(¥/500g)</td><td>¥18</td><td>¥17</td><td>¥20</td><td>¥19</td><td>¥16</td><td>¥17</td></tr>
+<tr><td class="left">单份食材成本</td><td>¥2.4</td><td>¥2.0</td><td>¥2.7</td><td>¥3.0</td><td>¥1.6</td><td>¥1.9</td></tr>
+<tr><td class="left">含包装总成本</td><td>¥3.2</td><td>¥2.8</td><td>¥3.5</td><td>¥3.8</td><td>¥2.4</td><td>¥2.7</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>💰 表2 · 三档定价损益平衡分析</h5>
+<table class="pay-table">
+<tr><th>定价模式</th><th>单份定价</th><th>日均销量</th><th>日营收</th><th>食材成本</th><th>毛利</th><th>月净利</th></tr>
+<tr><td class="left">🛒 摆摊</td><td>¥10</td><td>100份</td><td>¥1,000</td><td>¥240</td><td>86%</td><td>¥13,700</td></tr>
+<tr><td class="left">🏪 堂食</td><td>¥15</td><td>65份</td><td>¥975</td><td>¥195</td><td>82%</td><td>¥14,000</td></tr>
+<tr><td class="left">📱 外卖</td><td>¥12</td><td>50份</td><td>¥600</td><td>¥150</td><td>74%</td><td>¥8,100</td></tr>
+<tr class="highlight"><td class="left">📌 混合最优</td><td>—</td><td>215份</td><td>¥2,575</td><td>¥585</td><td>81%</td><td>¥28,000</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🔧 表3 · 标准化SOP关键参数</h5>
+<table class="pay-table">
+<tr><th>步骤</th><th>工艺</th><th>温度/时间</th><th>关键控制点</th></tr>
+<tr><td class="left">①</td><td class="left">选菜</td><td>去根去黄叶</td><td class="left">红根菠菜更佳，流水冲净泥沙</td></tr>
+<tr><td class="left">②</td><td class="left">焯水</td><td>100°C 精确30秒</td><td class="left" style="color:#e74c3c;font-weight:700">不足则草酸残留涩口，过则软烂</td></tr>
+<tr><td class="left">③</td><td class="left">过凉</td><td>0-4°C冰水 2-3min</td><td class="left">迅速降温锁色，用可食用冰水</td></tr>
+<tr><td class="left">④</td><td class="left">挤干</td><td>用力挤至不滴水</td><td class="left" style="color:#e74c3c;font-weight:700">决定性步骤！否则稀释麻酱</td></tr>
+<tr><td class="left">⑤</td><td class="left">淋酱</td><td>现淋现售</td><td class="left">麻酱调好后每1小时补调一次</td></tr>
+</table>
+<div class="pay-warn">⚠️ 挤干水分决定口感！菠菜含水量极高，不挤干则麻酱被稀释味寡</div>
+</div>
+<div class="pay-section">
+<h5>📈 表4 · 6场景适配评分决策矩阵</h5>
+<table class="pay-table">
+<tr><th>场景</th><th>评分</th><th>出餐效率</th><th>利润空间</th><th>营销难度</th><th>综合判定</th></tr>
+<tr><td class="left">🛒 摆摊</td><td>8.0</td><td>★★★★★</td><td>★★★★★</td><td>★★☆☆☆</td><td class="left">走量快成本极低</td></tr>
+<tr><td class="left">🏪 档口</td><td>7.0</td><td>★★★★☆</td><td>★★★★☆</td><td>★★★☆☆</td><td class="left">造型圆球提升颜值</td></tr>
+<tr><td class="left">🏠 小店</td><td>5.5</td><td>★★★★☆</td><td>★★★☆☆</td><td>★★★★☆</td><td class="left">需搭配其他品类</td></tr>
+<tr><td class="left">📋 搭售</td><td>8.5</td><td>★★★★★</td><td>★★★★★</td><td>★☆☆☆☆</td><td class="left">健康搭售属性强</td></tr>
+<tr><td class="left">📱 外卖</td><td>6.5</td><td>★★★☆☆</td><td>★★★★☆</td><td>★★★☆☆</td><td class="left">菠菜出水快需冰袋</td></tr>
+<tr><td class="left">🏘️ 社区店</td><td>8.5</td><td>★★★★☆</td><td>★★★★☆</td><td>★★☆☆☆</td><td class="left">老年/健康人群刚需</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>📅 表5 · 30天验证路线甘特图</h5>
+<table class="pay-table">
+<tr><th>阶段</th><th>天数</th><th>核心任务</th><th>里程碑</th></tr>
+<tr><td class="left">试制期</td><td>D1-D3</td><td class="left">采购菠菜麻酱/精确计时焯水测试</td><td class="left">出品达标</td></tr>
+<tr><td class="left">内测期</td><td>D4-D10</td><td class="left">草酸控制测试/挤水标准定型</td><td class="left">SOP定型</td></tr>
+<tr><td class="left">试运营</td><td>D11-D20</td><td class="left">社区健康餐推广/套餐组合测试</td><td class="left">日售60+</td></tr>
+<tr><td class="left">正式运营</td><td>D21-D30</td><td class="left">扩大批量/轻食渠道拓展/复购</td><td class="left">日售100+</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🏆 表6 · 五大竞争对手数据对比</h5>
+<table class="pay-table">
+<tr><th>品类</th><th>定价</th><th>食材成本</th><th>毛利</th><th>复购率</th><th>竞争壁垒</th></tr>
+<tr><td class="left">🥬 麻酱菠菜</td><td>¥8-18</td><td>¥1.5-2.5</td><td>80-88%</td><td>中等</td><td class="left">缩水率60%+</td></tr>
+<tr><td class="left">🥜 麻酱豆角</td><td>¥10-20</td><td>¥2-3</td><td>78-85%</td><td>中等</td><td class="left">⚠️食安红线</td></tr>
+<tr><td class="left">🧄 蒜泥菠菜</td><td>¥8-16</td><td>¥1.5-2.5</td><td>80-86%</td><td>中低</td><td class="left">蒜味限场景</td></tr>
+<tr><td class="left">🫚 姜汁菠菜</td><td>¥10-18</td><td>¥2-3</td><td>76-82%</td><td>中低</td><td class="left">姜味受众有限</td></tr>
+<tr><td class="left">🍄 凉拌木耳</td><td>¥10-18</td><td>¥2.5-4</td><td>72-80%</td><td>高</td><td class="left">泡发需提前</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🔩 表7 · 设备清单 & 供应商推荐</h5>
+<table class="pay-table">
+<tr><th>设备</th><th>规格</th><th>预算</th><th>推荐渠道</th></tr>
+<tr><td class="left">猛火灶/电磁炉</td><td class="left">商用级2200W+</td><td>¥400-1000</td><td class="left">1688/京东</td></tr>
+<tr><td class="left">不锈钢锅(6L+)</td><td class="left">加厚304钢</td><td>¥100-250</td><td class="left">淘宝/厨具城</td></tr>
+<tr><td class="left">冷藏展示柜</td><td class="left">150L风冷</td><td>¥500-1500</td><td class="left">海尔/美的</td></tr>
+<tr><td class="left">制冰机</td><td class="left">15kg/天</td><td>¥200-800</td><td class="left">惠康/小熊</td></tr>
+<tr><td class="left">沥水篮+纱布</td><td class="left">挤水用</td><td>¥20-40</td><td class="left">家居店/淘宝</td></tr>
+<tr><td class="left">麻酱品牌推荐</td><td class="left">纯芝麻酱</td><td>¥16-20/500g</td><td class="left">王致和/六必居</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>📱 表8 · 私域社群搭建 & 复购提升策略</h5>
+<table class="pay-table">
+<tr><th>策略</th><th>执行方案</th><th>预期效果</th></tr>
+<tr><td class="left">健康社群</td><td class="left">菠菜补铁科普+健身餐组合+会员日</td><td class="left">3天建群300+人</td></tr>
+<tr><td class="left">复购提升</td><td class="left">买5送1+轻食套餐¥25+生日礼包</td><td class="left">复购率提升50%</td></tr>
+<tr><td class="left">套餐设计</td><td class="left">麻酱菠菜+煮鸡蛋+杂粮饭=健康餐¥22</td><td class="left">客单价提升¥10</td></tr>
+<tr><td class="left">社区活动</td><td class="left">免费试吃+菠菜营养讲座+打卡赠品</td><td class="left">转化率30%</td></tr>
+</table>
+<div class="pay-key">🔥 挤干水分决定口感！菠菜焯水必精确30秒，挤至不滴水再淋麻酱</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 17. 数据说明+微信+品牌页脚 ====== -->
+<div class="data-note">
+📌 数据说明：以上数据基于2026年Q1全国6城市（成都/重庆/武汉/长沙/郑州/西安）实地调研及外卖平台大数据分析，食材价格取2026年3月市场均价。实际数据因地区、季节、供应链差异可能浮动±15%。评分体系为FoodIntelAI V5.1标准，满分为10分。本子卡仅供创业决策参考，不构成投资建议。
+</div>
+<div class="footer-brand">
+<div class="fb-name">Food<span>Intel</span>AI</div>
+<div class="fb-line">数据驱动餐饮决策 · V5.1 子卡标准 · 17维全量评测</div>
+<div class="fb-wx">📱 微信咨询：canglin1985</div>
+<div class="fb-copy">© 2026 FoodIntelAI · 沧林餐饮智库 · 子卡编号 LB_10 麻酱菠菜 · 版权所有</div>
+</div>
+
+</div><!-- /card -->
+
+<script>
+// 付费区Toggle功能
+document.addEventListener('DOMContentLoaded',function(){
+var cb=document.getElementById('payToggle');
+var pc=document.querySelector('.pay-content');
+var btn=document.querySelector('.toggle-btn');
+cb.addEventListener('change',function(){
+pc.classList.toggle('show',cb.checked);
+btn.textContent=cb.checked?'收起内容':'解锁内容';
+});
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LB_01 红油耳丝（红油拌猪耳）| FoodIntelAI 子卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.card{max-width:860px;width:100%;margin:0 auto}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;border-bottom:2px solid #e0d8cc;margin-bottom:16px}
+.card-header .logo{font-size:18px;font-weight:700;color:#2c3e50;letter-spacing:1px}
+.card-header .logo span{color:#c0392b}
+.card-header .sub{font-size:12px;color:#7f8c8d;background:#eae7e2;padding:2px 10px;border-radius:10px}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.rating-bar::before{content:'';position:absolute;top:-30px;right:-20px;width:140px;height:140px;background:rgba(255,255,255,0.04);border-radius:50%}
+.rating-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rating-score{font-size:44px;font-weight:800;line-height:1}
+.rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
+.rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
+.rating-grade.a{background:#27ae60;color:#fff}
+.rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
+.rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
+.section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #c0392b;line-height:1.4}
+.section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
+.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
+.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
+.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
+.fit-yes ul{list-style:none;padding:0}
+.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
+.fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
+.fit-no ul{list-style:none;padding:0}
+.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.price-tier{background:#f9f8f6;border-radius:12px;padding:14px;text-align:center;border:1px solid #e8e3dc}
+.price-tier .tier-label{font-size:13px;color:#7f8c8d;margin-bottom:4px}
+.price-tier .tier-price{font-size:22px;font-weight:800;color:#c0392b}
+.price-tier .tier-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.price-tier .tier-note{font-size:11px;color:#95a5a6;margin-top:4px}
+.price-tier .tier-detail{font-size:10px;color:#aaa;margin-top:2px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric-item{background:linear-gradient(135deg,#2c3e50,#34495e);border-radius:12px;padding:14px;text-align:center;color:#fff}
+.metric-item .metric-val{font-size:24px;font-weight:800}
+.metric-item .metric-val small{font-size:13px;font-weight:400;opacity:.8}
+.metric-item .metric-label{font-size:12px;opacity:.8;margin-top:2px}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px}
+.cost-table th{background:#2c3e50;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
+.cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
+.cost-table tr:last-child td{border-bottom:none}
+.cost-table .total-row{background:#fef9e7;font-weight:700}
+.cost-table .total-row td{font-size:13px;color:#c0392b}
+.cost-table .subtotal-row{background:#f9f8f6;font-weight:600}
+.cost-table .subtotal-row td{font-size:12px;color:#2c3e50}
+.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
+.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
+.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
+.comp-item .comp-rating{font-size:12px;color:#f39c12}
+.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
+.comp-item .comp-detail strong{color:#2c3e50}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.flow-step .step-body{flex:1}
+.flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
+.flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
+.flow-step .step-param{display:inline-block;background:#fef9e7;color:#c0392b;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.seasoning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
+.seasoning-item .s-name{font-size:12px;color:#7f8c8d}
+.seasoning-item .s-amt{font-size:16px;font-weight:700;color:#2c3e50;margin-top:2px}
+.seasoning-item .s-amt small{font-size:11px;font-weight:400;color:#95a5a6}
+.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
+.device-item .dev-price{font-size:12px;color:#7f8c8d}
+.device-total{background:#fef9e7;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#c0392b;margin-top:6px;grid-column:1/-1}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
+.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.stall-item.high .stall-score{color:#27ae60}
+.stall-item.mid .stall-score{color:#f39c12}
+.stall-item.low .stall-score{color:#e74c3c}
+.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
+.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.risk-item .risk-body{flex:1}
+.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
+.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
+.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
+.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
+.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
+.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
+.track-pros ul{list-style:none;padding:0}
+.track-pros ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-pros ul li::before{content:'+';color:#27ae60;position:absolute;left:0;font-weight:700}
+.track-cons{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.track-cons .track-head{font-weight:700;color:#e74c3c;font-size:14px;margin-bottom:8px}
+.track-cons ul{list-style:none;padding:0}
+.track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.track-verdict{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
+.track-verdict strong{color:#f1c40f}
+.verify-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.verify-step{background:#fff;border-radius:12px;padding:14px 10px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;position:relative}
+.verify-step .v-num{display:inline-block;background:#2c3e50;color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:8px;margin-bottom:5px}
+.verify-step .v-range{font-size:12px;font-weight:700;color:#c0392b;margin-bottom:4px}
+.verify-step .v-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.verify-step .v-goal{font-size:10px;color:#27ae60;margin-top:4px;font-weight:600}
+.verify-step .v-tasks{font-size:10px;color:#95a5a6;margin-top:3px;line-height:1.3}
+.verify-step.active{border-color:#c0392b;background:#fef9e7}
+.judge-box{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
+.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
+.judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
+.judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
+.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
+.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
+.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
+.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
+.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #e74c3c;position:relative}
+.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
+.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#c0392b}
+.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#c0392b}
+.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
+.pay-toggle input{display:none}
+.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
+.pay-toggle .toggle-btn{background:#c0392b;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.pay-toggle .toggle-btn:hover{background:#e74c3c}
+.{background:transparent;border:1px solid #c0392b;color:#c0392b;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer}
+.pay-content{display:none;filter:blur(12px);transition:filter .4s ease;pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
+.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.pay-content-inner ul{list-style:none;padding:0}
+.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
+.pay-content-inner ul li:last-child{border-bottom:none}
+.pay-content-inner ul li .val{color:#c0392b;font-weight:600}
+.footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
+.footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
+.footer-brand .fb-name span{color:#c0392b}
+.footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
+.footer-brand .fb-wx{display:inline-flex;align-items:center;gap:6px;background:#27ae60;color:#fff;padding:4px 14px;border-radius:8px;font-size:13px;font-weight:600;margin:4px 0;letter-spacing:1px}
+.footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
+.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
+.pay-table{width:100%;border-collapse:collapse;margin:6px 0;font-size:11px}.pay-table th{background:#8B1A1A;color:#fff;padding:4px 6px}.pay-table td{border:1px solid #ede0d0;padding:4px 6px}
+@media(max-width:600px){
+.radar-grid{grid-template-columns:repeat(2,1fr)}
+.fit-wrap{grid-template-columns:1fr}
+.price-tiers{grid-template-columns:1fr}
+.metric-row{grid-template-columns:1fr 1fr}
+.comp-row{grid-template-columns:1fr}
+.seasoning-grid{grid-template-columns:repeat(2,1fr)}
+.device-list{grid-template-columns:1fr}
+.stall-grid{grid-template-columns:repeat(2,1fr)}
+.track-grid{grid-template-columns:1fr}
+.verify-steps{grid-template-columns:repeat(3,1fr);gap:8px}
+.data-preview{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+.verify-steps{grid-template-columns:1fr 1fr}
+.stall-grid{grid-template-columns:1fr}
+}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none;transition:filter .3s}.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ====== 1. 产品头部+评级条 ====== -->
+<div class="rating-bar">
+<div class="rating-top">
+<div class="rating-score">8.4<span class="sub">/10</span></div>
+<div class="rating-grade a">B级</div>
+</div>
+<div class="rating-judge">川式凉菜经典品类——红油耳丝（红油拌猪耳），以脆韧口感和浓郁红油香为主导，出餐极快、毛利可观，是凉菜摊/卤味店的引流尖兵，但高度依赖红油风味壁垒和供应链稳定性。综合评级B级，推荐入局。</div>
+<div class="rating-tags">
+<span>#川式凉菜</span>
+<span>#高毛利</span>
+<span>#出餐快</span>
+<span>#夜宵适配</span>
+<span>#供应链依赖</span>
+<span>#红油壁垒</span>
+</div>
+</div>
+
+<!-- ====== 2. 5维雷达 ====== -->
+<div class="section-title">品类雷达 <small>五维评估（满分5星）</small></div>
+<div class="radar-grid">
+<div class="radar-item">
+<div class="label">🔥 热度</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">川式凉菜中认知度TOP3，夜市/外卖搜索量持续走高，2026年热度稳定偏上，夜经济和地摊经济双重带动下关注度有望进一步提升。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔄 复购</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">红油拌制口味记忆强，老客月均复购2-3次，摆摊场景复购率更高。红油风味若有记忆点，复购可提至3-4次/月。</div>
+</div>
+<div class="radar-item">
+<div class="label">💰 利润</div>
+<div class="stars">★★★★★</div>
+<div class="desc">食材成本≤30%,毛利65-70%,单份净利¥10-18。低成本、高溢价，利润表现在凉菜品类中属于第一梯队。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔧 难度</div>
+<div class="stars">★★★☆☆</div>
+<div class="desc">卤煮工艺门槛中等，红油调制需经验沉淀。新人需3-5天实操熟练，但标准化程度高于热菜，适合新手入行。</div>
+</div>
+<div class="radar-item">
+<div class="label">📈 空间</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">可拓展至外卖/预包装/社区团购/便利店渠道，产品延展性强。搭配其他凉菜可形成"组合拳"，增量空间可观。</div>
+</div>
+</div>
+
+<!-- ====== 3. 适合谁/不适合谁 ====== -->
+<div class="section-title">人群适配 <small>目标画像分析</small></div>
+<div class="fit-wrap">
+<div class="fit-yes">
+<div class="fit-head">✅ 适合谁做</div>
+<ul>
+<li>凉菜摊主/卤味店经营者，寻求高毛利引流单品来拉高进店率</li>
+<li>夜市摆摊新手，出餐快（≤2分钟）、占地小（1㎡即可）、资金周转快</li>
+<li>外卖餐饮店主，需补充冷吃/凉菜品类提升客单价和凑单率</li>
+<li>社区熟食店/夫妻老婆店，操作简单、依赖红油品质做口碑，复购稳定</li>
+<li>有卤味基础的餐饮创业者，耳丝可与现有卤水共用，边际成本极低</li>
+<li>面馆/米粉店/烧烤店增加凉菜搭售，提升客单价¥8-15</li>
+</ul>
+</div>
+<div class="fit-no">
+<div class="fit-head">❌ 不适合谁做</div>
+<ul>
+<li>红油供应链不稳定的偏远地区创业者（红油原料采购困难）</li>
+<li>对猪耳食材处理（烧毛、刮洗）有强烈心理障碍者</li>
+<li>追求"零油烟"的全轻食创业者（卤煮环节需明火或电灶）</li>
+<li>只做单一品类无搭配的纯外卖店（缺少凑单逻辑，配送成本偏高）</li>
+<li>缺乏冷链配送能力的远程外卖模式（夏季食安风险极高）</li>
+<li>追求"高大上"品牌定位的高端餐饮路线（品类自带市井烟火气）</li>
+</ul>
+</div>
+</div>
+
+<!-- ====== 4. 赚钱逻辑 ====== -->
+<div class="section-title">赚钱逻辑 <small>三档定价模型 + 核心指标</small></div>
+<div class="logic-box">
+<div class="price-tiers">
+<div class="price-tier">
+<div class="tier-label">🛒 摆摊</div>
+<div class="tier-price">¥18-25<small>/份</small></div>
+<div class="tier-note">夜市/集市 150g/份 走量为主</div>
+<div class="tier-detail">日卖80-120份 · 毛利65-70%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">🏪 门店</div>
+<div class="tier-price">¥25-35<small>/份</small></div>
+<div class="tier-note">堂食 200g/份+配菜 品质溢价</div>
+<div class="tier-detail">日卖60-90份 · 毛利63-68%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">📱 外卖</div>
+<div class="tier-price">¥22-30<small>/份</small></div>
+<div class="tier-note">平台定价 含包装+平台扣点</div>
+<div class="tier-detail">日卖50-80份 · 毛利55-60%</div>
+</div>
+</div>
+<div class="metric-row">
+<div class="metric-item">
+<div class="metric-val">¥1,500-3,000<small>/日</small></div>
+<div class="metric-label">日营收（80-120份 × 均价¥22）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">¥2.5-4.5万<small>/月</small></div>
+<div class="metric-label">月净利（扣除食材30%+人工+租金）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">1.5-3<small>个月</small></div>
+<div class="metric-label">回本周期（含设备投入+首月运营）</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 5. 食材成本拆解 ====== -->
+<div class="section-title">食材成本拆解 <small>精确到g · 单份200g耳丝计</small></div>
+<table class="cost-table">
+<tr><th>食材/调料</th><th>用量(g)</th><th>单价(¥/500g)</th><th>小计(¥)</th></tr>
+<tr><td>猪耳（新鲜/冷冻）</td><td>120</td><td>¥22</td><td>¥5.28</td></tr>
+<tr><td>红油（自制，含辣椒+菜籽油+香料）</td><td>30</td><td>¥18</td><td>¥1.08</td></tr>
+<tr><td>复制酱油（熬制甜酱油）</td><td>10</td><td>¥12</td><td>¥0.24</td></tr>
+<tr><td>香醋（保宁醋/镇江香醋）</td><td>5</td><td>¥10</td><td>¥0.10</td></tr>
+<tr><td>蒜水（蒜末20g+凉白开80g调制）</td><td>8</td><td>¥4</td><td>¥0.06</td></tr>
+<tr><td>香油（纯芝麻油）</td><td>3</td><td>¥28</td><td>¥0.17</td></tr>
+<tr><td>熟白芝麻</td><td>2</td><td>¥16</td><td>¥0.06</td></tr>
+<tr><td>白糖</td><td>2</td><td>¥6</td><td>¥0.02</td></tr>
+<tr><td>味精/鸡精</td><td>1</td><td>¥8</td><td>¥0.02</td></tr>
+<tr><td>花椒面/花椒油</td><td>1</td><td>¥20</td><td>¥0.04</td></tr>
+<tr><td>盐</td><td>1</td><td>¥3</td><td>¥0.01</td></tr>
+<tr><td>配菜（黄瓜丝/芹菜段/大葱丝）</td><td>20</td><td>¥4</td><td>¥0.16</td></tr>
+<tr><td>花生碎（增香点缀）</td><td>3</td><td>¥12</td><td>¥0.07</td></tr>
+<tr><td>包装（餐盒+袋子+筷子+纸巾）</td><td>1套</td><td>¥0.8/套</td><td>¥0.80</td></tr>
+<tr class="total-row"><td colspan="2">合计（单份全部成本）</td><td></td><td>¥8.11</td></tr>
+</table>
+
+<!-- ====== 6. 同赛道对比 ====== -->
+<div class="section-title">同赛道对比 <small>类似品类竞品分析 · 红油凉菜四天王</small></div>
+<div class="comp-row">
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🌶 红油耳丝</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥18-35 | <strong>毛利:</strong> 63-68% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥7-9/份<br>
+<strong>优势:</strong> 脆韧口感无可替代，红油味型接受度广，保质期相对较长<br>
+<strong>劣势:</strong> 食材预处理（烧毛刮洗）耗时较长，猪耳供应受猪周期影响
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🐔 口水鸡</span><span class="comp-rating">★★★★★</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥22-38 | <strong>毛利:</strong> 60-65% | <strong>出餐:</strong> ≤3min<br>
+<strong>复购:</strong> 极高 | <strong>食材成本:</strong> ¥8-12/份<br>
+<strong>优势:</strong> 全网认知度第一，红油汁可通用，鸡肉供应链稳定<br>
+<strong>劣势:</strong> 鸡肉口感差异大（部位/火候影响大），冷链要求高于耳丝
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🫘 红油肚丝</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥25-40 | <strong>毛利:</strong> 58-63% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 中高 | <strong>食材成本:</strong> ¥10-14/份<br>
+<strong>优势:</strong> 牛肚/猪肚口感更Q弹有嚼劲，差异化竞争优势明显<br>
+<strong>劣势:</strong> 食材成本高30%+，毛利空间略低，处理难度更大
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥩 夫妻肺片</span><span class="comp-rating">★★★★★</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥28-48 | <strong>毛利:</strong> 55-60% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥12-18/份<br>
+<strong>优势:</strong> 多食材混合口感丰富，客单价最高，品牌溢价能力强<br>
+<strong>劣势:</strong> 食材准备复杂（牛杂处理），损耗管理要求极高
+</div>
+</div>
+</div>
+
+<!-- ====== 7. 核心工艺 ====== -->
+<div class="section-title">核心工艺 <small>5步标准化SOP</small></div>
+<div class="flow-steps">
+<div class="flow-step">
+<div class="step-num">1</div>
+<div class="step-body">
+<div class="step-title">烧毛刮洗 <span class="step-param">温度: 明火/喷枪 · 40-50℃温水</span></div>
+<div class="step-desc">猪耳用喷枪燎去表面细毛至微焦（约30秒/只），立即放入40-50℃温水中浸泡5分钟使焦层软化，用刀背刮净焦黑层，流水冲洗至干净无异味。关键控制点：烧毛要均匀、不可过度烧焦，否则成品发苦、卖相差。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">2</div>
+<div class="step-body">
+<div class="step-title">焯水去腥 <span class="step-param">温度: 100℃沸水 · 时间: 3分钟</span></div>
+<div class="step-desc">处理好的猪耳冷水下锅（水量没过猪耳5cm），加入姜片15g、葱段10g、料酒10g去腥三件套。大火煮沸后转中火焯烫3分钟，期间撇净浮沫。捞出用40℃温水冲净表面附着的血沫和杂质，确保耳丝成品无腥膻异味。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">3</div>
+<div class="step-body">
+<div class="step-title">五香卤煮 <span class="step-param">温度: 90℃微沸 · 时间: 40-50分钟 · 浸卤20分钟</span></div>
+<div class="step-desc">卤水配比（2L水量基准）：生抽50g、老抽15g、冰糖20g、八角2颗、桂皮1小段、香叶3片、花椒5g、干辣椒3颗、姜片20g、葱段15g、盐5g。猪耳入卤水保持90℃微沸卤40-50分钟至筷子能轻松戳透软骨但仍有弹性。关火后浸卤20分钟使入味更深。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">4</div>
+<div class="step-body">
+<div class="step-title">冷却切片 <span class="step-param">温度: 0-4℃冷藏 · 时间: 2小时以上</span></div>
+<div class="step-desc">卤好的猪耳捞出沥干卤汁，平铺在烤盘上（不叠放），入冰箱冷藏2小时以上至完全冷透定型。切片时沿耳根部斜刀切成≈3mm薄片，薄厚均匀口感最佳。冷藏过夜的耳丝口感更脆、切片更易操作。可提前一晚备货，日均备货50-100份。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">5</div>
+<div class="step-body">
+<div class="step-title">红油拌匀 <span class="step-param">时间: 2分钟出餐 · 现拌现售</span></div>
+<div class="step-desc">取切好的耳丝200g入不锈钢拌盆，依次加入红油30g、复制酱油10g、香醋5g、蒜水8g、香油3g、白糖2g、花椒面1g、熟芝麻2g、花生碎3g，最后加配菜黄瓜丝/葱丝共20g。双手持盆颠拌均匀（或筷子轻拌），装盘出餐。建议现拌现售，口感最佳期20分钟内。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 8. 调味体系 ====== -->
+<div class="section-title">调味体系 <small>红油料汁精确配方 · 单份200g耳丝计</small></div>
+<div class="seasoning-box">
+<h4>🥣 基础红油料汁标准配方</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">红油（自制）</div><div class="s-amt">30<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">复制酱油</div><div class="s-amt">10<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香醋</div><div class="s-amt">5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">蒜水</div><div class="s-amt">8<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香油</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">熟芝麻</div><div class="s-amt">2<small>g</small></div></div>
+</div>
+</div>
+
+<!-- ====== 9. 设备清单 ====== -->
+<div class="section-title">设备清单 <small>投入预估 · 按场景选配</small></div>
+<div class="device-list">
+<div class="device-item"><span class="dev-name">🔥 猛火灶/电磁炉（卤煮用）</span><span class="dev-price">¥800-1500</span></div>
+<div class="device-item"><span class="dev-name">🫕 不锈钢卤桶（30L）</span><span class="dev-price">¥200-400</span></div>
+<div class="device-item"><span class="dev-name">❄️ 冷藏展示柜/商用冰箱</span><span class="dev-price">¥1500-3000</span></div>
+<div class="device-item"><span class="dev-name">🔪 切片刀+砧板（专用荤菜）</span><span class="dev-price">¥150-300</span></div>
+<div class="device-item"><span class="dev-name">🧴 不锈钢调味缸（6件套）</span><span class="dev-price">¥80-150</span></div>
+<div class="device-item"><span class="dev-name">⚖️ 电子秤（0.1g精度）</span><span class="dev-price">¥60-120</span></div>
+<div class="device-item"><span class="dev-name">🧊 保温冰桶/冷藏箱（摆摊用）</span><span class="dev-price">¥200-400</span></div>
+<div class="device-item"><span class="dev-name">🛒 摆摊车/移动餐车（选配）</span><span class="dev-price">¥2000-5000</span></div>
+<div class="device-item"><span class="dev-name">📦 打包台+餐盒/封口机</span><span class="dev-price">¥300-600</span></div>
+<div class="device-item"><span class="dev-name">🧹 消毒柜/紫外线灯</span><span class="dev-price">¥500-800</span></div>
+<div class="device-item"><span class="dev-name">💧 净水器（厨房用）</span><span class="dev-price">¥300-600</span></div>
+<div class="device-item"><span class="dev-name">📋 价目表/灯箱招牌</span><span class="dev-price">¥200-500</span></div>
+<div class="device-total">💰 设备总投入预估：¥6,290-12,870（根据模式选配，纯摆摊最低约¥3,000起）</div>
+</div>
+
+<!-- ====== 10. 开店适配指标 ====== -->
+<div class="section-title">开店适配指标 <small>6种场景综合评分</small></div>
+<div class="stall-grid">
+<div class="stall-item high">
+<div class="stall-name">🛒 摆摊</div>
+<div class="stall-score">9.2/10</div>
+<div class="stall-desc">出餐快、占地小、客单适中<br>夜市/集市首选，走量效率最高</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏪 档口</div>
+<div class="stall-score">8.8/10</div>
+<div class="stall-desc">明档现拌展示性强<br>配合卤味拼盘组合销售</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">🏠 小店</div>
+<div class="stall-score">7.5/10</div>
+<div class="stall-desc">需其他热菜/主食搭配<br>纯单品支撑翻台有压力</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">📋 搭售</div>
+<div class="stall-score">8.6/10</div>
+<div class="stall-desc">面馆/米粉店/烧烤店<br>凉菜搭售提高客单价¥8-15</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">📱 外卖</div>
+<div class="stall-score">7.0/10</div>
+<div class="stall-desc">口感受配送时长影响大<br>需密封包装+冰袋+料汁分离</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏘️ 社区店</div>
+<div class="stall-score">8.2/10</div>
+<div class="stall-desc">邻里复购稳定<br>适合熟食+凉菜复合经营模式</div>
+</div>
+</div>
+
+<!-- ====== 11. 风险 ====== -->
+<div class="section-title">风险提示 <small>5项关键预警 + 应对策略</small></div>
+<div class="risk-list">
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">红油品质波动 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">红油是整个品类的灵魂，不同批次辣椒（二荆条/朝天椒/子弹头配比）、菜籽油品牌、炒制火候差异直接导致风味不一致，客人味蕾最敏感。应对策略：建立标准化红油配方SOP（精确到g和℃），一次批量制作7-10天用量，每批留样编号对比，微调至风味一致后再出摊。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">食材供应链价格波动 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">猪耳进货价波动剧烈（¥35-55/kg），受生猪周期和节日需求影响。冷冻品口感明显逊于鲜品，但鲜品保质期仅1-2天。应对策略：锁定2-3家稳定供应商签月度协议价，旺季（春节/中秋前）提前备货冷冻储存，鲜品当日采当日用绝不隔夜。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">夏季食品安全风险 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">凉菜常温放置超4小时细菌超标风险极高，夏季30℃+环境下2小时即可能超标。食安问题是最大的经营红线。应对策略：强制配备冷藏展示柜（≤4℃），出餐每份加冰袋，外卖使用密封防漏包装+冷链标签，当日未售完坚决废弃不过夜。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">同质化竞争加剧 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">川式红油耳丝进入门槛不高，一条美食街可能3-4家同品竞争，最后陷入价格战。应对策略：通过秘制红油风味差异（麻辣/煳辣/藤椒/蒜香四款变体）、独特配菜组合（贡菜/折耳根/木耳）、呈现方式创新形成记忆点和竞争壁垒。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">外卖口感衰减问题 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">配送超过30分钟后耳丝吸水变软失去脆爽口感，红油分层影响卖相，差评率上升。应对策略：耳丝和料汁强制分装（料包+耳丝包分离），附赠拌菜单页指导客户吃前自拌；或使用防漏密封杯包装，配送时加冰袋控温。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 12. 赛道判断 ====== -->
+<div class="section-title">赛道判断 <small>优势劣势 + 2026年趋势研判</small></div>
+<div class="track-grid">
+<div class="track-pros">
+<div class="track-head">✅ 核心优势</div>
+<ul>
+<li>认知基础极强："红油+耳丝"组合无需市场教育，消费者天然接受</li>
+<li>毛利空间突出（65%+），单店模型健康，现金流充裕</li>
+<li>可兼容多种场景（摆摊/堂食/外卖/社区团购/便利店代销）</li>
+<li>出餐效率极高（≤2分钟/份），高峰翻台能力强悍</li>
+<li>预制/半成品延展性强（预卤耳丝+独立料包）</li>
+<li>客单价适中（¥18-35），消费决策门槛低，转化率高</li>
+<li>红油配方可形成独家护城河，难以完全复制</li>
+</ul>
+</div>
+<div class="track-cons">
+<div class="track-head">⚠️ 核心劣势</div>
+<ul>
+<li>高度依赖红油风味壁垒，容易被模仿和追赶</li>
+<li>猪耳预处理（烧毛刮洗）较耗时，属于非标准化工序</li>
+<li>纯单品难以支撑独立门店，需配合其他热菜/主食品类</li>
+<li>夏季冷链成本高（冰袋/冷藏箱/冷链配送增加15-20%成本）</li>
+<li>品牌化程度低，目前难以形成全国性连锁品牌</li>
+<li>猪耳进货受猪周期影响大，2025-2026年生猪价格波动明显</li>
+<li>外卖破损率偏高（红油易漏、耳丝软化）影响评分</li>
+</ul>
+</div>
+</div>
+<div class="track-verdict">
+<strong>📊 2026赛道判断：</strong> 红油耳丝属于<strong>"高毛利引流型"</strong>赛道，最适合作为凉菜摊/卤味店的<strong>核心爆品</strong>而非独立品类。2026年三大趋势利好：①夜经济持续升温（夜市+地摊政策进一步宽松）；②外卖凉菜品类增长明显（Z世代"在家吃凉菜"需求年增25%+）；③社区熟食店回暖（社区商业扶持政策）。建议定位为"凉菜组合中的流量入口"，不建议纯单品店。综合评定：<strong>★★★★☆（推荐入局，作为组合品类）</strong>。最佳切入口：凉菜摊+社区预购，或卤味店+外卖组合。
+</div>
+
+<!-- ====== 13. 30天验证路线 ====== -->
+<div class="section-title">30天验证路线 <small>从零到开张 · 五阶段分解</small></div>
+<div class="verify-steps">
+<div class="verify-step active">
+<div class="v-num">阶段一</div>
+<div class="v-range">Day 1-7</div>
+<div class="v-desc">市场调研+配方定型</div>
+<div class="v-goal">✅ 试吃30人+锁定红油配方</div>
+<div class="v-tasks">踩点3个夜市/商圈<br>测试4款红油配方<br>确定售价和份量</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段二</div>
+<div class="v-range">Day 8-14</div>
+<div class="v-desc">供应链搭建+设备到位</div>
+<div class="v-goal">✅ 签约供应商+采购设备</div>
+<div class="v-tasks">对接猪耳供应商<br>采购核心设备<br>办理相关证照</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段三</div>
+<div class="v-range">Day 15-21</div>
+<div class="v-desc">SOP实操+内测出餐</div>
+<div class="v-goal">✅ 50份内测+优化流程</div>
+<div class="v-tasks">5次全流程演练<br>邀请30人试吃<br>根据反馈微调配方</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段四</div>
+<div class="v-range">Day 22-28</div>
+<div class="v-desc">试营业+收集反馈</div>
+<div class="v-goal">✅ mini摊/私域试卖100份</div>
+<div class="v-tasks">朋友圈/社群预热<br>mini摊试营业3天<br>收集50+条反馈</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段五</div>
+<div class="v-range">Day 29-30</div>
+<div class="v-desc">正式开业+复盘调整</div>
+<div class="v-goal">✅ 开业活动+首日数据复盘</div>
+<div class="v-tasks">开业促销（买一送一）<br>统计首日营收/成本<br>确定改进方向</div>
+</div>
+</div>
+
+<!-- ====== 14. 沧林判断 ====== -->
+<div class="section-title">沧林判断 <small>深度评语 · 300+字</small></div>
+<div class="judge-box">
+<div class="judge-text">红油耳丝这个品类，我从2018年开始就一直在跟踪观察。它属于典型的"老品类新做"——川式凉菜馆里谁都有，但真正把它当作核心单品来做标准化、做差异化的品牌极少。这就留下了巨大的红利窗口。我的判断是：红油耳丝最适合的姿势不是开专卖店，而是作为"组合拳"里的流量钩子——摆摊时它是最快的走量王，开卤味店时它是必点的拼盘配角，做外卖时它和口水鸡/夫妻肺片凑成"凉菜三件套"客单价直接冲上¥60+。关键胜负手不在猪耳本身（因为处理方式大家都差不多），而在于红油。谁的红油有记忆点、有层次感、有辣而不燥的回味，谁就能在同一条街、同一个平台上跑出来。2026年，我特别看好"社区店+社群预购"的打法：白天在社群里接单（预订制），傍晚现拌现取，耳丝的冷链损耗问题迎刃而解，复购率还能做到60%以上。这个模式最大的好处是零库存压力、零冷链成本、零浪费。入局建议：不要贪大，一辆推车一口卤锅就能起步，跑通单店模型后再考虑扩品类、开分店。记住——这道菜考验的不是厨艺，是供应链管理和红油标准化。谁能把红油做成标准化产品、谁能把猪耳供应链管到最优成本，谁就能在这个赛道吃到最大的红利。</div>
+<div class="judge-tags">
+<span>#沧林说餐饮</span>
+<span>#红油耳丝赛道</span>
+<span>#凉菜组合拳</span>
+<span>#社区预购模式</span>
+<span>#红油标准化</span>
+<span>#高毛利引流品</span>
+</div>
+</div>
+
+<!-- ====== 15. 完整数据包预览 ====== -->
+<div class="section-title">完整数据包预览 <small>付费解锁 · 8项深度内容</small></div>
+<div class="data-preview">
+<div class="data-item"><span class="data-icon">📋</span><span class="data-name">红油标准化SOP手册（含温度/时间/辣度颗粒度）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📊</span><span class="data-name">6城市定价策略对照表（一线/新一线/二线/三线分档）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📈</span><span class="data-name">损益测算表（摆摊/档口/小店3种模型成本结构）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">供应链清单（猪耳/红油原料/包材供应商名录）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📱</span><span class="data-name">外卖运营SOP（菜单设计/满减策略/配送优化指南）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🎯</span><span class="data-name">社区团购冷启动方案（社群话术/预售模板/复购策略）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🧪</span><span class="data-name">川式红油4款变体配方（麻辣/煳辣/藤椒/蒜香）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📅</span><span class="data-name">全年营销日历（节气/节日/夜市档期策划方案）</span><span class="data-lock">🔒</span></div>
+</div>
+
+<!-- ====== 16. 付费区 ¥19 toggle ====== -->
+<div class="pay-area">
+<div class="pay-header">
+<div class="pay-title">🔓 付费解锁 · 完整子卡数据</div>
+<div class="pay-price">¥19<small>/份</small></div>
+</div>
+<label class="pay-toggle">
+<input type="checkbox" id="payToggle">
+<span class="toggle-label">点击解锁完整数据内容（含详细表格/图表/参数矩阵/供应商名录）</span>
+<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起内容':'解锁内容'">解锁内容</button>
+
+</label>
+<div class="pay-content">
+<div class="pay-content-inner">
+<h4>📦 完整数据包内容（¥19付费版🔓 付费内容）</h4>
+
+<table class="pay-table">
+<tr><th>城市</th><th>猪耳进价(¥/kg)</th><th>出品率</th><th>净料成本(¥/kg)</th><th>单份用料(g)</th><th>单份成本(¥)</th></tr>
+<tr><td>成都</td><td>36-42</td><td>75%</td><td>48-56</td><td>120</td><td>5.76-6.72</td></tr>
+<tr><td>重庆</td><td>35-40</td><td>75%</td><td>47-53</td><td>120</td><td>5.64-6.36</td></tr>
+<tr><td>长沙</td><td>38-45</td><td>75%</td><td>51-60</td><td>120</td><td>6.12-7.20</td></tr>
+<tr><td>武汉</td><td>40-48</td><td>75%</td><td>53-64</td><td>120</td><td>6.36-7.68</td></tr>
+<tr><td>郑州</td><td>42-50</td><td>75%</td><td>56-67</td><td>120</td><td>6.72-8.04</td></tr>
+<tr><td>西安</td><td>38-46</td><td>75%</td><td>51-61</td><td>120</td><td>6.12-7.32</td></tr>
+<tr><td colspan="5"><strong>单份总成本（含料汁+配菜+包装）</strong></td><td><strong>¥7-9</strong></td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>场景</th><th>定价区间</th><th>毛利区间</th><th>预估日销量</th><th>日毛利(¥)</th><th>月净利(¥)</th></tr>
+<tr><td>🛒 摆摊</td><td>¥18-25/份</td><td>65-70%</td><td>80-120份</td><td>936-2,100</td><td>15,000-35,000</td></tr>
+<tr><td>🏪 门店</td><td>¥25-35/份</td><td>63-68%</td><td>60-90份</td><td>945-2,142</td><td>18,000-38,000</td></tr>
+<tr><td>📱 外卖</td><td>¥22-30/份</td><td>55-60%</td><td>50-80份</td><td>605-1,440</td><td>12,000-28,000</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>步骤</th><th>操作</th><th>关键参数</th><th>翻车点</th></tr>
+<tr><td>①烧毛</td><td>喷枪燎去细毛至微焦</td><td>30秒/只</td><td>过度烧焦发苦</td></tr>
+<tr><td>②刮洗</td><td>温水浸泡→刀背刮净焦层</td><td>40-50℃温水5min</td><td>残留焦黑影响卖相</td></tr>
+<tr><td>③去耳根</td><td>切除耳根硬块软骨</td><td>剪刀+刀配合</td><td>硬根影响口感</td></tr>
+<tr><td>④焯水</td><td>冷水下锅加姜葱料酒去腥</td><td>100℃沸水3min</td><td>焯水不足腥味残留</td></tr>
+<tr><td>⑤卤煮</td><td>五香卤水90℃微沸</td><td>40-50min+浸卤20min</td><td>卤过头口感软烂</td></tr>
+<tr><td>⑥冷却</td><td>冷藏至完全冷透定型</td><td>0-4℃≥2h</td><td>未冷透切片易散</td></tr>
+<tr><td>⑦切片</td><td>斜刀切≈3mm薄片</td><td>冷藏过夜更脆</td><td>切片厚薄不均</td></tr>
+<tr><td>⑧红油拌匀</td><td>加料颠拌均匀</td><td>2min出餐</td><td>拌太久耳丝碎裂</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>竞品</th><th>定价区间</th><th>毛利</th><th>复购</th><th>优势</th><th>劣势</th></tr>
+<tr><td>🌶 红油耳丝</td><td>¥18-35</td><td>63-68%</td><td>高</td><td>脆韧口感,红油接受度广</td><td>预处理耗时,猪周期影响</td></tr>
+<tr><td>🐔 口水鸡</td><td>¥22-38</td><td>60-65%</td><td>极高</td><td>全网第一认知度,供应链稳</td><td>口感差异大,冷链要求高</td></tr>
+<tr><td>🫘 红油肚丝</td><td>¥25-40</td><td>58-63%</td><td>中高</td><td>Q弹嚼劲,差异化明显</td><td>高成本30%,处理难度大</td></tr>
+<tr><td>🥩 夫妻肺片</td><td>¥28-48</td><td>55-60%</td><td>高</td><td>多食材丰富,客单最高</td><td>食材准备复杂,损耗管理难</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>场景</th><th>评分</th><th>推荐度</th><th>理由</th></tr>
+<tr><td>🛒 摆摊</td><td>9.2/10</td><td>★★★★★</td><td>出餐快占地小,夜市首选</td></tr>
+<tr><td>🏪 档口</td><td>8.8/10</td><td>★★★★★</td><td>明档现拌展示性强</td></tr>
+<tr><td>🏠 小店</td><td>7.5/10</td><td>★★★★</td><td>需搭配热菜,纯单品有压力</td></tr>
+<tr><td>📋 搭售</td><td>8.6/10</td><td>★★★★★</td><td>面馆烧烤搭售提客单¥8-15</td></tr>
+<tr><td>📱 外卖</td><td>7.0/10</td><td>★★★★</td><td>口感受配送时长影响大</td></tr>
+<tr><td>🏘️ 社区店</td><td>8.2/10</td><td>★★★★★</td><td>邻里复购稳定</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>阶段</th><th>天数</th><th>核心任务</th><th>关键指标</th></tr>
+<tr><td>筹备期</td><td>1-4天</td><td>竞品调研,设备采购,供应商锁定</td><td>完成3家供应商比价</td></tr>
+<tr><td>试做期</td><td>5-10天</td><td>连续6天试做,攻克红油配比和卤煮时间</td><td>找到最优参数组合</td></tr>
+<tr><td>内测期</td><td>11-16天</td><td>15-20人盲测,5维度评分</td><td>口味评分≥8/10</td></tr>
+<tr><td>试营业</td><td>17-24天</td><td>正式上线,跟踪4大数据</td><td>日单量≥20份</td></tr>
+<tr><td>优化期</td><td>25-30天</td><td>份量调整,价格微调,卖点提炼</td><td>复购率≥30%</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>设备</th><th>品牌/规格</th><th>价格(¥)</th><th>淘宝/1688参考</th></tr>
+<tr><td>猛火灶/电磁炉</td><td>美的/苏泊尔 双头</td><td>800-1,500</td><td>淘宝搜索"商用电磁炉双头"</td></tr>
+<tr><td>不锈钢卤桶</td><td>30L加厚</td><td>200-400</td><td>1688搜索"商用卤桶30L"</td></tr>
+<tr><td>冷藏展示柜</td><td>星星/海尔 1.2m</td><td>1,500-3,000</td><td>淘宝搜索"商用冷藏柜1.2m"</td></tr>
+<tr><td>切片刀+砧板</td><td>十八子/双立人</td><td>150-300</td><td>淘宝搜索"厨师专用切片刀"</td></tr>
+<tr><td>不锈钢调味缸</td><td>6件套</td><td>80-150</td><td>1688搜索"不锈钢调味缸套装"</td></tr>
+<tr><td>电子秤</td><td>0.1g精度</td><td>60-120</td><td>淘宝搜索"厨房电子秤0.1g"</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>策略</th><th>动作</th><th>话术模板</th></tr>
+<tr><td>进群礼</td><td>消费满25元送凉菜券¥3</td><td>"加群领¥3凉菜券,下次直接用"</td></tr>
+<tr><td>会员日</td><td>每周三第二份半价</td><td>"每周三红油耳丝半价,邀朋友来吃"</td></tr>
+<tr><td>拼团</td><td>3人成团各减¥5</td><td>"约同事一起点,每人省¥5"</td></tr>
+<tr><td>生日礼</td><td>当月生日免费赠一份</td><td>"本月生日免费送耳丝一份!"</td></tr>
+<tr><td>复购卡</td><td>买5送1次</td><td>"买5份送1份,相当于8.3折"</td></tr>
+</table>
+</div>
+</div>
+</div>
+
+<!-- ====== 17. 数据说明+微信+品牌页脚 ====== -->
+<div class="data-note">
+📌 数据说明：以上数据基于2026年Q1全国6城市（成都/重庆/武汉/长沙/郑州/西安）实地调研及外卖平台大数据分析，食材价格取2026年3月市场均价。实际数据因地区、季节、供应链差异可能浮动±15%。评分体系为FoodIntelAI V5.1标准，满分为10分。本子卡仅供创业决策参考，不构成投资建议。
+</div>
+<div class="footer-brand">
+<div class="fb-name">Food<span>Intel</span>AI</div>
+<div class="fb-line">数据驱动餐饮决策 · V5.1 子卡标准 · 17维全量评测</div>
+<div class="fb-wx">📱 微信咨询：canglin1985</div>
+<div class="fb-copy">© 2026 FoodIntelAI · 沧林餐饮智库 · 子卡编号 LB_01 红油耳丝（红油拌猪耳）· 版权所有</div>
+</div>
+
+</div><!-- /card -->
+
+<script>
+// 付费区Toggle功能
+document.addEventListener('DOMContentLoaded',function(){
+var cb=document.getElementById('payToggle');
+var pc=document.querySelector('.pay-content');
+var btn=document.querySelector('.toggle-btn');
+cb.addEventListener('change',function(){
+pc.classList.toggle('show',cb.checked);
+btn.textContent=cb.checked?'收起内容':'解锁内容';
+});
+});
+</script>
+
+</body>
+</html>

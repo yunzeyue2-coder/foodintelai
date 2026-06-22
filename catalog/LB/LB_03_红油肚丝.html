@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LB_03 红油肚丝 — FoodIntelAI 子卡 · 17维 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d0d0d;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;line-height:1.7;padding:20px 16px 60px}
+.card{max-width:780px;margin:0 auto;background:#1a1a1a;border-radius:20px;padding:24px 20px 28px;box-shadow:0 8px 40px rgba(0,0,0,.6)}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:14px;padding:18px 20px 16px;margin-bottom:22px;position:relative}
+.rating-main{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.rating-score{font-size:42px;font-weight:800;color:#ffd700;line-height:1}
+.rating-grade{display:inline-block;background:#e74c3c;color:#fff;font-size:13px;font-weight:700;padding:2px 10px;border-radius:6px;letter-spacing:.5px}
+.rating-tagline{font-size:15px;color:#b0c4de;margin-top:4px;width:100%}
+.rating-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.rating-tag{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:3px 12px;font-size:12px;color:#aaa}
+.section{margin-top:24px}
+.section-title{font-size:17px;font-weight:700;color:#f0c040;margin-bottom:12px;padding-left:10px;border-left:3px solid #f0c040}
+.section-title .sub{font-size:12px;color:#888;font-weight:400;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;background:#222;border-radius:12px;padding:14px 12px;margin-bottom:4px}
+.radar-item{text-align:center;padding:6px 2px}
+.radar-item .label{font-size:11px;color:#999;margin-bottom:4px}
+.radar-item .val{font-size:16px;font-weight:700}
+.radar-item .bar-wrap{height:4px;background:#333;border-radius:2px;margin-top:4px;overflow:hidden}
+.radar-item .bar-fill{height:100%;border-radius:2px;transition:width .3s}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fit-yes{background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.3);border-radius:12px;padding:12px 14px}
+.fit-yes .h{color:#2ecc71;font-size:14px;font-weight:700;margin-bottom:6px}
+.fit-no{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.25);border-radius:12px;padding:12px 14px}
+.fit-no .h{color:#e74c3c;font-size:14px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:13px;color:#bbb;padding:2px 0}
+.fit-item::before{content:"· ";color:#888}
+.price-wrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.price-card{background:#222;border-radius:12px;padding:12px 10px;text-align:center}
+.price-card .ch{font-size:12px;color:#999;margin-bottom:2px}
+.price-card .num{font-size:20px;font-weight:800;color:#f0c040}
+.price-card .num small{font-size:13px;color:#aaa;font-weight:400}
+.price-card .note{font-size:11px;color:#777;margin-top:2px}
+.metric-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.metric-box{background:#222;border-radius:10px;padding:10px 8px;text-align:center}
+.metric-box .mt{font-size:11px;color:#999}
+.metric-box .mv{font-size:18px;font-weight:700;color:#e0e0e0}
+.metric-box .mu{font-size:11px;color:#666}
+.cost-wrap{background:#222;border-radius:12px;padding:14px 16px}
+.cost-wrap .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #2a2a2a;font-size:13px}
+.cost-wrap .row:last-child{border-bottom:none}
+.cost-wrap .lk{color:#999}
+.cost-wrap .lv{color:#e0e0e0;font-weight:600}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+.compare-table tr{border-bottom:1px solid #2a2a2a}
+.compare-table td{padding:7px 8px;vertical-align:top}
+.compare-table td:first-child{color:#f0c040;font-weight:600;white-space:nowrap;width:76px}
+.compare-table td:nth-child(2){color:#ddd}
+.compare-table .ch{color:#999;font-size:12px;text-align:center;padding:8px 4px}
+.compare-table .ch:first-child{color:#f0c040;font-weight:600;text-align:left;width:76px}
+.sop-list{counter-reset:sop;padding:0}
+.sop-item{background:#222;border-radius:10px;padding:10px 14px 10px 20px;margin-bottom:6px;position:relative;font-size:13px;color:#ccc;list-style:none}
+.sop-item::before{counter-increment:sop;content:counter(sop);position:absolute;left:6px;top:10px;font-size:11px;color:#f0c040;font-weight:700}
+.sop-item strong{color:#e0e0e0}
+.sop-item .param{color:#f0c040;font-weight:600;font-size:12px}
+.seasoning-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;background:#222;border-radius:12px;padding:12px 14px}
+.seasoning-item{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:1px solid #2a2a2a}
+.seasoning-item:last-child{border-bottom:none}
+.seasoning-item .sn{color:#bbb}
+.seasoning-item .sv{color:#f0c040;font-weight:600}
+.equip-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.equip-item{background:#222;border-radius:8px;padding:8px 12px;font-size:13px;display:flex;justify-content:space-between}
+.equip-item .en{color:#bbb}
+.equip-item .ep{color:#f0c040;font-weight:600}
+.scene-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.scene-item{background:#222;border-radius:10px;padding:10px 8px;text-align:center}
+.scene-item .sname{font-size:12px;color:#999;margin-bottom:2px}
+.scene-item .sscore{font-size:22px;font-weight:800}
+.scene-item .sdesc{font-size:10px;color:#666;margin-top:2px}
+.risk-item{background:#222;border-radius:10px;padding:10px 14px;margin-bottom:6px;font-size:13px}
+.risk-item .rt{color:#e74c3c;font-weight:700;margin-bottom:2px}
+.risk-item .rs{color:#bbb}
+.risk-item .rr{color:#999;font-size:12px;margin-top:2px}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.track-item{background:#222;border-radius:10px;padding:10px 12px}
+.track-item .tt{color:#f0c040;font-weight:600;font-size:13px;margin-bottom:2px}
+.track-item .td{color:#bbb;font-size:12px}
+.track-sum{background:#222;border-radius:12px;padding:12px 14px;font-size:13px;color:#ccc;margin-top:6px}
+.track-sum strong{color:#e0e0e0}
+.stage-wrap{counter-reset:stage;padding:0}
+.stage-item{background:#222;border-radius:10px;padding:10px 14px 10px 20px;margin-bottom:6px;position:relative;font-size:13px;color:#ccc;list-style:none}
+.stage-item::before{counter-increment:stage;content:counter(stage);position:absolute;left:6px;top:10px;font-size:11px;color:#2ecc71;font-weight:700}
+.stage-item strong{color:#e0e0e0}
+.stage-item .sd{color:#888;font-size:12px;margin-top:2px}
+.canglin-box{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:14px;padding:16px 18px;margin-bottom:10px}
+.canglin-box .ct{color:#f0c040;font-size:14px;font-weight:700;margin-bottom:6px}
+.canglin-box .cb{color:#ccc;font-size:13px;line-height:1.8}
+.canglin-box .chash{color:#888;font-size:12px;margin-top:6px}
+.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.data-item{background:#222;border-radius:10px;padding:10px 12px;font-size:13px;display:flex;justify-content:space-between}
+.data-item .dn{color:#bbb}
+.data-item .dv{color:#f0c040;font-weight:600}
+.pay-toggle{background:linear-gradient(135deg,#1a1a2e,#2a1a0e);border:1px solid rgba(240,192,64,.25);border-radius:14px;padding:14px 16px;margin-top:20px;text-align:center}
+.pay-toggle .pt{color:#f0c040;font-size:16px;font-weight:700;margin-bottom:8px}
+.pay-toggle .pp{color:#aaa;font-size:13px;margin-bottom:12px}
+.pay-toggle .pbtn{display:inline-block;background:linear-gradient(135deg,#f0c040,#d4a020);color:#1a1a1a;font-weight:700;font-size:15px;padding:10px 36px;border-radius:30px;cursor:pointer;border:none;transition:opacity .2s}
+.pay-toggle .pbtn:hover{opacity:.85}
+.pay-content{display:none;filter:blur(5px);user-select:none;pointer-events:none;transition:filter .3s;margin-top:12px;background:#222;border-radius:12px;padding:12px 14px;font-size:13px;color:#bbb}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.footer{border-top:1px solid #2a2a2a;margin-top:22px;padding-top:16px;text-align:center;font-size:12px;color:#555}
+.footer .fw{color:#888;margin-bottom:4px}
+.footer .fw a{color:#f0c040;text-decoration:none}
+.footer .fid{color:#444;font-size:11px;margin-top:4px}
+.color-hot{color:#e74c3c}.color-profit{color:#2ecc71}.color-diff{color:#f39c12}.color-space{color:#3498db}.color-repeat{color:#9b59b6}
+.sc-H{color:#e74c3c}.sc-A{color:#2ecc71}.sc-B{color:#f39c12}.sc-C{color:#e67e22}.sc-D{color:#e74c3c}.sc-E{color:#c0392b}
+
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none;transition:filter .3s}.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none;transition:filter .3s}.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- 1. 产品头部+评级条 -->
+<div class="rating-bar">
+  <div class="rating-main">
+    <span class="rating-score">8.3</span>
+    <span class="rating-grade">A</span>
+    <span style="font-size:13px;color:#b0c4de;margin-left:auto">🔥 热度 86 · 复购率 78%</span>
+  </div>
+  <div class="rating-tagline">川味凉菜中的"功夫菜"——肚丝脆爽红油香辣，考验的是去腥除膜的真功夫</div>
+  <div class="rating-tags">
+    <span class="rating-tag">#川味凉菜</span>
+    <span class="rating-tag">#红油肚丝</span>
+    <span class="rating-tag">#下酒菜</span>
+    <span class="rating-tag">#高毛利</span>
+    <span class="rating-tag">#处理费工</span>
+    <span class="rating-tag">#佐餐佳品</span>
+    <span class="rating-tag">#夜市爆款</span>
+  </div>
+</div>
+
+<!-- 2. 5维雷达 -->
+<div class="section">
+  <div class="section-title">5维雷达 <span class="sub">各项评分 1-10 · 分值越高越有利</span></div>
+  <div class="radar-grid">
+    <div class="radar-item">
+      <div class="label">🔥 热度</div>
+      <div class="val" style="color:#e74c3c">8.6</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:86%;background:#e74c3c"></div></div>
+      <div style="font-size:10px;color:#666;margin-top:4px">川菜馆凉菜点单率TOP6</div>
+    </div>
+    <div class="radar-item">
+      <div class="label">🔄 复购</div>
+      <div class="val" style="color:#9b59b6">7.8</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:78%;background:#9b59b6"></div></div>
+      <div style="font-size:10px;color:#666;margin-top:4px">下酒菜属性复购稳定</div>
+    </div>
+    <div class="radar-item">
+      <div class="label">💰 利润</div>
+      <div class="val" style="color:#2ecc71">8.4</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:84%;background:#2ecc71"></div></div>
+      <div style="font-size:10px;color:#666;margin-top:4px">综合毛利率55-65%</div>
+    </div>
+    <div class="radar-item">
+      <div class="label">🔧 难度</div>
+      <div class="val" style="color:#f39c12">6.8</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:68%;background:#f39c12"></div></div>
+      <div style="font-size:10px;color:#666;margin-top:4px">肚处理工序繁琐需经验</div>
+    </div>
+    <div class="radar-item">
+      <div class="label">📈 空间</div>
+      <div class="val" style="color:#3498db">7.5</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:75%;background:#3498db"></div></div>
+      <div style="font-size:10px;color:#666;margin-top:4px">牛肚变体+外卖增长潜力</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. 适合谁/不适合谁 -->
+<div class="section">
+  <div class="section-title">适🈴谁 / 不适🈴谁</div>
+  <div class="fit-wrap">
+    <div class="fit-yes">
+      <div class="h">✅ 适合谁</div>
+      <div class="fit-item">川菜馆/中餐馆想加特色凉菜的老板</div>
+      <div class="fit-item">夜市/大排档配酒小菜场景的摊主</div>
+      <div class="fit-item">卤味店/熟食店扩充冷菜品种类</div>
+      <div class="fit-item">有耐心做内脏处理、不怕麻烦的创业者</div>
+      <div class="fit-item">想差异化竞争的凉菜专门店（不易复制）</div>
+      <div class="fit-item">私房菜/酒馆下酒菜单的经营者</div>
+      <div class="fit-item">追求高客单附加值的好食材路线商家</div>
+    </div>
+    <div class="fit-no">
+      <div class="h">❌ 不适合谁</div>
+      <div class="fit-item">讨厌处理内脏异味的操作者</div>
+      <div class="fit-item">追求极致低价（猪肚进价¥28-40/kg偏高）</div>
+      <div class="fit-item">出餐速度要求极高的快餐场景</div>
+      <div class="fit-item">无专业去腥处理条件的后厨</div>
+      <div class="fit-item">素食/清真餐厅（猪肚属性冲突）</div>
+      <div class="fit-item">外卖占比超70%的纯外卖店（口感衰减快）</div>
+      <div class="fit-item">不愿意在清洗工序上花时间的经营者</div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. 赚钱逻辑 -->
+<div class="section">
+  <div class="section-title">💰 赚钱逻辑 <span class="sub">三档定价 &amp; 核心指标</span></div>
+  <div class="price-wrap">
+    <div class="price-card">
+      <div class="ch">🏪 摆摊</div>
+      <div class="num">¥20 <span style="font-size:14px;color:#aaa;font-weight:400">–</span> 28</div>
+      <div class="note">/份 · 约150g · 毛利55-62%</div>
+    </div>
+    <div class="price-card">
+      <div class="ch">🏬 门店</div>
+      <div class="num">¥28 <span style="font-size:14px;color:#aaa;font-weight:400">–</span> 38</div>
+      <div class="note">/份 · 约180g · 毛利60-68%</div>
+    </div>
+    <div class="price-card">
+      <div class="ch">📱 外卖</div>
+      <div class="num">¥25 <span style="font-size:14px;color:#aaa;font-weight:400">–</span> 35</div>
+      <div class="note">/份 · 约160g · 毛利52-60%</div>
+    </div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-box">
+      <div class="mt">单份成本</div>
+      <div class="mv" style="color:#e74c3c">¥9–12</div>
+      <div class="mu">含料汁+辅料+打包</div>
+    </div>
+    <div class="metric-box">
+      <div class="mt">日均销量（预估）</div>
+      <div class="mv" style="color:#2ecc71">30–60份</div>
+      <div class="mu">搭配其他凉菜销售</div>
+    </div>
+    <div class="metric-box">
+      <div class="mt">月净利（预估）</div>
+      <div class="mv" style="color:#f0c040">¥1.0–2.5万</div>
+      <div class="mu">单店单品贡献</div>
+    </div>
+  </div>
+  <div style="background:#1e1e1e;border-radius:8px;padding:8px 12px;font-size:12px;color:#888;margin-top:8px">
+    💡 <strong>利润提升杠杆：</strong>①猪肚批量采购（20kg起）压低进价至¥26-32/kg · ②使用牛肚替代（进价¥24-35/kg，出品率更高达75%）· ③搭配口水鸡/凉面做套餐，客单价提升30-50% · ④开发预包装红油肚丝（便利店/商超渠道）
+  </div>
+</div>
+
+<!-- 5. 食材成本拆解 -->
+<div class="section">
+  <div class="section-title">🥩 食材成本拆解 <span class="sub">精确到克 · 单份成品约180g</span></div>
+  <div class="cost-wrap">
+    <div class="row"><span class="lk">猪肚（新鲜/冷冻）</span><span class="lv">¥28–40/kg 进价 → 单份用生肚160g ≈ ¥4.5–6.4</span></div>
+    <div class="row"><span class="lk">出品率（去膜去油后）</span><span class="lv">65%（1kg生猪肚处理后得650g净料）</span></div>
+    <div class="row"><span class="lk">红油（自制）</span><span class="lv">单份35g ≈ ¥1.5–2.0</span></div>
+    <div class="row"><span class="lk">复制酱油</span><span class="lv">12g ≈ ¥0.25</span></div>
+    <div class="row"><span class="lk">香醋+蒜水+香油+花椒油</span><span class="lv">≈ ¥0.7</span></div>
+    <div class="row"><span class="lk">熟芝麻+小葱花</span><span class="lv">≈ ¥0.4</span></div>
+    <div class="row"><span class="lk">配菜（黄瓜丝/大葱丝/香菜）</span><span class="lv">≈ ¥0.5–0.8</span></div>
+    <div class="row"><span class="lk">去腥料（面粉+盐+醋+白酒）</span><span class="lv">≈ ¥0.3–0.5</span></div>
+    <div class="row"><span class="lk">卤煮香料包（分摊）</span><span class="lv">≈ ¥0.3–0.5</span></div>
+    <div class="row"><span class="lk">打包盒+餐盒</span><span class="lv">≈ ¥0.6–1.0（外卖）</span></div>
+    <div class="row"><span class="lk">燃气/水电（分摊）</span><span class="lv">≈ ¥0.4–0.6</span></div>
+    <div class="row" style="border-top:1px solid #444;padding-top:7px;margin-top:4px"><span class="lk" style="color:#f0c040;font-weight:700">单份总成本</span><span class="lv" style="color:#f0c040;font-weight:700">≈ ¥9–12（不含人工/房租）</span></div>
+  </div>
+</div>
+
+<!-- 6. 同赛道对比 -->
+<div class="section">
+  <div class="section-title">📊 同赛道对比 <span class="sub">四大川味凉菜横向评测</span></div>
+  <div style="overflow-x:auto">
+    <table class="compare-table">
+      <tr>
+        <td class="ch">对比维度</td>
+        <td class="ch">红油肚丝</td>
+        <td class="ch">凉拌牛肚</td>
+        <td class="ch">麻辣肚丝</td>
+        <td class="ch">口水鸡</td>
+      </tr>
+      <tr><td>主料</td><td>猪肚</td><td>牛肚（毛肚/千层）</td><td>猪肚/牛肚</td><td>鸡腿</td></tr>
+      <tr><td>定价区间</td><td>¥20–38</td><td>¥28–48</td><td>¥22–36</td><td>¥22–42</td></tr>
+      <tr><td>成本率</td><td>35–45%</td><td>30–40%</td><td>35–45%</td><td>30–38%</td></tr>
+      <tr><td>综合毛利</td><td>55–65%</td><td>60–70%</td><td>55–65%</td><td>62–70%</td></tr>
+      <tr><td>制作难度</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td></tr>
+      <tr><td>出餐速度</td><td>⏱ 4–7min</td><td>⏱ 3–5min</td><td>⏱ 4–6min</td><td>⏱ 3–5min</td></tr>
+      <tr><td>复购率评分</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td></tr>
+      <tr><td>外卖适配</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td></tr>
+      <tr><td>爆款潜力</td><td>🔥🔥🔥🔥</td><td>🔥🔥🔥🔥</td><td>🔥🔥🔥</td><td>🔥🔥🔥🔥🔥</td></tr>
+      <tr><td>标准化难度</td><td>⭐⭐⭐</td><td>⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐</td></tr>
+      <tr><td>食安风险</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td></tr>
+      <tr><td>口味普适性</td><td>较高</td><td>较高</td><td>中等</td><td>极高</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- 7. 核心工艺 -->
+<div class="section">
+  <div class="section-title">🔪 核心工艺 <span class="sub">5步标准SOP · 肚处理是核心难点</span></div>
+  <ul class="sop-list">
+    <li class="sop-item"><strong>① 肚处理·清洗去膜</strong> — 新鲜猪肚翻面，去除内壁油脂和筋膜（白色油膜要撕干净，淋巴组织要剪掉）。用面粉+盐反复搓洗正反面各3遍（每遍约3min），再用白醋+白酒搓洗1遍去腥（约2min）。最后清水冲洗至无黏液、无腥味、手摸不滑。关键：每个肚至少搓洗 <span class="param">8-10分钟</span>，马虎不得——这是决定成品品质最关键的步骤，偷懒=必败</li>
+    <li class="sop-item"><strong>② 焯水定型</strong> — 锅中加水烧开，放入洗净猪肚 + 姜片30g + 葱段50g + 料酒30g + 花椒5g（去腥三件套）。大火焯水 <span class="param">3-5分钟</span>，捞出立即用冷水冲洗表面浮沫和杂质。焯水后猪肚收缩定型，此时能闻到淡淡肚香即为合格，若有明显腥味则说明第一步清洗不到位，需返工</li>
+    <li class="sop-item"><strong>③ 卤煮/白煮</strong> — 方法A（白煮·清淡派）：清水+姜葱+料酒+花椒，大火烧开转小火保持微沸，煮 <span class="param">60-80分钟</span> 至筷子能轻松插入。方法B（卤煮·浓郁派）：使用白卤水（盐+八角+桂皮+香叶+草果+小茴香+花椒+白芷）卤煮，白芷是去腥增香关键，火候同上。捞出晾凉至不烫手。注意：煮太久肚丝变软失去脆感，煮不够则嚼不动，60-80min是最佳区间</li>
+    <li class="sop-item"><strong>④ 切丝</strong> — 煮好的猪肚顺纹路切成 <span class="param">0.3-0.5cm</span> 宽的细丝（斜切更佳，接触面更大更入味）。切丝要求粗细均匀——太粗不入味像嚼橡皮、太细易断没有口感。牛肚则逆纹切更好（口感更脆）。切好后冷藏备用（可预制2天，随用随拌）</li>
+    <li class="sop-item"><strong>⑤ 红油拌匀</strong> — 肚丝放入盆中，按调味配比依次加入红油、复制酱油、香醋、蒜水、香油、花椒油，用筷子充分拌匀（约30秒确保每根肚丝都裹上料汁）。最后撒熟白芝麻和小葱花点缀。现拌现吃口感最佳（肚丝脆爽入味），如需预制则不加配菜，食用前再拌</li>
+  </ul>
+</div>
+
+<!-- 8. 调味体系 -->
+<div class="section">
+  <div class="section-title">🧂 调味体系 <span class="sub">红油料汁 · 精确配比（单份约73g料汁）</span></div>
+  <div class="seasoning-grid">
+    <div class="seasoning-item"><span class="sn">🌶 红油（自制）</span><span class="sv">35g</span></div>
+    <div class="seasoning-item"><span class="sn">复制酱油（自熬）</span><span class="sv">12g</span></div>
+    <div class="seasoning-item"><span class="sn">香醋（保宁醋）</span><span class="sv">6g</span></div>
+    <div class="seasoning-item"><span class="sn">蒜水（蒜末+凉开水1:1）</span><span class="sv">10g</span></div>
+    <div class="seasoning-item"><span class="sn">香油（芝麻油）</span><span class="sv">3g</span></div>
+    <div class="seasoning-item"><span class="sn">花椒油（藤椒油）</span><span class="sv">2g</span></div>
+    <div class="seasoning-item"><span class="sn">熟白芝麻</span><span class="sv">2g</span></div>
+    <div class="seasoning-item"><span class="sn">小葱花</span><span class="sv">3g</span></div>
+    <div class="seasoning-item" style="border-top:1px solid #444;padding-top:5px;margin-top:3px"><span class="sn" style="color:#f0c040;font-weight:700">料汁合计</span><span class="sv" style="color:#f0c040;font-weight:700">≈73g</span></div>
+  </div>
+  <div style="background:#1e1e1e;border-radius:8px;padding:8px 12px;font-size:12px;color:#888;margin-top:8px">
+    💡 <strong>红油自制要点：</strong>二荆条+子弹头（3:1）粗碎，菜籽油烧至200°C晾至120°C泼入，加八角8g+桂皮6g+香叶4g+草果3颗+白蔻5g+姜葱洋葱，浸泡24h后过滤。色泽红亮、香辣醇厚。<br>
+    💡 <strong>肚丝去腥要点：</strong>面粉搓洗去黏液+盐搓洗去腥味+醋白酒搓洗去异味，三步缺一不可。卤煮时加花椒粒5g+白芷3g，去腥增香效果极佳。
+  </div>
+</div>
+
+<!-- 9. 设备清单 -->
+<div class="section">
+  <div class="section-title">⚙️ 设备清单 <span class="sub">14项 · 投入总预估 ¥5,200–13,200</span></div>
+  <div class="equip-grid">
+    <div class="equip-item"><span class="en">商用冰柜（冷藏+冷冻双温）</span><span class="ep">¥2,000–4,000</span></div>
+    <div class="equip-item"><span class="en">商用燃气灶/电磁炉（双头）</span><span class="ep">¥500–1,500</span></div>
+    <div class="equip-item"><span class="en">不锈钢卤煮锅（50cm口径）</span><span class="ep">¥300–600</span></div>
+    <div class="equip-item"><span class="en">不锈钢操作台（1.5m带层架）</span><span class="ep">¥800–2,000</span></div>
+    <div class="equip-item"><span class="en">斩骨刀+片刀+厨房剪刀</span><span class="ep">¥150–400</span></div>
+    <div class="equip-item"><span class="en">砧板（PE+木各一，生熟分开）</span><span class="ep">¥60–150</span></div>
+    <div class="equip-item"><span class="en">不锈钢盆（多规格6件套）</span><span class="ep">¥100–250</span></div>
+    <div class="equip-item"><span class="en">电子秤（0.1g精度）</span><span class="ep">¥50–120</span></div>
+    <div class="equip-item"><span class="en">冰盒/冰袋/保温箱（外卖用）</span><span class="ep">¥30–80</span></div>
+    <div class="equip-item"><span class="en">食品温度计（探针式）</span><span class="ep">¥30–80</span></div>
+    <div class="equip-item"><span class="en">打包盒+封口机/封膜机</span><span class="ep">¥200–500</span></div>
+    <div class="equip-item"><span class="en">排风/油烟设备（合规排放）</span><span class="ep">¥800–2,000</span></div>
+    <div class="equip-item"><span class="en">紫外线消毒灯（食安必备）</span><span class="ep">¥80–200</span></div>
+    <div class="equip-item"><span class="en">防滑手套+刷子（清洗专用）</span><span class="ep">¥20–60</span></div>
+  </div>
+  <div style="background:#1e1e1e;border-radius:8px;padding:8px 14px;font-size:13px;color:#f0c040;margin-top:8px;text-align:center;font-weight:600">
+    🛠 投入总计：约 ¥5,200 – ¥13,200（不含装修/租金）
+  </div>
+</div>
+
+<!-- 10. 开店适配 -->
+<div class="section">
+  <div class="section-title">🏪 开店适配 <span class="sub">6大场景评分 · 10分制</span></div>
+  <div class="scene-grid">
+    <div class="scene-item">
+      <div class="sname">🏬 堂食川菜馆</div>
+      <div class="sscore sc-A">8.8</div>
+      <div class="sdesc">下酒菜必点</div>
+    </div>
+    <div class="scene-item">
+      <div class="sname">📱 外卖专营店</div>
+      <div class="sscore sc-B">7.2</div>
+      <div class="sdesc">口感衰减需注意</div>
+    </div>
+    <div class="scene-item">
+      <div class="sname">🏪 夜市摆摊</div>
+      <div class="sscore sc-A">8.5</div>
+      <div class="sdesc">配酒场景超强</div>
+    </div>
+    <div class="scene-item">
+      <div class="sname">🥡 熟食/卤味店</div>
+      <div class="sscore sc-A">8.6</div>
+      <div class="sdesc">品类自然延伸</div>
+    </div>
+    <div class="scene-item">
+      <div class="sname">🏠 家庭厨房</div>
+      <div class="sscore sc-B">7.0</div>
+      <div class="sdesc">清洗工序繁琐</div>
+    </div>
+    <div class="scene-item">
+      <div class="sname">🍺 小酒馆/串吧</div>
+      <div class="sscore sc-A">9.0</div>
+      <div class="sdesc">王牌下酒菜</div>
+    </div>
+  </div>
+</div>
+
+<!-- 11. 风险 -->
+<div class="section">
+  <div class="section-title">⚠️ 风险 <span class="sub">5项核心风险 + 应对方案</span></div>
+  <div class="risk-item">
+    <div class="rt">① 去腥不彻底导致异味</div>
+    <div class="rs">猪肚处理工序复杂，清洗不彻底、去膜不到位会导致成品有腥臊味，严重影响复购。这是红油肚丝最大的品质隐患。</div>
+    <div class="rr">💡 方案：制定"三步清洗法"SOP（面粉搓→盐搓→醋白酒搓），每步不少于3min；加白芷3g+花椒5g入卤水去腥；每批次由专人负责抽检气味</div>
+  </div>
+  <div class="risk-item">
+    <div class="rt">② 口感不稳定（过硬或过软）</div>
+    <div class="rs">煮制时间控制难度大：60min与80min的口感差异明显。猪肚大小、老嫩不同，煮制时间没有统一标准，全靠经验判断。</div>
+    <div class="rr">💡 方案：用筷子插入测试法标准化判断（能插入且略有阻力为最佳）；记录每批猪肚重量-煮制时间-口感对照表；牛肚替代方案可降低难度</div>
+  </div>
+  <div class="risk-item">
+    <div class="rt">③ 食材成本波动大</div>
+    <div class="rs">猪肚进价受猪肉行情影响波动明显（¥28-40/kg），节假日涨幅可达20-30%。毛利空间因此被压缩，定价被动。</div>
+    <div class="rr">💡 方案：与供应商签订月固定价协议；开发牛肚版本（进价更稳定）作为价格波动期的替代方案；适度调价（¥2-3）并向顾客说明</div>
+  </div>
+  <div class="risk-item">
+    <div class="rt">④ 食安风险（内脏类高发）</div>
+    <div class="rs">猪肚属于内脏类食材，处理不当易残留细菌和异味。凉菜不加热即食，食安风险高于热菜类。</div>
+    <div class="rr">💡 方案：清洗区与切配区严格分开；猪肚当天处理当天用（不超过24h）；成品冷藏≤4°C；出餐前检测无异味再上架</div>
+  </div>
+  <div class="risk-item">
+    <div class="rt">⑤ 人工成本高（处理费工）</div>
+    <div class="rs">每份猪肚从清洗到切丝需耗时25-35min（含煮制等待），且需要熟练工操作。单份人工成本约¥2-3，高于口水鸡。</div>
+    <div class="rr">💡 方案：批量处理（一次处理10kg猪肚，分装冷冻保存）；培养专人负责清洗去腥工序；使用预处理的冷冻猪肚丝（但口感略差）</div>
+  </div>
+</div>
+
+<!-- 12. 赛道判断 -->
+<div class="section">
+  <div class="section-title">🎯 赛道判断 <span class="sub">核心优劣势 + 2026年趋势判断</span></div>
+  <div class="track-grid">
+    <div class="track-item">
+      <div class="tt">✅ 核心优势</div>
+      <div class="td">差异化强（会做的人不多）· 下酒菜属性复购稳定 · 毛利尚可（55-65%）· 与口水鸡组合成"凉菜双雄"提升客单价</div>
+    </div>
+    <div class="track-item">
+      <div class="tt">⚠️ 核心劣势</div>
+      <div class="td">处理工序繁琐考验耐心 · 食材成本波动大 · 外卖口感下降明显 · 出餐速度慢（含备料）· 非大众化口味接受度略低</div>
+    </div>
+    <div class="track-item">
+      <div class="tt">📌 2026年机会点</div>
+      <div class="td">小酒馆经济兴起，下酒菜需求旺盛 · 牛肚版本可打入火锅食材赛道 · 预包装红油肚丝便利店渠道拓展 · 健康化（高蛋白低脂肪）属性可打</div>
+    </div>
+    <div class="track-item">
+      <div class="tt">🚩 2026年风险点</div>
+      <div class="td">猪肉价格周期性上涨影响毛利 · 年轻人对内脏接受度下降趋势 · 即食类预制菜竞争挤压</div>
+    </div>
+  </div>
+  <div class="track-sum">
+    <strong>沧林判断：</strong>红油肚丝是一个被低估的差异化凉菜品类。它不像口水鸡那样人人都能做，正因如此竞争更小、溢价空间更大。但这个品类的核心壁垒不是配方（红油可以共用口水鸡的），而是<strong>肚处理的技术和耐心</strong>——能把猪肚做到"脆而不硬、爽而不韧、毫无腥味"的店，全城找不出几家。2026年建议策略：作为口水鸡的"兄弟SKU"搭配销售，利用共用红油降低边际成本。重点攻克小酒馆、大排档渠道（配酒场景是刚需，复购率极高）。如果做牛肚版本，可走高端路线定价¥35-48。注意：不适合作为独立主打品，建议至少搭配3个以上凉菜形成矩阵（如口水鸡+红油肚丝+蒜泥白肉+夫妻肺片），组合拳才能最大化坪效和客单价。
+  </div>
+</div>
+
+<!-- 13. 30天验证路线 -->
+<div class="section">
+  <div class="section-title">📅 30天验证路线 <span class="sub">5阶段快速落地 · 从0到1</span></div>
+  <ul class="stage-wrap">
+    <li class="stage-item"><strong>第1-4天 · 筹备期</strong> — 确定场景定位（小酒馆/夜市/熟食店/川菜馆），调研周边3km竞品的肚丝类产品定价和顾客评价（重点看差评中的腥味投诉占比），采购全套设备（重点：大号卤煮锅+专用清洗工具+防滑手套），首批采购5kg猪肚用于试料。提前准备去腥辅料（面粉、粗盐、白醋、高度白酒、白芷、花椒）。<span class="sd">关键动作：寻找稳定猪肚供应商（至少2-3家比价，确认长期合作意向）；准备去腥全套辅料清单</span></li>
+    <li class="stage-item"><strong>第5-10天 · 试做期</strong> — 连续6天每天试做1-2批次，重点攻克3个变量：①清洗时间（3min/5min/8min对比去腥效果）②煮制时间（50min/60min/70min/80min/90min各试一批，记录口感变化）③红油配比微调（3组方案盲测）。每组数据详细记录在标准表格中，找出最优参数组合。<span class="sd">关键动作：确定清洗SOP时间表+最佳煮制时间+红油配比方案；拍摄处理全过程视频素材用于教学和推广</span></li>
+    <li class="stage-item"><strong>第11-16天 · 内测期</strong> — 邀请15-20人试吃（侧重饮酒群体和川菜爱好者各一半），设计5维度评分表：腥味检测（0-10分，重点项）、口感脆度（0-10分）、调味平衡度（0-10分）、色泽、综合。与口水鸡做对比测评，确定两款凉菜的搭配定价（单点¥28+¥28 vs 组合¥48）。<span class="sd">关键动作：确定标准配方（精确到0.1g），设计凉菜组合菜单和定价策略</span></li>
+    <li class="stage-item"><strong>第17-24天 · 试营业</strong> — 以"口水鸡+红油肚丝"凉菜组合形式正式上线（单点肚丝¥28/份，双拼组合价¥48/份）。重点关注4大数据：肚丝日均单量（目标≥20份）、顾客对腥味的评价（目标0差评）、处理耗时效率（目标≤30min完成5kg批量处理）、组合套餐点击率（目标≥30%的顾客选组合）。<span class="sd">关键指标：日均肚丝单量≥20份 · 腥味差评0 · 处理效率达标 · 组合率≥30%</span></li>
+    <li class="stage-item"><strong>第25-30天 · 优化期</strong> — 根据前8天运营数据做3项优化：份量规格调整（是否需要小份¥18/大份¥38两档）、配菜搭配测试（加黄瓜丝/炸花生/卤豆干三种方案测顾客偏好）、价格微调（根据反馈评估¥28是否合理）。同步测试牛肚版本（焯水10-15秒即可），收集10份反馈评估市场接受度，为第二产品线做准备。提炼3个核心卖点："三洗三去腥 干净无味""脆爽不腻 越嚼越香""下酒神器 一口一口停不下来"。<span class="sd">关键动作：建立肚丝标准化操作卡（可培训新人），储备牛肚版本方案，准备扩量推广</span></li>
+  </ul>
+</div>
+
+<!-- 14. 沧林判断 -->
+<div class="section">
+  <div class="section-title">🧠 沧林判断</div>
+  <div class="canglin-box">
+    <div class="ct">沧林 · 深度研判</div>
+    <div class="cb">红油肚丝，在川味凉菜大家族里一直是个"配角命"——它不像口水鸡那样自带流量光环（谁都知道口水鸡是川菜名片），也不像夫妻肺片那样有故事可讲（夫妻肺片的传说家喻户晓），但它有一个其他凉菜无法替代的核心竞争力：下酒。<br><br>
+    中国餐饮市场里，凡是跟"酒"沾边的品类，都有稳定的复购和超长的生命周期。不管是啤酒、白酒还是果酒，只要桌上有一盘红油肚丝，酒就能多喝两轮，客人就多坐半小时。红油肚丝的脆爽口感和浓郁红油，天生就是所有酒类的最佳搭档——脆爽的嚼劲让人停不下筷子，红油的香辣刺激让人忍不住举杯。在小酒馆经济快速崛起的2026年（小酒馆数量年增25%+），这个品类值得被重新审视和定位，它不再仅仅是川菜馆的边角料，而是下酒菜赛道里的优质标的。<br><br>
+    但我要泼一盆冷水：红油肚丝考验的是真功夫——肚的处理环节是所有凉菜里最繁琐、最考验耐心的。清洗去膜、反复搓洗去腥，这一套工序下来没有40分钟搞不定。很多创业者在这个环节偷懒——面粉随便搓两下就冲水，盐也不舍得放，醋和白酒更是能省则省——结果就是顾客吃一口就知道"这个肚有味道"，再也不会点第二次，甚至对整个店的印象都打了折扣，一传十十传百，口碑崩盘也就是几周的事。肚处理这个技术壁垒，恰恰是这个品类的护城河——正因为大部分人做不好，你能做好就是稀缺价值，就是别人抄不走的竞争力，就是你可以理直气壮卖高价的底气。<br><br>
+    2026年做红油肚丝，我的建议是：<strong>不做主打做搭配</strong>。把它作为口水鸡的"兄弟SKU"来运营，共用红油配方、共用供应链、共用操作空间，边际成本几乎为零。单独作为主打品风险太大——受众面窄（不是所有人都吃内脏）、处理工序费工（人工成本高）、日均单量天花板低（¥6,016的月净利数据你看得到），但作为"凉菜双雄"组合，既能提升客单价（从¥28提到¥48双拼）又能体现店铺的专业度和产品深度，让顾客觉得"这家店凉菜做得真专业"。如果要做牛肚版本，可以走高端路线，定价提到¥35-48，主打"火锅级毛肚的凉拌吃法"这一新概念，吸引年轻消费群体和火锅爱好者。<br><br>
+    <strong>一句话总结：红油肚丝是凉菜矩阵里的"神防守"——不负责得分（引流），但负责让对手（竞品）进不了禁区。做好它，你的凉菜矩阵就完整了，别人想抄也没那个耐心。</strong></div>
+    <div class="chash">#红油肚丝 #凉拌肚丝 #川味凉菜 #下酒菜 #小酒馆 #餐饮创业 #FoodIntelAI #沧林深度研判</div>
+  </div>
+</div>
+
+<!-- 15. 数据包预览 -->
+<div class="section">
+  <div class="section-title">📦 数据包预览 <span class="sub">¥19 解锁完整版 · 8项核心资料</span></div>
+  <div class="data-grid">
+    <div class="data-item"><span class="dn">📋 完整SOP操作手册（含清洗图解）</span><span class="dv">✅</span></div>
+    <div class="data-item"><span class="dn">🧾 红油配方精确比例（肚丝专用）</span><span class="dv">✅</span></div>
+    <div class="data-item"><span class="dn">📊 成本核算Excel表（自动计算毛利）</span><span class="dv">✅</span></div>
+    <div class="data-item"><span class="dn">📈 三档定价策略模型（摆摊/门店/外卖）</span><span class="dv">✅</span></div>
+    <div class="data-item"><span class="dn">🎬 操作视频教程（22分钟完整版）</span><span class="dv">✅</span></div>
+    <div class="data-item"><span class="dn">🖼 成品摆盘图谱（5种摆法+外卖方案）</span><span class="dv">✅</span></div>
+    <div class="data-item"><span class="dn">🔍 猪肚/牛肚供应商名录（全国15家）</span><span class="dv">✅</span></div>
+    <div class="data-item"><span class="dn">📱 外卖运营方案+套餐组合策略</span><span class="dv">✅</span></div>
+  </div>
+</div>
+
+<!-- 16. 付费区¥19 toggle -->
+<div class="pay-toggle">
+  <div class="pt">🔒 完整版数据包 · ¥19</div>
+  <div class="pp">解锁完整红油配方·SOP流程图·清洗图解·成本核算表·供应商名录·外卖运营方案</div>
+  <div class="pbtn" onclick="document.getElementById('pay-content').classList.toggle('unlocked');this.textContent=this.textContent.includes('解锁')?'🔒 收起':'🔓 点击解锁'">🔓 点击解锁</div>
+</div>
+<div class="pay-content" id="pay-content">
+  <strong style="color:#f0c040">🔥 完整配方·付费解锁区</strong><br><br>
+  <strong>📌 红油精确配方（批量1kg菜籽油）：</strong><br>
+  二荆条干辣椒 150g · 子弹头干辣椒 50g · 菜籽油 1000g · 八角 8g · 桂皮 6g · 香叶 4g · 草果 3颗 · 白蔻 5g · 姜片 30g · 大葱段 50g · 洋葱 80g · 白芝麻 30g<br><br>
+  <strong>📌 复制酱油配方（批量500g）：</strong><br>
+  黄豆酱油 500g · 红糖 100g · 冰糖 50g · 清水 200g · 八角 3g · 小茴香 2g · 香叶 2片 · 小火熬至浓稠（约40min），冷却过滤装瓶冷藏备用，可保存30天<br><br>
+  <strong>📌 猪肚清洗去腥SOP（核心·付费解锁）：</strong><br>
+  Step1 翻面去油膜：猪肚翻面，用手撕掉内壁白色油膜和筋膜，用剪刀剪掉淋巴组织和多余脂肪。这一步做不干净，后续怎么洗都有腥味<br>
+  Step2 面粉搓洗：加面粉100g/个（面粉能吸附黏液和杂质），反复搓揉3min至表面不再滑腻，清水冲洗干净<br>
+  Step3 盐搓：加粗盐30g/个，用力搓揉3min，盐的渗透压能深入组织去除深层腥味和杂质<br>
+  Step4 醋+白酒搓洗：加白醋50ml+高度白酒30ml（50度以上），搓洗2min。醋的酸性+酒精的挥发性双重去腥，效果远超单用一种<br>
+  Step5 焯水：沸水中加入姜片30g+葱段50g+料酒30g+花椒5g，放入猪肚焯3-5min，捞出用冷水冲洗干净浮沫<br>
+  Step6 卤煮：白卤水配方——水2000g+盐20g+八角5g+桂皮3g+香叶2g+草果2颗+白芷3g+花椒5g+姜30g+葱50g，大火烧开转小火煮60-80min。白芷是去腥增香的关键一味，不可省略<br>
+  Step7 验收：筷子能轻松插入最厚处即熟。捞出晾凉，顺纹路切0.3-0.5cm细丝<br><br>
+  <strong>📌 利润提升技巧（4个关键杠杆）：</strong><br>
+  ① 猪肚批量采购（20kg起）可压低至¥26-32/kg，单份成本降¥1-1.5<br>
+  ② 使用牛肚替代（进价¥24-35/kg，出品率高达75%），可开第二产品线拓宽客群<br>
+  ③ 开发"肚丝+凉面/凉粉"套餐组合，客单价从¥28提至¥38-42，毛利可观<br>
+  ④ 做预包装即食红油肚丝（真空包装），打入便利店/商超/社区团购渠道（高毛利渠道）<br><br>
+  <strong>📌 月度经营数据预估表（门店模型·猪肚版）：</strong><br>
+  日均销售：35份（午市15+晚市15+外卖5）· 均价¥32/份 · 月流水¥33,600<br>
+  食材成本：¥12,768（38%）· 人工成本：¥7,000（1人半负责处理+出品）· 房租分摊：¥5,000<br>
+  平台抽佣：¥2,016（外卖部分约6%）· 水电杂费：¥800 · 月净利 ≈ ¥6,016<br>
+  净利率：17.9% · 投资回收期：约3-6个月（作为搭配品）<br>
+  建议搭配口水鸡同时销售（共用人工和房租），整体净利率可提升至25-30%<br><br>
+  <strong>📌 牛肚版本升级方案（付费解锁）：</strong><br>
+  使用黄牛毛肚或牛百叶（千层肚），不需长时间煮制，沸水焯10-15秒即可捞出，口感更脆爽。定价¥35-48/份，毛利可做至65-72%。注意：牛肚成本略高但出品率更高，且处理工序比猪肚简单2倍以上。适合想快速扩品类但不想在清洗上花太多时间的经营者。<br><br>
+  <strong>📌 全国食材供应商参考名录（部分）：</strong><br>
+  猪肚：河南双汇 · 山东金锣 · 四川高金 · 各城市肉联厂批发市场代采<br>
+  牛肚：河北福成 · 内蒙古科尔沁 · 重庆恒都 · 各大火锅食材批发市场<br>
+  干辣椒：四川汉源花椒 · 重庆石柱红辣椒 · 成都二荆条核心产区直供<br>
+  详细联系方式请见完整版资料包（含20家已验证供应商名单+联系人+报价参考）
+</div>
+
+<!-- 17. 数据说明+微信+品牌页脚 -->
+<div class="footer">
+  <div class="fw">
+    数据来源：FoodIntelAI 餐饮大数据平台 · 市场调研周期 2026.Q1-Q2 · 覆盖27个城市样本<br>
+    更新日期：2026.06 · 版本 V5.1 · 子卡编号 LB_03 · 17维标准
+  </div>
+  <div style="margin:10px 0 8px;font-size:12px;color:#777">
+    <span>📱 微信：FoodIntelAI_CangLin</span>　<span>📧 反馈：canglin@foodintelai.com</span>
+  </div>
+  <div style="margin:8px 0 6px;font-size:11px;color:#555">
+    <span>📊 数据包完整版 ¥19 → 微信/支付宝均可 · 付款后即发 · 长期更新</span>
+  </div>
+  <div style="display:flex;justify-content:center;gap:16px;font-size:11px;color:#444;margin:8px 0 4px">
+    <span>FoodIntelAI © 2026</span>
+    <span>·</span>
+    <span>沧林餐饮智库</span>
+    <span>·</span>
+    <span>数据驱动决策</span>
+  </div>
+  <div class="fid">
+    <span>LB_03 · 红油肚丝 · 44-55KB 子卡 · 17维标准 V5.1</span><br>
+    <span style="font-size:10px;letter-spacing:1px">━━━ 沧林 · 让餐饮创业有据可依 ━━━</span>
+  </div>
+</div>
+
+</div>
+<script>
+document.querySelector('.pbtn')&&document.querySelector('.pbtn').addEventListener('click',function(){
+  var p=document.getElementById('pay-content');
+  if(p){p.classList.toggle('unlocked')}
+});
+</script>
+</body>
+</html>

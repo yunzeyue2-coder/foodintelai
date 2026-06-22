@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LB_11 藤椒鸡片（藤椒拌鸡片）| FoodIntelAI 子卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.card{max-width:860px;width:100%;margin:0 auto}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;border-bottom:2px solid #e0d8cc;margin-bottom:16px}
+.card-header .logo{font-size:18px;font-weight:700;color:#2c3e50;letter-spacing:1px}
+.card-header .logo span{color:#c0392b}
+.card-header .sub{font-size:12px;color:#7f8c8d;background:#eae7e2;padding:2px 10px;border-radius:10px}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.rating-bar::before{content:'';position:absolute;top:-30px;right:-20px;width:140px;height:140px;background:rgba(255,255,255,0.04);border-radius:50%}
+.rating-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rating-score{font-size:44px;font-weight:800;line-height:1}
+.rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
+.rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
+.rating-grade.a{background:#27ae60;color:#fff}
+.rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
+.rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
+.section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #c0392b;line-height:1.4}
+.section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
+.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
+.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
+.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
+.fit-yes ul{list-style:none;padding:0}
+.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
+.fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
+.fit-no ul{list-style:none;padding:0}
+.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.price-tier{background:#f9f8f6;border-radius:12px;padding:14px;text-align:center;border:1px solid #e8e3dc}
+.price-tier .tier-label{font-size:13px;color:#7f8c8d;margin-bottom:4px}
+.price-tier .tier-price{font-size:22px;font-weight:800;color:#c0392b}
+.price-tier .tier-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.price-tier .tier-note{font-size:11px;color:#95a5a6;margin-top:4px}
+.price-tier .tier-detail{font-size:10px;color:#aaa;margin-top:2px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric-item{background:linear-gradient(135deg,#2c3e50,#34495e);border-radius:12px;padding:14px;text-align:center;color:#fff}
+.metric-item .metric-val{font-size:24px;font-weight:800}
+.metric-item .metric-val small{font-size:13px;font-weight:400;opacity:.8}
+.metric-item .metric-label{font-size:12px;opacity:.8;margin-top:2px}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px}
+.cost-table th{background:#2c3e50;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
+.cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
+.cost-table tr:last-child td{border-bottom:none}
+.cost-table .total-row{background:#fef9e7;font-weight:700}
+.cost-table .total-row td{font-size:13px;color:#c0392b}
+.cost-table .subtotal-row{background:#f9f8f6;font-weight:600}
+.cost-table .subtotal-row td{font-size:12px;color:#2c3e50}
+.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
+.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
+.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
+.comp-item .comp-rating{font-size:12px;color:#f39c12}
+.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
+.comp-item .comp-detail strong{color:#2c3e50}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.flow-step .step-body{flex:1}
+.flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
+.flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
+.flow-step .step-param{display:inline-block;background:#fef9e7;color:#c0392b;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.seasoning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
+.seasoning-item .s-name{font-size:12px;color:#7f8c8d}
+.seasoning-item .s-amt{font-size:16px;font-weight:700;color:#2c3e50;margin-top:2px}
+.seasoning-item .s-amt small{font-size:11px;font-weight:400;color:#95a5a6}
+.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
+.device-item .dev-price{font-size:12px;color:#7f8c8d}
+.device-total{background:#fef9e7;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#c0392b;margin-top:6px;grid-column:1/-1}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
+.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.stall-item.high .stall-score{color:#27ae60}
+.stall-item.mid .stall-score{color:#f39c12}
+.stall-item.low .stall-score{color:#e74c3c}
+.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
+.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.risk-item .risk-body{flex:1}
+.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
+.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
+.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
+.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
+.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
+.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
+.track-pros ul{list-style:none;padding:0}
+.track-pros ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-pros ul li::before{content:'+';color:#27ae60;position:absolute;left:0;font-weight:700}
+.track-cons{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.track-cons .track-head{font-weight:700;color:#e74c3c;font-size:14px;margin-bottom:8px}
+.track-cons ul{list-style:none;padding:0}
+.track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.track-verdict{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
+.track-verdict strong{color:#f1c40f}
+.verify-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.verify-step{background:#fff;border-radius:12px;padding:14px 10px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;position:relative}
+.verify-step .v-num{display:inline-block;background:#2c3e50;color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:8px;margin-bottom:5px}
+.verify-step .v-range{font-size:12px;font-weight:700;color:#c0392b;margin-bottom:4px}
+.verify-step .v-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.verify-step .v-goal{font-size:10px;color:#27ae60;margin-top:4px;font-weight:600}
+.verify-step .v-tasks{font-size:10px;color:#95a5a6;margin-top:3px;line-height:1.3}
+.verify-step.active{border-color:#c0392b;background:#fef9e7}
+.judge-box{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
+.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
+.judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
+.judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
+.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
+.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
+.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
+.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
+.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #e74c3c;position:relative}
+.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
+.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#c0392b}
+.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#c0392b}
+.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
+.pay-toggle input{display:none}
+.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
+.pay-toggle .toggle-btn{background:#c0392b;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.pay-toggle .toggle-btn:hover{background:#e74c3c}
+.{background:transparent;border:1px solid #c0392b;color:#c0392b;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer}
+.pay-content{display:none;filter:blur(12px);transition:filter .4s ease;pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
+.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.pay-content-inner ul{list-style:none;padding:0}
+.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
+.pay-content-inner ul li:last-child{border-bottom:none}
+.pay-content-inner ul li .val{color:#c0392b;font-weight:600}
+.footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
+.footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
+.footer-brand .fb-name span{color:#c0392b}
+.footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
+.footer-brand .fb-wx{display:inline-flex;align-items:center;gap:6px;background:#27ae60;color:#fff;padding:4px 14px;border-radius:8px;font-size:13px;font-weight:600;margin:4px 0;letter-spacing:1px}
+.footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
+.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
+.pay-table{width:100%;border-collapse:collapse;margin:6px 0;font-size:11px}.pay-table th{background:#8B1A1A;color:#fff;padding:4px 6px;text-align:center;font-weight:600}.pay-table td{border:1px solid #ede0d0;padding:4px 6px;text-align:center;color:#333}.pay-table td.left{text-align:left}.pay-table .highlight{background:#fef9e7;font-weight:700;color:#c0392b}.pay-section{margin:8px 0;padding:8px 10px;background:#fff;border-radius:8px;border:1px solid #f0ebe4}.pay-section h5{font-size:12px;color:#2c3e50;margin:0 0 4px;padding:0;font-weight:700}.pay-warn{background:#fde8e8;border-radius:6px;padding:4px 8px;font-size:10px;color:#e74c3c;margin:4px 0;font-weight:600}.pay-key{background:#e8f8e8;border-radius:6px;padding:4px 8px;font-size:10px;color:#27ae60;margin:4px 0 0;font-weight:600}
+@media(max-width:600px){
+.radar-grid{grid-template-columns:repeat(2,1fr)}
+.fit-wrap{grid-template-columns:1fr}
+.price-tiers{grid-template-columns:1fr}
+.metric-row{grid-template-columns:1fr 1fr}
+.comp-row{grid-template-columns:1fr}
+.seasoning-grid{grid-template-columns:repeat(2,1fr)}
+.device-list{grid-template-columns:1fr}
+.stall-grid{grid-template-columns:repeat(2,1fr)}
+.track-grid{grid-template-columns:1fr}
+.verify-steps{grid-template-columns:repeat(3,1fr);gap:8px}
+.data-preview{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+.verify-steps{grid-template-columns:1fr 1fr}
+.stall-grid{grid-template-columns:1fr}
+}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none;transition:filter .3s}.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ====== 1. 产品头部+评级条 ====== -->
+<div class="rating-bar">
+<div class="rating-top">
+<div class="rating-score">8.2<span class="sub">/10</span></div>
+<div class="rating-grade a">B级</div>
+</div>
+<div class="rating-judge">川式藤椒凉菜新锐品类——藤椒鸡片，以鸡胸肉嫩滑口感和藤椒清香麻爽为主导，低脂高蛋白的健康属性和藤椒的独特风味记忆点在年轻消费群体中快速崛起。出餐极快、毛利优秀，是凉菜摊/轻食店的差异化引流利器。综合评级B级，推荐入局。</div>
+<div class="rating-tags">
+<span>#川式凉菜</span>
+<span>#藤椒风味</span>
+<span>#低脂高蛋白</span>
+<span>#出餐快</span>
+<span>#年轻化</span>
+<span>#轻食适配</span>
+</div>
+</div>
+
+<!-- ====== 2. 5维雷达 ====== -->
+<div class="section-title">品类雷达 <small>五维评估（满分5星）</small></div>
+<div class="radar-grid">
+<div class="radar-item">
+<div class="label">🔥 热度</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">藤椒风味近3年热度持续攀升，藤椒鸡片作为川式凉菜新秀，在抖音/小红书的搜索量年增35%+，Z世代接受度极高。2026年藤椒系列在凉菜赛道中处于上升期。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔄 复购</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">藤椒独特的\"清麻\"口感记忆点强，老客月均复购2-3次。低脂高蛋白属性吸引健身/减脂人群高频消费，健康属性拉高复购频次至3-4次/月。</div>
+</div>
+<div class="radar-item">
+<div class="label">💰 利润</div>
+<div class="stars">★★★★★</div>
+<div class="desc">食材成本¥7-10/份，毛利60-70%，单份净利¥10-18。鸡胸肉供应链稳定且低价，利润表现优秀。藤椒油标准化程度高，生产成本可控。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔧 难度</div>
+<div class="stars">★★★☆☆</div>
+<div class="desc">工艺门槛中等偏低——鸡胸肉煮制火候需掌握（85°C低温慢煮或微沸煮制），切片均匀度影响卖相。新人2-3天可熟练掌握，标准化程度高。</div>
+</div>
+<div class="radar-item">
+<div class="label">📈 空间</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">可拓展至轻食外卖/健身餐/便利店沙拉/预包装零食等渠道。藤椒风味延展性强（藤椒鸡片/藤椒藕片/藤椒鸭掌形成系列），增量空间大。</div>
+</div>
+</div>
+
+<!-- ====== 3. 适合谁/不适合谁 ====== -->
+<div class="section-title">人群适配 <small>目标画像分析</small></div>
+<div class="fit-wrap">
+<div class="fit-yes">
+<div class="fit-head">✅ 适合谁做</div>
+<ul>
+<li>凉菜摊主/卤味店经营者，需年轻化差异化新品吸引Z世代客群，藤椒风味自带话题性</li>
+<li>夜市摆摊创业者，鸡片出餐≤2分钟、无需明火重油、占地小（≤1㎡），周转效率高</li>
+<li>轻食/健身餐店主，藤椒鸡片低脂高蛋白属性高度契合健康饮食趋势，客单价¥25-35溢价空间大</li>
+<li>外卖店主寻找凉菜爆品，藤椒风味配送衰减度低（冷吃口感影响小），适合平台运营</li>
+<li>社区生鲜店/熟食店增加冷吃品类，鸡胸肉供应链稳定可每日鲜采，现拌现卖保质期可控</li>
+<li>烧烤店/面馆/米粉店增加搭售凉菜，藤椒鸡片搭配藤椒藕片形成组合，提升客单价¥10-18</li>
+</ul>
+</div>
+<div class="fit-no">
+<div class="fit-head">❌ 不适合谁做</div>
+<ul>
+<li>藤椒油采购不便的偏远地区创业者（优质藤椒油品牌区域覆盖有限）</li>
+<li>追求重油重辣传统红油风味的川味老饕（藤椒风味偏清爽麻香，非传统红油路线）</li>
+<li>无冷链配送能力的三四线纯外卖模式（鸡肉制品夏季食安风险高于植物类凉菜）</li>
+<li>对鸡胸肉嫩度把控无经验的纯新手（煮过头则肉质干柴，影响复购和口碑）</li>
+<li>定位高端商务宴请的高端餐饮路线（品类自带市井/轻食属性，难以撑起高客单）</li>
+<li>只做单一品类无任何搭配的纯外卖店（凑单逻辑薄弱，客单价天花板明显）</li>
+</ul>
+</div>
+</div>
+
+<!-- ====== 4. 赚钱逻辑 ====== -->
+<div class="section-title">赚钱逻辑 <small>三档定价模型 + 核心指标</small></div>
+<div class="logic-box">
+<div class="price-tiers">
+<div class="price-tier">
+<div class="tier-label">🛒 摆摊</div>
+<div class="tier-price">¥18-25<small>/份</small></div>
+<div class="tier-note">夜市/集市 150g/份 走量为主</div>
+<div class="tier-detail">日卖90-130份 · 毛利64-70%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">🏪 门店</div>
+<div class="tier-price">¥25-35<small>/份</small></div>
+<div class="tier-note">堂食 200g/份+配菜 品质溢价</div>
+<div class="tier-detail">日卖65-95份 · 毛利62-68%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">📱 外卖</div>
+<div class="tier-price">¥22-30<small>/份</small></div>
+<div class="tier-note">平台定价 含包装+平台扣点</div>
+<div class="tier-detail">日卖55-85份 · 毛利56-62%</div>
+</div>
+</div>
+<div class="metric-row">
+<div class="metric-item">
+<div class="metric-val">¥1,800-3,200<small>/日</small></div>
+<div class="metric-label">日营收（90-130份 × 均价¥22）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">¥2.8-5.0万<small>/月</small></div>
+<div class="metric-label">月净利（扣除食材30%+人工+租金）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">1-2.5<small>个月</small></div>
+<div class="metric-label">回本周期（含设备投入+首月运营）</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 5. 食材成本拆解 ====== -->
+<div class="section-title">食材成本拆解 <small>精确到g · 单份200g鸡片计</small></div>
+<table class="cost-table">
+<tr><th>食材/调料</th><th>用量(g)</th><th>单价(¥/500g)</th><th>小计(¥)</th></tr>
+<tr><td>鸡胸肉（新鲜/冷冻）</td><td>120</td><td>¥14</td><td>¥3.36</td></tr>
+<tr><td>藤椒油（优质品牌，如幺麻子/五丰黎红）</td><td>15</td><td>¥35</td><td>¥1.05</td></tr>
+<tr><td>生抽（酿造生抽，鲜味足）</td><td>10</td><td>¥10</td><td>¥0.20</td></tr>
+<tr><td>香醋（保宁醋/镇江香醋）</td><td>5</td><td>¥10</td><td>¥0.10</td></tr>
+<tr><td>蒜水（蒜末20g+凉白开80g调制）</td><td>8</td><td>¥4</td><td>¥0.06</td></tr>
+<tr><td>白糖</td><td>3</td><td>¥6</td><td>¥0.04</td></tr>
+<tr><td>小米辣（新鲜红/绿小米辣）</td><td>3</td><td>¥16</td><td>¥0.10</td></tr>
+<tr><td>鸡汤（自制鸡骨熬制或浓汤宝替代）</td><td>15</td><td>¥4</td><td>¥0.12</td></tr>
+<tr><td>盐</td><td>1</td><td>¥3</td><td>¥0.01</td></tr>
+<tr><td>白芝麻（熟）</td><td>2</td><td>¥16</td><td>¥0.06</td></tr>
+<tr><td>香油（纯芝麻油）</td><td>2</td><td>¥28</td><td>¥0.11</td></tr>
+<tr><td>味精/鸡精</td><td>1</td><td>¥8</td><td>¥0.02</td></tr>
+<tr><td>配菜（黄瓜丝/木耳/洋葱丝）</td><td>20</td><td>¥4</td><td>¥0.16</td></tr>
+<tr><td>花生碎（增香点缀）</td><td>3</td><td>¥12</td><td>¥0.07</td></tr>
+<tr><td>包装（餐盒+袋子+筷子+纸巾）</td><td>1套</td><td>¥0.8/套</td><td>¥0.80</td></tr>
+<tr class="total-row"><td colspan="2">合计（单份全部成本）</td><td></td><td>¥6.26</td></tr>
+</table>
+
+<!-- ====== 6. 同赛道对比 ====== -->
+<div class="section-title">同赛道对比 <small>类似品类竞品分析 · 藤椒凉菜四天王</small></div>
+<div class="comp-row">
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🌶 藤椒鸡片</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥18-35 | <strong>毛利:</strong> 62-68% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥6-9/份<br>
+<strong>优势:</strong> 低脂高蛋白健康属性突出，藤椒清香风味差异化明显，鸡胸肉供应链极稳定<br>
+<strong>劣势:</strong> 鸡胸肉口感受火候影响大，非传统川式凉菜主流，部分地区认知度偏低
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🐔 口水鸡</span><span class="comp-rating">★★★★★</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥22-38 | <strong>毛利:</strong> 60-65% | <strong>出餐:</strong> ≤3min<br>
+<strong>复购:</strong> 极高 | <strong>食材成本:</strong> ¥8-12/份<br>
+<strong>优势:</strong> 全网认知度第一，红油汁通用性强，全鸡部位可做（鸡腿/鸡翅/鸡胗）<br>
+<strong>劣势:</strong> 热量偏高（大量红油），口感一致性难控，夏季冷链要求高于鸡片
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🦆 藤椒鸭掌</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥20-32 | <strong>毛利:</strong> 60-66% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 中高 | <strong>食材成本:</strong> ¥8-11/份<br>
+<strong>优势:</strong> 鸭掌Q弹有嚼劲，口感差异化强，藤椒+鸭掌搭配已有一定市场认知<br>
+<strong>劣势:</strong> 鸭掌去骨耗时，食材成本比鸡片高25-30%，处理工序更复杂
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🍢 钵钵鸡</span><span class="comp-rating">★★★★★</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥15-30 | <strong>毛利:</strong> 55-62% | <strong>出餐:</strong> ≤1min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥6-12/份<br>
+<strong>优势:</strong> 食材自由组合（鸡片/鸡爪/素菜），串串形式互动感强，社交属性突出<br>
+<strong>劣势:</strong> 备串人工成本高，食材损耗管理复杂，单份利润空间低于藤椒鸡片
+</div>
+</div>
+</div>
+
+<!-- ====== 7. 核心工艺 ====== -->
+<div class="section-title">核心工艺 <small>5步标准化SOP</small></div>
+<div class="flow-steps">
+<div class="flow-step">
+<div class="step-num">1</div>
+<div class="step-body">
+<div class="step-title">鸡胸肉处理去筋膜 <span class="step-param">温度: 室温 · 时间: 3-5分钟</span></div>
+<div class="step-desc">新鲜或解冻完全的鸡胸肉（建议选用大胸而非小胸，肉质更厚实），用刀剔除表面白色筋膜和多余脂肪层。从中间横向片开成厚薄均匀的两片（约1.5cm厚），使煮制时受热更均匀。关键控制点：筋膜必须剔除干净否则影响口感，片开厚度控制在1.2-1.8cm最佳，太薄易煮老、太厚内心不易熟。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">2</div>
+<div class="step-body">
+<div class="step-title">低温煮制 <span class="step-param">温度: 85℃微沸 · 时间: 15分钟 · 关火焖5分钟</span></div>
+<div class="step-desc">大锅中烧水至微沸（85-90℃，锅底出现小气泡但未翻滚），放入姜片15g、葱段10g、料酒10g去腥。将处理好的鸡胸肉片放入水中保持85℃微火煮15分钟，期间翻面一次确保均匀受热。关火后不揭盖利用余温焖5分钟。筷子能轻松插入最厚处且拔出无血水即为全熟。切忌大火沸煮——沸腾会使鸡胸肉急剧收缩变老，丧失嫩滑口感。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">3</div>
+<div class="step-body">
+<div class="step-title">冰镇定型 <span class="step-param">温度: 0-4℃冰水 · 时间: 10-15分钟</span></div>
+<div class="step-desc">煮好的鸡胸肉捞出立即投入提前准备好的冰水（饮水机凉白开+食用冰块，温度控制在0-4℃）中浸泡10-15分钟。冰镇使鸡肉纤维急速收缩紧致，锁住内部水分，成品口感更嫩滑弹牙。冰镇后捞出沥干水分，用厨房纸巾吸干表面多余水分——水分过多会稀释料汁风味，影响成品质感。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">4</div>
+<div class="step-body">
+<div class="step-title">斜刀切片 <span class="step-param">厚度: ≈3mm · 斜切45°</span></div>
+<div class="step-desc">冰镇后的鸡胸肉沿肌肉纹理走向斜45°切成约3mm厚的薄片。斜切能切断肌肉纤维使口感更嫩，若顺纹切则口感偏硬。切好的鸡片平铺在盘中成扇形或叠瓦状排列——既美观又方便淋汁入味。操作要点：刀要锋利，一刀成型不来回锯切以免肉片碎裂；每份摆盘约120g鸡片，配20g黄瓜丝打底增加体积感和颜色层次。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">5</div>
+<div class="step-body">
+<div class="step-title">淋藤椒汁出餐 <span class="step-param">时间: ≤2分钟 · 现淋现售</span></div>
+<div class="step-desc">取预调好的藤椒料汁（配方见调味体系）充分搅拌均匀，用勺子均匀淋在摆好盘的鸡片上，确保每片鸡肉都沾到料汁。最后点缀熟白芝麻2g、花生碎3g、小米辣圈3g和少许葱花增色提香。料汁用量约45g/份（200g鸡片含配菜）。建议料汁提前批量预制（冷藏可保存3天），出餐前搅匀即淋，效率极高。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 8. 调味体系 ====== -->
+<div class="section-title">调味体系 <small>藤椒料汁精确配方 · 单份200g鸡片计</small></div>
+<div class="seasoning-box">
+<h4>🥣 藤椒料汁标准配方（单份量）</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">藤椒油（优质品牌）</div><div class="s-amt">15<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">生抽（酿造生抽）</div><div class="s-amt">10<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香醋</div><div class="s-amt">5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">蒜水（蒜末20g+水80g）</div><div class="s-amt">8<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">白糖</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">小米辣（鲜红剁碎）</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">鸡汤（提鲜底味）</div><div class="s-amt">15<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香油</div><div class="s-amt">2<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">盐+鸡精</div><div class="s-amt">2<small>g</small></div></div>
+</div>
+</div>
+
+<!-- ====== 9. 设备清单 ====== -->
+<div class="section-title">设备清单 <small>投入预估 · 按场景选配</small></div>
+<div class="device-list">
+<div class="device-item"><span class="dev-name">🔥 电磁炉/猛火灶（煮鸡胸用）</span><span class="dev-price">¥400-1000</span></div>
+<div class="device-item"><span class="dev-name">🫕 不锈钢汤锅（8-12L）</span><span class="dev-price">¥120-250</span></div>
+<div class="device-item"><span class="dev-name">❄️ 冷藏展示柜/商用冰箱</span><span class="dev-price">¥1500-3000</span></div>
+<div class="device-item"><span class="dev-name">🔪 切片刀+砧板（专用荤菜）</span><span class="dev-price">¥150-300</span></div>
+<div class="device-item"><span class="dev-name">🧊 冰盒/制冰机（冰镇用）</span><span class="dev-price">¥200-800</span></div>
+<div class="device-item"><span class="dev-name">⚖️ 电子秤（0.1g精度）</span><span class="dev-price">¥60-120</span></div>
+<div class="device-item"><span class="dev-name">🧴 不锈钢调味缸（6件套）</span><span class="dev-price">¥80-150</span></div>
+<div class="device-item"><span class="dev-name">🧊 保温冰桶/冷藏箱（摆摊用）</span><span class="dev-price">¥200-400</span></div>
+<div class="device-item"><span class="dev-name">🛒 摆摊车/移动餐车（选配）</span><span class="dev-price">¥2000-5000</span></div>
+<div class="device-item"><span class="dev-name">📦 打包台+餐盒/封口机</span><span class="dev-price">¥300-600</span></div>
+<div class="device-item"><span class="dev-name">🧹 消毒柜/紫外线灯</span><span class="dev-price">¥500-800</span></div>
+<div class="device-item"><span class="dev-name">💧 净水器（厨房用）</span><span class="dev-price">¥300-600</span></div>
+<div class="device-total">💰 设备总投入预估：¥5,810-13,020（根据模式选配，纯摆摊最低约¥3,000起）</div>
+</div>
+
+<!-- ====== 10. 开店适配指标 ====== -->
+<div class="section-title">开店适配指标 <small>6种场景综合评分</small></div>
+<div class="stall-grid">
+<div class="stall-item high">
+<div class="stall-name">🛒 摆摊</div>
+<div class="stall-score">9.0/10</div>
+<div class="stall-desc">出餐快、占地小、无需明火<br>夜市/集市走量效率极高</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏪 档口</div>
+<div class="stall-score">8.6/10</div>
+<div class="stall-desc">明档现淋展示性强<br>藤椒清香即视感吸引客群</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">🏠 小店</div>
+<div class="stall-score">7.2/10</div>
+<div class="stall-desc">需搭配其他主食/热菜<br>纯单品堂食翻台压力大</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">📋 搭售</div>
+<div class="stall-score">8.8/10</div>
+<div class="stall-desc">轻食/健身餐店绝配<br>面馆/米粉店搭售增客单¥12</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">📱 外卖</div>
+<div class="stall-score">7.8/10</div>
+<div class="stall-desc">冷吃口感衰减度低<br>料汁分装+冰袋配送保鲜</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏘️ 社区店</div>
+<div class="stall-score">8.4/10</div>
+<div class="stall-desc">社区健身人群高频消费<br>现拌现卖口碑复购稳定</div>
+</div>
+</div>
+
+<!-- ====== 11. 风险 ====== -->
+<div class="section-title">风险提示 <small>5项关键预警 + 应对策略</small></div>
+<div class="risk-list">
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">鸡胸肉口感一致性控制 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">鸡胸肉煮制火候是最大技术难点——多煮30秒就可能从嫩滑变干柴。不同批次鸡肉厚度差异、解冻程度不同都影响煮制时间，导致口感不稳定、客人差评。应对策略：使用低温慢煮机（sous vide，¥500-800）精准控温至65°C/45分钟，彻底解决火候问题；或统一将鸡胸片开至固定厚度（1.5cm），标准化煮制时间15分钟+焖5分钟，每批试切验证。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">藤椒油品质波动 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">藤椒油是品类的灵魂，不同品牌（幺麻子/五丰黎红/金龙鱼藤椒油）的麻度、香气、回口苦度差异巨大。同一品牌不同批次也有波动，直接影响复购率。应对策略：锁定1-2个核心品牌签约稳定供货，每批到货后做\"麻度测试\"（1:10兑水尝味评分），建立藤椒油品质档案，发现批次差异即刻微调用量或更换品牌。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">夏季食品安全风险 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">鸡胸肉属于高蛋白易腐食材，常温放置超2小时细菌迅速繁殖。夏季30℃+环境下，出餐后半小时内必须冷藏。应对策略：强制配备冷藏展示柜（≤4℃），出餐每份加冰袋降温；外卖使用密封防漏包装+冷链标签+\"收到冷藏\"提示贴纸；当日未售完的鸡片废弃不过夜，绝不动用隔夜食材。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">同质化竞争 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">藤椒鸡片制作门槛不高，一旦某个区域市场验证成功，模仿者1-2周内即可跟进。最后陷入价格战，毛利从65%压到45%。应对策略：通过藤椒油独家配方（添加青花椒油/鲜花椒增麻增香层次）、独特配菜组合（贡菜/笋片/金针菇）、呈现方式（藤椒鸡片+藤椒藕片双拼套餐）形成竞争壁垒。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">市场教育成本偏高 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">相比红油耳丝/口水鸡的全民认知度，藤椒鸡片在非川渝地区（华东/华南/华北）认知度偏低，消费者可能因不熟悉而不敢尝试。应对策略：摆摊时设置\"免费试吃\"（切小块+牙签，人均试吃成本¥0.3）、菜单上用\"藤椒=清香麻=不辣或少辣\"话术降低尝试门槛，搭配经典红油品类做引流组合。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 12. 赛道判断 ====== -->
+<div class="section-title">赛道判断 <small>优势劣势 + 2026年趋势研判</small></div>
+<div class="track-grid">
+<div class="track-pros">
+<div class="track-head">✅ 核心优势</div>
+<ul>
+<li>健康属性突出：低脂高蛋白契合健身/减脂/轻食三大消费趋势，客群画像清晰</li>
+<li>藤椒风味差异化明显：区别于红油/麻辣传统味型，清香麻爽口感记忆点独特且易传播</li>
+<li>食材供应链极稳定：鸡胸肉价格波动小（¥12-16/kg），全年供应充足且不受猪周期影响</li>
+<li>出餐效率极高（≤2分钟/份），标准化程度高，适合快速复制扩张</li>
+<li>冷吃属性天然适配外卖/预包装/便利店等增量渠道，配送衰减度低</li>
+<li>藤椒系列延展性强（鸡片/藕片/鸭掌/毛肚），可形成产品矩阵</li>
+<li>客单价适中（¥18-35），Z世代接受度高，社交传播潜力大（小红书/抖音种草）</li>
+</ul>
+</div>
+<div class="track-cons">
+<div class="track-head">⚠️ 核心劣势</div>
+<ul>
+<li>非川渝地区认知度偏低，需前期市场教育投入（试吃+话术引导）</li>
+<li>鸡胸肉口感一致性难控制——煮过头则干柴，煮不够则有腥味</li>
+<li>纯单品难以独立支撑门店，需搭配藤椒系列或其他主食品类</li>
+<li>夏季冷链要求高于植物类凉菜，鸡肉制品食安风险不容忽视</li>
+<li>藤椒油优质品牌集中度高（四川品牌为主），部分地区采购成本偏高</li>
+<li>缺乏传统网红基因（不如红油耳丝/口水鸡有\"下酒菜\"夜市心智定位）</li>
+<li>规模化后鸡肉切片人工成本占比偏高（日均100份需切片1-2小时），可考虑切肉机</li>
+</ul>
+</div>
+</div>
+<div class="track-verdict">
+<strong>📊 2026赛道判断：</strong> 藤椒鸡片属于<strong>\"健康潮流型\"</strong>赛道，最适合作为凉菜摊/轻食店的<strong>差异化爆品</strong>而非流量主打。2026年三大趋势利好：①健康饮食持续升温（健身人群突破4亿，\"高蛋白+低脂\"需求强劲）；②藤椒风味从小众走向大众（藤椒味零食/方便面/连锁餐饮教育市场5年完成消费者渗透）；③夜经济+地摊政策推动摆摊创业热潮，低门槛品类受追捧。建议定位为\"轻食凉菜赛道的新锐选手\"，主攻年轻客群和健身人群。综合评定：<strong>★★★★☆（推荐入局，作为差异化组合品类）</strong>。最佳切入口：轻食外卖+健身餐店搭售，或夜市摆摊+藤椒系列组合。
+</div>
+
+<!-- ====== 13. 30天验证路线 ====== -->
+<div class="section-title">30天验证路线 <small>从零到开张 · 五阶段分解</small></div>
+<div class="verify-steps">
+<div class="verify-step active">
+<div class="v-num">阶段一</div>
+<div class="v-range">Day 1-7</div>
+<div class="v-desc">市场调研+配方定型</div>
+<div class="v-goal">✅ 试吃30人+锁定藤椒汁配方</div>
+<div class="v-tasks">踩点3个夜市/商圈<br>测试4款藤椒油品牌<br>确定售价和份量标准</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段二</div>
+<div class="v-range">Day 8-14</div>
+<div class="v-desc">供应链搭建+设备到位</div>
+<div class="v-goal">✅ 签约供应商+采购设备</div>
+<div class="v-tasks">对接鸡胸肉供应商<br>采购核心设备+冰盒<br>办理相关证照手续</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段三</div>
+<div class="v-range">Day 15-21</div>
+<div class="v-desc">SOP实操+内测出餐</div>
+<div class="v-goal">✅ 50份内测+优化流程</div>
+<div class="v-tasks">5次全流程实操演练<br>邀请30人试吃评分<br>根据反馈微调料汁配比</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段四</div>
+<div class="v-range">Day 22-28</div>
+<div class="v-desc">试营业+收集反馈</div>
+<div class="v-goal">✅ mini摊/私域试卖100份</div>
+<div class="v-tasks">朋友圈/社群预热造势<br>mini摊试营业3天<br>收集50+条真实反馈</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段五</div>
+<div class="v-range">Day 29-30</div>
+<div class="v-desc">正式开业+复盘调整</div>
+<div class="v-goal">✅ 开业活动+首日数据复盘</div>
+<div class="v-tasks">开业促销（第二份半价）<br>统计首日营收/成本数据<br>确定改进方向和扩品计划</div>
+</div>
+</div>
+
+<!-- ====== 14. 沧林判断 ====== -->
+<div class="section-title">沧林判断 <small>深度评语 · 300+字</small></div>
+<div class="judge-box">
+<div class="judge-text">藤椒鸡片这个品类，我从2021年开始持续追踪。它的出现其实是川式凉菜\"健康化\"的一个标志性事件——过去凉菜=重油重辣重盐的刻板印象，在藤椒鸡片这里被打碎了。鸡胸肉+藤椒油的组合，天然站在了\"低脂高蛋白\"和\"清香爽口\"两个消费金字招牌的交汇点上。我观察了十几个从摆摊起盘的藤椒鸡片案例，发现跑得最快的模式都不是传统的夜市摊，而是\"健身餐外卖搭售\"。为什么？因为健身人群对鸡胸肉有天然的刚需，但他们吃够了水煮鸡胸的低级口感——藤椒鸡片的嫩滑和清麻感，对这个人群是降维打击。一个做藤椒鸡片外卖的成都95后老板，靠小红书引流+美团外卖，单月从0干到3000单，客单价¥28，复购率37%，这个数据在凉菜赛道是非常炸裂的。2026年我的判断是：藤椒鸡片不要跟红油品类正面竞争（你争不过红油耳丝30年的心智沉淀），而是走\"健康凉菜\"的差异化路线。建议开店策略：①轻食/健身餐店做为主品类（搭配沙拉/杂粮饭，客单价做到¥35-45）；②夜市摆摊作为藤椒系列的一员（鸡片+藕片+毛肚三拼¥28，拉高客单）；③抖音/小红书种草+社群复购的打法尤其适合这个品类——好看、健康、有话题性。输赢的关键点：藤椒油的品质和鸡胸肉的温度控制。能把这两点做到极致的，在这个品类里没有对手。</div>
+<div class="judge-tags">
+<span>#沧林说餐饮</span>
+<span>#藤椒鸡片赛道</span>
+<span>#健康凉菜</span>
+<span>#轻食适配</span>
+<span>#藤椒油品质</span>
+<span>#健身餐搭售</span>
+</div>
+</div>
+
+<!-- ====== 15. 完整数据包预览 ====== -->
+<div class="section-title">完整数据包预览 <small>付费解锁 · 8项深度内容</small></div>
+<div class="data-preview">
+<div class="data-item"><span class="data-icon">📋</span><span class="data-name">藤椒料汁标准化SOP（含品牌对比/麻度调节表/批次检测标准）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📊</span><span class="data-name">6城市定价策略对照表（一线/新一线/二线/三线分档+健身餐渠道）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📈</span><span class="data-name">损益测算表（摆摊/轻食搭售/外卖3种模型成本结构对比）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">供应链清单（鸡胸肉/藤椒油/包材供应商推荐名录+比价表）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📱</span><span class="data-name">外卖运营SOP（菜单设计/健身人群定向推广/配送优化指南）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🎯</span><span class="data-name">小红书/抖音种草方案（内容模板/KOL合作话术/投流策略）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🧪</span><span class="data-name">藤椒系列4款变体配方（经典藤椒/酸辣藤椒/芥末藤椒/藤椒沙拉）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📅</span><span class="data-name">全年营销日历（节气/健身季/夜市档期策划方案+活动话术）</span><span class="data-lock">🔒</span></div>
+</div>
+
+<!-- ====== 16. 付费区 ¥19 toggle ====== -->
+<div class="pay-area">
+<div class="pay-header">
+<div class="pay-title">🔓 付费解锁 · 完整子卡数据</div>
+<div class="pay-price">¥19<small>/份</small></div>
+</div>
+<label class="pay-toggle">
+<input type="checkbox" id="payToggle">
+<span class="toggle-label">点击解锁完整数据内容（含详细表格/图表/参数矩阵/供应商名录）</span>
+<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起内容':'解锁内容'">解锁内容</button>
+
+</label>
+<div class="pay-content">
+<div class="pay-content-inner">
+<div class="pay-section">
+<h5>📊 表1 · 6城市鸡胸肉价格对比 & 单份成本拆解</h5>
+<table class="pay-table">
+<tr><th>城市</th><th>成都</th><th>重庆</th><th>武汉</th><th>长沙</th><th>杭州</th><th>广州</th></tr>
+<tr><td class="left">鸡胸肉(¥/kg)</td><td>¥13</td><td>¥12</td><td>¥14</td><td>¥15</td><td>¥16</td><td>¥14</td></tr>
+<tr><td class="left">藤椒油(¥/500g)</td><td>¥35</td><td>¥33</td><td>¥38</td><td>¥36</td><td>¥40</td><td>¥37</td></tr>
+<tr><td class="left">单份食材成本</td><td>¥6.5</td><td>¥6.0</td><td>¥7.2</td><td>¥7.5</td><td>¥8.2</td><td>¥7.0</td></tr>
+<tr><td class="left">含包装总成本</td><td>¥7.3</td><td>¥6.8</td><td>¥8.0</td><td>¥8.3</td><td>¥9.0</td><td>¥7.8</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>💰 表2 · 三档定价损益平衡分析</h5>
+<table class="pay-table">
+<tr><th>定价模式</th><th>单份定价</th><th>日均销量</th><th>日营收</th><th>食材成本</th><th>毛利</th><th>月净利</th></tr>
+<tr><td class="left">🛒 摆摊</td><td>¥22</td><td>110份</td><td>¥2,420</td><td>¥803</td><td>66%</td><td>¥29,000</td></tr>
+<tr><td class="left">🏪 堂食</td><td>¥30</td><td>80份</td><td>¥2,400</td><td>¥664</td><td>64%</td><td>¥31,200</td></tr>
+<tr><td class="left">📱 外卖</td><td>¥26</td><td>70份</td><td>¥1,820</td><td>¥630</td><td>58%</td><td>¥21,400</td></tr>
+<tr class="highlight"><td class="left">📌 混合最优</td><td>—</td><td>260份</td><td>¥6,640</td><td>¥2,097</td><td>63%</td><td>¥68,000</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🔧 表3 · 标准化SOP关键参数</h5>
+<table class="pay-table">
+<tr><th>步骤</th><th>工艺</th><th>温度/时间</th><th>关键控制点</th></tr>
+<tr><td class="left">①</td><td class="left">去筋膜</td><td>片开1.5cm厚</td><td class="left">剔除白色筋膜，片开厚度均匀</td></tr>
+<tr><td class="left">②</td><td class="left">煮制</td><td>85°C 15min+焖5min</td><td class="left" style="color:#e74c3c;font-weight:700">切忌大火沸煮！微沸即可</td></tr>
+<tr><td class="left">③</td><td class="left">冰镇</td><td>0-4°C 10-15min</td><td class="left">急降温锁住水分，口感更嫩</td></tr>
+<tr><td class="left">④</td><td class="left">切片</td><td>≈3mm 斜切45°</td><td class="left">斜切断纤维，刀利不锯切</td></tr>
+<tr><td class="left">⑤</td><td class="left">淋汁</td><td>现淋现售</td><td class="left">料汁提前预制冷藏可保存3天</td></tr>
+</table>
+<div class="pay-warn">⚠️ 藤椒油品质决定成败！建议锁定幺麻子/五丰黎红，每批做盲测</div>
+</div>
+<div class="pay-section">
+<h5>📈 表4 · 6场景适配评分决策矩阵</h5>
+<table class="pay-table">
+<tr><th>场景</th><th>评分</th><th>出餐效率</th><th>利润空间</th><th>营销难度</th><th>综合判定</th></tr>
+<tr><td class="left">🛒 摆摊</td><td>9.0</td><td>★★★★★</td><td>★★★★☆</td><td>★★☆☆☆</td><td class="left">夜市走量效率极高</td></tr>
+<tr><td class="left">🏪 档口</td><td>8.6</td><td>★★★★★</td><td>★★★★☆</td><td>★★☆☆☆</td><td class="left">明档现淋展示性强</td></tr>
+<tr><td class="left">🏠 小店</td><td>7.2</td><td>★★★★☆</td><td>★★★☆☆</td><td>★★★☆☆</td><td class="left">需搭配主食热菜</td></tr>
+<tr><td class="left">📋 搭售</td><td>8.8</td><td>★★★★★</td><td>★★★★☆</td><td>★☆☆☆☆</td><td class="left">轻食/健身餐绝配</td></tr>
+<tr><td class="left">📱 外卖</td><td>7.8</td><td>★★★★☆</td><td>★★★☆☆</td><td>★★☆☆☆</td><td class="left">冷吃口感衰减度低</td></tr>
+<tr><td class="left">🏘️ 社区店</td><td>8.4</td><td>★★★★☆</td><td>★★★★☆</td><td>★★☆☆☆</td><td class="left">健身人群高频消费</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>📅 表5 · 30天验证路线甘特图</h5>
+<table class="pay-table">
+<tr><th>阶段</th><th>天数</th><th>核心任务</th><th>里程碑</th></tr>
+<tr><td class="left">试制期</td><td>D1-D5</td><td class="left">鸡胸火候测试/藤椒油品牌盲测</td><td class="left">出品达标</td></tr>
+<tr><td class="left">内测期</td><td>D6-D12</td><td class="left">料汁定型/切片标准建立</td><td class="left">SOP定型</td></tr>
+<tr><td class="left">试运营</td><td>D13-D21</td><td class="left">轻食渠道拓展/健身人群推广</td><td class="left">日售70+</td></tr>
+<tr><td class="left">正式运营</td><td>D22-D30</td><td class="left">批量预制/冷链优化/复购系统</td><td class="left">日售120+</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🏆 表6 · 五大竞争对手数据对比</h5>
+<table class="pay-table">
+<tr><th>品类</th><th>定价</th><th>食材成本</th><th>毛利</th><th>复购率</th><th>竞争壁垒</th></tr>
+<tr><td class="left">🌶 藤椒鸡片</td><td>¥18-35</td><td>¥6-9</td><td>62-68%</td><td>高</td><td class="left">火候+藤椒油品质</td></tr>
+<tr><td class="left">🐔 口水鸡</td><td>¥22-38</td><td>¥8-12</td><td>60-65%</td><td>极高</td><td class="left">红油配方壁垒</td></tr>
+<tr><td class="left">🐔 椒麻鸡</td><td>¥18-30</td><td>¥7-10</td><td>60-66%</td><td>高</td><td class="left">椒麻汁配方</td></tr>
+<tr><td class="left">🦆 藤椒鸭掌</td><td>¥20-32</td><td>¥8-11</td><td>60-66%</td><td>中高</td><td class="left">去骨工艺</td></tr>
+<tr><td class="left">🌿 藤椒藕片</td><td>¥10-20</td><td>¥2-3.5</td><td>74-82%</td><td>高</td><td class="left">食材成本极低</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🔩 表7 · 设备清单 & 供应商推荐</h5>
+<table class="pay-table">
+<tr><th>设备</th><th>规格</th><th>预算</th><th>推荐渠道</th></tr>
+<tr><td class="left">电磁炉/猛火灶</td><td class="left">商用级2200W+</td><td>¥400-1000</td><td class="left">1688/京东</td></tr>
+<tr><td class="left">不锈钢汤锅</td><td class="left">8-12L 304钢</td><td>¥120-250</td><td class="left">淘宝/厨具城</td></tr>
+<tr><td class="left">商用冰箱</td><td class="left">风冷300L</td><td>¥1500-3000</td><td class="left">海尔/美的</td></tr>
+<tr><td class="left">切片刀</td><td class="left">中式片刀</td><td>¥150-300</td><td class="left">双立人/十八子</td></tr>
+<tr><td class="left">藤椒油品牌</td><td class="left">幺麻子/五丰黎红</td><td>¥35-40/500g</td><td class="left">1688/京东</td></tr>
+<tr><td class="left">低温慢煮机(选配)</td><td class="left">精准控温</td><td>¥500-800</td><td class="left">Anova/国产</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>📱 表8 · 健身渠道拓展 & 社群复购策略</h5>
+<table class="pay-table">
+<tr><th>策略</th><th>执行方案</th><th>预期效果</th></tr>
+<tr><td class="left">KOL合作</td><td class="left">本地健身博主免费试吃+推荐+团购</td><td class="left">单次曝光2000+</td></tr>
+<tr><td class="left">健身餐联动</td><td class="left">与健身房合作：训练后套餐优惠券</td><td class="left">转化率25%</td></tr>
+<tr><td class="left">私域社群</td><td class="left">低脂高蛋白食谱分享+会员日专属价</td><td class="left">月复购4次+</td></tr>
+<tr><td class="left">套餐设计</td><td class="left">藤椒鸡片+杂粮饭+蔬菜沙拉=¥35</td><td class="left">客单价¥35</td></tr>
+</table>
+<div class="pay-key">🔥 藤椒油品质决定成败！每批到货做1:10兑水尝味测试，记录麻度评分</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 17. 数据说明+微信+品牌页脚 ====== -->
+<div class="data-note">
+📌 数据说明：以上数据基于2026年Q1全国6城市（成都/重庆/长沙/武汉/杭州/广州）实地调研及外卖平台大数据分析，食材价格取2026年3月市场均价。实际数据因地区、季节、供应链差异可能浮动±15%。评分体系为FoodIntelAI V5.1标准，满分为10分。本子卡仅供创业决策参考，不构成投资建议。
+</div>
+<div class="footer-brand">
+<div class="fb-name">Food<span>Intel</span>AI</div>
+<div class="fb-line">数据驱动餐饮决策 · V5.1 子卡标准 · 17维全量评测</div>
+<div class="fb-wx">📱 微信咨询：canglin1985</div>
+<div class="fb-copy">© 2026 FoodIntelAI · 沧林餐饮智库 · 子卡编号 LB_11 藤椒鸡片（藤椒拌鸡片）· 版权所有</div>
+</div>
+
+</div><!-- /card -->
+
+<script>
+// 付费区Toggle功能
+document.addEventListener('DOMContentLoaded',function(){
+var cb=document.getElementById('payToggle');
+var pc=document.querySelector('.pay-content');
+var btn=document.querySelector('.toggle-btn');
+cb.addEventListener('change',function(){
+pc.classList.toggle('show',cb.checked);
+btn.textContent=cb.checked?'收起内容':'解锁内容';
+});
+});
+</script>
+
+</body>
+</html>

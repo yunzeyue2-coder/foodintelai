@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LB_14 烧椒茄子（烧椒拌茄子）| FoodIntelAI 子卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.card{max-width:860px;width:100%;margin:0 auto}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;border-bottom:2px solid #e0d8cc;margin-bottom:16px}
+.card-header .logo{font-size:18px;font-weight:700;color:#2c3e50;letter-spacing:1px}
+.card-header .logo span{color:#c0392b}
+.card-header .sub{font-size:12px;color:#7f8c8d;background:#eae7e2;padding:2px 10px;border-radius:10px}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.rating-bar::before{content:'';position:absolute;top:-30px;right:-20px;width:140px;height:140px;background:rgba(255,255,255,0.04);border-radius:50%}
+.rating-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rating-score{font-size:44px;font-weight:800;line-height:1}
+.rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
+.rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
+.rating-grade.a{background:#27ae60;color:#fff}
+.rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
+.rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
+.section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #c0392b;line-height:1.4}
+.section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
+.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
+.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
+.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
+.fit-yes ul{list-style:none;padding:0}
+.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
+.fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
+.fit-no ul{list-style:none;padding:0}
+.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.price-tier{background:#f9f8f6;border-radius:12px;padding:14px;text-align:center;border:1px solid #e8e3dc}
+.price-tier .tier-label{font-size:13px;color:#7f8c8d;margin-bottom:4px}
+.price-tier .tier-price{font-size:22px;font-weight:800;color:#c0392b}
+.price-tier .tier-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.price-tier .tier-note{font-size:11px;color:#95a5a6;margin-top:4px}
+.price-tier .tier-detail{font-size:10px;color:#aaa;margin-top:2px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric-item{background:linear-gradient(135deg,#2c3e50,#34495e);border-radius:12px;padding:14px;text-align:center;color:#fff}
+.metric-item .metric-val{font-size:24px;font-weight:800}
+.metric-item .metric-val small{font-size:13px;font-weight:400;opacity:.8}
+.metric-item .metric-label{font-size:12px;opacity:.8;margin-top:2px}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px}
+.cost-table th{background:#2c3e50;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
+.cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
+.cost-table tr:last-child td{border-bottom:none}
+.cost-table .total-row{background:#fef9e7;font-weight:700}
+.cost-table .total-row td{font-size:13px;color:#c0392b}
+.cost-table .subtotal-row{background:#f9f8f6;font-weight:600}
+.cost-table .subtotal-row td{font-size:12px;color:#2c3e50}
+.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
+.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
+.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
+.comp-item .comp-rating{font-size:12px;color:#f39c12}
+.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
+.comp-item .comp-detail strong{color:#2c3e50}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.flow-step .step-body{flex:1}
+.flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
+.flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
+.flow-step .step-param{display:inline-block;background:#fef9e7;color:#c0392b;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.seasoning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
+.seasoning-item .s-name{font-size:12px;color:#7f8c8d}
+.seasoning-item .s-amt{font-size:16px;font-weight:700;color:#2c3e50;margin-top:2px}
+.seasoning-item .s-amt small{font-size:11px;font-weight:400;color:#95a5a6}
+.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
+.device-item .dev-price{font-size:12px;color:#7f8c8d}
+.device-total{background:#fef9e7;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#c0392b;margin-top:6px;grid-column:1/-1}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
+.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.stall-item.high .stall-score{color:#27ae60}
+.stall-item.mid .stall-score{color:#f39c12}
+.stall-item.low .stall-score{color:#e74c3c}
+.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
+.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.risk-item .risk-body{flex:1}
+.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
+.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
+.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
+.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
+.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
+.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
+.track-pros ul{list-style:none;padding:0}
+.track-pros ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-pros ul li::before{content:'+';color:#27ae60;position:absolute;left:0;font-weight:700}
+.track-cons{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.track-cons .track-head{font-weight:700;color:#e74c3c;font-size:14px;margin-bottom:8px}
+.track-cons ul{list-style:none;padding:0}
+.track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.track-verdict{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
+.track-verdict strong{color:#f1c40f}
+.verify-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.verify-step{background:#fff;border-radius:12px;padding:14px 10px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;position:relative}
+.verify-step .v-num{display:inline-block;background:#2c3e50;color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:8px;margin-bottom:5px}
+.verify-step .v-range{font-size:12px;font-weight:700;color:#c0392b;margin-bottom:4px}
+.verify-step .v-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.verify-step .v-goal{font-size:10px;color:#27ae60;margin-top:4px;font-weight:600}
+.verify-step .v-tasks{font-size:10px;color:#95a5a6;margin-top:3px;line-height:1.3}
+.verify-step.active{border-color:#c0392b;background:#fef9e7}
+.judge-box{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
+.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
+.judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
+.judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
+.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
+.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
+.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
+.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
+.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #e74c3c;position:relative}
+.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
+.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#c0392b}
+.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#c0392b}
+.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
+.pay-toggle input{display:none}
+.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
+.pay-toggle .toggle-btn{background:#c0392b;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.pay-toggle .toggle-btn:hover{background:#e74c3c}
+.{background:transparent;border:1px solid #c0392b;color:#c0392b;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer}
+.pay-content{display:none;filter:blur(12px);transition:filter .4s ease;pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
+.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.pay-content-inner ul{list-style:none;padding:0}
+.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
+.pay-content-inner ul li:last-child{border-bottom:none}
+.pay-content-inner ul li .val{color:#c0392b;font-weight:600}
+.footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
+.footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
+.footer-brand .fb-name span{color:#c0392b}
+.footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
+.footer-brand .fb-wx{display:inline-flex;align-items:center;gap:6px;background:#27ae60;color:#fff;padding:4px 14px;border-radius:8px;font-size:13px;font-weight:600;margin:4px 0;letter-spacing:1px}
+.footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
+.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
+.pay-table{width:100%;border-collapse:collapse;margin:6px 0;font-size:11px}.pay-table th{background:#8B1A1A;color:#fff;padding:4px 6px}.pay-table td{border:1px solid #ede0d0;padding:4px 6px}
+@media(max-width:600px){
+.radar-grid{grid-template-columns:repeat(2,1fr)}
+.fit-wrap{grid-template-columns:1fr}
+.price-tiers{grid-template-columns:1fr}
+.metric-row{grid-template-columns:1fr 1fr}
+.comp-row{grid-template-columns:1fr}
+.seasoning-grid{grid-template-columns:repeat(2,1fr)}
+.device-list{grid-template-columns:1fr}
+.stall-grid{grid-template-columns:repeat(2,1fr)}
+.track-grid{grid-template-columns:1fr}
+.verify-steps{grid-template-columns:repeat(3,1fr);gap:8px}
+.data-preview{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+.verify-steps{grid-template-columns:1fr 1fr}
+.stall-grid{grid-template-columns:1fr}
+}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none;transition:filter .3s}.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ====== 1. 产品头部+评级条 ====== -->
+<div class="rating-bar">
+<div class="rating-top">
+<div class="rating-score">8.5<span class="sub">/10</span></div>
+<div class="rating-grade a">A级</div>
+</div>
+<div class="rating-judge">川式烧椒素凉菜的性价比王者——烧椒茄子，以紫皮茄子的软糯绵密和烧椒的焦香糊辣形成绝妙搭配，食材成本极低（¥2-4/份）、毛利极高（75-82%），是凉菜摊/面馆/家常菜馆的\"利润型走量单品\"。素食属性无消费争议、接受度广，出餐速度≤2分钟。综合评级A级，强烈推荐入局。</div>
+<div class="rating-tags">
+<span>#川式凉菜</span>
+<span>#烧椒风味</span>
+<span>#高毛利标杆</span>
+<span>#素食友好</span>
+<span>#下饭神器</span>
+<span>#低成本创业</span>
+</div>
+</div>
+
+<!-- ====== 2. 5维雷达 ====== -->
+<div class="section-title">品类雷达 <small>五维评估（满分5星）</small></div>
+<div class="radar-grid">
+<div class="radar-item">
+<div class="label">🔥 热度</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">烧椒茄子是川渝地区家常菜/面馆的标配凉菜，随着烧椒风味在全国的普及，2026年搜索量年增30%+。茄子作为国民蔬菜接受度100%，搭配烧椒这个\"川式网红味型\"热度持续走高。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔄 复购</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">烧椒茄子软糯入味的口感配合焦香糊辣味，下饭属性极强，老客月均复购3-4次。素食无负担的特性让消费者愿意高频次食用——是凉菜中复购率最高的素菜品类之一。</div>
+</div>
+<div class="radar-item">
+<div class="label">💰 利润</div>
+<div class="stars">★★★★★</div>
+<div class="desc">食材成本仅¥2-4/份（含料汁），毛利高达75-82%，单份净利¥8-14。茄子批发价低至¥2-3/kg，利润空间在凉菜全品类中稳居TOP3水平。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔧 难度</div>
+<div class="stars">★★☆☆☆</div>
+<div class="desc">工艺简单——茄子蒸制/撕条+烧椒剁碎+浇汁，新手半天上手。烧椒部分需稍加练习但难度远低于烧椒皮蛋（茄子不需要考虑火候和质地配合问题）。</div>
+</div>
+<div class="radar-item">
+<div class="label">📈 空间</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">茄子全年供应稳定，价格波动小。可拓展至烧椒酱预包装/便利店冷柜/社区团购渠道。烧椒茄子+米饭套餐模式可标准化复制，拓展空间大。</div>
+</div>
+</div>
+
+<!-- ====== 3. 适合谁/不适合谁 ====== -->
+<div class="section-title">人群适配 <small>目标画像分析</small></div>
+<div class="fit-wrap">
+<div class="fit-yes">
+<div class="fit-head">✅ 适合谁做</div>
+<ul>
+<li>凉菜摊主/面馆老板，烧椒茄子成本低、利润高、出餐快，是性价比最高的凉菜单品之一</li>
+<li>零基础摆摊创业者，烧椒茄子几乎不需要烹饪经验——茄子蒸熟撕条即可，试错成本¥200起</li>
+<li>家常菜馆/川菜馆增加凉菜单品，烧椒茄子适配全客群（素菜无争议），下单率极高</li>
+<li>外卖店主寻找高利润加购品，烧椒茄子成本¥3卖¥12，毛利75%，平台扣点后依然暴利</li>
+<li>社区团购/生鲜电商创业者，烧椒茄子可做预包装（蒸好茄子+烧椒料包分离），冷链成本低</li>
+<li>烧烤店/大排档增加素食凉菜，茄子软糯口感搭配烧椒的糊辣味，和烧烤/啤酒搭配度极高</li>
+</ul>
+</div>
+<div class="fit-no">
+<div class="fit-head">❌ 不适合谁做</div>
+<ul>
+<li>追求\"大块肉感\"满足感的纯肉食客群为主的市场（茄子纯素，缺乏蛋白质饱腹感）</li>
+<li>对茄子口感有偏见的消费群体（部分人不喜欢茄子\"软烂\"的口感）</li>
+<li>高端餐饮/商务宴请定位（茄子+烧椒定位市井家常，难以撑起¥30+定价）</li>
+<li>茄子蒸制过度的新手（蒸太久茄子变成\"茄子泥\"，失去撕条的纤维口感）</li>
+<li>纯烧椒茄子单品店（品类单一缺乏搭配，消费者选择少导致复购疲劳）</li>
+<li>追求极致低价市场竞争激烈的区域（茄子虽成本低但¥8以下定价无利润空间）</li>
+</ul>
+</div>
+</div>
+
+<!-- ====== 4. 赚钱逻辑 ====== -->
+<div class="section-title">赚钱逻辑 <small>三档定价模型 + 核心指标</small></div>
+<div class="logic-box">
+<div class="price-tiers">
+<div class="price-tier">
+<div class="tier-label">🛒 摆摊</div>
+<div class="tier-price">¥10-15<small>/份</small></div>
+<div class="tier-note">夜市/集市 200g/份 走量为主</div>
+<div class="tier-detail">日卖100-160份 · 毛利76-82%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">🏪 门店</div>
+<div class="tier-price">¥15-20<small>/份</small></div>
+<div class="tier-note">堂食 250g/份+配菜 品质溢价</div>
+<div class="tier-detail">日卖70-110份 · 毛利74-80%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">📱 外卖</div>
+<div class="tier-price">¥12-18<small>/份</small></div>
+<div class="tier-note">平台定价 含包装+平台扣点</div>
+<div class="tier-detail">日卖60-100份 · 毛利66-72%</div>
+</div>
+</div>
+<div class="metric-row">
+<div class="metric-item">
+<div class="metric-val">¥1,200-2,400<small>/日</small></div>
+<div class="metric-label">日营收（100-160份 × 均价¥13）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">¥2.0-3.8万<small>/月</small></div>
+<div class="metric-label">月净利（扣除食材20%+人工+租金）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">0.5-1<small>个月</small></div>
+<div class="metric-label">回本周期（设备投入最低，摆摊¥1500起）</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 5. 食材成本拆解 ====== -->
+<div class="section-title">食材成本拆解 <small>精确到g · 单份250g茄子计</small></div>
+<table class="cost-table">
+<tr><th>食材/调料</th><th>用量(g)</th><th>单价(¥/500g)</th><th>小计(¥)</th></tr>
+<tr><td>紫皮长茄子（新鲜，肉厚籽少）</td><td>200</td><td>¥3</td><td>¥1.20</td></tr>
+<tr><td>二荆条/线椒（烧椒用）</td><td>50</td><td>¥6</td><td>¥0.60</td></tr>
+<tr><td>生抽（酿造生抽）</td><td>8</td><td>¥10</td><td>¥0.16</td></tr>
+<tr><td>香醋（保宁醋/镇江香醋）</td><td>6</td><td>¥10</td><td>¥0.12</td></tr>
+<tr><td>蒜末（新鲜蒜瓣剁碎）</td><td>4</td><td>¥8</td><td>¥0.06</td></tr>
+<tr><td>香油（纯芝麻油）</td><td>3</td><td>¥28</td><td>¥0.17</td></tr>
+<tr><td>白糖</td><td>2</td><td>¥6</td><td>¥0.02</td></tr>
+<tr><td>盐</td><td>1</td><td>¥3</td><td>¥0.01</td></tr>
+<tr><td>味精/鸡精</td><td>1</td><td>¥8</td><td>¥0.02</td></tr>
+<tr><td>花椒面</td><td>1</td><td>¥40</td><td>¥0.08</td></tr>
+<tr><td>葱花（小葱切圈）</td><td>3</td><td>¥6</td><td>¥0.04</td></tr>
+<tr><td>熟白芝麻</td><td>2</td><td>¥16</td><td>¥0.06</td></tr>
+<tr><td>菜籽油（刷茄子面蒸制用）</td><td>2</td><td>¥8</td><td>¥0.03</td></tr>
+<tr><td>包装（餐盒+袋子+筷子+纸巾）</td><td>1套</td><td>¥0.8/套</td><td>¥0.80</td></tr>
+<tr class="total-row"><td colspan="2">合计（单份全部成本）</td><td></td><td>¥3.37</td></tr>
+</table>
+
+<!-- ====== 6. 同赛道对比 ====== -->
+<div class="section-title">同赛道对比 <small>类似品类竞品分析 · 烧椒素凉菜四天王</small></div>
+<div class="comp-row">
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🍆 烧椒茄子</span><span class="comp-rating">★★★★★</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥10-20 | <strong>毛利:</strong> 74-82% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥2-4/份<br>
+<strong>优势:</strong> 成本最低、受众最广、素食无争议，茄子软糯+烧椒焦香口感反差完美<br>
+<strong>劣势:</strong> 茄子蒸后保质期极短（2小时内最佳），外卖口感衰减快于藕片等脆素菜
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🔥 烧椒皮蛋</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥15-30 | <strong>毛利:</strong> 64-75% | <strong>出餐:</strong> ≤1min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥4-6/份<br>
+<strong>优势:</strong> 皮蛋Q弹口感更有层次，客单价高50%，川渝认知度极高<br>
+<strong>劣势:</strong> 食材成本高75%，非川渝地区接受度两极分化，纯素人群无法消费
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🫘 烧椒豆腐/豆花</span><span class="comp-rating">★★★☆☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥8-15 | <strong>毛利:</strong> 70-78% | <strong>出餐:</strong> ≤1min<br>
+<strong>复购:</strong> 中 | <strong>食材成本:</strong> ¥2.5-4/份<br>
+<strong>优势:</strong> 内酯豆腐滑嫩+烧椒焦香，口感新奇有爆点，素食/减脂人群友好<br>
+<strong>劣势:</strong> 豆腐出水严重保质期极短，配送几乎不可行，只能堂食/摆摊即食
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥬 烧椒木耳/贡菜</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥12-18 | <strong>毛利:</strong> 70-80% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 中高 | <strong>食材成本:</strong> ¥3-5/份<br>
+<strong>优势:</strong> 木耳/贡菜脆韧口感+烧椒焦香，口感层次比茄子更丰富<br>
+<strong>劣势:</strong> 脆素菜受众面窄于茄子，木耳泡发不及时则影响出餐效率
+</div>
+</div>
+</div>
+
+<!-- ====== 7. 核心工艺 ====== -->
+<div class="section-title">核心工艺 <small>5步标准化SOP</small></div>
+<div class="flow-steps">
+<div class="flow-step">
+<div class="step-num">1</div>
+<div class="step-body">
+<div class="step-title">茄子处理 <span class="step-param">品种: 紫皮长茄子 · 处理: 洗净切段 · 刷油防氧化</span></div>
+<div class="step-desc">选用紫皮长茄子（肉厚籽少、口感绵密），流水冲洗干净后切成8-10cm长的段。茄子表面刷一层薄薄的菜籽油（防氧化变黑+增香），放入蒸盘中。关键控制点：不要削皮——茄子皮含有花青素且蒸熟后口感有韧性，和软糯的茄子肉形成口感层次；但茄子蒂必须去除干净。长紫茄比圆茄更适合做烧椒茄子（长茄肉更紧实、蒸后不易散烂）。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">2</div>
+<div class="step-body">
+<div class="step-title">蒸制控时 <span class="step-param">温度: 100℃蒸汽 · 时间: 8-10分钟 · ⚠️不宜过久</span></div>
+<div class="step-desc">蒸锅水开后放入茄子段，大火蒸8-10分钟。以筷子能轻松插入茄子最粗处且茄子微微变软但不塌陷为最佳状态。蒸至茄皮开始皱缩、茄子肉呈半透明状但仍有形状——此时茄子已熟透但还保留了部分纤维质感。⚠️最关键控制点：蒸过头则茄子变成\"茄子泥\"，撕条时失去纤维口感，软趴趴的一坨——这是烧椒茄子最常见的失败原因。建议每批次少量多次蒸制，每次不超过6根（约1.2kg），确保蒸汽均匀。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">3</div>
+<div class="step-body">
+<div class="step-title">撕条沥水 <span class="step-param">时间: 凉至不烫手 · 手法: 手撕成条</span></div>
+<div class="step-desc">蒸好的茄子取出放凉至不烫手（约5分钟），用手将茄子纵向撕成约1cm宽的条状。手撕能保留自然的纤维纹理和凹凸表面——比刀切更易挂汁入味。撕好的茄条平铺在沥水篮中静置3-5分钟，沥掉蒸制过程中渗出的水分。这个步骤非常关键：茄子本身含水量高，如果不沥干水分，料汁会被稀释导致风味不足\"水垮垮\"。也可用厨房纸巾轻按吸走表面水分。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">4</div>
+<div class="step-body">
+<div class="step-title">烧椒制作 <span class="step-param">🔥 核心工序 · 同烧椒皮蛋烧椒制法</span></div>
+<div class="step-desc">⚠️烧椒关键：二荆条/线椒用燃气灶中大火直火烧至表面出现虎皮纹（焦黑斑点），闻到浓郁焦香糊辣味即停止——单面15-20秒，总时间约60-80秒。烧好后放入碗中盖保鲜膜焖2分钟，撕去焦黑外皮，剁成粗碎（绿豆大小颗粒感）。关键注意：烧到虎皮纹即停，烧过头发苦发酸；一定不要用搅拌机打成泥——会破坏烧椒的焦香风味层次。烧椒可批量预制（冷藏保存2天），每天营业前做一次即可。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">5</div>
+<div class="step-body">
+<div class="step-title">浇汁出餐 <span class="step-param">时间: ≤2分钟 · 现浇现售</span></div>
+<div class="step-desc">将沥干水分的茄条200g装入盘中（堆成小山形或平铺），取预调好的烧椒汁（烧椒碎20g+生抽8g+香醋6g+蒜末4g+香油3g+白糖2g+盐1g+花椒面1g+鸡精1g）搅拌均匀，均匀浇在茄条上。最后撒葱花3g和熟白芝麻2g增色提香。烧椒汁配方和烧椒皮蛋的汁同源——两者可共用同一料汁，出餐前加入烧椒碎即可。建议批量调汁（冷藏保存3天），出餐效率极高。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 8. 调味体系 ====== -->
+<div class="section-title">调味体系 <small>烧椒汁精确配方 · 单份250g茄子计</small></div>
+<div class="seasoning-box">
+<h4>🥣 烧椒汁标准配方（单份量 · 与烧椒皮蛋通用）</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">烧椒碎（核心灵魂）</div><div class="s-amt">20<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">生抽</div><div class="s-amt">8<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香醋</div><div class="s-amt">6<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">蒜末（鲜剁）</div><div class="s-amt">4<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香油</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">白糖</div><div class="s-amt">2<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">花椒面</div><div class="s-amt">1<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">盐+鸡精</div><div class="s-amt">2<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">葱花+熟芝麻</div><div class="s-amt">5<small>g</small></div></div>
+</div>
+</div>
+
+<!-- ====== 9. 设备清单 ====== -->
+<div class="section-title">设备清单 <small>投入预估 · 按场景选配</small></div>
+<div class="device-list">
+<div class="device-item"><span class="dev-name">🔥 燃气灶（烧椒必需明火）</span><span class="dev-price">¥500-1200</span></div>
+<div class="device-item"><span class="dev-name">🫕 蒸锅/蒸箱（茄子蒸制用）</span><span class="dev-price">¥150-500</span></div>
+<div class="device-item"><span class="dev-name">❄️ 冷藏展示柜/商用冰箱</span><span class="dev-price">¥1500-3000</span></div>
+<div class="device-item"><span class="dev-name">🔪 切片刀+砧板（专用素菜）</span><span class="dev-price">¥100-200</span></div>
+<div class="device-item"><span class="dev-name">🥢 长柄不锈钢夹（烧椒用）</span><span class="dev-price">¥20-40</span></div>
+<div class="device-item"><span class="dev-name">⚖️ 电子秤（0.1g精度）</span><span class="dev-price">¥60-120</span></div>
+<div class="device-item"><span class="dev-name">🧴 调味缸+料汁瓶（6件套）</span><span class="dev-price">¥80-150</span></div>
+<div class="device-item"><span class="dev-name">🧊 保温冰桶（摆摊用）</span><span class="dev-price">¥200-400</span></div>
+<div class="device-item"><span class="dev-name">🛒 摆摊车/移动餐车（选配）</span><span class="dev-price">¥2000-5000</span></div>
+<div class="device-item"><span class="dev-name">📦 打包台+餐盒/封口机</span><span class="dev-price">¥300-600</span></div>
+<div class="device-item"><span class="dev-name">🧹 消毒柜/紫外线灯</span><span class="dev-price">¥500-800</span></div>
+<div class="device-item"><span class="dev-name">💧 净水器（厨房用）</span><span class="dev-price">¥300-600</span></div>
+<div class="device-total">💰 设备总投入预估：¥5,710-12,610（纯摆摊最低约¥2,000起，蒸锅+燃气灶+夹子即可）</div>
+</div>
+
+<!-- ====== 10. 开店适配指标 ====== -->
+<div class="section-title">开店适配指标 <small>6种场景综合评分</small></div>
+<div class="stall-grid">
+<div class="stall-item high">
+<div class="stall-name">🛒 摆摊</div>
+<div class="stall-score">9.4/10</div>
+<div class="stall-desc">成本极低、出餐快<br>夜市走量利润之王</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏪 档口</div>
+<div class="stall-score">8.8/10</div>
+<div class="stall-desc">面馆/川菜馆必备凉菜<br>下饭属性拉高客单价</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">🏠 小店</div>
+<div class="stall-score">7.4/10</div>
+<div class="stall-desc">搭配米饭/面食做成套餐<br>纯单品堂食体验单一</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">📋 搭售</div>
+<div class="stall-score">9.2/10</div>
+<div class="stall-desc">烧烤店/大排档/面馆<br>¥12搭售提升客单价¥8-12</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">📱 外卖</div>
+<div class="stall-score">6.5/10</div>
+<div class="stall-desc">茄子保质期极短<br>配送超20分钟口感衰减</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏘️ 社区店</div>
+<div class="stall-score">8.6/10</div>
+<div class="stall-desc">邻里复购稳定<br>现蒸现卖口碑传播强</div>
+</div>
+</div>
+
+<!-- ====== 11. 风险 ====== -->
+<div class="section-title">风险提示 <small>5项关键预警 + 应对策略</small></div>
+<div class="risk-list">
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">茄子蒸制时间控制 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">茄子蒸制8-10分钟是最佳窗口——蒸不够则茄子发硬带生涩味，蒸过头则软烂成泥无法撕条、口感坍塌。不同粗细的茄子蒸制时间差异大（细茄6分钟即熟、粗茄需12分钟），混蒸时粗的没熟透细的已成泥。应对策略：按茄子粗细分拣后分批次蒸制（直径≤3cm蒸8分钟，3-4cm蒸10分钟，≥4cm蒸12分钟）；使用蒸箱或带定时器的大蒸锅，精确控时不允许目测。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">茄子氧化变色 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">紫皮茄子蒸制后如果接触空气时间过长（超过30分钟），茄子肉会从白色逐渐变为褐色——尤其摆摊/外卖场景下卖相大打折扣。应对策略：蒸前在茄子表面均匀刷一层薄菜籽油（形成氧化隔离层）；蒸好的茄子如果不立即使用，浸泡在淡盐水中冷藏（≤4℃可保存2小时）；出餐前再沥水撕条——切不可提前大量撕条备用。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">烧椒火候控制 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">烧椒制作是烧椒茄子共用烧椒汁的核心技术点——辣椒烧到虎皮纹即停，烧过头发苦发酸、烧不够则焦香出不来。这个火候判断对新手不太友好。应对策略：建立\"三阶段烧制标准\"（见烧椒皮蛋风险模块），批量烧制单次30-50根冷藏保存；如对烧椒技术不自信可购买成品烧椒酱作为过渡，但风味会比现做差15-20%。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">茄子保质期短——外卖衰减严重 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">烧椒茄子的最佳食用时间是出餐后20分钟内——超过30分钟茄子开始出水（\"水垮垮\"）、烧椒焦香挥发、口感从软糯变成\"烂糊\"。外卖配送（通常30-50分钟）是烧椒茄子最大的挑战。应对策略：外卖必须采用\"料汁分离+茄子单独包装\"（茄子整根不撕+烧椒料包附赠），顾客收到后自行撕条浇汁；或仅限3公里内配送（配送≤15分钟区域），超出范围建议不接单。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">与烧椒皮蛋的定位重叠 <span class="risk-level low">低风险</span></div>
+<div class="risk-desc">烧椒茄子和烧椒皮蛋使用几乎完全相同的料汁，如果同时出现在一个菜单上，容易让消费者产生\"这不是一样的吗\"的感觉，导致茄子被皮蛋\"抢单\"。应对策略：明确定位差异——烧椒皮蛋主打\"下饭+蛋白质\"（¥18-25，适合主食搭售），烧椒茄子主打\"低价走量+素食友好\"（¥10-15，适合引流和搭售）；套餐设计时两者可搭配成\"烧椒双拼\"（半份茄子+半份皮蛋¥22），提高客单价。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 12. 赛道判断 ====== -->
+<div class="section-title">赛道判断 <small>优势劣势 + 2026年趋势研判</small></div>
+<div class="track-grid">
+<div class="track-pros">
+<div class="track-head">✅ 核心优势</div>
+<ul>
+<li>极致性价比：食材成本¥2-4/份，毛利75-82%，凉菜品类利润天花板</li>
+<li>100%素食友好：对素食者、减脂人群、蛋奶过敏者无任何消费障碍</li>
+<li>茄子全季供应、价格波动极小（¥2-4/kg），不依赖任何\"周期\"</li>
+<li>出餐速度快（≤2分钟），标准化程度高，适合快速复制扩张</li>
+<li>烧椒汁可与烧椒皮蛋共用，一汁多用降低运营复杂度</li>
+<li>适配面馆/烧烤店/大排档/家常菜馆等多种渠道，搭售场景丰富</li>
+<li>下饭属性强——烧椒茄子的酱汁拌饭是川渝\"隐藏菜单\"，口碑传播力强</li>
+<li>设备投入最低级别（蒸锅+燃气灶即可起步），试错成本几乎为零</li>
+</ul>
+</div>
+<div class="track-cons">
+<div class="track-head">⚠️ 核心劣势</div>
+<ul>
+<li>茄子保质期极短——出餐20分钟后口感开始衰减，超越30分钟基本报废</li>
+<li>外卖配送几乎不可行（非料汁分离模式），严重限制渠道拓展</li>
+<li>定价天花板明显（¥15-20），纯素菜品难以支撑高客单价</li>
+<li>与烧椒皮蛋同用烧椒汁，菜单上彼此竞争而非互补</li>
+<li>茄子蒸制口感高度依赖经验——蒸过头就变成\"茄子泥\"，不可逆</li>
+<li>茄子变色问题影响外卖/预包装卖相，需要额外防护措施</li>
+<li>纯素缺乏蛋白质满足感，部分消费者觉得\"吃不饱\"</li>
+</ul>
+</div>
+</div>
+<div class="track-verdict">
+<strong>📊 2026赛道判断：</strong> 烧椒茄子属于<strong>\"高毛利引流型\"</strong>素凉菜品类，最适合作为面馆/烧烤店/大排档的<strong>利润型搭售凉菜</strong>。2026年三大趋势利好：①素食/轻食消费持续扩大（\"周一吃素\"等生活理念渗透率年增20%）；②烧椒风味从小众破圈走向大众（烧椒酱/烧椒味零食在便利店渠道快速增长）；③摆摊经济政策进一步放开，低成本素凉菜品类成为新手首选。建议定位为\"烧椒系列中的走量利润品\"——用烧椒茄子锁定素食客群和价格敏感客群，用烧椒皮蛋锁定下饭客群和追求口感的客群。两品类共用烧椒汁，运营协同效应极强。综合评定：<strong>★★★★★（强烈推荐入局，素凉菜利润之王）</strong>。最佳切入口：面馆/烧烤店的搭售凉菜，或夜市摆摊的走量爆品。
+</div>
+
+<!-- ====== 13. 30天验证路线 ====== -->
+<div class="section-title">30天验证路线 <small>从零到开张 · 五阶段分解</small></div>
+<div class="verify-steps">
+<div class="verify-step active">
+<div class="v-num">阶段一</div>
+<div class="v-range">Day 1-3</div>
+<div class="v-desc">配方确定+工艺训练</div>
+<div class="v-goal">✅ 茄子蒸制火候掌握+料汁定版</div>
+<div class="v-tasks">测试3种茄子蒸制时间<br>烧椒火候训练（20根/天）<br>确定料汁配比+份量标准</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段二</div>
+<div class="v-range">Day 4-8</div>
+<div class="v-desc">供应链搭建+设备到位</div>
+<div class="v-goal">✅ 签约供应商+设备采购</div>
+<div class="v-tasks">对接茄子/辣椒批发商<br>采购蒸锅/燃气灶/冰柜<br>办理摊位证照手续</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段三</div>
+<div class="v-range">Day 9-16</div>
+<div class="v-desc">SOP固化+内测出餐</div>
+<div class="v-goal">✅ 30份内测+优化流程</div>
+<div class="v-tasks">3次全流程实操演练<br>邀请20人试吃评分<br>根据反馈优化配方</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段四</div>
+<div class="v-range">Day 17-27</div>
+<div class="v-desc">试营业+口碑积累</div>
+<div class="v-goal">✅ mini摊试卖100份</div>
+<div class="v-tasks">朋友圈/社群预热推广<br>mini摊位试营业3-5天<br>收集50+条真实反馈</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段五</div>
+<div class="v-range">Day 28-30</div>
+<div class="v-desc">正式开业+复盘优化</div>
+<div class="v-goal">✅ 开业活动+首周数据复盘</div>
+<div class="v-tasks">开业特价（烧椒茄子+米饭套餐¥12.9）<br>统计首周日均营收/成本<br>确定烧椒系列扩品（加烧椒皮蛋）计划</div>
+</div>
+</div>
+
+<!-- ====== 14. 沧林判断 ====== -->
+<div class="section-title">沧林判断 <small>深度评语 · 300+字</small></div>
+<div class="judge-box">
+<div class="judge-text">烧椒茄子是我在2026年最想推荐给摆摊新手和面馆老板的一个素凉菜品类——没有之一。为什么？因为它同时满足了餐饮创业的\"不可能三角\"：成本极低（¥2-4/份）、毛利极高（75-82%）、操作极简单（蒸熟撕条浇汁）。这种三位一体的品类在整个餐饮赛道里都极其罕见。我来说说面馆场景——一家日均卖150碗面的面馆，如果在菜单上加一道烧椒茄子（¥15/份），哪怕只有20%的顾客点单（30份/天），一份净赚¥10，一天就是¥300的纯利润增量，一个月多赚¥9,000——只需要多雇一个临时工或者老板自己多花1小时蒸茄子。这就是我常说的\"微小增量带来巨大利润\"的模型。对于摆摊创业者，我建议的黄金组合是\"烧椒茄子+烧椒皮蛋\"双拼模式——烧椒茄子定价¥12做引流（成本¥3），烧椒皮蛋定价¥18做利润（成本¥5），双拼¥22（成本¥7，毛利68%）。一汁两用、操作流程复用、备料共享，运营效率极高。2026年我还看好一个趋势：烧椒酱预包装化。烧椒茄子这个品类最大的价值可能不在于卖成品凉菜，而在于它的\"核心资产\"——烧椒酱。把烧椒酱做成瓶装预包装调味品，消费者买回家自己蒸茄子/拌皮蛋/拌豆腐，这是一个比凉菜本身大10倍的市场。我的建议是：先用烧椒茄子线下摊位跑通现金流转正，同时积累烧椒酱口碑和配方数据，6个月后推出预包装烧椒酱，从餐饮赛道切入调味品赛道——这才是这个品类真正的爆发点。</div>
+<div class="judge-tags">
+<span>#沧林说餐饮</span>
+<span>#烧椒茄子赛道</span>
+<span>#素凉菜利润王</span>
+<span>#面馆搭售神器</span>
+<span>#烧椒酱化</span>
+<span>#一汁两用</span>
+</div>
+</div>
+
+<!-- ====== 15. 完整数据包预览 ====== -->
+<div class="section-title">完整数据包预览 <small>付费解锁 · 8项深度内容</small></div>
+<div class="data-preview">
+<div class="data-item"><span class="data-icon">📋</span><span class="data-name">烧椒茄子标准化SOP手册（含蒸制时间表/茄子品种对照/防变色方案）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📊</span><span class="data-name">6城市定价策略对照表（一线/新一线/二线/三线/县域分档+面馆渠道）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📈</span><span class="data-name">损益测算表（摆摊/面馆搭售/外卖3种模型成本结构+盈亏平衡分析）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">供应链清单（茄子/辣椒/包材供应商推荐名录+1688比价表+季节性采购）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📱</span><span class="data-name">外卖运营SOP（料汁分离方案/包装策略/配送范围控制/满减方案）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🎯</span><span class="data-name">面馆/烧烤店搭售策略（菜单设计/话术模板/组合套餐方案/定价模型）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🧪</span><span class="data-name">烧椒系列变体配方（经典烧椒/烧椒茄子/烧椒皮蛋/烧椒豆腐/烧椒酱预包装）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📅</span><span class="data-name">全年茄子采购日历（各产区上市时间表+品种推荐+价格走势+品质评级）</span><span class="data-lock">🔒</span></div>
+</div>
+
+<!-- ====== 16. 付费区 ¥19 toggle ====== -->
+<div class="pay-area">
+<div class="pay-header">
+<div class="pay-title">🔓 付费解锁 · 完整子卡数据</div>
+<div class="pay-price">¥19<small>/份</small></div>
+</div>
+<label class="pay-toggle">
+<input type="checkbox" id="payToggle">
+<span class="toggle-label">点击解锁完整数据内容（含详细表格/图表/参数矩阵/供应商名录）</span>
+<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起内容':'解锁内容'">解锁内容</button>
+
+</label>
+<div class="pay-content">
+<div class="pay-content-inner">
+<h4>📦 完整数据包内容（¥19付费版🔓 付费内容）</h4>
+
+<table class="pay-table">
+<tr><th>城市</th><th>茄子进价(¥/kg)</th><th>辣椒进价(¥/kg)</th><th>单份茄子(g)</th><th>单份辣椒(g)</th><th>单份成本(¥)</th></tr>
+<tr><td>成都</td><td>2.5-3.5</td><td>5-7</td><td>200</td><td>50</td><td>2.0-3.2</td></tr>
+<tr><td>重庆</td><td>2.0-3.0</td><td>5-6</td><td>200</td><td>50</td><td>1.8-2.8</td></tr>
+<tr><td>长沙</td><td>3.0-4.0</td><td>6-8</td><td>200</td><td>50</td><td>2.4-3.6</td></tr>
+<tr><td>武汉</td><td>2.5-3.5</td><td>5-7</td><td>200</td><td>50</td><td>2.0-3.2</td></tr>
+<tr><td>郑州</td><td>2.0-3.0</td><td>4-6</td><td>200</td><td>50</td><td>1.6-2.8</td></tr>
+<tr><td>昆明</td><td>2.0-3.0</td><td>4-5</td><td>200</td><td>50</td><td>1.6-2.6</td></tr>
+<tr><td colspan="5"><strong>单份总成本（含料汁+配菜+包装）</strong></td><td><strong>¥2-4</strong></td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>场景</th><th>定价区间</th><th>毛利区间</th><th>预估日销量</th><th>日毛利(¥)</th><th>月净利(¥)</th></tr>
+<tr><td>🛒 摆摊</td><td>¥10-15/份</td><td>76-82%</td><td>100-160份</td><td>760-1,968</td><td>18,000-40,000</td></tr>
+<tr><td>🏪 门店</td><td>¥15-20/份</td><td>74-80%</td><td>70-110份</td><td>777-1,760</td><td>16,000-35,000</td></tr>
+<tr><td>📱 外卖</td><td>¥12-18/份</td><td>66-72%</td><td>60-100份</td><td>475-1,296</td><td>10,000-28,000</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>步骤</th><th>操作</th><th>关键参数</th><th>翻车点</th></tr>
+<tr><td>①茄子处理</td><td>洗净切段8-10cm,刷油防氧化</td><td>紫皮长茄,不去皮</td><td>削皮失去口感层次</td></tr>
+<tr><td>②蒸制控时</td><td>大火蒸至筷子能插入</td><td>100℃蒸汽8-10min</td><td>蒸过头成泥,蒸不够发硬</td></tr>
+<tr><td>③撕条沥水</td><td>手撕成1cm条,沥干水分</td><td>凉至不烫手约5min</td><td>不沥干料汁被稀释</td></tr>
+<tr><td>④烧椒制作</td><td>直火烧至虎皮纹→焖→去皮→剁碎</td><td>中大火60-80秒,焖2min</td><td>烧过头发苦发酸</td></tr>
+<tr><td>⑤浇汁出餐</td><td>浇烧椒汁+撒葱花芝麻</td><td>≤2min出餐</td><td>料汁提前混合出水</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>竞品</th><th>定价区间</th><th>毛利</th><th>复购</th><th>优势</th><th>劣势</th></tr>
+<tr><td>🍆 烧椒茄子</td><td>¥10-20</td><td>74-82%</td><td>高</td><td>成本最低,受众最广,素食无争议</td><td>保质期极短,外卖衰减快</td></tr>
+<tr><td>🔥 烧椒皮蛋</td><td>¥15-30</td><td>64-75%</td><td>高</td><td>皮蛋Q弹,客单高50%</td><td>非川渝接受度两极分化</td></tr>
+<tr><td>🫘 烧椒豆腐</td><td>¥8-15</td><td>70-78%</td><td>中</td><td>滑嫩口感新奇,素食友好</td><td>豆腐出水,配送不可行</td></tr>
+<tr><td>🥬 烧椒木耳</td><td>¥12-18</td><td>70-80%</td><td>中高</td><td>脆韧口感丰富</td><td>受众面窄于茄子</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>场景</th><th>评分</th><th>推荐度</th><th>理由</th></tr>
+<tr><td>🛒 摆摊</td><td>9.4/10</td><td>★★★★★</td><td>成本极低,夜市利润之王</td></tr>
+<tr><td>🏪 档口</td><td>8.8/10</td><td>★★★★★</td><td>面馆川菜馆必备,下饭属性</td></tr>
+<tr><td>🏠 小店</td><td>7.4/10</td><td>★★★★</td><td>搭配米饭/面食成套餐</td></tr>
+<tr><td>📋 搭售</td><td>9.2/10</td><td>★★★★★</td><td>烧烤大排档搭售提客单¥8-12</td></tr>
+<tr><td>📱 外卖</td><td>6.5/10</td><td>★★★</td><td>配送超20min口感衰减</td></tr>
+<tr><td>🏘️ 社区店</td><td>8.6/10</td><td>★★★★★</td><td>邻里复购稳定</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>阶段</th><th>天数</th><th>核心任务</th><th>关键指标</th></tr>
+<tr><td>筹备期</td><td>1-3天</td><td>采购设备,锁定茄子/辣椒供应商</td><td>完成2家供应商比价</td></tr>
+<tr><td>试做期</td><td>4-8天</td><td>连续5天试做,攻克蒸制时间和烧椒火候</td><td>找到茄子粗细对应蒸制时间</td></tr>
+<tr><td>内测期</td><td>9-14天</td><td>15人盲测烧椒汁配比,3组方案对比</td><td>烧椒汁评分≥8/10</td></tr>
+<tr><td>试营业</td><td>15-22天</td><td>正式上线,搭配面食/米饭销售</td><td>日单量≥30份</td></tr>
+<tr><td>优化期</td><td>23-30天</td><td>外卖料汁分离方案测试,预包装烧椒酱测试</td><td>复购率≥35%</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>设备</th><th>品牌/规格</th><th>价格(¥)</th><th>采购参考</th></tr>
+<tr><td>燃气灶(烧椒必需)</td><td>美的/苏泊尔</td><td>500-1,200</td><td>淘宝搜索"燃气灶"</td></tr>
+<tr><td>蒸锅/蒸箱</td><td>不锈钢大号</td><td>150-500</td><td>1688搜索"商用蒸锅"</td></tr>
+<tr><td>冷藏展示柜</td><td>星星/海尔 1.2m</td><td>1,500-3,000</td><td>淘宝搜索"商用冷藏柜"</td></tr>
+<tr><td>长柄不锈钢夹</td><td>烧椒专用</td><td>20-40</td><td>淘宝搜索"不锈钢食品夹"</td></tr>
+<tr><td>切片刀+砧板</td><td>素菜专用</td><td>100-200</td><td>淘宝搜索"厨师专用切片刀"</td></tr>
+<tr><td>电子秤</td><td>0.1g精度</td><td>60-120</td><td>淘宝搜索"厨房电子秤0.1g"</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>策略</th><th>动作</th><th>话术模板</th></tr>
+<tr><td>进群礼</td><td>消费满15元送烧椒茄子券¥2</td><td>"加群领¥2烧椒茄子券"</td></tr>
+<tr><td>面馆搭售</td><td>点面+¥8升级凉菜套餐</td><td>"加¥8升级烧椒茄子套餐"</td></tr>
+<tr><td>拼团</td><td>3份起订各减¥3</td><td>"约同事拼团每人省¥3"</td></tr>
+<tr><td>复购卡</td><td>买6送1次</td><td>"买6份送1份,相当于8.6折"</td></tr>
+<tr><td>预包装</td><td>烧椒酱+茄子分装,社区团购</td><td>"在家也能做出烧椒茄子"</td></tr>
+</table>
+</div>
+</div>
+</div>
+
+<!-- ====== 17. 数据说明+微信+品牌页脚 ====== -->
+<div class="data-note">
+📌 数据说明：以上数据基于2026年Q1全国6城市（成都/重庆/长沙/武汉/郑州/昆明）实地调研及外卖平台大数据分析，食材价格取2026年3月市场均价。实际数据因地区、季节、供应链差异可能浮动±15%。评分体系为FoodIntelAI V5.1标准，满分为10分。本子卡仅供创业决策参考，不构成投资建议。
+</div>
+<div class="footer-brand">
+<div class="fb-name">Food<span>Intel</span>AI</div>
+<div class="fb-line">数据驱动餐饮决策 · V5.1 子卡标准 · 17维全量评测</div>
+<div class="fb-wx">📱 微信咨询：canglin1985</div>
+<div class="fb-copy">© 2026 FoodIntelAI · 沧林餐饮智库 · 子卡编号 LB_14 烧椒茄子（烧椒拌茄子）· 版权所有</div>
+</div>
+
+</div><!-- /card -->
+
+<script>
+// 付费区Toggle功能
+document.addEventListener('DOMContentLoaded',function(){
+var cb=document.getElementById('payToggle');
+var pc=document.querySelector('.pay-content');
+var btn=document.querySelector('.toggle-btn');
+cb.addEventListener('change',function(){
+pc.classList.toggle('show',cb.checked);
+btn.textContent=cb.checked?'收起内容':'解锁内容';
+});
+});
+</script>
+
+</body>
+</html>

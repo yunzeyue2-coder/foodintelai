@@ -47,7 +47,30 @@ const STORE_DATA = [
   {p:"KF",n:"韩式汤/主食",e:"🍲",c:[{f:"catalog/KF/KF_001_石锅拌饭.html",n:"KF_001_石锅拌饭"},{f:"catalog/KF/KF_002_冷面.html",n:"KF_002_冷面"},{f:"catalog/KF/KF_003_大酱汤.html",n:"KF_003_大酱汤"},{f:"catalog/KF/KF_004_嫩豆腐汤.html",n:"KF_004_嫩豆腐汤"},{f:"catalog/KF/KF_005_肥牛拌饭.html",n:"KF_005_肥牛拌饭"},{f:"catalog/KF/KF_006_辣白菜炒饭.html",n:"KF_006_辣白菜炒饭"},{f:"catalog/KF/KF_007_海鲜葱饼.html",n:"KF_007_海鲜葱饼"},{f:"catalog/KF/KF_008_辣炒年糕.html",n:"KF_008_辣炒年糕"},{f:"catalog/KF/KF_009_泡菜汤.html",n:"KF_009_泡菜汤"},{f:"catalog/KF/KF_010_部队锅.html",n:"KF_010_部队锅"},{f:"catalog/KF/KF_011_参鸡汤.html",n:"KF_011_参鸡汤"},{f:"catalog/KF/KF_012_排骨汤.html",n:"KF_012_排骨汤"}]},
   {p:"PC",n:"韩式拌菜",e:"🥬",c:[{f:"catalog/PC/PC_K01_韩式辣白菜系列.html",n:"PC_K01_韩式辣白菜系列"},{f:"catalog/PC/PC_K02_韩式牛副拌菜.html",n:"PC_K02_韩式牛副拌菜"},{f:"catalog/PC/PC_K03_韩式明太鱼系列.html",n:"PC_K03_韩式明太鱼系列"},{f:"catalog/PC/PC_K04_韩式豆制品系列.html",n:"PC_K04_韩式豆制品系列"},{f:"catalog/PC/PC_K05_韩式腌菜拌菜系列.html",n:"PC_K05_韩式腌菜拌菜系列"},{f:"catalog/PC/PC_K06_韩式拌豆芽.html",n:"PC_K06_韩式拌豆芽"},{f:"catalog/PC/PC_K07_韩式炒鱼饼.html",n:"PC_K07_韩式炒鱼饼"},{f:"catalog/PC/PC_K08_韩式拌菠菜.html",n:"PC_K08_韩式拌菠菜"}]},
   {p:"JX",n:"江西小炒",e:"🍳",c:[{f:"catalog/JX/JX_T01_江西小炒总纲.html",n:"JX_T01_江西小炒总纲"},{f:"catalog/JX/JX_M01_江西小炒创业母卡.html",n:"JX_M01_江西小炒创业母卡"},{f:"catalog/JX/JX_VC01_江西小炒鲜辣调味体系.html",n:"JX_VC01_江西小炒鲜辣调味体系"},{f:"catalog/JX/JX_VC02_江西小炒猛火快炒火候体系.html",n:"JX_VC02_江西小炒猛火快炒火候体系"},{f:"catalog/JX/JX_01_辣椒炒肉（子）.html",n:"JX_01_辣椒炒肉（子）"},{f:"catalog/JX/JX_02_小炒牛肉（子）.html",n:"JX_02_小炒牛肉（子）"},{f:"catalog/JX/JX_03_红烧鸡块（子）.html",n:"JX_03_红烧鸡块（子）"},{f:"catalog/JX/JX_04_酸菜炒肚（子）.html",n:"JX_04_酸菜炒肚（子）"},{f:"catalog/JX/JX_05_江西炒粉（子）.html",n:"JX_05_江西炒粉（子）"},{f:"catalog/JX/JX_06_南昌拌粉（子）.html",n:"JX_06_南昌拌粉（子）"},{f:"catalog/JX/JX_07_瓦罐汤（子）.html",n:"JX_07_瓦罐汤（子）"},{f:"catalog/JX/JX_08_素菜合辑（子）.html",n:"JX_08_素菜合辑（子）"}]},
-  {p:"LB",n:"凉菜/拌菜",e:"🥬",c:[{f:"catalog/LB/LB_T01_凉菜总纲.html",n:"LB_T01_凉菜总纲"}]}];
+  {p:"LB",n:"凉菜/拌菜",e:"🥬",c:[
+    {f:"catalog/LB/LB_T01_凉菜总纲.html",n:"LB_T01_凉菜总纲"},
+    {f:"catalog/LB/LB_M01_凉菜创业母卡.html",n:"LB_M01_凉菜创业母卡"},
+    {f:"catalog/LB/LB_VC01_凉菜红油体系.html",n:"LB_VC01_凉菜红油体系"},
+    {f:"catalog/LB/LB_VC02_凉菜酸辣蒜泥麻酱体系.html",n:"LB_VC02_凉菜酸辣蒜泥麻酱体系"},
+    {f:"catalog/LB/LB_VC03_凉菜烧椒藤椒麻辣体系.html",n:"LB_VC03_凉菜烧椒藤椒麻辣体系"},
+    {f:"catalog/LB/LB_01_红油耳丝.html",n:"LB_01_红油耳丝"},
+    {f:"catalog/LB/LB_02_口水鸡.html",n:"LB_02_口水鸡"},
+    {f:"catalog/LB/LB_03_红油肚丝.html",n:"LB_03_红油肚丝"},
+    {f:"catalog/LB/LB_04_酸辣土豆丝.html",n:"LB_04_酸辣土豆丝"},
+    {f:"catalog/LB/LB_05_柠檬凤爪.html",n:"LB_05_柠檬凤爪"},
+    {f:"catalog/LB/LB_06_酸辣海带丝.html",n:"LB_06_酸辣海带丝"},
+    {f:"catalog/LB/LB_07_蒜泥白肉.html",n:"LB_07_蒜泥白肉"},
+    {f:"catalog/LB/LB_08_蒜泥茄子.html",n:"LB_08_蒜泥茄子"},
+    {f:"catalog/LB/LB_09_麻酱豆角.html",n:"LB_09_麻酱豆角"},
+    {f:"catalog/LB/LB_10_麻酱菠菜.html",n:"LB_10_麻酱菠菜"},
+    {f:"catalog/LB/LB_11_藤椒鸡片.html",n:"LB_11_藤椒鸡片"},
+    {f:"catalog/LB/LB_12_藤椒藕片.html",n:"LB_12_藤椒藕片"},
+    {f:"catalog/LB/LB_13_烧椒皮蛋.html",n:"LB_13_烧椒皮蛋"},
+    {f:"catalog/LB/LB_14_烧椒茄子.html",n:"LB_14_烧椒茄子"},
+    {f:"catalog/LB/LB_15_麻辣拌.html",n:"LB_15_麻辣拌"},
+    {f:"catalog/LB/LB_16_麻辣鸡杂.html",n:"LB_16_麻辣鸡杂"},
+    {f:"catalog/LB/LB_19_口水鸡.html",n:"LB_19_口水鸡"}
+  ]}];
 
 // 地摊产品卡
 // ===== 版本号：20260616.2（强制刷新缓存） =====

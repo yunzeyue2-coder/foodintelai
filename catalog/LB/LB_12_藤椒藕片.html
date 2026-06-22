@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LB_12 藤椒藕片（藤椒拌藕片）| FoodIntelAI 子卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.card{max-width:860px;width:100%;margin:0 auto}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;border-bottom:2px solid #e0d8cc;margin-bottom:16px}
+.card-header .logo{font-size:18px;font-weight:700;color:#2c3e50;letter-spacing:1px}
+.card-header .logo span{color:#c0392b}
+.card-header .sub{font-size:12px;color:#7f8c8d;background:#eae7e2;padding:2px 10px;border-radius:10px}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.rating-bar::before{content:'';position:absolute;top:-30px;right:-20px;width:140px;height:140px;background:rgba(255,255,255,0.04);border-radius:50%}
+.rating-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rating-score{font-size:44px;font-weight:800;line-height:1}
+.rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
+.rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
+.rating-grade.a{background:#27ae60;color:#fff}
+.rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
+.rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
+.section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #c0392b;line-height:1.4}
+.section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
+.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
+.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
+.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
+.fit-yes ul{list-style:none;padding:0}
+.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
+.fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
+.fit-no ul{list-style:none;padding:0}
+.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.price-tier{background:#f9f8f6;border-radius:12px;padding:14px;text-align:center;border:1px solid #e8e3dc}
+.price-tier .tier-label{font-size:13px;color:#7f8c8d;margin-bottom:4px}
+.price-tier .tier-price{font-size:22px;font-weight:800;color:#c0392b}
+.price-tier .tier-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.price-tier .tier-note{font-size:11px;color:#95a5a6;margin-top:4px}
+.price-tier .tier-detail{font-size:10px;color:#aaa;margin-top:2px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric-item{background:linear-gradient(135deg,#2c3e50,#34495e);border-radius:12px;padding:14px;text-align:center;color:#fff}
+.metric-item .metric-val{font-size:24px;font-weight:800}
+.metric-item .metric-val small{font-size:13px;font-weight:400;opacity:.8}
+.metric-item .metric-label{font-size:12px;opacity:.8;margin-top:2px}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px}
+.cost-table th{background:#2c3e50;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
+.cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
+.cost-table tr:last-child td{border-bottom:none}
+.cost-table .total-row{background:#fef9e7;font-weight:700}
+.cost-table .total-row td{font-size:13px;color:#c0392b}
+.cost-table .subtotal-row{background:#f9f8f6;font-weight:600}
+.cost-table .subtotal-row td{font-size:12px;color:#2c3e50}
+.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
+.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
+.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
+.comp-item .comp-rating{font-size:12px;color:#f39c12}
+.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
+.comp-item .comp-detail strong{color:#2c3e50}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.flow-step .step-body{flex:1}
+.flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
+.flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
+.flow-step .step-param{display:inline-block;background:#fef9e7;color:#c0392b;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.seasoning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
+.seasoning-item .s-name{font-size:12px;color:#7f8c8d}
+.seasoning-item .s-amt{font-size:16px;font-weight:700;color:#2c3e50;margin-top:2px}
+.seasoning-item .s-amt small{font-size:11px;font-weight:400;color:#95a5a6}
+.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
+.device-item .dev-price{font-size:12px;color:#7f8c8d}
+.device-total{background:#fef9e7;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#c0392b;margin-top:6px;grid-column:1/-1}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
+.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.stall-item.high .stall-score{color:#27ae60}
+.stall-item.mid .stall-score{color:#f39c12}
+.stall-item.low .stall-score{color:#e74c3c}
+.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
+.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.risk-item .risk-body{flex:1}
+.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
+.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
+.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
+.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
+.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
+.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
+.track-pros ul{list-style:none;padding:0}
+.track-pros ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-pros ul li::before{content:'+';color:#27ae60;position:absolute;left:0;font-weight:700}
+.track-cons{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.track-cons .track-head{font-weight:700;color:#e74c3c;font-size:14px;margin-bottom:8px}
+.track-cons ul{list-style:none;padding:0}
+.track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.track-verdict{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
+.track-verdict strong{color:#f1c40f}
+.verify-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.verify-step{background:#fff;border-radius:12px;padding:14px 10px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;position:relative}
+.verify-step .v-num{display:inline-block;background:#2c3e50;color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:8px;margin-bottom:5px}
+.verify-step .v-range{font-size:12px;font-weight:700;color:#c0392b;margin-bottom:4px}
+.verify-step .v-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.verify-step .v-goal{font-size:10px;color:#27ae60;margin-top:4px;font-weight:600}
+.verify-step .v-tasks{font-size:10px;color:#95a5a6;margin-top:3px;line-height:1.3}
+.verify-step.active{border-color:#c0392b;background:#fef9e7}
+.judge-box{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
+.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
+.judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
+.judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
+.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
+.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
+.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
+.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
+.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #e74c3c;position:relative}
+.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
+.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#c0392b}
+.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#c0392b}
+.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
+.pay-toggle input{display:none}
+.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
+.pay-toggle .toggle-btn{background:#c0392b;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.pay-toggle .toggle-btn:hover{background:#e74c3c}
+.{background:transparent;border:1px solid #c0392b;color:#c0392b;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer}
+.pay-content{display:none;filter:blur(12px);transition:filter .4s ease;pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
+.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.pay-content-inner ul{list-style:none;padding:0}
+.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
+.pay-content-inner ul li:last-child{border-bottom:none}
+.pay-content-inner ul li .val{color:#c0392b;font-weight:600}
+.footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
+.footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
+.footer-brand .fb-name span{color:#c0392b}
+.footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
+.footer-brand .fb-wx{display:inline-flex;align-items:center;gap:6px;background:#27ae60;color:#fff;padding:4px 14px;border-radius:8px;font-size:13px;font-weight:600;margin:4px 0;letter-spacing:1px}
+.footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
+.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
+.pay-table{width:100%;border-collapse:collapse;margin:6px 0;font-size:11px}.pay-table th{background:#8B1A1A;color:#fff;padding:4px 6px;text-align:center;font-weight:600}.pay-table td{border:1px solid #ede0d0;padding:4px 6px;text-align:center;color:#333}.pay-table td.left{text-align:left}.pay-table .highlight{background:#fef9e7;font-weight:700;color:#c0392b}.pay-section{margin:8px 0;padding:8px 10px;background:#fff;border-radius:8px;border:1px solid #f0ebe4}.pay-section h5{font-size:12px;color:#2c3e50;margin:0 0 4px;padding:0;font-weight:700}.pay-warn{background:#fde8e8;border-radius:6px;padding:4px 8px;font-size:10px;color:#e74c3c;margin:4px 0;font-weight:600}.pay-key{background:#e8f8e8;border-radius:6px;padding:4px 8px;font-size:10px;color:#27ae60;margin:4px 0 0;font-weight:600}
+@media(max-width:600px){
+.radar-grid{grid-template-columns:repeat(2,1fr)}
+.fit-wrap{grid-template-columns:1fr}
+.price-tiers{grid-template-columns:1fr}
+.metric-row{grid-template-columns:1fr 1fr}
+.comp-row{grid-template-columns:1fr}
+.seasoning-grid{grid-template-columns:repeat(2,1fr)}
+.device-list{grid-template-columns:1fr}
+.stall-grid{grid-template-columns:repeat(2,1fr)}
+.track-grid{grid-template-columns:1fr}
+.verify-steps{grid-template-columns:repeat(3,1fr);gap:8px}
+.data-preview{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+.verify-steps{grid-template-columns:1fr 1fr}
+.stall-grid{grid-template-columns:1fr}
+}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none;transition:filter .3s}.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ====== 1. 产品头部+评级条 ====== -->
+<div class="rating-bar">
+<div class="rating-top">
+<div class="rating-score">8.6<span class="sub">/10</span></div>
+<div class="rating-grade a">A级</div>
+</div>
+<div class="rating-judge">川式藤椒素凉菜中的王牌品类——藤椒藕片，以莲藕的脆嫩口感和藤椒清香麻爽为双重卖点，食材成本极低（¥2-3.5/份）、毛利极高（75-82%），是凉菜摊/卤味店/外卖店的利润收割机。素食属性适配全客群，出餐≤2分钟，标准化难度极低。综合评级A级，强烈推荐入局。</div>
+<div class="rating-tags">
+<span>#川式凉菜</span>
+<span>#藤椒风味</span>
+<span>#高毛利标杆</span>
+<span>#素食适配</span>
+<span>#出餐极快</span>
+<span>#零门槛</span>
+</div>
+</div>
+
+<!-- ====== 2. 5维雷达 ====== -->
+<div class="section-title">品类雷达 <small>五维评估（满分5星）</small></div>
+<div class="radar-grid">
+<div class="radar-item">
+<div class="label">🔥 热度</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">藤椒风味热度持续走高，藕片作为国民度最高的根茎类蔬菜之一，口感脆嫩接受度极高。2026年藤椒+藕片的组合在抖音/小红书上搜索量年增40%+，属于凉菜赛道的\"黄金CP\"。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔄 复购</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">藤椒藕片酸甜麻香层次丰富，味型记忆点强，老客月均复购3-4次。素食属性无负担感，消费者愿意高频食用——是凉菜中复购率最高的品类之一。</div>
+</div>
+<div class="radar-item">
+<div class="label">💰 利润</div>
+<div class="stars">★★★★★</div>
+<div class="desc">食材成本仅¥2-3.5/份（含料汁），毛利高达75-82%，单份净利¥8-15。莲藕批发价低至¥3-5/kg，利润空间在凉菜全品类中排TOP2水平。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔧 难度</div>
+<div class="stars">★★☆☆☆</div>
+<div class="desc">几乎没有技术门槛——切片焯水即完成主体工序，料汁预调即可。新人0基础半天上手，标准化程度100%，是凉菜入行首选品类。</div>
+</div>
+<div class="radar-item">
+<div class="label">📈 空间</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">藤椒藕片可拓展至预包装零食/便利店冷柜/社区团购/外卖加购等多渠道。莲藕供应链全年稳定，无季节断供风险，规模化扩张优势明显。</div>
+</div>
+</div>
+
+<!-- ====== 3. 适合谁/不适合谁 ====== -->
+<div class="section-title">人群适配 <small>目标画像分析</small></div>
+<div class="fit-wrap">
+<div class="fit-yes">
+<div class="fit-head">✅ 适合谁做</div>
+<ul>
+<li>凉菜摊主/卤味店经营者，需要高毛利走量单品提升整体利润率，藕片是性价比之王</li>
+<li>零基础摆摊新手，藤椒藕片难度极低（≈会切菜就能做），试错成本¥300起，最快3天出摊</li>
+<li>外卖店主需要凑单神器，藕片制作成本低可设置¥9.9加购价，有效拉升客单价和单量</li>
+<li>社区团购/生鲜电商创业者，藕片预处理后真空包装保质期可达3-5天，冷链成本低</li>
+<li>轻食/素食店增加凉菜品类，藕片低脂低卡符合健康饮食定位，藤椒风味提升记忆点</li>
+<li>烧烤店/面馆/米粉店增加搭售凉菜，藕片¥12-15搭售性价比高，顾客决策门槛低</li>
+</ul>
+</div>
+<div class="fit-no">
+<div class="fit-head">❌ 不适合谁做</div>
+<ul>
+<li>追求\"大块吃肉\"满足感的重度肉食客群为主的目标市场（藕片是素食，缺乏蛋白质满足感）</li>
+<li>莲藕采购困难的北方偏远地区（优质莲藕依赖湖北/江苏产区，运费成本高）</li>
+<li>高端餐饮/商务宴请场景（藕片定位市井小吃，难以撑起¥38+的客单价）</li>
+<li>只有藕片一个品类的纯单品店（凑单逻辑弱，顾客选择单一导致复购疲劳）</li>
+<li>对藕片焯水口感把握不好的新手（焯水时间过长则藕片变软失去脆爽核心卖点）</li>
+<li>追求极致低成本的极端价格战路线（藕片毛利虽高，但¥9.9以下定价无利润空间）</li>
+</ul>
+</div>
+</div>
+
+<!-- ====== 4. 赚钱逻辑 ====== -->
+<div class="section-title">赚钱逻辑 <small>三档定价模型 + 核心指标</small></div>
+<div class="logic-box">
+<div class="price-tiers">
+<div class="price-tier">
+<div class="tier-label">🛒 摆摊</div>
+<div class="tier-price">¥10-15<small>/份</small></div>
+<div class="tier-note">夜市/集市 150g/份 走量为主</div>
+<div class="tier-detail">日卖120-180份 · 毛利76-82%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">🏪 门店</div>
+<div class="tier-price">¥15-20<small>/份</small></div>
+<div class="tier-note">堂食 200g/份+配菜 品质溢价</div>
+<div class="tier-detail">日卖80-120份 · 毛利74-80%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">📱 外卖</div>
+<div class="tier-price">¥12-18<small>/份</small></div>
+<div class="tier-note">平台定价 含包装+平台扣点</div>
+<div class="tier-detail">日卖70-110份 · 毛利66-72%</div>
+</div>
+</div>
+<div class="metric-row">
+<div class="metric-item">
+<div class="metric-val">¥1,500-2,700<small>/日</small></div>
+<div class="metric-label">日营收（120-180份 × 均价¥13）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">¥2.5-4.2万<small>/月</small></div>
+<div class="metric-label">月净利（扣除食材20%+人工+租金）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">0.5-1.5<small>个月</small></div>
+<div class="metric-label">回本周期（设备投入极低，纯摆摊¥1000起）</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 5. 食材成本拆解 ====== -->
+<div class="section-title">食材成本拆解 <small>精确到g · 单份200g藕片计</small></div>
+<table class="cost-table">
+<tr><th>食材/调料</th><th>用量(g)</th><th>单价(¥/500g)</th><th>小计(¥)</th></tr>
+<tr><td>莲藕（鲜藕，九孔脆藕最佳）</td><td>150</td><td>¥4</td><td>¥1.20</td></tr>
+<tr><td>藤椒油（优质品牌）</td><td>12</td><td>¥35</td><td>¥0.84</td></tr>
+<tr><td>生抽（酿造生抽）</td><td>8</td><td>¥10</td><td>¥0.16</td></tr>
+<tr><td>香醋（保宁醋/镇江香醋）</td><td>5</td><td>¥10</td><td>¥0.10</td></tr>
+<tr><td>蒜末（新鲜蒜瓣剁碎）</td><td>3</td><td>¥8</td><td>¥0.05</td></tr>
+<tr><td>白糖</td><td>2</td><td>¥6</td><td>¥0.02</td></tr>
+<tr><td>红油（自制或成品）</td><td>5</td><td>¥18</td><td>¥0.18</td></tr>
+<tr><td>香油（纯芝麻油）</td><td>2</td><td>¥28</td><td>¥0.11</td></tr>
+<tr><td>小米辣（新鲜红/绿剁碎）</td><td>2</td><td>¥16</td><td>¥0.06</td></tr>
+<tr><td>盐</td><td>1</td><td>¥3</td><td>¥0.01</td></tr>
+<tr><td>白醋（泡藕片防变色用）</td><td>3</td><td>¥4</td><td>¥0.02</td></tr>
+<tr><td>白芝麻（熟）</td><td>2</td><td>¥16</td><td>¥0.06</td></tr>
+<tr><td>味精/鸡精</td><td>1</td><td>¥8</td><td>¥0.02</td></tr>
+<tr><td>配菜（木耳/黄瓜片/胡萝卜片）</td><td>20</td><td>¥4</td><td>¥0.16</td></tr>
+<tr><td>花生碎（增香点缀）</td><td>2</td><td>¥12</td><td>¥0.05</td></tr>
+<tr><td>包装（餐盒+袋子+筷子+纸巾）</td><td>1套</td><td>¥0.8/套</td><td>¥0.80</td></tr>
+<tr class="total-row"><td colspan="2">合计（单份全部成本）</td><td></td><td>¥3.84</td></tr>
+</table>
+
+<!-- ====== 6. 同赛道对比 ====== -->
+<div class="section-title">同赛道对比 <small>类似品类竞品分析 · 藤椒素凉菜四天王</small></div>
+<div class="comp-row">
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🌿 藤椒藕片</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥10-20 | <strong>毛利:</strong> 74-82% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥2-3.5/份<br>
+<strong>优势:</strong> 食材成本极低，脆嫩口感无可替代，标准化程度100%，全年供应链稳定<br>
+<strong>劣势:</strong> 纯素食缺乏蛋白质，定价天花板低（¥20封顶），需搭配荤菜组合
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥒 藤椒贡菜</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥12-18 | <strong>毛利:</strong> 70-78% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 中高 | <strong>食材成本:</strong> ¥3-5/份<br>
+<strong>优势:</strong> 贡菜爽脆口感极具辨识度，干贡菜复水性好便于储存，差异化竞争优势明显<br>
+<strong>劣势:</strong> 贡菜认知度低于莲藕（部分消费者不认识），采购渠道窄，口感偏硬受众有限
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🫘 藤椒腐竹/豆皮</span><span class="comp-rating">★★★☆☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥10-16 | <strong>毛利:</strong> 68-75% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 中 | <strong>食材成本:</strong> ¥3-5/份<br>
+<strong>优势:</strong> 豆制品蛋白质含量高，口感筋道吸汁能力强，素食者接受度高<br>
+<strong>劣势:</strong> 腐竹泡发需提前准备（耗时4-6小时），保质期短，豆腥味处理需经验
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥕 藤椒木耳</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥12-18 | <strong>毛利:</strong> 72-80% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥2.5-4/份<br>
+<strong>优势:</strong> 木耳脆爽口感+藤椒麻香适配度极高，黑木耳营养价值认知强（清道夫）<br>
+<strong>劣势:</strong> 木耳泡发（冷水4-6小时）需提前计划，泡发过多容易浪费，食安风险略高
+</div>
+</div>
+</div>
+
+<!-- ====== 7. 核心工艺 ====== -->
+<div class="section-title">核心工艺 <small>5步标准化SOP</small></div>
+<div class="flow-steps">
+<div class="flow-step">
+<div class="step-num">1</div>
+<div class="step-body">
+<div class="step-title">莲藕清洗去皮 <span class="step-param">工具: 削皮刀 · 时间: 3分钟/斤</span></div>
+<div class="step-desc">选择九孔脆藕（口感更脆甜，适合凉拌），用流水冲洗掉藕孔中的泥沙。用削皮刀刮去外层表皮，注意藕节凹陷处容易藏泥需仔细清理。去皮的藕立即放入加了白醋（5ml/L）的凉水中浸泡防氧化变色。关键控制点：藕皮去干净不留褐色斑点，否则影响成品卖相；削皮后浸泡不超过30分钟，否则藕片会吸收过多水分变软。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">2</div>
+<div class="step-body">
+<div class="step-title">切片泡醋 <span class="step-param">厚度: 2-3mm · 泡水: 白醋水10分钟</span></div>
+<div class="step-desc">将去皮的莲藕切成2-3mm薄片（厚度均匀是口感一致的关键）。切好的藕片立即投入白醋水（凉水+白醋10ml/L）中浸泡10分钟。白醋水可以防止藕片氧化变黑、同时使藕片更脆嫩。浸泡后捞出用流水冲洗掉表面淀粉和酸味。注意：切片越薄越脆但易碎，2-3mm是最佳平衡点；泡醋时间不宜超过15分钟否则藕片会发酸。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">3</div>
+<div class="step-body">
+<div class="step-title">焯水控时 <span class="step-param">温度: 100℃沸水 · 时间: 2分钟 · 过冷水</span></div>
+<div class="step-desc">大锅水烧至沸腾，放入处理好的藕片，保持大火焯水2分钟（从再次沸腾开始计时）。2分钟到立即捞出，迅速投入冰水或冷水中降温（\"过冷水\"步骤阻止余温继续加热）。焯水过长则藕片失去脆爽口感变成\"面藕\"，这是最常犯的错误。建议小批量分批焯水（每次≤500g），避免水温骤降导致焯水时间不一致。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">4</div>
+<div class="step-body">
+<div class="step-title">沥水控干 <span class="step-param">时间: 10-15分钟自然沥水</span></div>
+<div class="step-desc">焯水过冷后的藕片装入沥水篮中，静置10-15分钟自然沥干水分。也可用厨房纸巾轻轻吸干表面水分——这一步非常关键：藕片表面水分过多会稀释料汁，导致风味偏淡、口感\"水垮垮\"。关键控制点：不宜用力挤压藕片（会破坏脆嫩口感），自然沥干或轻吸即可。沥干后的藕片可冷藏保存（覆保鲜膜，≤4℃，12小时内使用完毕）。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">5</div>
+<div class="step-body">
+<div class="step-title">拌料出餐 <span class="step-param">时间: ≤2分钟 · 现拌现售</span></div>
+<div class="step-desc">取沥干水分的藕片150g入不锈钢拌盆，依次加入预调好的藤椒料汁（含藤椒油12g+生抽8g+香醋5g+蒜末3g+白糖2g+红油5g+香油2g+小米辣2g+盐1g+鸡精1g），最后撒入熟白芝麻2g和花生碎2g。双手轻拌均匀（不宜过度搅拌以免藕片碎裂），装盘出餐。建议批量调汁冷藏保存（可放5天），出餐前搅匀即可，单人操作效率可达30份/10分钟。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 8. 调味体系 ====== -->
+<div class="section-title">调味体系 <small>藤椒藕片料汁精确配方 · 单份200g藕片计</small></div>
+<div class="seasoning-box">
+<h4>🥣 藤椒藕片标准料汁配方（单份量）</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">藤椒油</div><div class="s-amt">12<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">生抽</div><div class="s-amt">8<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香醋</div><div class="s-amt">5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">蒜末（鲜剁）</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">白糖</div><div class="s-amt">2<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">红油（增色增香）</div><div class="s-amt">5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香油</div><div class="s-amt">2<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">小米辣（剁碎）</div><div class="s-amt">2<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">盐+鸡精</div><div class="s-amt">2<small>g</small></div></div>
+</div>
+</div>
+
+<!-- ====== 9. 设备清单 ====== -->
+<div class="section-title">设备清单 <small>投入预估 · 按场景选配</small></div>
+<div class="device-list">
+<div class="device-item"><span class="dev-name">🔥 电磁炉/猛火灶（焯水用）</span><span class="dev-price">¥300-800</span></div>
+<div class="device-item"><span class="dev-name">🫕 不锈钢大锅（8-12L）</span><span class="dev-price">¥80-200</span></div>
+<div class="device-item"><span class="dev-name">❄️ 冷藏展示柜/商用冰箱</span><span class="dev-price">¥1500-3000</span></div>
+<div class="device-item"><span class="dev-name">🔪 切片刀+削皮器+砧板</span><span class="dev-price">¥100-250</span></div>
+<div class="device-item"><span class="dev-name">🧴 不锈钢调味缸（6件套）</span><span class="dev-price">¥80-150</span></div>
+<div class="device-item"><span class="dev-name">⚖️ 电子秤（0.1g精度）</span><span class="dev-price">¥60-120</span></div>
+<div class="device-item"><span class="dev-name">🧊 保温冰桶（摆摊用）</span><span class="dev-price">¥150-300</span></div>
+<div class="device-item"><span class="dev-name">🛒 摆摊车/移动餐车（选配）</span><span class="dev-price">¥2000-5000</span></div>
+<div class="device-item"><span class="dev-name">📦 打包台+餐盒/封口机</span><span class="dev-price">¥300-600</span></div>
+<div class="device-item"><span class="dev-name">🧹 消毒柜/紫外线灯</span><span class="dev-price">¥500-800</span></div>
+<div class="device-item"><span class="dev-name">💧 净水器（厨房用）</span><span class="dev-price">¥300-600</span></div>
+<div class="device-item"><span class="dev-name">📋 价目表/灯箱招牌</span><span class="dev-price">¥200-500</span></div>
+<div class="device-total">💰 设备总投入预估：¥5,570-12,320（纯摆摊最低约¥2,000起，焯水锅+冰桶+刀即可）</div>
+</div>
+
+<!-- ====== 10. 开店适配指标 ====== -->
+<div class="section-title">开店适配指标 <small>6种场景综合评分</small></div>
+<div class="stall-grid">
+<div class="stall-item high">
+<div class="stall-name">🛒 摆摊</div>
+<div class="stall-score">9.6/10</div>
+<div class="stall-desc">成本极低、出餐最快<br>夜市暴利走量神器</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏪 档口</div>
+<div class="stall-score">9.2/10</div>
+<div class="stall-desc">明档现拌展示脆嫩感<br>藤椒清香吸引过路客流</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">🏠 小店</div>
+<div class="stall-score">7.0/10</div>
+<div class="stall-desc">纯素凉菜单品撑场不足<br>需搭配荤菜/主食组合</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">📋 搭售</div>
+<div class="stall-score">9.0/10</div>
+<div class="stall-desc">烧烤/面馆/米粉店绝配<br>¥12搭售提升客单价¥8-12</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">📱 外卖</div>
+<div class="stall-score">8.2/10</div>
+<div class="stall-desc">冷吃口感衰减度极低<br>¥9.9加购神器拉升单量</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏘️ 社区店</div>
+<div class="stall-score">8.8/10</div>
+<div class="stall-desc">邻里复购率高<br>现拌现卖成本低利润高</div>
+</div>
+</div>
+
+<!-- ====== 11. 风险 ====== -->
+<div class="section-title">风险提示 <small>5项关键预警 + 应对策略</small></div>
+<div class="risk-list">
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">藕片焯水口感控制 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">藕片焯水2分钟是标准时间，但不同批次莲藕的新鲜度、厚度差异可能导致口感不一致。焯不够则生涩有腥味，焯过头则软塌失去脆爽——这是藕片凉菜最大的致命伤。应对策略：每次批量焯水前先试焯2-3片确认口感，以\"筷子夹起藕片自然下垂不断裂\"为最佳火候标志；使用厨房定时器精确控制，不允许目测估算。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">藕片氧化变色 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">莲藕富含多酚氧化酶，去皮切片后暴露在空气中5分钟即开始变褐，严重影响卖相——尤其摆摊/外卖场景下，\"褐色的藕片\"会让客人瞬间失去食欲。应对策略：严格执行\"切即泡\"原则——切片后立即投入白醋水中浸泡隔绝空气；出餐前再沥水拌料；焯水后如不立即使用则泡在凉白开中冷藏（≤4℃可保存4小时）。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">莲藕季节性品质波动 <span class="risk-level low">低风险</span></div>
+<div class="risk-desc">莲藕虽然全年有供应，但品质随季节波动明显——秋季（9-11月）最粉最甜，夏季藕偏硬水分大，冬季藕淀粉含量高焯水易发黏。应对策略：春季选用湖北/江苏白莲藕（脆度最佳），夏季选广东莲藕（纤维细嫩），秋季选本地粉藕（甜度高），冬季选用云南产区莲藕。建立稳定供应商关系，每批到货做\"脆度测试\"。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">同质化价格战 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">藤椒藕片制作门槛极低——市场上出现跟风者只需1天。一旦3-5家同品竞争，价格从¥15迅速杀到¥9.9。应对策略：通过藤椒油独家配方（添加鲜花椒/青花椒油增加麻度层次、藤椒+小米辣双椒组合）和独特配菜（贡菜/木耳/腐竹三拼¥18）制造差异化，避开纯价格竞争。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">素食品类定价天花板 <span class="risk-level low">低风险</span></div>
+<div class="risk-desc">藕片作为素食凉菜，消费者心理定价天然低于荤菜——摆摊¥15以上消费者觉得贵，门店¥20以上销量明显下降。这一认知短期内难以改变。应对策略：不单独卖藕片冲高客单，而是作为\"藤椒系列\"组合（藕片+鸡片+毛肚三拼¥28-35）提客单，或作为¥9.9加购品引流。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 12. 赛道判断 ====== -->
+<div class="section-title">赛道判断 <small>优势劣势 + 2026年趋势研判</small></div>
+<div class="track-grid">
+<div class="track-pros">
+<div class="track-head">✅ 核心优势</div>
+<ul>
+<li>毛利天花板级别品类（75-82%），是凉菜摊/卤味店的利润稳压器</li>
+<li>食材成本极低（¥2-3.5/份），试错成本和经营风险几乎为零</li>
+<li>出餐速度最快（≤2分钟），高峰时段翻台效率行业顶尖</li>
+<li>素食属性适配全客群——老少皆宜、素食者/减脂人群无负担</li>
+<li>标准化程度100%——藕片焯水+料汁拌匀，不需要任何烹饪经验</li>
+<li>莲藕供应链全年稳定，无猪周期/鸡周期等价格波动风险</li>
+<li>藤椒藕片可做预包装（真空+料包分离），拓展至便利店/团购渠道</li>
+<li>颜值得天独厚——藕片切薄片白色透亮+藤椒油翠绿清亮，视觉卖相极佳</li>
+<li>可作为\"藤椒系列\"的核心引流品（低价高频→带动高价荤菜品销售）</li>
+</ul>
+</div>
+<div class="track-cons">
+<div class="track-head">⚠️ 核心劣势</div>
+<ul>
+<li>纯素食定位：缺乏蛋白质满足感，部分消费者觉得\"不过瘾\"</li>
+<li>定价天花板明显——摆摊¥15/¥20是消费者心理上限，提价空间有限</li>
+<li>过度依赖藕片焯水口感——焯水时间差30秒口感即完全不同</li>
+<li>藕片变色问题是天然缺陷——出餐后30分钟颜色开始变深影响卖相</li>
+<li>品牌化难度大——藕片难以形成独立品牌认知，通常作为配角存在</li>
+<li>同质化门槛极低——市场上模仿者可在1天内复制出几乎相同的产品</li>
+<li>纯单品店逻辑不成立——藕片必须搭配其他品类才能凑单提客单</li>
+</ul>
+</div>
+</div>
+<div class="track-verdict">
+<strong>📊 2026赛道判断：</strong> 藤椒藕片属于<strong>\"高毛利引流型\"</strong>素凉菜品类，最适合作为凉菜组合中的<strong>利润基石和流量入口</strong>。2026年三大趋势利好：①素食/轻食消费持续增长（国内素食人群突破5000万+弹性素食者超2亿）；②藤椒风味从小众走向大众（藤椒味零食/速食/火锅底料教育消费者5年）；③摆摊经济政策进一步放宽，低门槛品类创业者涌入，藕片作为入行首选品类。建议定位为\"凉菜组合中的性价比之王\"——用藕片引流走量，带动藤椒鸡片/藤椒毛肚等高客单品类销售。综合评定：<strong>★★★★★（强烈推荐入局，素凉菜首选品类）</strong>。最佳切入口：夜市摆摊+藤椒系列组合，或卤味店+外卖平台的加购品策略。
+</div>
+
+<!-- ====== 13. 30天验证路线 ====== -->
+<div class="section-title">30天验证路线 <small>从零到开张 · 五阶段分解</small></div>
+<div class="verify-steps">
+<div class="verify-step active">
+<div class="v-num">阶段一</div>
+<div class="v-range">Day 1-3</div>
+<div class="v-desc">配方测试+设备采购</div>
+<div class="v-goal">✅ 确定藤椒汁配方+下单设备</div>
+<div class="v-tasks">测试3款藤椒油品牌<br>确定料汁配比和份量<br>下单采购核心设备</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段二</div>
+<div class="v-range">Day 4-8</div>
+<div class="v-desc">货源搭建+试做内测</div>
+<div class="v-goal">✅ 莲藕供应商锁定+试做30份</div>
+<div class="v-tasks">对接2家莲藕供应商<br>试做3批次藕片<br>邀请10人试吃反馈</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段三</div>
+<div class="v-range">Day 9-16</div>
+<div class="v-desc">SOP固化+准备出摊</div>
+<div class="v-goal">✅ 标准化流程+备齐物料</div>
+<div class="v-tasks">制定SOP操作手册<br>采购包装/冰袋/灯箱<br>办理摊位证照手续</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段四</div>
+<div class="v-range">Day 17-27</div>
+<div class="v-desc">试营业+口碑积累</div>
+<div class="v-goal">✅ mini摊试卖200份</div>
+<div class="v-tasks">朋友圈预热+社群推广<br>mini摊位试营业3-5天<br>收集100+条真实反馈</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段五</div>
+<div class="v-range">Day 28-30</div>
+<div class="v-desc">正式开业+复盘优化</div>
+<div class="v-goal">✅ 开业活动+首周数据复盘</div>
+<div class="v-tasks">开业特价（买藕片送鸡片尝鲜）<br>统计首周日均营收/成本<br>确定扩品方向和定价策略</div>
+</div>
+</div>
+
+<!-- ====== 14. 沧林判断 ====== -->
+<div class="section-title">沧林判断 <small>深度评语 · 300+字</small></div>
+<div class="judge-box">
+<div class="judge-text">藤椒藕片是我在凉菜品类中比较看好的\"隐形冠军\"。为什么这么说？因为很多人看不起素凉菜——觉得素菜利润天花板低、做不出差异化。但恰恰相反，藤椒藕片是这个赛道里ROI最高的品类没有之一。食材成本不到¥4/份，卖¥15，毛利78%，出餐1分钟。我算过一笔账：一个夜市摊3个小时卖150份藕片，光藕片就营收¥2,250，成本¥576，毛利¥1,674。如果你同时卖藤椒鸡片（利润¥12/份×80份=¥960），两者加起来一晚净赚¥2,600+。这就是\"素菜走量+荤菜利润\"的组合拳逻辑。2026年我观察到的一个有意思的趋势：很多消费者买凉菜时是先选素菜再选荤菜——因为素菜试错成本低、吃着没负担。藕片作为素菜里的\"口感之王\"（够脆、够入味、够好看），天然就是第一选择。所以藤椒藕片的真正价值不在于它本身赚多少钱，而在于它是整个凉菜组合的\"流量入口\"——客人先选择藕片，然后才会加购鸡片、鸭掌等高毛利品类。这一点很多做凉菜的人没有意识到。我的建议是：藤椒藕片必须作为组合品类的标配存在，定价可以比其他素凉菜低10-15%，用极致性价比把客流拉进来，靠搭配销售赚真正的利润。记住——藕片是钩子，系列才是利润。能做到这一层认知的创业者，在这个品类里几乎没有对手。</div>
+<div class="judge-tags">
+<span>#沧林说餐饮</span>
+<span>#藤椒藕片赛道</span>
+<span>#素菜走量荤菜利润</span>
+<span>#流量入口</span>
+<span>#高毛利标杆</span>
+<span>#组合拳策略</span>
+</div>
+</div>
+
+<!-- ====== 15. 完整数据包预览 ====== -->
+<div class="section-title">完整数据包预览 <small>付费解锁 · 8项深度内容</small></div>
+<div class="data-preview">
+<div class="data-item"><span class="data-icon">📋</span><span class="data-name">藤椒藕片标准化SOP手册（含焯水时间表/藕片厚度标准/防变色方案）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📊</span><span class="data-name">6城市定价策略对照表（一线/新一线/二线/三线/县域分档定价）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📈</span><span class="data-name">损益测算表（摆摊/档口/外卖3种模型成本结构+盈亏平衡分析）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">供应链清单（莲藕/藤椒油/包材供应商推荐名录+1688比价表）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📱</span><span class="data-name">外卖运营SOP（菜单设计/¥9.9加购策略/配送优化/满减方案）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🎯</span><span class="data-name">夜市摆摊话术手册（叫卖话术/试吃策略/组合推荐话术模板）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🧪</span><span class="data-name">藤椒系列4款变体配方（经典藤椒/藤椒酸辣/藤椒芥末/藤椒沙拉汁）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📅</span><span class="data-name">全年莲藕采购日历（各产区上市时间表+品质评级+价格预测）</span><span class="data-lock">🔒</span></div>
+</div>
+
+<!-- ====== 16. 付费区 ¥19 toggle ====== -->
+<div class="pay-area">
+<div class="pay-header">
+<div class="pay-title">🔓 付费解锁 · 完整子卡数据</div>
+<div class="pay-price">¥19<small>/份</small></div>
+</div>
+<label class="pay-toggle">
+<input type="checkbox" id="payToggle">
+<span class="toggle-label">点击解锁完整数据内容（含详细表格/图表/参数矩阵/供应商名录）</span>
+<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起内容':'解锁内容'">解锁内容</button>
+
+</label>
+<div class="pay-content">
+<div class="pay-content-inner">
+<div class="pay-section">
+<h5>📊 表1 · 6城市莲藕价格对比 & 单份成本拆解</h5>
+<table class="pay-table">
+<tr><th>城市</th><th>成都</th><th>重庆</th><th>武汉</th><th>长沙</th><th>杭州</th><th>广州</th></tr>
+<tr><td class="left">莲藕(¥/kg)</td><td>¥6.5</td><td>¥5.8</td><td>¥5.0</td><td>¥7.0</td><td>¥9.0</td><td>¥10.0</td></tr>
+<tr><td class="left">藤椒油(¥/500g)</td><td>¥35</td><td>¥33</td><td>¥38</td><td>¥36</td><td>¥40</td><td>¥37</td></tr>
+<tr><td class="left">单份食材成本</td><td>¥2.4</td><td>¥2.2</td><td>¥2.0</td><td>¥2.6</td><td>¥3.2</td><td>¥3.5</td></tr>
+<tr><td class="left">含包装总成本</td><td>¥3.2</td><td>¥3.0</td><td>¥2.8</td><td>¥3.4</td><td>¥4.0</td><td>¥4.3</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>💰 表2 · 三档定价损益平衡分析</h5>
+<table class="pay-table">
+<tr><th>定价模式</th><th>单份定价</th><th>日均销量</th><th>日营收</th><th>食材成本</th><th>毛利</th><th>月净利</th></tr>
+<tr><td class="left">🛒 摆摊</td><td>¥13</td><td>150份</td><td>¥1,950</td><td>¥480</td><td>79%</td><td>¥26,500</td></tr>
+<tr><td class="left">🏪 堂食</td><td>¥18</td><td>100份</td><td>¥1,800</td><td>¥340</td><td>76%</td><td>¥26,200</td></tr>
+<tr><td class="left">📱 外卖</td><td>¥15</td><td>90份</td><td>¥1,350</td><td>¥387</td><td>68%</td><td>¥17,300</td></tr>
+<tr class="highlight"><td class="left">📌 混合最优</td><td>—</td><td>340份</td><td>¥5,100</td><td>¥1,207</td><td>75%</td><td>¥58,000</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🔧 表3 · 标准化SOP关键参数</h5>
+<table class="pay-table">
+<tr><th>步骤</th><th>工艺</th><th>温度/时间</th><th>关键控制点</th></tr>
+<tr><td class="left">①</td><td class="left">去皮</td><td>削皮刀清理</td><td class="left">藕节藏泥需仔细，去皮后泡白醋水</td></tr>
+<tr><td class="left">②</td><td class="left">切片</td><td>2-3mm 泡白醋水</td><td class="left" style="color:#e74c3c;font-weight:700">白醋水泡10分钟防氧化变黑</td></tr>
+<tr><td class="left">③</td><td class="left">焯水</td><td>100°C 2分钟</td><td class="left">再次沸腾计时，不过则变"面藕"</td></tr>
+<tr><td class="left">④</td><td class="left">过凉</td><td>冰水降温</td><td class="left">立即停止加热，保持脆爽</td></tr>
+<tr><td class="left">⑤</td><td class="left">拌料</td><td>现拌现售</td><td class="left">轻拌防碎，料汁预调可存5天</td></tr>
+</table>
+<div class="pay-warn">⚠️ 藕片泡白醋水防氧化变黑！切片后立即入醋水，否则5分钟变褐</div>
+</div>
+<div class="pay-section">
+<h5>📈 表4 · 6场景适配评分决策矩阵</h5>
+<table class="pay-table">
+<tr><th>场景</th><th>评分</th><th>出餐效率</th><th>利润空间</th><th>营销难度</th><th>综合判定</th></tr>
+<tr><td class="left">🛒 摆摊</td><td>9.6</td><td>★★★★★</td><td>★★★★★</td><td>★☆☆☆☆</td><td class="left">夜市暴利走量神器</td></tr>
+<tr><td class="left">🏪 档口</td><td>9.2</td><td>★★★★★</td><td>★★★★★</td><td>★★☆☆☆</td><td class="left">明档现拌展示脆嫩</td></tr>
+<tr><td class="left">🏠 小店</td><td>7.0</td><td>★★★★☆</td><td>★★★★☆</td><td>★★★☆☆</td><td class="left">需搭配荤菜/主食</td></tr>
+<tr><td class="left">📋 搭售</td><td>9.0</td><td>★★★★★</td><td>★★★★★</td><td>★☆☆☆☆</td><td class="left">面馆/烧烤绝配</td></tr>
+<tr><td class="left">📱 外卖</td><td>8.2</td><td>★★★★☆</td><td>★★★★☆</td><td>★★☆☆☆</td><td class="left">冷吃口感衰减低</td></tr>
+<tr><td class="left">🏘️ 社区店</td><td>8.8</td><td>★★★★★</td><td>★★★★★</td><td>★★☆☆☆</td><td class="left">邻里复购率高</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>📅 表5 · 30天验证路线甘特图</h5>
+<table class="pay-table">
+<tr><th>阶段</th><th>天数</th><th>核心任务</th><th>里程碑</th></tr>
+<tr><td class="left">试制期</td><td>D1-D3</td><td class="left">采购莲藕/焯水时间测试/醋水配比</td><td class="left">出品达标</td></tr>
+<tr><td class="left">内测期</td><td>D4-D9</td><td class="left">料汁定型/防氧化方案验证</td><td class="left">SOP定型</td></tr>
+<tr><td class="left">试运营</td><td>D10-D20</td><td class="left">夜市摆摊/加购策略测试</td><td class="left">日售100+</td></tr>
+<tr><td class="left">正式运营</td><td>D21-D30</td><td class="left">批量预制/藤椒系列组合/复购</td><td class="left">日售180+</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🏆 表6 · 五大竞争对手数据对比</h5>
+<table class="pay-table">
+<tr><th>品类</th><th>定价</th><th>食材成本</th><th>毛利</th><th>复购率</th><th>竞争壁垒</th></tr>
+<tr><td class="left">🌿 藤椒藕片</td><td>¥10-20</td><td>¥2-3.5</td><td>74-82%</td><td>高</td><td class="left">食材成本极低</td></tr>
+<tr><td class="left">🥒 藤椒贡菜</td><td>¥12-18</td><td>¥3-5</td><td>70-78%</td><td>中高</td><td class="left">贡菜认知度低</td></tr>
+<tr><td class="left">🫘 藤椒腐竹</td><td>¥10-16</td><td>¥3-5</td><td>68-75%</td><td>中</td><td class="left">泡发需4-6h</td></tr>
+<tr><td class="left">🥕 藤椒木耳</td><td>¥12-18</td><td>¥2.5-4</td><td>72-80%</td><td>高</td><td class="left">泡发需提前</td></tr>
+<tr><td class="left">🥔 红油土豆丝</td><td>¥8-16</td><td>¥1.5-2.5</td><td>78-85%</td><td>中</td><td class="left">土豆易氧化</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>🔩 表7 · 设备清单 & 供应商推荐</h5>
+<table class="pay-table">
+<tr><th>设备</th><th>规格</th><th>预算</th><th>推荐渠道</th></tr>
+<tr><td class="left">电磁炉/猛火灶</td><td class="left">商用级2200W+</td><td>¥300-800</td><td class="left">1688/京东</td></tr>
+<tr><td class="left">不锈钢大锅</td><td class="left">8-12L 304钢</td><td>¥80-200</td><td class="left">淘宝/厨具城</td></tr>
+<tr><td class="left">商用冰箱</td><td class="left">风冷300L</td><td>¥1500-3000</td><td class="left">海尔/美的</td></tr>
+<tr><td class="left">切片刀+削皮器</td><td class="left">锋利片刀</td><td>¥100-250</td><td class="left">十八子/双立人</td></tr>
+<tr><td class="left">保温冰桶</td><td class="left">10L+</td><td>¥150-300</td><td class="left">淘宝/1688</td></tr>
+<tr><td class="left">藤椒油品牌</td><td class="left">幺麻子/五丰黎红</td><td>¥35-40/500g</td><td class="left">1688/京东</td></tr>
+</table>
+</div>
+<div class="pay-section">
+<h5>📱 表8 · 藤椒系列营销策略 & 社群复购方案</h5>
+<table class="pay-table">
+<tr><th>策略</th><th>执行方案</th><th>预期效果</th></tr>
+<tr><td class="left">系列组合</td><td class="left">藤椒藕片+藤椒鸡片+藤椒木耳=¥39套餐</td><td class="left">客单价提升¥12</td></tr>
+<tr><td class="left">夜市话术</td><td class="left">"藤椒清香脆藕片，吃了还想吃"体验装</td><td class="left">转化率60%</td></tr>
+<tr><td class="left">社群复购</td><td class="left">满¥30减¥5+买5送1+新品优先试吃</td><td class="left">月复购4次+</td></tr>
+<tr><td class="left">外卖加购</td><td class="left">藤椒藕片¥9.9加购券+好评返现¥1</td><td class="left">加购率45%</td></tr>
+</table>
+<div class="pay-key">🔥 藕片泡白醋水防氧化变黑！切片→泡醋水→焯水，三步不可颠倒</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 17. 数据说明+微信+品牌页脚 ====== -->
+<div class="data-note">
+📌 数据说明：以上数据基于2026年Q1全国6城市（成都/重庆/武汉/长沙/杭州/广州）实地调研及外卖平台大数据分析，食材价格取2026年3月市场均价。实际数据因地区、季节、供应链差异可能浮动±15%。评分体系为FoodIntelAI V5.1标准，满分为10分。本子卡仅供创业决策参考，不构成投资建议。
+</div>
+<div class="footer-brand">
+<div class="fb-name">Food<span>Intel</span>AI</div>
+<div class="fb-line">数据驱动餐饮决策 · V5.1 子卡标准 · 17维全量评测</div>
+<div class="fb-wx">📱 微信咨询：canglin1985</div>
+<div class="fb-copy">© 2026 FoodIntelAI · 沧林餐饮智库 · 子卡编号 LB_12 藤椒藕片（藤椒拌藕片）· 版权所有</div>
+</div>
+
+</div><!-- /card -->
+
+<script>
+// 付费区Toggle功能
+document.addEventListener('DOMContentLoaded',function(){
+var cb=document.getElementById('payToggle');
+var pc=document.querySelector('.pay-content');
+var btn=document.querySelector('.toggle-btn');
+cb.addEventListener('change',function(){
+pc.classList.toggle('show',cb.checked);
+btn.textContent=cb.checked?'收起内容':'解锁内容';
+});
+});
+</script>
+
+</body>
+</html>

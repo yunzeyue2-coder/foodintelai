@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LB_19 口水鸡（红油浇汁鸡）| FoodIntelAI 子卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.card{max-width:860px;width:100%;margin:0 auto}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;border-bottom:2px solid #e0d8cc;margin-bottom:16px}
+.card-header .logo{font-size:18px;font-weight:700;color:#2c3e50;letter-spacing:1px}
+.card-header .logo span{color:#c0392b}
+.card-header .sub{font-size:12px;color:#7f8c8d;background:#eae7e2;padding:2px 10px;border-radius:10px}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.rating-bar::before{content:'';position:absolute;top:-30px;right:-20px;width:140px;height:140px;background:rgba(255,255,255,0.04);border-radius:50%}
+.rating-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rating-score{font-size:44px;font-weight:800;line-height:1}
+.rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
+.rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
+.rating-grade.a{background:#27ae60;color:#fff}
+.rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
+.rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
+.section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #c0392b;line-height:1.4}
+.section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
+.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
+.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
+.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
+.fit-yes ul{list-style:none;padding:0}
+.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
+.fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
+.fit-no ul{list-style:none;padding:0}
+.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.price-tier{background:#f9f8f6;border-radius:12px;padding:14px;text-align:center;border:1px solid #e8e3dc}
+.price-tier .tier-label{font-size:13px;color:#7f8c8d;margin-bottom:4px}
+.price-tier .tier-price{font-size:22px;font-weight:800;color:#c0392b}
+.price-tier .tier-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.price-tier .tier-note{font-size:11px;color:#95a5a6;margin-top:4px}
+.price-tier .tier-detail{font-size:10px;color:#aaa;margin-top:2px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric-item{background:linear-gradient(135deg,#2c3e50,#34495e);border-radius:12px;padding:14px;text-align:center;color:#fff}
+.metric-item .metric-val{font-size:24px;font-weight:800}
+.metric-item .metric-val small{font-size:13px;font-weight:400;opacity:.8}
+.metric-item .metric-label{font-size:12px;opacity:.8;margin-top:2px}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px}
+.cost-table th{background:#2c3e50;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
+.cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
+.cost-table tr:last-child td{border-bottom:none}
+.cost-table .total-row{background:#fef9e7;font-weight:700}
+.cost-table .total-row td{font-size:13px;color:#c0392b}
+.cost-table .subtotal-row{background:#f9f8f6;font-weight:600}
+.cost-table .subtotal-row td{font-size:12px;color:#2c3e50}
+.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
+.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
+.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
+.comp-item .comp-rating{font-size:12px;color:#f39c12}
+.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
+.comp-item .comp-detail strong{color:#2c3e50}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.flow-step .step-body{flex:1}
+.flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
+.flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
+.flow-step .step-param{display:inline-block;background:#fef9e7;color:#c0392b;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.seasoning-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
+.seasoning-item .s-name{font-size:12px;color:#7f8c8d}
+.seasoning-item .s-amt{font-size:16px;font-weight:700;color:#2c3e50;margin-top:2px}
+.seasoning-item .s-amt small{font-size:11px;font-weight:400;color:#95a5a6}
+.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
+.device-item .dev-price{font-size:12px;color:#7f8c8d}
+.device-total{background:#fef9e7;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#c0392b;margin-top:6px;grid-column:1/-1}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
+.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.stall-item.high .stall-score{color:#27ae60}
+.stall-item.mid .stall-score{color:#f39c12}
+.stall-item.low .stall-score{color:#e74c3c}
+.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
+.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.risk-item .risk-body{flex:1}
+.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
+.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
+.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
+.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
+.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
+.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
+.track-pros ul{list-style:none;padding:0}
+.track-pros ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-pros ul li::before{content:'+';color:#27ae60;position:absolute;left:0;font-weight:700}
+.track-cons{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.track-cons .track-head{font-weight:700;color:#e74c3c;font-size:14px;margin-bottom:8px}
+.track-cons ul{list-style:none;padding:0}
+.track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.track-verdict{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
+.track-verdict strong{color:#f1c40f}
+.verify-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.verify-step{background:#fff;border-radius:12px;padding:14px 10px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;position:relative}
+.verify-step .v-num{display:inline-block;background:#2c3e50;color:#fff;font-size:11px;font-weight:700;padding:1px 8px;border-radius:8px;margin-bottom:5px}
+.verify-step .v-range{font-size:12px;font-weight:700;color:#c0392b;margin-bottom:4px}
+.verify-step .v-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.verify-step .v-goal{font-size:10px;color:#27ae60;margin-top:4px;font-weight:600}
+.verify-step .v-tasks{font-size:10px;color:#95a5a6;margin-top:3px;line-height:1.3}
+.verify-step.active{border-color:#c0392b;background:#fef9e7}
+.judge-box{background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
+.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
+.judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
+.judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
+.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
+.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
+.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
+.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
+.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #e74c3c;position:relative}
+.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
+.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#c0392b}
+.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#c0392b}
+.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
+.pay-toggle input{display:none}
+.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
+.pay-toggle .toggle-btn{background:#c0392b;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.pay-toggle .toggle-btn:hover{background:#e74c3c}
+.{background:transparent;border:1px solid #c0392b;color:#c0392b;padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer}
+.pay-content{display:none;filter:blur(12px);transition:filter .4s ease;pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
+.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.pay-content-inner ul{list-style:none;padding:0}
+.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
+.pay-content-inner ul li:last-child{border-bottom:none}
+.pay-content-inner ul li .val{color:#c0392b;font-weight:600}
+.footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
+.footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
+.footer-brand .fb-name span{color:#c0392b}
+.footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
+.footer-brand .fb-wx{display:inline-flex;align-items:center;gap:6px;background:#27ae60;color:#fff;padding:4px 14px;border-radius:8px;font-size:13px;font-weight:600;margin:4px 0;letter-spacing:1px}
+.footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
+.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
+.pay-table{width:100%;border-collapse:collapse;margin:6px 0;font-size:11px}.pay-table th{background:#8B1A1A;color:#fff;padding:4px 6px}.pay-table td{border:1px solid #ede0d0;padding:4px 6px}
+@media(max-width:600px){
+.radar-grid{grid-template-columns:repeat(2,1fr)}
+.fit-wrap{grid-template-columns:1fr}
+.price-tiers{grid-template-columns:1fr}
+.metric-row{grid-template-columns:1fr 1fr}
+.comp-row{grid-template-columns:1fr}
+.seasoning-grid{grid-template-columns:repeat(2,1fr)}
+.device-list{grid-template-columns:1fr}
+.stall-grid{grid-template-columns:repeat(2,1fr)}
+.track-grid{grid-template-columns:1fr}
+.verify-steps{grid-template-columns:repeat(3,1fr);gap:8px}
+.data-preview{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+.verify-steps{grid-template-columns:1fr 1fr}
+.stall-grid{grid-template-columns:1fr}
+}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none;transition:filter .3s}.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ====== 1. 产品头部+评级条 ====== -->
+<div class="rating-bar">
+<div class="rating-top">
+<div class="rating-score">8.6<span class="sub">/10</span></div>
+<div class="rating-grade a">A级</div>
+</div>
+<div class="rating-judge">川式凉菜界的"超级符号"——口水鸡（红油浇汁鸡），以嫩滑鸡肉+浓郁红油浇汁为双重卖点，全网认知度凉菜品类TOP1，出餐快、覆盖人群极广、供应链稳定。是凉菜摊/卤味店/川菜馆的招牌引流品，综合评级A级，强烈推荐入局。</div>
+<div class="rating-tags">
+<span>#川式凉菜之王</span>
+<span>#全网认知度TOP1</span>
+<span>#红油浇汁</span>
+<span>#鸡肉供应链稳定</span>
+<span>#高复购</span>
+<span>#招牌引流品</span>
+<span>#A级推荐</span>
+</div>
+</div>
+
+<!-- ====== 2. 5维雷达 ====== -->
+<div class="section-title">品类雷达 <small>五维评估（满分5星）</small></div>
+<div class="radar-grid">
+<div class="radar-item">
+<div class="label">🔥 热度</div>
+<div class="stars">★★★★★</div>
+<div class="desc">口水鸡是凉菜品类中名副其实的"流量之王"——全网搜索量凉菜品类第一，抖音/小红书/大众点评相关话题量超50亿次。川菜馆/凉菜摊/烧烤店几乎家家必上，消费者认知度≈100%。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔄 复购</div>
+<div class="stars">★★★★★</div>
+<div class="desc">口水鸡复购率在凉菜品类中名列前茅——鸡肉受众广（几乎无饮食禁忌），红油浇汁味型记忆点极强，老客月均复购3-5次。口味变体空间大（麻辣/藤椒/蒜香），可持续产生新鲜感。</div>
+</div>
+<div class="radar-item">
+<div class="label">💰 利润</div>
+<div class="stars">★★★★☆</div>
+<div class="desc">食材成本¥10-13/份，毛利62-70%。鸡腿去骨出品率70%导致实际食材成本偏高，但客单价¥22-42支撑利润空间。单份净利¥10-18，走量模式日净利可观。</div>
+</div>
+<div class="radar-item">
+<div class="label">🔧 难度</div>
+<div class="stars">★★★☆☆</div>
+<div class="desc">煮鸡火候是核心难点——90°C精确控温15分钟保持嫩滑，冰镇使皮脆。新人需3-5天练习掌握温度/时间，但总体标准化程度高，适合新入行者学习。</div>
+</div>
+<div class="radar-item">
+<div class="label">📈 空间</div>
+<div class="stars">★★★★★</div>
+<div class="desc">可拓展空间极大：预包装口水鸡（便利店/生鲜电商）、口水鸡料包（家庭场景）、口水鸡米饭套餐（快餐渠道）、口水鸡+凉菜组合套餐。鸡肉供应链极稳定，品类延展性极强。</div>
+</div>
+</div>
+
+<!-- ====== 3. 适合谁/不适合谁 ====== -->
+<div class="section-title">人群适配 <small>目标画像分析</small></div>
+<div class="fit-wrap">
+<div class="fit-yes">
+<div class="fit-head">✅ 适合谁做</div>
+<ul>
+<li>川菜馆/凉菜摊主，口水鸡是必备引流品，不上口水鸡等于川菜馆缺了招牌菜</li>
+<li>烧烤店/大排档经营者，口水鸡作为冷吃下酒菜，搭配啤酒客单价提升¥15-25</li>
+<li>外卖餐饮店主，口水鸡外卖适配度较高（鸡肉+红油汁分装，配送后口感下降可控）</li>
+<li>社区熟食店/卤味店，口水鸡标准化程度高、供应链极稳、顾客认知接受度100%</li>
+<li>想开川式凉菜专卖店的创业者，口水鸡作为核心爆品+其他凉菜搭售形成组合</li>
+<li>面馆/米粉店增加凉菜搭售，口水鸡出餐快（≤3分钟），提升客单价¥12-20</li>
+</ul>
+</div>
+<div class="fit-no">
+<div class="fit-head">❌ 不适合谁做</div>
+<ul>
+<li>无温度控制设备的纯摆摊创业者（煮鸡需要精准控温至90°C，电磁炉/温度计必备）</li>
+<li>追求"零浪费"的库存敏感型创业者（鸡腿去骨后剩余骨架需额外处理或废弃）</li>
+<li>低成本极限创业（¥1,000以下启动资金）（口水鸡需冰箱+电磁炉+温度计，起步门槛高于麻辣拌）</li>
+<li>对鸡肉口感应变不敏感的从业者（不同批次鸡腿肉质不同需动态调整煮制时间）</li>
+<li>纯素/清真/特定饮食限制的品牌（鸡肉+红油高脂高辣）</li>
+<li>追求极致简明不想涉及肉类处理的极简主义者（鸡腿去骨+煮制+斩件需要一定刀工基础）</li>
+</ul>
+</div>
+</div>
+
+<!-- ====== 4. 赚钱逻辑 ====== -->
+<div class="section-title">赚钱逻辑 <small>三档定价模型 + 核心指标</small></div>
+<div class="logic-box">
+<div class="price-tiers">
+<div class="price-tier">
+<div class="tier-label">🛒 摆摊</div>
+<div class="tier-price">¥22-30<small>/份</small></div>
+<div class="tier-note">夜市/集市 200g/份 走量为主</div>
+<div class="tier-detail">日卖60-100份 · 毛利62-68%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">🏪 门店</div>
+<div class="tier-price">¥32-42<small>/份</small></div>
+<div class="tier-note">堂食 250g/份+配菜 品质溢价</div>
+<div class="tier-detail">日卖50-80份 · 毛利65-70%</div>
+</div>
+<div class="price-tier">
+<div class="tier-label">📱 外卖</div>
+<div class="tier-price">¥28-38<small>/份</small></div>
+<div class="tier-note">平台定价 料汁分离包装</div>
+<div class="tier-detail">日卖40-70份 · 毛利58-63%</div>
+</div>
+</div>
+<div class="metric-row">
+<div class="metric-item">
+<div class="metric-val">¥1,500-3,000<small>/日</small></div>
+<div class="metric-label">日营收（60-100份 × 均价¥26）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">¥2.5-4.5万<small>/月</small></div>
+<div class="metric-label">月净利（扣除食材35%+人工+租金）</div>
+</div>
+<div class="metric-item">
+<div class="metric-val">1.5-3<small>个月</small></div>
+<div class="metric-label">回本周期（含设备投入+首月运营）</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 5. 食材成本拆解 ====== -->
+<div class="section-title">食材成本拆解 <small>精确到g · 单份200g去骨鸡腿肉计</small></div>
+<table class="cost-table">
+<tr><th>食材/调料</th><th>用量(g)</th><th>单价(¥/500g)</th><th>小计(¥)</th></tr>
+<tr class="subtotal-row"><td colspan="4">🍗 主料类</td></tr>
+<tr><td>鸡腿（去骨后出品率70%，带骨约285g）</td><td>285→200</td><td>¥16</td><td>¥9.12</td></tr>
+<tr><td>黄瓜片（垫底配菜）</td><td>30</td><td>¥4</td><td>¥0.24</td></tr>
+<tr class="subtotal-row"><td colspan="4">🧂 煮鸡料（去腥增香）</td></tr>
+<tr><td>生姜（切片）</td><td>10</td><td>¥8</td><td>¥0.16</td></tr>
+<tr><td>大葱（切段）</td><td>10</td><td>¥4</td><td>¥0.08</td></tr>
+<tr><td>料酒</td><td>10</td><td>¥6</td><td>¥0.12</td></tr>
+<tr><td>花椒粒（煮鸡用）</td><td>1</td><td>¥24</td><td>¥0.05</td></tr>
+<tr class="subtotal-row"><td colspan="4">🌶 红油浇汁</td></tr>
+<tr><td>红油（自制，二荆条+朝天椒+菜籽油）</td><td>40</td><td>¥18</td><td>¥1.44</td></tr>
+<tr><td>复制酱油（熬制甜酱油）</td><td>15</td><td>¥12</td><td>¥0.36</td></tr>
+<tr><td>香醋（保宁醋/镇江香醋）</td><td>8</td><td>¥10</td><td>¥0.16</td></tr>
+<tr><td>蒜泥（鲜蒜捣泥）</td><td>10</td><td>¥8</td><td>¥0.16</td></tr>
+<tr><td>姜水（姜末10g+凉开水30g调制）</td><td>5</td><td>¥4</td><td>¥0.04</td></tr>
+<tr><td>花椒油/藤椒油</td><td>3</td><td>¥28</td><td>¥0.17</td></tr>
+<tr><td>白糖</td><td>3</td><td>¥6</td><td>¥0.04</td></tr>
+<tr><td>味精/鸡精</td><td>1</td><td>¥8</td><td>¥0.02</td></tr>
+<tr><td>盐</td><td>1</td><td>¥3</td><td>¥0.01</td></tr>
+<tr><td>熟白芝麻</td><td>3</td><td>¥16</td><td>¥0.10</td></tr>
+<tr><td>花生碎（炸香碾碎）</td><td>5</td><td>¥12</td><td>¥0.12</td></tr>
+<tr><td>葱花/香菜（点缀）</td><td>5</td><td>¥6</td><td>¥0.06</td></tr>
+<tr><td>包装（餐盒+料汁杯+筷子+纸巾）</td><td>1套</td><td>¥1.0/套</td><td>¥1.00</td></tr>
+<tr class="total-row"><td colspan="2">合计（单份全部成本）</td><td></td><td>¥13.29</td></tr>
+</table>
+
+<!-- ====== 6. 同赛道对比 ====== -->
+<div class="section-title">同赛道对比 <small>类似品类竞品分析 · 川式凉菜四天王</small></div>
+<div class="comp-row">
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🐔 口水鸡</span><span class="comp-rating">★★★★★</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥22-42 | <strong>毛利:</strong> 62-70% | <strong>出餐:</strong> ≤3min<br>
+<strong>复购:</strong> 极高 | <strong>食材成本:</strong> ¥10-13/份<br>
+<strong>优势:</strong> 全网认知度第一，鸡肉供应链极稳，红油汁通用性强，出餐快<br>
+<strong>劣势:</strong> 鸡腿去骨出品率仅70%导致食材成本偏高，肉质口感差异大
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥟 白切鸡</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥30-55 | <strong>毛利:</strong> 55-63% | <strong>出餐:</strong> ≤3min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥12-18/份<br>
+<strong>优势:</strong> 粤式经典认知度高，原味鸡+姜葱蘸酱走极致本味路线<br>
+<strong>劣势:</strong> 要求鸡品质极高（走地鸡），食材成本高30%+，毛利空间低
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🌿 椒麻鸡</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥25-38 | <strong>毛利:</strong> 60-66% | <strong>出餐:</strong> ≤3min<br>
+<strong>复购:</strong> 高 | <strong>食材成本:</strong> ¥9-13/份<br>
+<strong>优势:</strong> 椒麻味型差异化明显（麻感突出），新奇感强<br>
+<strong>劣势:</strong> 椒麻味型受众不及红油广，供应链（鲜藤椒/花椒）受限
+</div>
+</div>
+<div class="comp-item">
+<div class="comp-header"><span class="comp-name">🥩 红油肚丝</span><span class="comp-rating">★★★★☆</span></div>
+<div class="comp-detail">
+<strong>定价:</strong> ¥25-40 | <strong>毛利:</strong> 58-63% | <strong>出餐:</strong> ≤2min<br>
+<strong>复购:</strong> 中高 | <strong>食材成本:</strong> ¥10-14/份<br>
+<strong>优势:</strong> 肚丝口感Q弹有嚼劲，差异化竞争优势明显<br>
+<strong>劣势:</strong> 食材成本比鸡肉高30%+，处理难度更大，受众面较窄
+</div>
+</div>
+</div>
+
+<!-- ====== 7. 核心工艺 ====== -->
+<div class="section-title">核心工艺 <small>5步标准化SOP</small></div>
+<div class="flow-steps">
+<div class="flow-step">
+<div class="step-num">1</div>
+<div class="step-body">
+<div class="step-title">鸡腿处理 <span class="step-param">冰水浸泡30分钟 · 去骨技巧</span></div>
+<div class="step-desc">冷冻鸡腿提前置于冷藏室自然解冻（不可微波解冻导致肉质变柴）。解冻后冷水浸泡30分钟去除血水。去骨：沿鸡腿内侧划开至骨头，用刀背/剪刀分离骨肉，尽量保持鸡肉完整不断裂。去骨后鸡皮朝下平铺，用刀背轻拍使厚度均匀（约2cm厚），确保煮制时受热均匀。关键控制点：鸡皮保持完整（破皮会导致煮制过程中脂肪流失、肉质变干），去骨后重量约为带骨前的70%。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">2</div>
+<div class="step-body">
+<div class="step-title">精确煮制 <span class="step-param">温度: 90°C（非沸点） · 时间: 15分钟 · 焖浸15分钟</span></div>
+<div class="step-desc">大锅加水（水量淹没鸡腿5cm），加入姜片15g、葱段10g、料酒10g、花椒粒1g。大火烧至90°C（温度计精确测量，不要烧到100°C沸腾！沸腾会导致鸡肉收缩变老、失去嫩滑口感），保持90°C微沸状态放入去骨鸡腿，计时15分钟。15分钟后关火，不捞出，利用余温继续焖浸15分钟（中心温度保持在75°C以上充分熟透）。关键控制点：温度计是必需品，90°C±2°C是口水鸡嫩滑的命门——温度低则不熟、温度高则变柴。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">3</div>
+<div class="step-body">
+<div class="step-title">冰镇定形 <span class="step-param">温度: 0-4°C冰水 · 时间: 10-15分钟</span></div>
+<div class="step-desc">煮好的鸡腿立即捞出，迅速投入冰水中（冰水比1:1，冰块提前备好）。冰镇10-15分钟至鸡皮完全冷透收缩（手触无温感），这一步骤使鸡皮在急速冷却中变得紧致脆弹——这是口水鸡"皮脆肉嫩"口感的工艺秘诀。冰镇后在鸡皮表面均匀刷一层薄薄熟油防止风干变硬，用保鲜膜包裹入冰箱冷藏（0-4°C）至少1小时以上，冷藏过夜口感更佳（肉质回嫩、皮更脆）。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">4</div>
+<div class="step-body">
+<div class="step-title">斩件摆盘 <span class="step-param">刀法: 斜刀片斩 · 整齐码盘</span></div>
+<div class="step-desc">冷藏好的鸡腿取出，用锋利刀（建议用专用斩切刀/中式片刀）斜刀切成约1.5cm厚的块状。刀法要求：一刀斩断不要来回锯，保持切面整洁、皮肉不分离。盘中先铺上黄瓜片30g作为垫底（提升卖相口感、降低食材总成本），再整齐码放斩好的鸡块（皮朝上码放美观）。注意码盘要紧凑、覆盖全部垫底黄瓜，呈现"满盘鸡块"的视觉效果。</div>
+</div>
+</div>
+<div class="flow-step">
+<div class="step-num">5</div>
+<div class="step-body">
+<div class="step-title">浇汁撒料出餐 <span class="step-param">时间: 2分钟出餐 · 标准浇汁量75g</span></div>
+<div class="step-desc">调红油浇汁（单份）：红油40g+复制酱油15g+香醋8g+蒜泥10g+姜水5g+花椒油3g+白糖3g+盐1g+味精1g放入碗中搅匀。将调好的浇汁均匀淋在码好的鸡块上（确保每块鸡肉都淋到汁），撒上熟芝麻3g、花生碎5g、葱花少许点缀。关键：浇汁量要足（汤汁浸到黄瓜垫底约1/3高度），让鸡块底部浸泡在红油汁中，既入味又好看。出餐后最佳食用期30分钟内，可提前备好鸡块冷藏，出餐时现浇汁。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 8. 调味体系 ====== -->
+<div class="section-title">调味体系 <small>红油浇汁精确配方 · 单份200g鸡腿肉计</small></div>
+<div class="seasoning-box">
+<h4>🥣 红油浇汁标准配方（预调汁）</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">红油（自制）</div><div class="s-amt">40<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">复制酱油</div><div class="s-amt">15<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香醋（保宁醋）</div><div class="s-amt">8<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">蒜泥（鲜蒜）</div><div class="s-amt">10<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">姜水</div><div class="s-amt">5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">花椒油/藤椒油</div><div class="s-amt">3<small>g</small></div></div>
+</div>
+</div>
+<div class="seasoning-box">
+<h4>🥣 调味+撒料</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">白糖</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">盐（细盐）</div><div class="s-amt">1<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">味精/鸡精</div><div class="s-amt">1<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">熟白芝麻</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">花生碎（炸香）</div><div class="s-amt">5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">葱花/香菜</div><div class="s-amt">5<small>g</small></div></div>
+</div>
+</div>
+
+<!-- ====== 9. 设备清单 ====== -->
+<div class="section-title">设备清单 <small>投入预估 · 按场景选配</small></div>
+<div class="device-list">
+<div class="device-item"><span class="dev-name">🔥 电磁炉/商用灶（精确控温）</span><span class="dev-price">¥500-1500</span></div>
+<div class="device-item"><span class="dev-name">🌡️ 探针温度计（必配！）</span><span class="dev-price">¥30-80</span></div>
+<div class="device-item"><span class="dev-name">🫕 不锈钢煮锅（大号）</span><span class="dev-price">¥150-300</span></div>
+<div class="device-item"><span class="dev-name">❄️ 商用冰箱/冷藏展示柜</span><span class="dev-price">¥1500-3000</span></div>
+<div class="device-item"><span class="dev-name">🔪 中式片刀+斩切刀+砧板</span><span class="dev-price">¥200-400</span></div>
+<div class="device-item"><span class="dev-name">🧊 不锈钢冰桶/制冰机（选配）</span><span class="dev-price">¥200-800</span></div>
+<div class="device-item"><span class="dev-name">🧴 不锈钢调味缸（6件套）</span><span class="dev-price">¥80-150</span></div>
+<div class="device-item"><span class="dev-name">⚖️ 电子秤（0.1g精度）</span><span class="dev-price">¥60-120</span></div>
+<div class="device-item"><span class="dev-name">🥣 不锈钢拌盆（中号）</span><span class="dev-price">¥50-100</span></div>
+<div class="device-item"><span class="dev-name">🛒 摆摊车/移动餐车（选配）</span><span class="dev-price">¥2000-5000</span></div>
+<div class="device-item"><span class="dev-name">📦 打包台+餐盒/料汁杯/封口机</span><span class="dev-price">¥300-600</span></div>
+<div class="device-item"><span class="dev-name">🧹 消毒柜/紫外线灯</span><span class="dev-price">¥500-800</span></div>
+<div class="device-total">💰 设备总投入预估：¥5,570-12,850（根据模式选配，纯摆摊最低约¥2,500起）</div>
+</div>
+
+<!-- ====== 10. 开店适配指标 ====== -->
+<div class="section-title">开店适配指标 <small>6种场景综合评分</small></div>
+<div class="stall-grid">
+<div class="stall-item high">
+<div class="stall-name">🛒 摆摊</div>
+<div class="stall-score">8.8/10</div>
+<div class="stall-desc">出餐快、认知度高<br>溜达鸡/口水鸡招牌吸引流量</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏪 档口</div>
+<div class="stall-score">9.0/10</div>
+<div class="stall-desc">明档展示红油浇汁过程<br>视觉冲击力强、转化率高</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏠 小店</div>
+<div class="stall-score">8.5/10</div>
+<div class="stall-desc">川菜馆/快餐店核心引流品<br>搭配热菜/主食组合销售</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">📋 搭售</div>
+<div class="stall-score">9.2/10</div>
+<div class="stall-desc">烧烤店/面馆/小酒馆<br>下酒菜属性强、搭售效果最佳</div>
+</div>
+<div class="stall-item mid">
+<div class="stall-name">📱 外卖</div>
+<div class="stall-score">7.5/10</div>
+<div class="stall-desc">料汁分装可配送<br>但鸡肉冷吃易被投诉分量少</div>
+</div>
+<div class="stall-item high">
+<div class="stall-name">🏘️ 社区店</div>
+<div class="stall-score">8.8/10</div>
+<div class="stall-desc">邻里复购率极高<br>可做"口水鸡+主食"家庭套餐</div>
+</div>
+</div>
+
+<!-- ====== 11. 风险 ====== -->
+<div class="section-title">风险提示 <small>5项关键预警 + 应对策略</small></div>
+<div class="risk-list">
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">鸡肉口感波动风险 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">不同批次鸡腿（大小、老嫩、品种差异）导致煮制时间和口感不稳定，这是口水鸡标准化最大的痛点。冷冻鸡腿与鲜鸡腿口感差异明显，解冻方式不当（微波/热水解冻）会导致鸡肉严重变柴。应对策略：统一采购同一品牌/同一规格的冷冻鸡腿（推荐单个鸡腿200-250g规格），建立"按克重分段煮制"标准（<200g煮12分钟、200-250g煮15分钟、>250g煮18分钟），解冻方式标准化（冷藏室解冻≥12小时，不可室温或微波解冻）。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">红油品质波动 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">红油是口水鸡的灵魂，但红油品质受辣椒品种/菜籽油品牌/炒制温度/静置时间等多因素影响。不同批次红油颜色/辣度/香气不一致直接影响顾客体验。应对策略：红油批次制作至少15天用量，每批严格记录配方比例（辣椒配比二荆条:朝天椒:子弹头=5:3:2）、油温曲线（120°C炸香→160°C提色→冷却过滤→静置24h），每批留样编号，新批红油与上批盲测对比后才可使用。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">定价认知错位 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">消费者对口水鸡的心理价位存在"低价锚定"效应——路边摊¥18-22的口水鸡和餐馆¥38-48的让人对定价敏感。一份200g口水鸡在餐盒中看起来量少容易引发"不值"投诉。应对策略：摆摊用200g标准份（搭配黄瓜垫底显得满盘），门店用250g份量（垫底蔬菜升级为黄瓜+花生碎双铺底），外卖用200g+料汁分离模式（强调"料汁另配"显得专业）。定价建议遵循"高开低走"——标价比心理价位高¥3-5再用活动回落到实际价，让顾客有"赚到"的感觉。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">夏季食品安全风险 <span class="risk-level high">高风险</span></div>
+<div class="risk-desc">口水鸡属于冷吃鸡肉制品，常温下细菌繁殖速度极快（夏季30°C环境下2小时即超标）。红油汁中含有大量蒜泥（弱防腐作用），但不足以抵御高温环境。应对策略：煮好的鸡腿冷藏保存（≤4°C），出餐前现切现浇汁，已切好未浇汁的鸡块冷藏不超过4小时。夏季摆摊须配备冷藏展示柜或保温冰桶配冰袋，测量中心温度（≤10°C），超过2小时未售完的已浇汁成品立即废弃。</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-icon">⚠️</div>
+<div class="risk-body">
+<div class="risk-title">同质化竞争加剧 <span class="risk-level mid">中风险</span></div>
+<div class="risk-desc">口水鸡家家都能做，差异化难建立，一条街可能出现3-5家口水鸡摊位/门店。缺乏独特壁垒的纯口水鸡店容易被模仿，最后只能打价格战。应对策略：在红油浇汁基础上开发2-3款独家变体（藤椒口水鸡/蒜泥口水鸡/煳辣口水鸡），配合"秘制红油"概念建立品牌认知；通过与凉菜组合套餐形式（口水鸡+凉拌素菜+主食）提升客单价和竞争壁垒，降低纯单品竞争压力。</div>
+</div>
+</div>
+</div>
+
+<!-- ====== 12. 赛道判断 ====== -->
+<div class="section-title">赛道判断 <small>优势劣势 + 2026年趋势研判</small></div>
+<div class="track-grid">
+<div class="track-pros">
+<div class="track-head">✅ 核心优势</div>
+<ul>
+<li>全网认知度凉菜品类第一（100%消费者认识口水鸡，零教育成本）</li>
+<li>鸡肉供应链稳定性极强（相比猪耳/牛肚，鸡腿全年价格波动<15%）</li>
+<li>毛利空间优秀（62-70%），单店模型健康，现金流稳定</li>
+<li>出餐效率高（≤3分钟/份），高峰可预制鸡块、现浇汁</li>
+<li>可兼容场景极多（摆摊/堂食/外卖/便利店预包装/电商料包）</li>
+<li>红油浇汁可与红油耳丝/红油肚丝共用，一汁多用降低边际成本</li>
+<li>消费决策门槛低、转化率高、复购率高</li>
+</ul>
+</div>
+<div class="track-cons">
+<div class="track-head">⚠️ 核心劣势</div>
+<ul>
+<li>鸡腿去骨后出品率仅70%，实际食材成本高于表面计算</li>
+<li>鸡肉口感差异大（部位/火候/解冻方式影响显著），标准化难度高于猪耳</li>
+<li>纯口水鸡单品客单价偏低（¥22-42），独立门店需搭配其他品类支撑</li>
+<li>外卖配送后鸡皮回软、红油分层，口感下降影响复购</li>
+<li>同质化竞争严重，差异化建立难度大</li>
+<li>夏季冷链成本高（冷藏展示柜/冰袋/冷链配送成本增加）</li>
+<li>凉菜品类中"性价比投诉"最多的单品之一（消费者对份量敏感）</li>
+</ul>
+</div>
+</div>
+<div class="track-verdict">
+<strong>📊 2026赛道判断：</strong> 口水鸡属于<strong>"超级认知+高毛利引流型"</strong>赛道，是凉菜摊/川菜馆/烧烤店的<strong>必备引流品</strong>而非可选品。2026年四大趋势利好：①Z世代"吃鸡文化"持续火热（炸鸡/白切鸡/口水鸡/椒麻鸡，鸡肉消费年增8%+）；②川式凉菜馆在下沉市场快速扩张（三四线城市川式凉菜需求年增30%+）；③便利店+生鲜电商凉菜预包装增速迅猛（口水鸡预包装是便利店凉菜TOP3单品）；④"红油浇汁"味型在全国范围内接受度持续提升。最佳切入口：①川式凉菜馆/卤味店的核心引流品（搭配红油耳丝+夫妻肺片形成"凉菜三件套"）；②烧烤店/面馆的搭售单品（零投入增品）；③社区团购+预包装（便利店渠道）。综合评定：<strong>★★★★★（强烈推荐入局，凉菜必上单品）</strong>。
+</div>
+
+<!-- ====== 13. 30天验证路线 ====== -->
+<div class="section-title">30天验证路线 <small>从零到开张 · 五阶段分解</small></div>
+<div class="verify-steps">
+<div class="verify-step active">
+<div class="v-num">阶段一</div>
+<div class="v-range">Day 1-7</div>
+<div class="v-desc">市场调研+配方定型</div>
+<div class="v-goal">✅ 试吃30人+锁定红油+煮鸡参数</div>
+<div class="v-tasks">踩点3个目标市场<br>测试煮鸡温度/时间参数<br>确定红油配方和份量</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段二</div>
+<div class="v-range">Day 8-14</div>
+<div class="v-desc">供应链搭建+设备到位</div>
+<div class="v-goal">✅ 签鸡腿供应商+采购核心设备</div>
+<div class="v-tasks">对接冷冻鸡腿供应商<br>采购温度计+控温灶<br>办理相关证照</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段三</div>
+<div class="v-range">Day 15-21</div>
+<div class="v-desc">SOP实操+内测出餐</div>
+<div class="v-goal">✅ 40份内测+稳定煮鸡工艺</div>
+<div class="v-tasks">5次全流程演练<br>邀请30人试吃<br>根据反馈微调浇汁配方</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段四</div>
+<div class="v-range">Day 22-28</div>
+<div class="v-desc">试营业+收集反馈</div>
+<div class="v-goal">✅ mini摊试卖80份</div>
+<div class="v-tasks">朋友圈/社群预热<br>试营业3天<br>收集50+条反馈</div>
+</div>
+<div class="verify-step">
+<div class="v-num">阶段五</div>
+<div class="v-range">Day 29-30</div>
+<div class="v-desc">正式开业+复盘调整</div>
+<div class="v-goal">✅ 开业活动+首日数据复盘</div>
+<div class="v-tasks">开业促销（口味试吃）<br>统计首日营收/成本<br>确定鸡腿备货量标准</div>
+</div>
+</div>
+
+<!-- ====== 14. 沧林判断 ====== -->
+<div class="section-title">沧林判断 <small>深度评语 · 300+字</small></div>
+<div class="judge-box">
+<div class="judge-text">口水鸡这个品类，我称之为"川式凉菜的基本盘"——不是最赚钱的那个，但绝对是最不能少的那个。我2016年开始做餐饮咨询时帮成都一个社区凉菜摊做过升级方案，老板原本一天卖¥800，我给他的第一个建议就是"必须上口水鸡"——不是因为口水鸡利润高（它利润其实中等），而是因为口水鸡是"信任符号"：顾客看到店里有口水鸡，就默认这家店是正经川式凉菜店，就有信心尝试其他高利润单品。结果上了口水鸡之后，红油耳丝和夫妻肺片的销量也跟着翻了倍——因为红油料汁是共用的，厨房效率提升了，顾客的信任感也建立起来了。这就是口水鸡的"钩子效应"。2026年做口水鸡，我特别看好"预煮预制+现浇现卖"的半成品模式：头一天晚上批量煮好鸡腿（50-100份），冷藏过夜使肉质回嫩、皮更脆，出餐时现场斩件、现浇红油汁——既保证了出餐速度（从接单到出餐≤2分钟），又保留了现做的仪式感。这个模式最大的优势是将煮鸡这个最耗时、最影响品质的环节前置到非高峰时段，高峰时段只做"切+浇"两个动作，一人操作即可覆盖全高峰。口水鸡的核心竞争力不在于你用了多贵的鸡，而在于煮鸡的温度每批都稳定的90°C、红油的批次风味每批都保持一致。能做到这两点，你就能在任何一个夜市、任何一条美食街里跑赢90%的竞争对手。记住——口水鸡不比厨艺，比的是标准化的执行力。</div>
+<div class="judge-tags">
+<span>#沧林说餐饮</span>
+<span>#口水鸡赛道</span>
+<span>#川式凉菜基本盘</span>
+<span>#信任符号</span>
+<span>#预煮预制模式</span>
+<span>#标准化执行力</span>
+</div>
+</div>
+
+<!-- ====== 15. 完整数据包预览 ====== -->
+<div class="section-title">完整数据包预览 <small>付费解锁 · 8项深度内容</small></div>
+<div class="data-preview">
+<div class="data-item"><span class="data-icon">📋</span><span class="data-name">口水鸡标准化SOP手册（含煮鸡温度曲线/冰镇时间表）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📊</span><span class="data-name">6城市定价策略对照表（一线/新一线/二线/三线分档）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📈</span><span class="data-name">损益测算表（摆摊/档口/门店3种模型成本结构）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">供应链清单（鸡腿供应商/红油原料/包材名录）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📱</span><span class="data-name">外卖运营SOP（料汁分离包装/配送优化指南）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🎯</span><span class="data-name">社区团购冷启动方案（社群话术/预售模板/复购策略）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🧪</span><span class="data-name">红油浇汁4款变体配方（藤椒/蒜泥/煳辣/酸辣风味）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📅</span><span class="data-name">全年营销日历（节气/夜市档期/开学季/啤酒节方案）</span><span class="data-lock">🔒</span></div>
+</div>
+
+<!-- ====== 16. 付费区 ¥19 toggle ====== -->
+<div class="pay-area">
+<div class="pay-header">
+<div class="pay-title">🔓 付费解锁 · 完整子卡数据</div>
+<div class="pay-price">¥19<small>/份</small></div>
+</div>
+<label class="pay-toggle">
+<input type="checkbox" id="payToggle">
+<span class="toggle-label">点击解锁完整数据内容（含详细表格/图表/参数矩阵/供应商名录）</span>
+<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起内容':'解锁内容'">解锁内容</button>
+
+</label>
+<div class="pay-content">
+<div class="pay-content-inner">
+<h4>📦 完整数据包内容（¥19付费版🔓 付费内容）</h4>
+
+<table class="pay-table">
+<tr><th>城市</th><th>鸡腿进价(¥/kg)</th><th>去骨出品率</th><th>净料成本(¥/kg)</th><th>单份用料(g)</th><th>单份成本(¥)</th></tr>
+<tr><td>成都</td><td>12-15</td><td>70%</td><td>17-21</td><td>200</td><td>8.56-10.68</td></tr>
+<tr><td>重庆</td><td>12-14</td><td>70%</td><td>17-20</td><td>200</td><td>8.56-10.00</td></tr>
+<tr><td>长沙</td><td>14-17</td><td>70%</td><td>20-24</td><td>200</td><td>10.00-12.28</td></tr>
+<tr><td>武汉</td><td>13-16</td><td>70%</td><td>19-23</td><td>200</td><td>9.28-11.44</td></tr>
+<tr><td>郑州</td><td>14-18</td><td>70%</td><td>20-26</td><td>200</td><td>10.00-12.84</td></tr>
+<tr><td>西安</td><td>13-17</td><td>70%</td><td>19-24</td><td>200</td><td>9.28-12.00</td></tr>
+<tr><td colspan="5"><strong>单份总成本（含红油浇汁+配菜+包装）</strong></td><td><strong>¥10-13</strong></td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>场景</th><th>定价区间</th><th>毛利区间</th><th>预估日销量</th><th>日毛利(¥)</th><th>月净利(¥)</th></tr>
+<tr><td>🛒 摆摊</td><td>¥22-30/份</td><td>62-68%</td><td>60-100份</td><td>818-2,040</td><td>16,000-38,000</td></tr>
+<tr><td>🏪 门店</td><td>¥32-42/份</td><td>65-70%</td><td>50-80份</td><td>1,040-2,352</td><td>20,000-42,000</td></tr>
+<tr><td>📱 外卖</td><td>¥28-38/份</td><td>58-63%</td><td>40-70份</td><td>649-1,676</td><td>14,000-32,000</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>步骤</th><th>操作</th><th>关键参数</th><th>翻车点</th></tr>
+<tr><td>①鸡腿处理</td><td>解冻→冷水浸泡30min去血→去骨</td><td>冷藏解冻≥12h,去骨后70%出品率</td><td>微波解冻肉质变柴</td></tr>
+<tr><td>②精确煮制</td><td>90℃微沸煮15min→关火焖15min</td><td>温度计精确控温90℃±2℃</td><td>沸腾煮制鸡肉变老</td></tr>
+<tr><td>③冰镇定形</td><td>冰水10-15min至皮脆紧致</td><td>冰水比1:1,刷薄油防干</td><td>冰镇不足皮不脆</td></tr>
+<tr><td>④斩件摆盘</td><td>斜刀1.5cm块,皮朝上码放</td><td>刀要锋利,一刀斩断不来回锯</td><td>来回锯皮肉分离</td></tr>
+<tr><td>⑤浇汁撒料</td><td>浇红油汁75g+撒芝麻花生葱花</td><td>汤汁浸到垫底黄瓜1/3高度</td><td>浇汁不足不入味</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>竞品</th><th>定价区间</th><th>毛利</th><th>复购</th><th>优势</th><th>劣势</th></tr>
+<tr><td>🐔 口水鸡</td><td>¥22-42</td><td>62-70%</td><td>极高</td><td>认知度第一,供应链稳,出餐快</td><td>出品率70%成本偏高</td></tr>
+<tr><td>🥟 白切鸡</td><td>¥30-55</td><td>55-63%</td><td>高</td><td>经典本味,老广市场刚需</td><td>要走地鸡,成本高30%</td></tr>
+<tr><td>🌿 椒麻鸡</td><td>¥25-38</td><td>60-66%</td><td>高</td><td>椒麻味型差异化强</td><td>受众不及红油广</td></tr>
+<tr><td>🥩 红油肚丝</td><td>¥25-40</td><td>58-63%</td><td>中高</td><td>Q弹口感,差异化明显</td><td>处理难度大,受众窄</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>场景</th><th>评分</th><th>推荐度</th><th>理由</th></tr>
+<tr><td>🛒 摆摊</td><td>8.8/10</td><td>★★★★★</td><td>认知度高,招牌吸引流量</td></tr>
+<tr><td>🏪 档口</td><td>9.0/10</td><td>★★★★★</td><td>明档浇汁视觉冲击强</td></tr>
+<tr><td>🏠 小店</td><td>8.5/10</td><td>★★★★★</td><td>川菜馆快餐店核心引流品</td></tr>
+<tr><td>📋 搭售</td><td>9.2/10</td><td>★★★★★</td><td>烧烤小酒馆下酒菜属性强</td></tr>
+<tr><td>📱 外卖</td><td>7.5/10</td><td>★★★★</td><td>料汁分装可配送</td></tr>
+<tr><td>🏘️ 社区店</td><td>8.8/10</td><td>★★★★★</td><td>邻里复购率极高</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>阶段</th><th>天数</th><th>核心任务</th><th>关键指标</th></tr>
+<tr><td>筹备期</td><td>1-4天</td><td>采购设备(温度计必配),锁定鸡腿供应商</td><td>完成2家供应商比价</td></tr>
+<tr><td>试做期</td><td>5-10天</td><td>连续试做,攻克90℃煮制温度和冰镇时间</td><td>找到最优温度时间组合</td></tr>
+<tr><td>内测期</td><td>11-16天</td><td>15-20人盲测,5维度评分(嫩滑度/口味/色泽)</td><td>嫩滑度评分≥8/10</td></tr>
+<tr><td>试营业</td><td>17-24天</td><td>正式上线,搭配凉菜组合销售</td><td>日单量≥20份</td></tr>
+<tr><td>优化期</td><td>25-30天</td><td>口味微调,测试外卖料汁分装方案</td><td>复购率≥30%</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>设备</th><th>品牌/规格</th><th>价格(¥)</th><th>采购参考</th></tr>
+<tr><td>电磁炉/商用灶</td><td>美的/苏泊尔 精确控温</td><td>500-1,500</td><td>淘宝搜索"商用电磁炉"</td></tr>
+<tr><td>探针温度计</td><td>必配!±1℃精度</td><td>30-80</td><td>淘宝搜索"探针温度计"</td></tr>
+<tr><td>不锈钢煮锅</td><td>大号</td><td>150-300</td><td>1688搜索"不锈钢煮锅"</td></tr>
+<tr><td>商用冰箱</td><td>星星/海尔 1.2m</td><td>1,500-3,000</td><td>淘宝搜索"商用冷藏柜"</td></tr>
+<tr><td>中式片刀+斩切刀</td><td>十八子/双立人</td><td>200-400</td><td>淘宝搜索"中式斩切刀"</td></tr>
+<tr><td>不锈钢冰桶</td><td>制冰机选配</td><td>200-800</td><td>淘宝搜索"不锈钢冰桶"</td></tr>
+</table>
+
+<table class="pay-table">
+<tr><th>策略</th><th>动作</th><th>话术模板</th></tr>
+<tr><td>进群礼</td><td>消费满30元送口水鸡券¥5</td><td>"加群领¥5口水鸡券"</td></tr>
+<tr><td>双拼组合</td><td>口水鸡+红油肚丝双拼¥48</td><td>"双拼凉菜省¥8,两种口味都尝到"</td></tr>
+<tr><td>套餐</td><td>口水鸡+米饭¥28(原¥35)</td><td>"口水鸡米饭套餐省¥7"</td></tr>
+<tr><td>生日礼</td><td>当月生日免费赠小份</td><td>"生日免费吃口水鸡!"</td></tr>
+<tr><td>会员日</td><td>每周二第二份6折</td><td>"周二哥俩来吃,第二份6折"</td></tr>
+</table>
+</div>
+</div>
+</div>
+
+<!-- ====== 17. 数据说明+微信+品牌页脚 ====== -->
+<div class="data-note">
+📌 数据说明：以上数据基于2026年Q1全国6城市（成都/重庆/长沙/武汉/郑州/西安）实地调研及外卖平台大数据分析，食材价格取2026年3月市场均价。实际数据因地区、季节、供应链差异可能浮动±15%。评分体系为FoodIntelAI V5.1标准，满分为10分。本子卡仅供创业决策参考，不构成投资建议。
+</div>
+<div class="footer-brand">
+<div class="fb-name">Food<span>Intel</span>AI</div>
+<div class="fb-line">数据驱动餐饮决策 · V5.1 子卡标准 · 17维全量评测</div>
+<div class="fb-wx">📱 微信咨询：canglin1985</div>
+<div class="fb-copy">© 2026 FoodIntelAI · 沧林餐饮智库 · 子卡编号 LB_19 口水鸡（红油浇汁鸡）· 版权所有</div>
+</div>
+
+</div><!-- /card -->
+
+<script>
+// 付费区Toggle功能
+document.addEventListener('DOMContentLoaded',function(){
+var cb=document.getElementById('payToggle');
+var pc=document.querySelector('.pay-content');
+var btn=document.querySelector('.toggle-btn');
+cb.addEventListener('change',function(){
+pc.classList.toggle('show',cb.checked);
+btn.textContent=cb.checked?'收起内容':'解锁内容';
+});
+});
+</script>
+
+</body>
+</html>
