@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>枣庄辣子鸡 · 创业项目测评</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 顶部评级（深色基调） ===== */
+.rating-bar{background:linear-gradient(135deg,#3a322a,#5a3f2a);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+/* ===== 公共模块 ===== */
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-arrow{color:#ccc;font-size:10px}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+
+.comp-grid{display:grid;grid-template-columns:1fr;gap:6px}
+.comp-row{display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:11px;padding:8px 10px;border-radius:8px;align-items:center}
+.comp-row .c-label{font-weight:600;color:#3a322a}
+.comp-row .c-star{text-align:center;color:#5a4f44}
+
+/* ===== 工艺框架 ===== */
+.spec-card{background:#f8f4ef;border-radius:10px;padding:14px;margin:6px 0;border-left:3px solid #E8652D}
+.spec-card .sc-body{font-size:12px;color:#4a3f35;line-height:1.7}
+.tip-box{background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#E8652D;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.temp-table{background:#f8f4ef;border-radius:10px;overflow:hidden;margin:6px 0}
+.temp-header{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff}
+.temp-row{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:11px;padding:7px 10px;border-bottom:1px solid #e8dfd5}
+.temp-row:last-child{border-bottom:none}
+.temp-row:nth-child(even){background:#f5f0eb}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+/* ===== 付费区 ===== */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+/* locked-section removed for audit version */
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🌶️ 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🌶️ 枣庄辣子鸡</h1>
+  <div style="font-size:12px;color:#b5aaa0">山东第二大流派 · 双油炸 · 干香型</div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.5</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">A级项目</span>
+  </div>
+  <div class="r-tagline">技术门槛最高·利润最好的炒鸡。双油炸+干辣椒多=天然壁垒，客单高、复购稳，但劝退率也最高。</div>
+  <div class="r-tags">
+    <span>🔥 技术门槛最高</span>
+    <span>💰 利润最好</span>
+    <span>🌶️ 干辣椒暴多</span>
+    <span>🔄 复购高</span>
+    <span>📈 客单¥38-68</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览 5维 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔧 技术门槛</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item high"><div class="label">💰 利润</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item"><div class="label">⚔️ 竞争</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item"><div class="label">📐 标准化</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item high"><div class="label">🎨 视觉冲击</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 有后厨经验者</div>
+      <div class="fit-item fit-yes">✅ 鲁菜/川菜师傅转型</div>
+      <div class="fit-item fit-yes">✅ 做正餐堂食的门店</div>
+      <div class="fit-item fit-yes">✅ 搭配烧饼/馒头卖</div>
+      <div class="fit-item fit-yes">✅ 有控温经验的老手</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 纯新手小白</div>
+      <div class="fit-item fit-no">❌ 摆摊（油烟大）</div>
+      <div class="fit-item fit-no">❌ 外卖为主（回软快）</div>
+      <div class="fit-item fit-no">❌ 怕油飞溅</div>
+      <div class="fit-item fit-no">❌ 追求3天速成</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是辣子鸡</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">顾客买的是：干辣椒堆成山的视觉震撼 × 双油炸的酥脆 × 下酒暴爽 × 配烧饼的饱足感</div>
+    <div class="l-title">📈 利润来源</div>
+    <div class="logic-item"><span>枣庄辣子鸡小份（1-2人）</span><span class="v">毛利75-80%</span></div>
+    <div class="logic-item"><span>枣庄辣子鸡大份（3-4人）</span><span class="v">毛利80-85%</span></div>
+    <div class="logic-item"><span>辣度升级（+¥5）</span><span class="v">毛利95%</span></div>
+    <div class="logic-item"><span>搭售烧饼/馒头/饮品</span><span class="v">增收20-30%</span></div>
+    <div class="logic-item"><span>配菜加料（土豆/藕片/豆皮）</span><span class="v">加¥8-12</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">日营收</div>
+      <div class="m-val">¥1200-3000</div>
+      <div class="m-sub">午晚两市</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">月净利</div>
+      <div class="m-val">¥7000-20000</div>
+      <div class="m-sub">出摊26天</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">6-10个月</div>
+      <div class="m-sub">含装修设备</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>赚钱关键：</strong>枣庄辣子鸡不是走量品——是利润品。一份大份辣子鸡（鸡400g+干辣椒200g）食材成本约¥10-15，售价¥58-68，毛利80%+。核心是双油炸带来的酥脆口感+干辣椒视觉冲击——顾客觉得\"值\"。配烧饼/馒头可以拉高客单价¥10-15。如果日均卖20份大份+15份小份，日营收轻松破¥2000。关键是控好油和辣椒成本——一次用油成本约¥2-3/份，批量采购干辣椒¥15-20/斤，一斤出5份辣椒量。平均食材成本率≈18-22%，在炒鸡品类中利润结构最优。配合工业温度计精准控温，一天炸3轮油滤一次，一锅油8-10L可以用3天（约60-80份），单份油成本降至¥1.5-2。
+  </div>
+</div>
+
+<!-- ===== 📈 同赛道对比（辣子鸡流派） ===== -->
+<div class="section">
+  <div class="s-title">📈 同赛道对比</div>
+  <div class="comp-grid">
+    <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff;border-radius:6px;gap:0">
+      <span>辣子鸡流派</span><span style="text-align:center">利润</span><span style="text-align:center">难度</span><span style="text-align:center">卖相</span><span style="text-align:center">复购</span><span style="text-align:center">推荐</span>
+    </div>
+    <div class="comp-row" style="background:#fef6ec">
+      <span class="c-label">🌶️ 枣庄辣子鸡</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★★</span>
+      <span class="c-star" style="color:#E8652D">★★★★★</span>
+      <span class="c-star" style="color:#E8652D">★★★★★</span>
+      <span class="c-star" style="color:#E8652D">★★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#E8652D">A</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🌶️ 重庆辣子鸡</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="color:#E8652D">★★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B+</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🏔️ 歌乐山辣子鸡</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="color:#E8652D">★★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="color:#D4A574">★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B+</span>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 <strong>核心区别：</strong>枣庄辣子鸡是干香型（干辣椒多、双油炸、鸡:辣椒≈2:1、不重麻），适合配烧饼/馒头当正餐。重庆辣子鸡重麻辣+典型川味调料，歌乐山辣子鸡是重庆辣子鸡的原型。枣庄版利润结构最优——辣椒成本比鸡肉低得多，辣椒量越大毛利越高。枣庄版的复购率也最高（干香口感不上火、适口性广、配主食顶饿）。
+  </div>
+</div>
+
+<!-- ===== 🗓️ 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#E8652D;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1-3</span>
+      <span style="flex:1">试做5份：跑通腌制→双油炸→炒辣椒→合炒全流程，记录温度+时间数据</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 4-7</span>
+      <span style="flex:1">邀请15人试吃：测试3档辣度（微辣/中辣/重辣），收集酥脆度+辣度反馈</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 8-14</span>
+      <span style="flex:1">定辣度+定价（小份¥38-48/大份¥58-68），备齐设备物料，确定配烧饼/馒头方案</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 15-21</span>
+      <span style="flex:1">正式营业第1周：测试出餐速度（目标≤15分钟/份）、优化后厨动线、记客单价</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 22-30</span>
+      <span style="flex:1">复盘数据：日均营收、食材成本率、客单价、顾客评价。决定长期经营或调整</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键判断：</strong>枣庄辣子鸡不是30天能赚钱的——前30天是技术打磨期。双油炸的控温、辣椒炒制的时间感、合炒的火候——这些至少需要做30-50份才能稳定。如果能做到"每份出品误差＜10秒"，才算是合格。<br>
+    真正赚钱要第2-3个月开始。如果第1个月末还没人夸"这鸡炸得真酥"——你工艺还没到位，别急着扩店。
+  </div>
+</div>
+
+<!-- ===== 🔥 开店适配指标 ===== -->
+<div class="section">
+  <div class="s-title">🔥 开店适配指标</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">正餐门店</div>
+      <div class="s-bar"><div class="fill" style="width:95%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏮</div>
+      <div class="s-name">夜宵排档</div>
+      <div class="s-bar"><div class="fill" style="width:85%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">学校周边</div>
+      <div class="s-bar"><div class="fill" style="width:50%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市摆摊</div>
+      <div class="s-bar"><div class="fill" style="width:20%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★☆☆☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区小店</div>
+      <div class="s-bar"><div class="fill" style="width:65%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖平台</div>
+      <div class="s-bar"><div class="fill" style="width:20%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★☆☆☆☆</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 枣庄辣子鸡严重依赖堂食——双油炸的酥脆口感在出锅后15-20分钟内最佳，外卖配送后回软明显。推荐模式：正餐门店（午晚两市）+配烧饼/馒头+啤酒。夜市摆摊不建议——双油炸油烟大、辣椒炒制香气虽然诱人但熏路人。如果门店选址在鲁菜/山东菜消费基础好的区域（山东/北京/大连/青岛等），转化率远高于南方面食区。日均翻台2-3轮是盈利基线。
+  </div>
+</div>
+
+<!-- ===== 🌶️ 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🌶️ 核心工艺</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <strong style="color:#C0392B">原料配比（1份 大份基准·鸡400g）：</strong>
+      <div class="recipe-line"><span class="k">仔鸡/三黄鸡（剁1.5-2cm小丁）</span><span class="v">400g</span></div>
+      <div class="recipe-line"><span class="k">干辣椒（剪段·去部分籽）</span><span class="v">200g（鸡:辣椒≈2:1）</span></div>
+      <div class="recipe-line"><span class="k">花椒+青花椒（3:1）</span><span class="v">8g</span></div>
+      <div class="recipe-line"><span class="k">蒜片+姜片</span><span class="v">各20g+10g</span></div>
+      <div class="recipe-line"><span class="k">白芝麻（装饰）</span><span class="v">5g</span></div>
+      <div class="recipe-line"><span class="k">炸油（菜籽油/大豆油）</span><span class="v">约1L</span></div>
+    </div>
+  </div>
+
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc">腌制15分钟：生抽15ml+料酒10ml+盐3g+玉米淀粉5g+蛋清1个→抓匀上浆</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc">第一炸（炸熟）160℃·4分钟·中小火→鸡丁表面金黄捞出</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc">第二炸（炸脆）190℃·2分钟·中大火→表面焦黄酥脆捞出</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc">炒辣椒：留底油15g·小火·干辣椒+花椒慢炒30秒至深红（不能黑）</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc">加蒜片+姜片→大火10秒→回鸡丁→大火合炒≤20秒</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">6</span>
+      <span class="ps-desc">调味：盐2g+味精2g+白糖2g→撒白芝麻→翻匀出锅</span>
+    </div>
+  </div>
+
+  <!-- 温度曲线表 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 6px">🌡️ 双油炸温度曲线</div>
+  <div class="temp-table">
+    <div class="temp-header">
+      <span>工序</span><span style="text-align:center">油温</span><span style="text-align:center">时间</span><span style="text-align:center">效果标识</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">第一炸（炸熟）</span>
+      <span style="text-align:center;font-weight:700;color:#E8652D">160℃</span>
+      <span style="text-align:center">4分钟</span>
+      <span style="text-align:center">鸡丁浮起·表面淡金黄</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">第二炸（炸脆）</span>
+      <span style="text-align:center;font-weight:700;color:#C0392B">190℃</span>
+      <span style="text-align:center">2分钟</span>
+      <span style="text-align:center">表面焦黄·敲击有脆响</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">炒辣椒</span>
+      <span style="text-align:center;font-weight:700">小火</span>
+      <span style="text-align:center">30秒</span>
+      <span style="text-align:center">辣椒深红·出香不苦</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">合炒出锅</span>
+      <span style="text-align:center;font-weight:700">大火</span>
+      <span style="text-align:center">≤20秒</span>
+      <span style="text-align:center">鸡丁回锅不超过1分钟</span>
+    </div>
+  </div>
+
+  <div class="tip-box"><div class="tip-label">🔥 双油炸核心原理</div><p>160℃第一炸是把鸡丁从里到外炸熟——这个温度下淀粉糊化、肉汁锁住；190℃第二炸是表面脱水变脆——温差30℃让表皮急速皱缩形成酥脆层。两次炸之间鸡丁要彻底沥油（约30秒），保证第二炸时表面无多余水分。油温必须用探针温度计精确控制——手感和眼睛不可靠。没有温度计前不要尝试双油炸，99%的翻车都是油温失控。</p></div>
+
+  <div class="tip-box"><div class="tip-label">🌶️ 辣椒炒制时间标准</div><p>干辣椒下锅后前10秒：辣椒香气开始释放。15-20秒：辣椒颜色从鲜红变深红，香味最浓。25-30秒：辣椒表面微焦但不变黑——这是最佳的炒制终点。超过35秒：辣椒开始变黑、产生苦味，整锅报废。判断标准：辣椒表面出现细小白色斑点（油点）但整体仍是深红色——说明火候完美；如果辣椒边缘变黑——已经过度了。新手建议：小火慢炒20秒停火看颜色，不够再加5秒，不要一次性炒够30秒。火候宁可欠一点也不要过——欠还可以再炒一下，过了就只能重来。</p></div>
+
+  <div style="font-size:11px;color:#b5aaa0;line-height:1.6;padding:8px 0 4px;text-align:center">
+    💡 以上工艺你看得明白，<br>精确到克的撒料配方和3档辣度配比——解锁后查看。
+  </div>
+</div>
+
+<!-- ===== 🧂 腌料+撒料体系 ===== -->
+<div class="section">
+  <div class="s-title">🧂 腌料体系</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #E8652D;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>基础腌料（每500g鸡丁·精确g）：</strong>
+    <div class="recipe-line"><span class="k">生抽</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">料酒</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">盐</span><span class="v">3g</span></div>
+    <div class="recipe-line"><span class="k">玉米淀粉</span><span class="v">5g</span></div>
+    <div class="recipe-line"><span class="k">蛋清</span><span class="v">1个（约30g）</span></div>
+    <div class="recipe-line"><span class="k">白胡椒粉</span><span class="v">1g（去腥·可选）</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🔥 抓匀腌制15分钟——不超过30分钟，否则鸡蛋会出水、鸡丁变柴。腌制时不要加太多液体，2:1的液体-淀粉比最佳（15ml生抽+10ml料酒 vs 5g淀粉+30g蛋清）。腌完的鸡丁表面应挂薄浆、不滴汁。</div>
+  </div>
+
+  <div class="s-title">🧂 撒料体系</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #C0392B;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>出餐撒料（每份5g）：</strong>
+    <div class="recipe-line"><span class="k">孜然粉</span><span class="v">2g</span></div>
+    <div class="recipe-line"><span class="k">熟白芝麻（整粒）</span><span class="v">1.5g</span></div>
+    <div class="recipe-line"><span class="k">细辣椒粉</span><span class="v">0.5g</span></div>
+    <div class="recipe-line"><span class="k">白糖</span><span class="v">0.5g</span></div>
+    <div class="recipe-line"><span class="k">味精</span><span class="v">0.3g</span></div>
+    <div class="recipe-line"><span class="k">花椒粉</span><span class="v">0.2g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🌶️ 撒料在合炒最后10秒撒入，翻匀即出锅。批量预混100份量=孜然粉200g+芝麻150g+辣椒粉50g+白糖50g+味精30g+花椒粉20g，密封避光保存1个月风味不减。枣庄版不依赖重麻——花椒粉比例明显低于重庆版。</div>
+  </div>
+</div>
+
+<!-- ===== 🛠️ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 后厨设备（一次性投入）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #E8652D">
+    <div class="recipe-line"><span class="k">双缸油炸锅 16-20L（控温型）</span><span class="v" style="font-weight:600;color:#3a322a">¥500-1200</span></div>
+    <div class="recipe-line"><span class="k">猛火灶（单眼/双眼·配通风）</span><span class="v" style="font-weight:600;color:#3a322a">¥300-800</span></div>
+    <div class="recipe-line"><span class="k">探针式油温温度计（双探头）</span><span class="v" style="font-weight:600;color:#3a322a">¥30-50</span></div>
+    <div class="recipe-line"><span class="k">铁锅/不锈钢炒锅 36-40cm</span><span class="v" style="font-weight:600;color:#3a322a">¥80-150</span></div>
+    <div class="recipe-line"><span class="k">不锈钢操作台 1.2-1.5m</span><span class="v" style="font-weight:600;color:#3a322a">¥200-500</span></div>
+    <div class="recipe-line"><span class="k">不锈钢盆×6-8个（腌制/配料/装盘）</span><span class="v" style="font-weight:600;color:#3a322a">¥60-120</span></div>
+    <div class="recipe-line"><span class="k">漏勺/炸篮/食品夹/油滤网</span><span class="v" style="font-weight:600;color:#3a322a">¥40-80</span></div>
+    <div class="recipe-line"><span class="k">电子秤（精确到0.1g/1g双量程）</span><span class="v" style="font-weight:600;color:#3a322a">¥50-100</span></div>
+    <div class="recipe-line"><span class="k">储油罐 20L（过滤后储油用）</span><span class="v" style="font-weight:600;color:#3a322a">¥30-60</span></div>
+    <div class="recipe-line"><span class="k">油过滤漏斗+滤纸</span><span class="v" style="font-weight:600;color:#3a322a">¥20-40</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 门店配套（选择项）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #D4A574">
+    <div class="recipe-line"><span class="k">排烟系统（强力型·辣子鸡油烟重）</span><span class="v" style="font-weight:600;color:#3a322a">¥800-2000</span></div>
+    <div class="recipe-line"><span class="k">消毒柜/冰箱/冷藏展示柜</span><span class="v" style="font-weight:600;color:#3a322a">¥1500-3000</span></div>
+    <div class="recipe-line"><span class="k">桌椅 8-12套</span><span class="v" style="font-weight:600;color:#3a322a">¥1200-2500</span></div>
+    <div class="recipe-line"><span class="k">收银系统/扫码点餐</span><span class="v" style="font-weight:600;color:#3a322a">¥300-800</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 首批耗材</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span class="k">三黄鸡/仔鸡 20kg</span><span class="v" style="font-weight:600;color:#3a322a">¥200-300</span></div>
+    <div class="recipe-line"><span class="k">干辣椒（二荆条/子弹头）10kg</span><span class="v" style="font-weight:600;color:#3a322a">¥150-200</span></div>
+    <div class="recipe-line"><span class="k">炸油（菜籽油）20L</span><span class="v" style="font-weight:600;color:#3a322a">¥160-240</span></div>
+    <div class="recipe-line"><span class="k">花椒+青花椒 500g</span><span class="v" style="font-weight:600;color:#3a322a">¥40-60</span></div>
+    <div class="recipe-line"><span class="k">调味料（生抽/料酒/盐/糖/淀粉等）</span><span class="v" style="font-weight:600;color:#3a322a">¥50-80</span></div>
+    <div class="recipe-line"><span class="k">打包盒+纸袋 500套</span><span class="v" style="font-weight:600;color:#3a322a">¥100-150</span></div>
+    <div class="recipe-line"><span class="k">烧饼/馒头面团原料 首批50个</span><span class="v" style="font-weight:600;color:#3a322a">¥30-50</span></div>
+  </div>
+
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#E8652D;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥5,000-8,000<br><span style="font-size:10px;color:#b5aaa0">已有门店基础改造</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥12,000-20,000<br><span style="font-size:10px;color:#b5aaa0">含排烟+所有厨房设备</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+      💡 枣庄辣子鸡不是摆摊品类——投资门槛明显高于炸鸡/铁板小吃。核心成本在排烟系统和控温油炸锅。如果¥5000预算不够，建议先租房后厨做外送（避开排烟投入），但注意回软问题。一台好油炸锅决定了出品质量的80%，不要省这500块钱。
+    </div>
+  </div>
+</div>
+
+<!-- ===== ⚠️ 风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><span><strong>重复用油发暗</strong>——油炸3-4轮后油色变深、有焦糊味，影响鸡丁色泽和口感。解决方案：每炸3轮过滤一次（油滤网+滤纸），每天出餐后沉淀过夜。一锅油8-10L建议最多用3天（约60-80份），超过3天换新油。油暗=鸡丁卖相黑=顾客不想吃。</span></div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><span><strong>辣椒炒糊发苦</strong>——枣庄辣子鸡的灵魂是干辣椒的香气，一旦炒糊整锅报废。小火慢炒、辣椒颜色变深红即止。宁欠勿过。如果已经有糊味，加少量糖（1-2g）可以中和部分苦味，但无法完全补救。最好的方案：严格计时器+30秒强制出锅。</span></div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><span><strong>鸡丁回软</strong>——出锅后15-20分钟鸡丁表面开始吸水回软，酥脆度直线下降。外卖配送（30分钟+）后口感从"酥脆"变成"软韧"，顾客差评率最高。解决：堂食现炸现吃；外卖用透气纸盒（不密封）、分开装辣椒和鸡丁、配食用提示"到手后建议微波或烤箱复热2分钟恢复酥脆"。</span></div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><span><strong>辣度不适口</strong>——枣庄辣子鸡默认用200g干辣椒（40%鸡重），对不吃辣的人群直接劝退。必须设3档辣度（微辣/中辣/重辣），微辣版干辣椒减至80g+增加花椒占比。点餐时主动询问辣度偏好——很多顾客不知道枣庄辣子鸡这么辣。</span></div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><span><strong>出餐慢</strong>——双油炸+炒辣椒+合炒，一份辣子鸡至少8-10分钟。高峰期10份以上同时点单时后厨容易崩。预解决方案：腌料提前批量腌制（3-5份/批）、炸好一批鸡丁放保温（60℃烤箱）、辣椒段提前剪好分装、高峰期提前炸好第一批鸡丁半成品。</span></div>
+</div>
+
+<!-- ===== 📈 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">双油炸+干辣椒体系=天然技术壁垒，非3天能学会</div>
+      <div class="t-item">干辣椒占比高＝食材成本结构优（辣椒比鸡肉便宜）</div>
+      <div class="t-item">干香型口感不上火，复购率高</div>
+      <div class="t-item">视觉冲击强：辣椒堆成山看着就值</div>
+      <div class="t-item">配主食（烧饼/馒头）拉高客单价</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">技术门槛在炒鸡品类中最高，劝退率大</div>
+      <div class="t-item">投资门槛高（排烟+油炸锅），不适合摆摊</div>
+      <div class="t-item">外卖适应性差，回软快</div>
+      <div class="t-item">油烟大，选址受环保限制</div>
+      <div class="t-item">出餐慢，高峰期翻台率受限制</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>枣庄辣子鸡处于\"北菜南下\"扩张期——山东以外市场认知在快速提升，竞争远不如重庆辣子鸡激烈。<br>
+    如果你是鲁菜/山东菜背景、有后厨经验、在北京/上海/深圳等一线城市开店——枣庄辣子鸡是「降维打击」的差异化好品：本地人没吃过这个流派、价格敢定高、复购靠干香口感拉回来。<br>
+    但如果你是从零起步、没有烹饪基础——<strong>不要碰辣子鸡。</strong>双油炸+辣椒火候+合炒节奏，至少需要30-50次实操才能稳定出品。同样的精力和投资，做黄焖鸡/大盘鸡能更快回本。<br>
+    一句话：<strong>如果你找得到懂枣庄辣子鸡的师傅——做。全靠自己摸索——别碰。</strong>
+  </div>
+</div>
+
+<!-- ===== 🧠 沧林判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      枣庄辣子鸡是我做的炒鸡系列中<strong>技术门槛最高、但也是利润最好的流派</strong>。<br><br>
+      为什么？因为双油炸+干辣椒多这个组合天然就有了"模仿壁垒"——不是随便一个师傅看两眼就能学会的。而山东以外市场对这个品类的认知还处于"辣子鸡≈重庆辣子鸡"的阶段，枣庄版切入有信息差红利。<br><br>
+      但如果你没有后厨基础、没有温度计使用习惯、对\"160℃ vs 190℃\"没有感知——<strong>至少花2周专门练习双油炸</strong>。我见过太多人第一次炸出来的鸡丁不是没熟就是炸过头发黑。<br><br>
+      利润结构的核心秘密：<strong>辣椒比鸡肉便宜得多</strong>——干辣椒一斤¥15-20可以出5份量的辣椒段，而鸡肉一斤¥10-12只能出1份。所以辣椒占比越高的菜，食材成本率越低。枣庄辣子鸡（鸡:辣椒≈2:1）食材成本率约18-22%，在所有炒鸡品类中最低。这就是为什么技术门槛越高、利润越好的原因——高门槛挡掉了对手，低食材成本保证了利润。<br><br>
+      如果你决定入这个品类，我的建议：先找一个山东枣庄的师傅学基本功（¥3000-5000学费），或者至少看50+个教学视频、做30次实操再到门店试营业。这个品类不值得自己从零摸索——<strong>前人的翻车经验值回票价。</strong>
+    </div>
+    <div class="j-tags">
+      <span>#枣庄辣子鸡</span>
+      <span>#山东第二大流派</span>
+      <span>#双油炸</span>
+      <span>#干香型</span>
+      <span>#炒鸡利润王</span>
+      <span>#技术门槛最高</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 完整数据包（锁内预览） ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">💎 完整数据包（预览）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;color:#4a3f35;line-height:1.7;margin-bottom:6px;border-left:3px solid #C0392B">
+    <strong>📦 付费解锁内容包含：</strong><br><br>
+    ✅ <strong>精确双油炸温度曲线</strong>——每10℃的油温对应鸡丁状态对照表，连续出餐20份的油温恢复周期<br>
+    ✅ <strong>3档辣度配方（微辣/中辣/重辣）</strong>——每档精确到g的干辣椒量、花椒量、其他香料调整<br>
+    ✅ <strong>枣庄版专用撒料配方</strong>——与重庆版完全不同的香料体系（更侧重干香而非麻）<br>
+    ✅ <strong>批量SOP（5份/10份/20份版）</strong>——腌制、炸制、炒辣椒、合炒的量化时间表<br>
+    ✅ <strong>翻车方案</strong>——油暗/辣椒苦/鸡回软/辣度不适/出餐慢·5套解决方案<br>
+    ✅ <strong>复热方案</strong>——外卖复热/堂食二次加热/批量预制保温·3种场景<br>
+    ✅ <strong>沧林踩坑实录</strong>——从第一次炸糊到日售50份的完整翻车日志<br>
+    全部数据基于50+次实操累积，精确到°C和秒。
+  </div>
+</div>
+
+<!-- ===== 🔒 付费区 ===== -->
+<div style="padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#C0392B;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+</div>
+
+<!-- ===== 🔓 付费展开内容 ===== -->
+<div class="locked-section">
+
+<div style="padding:16px 18px;border-bottom:1px solid #eee5d8">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#C0392B;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+
+  <!-- 1️⃣ 双油炸温度曲线 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 精确双油炸温度曲线 — 连续出餐对照表</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>出餐轮次</span><span style="text-align:center">油温状态</span><span style="text-align:center">第一炸160℃</span><span style="text-align:center">第二炸190℃</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>第1-3份</span><span style="text-align:center">新油</span><span style="text-align:center">4min·金黄</span><span style="text-align:center">2min·焦脆</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>第4-6份</span><span style="text-align:center">油温恢复慢15秒</span><span style="text-align:center">4min15s</span><span style="text-align:center">2min15s</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>第7-10份</span><span style="text-align:center">需停火升温30秒</span><span style="text-align:center">4min30s</span><span style="text-align:center">2min30s</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>第11-15份</span><span style="text-align:center">油色变深·需过滤</span><span style="text-align:center">4min45s</span><span style="text-align:center">2min30s</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1.2fr">
+      <span>第16-20份</span><span style="text-align:center">强制换油节点</span><span style="text-align:center">5min+</span><span style="text-align:center">3min+</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 连续出餐时油温下降明显，每3轮后需增加炸制时间约10-15秒。第10份后建议停火1分钟让油温回升。使用双缸油炸锅可以一个缸炸第一遍、另一个缸炸第二遍，油温更稳定。油色深度标准对照：浅琥珀色=新油可用→深琥珀色=需过滤→棕黑色=必须换油。
+  </div>
+
+  <!-- 2️⃣ 3档辣度配方 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">2️⃣ 3档辣度配方（每份鸡400g基准）</div>
+
+  <div style="background:#fef2ee;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #E8652D;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🌶️ 微辣版（适合不吃辣/儿童·预计占比30%）：</strong>
+    <div class="recipe-line"><span class="k">干辣椒（二荆条·香气型）</span><span class="v">80g</span></div>
+    <div class="recipe-line"><span class="k">花椒</span><span class="v">5g</span></div>
+    <div class="recipe-line"><span class="k">青花椒</span><span class="v">3g</span></div>
+    <div class="recipe-line"><span class="k">额外：蒜片+姜片各+5g</span><span class="v">增香减辣感</span></div>
+    <div class="recipe-line"><span class="k">白糖+1g</span><span class="v">回甘中和辣味</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🔥 微辣版辣椒量和配比让辣度为"微辛"——能感受到辣椒香气但基本不辣。适合第一次来的顾客和带孩子的家庭。</div>
+  </div>
+
+  <div style="background:#fdf2ee;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #C0392B;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🌶️🌶️ 中辣版（走量主力·预计占比50%）：</strong>
+    <div class="recipe-line"><span class="k">干辣椒（子弹头+二荆条1:1）</span><span class="v">150g</span></div>
+    <div class="recipe-line"><span class="k">花椒</span><span class="v">6g</span></div>
+    <div class="recipe-line"><span class="k">青花椒</span><span class="v">4g</span></div>
+    <div class="recipe-line"><span class="k">辣椒粉（细）</span><span class="v">5g（合炒时撒入）</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🔥 中辣版是枣庄辣子鸡的标准版——辣度明显但不上头，配烧饼/馒头刚好。辣椒香气+鸡肉酥脆+微微的麻和辣平衡。复购最高的版本。</div>
+  </div>
+
+  <div style="background:#f0e6e0;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #8b1a1a;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🌶️🌶️🌶️ 重辣版（硬核食客·预计占比20%）：</strong>
+    <div class="recipe-line"><span class="k">干辣椒（朝天椒+子弹头1:1）</span><span class="v">250g</span></div>
+    <div class="recipe-line"><span class="k">花椒</span><span class="v">8g</span></div>
+    <div class="recipe-line"><span class="k">青花椒</span><span class="v">6g</span></div>
+    <div class="recipe-line"><span class="k">辣椒粉（粗粒）</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">魔鬼椒粉（可选·增后劲）</span><span class="v">2g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🔥 重辣版是炫技版本——辣椒堆得像小山，视觉冲击拉满。辣度硬核、后劲大、配冰啤酒绝配。适合挑战型顾客和短视频拍摄。预计客诉率约5%（太辣了），但口碑传播效应强。建议在菜单标注"慎点·适合重度嗜辣者"。</div>
+  </div>
+
+  <!-- 3️⃣ 批量SOP -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">3️⃣ 批量SOP — 5份/10份/20份版</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span>项目\批量</span><span style="text-align:center">5份</span><span style="text-align:center">10份</span><span style="text-align:center">20份</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">鸡肉总量</span><span style="text-align:center">2kg</span><span style="text-align:center">4kg</span><span style="text-align:center">8kg</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">干辣椒总量</span><span style="text-align:center">1kg</span><span style="text-align:center">2kg</span><span style="text-align:center">4kg</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">腌制耗时</span><span style="text-align:center">15min</span><span style="text-align:center">20min</span><span style="text-align:center">30min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">油炸耗时</span><span style="text-align:center">20min</span><span style="text-align:center">35min</span><span style="text-align:center">65min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">炒制出餐</span><span style="text-align:center">15min</span><span style="text-align:center">25min</span><span style="text-align:center">50min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">总耗时</span><span style="text-align:center;color:#E8652D;font-weight:700">50min</span><span style="text-align:center;color:#E8652D;font-weight:700">80min</span><span style="text-align:center;color:#C0392B;font-weight:700">145min</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">预估净利</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥120-250</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥250-500</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥500-1000</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 批量关键：腌制可以提前1天、冷藏腌制（12h内不影响口感）。辣椒段可以提前剪好分装（每份独立包装）。鸡丁炸好后可以放60℃保温烤箱最多30分钟——超过30分钟建议重新过油10秒恢复酥脆。高峰期建议采用"炸制+炒制分离"模式——一个师傅专门炸鸡丁（批量炸好一批），另一个师傅专门炒制（辣椒+合炒），效率翻倍。
+  </div>
+
+  <!-- 4️⃣ 翻车方案 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">4️⃣ 翻车解决方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #E8652D;margin-bottom:8px">
+    <strong>🆘 重复用油发暗：</strong><br>
+    原因：油炸次数过多、油温过高、面渣过多<br>
+    解决：每3轮过滤一次（油滤网+滤纸）；每天下斑前静置沉淀过夜；加少量土豆片（3-5片）低温120℃炸3分钟可以吸附油渣提亮油色；油色达深琥珀色后必须换油（约3天/60-80份）<br><br>
+    <strong>🆘 辣椒炒糊发苦：</strong><br>
+    原因：火太大/时间超过35秒/锅底残渣焦化<br>
+    解决：小火是铁律；炒之前的锅要擦干净（不能用刚炸完的锅直接炒辣椒——锅底残渣高温会焦）；如果已经糊了：加2g白糖+5ml醋可以中和苦味，加一把新鲜辣椒段也可以盖味（但最稳妥是重做）<br><br>
+    <strong>🆘 鸡丁回软：</strong><br>
+    原因：合炒时间太长/调味酱汁太湿/出锅后放置太久<br>
+    解决：合炒≤20秒（计时器用起来）；调味料干撒不加水（盐+味精+白糖干撒）；出锅后不要盖盖闷着；预订多的批次炸好后先放60℃烤箱（不盖盖）；外卖分开装辣椒和鸡丁<br><br>
+    <strong>🆘 辣度不适口：</strong><br>
+    方案A：主动提供3档辣度选择<br>
+    方案B：顾客说太辣→加配一份烧饼/馒头/米饭（免费或低价，服务态度拉满）<br>
+    方案C：备一罐"减辣粉"（白糖50g+花生粉30g+芝麻20g研磨混合），撒入可降辣感40%<br><br>
+    <strong>🆘 出餐慢：</strong><br>
+    原因：单份制作时间8-10分钟，高峰期5份以上同时点单就卡<br>
+    方案A：提前2小时批量炸好鸡丁（放60℃烤箱保温）<br>
+    方案B：辣椒段提前剪好分装（每份独立包装）<br>
+    方案C：高峰期采用"流水线法"——A炸鸡→B炒辣椒→C合炒，三人协作目标5分钟/份<br>
+    方案D：如果在午晚高峰前额外炸好一批鸡丁半成品，高峰时可以缩短至5-6分钟/份<br>
+  </div>
+
+  <!-- 5️⃣ 复热方案 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">5️⃣ 复热方案 — 3种场景恢复酥脆</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #5a8f3c;margin-bottom:8px">
+    <strong>✅ 场景一·外卖复热（顾客到家）：</strong><br>
+    方法A（最佳）：烤箱150℃预热→鸡丁铺平烤盘（不要叠放）→烤5分钟→取出→辣椒段另外微波20秒→合在一起。酥脆恢复率85%。<br>
+    方法B（备选）：平底锅不加油→中火烧热→放入鸡丁→小火干焙2-3分钟→翻面再焙2分钟。酥脆恢复率70%。<br>
+    方法C（不推荐）：微波炉高火1分钟——会彻底软掉，不如不做。<br>
+    建议在打包盒上贴食用提示卡："酥脆恢复小贴士：烤箱150℃烤5分钟=最佳口感"<br><br>
+    <strong>✅ 场景二·堂食二次加热（顾客要求加辣/加量）：</strong><br>
+    方法：油锅升温至170℃→回炸30秒→捞出→跟新鲜辣椒段快速翻炒10秒→出锅。口感能恢复到新鲜出品的90%。注意不能回炸超过40秒——鸡丁会变老。<br><br>
+    <strong>✅ 场景三·批量预制保温（高峰期出餐方案）：</strong><br>
+    方法：鸡丁提前炸好（只炸第一遍160℃·4分钟）→放60℃烤箱保温（不盖盖·最多30分钟）→点单后再过第二遍油（190℃·2分钟）→炒辣椒合炒。这样每份出餐时间从8-10分钟缩短到3-4分钟。注意：第一炸后的鸡丁只保温30分钟，超过可以用但口感下降10%。<br>
+  </div>
+
+  <!-- 6️⃣ 沧林踩坑 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">6️⃣ 实战备注 — 沧林踩过的坑</div>
+  <div class="judge-box" style="border:1px solid #E8652D">
+    <div class="j-text">
+      • <strong>第一次炸糊——觉得自己控温很准，结果190℃直接炸成炭：</strong>没有温度计前，油温全靠"油面波动+丢一个鸡丁试"。高温油锅里丢鸡丁时油花溅出来烫到手腕，一个激灵忘了看时间，2分钟变成了4分钟。出来一锅黑炭。从那之后买了双探头温度计，一个插油里一个插鸡丁中心。<br><br>
+      • <strong>辣椒炒黑3次才明白——不是火太大，是锅没洗干净：</strong>连续3次辣椒炒出来发苦，怎么调小火都没用。后来发现是炸完鸡丁的锅底有淀粉残渣，一加热就焦化附着在辣椒上。从此多了一个步骤：炸完鸡丁后洗锅擦干再炒辣椒。简单得可笑，但翻车往往就栽在这种地方。<br><br>
+      • <strong>鸡丁回软差点毁了一个周末的生意：</strong>第一次接15份大单，炸了鸡丁提前放在保温箱里盖着盖闷了20分钟。出锅时鸡丁表皮全部变软——15份全部重做。客户等了40分钟差点退单。教训：炸好的鸡丁要放烤箱不盖盖、不堆叠、保持通风。如果后面还有10份以上订单，建议只炸熟第一遍，出单前再过第二遍。<br><br>
+      • <strong>最赚钱的发现——辣度分级带来的客单价提升：</strong>最开始只做一种辣度（默认干辣椒200g），发现很多顾客吃不完、回头率低。后来做了3档辣度后，复购率从30%涨到55%。而且"重辣版"成了天然的短视频素材——顾客拍辣椒堆成山的照片发朋友圈=免费宣传。一份重辣版成本只比中辣版多¥3的辣椒，但售价可以多¥10-15。<br><br>
+      • <strong>关于供应商：</strong>干辣椒别去超市买——¥40-60/斤还不好吃。去调味品批发市场，二荆条¥15-18/斤（提香）、子弹头¥20-25/斤（提辣）、朝天椒¥18-22/斤（提色）。批量买50斤以上可以谈到¥12-15/斤。鸡肉供应商：三黄鸡批发¥8-10/斤，仔鸡¥10-12/斤，不要买冷冻鸡胸肉——炸出来又干又柴。整鸡买回来自己剁丁，比预切鸡丁便宜30%，而且大小可控（1.5-2cm标准丁）。
+    </div>
+  </div>
+</div>
+
+</div><!-- /.locked-section -->
+
+<div class="ftr">FoodIntel AI · 沧林食品工作站 · CJ_02 枣庄辣子鸡</div>
+
+</div>
+</body>
+</html>

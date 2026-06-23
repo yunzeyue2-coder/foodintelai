@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>CJ_T01 炒鸡总纲 — 品类全景测评 · FoodIntelAI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e8e0;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 顶部评级（HZ基调·暗红色系） ===== */
+.rating-bar{background:linear-gradient(135deg,#3a322a,#2a1f18);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+/* ===== 公共section ===== */
+.section{padding:16px 18px;border-bottom:1px solid #ede0d0}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+/* ===== 项目速览（5维雷达）===== */
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.radar-item.low{background:#f0f6ec}
+.radar-item.low .stars{color:#5a8f3c}
+
+/* ===== 适合谁 ===== */
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+/* ===== 逻辑块+指标卡 ===== */
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+/* ===== 表格 ===== */
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:8px 0}
+.tb th{background:#8b1a1a;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:11px}
+.tb td{padding:5px 8px;border-bottom:1px solid #ede0d0;color:#3a2a1a;font-size:11px}
+.tb tr:nth-child(even) td{background:#faf5f0}
+.tb .hl{color:#C0392B;font-weight:700}
+.tb .hl-g{color:#5a8f3c;font-weight:700}
+
+/* ===== 赛道判断 ===== */
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+/* ===== 对比表 ===== */
+.comp-table{width:100%;border-collapse:collapse;font-size:11px;min-width:360px}
+.comp-table th{background:#8b1a1a;color:#fff;padding:8px 6px;text-align:left;font-weight:600;font-size:10px}
+.comp-table td{padding:7px 6px;border-bottom:1px solid #ede0d0;color:#3a2a1a;font-size:11px}
+.comp-table tr.current{background:#fef6ec}
+.comp-table tr.current td:first-child{color:#C0392B;font-weight:700}
+
+/* ===== 规格卡 ===== */
+.spec-card{background:#fdf8f0;border-radius:10px;padding:12px;margin:8px 0;border:1px solid #ede0d0}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#8b1a1a;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#4a3f35;line-height:1.6}
+.tip-box{background:#fff8f0;border-radius:8px;padding:10px 12px;margin:6px 0}
+.tip-box .t-label{font-size:10px;font-weight:700;color:#E8652D;margin-bottom:2px}
+.tip-box p{font-size:11px;color:#5a4f44;line-height:1.5}
+
+/* ===== 开店适配（原摆摊指数改造） ===== */
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+
+/* ===== 时间投入 ===== */
+.time-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.time-card{background:#f8f4ef;border-radius:10px;padding:10px;text-align:center}
+.time-card .t-label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.time-card .t-val{font-size:18px;font-weight:800;color:#E8652D}
+.time-card .t-desc{font-size:10px;color:#5a4f44;margin-top:2px}
+.time-total{margin-top:8px;padding:10px;background:#fef2ee;border-radius:10px;text-align:center}
+.time-total .tt-label{font-size:10px;color:#7a7269;margin-bottom:2px}
+.time-total .tt-val{font-size:22px;font-weight:800;color:#C0392B}
+.time-total .tt-sub{font-size:10px;color:#5a4f44;margin-top:2px}
+
+/* ===== 风险 ===== */
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* ===== 沧林判断 ===== */
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+/* ===== 设备清单 ===== */
+.recipe-box{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px}
+.recipe-box .recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-box .recipe-line:last-child{border-bottom:none}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+/* ===== 30天路线 ===== */
+.day-step{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:12px;color:#3a322a;margin-bottom:4px}
+.day-badge{border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0;color:#fff}
+
+/* ===== 产品结构 ===== */
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+/* ===== 付费区 ===== */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{margin-top:14px;text-align:left;border-top:1px solid #ddd4ca;padding-top:12px}
+
+/* ===== 底部 ===== */
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.consult-box{background:#3a322a;color:#fff;text-align:center;padding:16px}
+.consult-box .c-head{font-size:14px;font-weight:700;margin-bottom:4px}
+.consult-box .c-desc{font-size:11px;opacity:.7;margin-bottom:8px}
+.consult-box .c-wx{padding:8px 16px;background:rgba(255,255,255,.12);border-radius:6px;display:inline-block;font-size:13px;cursor:pointer}
+.consult-box .c-copy{font-size:10px;opacity:.5;margin-top:4px}
+
+/* ===== 付费展开配方行 ===== */
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🍗 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍗 炒鸡总纲</h1>
+  <div style="font-size:12px;color:#b5aaa0">临沂炒鸡·大盘鸡·地锅鸡·黄焖鸡·辣子鸡 — 五派全景·一锅炒天下</div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">7.8</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">A-级品类</span>
+  </div>
+  <div class="r-tagline">炒鸡是开店品类中最接地气的烟火赛道——五流派覆盖从¥3万档口到¥35万堂食全段。不是摆摊品类，是正餐模型。</div>
+  <div class="r-tags">
+    <span>🔥 品类热度TOP3</span>
+    <span>💰 ¥3-35万</span>
+    <span>📈 毛利50-60%</span>
+    <span>🍳 五派矩阵</span>
+    <span>🏪 开店适配</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览（5维雷达） ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 品类热度</div><div class="stars">★★★★★</div><div class="val">极高·全民认知</div></div>
+    <div class="radar-item"><div class="label">💰 启动成本</div><div class="stars">★★☆☆☆</div><div class="val">¥3-35万</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">毛利50-60%</div></div>
+    <div class="radar-item"><div class="label">⚔️ 竞争</div><div class="stars">★★★★☆</div><div class="val">中高·流派差异大</div></div>
+    <div class="radar-item"><div class="label">🔧 技术门槛</div><div class="stars">★★★☆☆</div><div class="val">中等·锅功关键</div></div>
+  </div>
+</div>
+
+<!-- ===== 🔥 品类定义与热度 ===== -->
+<div class="section">
+  <div class="s-title">🔥 品类定义与热度</div>
+  <div class="spec-card">
+    <div class="sc-title">什么是炒鸡品类？</div>
+    <div class="sc-body">炒鸡不是单一菜品——是中国鸡肴中「炒制工艺」的总称。覆盖五个流派：临沂炒鸡（酱香型·猛火快炒）、新疆大盘鸡（孜然香型·土豆焖炖）、苏北地锅鸡（豆瓣酱型·锅边贴饼）、鲁派黄焖鸡（酱汁标准化·快餐模型）、重庆/枣庄辣子鸡（干香型·双油炸）。五派共享同一品类基因——「鸡块+炒锅+香料+收汁」，但工艺路径完全不同。2026年全品类市场规模预估超1200亿，其中黄焖鸡占45%、大盘鸡占25%、临沂炒鸡15%、辣子鸡10%、地锅鸡5%。</div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">抖音话题播放</div>
+      <div class="m-val">380亿+</div>
+      <div class="m-sub">#炒鸡 相关话题</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">全国门店数</div>
+      <div class="m-val">12万+</div>
+      <div class="m-sub">含黄焖鸡·大盘鸡</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">年增速</div>
+      <div class="m-val">+8-12%</div>
+      <div class="m-sub">品类持续增长</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 预算¥3-8万想做餐饮开店</div>
+      <div class="fit-item fit-yes">✅ 有炒锅基本功的人</div>
+      <div class="fit-item fit-yes">✅ 想做标准化快餐（黄焖鸡模型）</div>
+      <div class="fit-item fit-yes">✅ 北方/西北城市创业者</div>
+      <div class="fit-item fit-yes">✅ 午餐+晚餐两段经营</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 南方沿海城市（鸡肴认知差异大）</div>
+      <div class="fit-item fit-no">❌ 完全不会炒锅（不是料包能解决）</div>
+      <div class="fit-item fit-no">❌ 只想做外卖（炒鸡依赖堂食体验）</div>
+      <div class="fit-item fit-no">❌ 想¥50万+快速连锁开店</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🗺️ 流派全景图（CJ_V01整合） ===== -->
+<div class="section">
+  <div class="s-title">🗺️ 流派全景图 · 五大流派对比</div>
+  <table class="tb">
+    <tr><th>维度</th><th>临沂炒鸡档口</th><th>大盘鸡堂食</th><th>地锅鸡特色</th><th>黄焖鸡快餐</th><th>辣子鸡专卖</th></tr>
+    <tr><td>投资</td><td>¥3-8万</td><td>¥15-35万</td><td>¥10-20万</td><td>¥10-20万</td><td>¥8-15万</td></tr>
+    <tr><td>面积</td><td>15-25㎡</td><td>60-100㎡</td><td>40-80㎡</td><td>30-50㎡</td><td>20-40㎡</td></tr>
+    <tr><td>员工</td><td>1-2人</td><td>3-5人</td><td>2-4人</td><td>2-3人</td><td>2-3人</td></tr>
+    <tr><td>客单价</td><td>¥35-55</td><td>¥40-68</td><td>¥38-58</td><td>¥22-32</td><td>¥38-58</td></tr>
+    <tr><td>日营业额</td><td>¥800-2000</td><td>¥2500-6000</td><td>¥1500-3500</td><td>¥1500-3500</td><td>¥1200-3000</td></tr>
+    <tr><td>毛利率</td><td class="hl">55-60%</td><td>50-55%</td><td>52-58%</td><td>50-55%</td><td>55-60%</td></tr>
+    <tr><td>净利率</td><td class="hl">20-30%</td><td>10-18%</td><td>15-20%</td><td>15-22%</td><td>18-25%</td></tr>
+    <tr><td>月净利</td><td>¥5000-18000</td><td>¥8000-30000</td><td>¥7000-20000</td><td>¥8000-20000</td><td>¥7000-20000</td></tr>
+    <tr><td>回本周期</td><td class="hl">4-8个月</td><td>8-14个月</td><td>6-12个月</td><td>6-12个月</td><td>6-10个月</td></tr>
+    <tr><td>技术门槛</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td>复制能力</td><td>⭐⭐</td><td>⭐</td><td>⭐⭐</td><td class="hl">⭐⭐⭐⭐⭐</td><td>⭐⭐⭐</td></tr>
+  </table>
+  <div class="tip-box"><div class="t-label">💡 流派选择逻辑</div><p><strong>最低门槛快速回本：</strong>临沂炒鸡档口（¥3-8万）——一个猛火灶+一口铁锅+自己炒，净利率最高20-30%。<br><strong>品牌连锁：</strong>黄焖鸡模型——杨铭宇3000+店已验证，标准化程度最高，复制能力五星。<br><strong>特色堂食：</strong>大盘鸡/地锅鸡——投资大但客单价高，有仪式感，适合聚餐。<br><strong>技术流：</strong>辣子鸡专卖——技术门槛最高（五星），但毛利55-60%+差异化壁垒最强。</p></div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是炒鸡</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">顾客买的是：烟火气 × 一锅出的满足感 × 碳水搭配（烧饼/米饭/面条）</div>
+    <div class="l-title">📈 日营收拆解（临沂炒鸡档口·日均¥1500）</div>
+    <div class="logic-item"><span>炒鸡（¥45/份×22份）</span><span class="v">¥990/天</span></div>
+    <div class="logic-item"><span>米饭/烧饼搭售（¥3-5×22份）</span><span class="v">¥88/天</span></div>
+    <div class="logic-item"><span>凉菜小食（¥8-15×15份）</span><span class="v">¥180/天</span></div>
+    <div class="logic-item"><span>饮品（¥5-8×20杯）</span><span class="v">¥140/天</span></div>
+    <div class="logic-item" style="border-top:2px solid #C0392B;padding-top:6px;margin-top:4px"><span><strong>合计日营收</strong></span><span class="v"><strong>¥1,398/天</strong></span></div>
+    <div class="logic-item"><span>食材成本（毛利55%）</span><span class="v">¥629/天</span></div>
+    <div class="logic-item"><span>房租+人工摊</span><span class="v">¥333/天</span></div>
+    <div class="logic-item"><span><strong>日净利</strong></span><span class="v" style="color:#5a8f3c"><strong>¥436/天</strong></span></div>
+  </div>
+  <div class="s-title" style="margin-top:12px">💰 月净利三档对比</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin:4px 0">
+    <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px;color:#5a4f44;border-bottom:1px solid #f0ece6"><span><strong>临沂炒鸡档口</strong>（¥3-8万·1-2人）</span><span style="font-weight:700;color:#5a8f3c">¥8,000-18,000</span></div>
+    <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px;color:#5a4f44;border-bottom:1px solid #f0ece6"><span><strong>黄焖鸡快餐</strong>（¥10-20万·2-3人）</span><span style="font-weight:700;color:#E8652D">¥8,000-20,000</span></div>
+    <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px;color:#5a4f44"><span><strong>大盘鸡堂食</strong>（¥15-35万·3-5人）</span><span style="font-weight:700;color:#C0392B">¥8,000-30,000</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">档口月净利</div>
+      <div class="m-val">¥8-18K</div>
+      <div class="m-sub">临沂炒鸡型</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">快餐月净利</div>
+      <div class="m-val">¥8-20K</div>
+      <div class="m-sub">黄焖鸡型</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">堂食月净利</div>
+      <div class="m-val">¥8-30K</div>
+      <div class="m-sub">大盘鸡型</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📈 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">品类认知成熟——中国人吃鸡5000年，不用教育市场</div>
+      <div class="t-item">流派选择丰富——从¥3万档口到¥35万堂食全覆盖</div>
+      <div class="t-item">毛利50-60%稳定，高于火锅（40-45%）低于麻辣烫（65%）</div>
+      <div class="t-item">出餐速度可控——黄焖鸡10分钟·临沂炒鸡15-20分钟</div>
+      <div class="t-item">搭配碳水（米饭/面条/烧饼）客单价拉升容易</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">技术门槛不统一——火候靠经验，新手翻车率高</div>
+      <div class="t-item">流派选择错了全盘皆输——选错流派=选错投资模型</div>
+      <div class="t-item">鸡肉价格波动大——占食材成本60-70%，直接影响毛利</div>
+      <div class="t-item">外卖适配差——炒鸡放30分钟口感掉一半</div>
+      <div class="t-item">出餐慢（15-20分钟）→午餐高峰期翻台率低</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>炒鸡品类处于<b>成熟增长期</b>——既非爆发期也非衰退期。<br>
+    黄焖鸡已进入红海（杨铭宇+竞品3000+店），临沂炒鸡正在从区域走向全国（抖音播放量暴涨），大盘鸡/地锅鸡保持稳定存量。<br>
+    <strong>核心建议：</strong>选流派>选位置>选配方。流派选对了，成功了一半。新手优先考虑临沂炒鸡档口（低成本高净利率）或黄焖鸡（标准化强）。老手做大盘鸡堂食或辣子鸡专卖（差异化壁垒最强）。<br>
+    同赛道对比：炒鸡<b>优于</b>鸡公煲（标准化低·毛利低）、<b>略逊于</b>黄焖鸡单独品类（但黄焖鸡已卷）。<b>麻辣香锅</b>（毛利更高65-70%）、<b>鸡公煲</b>（上座率低）。
+  </div>
+</div>
+
+<!-- ===== 📈 同赛道对比表（炒鸡vs黄焖鸡vs麻辣香锅vs鸡公煲） ===== -->
+<div class="section">
+  <div class="s-title">📈 同赛道对比 · 炒鸡vs近亲属品类</div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="border-radius:6px 0 0 0">项目</th>
+          <th style="text-align:center">投资</th>
+          <th style="text-align:center">难度</th>
+          <th style="text-align:center">利润</th>
+          <th style="text-align:center">竞争</th>
+          <th style="text-align:center;border-radius:0 6px 0 0">推荐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="current">
+          <td style="font-weight:700;color:#C0392B">🍗 炒鸡总纲</td>
+          <td style="text-align:center;color:#5a8f3c">★★★☆☆</td>
+          <td style="text-align:center">★★★☆☆</td>
+          <td style="text-align:center;color:#E8652D">★★★★☆</td>
+          <td style="text-align:center;color:#E8652D">★★★★☆</td>
+          <td style="text-align:center;font-weight:700;color:#E8652D">A-</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">🍛 黄焖鸡（独立）</td>
+          <td style="text-align:center">★★☆☆☆</td>
+          <td style="text-align:center;color:#5a8f3c">★☆☆☆☆</td>
+          <td style="text-align:center;color:#D4A574">★★★☆☆</td>
+          <td style="text-align:center;color:#C0392B">★★★★★</td>
+          <td style="text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="font-weight:600">🌶️ 麻辣香锅</td>
+          <td style="text-align:center">★★★★☆</td>
+          <td style="text-align:center">★★★☆☆</td>
+          <td style="text-align:center;color:#5a8f3c">★★★★★</td>
+          <td style="text-align:center;color:#E8652D">★★★★☆</td>
+          <td style="text-align:center;font-weight:700;color:#5a8f3c">A</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">🍲 鸡公煲</td>
+          <td style="text-align:center">★★★☆☆</td>
+          <td style="text-align:center">★★☆☆☆</td>
+          <td style="text-align:center;color:#D4A574">★★★☆☆</td>
+          <td style="text-align:center;color:#E8652D">★★★★☆</td>
+          <td style="text-align:center;font-weight:700;color:#D4A574">B</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="font-weight:600">🔥 火锅（鸡肉锅底）</td>
+          <td style="text-align:center">★★★★★</td>
+          <td style="text-align:center">★★★☆☆</td>
+          <td style="text-align:center;color:#D4A574">★★★☆☆</td>
+          <td style="text-align:center;color:#C0392B">★★★★★</td>
+          <td style="text-align:center;font-weight:700;color:#b5aaa0">B-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tip-box"><div class="t-label">📊 数据源</div><p>评分基于FoodIntelAI项目评估模型：投资回报30%·执行难度20%·市场竞争20%·复购能力20%·扩展空间10%。炒鸡品类以流派丰富度和投资弹性（¥3-35万宽幅）获A-评级，在鸡类赛道中综合竞争力最强。</p></div>
+</div>
+
+<!-- ===== 📈 跨赛道对比（炒鸡vs火锅vs麻辣烫vs烤鱼vs炸鸡） ===== -->
+<div class="section">
+  <div class="s-title">📈 跨赛道对比 · 炒鸡vs主流餐饮品类</div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="border-radius:6px 0 0 0">品类</th>
+          <th style="text-align:center">投资</th>
+          <th style="text-align:center">毛利</th>
+          <th style="text-align:center">标准化</th>
+          <th style="text-align:center">复购</th>
+          <th style="text-align:center">外卖适配</th>
+          <th style="text-align:center;border-radius:0 6px 0 0">综合</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="current">
+          <td style="font-weight:700;color:#C0392B">🍗 炒鸡</td>
+          <td style="text-align:center">¥3-35万</td>
+          <td style="text-align:center;color:#E8652D">50-60%</td>
+          <td style="text-align:center">⭐⭐⭐</td>
+          <td style="text-align:center;color:#E8652D">⭐⭐⭐⭐</td>
+          <td style="text-align:center">⭐⭐</td>
+          <td style="text-align:center;font-weight:700;color:#E8652D">A-</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">🔥 火锅</td>
+          <td style="text-align:center">¥30-80万</td>
+          <td style="text-align:center">40-45%</td>
+          <td style="text-align:center;color:#E8652D">⭐⭐⭐⭐</td>
+          <td style="text-align:center;color:#5a8f3c">⭐⭐⭐⭐⭐</td>
+          <td style="text-align:center;color:#5a8f3c">⭐⭐⭐⭐</td>
+          <td style="text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="font-weight:600">🥘 麻辣烫</td>
+          <td style="text-align:center;color:#5a8f3c">¥5-15万</td>
+          <td style="text-align:center;color:#5a8f3c">65-70%</td>
+          <td style="text-align:center;color:#5a8f3c">⭐⭐⭐⭐⭐</td>
+          <td style="text-align:center">⭐⭐⭐</td>
+          <td style="text-align:center;color:#5a8f3c">⭐⭐⭐⭐</td>
+          <td style="text-align:center;font-weight:700;color:#5a8f3c">A</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">🐟 烤鱼</td>
+          <td style="text-align:center">¥20-50万</td>
+          <td style="text-align:center">50-55%</td>
+          <td style="text-align:center">⭐⭐⭐</td>
+          <td style="text-align:center">⭐⭐⭐⭐</td>
+          <td style="text-align:center;color:#5a8f3c">⭐⭐⭐⭐</td>
+          <td style="text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="font-weight:600">🍗 炸鸡</td>
+          <td style="text-align:center;color:#5a8f3c">¥0.3-0.5万</td>
+          <td style="text-align:center;color:#E8652D">68-85%</td>
+          <td style="text-align:center;color:#5a8f3c">⭐⭐⭐⭐</td>
+          <td style="text-align:center">⭐⭐⭐⭐</td>
+          <td style="text-align:center;color:#5a8f3c">⭐⭐⭐⭐</td>
+          <td style="text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">💡 炒鸡的投资弹性最大（¥3-35万宽幅），毛利中等但稳定。麻辣烫标准化最高但复购一般，火锅复购最强但投资太大。炒鸡的核心竞争力在「流派矩阵」——选对流派可适配不同预算和目标。</div>
+</div>
+
+<!-- ===== 🗓️ 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线 · 临沂炒鸡档口版</div>
+  <div class="day-step" style="background:#fef2ee">
+    <span class="day-badge" style="background:#E8652D">Day 1</span>
+    <span style="flex:1">采购猛火灶+铁锅+配料，在家试做3份临沂炒鸡，跑通糖色→煸炒→焖→收汁全流程</span>
+  </div>
+  <div class="day-step" style="background:#fef6ec">
+    <span class="day-badge" style="background:#D4A574">Day 3</span>
+    <span style="flex:1">邀请15-20人试吃，调整咸度/香料配比/辣度，确定基础口味标准</span>
+  </div>
+  <div class="day-step" style="background:#fef6ec">
+    <span class="day-badge" style="background:#D4A574">Day 7</span>
+    <span style="flex:1">找3个备选铺位，谈房租/转让费/证照周期，确定选址方案</span>
+  </div>
+  <div class="day-step" style="background:#f0f6ec">
+    <span class="day-badge" style="background:#5a8f3c">Day 15</span>
+    <span style="flex:1">试营业3天——每天备20份鸡，测试实际出餐速度、人流时段、定价敏感度</span>
+  </div>
+  <div class="day-step" style="background:#eef2ff">
+    <span class="day-badge" style="background:#4f6ef7">Day 30</span>
+    <span style="flex:1">复盘全月营收数据+客流画像，决定是否增加流派/调整菜品结构/正式长期经营</span>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键判断：</strong>炒鸡开店验证期比摆摊品类长——前2周是口味调试和选址优化。如果第3周日均营收不到¥600（档口版），说明位置/口味/定价至少一个有问题。炒鸡店一旦选错位置损失比摆摊大（装修+设备投入），建议先试营业再签长期租约。
+  </div>
+</div>
+
+<!-- ===== 🛠️ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单 · 临沂炒鸡档口版</div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 固定设备（一次性投入）</div>
+  <div class="recipe-box" style="border-left:3px solid #E8652D">
+    <div class="recipe-line"><span class="k">猛火灶×1（专用炒鸡灶）</span><span class="v">¥800-1,500</span></div>
+    <div class="recipe-line"><span class="k">生铁炒锅×2（40cm+50cm）</span><span class="v">¥150-400</span></div>
+    <div class="recipe-line"><span class="k">排烟系统（小型商用）</span><span class="v">¥3,000-5,000</span></div>
+    <div class="recipe-line"><span class="k">不锈钢操作台 1.2m</span><span class="v">¥400-800</span></div>
+    <div class="recipe-line"><span class="k">冰柜（冷藏+冷冻）</span><span class="v">¥1,500-3,000</span></div>
+    <div class="recipe-line"><span class="k">电子秤（精确到g）</span><span class="v">¥30-50</span></div>
+    <div class="recipe-line"><span class="k">铁铲/漏勺/食品夹套装</span><span class="v">¥50-100</span></div>
+    <div class="recipe-line"><span class="k">不锈钢盆/收纳盒×8-10个</span><span class="v">¥60-120</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 档口配套（选择项）</div>
+  <div class="recipe-box" style="border-left:3px solid #D4A574">
+    <div class="recipe-line"><span class="k">门头招牌+灯箱</span><span class="v">¥1,500-3,000</span></div>
+    <div class="recipe-line"><span class="k">简易装修（墙砖+地砖+吊顶）</span><span class="v">¥5,000-10,000</span></div>
+    <div class="recipe-line"><span class="k">不锈钢工作服/围裙/帽子</span><span class="v">¥100-200</span></div>
+    <div class="recipe-line"><span class="k">碗具（鸡公碗/砂锅）30-50套</span><span class="v">¥600-1,200</span></div>
+    <div class="recipe-line"><span class="k">桌椅×4-6套（堂食区）</span><span class="v">¥1,000-2,000</span></div>
+    <div class="recipe-line"><span class="k">收款码牌/菜单牌/价目表</span><span class="v">¥50-100</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 首批耗材</div>
+  <div class="recipe-box" style="border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span class="k">散养公鸡 30kg（约300份）</span><span class="v">¥600-900</span></div>
+    <div class="recipe-line"><span class="k">食用油（大豆油）10L</span><span class="v">¥80-120</span></div>
+    <div class="recipe-line"><span class="k">香料全套（八角/桂皮/香叶/花椒/干辣椒等）</span><span class="v">¥100-200</span></div>
+    <div class="recipe-line"><span class="k">调味料（生抽/老抽/甜面酱/冰糖/盐等）1套</span><span class="v">¥80-150</span></div>
+    <div class="recipe-line"><span class="k">啤酒（炒鸡调味用）1箱</span><span class="v">¥60-100</span></div>
+    <div class="recipe-line"><span class="k">配菜（土豆/青椒/洋葱/蒜苗等）</span><span class="v">¥100-200</span></div>
+    <div class="recipe-line"><span class="k">米饭/烧饼/面条主食材料</span><span class="v">¥100-200</span></div>
+    <div class="recipe-line"><span class="k">打包盒/餐盒/塑料袋 500套</span><span class="v">¥150-250</span></div>
+  </div>
+
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#E8652D;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥22,000-35,000<br><span style="font-size:10px;color:#b5aaa0">临沂炒鸡档口·已有简单铺面</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥50,000-80,000<br><span style="font-size:10px;color:#b5aaa0">含装修+全部设备+3月周转</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+      💡 炒鸡开店成本集中在<strong style="color:#3a322a">排烟系统（¥3-5k）和装修（¥5-10k）</strong>，这两个不能省。排烟不好→城管找上门；装修太差→顾客进不来。建议先以档口/窗口店起步，验证模式后再升级堂食店。设备买二手可省30-50%。<br>
+      黄焖鸡快餐版设备总投入约¥50,000-80,000（含标准化设备），大盘鸡堂食版¥80,000-150,000（含后厨+前厅）。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📦 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead">
+      <span class="t-badge">引流</span>
+      <span class="t-name">临沂炒鸡·大盘鸡·黄焖鸡（选1-2个）</span>
+      <span class="t-price">¥35-55</span>
+    </div>
+    <div class="prod-tier tier-profit">
+      <span class="t-badge">利润</span>
+      <span class="t-name">地锅鸡·辣子鸡（特色款·拉高客单）</span>
+      <span class="t-price">¥48-68</span>
+    </div>
+    <div class="prod-tier tier-set">
+      <span class="t-badge">搭售</span>
+      <span class="t-name">烧饼·烩面·凉菜·饮品</span>
+      <span class="t-price">¥3-18</span>
+    </div>
+  </div>
+  <div class="tip-box"><div class="t-label">💡 产品组合策略</div><p>不建议一店做所有流派——流派太多备料复杂+出餐混乱。推荐新手选「1引流+1利润+2-3搭售」结构。例：临沂炒鸡（引流¥45）+ 辣子鸡（利润¥58）+烧饼+凉菜+饮品。先跑通一个流派再做加法。</p></div>
+</div>
+
+<!-- ===== 🔥 开店适配（原摆摊指数改造） ===== -->
+<div class="section">
+  <div class="s-title">🔥 开店适配指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">街边店</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★ 最适配</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏬</div>
+      <div class="s-name">商场/美食城</div>
+      <div class="s-bar"><div class="fill" style="width:80%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆ 适配</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">学校周边</div>
+      <div class="s-bar"><div class="fill" style="width:75%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆ 适配</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区</div>
+      <div class="s-bar"><div class="fill" style="width:60%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆ 一般</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏔️</div>
+      <div class="s-name">景区</div>
+      <div class="s-bar"><div class="fill" style="width:40%;background:#b5aaa0"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★☆☆☆ 差</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖</div>
+      <div class="s-bar"><div class="fill" style="width:35%;background:#b5aaa0"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★☆☆☆ 差</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 炒鸡是<b>开店品类</b>，不是摆摊品类。需要排烟系统+猛火灶+固定铺位。街边店适配度最高（烟火气引流+堂食体验），外卖最差（口感衰减严重）。景区店不推荐——客源不稳定+房租高。
+  </div>
+</div>
+
+<!-- ===== ⏱️ 时间投入 ===== -->
+<div class="section">
+  <div class="s-title">⏱️ 时间投入 · 临沂炒鸡档口版</div>
+  <div class="time-grid">
+    <div class="time-card">
+      <div class="t-label">备料</div>
+      <div class="t-val">2-3h</div>
+      <div class="t-desc">鸡剁块+香料配比+配菜切配+酱汁调配</div>
+    </div>
+    <div class="time-card">
+      <div class="t-label">营业</div>
+      <div class="t-val">8-10h</div>
+      <div class="t-desc">午餐11:00-14:00 + 晚餐17:00-22:00</div>
+    </div>
+    <div class="time-card">
+      <div class="t-label">收尾</div>
+      <div class="t-val">1-1.5h</div>
+      <div class="t-desc">清洗锅具+后厨清理+盘点+记账</div>
+    </div>
+  </div>
+  <div class="time-total">
+    <div class="tt-label">每日总耗时</div>
+    <div class="tt-val">11-14.5h</div>
+    <div class="tt-sub">营业时间分午晚两段·中间休息3-4h · 比摆摊品类投入大</div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">💡 炒鸡开店<b>不是副业</b>——每天10h+投入是常态。两段营业制（11-14+17-22）比全时段运营省人省力。黄焖鸡快餐版可缩短到9-11h（压力锅法出餐快）。</div>
+</div>
+
+<!-- ===== ⚠️ 最大风险（5条） ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">🔥</span><span><strong>火候不稳——炒鸡不香</strong>——炒鸡第一关是"猛火壁功"。锅要到220℃冒烟再下油、油热了下鸡。新手常见问题：不敢开大火→鸡出水→变成水煮鸡→怎么调都不好吃。火候不到位的炒鸡连香料都救不了。</span></div>
+  <div class="risk-item"><span class="r-icon">🗺️</span><span><strong>流派选错——投资模型崩盘</strong>——选流派=选投资模型。选了大盘鸡堂食但只有¥8万→装修不够→客单价上不去→亏损。选了黄焖鸡但在西北县城→没人吃黄焖鸡（本地偏好大盘鸡/地锅鸡）。流派选择是炒鸡创业的第一决策，错不起。</span></div>
+  <div class="risk-item"><span class="r-icon">⏳</span><span><strong>出餐慢——午餐高峰期翻台率崩</strong>——一份炒鸡从下单到上桌至少15分钟。午餐高峰11:30-13:00只有90分钟窗口。如果后厨只有一个人炒锅，20份单就堵死了（排队等菜→顾客等不及走了→差评）。解决办法：提前预制半成品+高峰期只做3-4个品种+备电压力锅辅助。</span></div>
+  <div class="risk-item"><span class="r-icon">📈</span><span><strong>鸡肉价格波动——毛利直接缩水5-8%</strong>——鸡肉占食材成本60-70%（散养公鸡¥20-25/kg）。禽流感/饲料涨价/节假日波动±20%是常态。2025年鸡肉价格从¥18/kg涨到¥24/kg，毛利从58%降到50%。必须有2家以上供应商做价格对冲。</span></div>
+  <div class="risk-item"><span class="r-icon">📱</span><span><strong>外卖适配差——线上流量吃不到</strong>——炒鸡放30分钟口感掉一半：鸡肉回软、酱汁凝固、香气散尽。外卖评分比堂食低0.5-1.0分是常态。对策：汤酱分离包装+顾客到家再拌+缩短配送半径不超过2km。但本质问题是炒鸡做外卖是降维体验，不能当核心收入来源。</span></div>
+</div>
+
+<!-- ===== 🧠 沧林判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>炒鸡是开店品类中最"实在"的选择之一。</strong><br><br>
+      它的优势不是数据上有多亮眼——是<b>现金流的稳定性</b>。火锅有淡旺季，麻辣烫靠走量，炸鸡受外卖平台绑架——炒鸡的客流来自<b>想吃一顿正经饭的人</b>，这个需求最稳定。<br><br>
+      但炒鸡的<b>致命陷阱是流派选择</b>。我见过投¥30万做大盘鸡堂食的、投¥5万做辣子鸡的——都是流派和资源错配。临沂炒鸡档口+¥5万启动，4个月回本，是最稳的路径。黄焖鸡做品牌连锁需要¥15万+供应链能力。大盘鸡堂食不到¥25万不要碰。<br><br>
+      <strong>核心判断：</strong>新手做炒鸡=先跑临沂炒鸡档口（¥3-8万·4-8个月回本）。不要一上来就想做品牌做连锁，先让一家店活下来。炒鸡出餐慢的本质问题是<b>后厨流程设计</b>——SOP做好了15分钟不慢。<br><br>
+      顺便说一句：炒鸡的酱料和香料配比才是护城河（见CJ_V01），不是炒锅本身。用成品酱做炒鸡的店，没有一个做起来的。
+    </div>
+    <div class="j-tags">
+      <span>#炒鸡总纲</span>
+      <span>#开店品类</span>
+      <span>#临沂炒鸡</span>
+      <span>#流派选择</span>
+      <span>#档口创业</span>
+      <span>#五派矩阵</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 完整数据包（付费区） ===== -->
+<div style="padding:16px 18px;border-top:2px dashed #ddd4ca;border-bottom:1px solid #ede0d0">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#C0392B;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 总纲解锁</span>
+  </div>
+  <div style="font-size:12px;color:#7a7269;text-align:center;margin-bottom:14px;line-height:1.5">你买的不是一个分析报告。是一套经过验证的炒鸡开店决策数据体系。</div>
+
+  <!-- 1️⃣ 多城定价 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 多城定价对比 — 一線到縣城（2026年5月）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #C0392B;margin-bottom:8px">
+    <div class="recipe-line"><span class="k"><b>一线城市</b>（北上广深）</span><span class="v">¥48-68/份</span></div>
+    <div class="recipe-line"><span class="k"><b>新一线</b>（成都/杭州/武汉/南京）</span><span class="v">¥38-55/份</span></div>
+    <div class="recipe-line"><span class="k"><b>二线城市</b>（省會）</span><span class="v">¥28-45/份</span></div>
+    <div class="recipe-line"><span class="k"><b>三線/縣城</b></span><span class="v">¥22-38/份</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      💡 临沂炒鸡定价逻辑：城市均价×0.8（走量版）到×1.2（品质版）。黄焖鸡比同城炒鸡低¥10-15，大盘鸡高¥5-10。
+    </div>
+  </div>
+
+  <!-- 2️⃣ 精确成本模型 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">2️⃣ 精确成本模型 — 每份临沂炒鸡（¥45售价）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #D4A574;margin-bottom:8px">
+    <div class="recipe-line"><span class="k">鸡肉成本（散养公鸡·300g生肉）</span><span class="v">¥7.5</span></div>
+    <div class="recipe-line"><span class="k">香料+调味料（八角/花椒/干辣椒/生抽等）</span><span class="v">¥2.0</span></div>
+    <div class="recipe-line"><span class="k">食用油+啤酒</span><span class="v">¥2.5</span></div>
+    <div class="recipe-line"><span class="k">配菜（青椒/洋葱/蒜苗等）</span><span class="v">¥1.5</span></div>
+    <div class="recipe-line"><span class="k">配套（米饭/烧饼+打包）</span><span class="v">¥1.5</span></div>
+    <div class="recipe-line" style="border-top:2px solid #C0392B;padding-top:6px"><span class="k"><b>单份总成本</b></span><span class="v" style="font-weight:800;color:#C0392B"><b>¥15.0</b></span></div>
+    <div class="recipe-line"><span class="k"><b>单份毛利</b></span><span class="v" style="font-weight:800;color:#5a8f3c"><b>¥30.0（66.7%）</b></span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      💡 实际毛利率55-60%（已含损耗率8-10%+房租人工分摊）。各流派精确成本略有不同：黄焖鸡成本¥10-12/份（鸡腿肉）+¥2-3酱汁=¥12-15，毛利50-55%。辣子鸡成本¥16-18/份（含炸油消耗），毛利55-60%。
+    </div>
+  </div>
+
+  <!-- 3️⃣ 批量SOP -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">3️⃣ 批量SOP — 档口版·30份/50份/100份</div>
+  <div style="background:#f8f4ef;border-radius:0;overflow:hidden;margin-bottom:8px">
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+      <span>工序</span><span>30份</span><span>50份</span><span>100份</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>鸡块剁切</span><span>9kg·1h</span><span>15kg·1.5h</span><span>30kg·3h</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>香料配比</span><span>0.5h</span><span>0.5h</span><span>1h</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>配菜准备</span><span>0.5h</span><span>1h</span><span>2h</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;background:#f5f0eb">
+      <span>高峰炒制</span><span>2.5h</span><span>4h</span><span>7-8h（需2灶）</span>
+    </div>
+  </div>
+
+  <!-- 4️⃣ 翻车解决方案 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">4️⃣ 翻车解决方案 — 炒鸡发柴/发苦/不出味/糖色翻车/香料焦</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #E8652D;margin-bottom:8px">
+    <strong>🆘 鸡肉发柴/咬不动：</strong><br>
+    原因：鸡品种错了（用了蛋鸡/老母鸡）/火力太大焖煮太久<br>
+    解决：临沂炒鸡用散养公鸡（4-6个月），焖8-10分钟足够。焖超过15分钟→肉柴<br><br>
+    <strong>🆘 糖色发苦/不上色：</strong><br>
+    原因：糖色炒过了（变黑了）/糖色没到火候<br>
+    解决：冰糖炒到枣红色（约160-170℃）立即下鸡——不到枣红色不上色，过了枣红色发苦。新手建议老抽代替糖色（虽然少一层焦糖香）<br><br>
+    <strong>🆘 香料炒糊整锅报废：</strong><br>
+    原因：先下香料再大火煸鸡→10秒就焦了<br>
+    解决：香料在鸡块煸3分钟之后再下（锅温降了）+小火炒香→再转大火调味<br><br>
+    <strong>🆘 酱汁不够浓稠挂不住：</strong><br>
+    原因：水加多了/收汁时间不够<br>
+    解决：加水不超过100ml/份——收汁到酱汁挂勺不断线再出锅。也可加少量水淀粉勾芡（传统临沂炒鸡不勾芡·靠糖色+酱汁自然收浓）<br><br>
+    <strong>🆘 出餐速度跟不上：</strong><br>
+    原因：高峰期单量突然增加<br>
+    解决：11:00前预制好所有料（鸡剁好焯好·香料配好·配菜备好）；12:00-13:00最忙时段使用电压力锅辅助焖鸡（比铁锅快5分钟）<br><br>
+    <strong>🆘 鸡的品种选错：</strong><br>
+    解决：临沂炒鸡=散养公鸡（紧实有嚼劲）；黄焖鸡=鸡腿肉（嫩）；辣子鸡=仔鸡/三黄鸡（嫩中带脆）；大盘鸡=三黄鸡/普通肉鸡（便宜耐炖）
+  </div>
+
+  <!-- 5️⃣ 实战备注 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">5️⃣ 实战备注 — 沧林踩过的炒鸡坑</div>
+  <div class="judge-box" style="border:1px solid #E8652D">
+    <div class="j-text">
+      • <strong>最大的坑——糖色翻车：</strong>第一次自己做临沂炒鸡，冰糖炒到琥珀色就下鸡了，结果鸡块颜色跟白煮鸡一样——没上色。后来才知道糖色必须到枣红色（一秒都不能差），从琥珀到枣红色只有10秒窗口。新手建议用老抽上色替代糖色（少一层风味但稳）。<br><br>
+      • <strong>香料顺序搞反：</strong>第一次做把所有香料一股脑先下锅大火爆炒——5秒后八角焦了，整锅报废。正确做法：香料在鸡煸完、锅温降了之后下，小火炒香再转大火。<br><br>
+      • <strong>黄焖鸡酱汁没标准化：</strong>前几次每次凭感觉调酱——今天咸了明天淡了。顾客反馈"味道不稳定"是餐饮最致命的问题。后来一次调1000ml酱汁装瓶冷藏，每次100ml，味道就稳了。<br><br>
+      • <strong>大盘鸡的土豆——永远不要提前放：</strong>土豆一定要在炒完鸡+加水烧开后才放。放早了煮成糊，放晚了不入味。切3cm块、中小火焖25-30分钟。<br><br>
+      • <strong>地锅鸡饼子贴不对：</strong>饼子太厚中间不熟、太薄掉汤里、离汤面太远蒸不熟。标准：厚5mm·直径8cm·距汤面3-4cm·盖盖15分钟。<br><br>
+      • <strong>鸡的品种选择：</strong>三黄鸡做辣子鸡太嫩（一炸就干），土鸡做黄焖鸡太老（焖不烂）。每个流派要用对鸡种。<br><br>
+      • <strong>定价参考：</strong>临沂炒鸡¥35-55/份（城市均价¥42），大盘鸡¥40-68（大份够2-3人），黄焖鸡¥22-32，地锅鸡¥38-58，辣子鸡¥38-58。同品类定价不要低过同行¥5以上——炒鸡不是低价战品类。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔒 付费区 ===== -->
+<div class="pay-area">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#C0392B;color:#fff;border-radius:4px;font-weight:600">📦 完整品类评估数据包</span>
+  </div>
+  <div class="pay-content">
+    <div class="spec-card"><div class="sc-title">📊 15城定价区间（2026年5月·临沂炒鸡¥）</div><div class="sc-body">
+      <b>一线（北上广深）：</b>¥48-68/份<br>
+      <b>新一线（成都/杭州/武汉/南京/長沙）：</b>¥38-55/份<br>
+      <b>二线（省會·合肥/濟南/鄭州等）：</b>¥28-45/份<br>
+      <b>三線/縣城：</b>¥22-38/份<br>
+      <b>黄焖鸡各城参考价差：</b>比炒鸡低¥10-15/份<br>
+      <b>大盘鸡各城参考价差：</b>比炒鸡高¥5-10/份（份量大）
+    </div></div>
+    <div class="spec-card"><div class="sc-title">📦 全量设备清单（含参考价）</div><div class="sc-body">
+      <b>猛火灶：</b>商用炒鸡灶（单灶）¥800-1500 / 双灶¥1500-3000<br>
+      <b>铁锅：</b>生铁40cm ¥80-150 / 50cm ¥120-250 / 60cm ¥180-350<br>
+      <b>排烟：</b>小型商用烟罩+风机 ¥3000-5000 / 中型 ¥6000-10000<br>
+      <b>冰柜：</b>四门不锈钢冷冻冷藏 ¥1500-3000 / 六门 ¥3000-5000<br>
+      <b>操作台：</b>1.2m不锈钢 ¥400-800 / 1.5m带层板 ¥600-1200<br>
+      <b>碗具：</b>鸡公碗×50 ¥300-600 / 砂锅×30 ¥600-1200<br>
+      <b>压力锅：</b>8L商用电磁压力锅 ¥500-1000（黄焖鸡必备）
+    </div></div>
+    <div class="spec-card"><div class="sc-title">📈 三种营收模型预测</div><div class="sc-body">
+      <b>临沂炒鸡档口模型（¥5万启动·1人）：</b><br>
+      日营收¥1,400→月租¥4,000→食材¥18,900→人工¥0（自己）→水电¥1,500→杂费¥800→<b>月净利¥16,500</b>（净利率26%）·4-8月回本<br><br>
+      <b>黄焖鸡快餐模型（¥15万启动·2-3人）：</b><br>
+      日营收¥2,500→月租¥8,000→食材¥33,750→人工¥10,000→水电¥2,500→杂费¥1,500→<b>月净利¥19,000</b>（净利率16%）·6-12月回本<br><br>
+      <b>大盘鸡堂食模型（¥25万启动·3-5人）：</b><br>
+      日营收¥4,000→月租¥15,000→食材¥54,000→人工¥18,000→水电¥3,500→杂费¥2,500→<b>月净利¥27,000</b>（净利率13%）·8-14月回本
+    </div></div>
+  </div>
+</div>
+
+<!-- ===== 📱 咨询区 ===== -->
+<div class="consult-box">
+  <div class="c-head">📱 咨询沧林</div>
+  <div class="c-desc">炒鸡总纲任何问题，直接问</div>
+  <div class="c-wx" onclick="navigator.clipboard.writeText('canglin1985')">📋 复制微信号：canglin1985</div>
+  <div class="c-copy">微信复制 · 添加好友 · 流派选择咨询</div>
+</div>
+
+<!-- ===== 📋 数据说明 ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">📋 数据说明</div>
+  <div style="font-size:10px;color:#7a7269;line-height:1.8;">
+    · 热度数据：抖音/百度指数统计（2026-06-19），#炒鸡 话题综合380亿+播放<br>
+    · 品类定义：参考各流派行业通用定义<br>
+    · 原料成本：1688批发报价+农业农村部批发市场2026年5月均价（鸡肉¥20-25/kg）<br>
+    · 售价区间：美团/大众点评各城市抽样（一线/新一线/县城·五派分别）<br>
+    · 日营收数据：行业经营案例综合<br>
+    · 毛利率：含损耗率8-10%的综合毛利率，不含固定成本摊销<br>
+    · 以上为行业调研综合·实际因城市/供应链/经营能力差异有浮动<br>
+    · 参考卡片：CJ_M01炒鸡创业母卡·CJ_V01炒鸡工艺体系
+  </div>
+</div>
+
+<div class="ftr">🍗 食品决策库 · FoodIntel AI · 炒鸡系列</div>
+
+</div>
+</body>
+</html>
