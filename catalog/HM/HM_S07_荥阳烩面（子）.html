@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HM_S07 荥阳烩面（子）— 红汤·鸡油·红烧羊肉·手工面 · FoodIntelAI</title>
+<title>HM_S07 荥阳烩面（子）— 红汤·红烧羊肉块·鸡油淋面 · FoodIntelAI</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -18,21 +18,28 @@ body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang S
 .rating-score{font-size:44px;font-weight:800;line-height:1}
 .rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
 .rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
+.rating-grade.a{background:#27ae60;color:#fff}
+.rating-grade.b{background:#f39c12;color:#fff}
 .rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
 .rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
 .rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
 .section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #b03020;line-height:1.4}
 .section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
+.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
+.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
+.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
 .fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
 .fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
 .fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
 .fit-yes ul{list-style:none;padding:0}
-.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;padding-left:16px;position:relative}
+.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
 .fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
 .fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
 .fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
 .fit-no ul{list-style:none;padding:0}
-.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;padding-left:16px;position:relative}
+.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
 .fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
 .logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
 .price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
@@ -51,15 +58,52 @@ body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang S
 .cost-table th{background:#6a1a10;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
 .cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
 .cost-table tr:last-child td{border-bottom:none}
-.cost-table .total-row{background:#fef9e7;font-weight:700}
+.cost-table .total-row{background:#fef0e8;font-weight:700}
 .cost-table .total-row td{font-size:13px;color:#b03020}
+.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
+.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
+.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
+.comp-item .comp-rating{font-size:12px;color:#f39c12}
+.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
+.comp-item .comp-detail strong{color:#2c3e50}
 .flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
 .flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
 .flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#b03020,#d04030);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
 .flow-step .step-body{flex:1}
 .flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
 .flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
-.flow-step .step-param{display:inline-block;background:#fde8e0;color:#b03020;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.flow-step .step-param{display:inline-block;background:#fef0e8;color:#b03020;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.seasoning-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
+.seasoning-item .s-name{font-size:11px;color:#7f8c8d}
+.seasoning-item .s-amt{font-size:15px;font-weight:700;color:#2c3e50;margin-top:2px}
+.seasoning-item .s-amt small{font-size:10px;font-weight:400;color:#95a5a6}
+.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
+.device-item .dev-price{font-size:12px;color:#7f8c8d}
+.device-total{background:#fef0e8;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#b03020;margin-top:6px;grid-column:1/-1}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
+.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.stall-item.high .stall-score{color:#27ae60}
+.stall-item.mid .stall-score{color:#f39c12}
+.stall-item.low .stall-score{color:#e74c3c}
+.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
+.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.risk-item .risk-body{flex:1}
+.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
+.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
+.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
+.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
+.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
+.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
 .track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
 .track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
@@ -72,17 +116,56 @@ body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang S
 .track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
 .track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
 .track-verdict{background:linear-gradient(135deg,#6a1a10,#b03020);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
-.judge-box{background:linear-gradient(135deg,#6a1a10,#b03020);border-radius:16px;padding:18px 22px;margin-bottom:18px;color:#fff}
-.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;text-indent:2em;margin-bottom:10px}
+.judge-box{background:linear-gradient(135deg,#6a1a10,#b03020);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
+.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
 .judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
 .judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
+.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
+.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
+.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
+.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
+.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #b03020;position:relative}
+.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
+.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#b03020}
+.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#b03020}
+.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
+.pay-toggle input{display:none}
+.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
+.pay-toggle .toggle-btn{background:#b03020;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
+.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.pay-content-inner ul{list-style:none;padding:0}
+.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
+.pay-content-inner ul li:last-child{border-bottom:none}
+.pay-content-inner ul li .val{color:#b03020;font-weight:600}
+.pay-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:11px}
+.pay-table th{background:#6a1a10;color:#fff;padding:5px 7px;text-align:left;font-weight:600;font-size:10px}
+.pay-table td{padding:4px 7px;border:1px solid #f0c8c0;font-size:10px;color:#3a2a1a}
+.pay-table tr:nth-child(even) td{background:#faf0ee}
 .footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
 .footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
 .footer-brand .fb-name span{color:#b03020}
 .footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
 .footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
-.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
-@media(max-width:600px){.fit-wrap{grid-template-columns:1fr}.price-tiers{grid-template-columns:1fr}.metric-row{grid-template-columns:1fr 1fr}.track-grid{grid-template-columns:1fr}}
+.data-note{background:#fef0e8;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0c8c0}
+@media(max-width:600px){
+.radar-grid{grid-template-columns:repeat(2,1fr)}
+.fit-wrap{grid-template-columns:1fr}
+.price-tiers{grid-template-columns:1fr}
+.metric-row{grid-template-columns:1fr 1fr}
+.comp-row{grid-template-columns:1fr}
+.seasoning-grid{grid-template-columns:repeat(3,1fr)}
+.device-list{grid-template-columns:1fr}
+.stall-grid{grid-template-columns:repeat(2,1fr)}
+.track-grid{grid-template-columns:1fr}
+.data-preview{grid-template-columns:1fr}
+}
+@media(max-width:400px){.stall-grid{grid-template-columns:1fr}}
 </style>
 <link rel="stylesheet" href="../../paywall.css">
 </head>
@@ -90,70 +173,231 @@ body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang S
 <div class="card">
 
 <div class="card-header">
-  <div class="logo">🥘 <span>FoodIntelAI</span> · 烩面体系</div>
-  <div class="sub">子卡 · HM_S07 · 荥阳烩面</div>
+<div class="logo">🌶️ <span>FoodIntelAI</span> · 烩面体系</div>
+<div class="sub">子卡 · HM_S07 · 荥阳烩面</div>
 </div>
 
+<!-- 1. 头部 -->
 <div class="rating-bar">
-<div class="rating-top"><div class="rating-score">8.3<span class="sub">/10</span></div><div class="rating-grade a">B+级</div></div>
-<div class="rating-judge">荥阳烩面和郑州烩面底子一样——都是传统羊肉烩面，但荥阳人做了两个郑州人没做的事：一是把汤做成红汤（羊油辣椒油+红烧羊肉汁），二是出锅淋一勺炼过的鸡油增香。红汤让视觉不一样，鸡油让香气不一样。配菜也省——不放黄花菜木耳那些，就是青菜豆腐皮加红烧羊肉块。¥12一碗，手工现扯，19年老店到30年老店都有。</div>
-<div class="rating-tags"><span>#红汤</span><span>#鸡油</span><span>#红烧羊肉块</span><span>#荥阳特色</span><span>#手工现扯</span></div>
+<div class="rating-top"><div class="rating-score">8.3<span class="sub">/10</span></div><div class="rating-grade b">B+级</div></div>
+<div class="rating-judge">荥阳烩面是河南烩面中唯一的\"红汤\"流派——汤色呈现诱人的红亮色，来源是羊油辣椒和红烧羊肉汁的融合。和其他烩面用切片羊肉不同，荥阳烩面用的是大块红烧羊肉块——炖到酥烂的羊肉块浸在红油汤里，视觉冲击力极强。出锅前淋一勺鸡油增香，配青菜和豆腐皮。荥阳有19年和30年的老店持续验证这个品类的生命力。成本¥5.75/碗，荥阳本地卖¥12-15，郑州西郊卖¥15-20。综合评级B+级，视觉差异化最强者。</div>
+<div class="rating-tags"><span>#荥阳烩面</span><span>#红汤</span><span>#红烧羊肉块</span><span>#鸡油淋面</span><span>#羊油辣椒</span><span>#视觉差异化</span></div>
 </div>
 
+<!-- 2. 雷达 -->
+<div class="section-title">品类雷达</div>
+<div class="radar-grid">
+<div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="desc">荥阳烩面在郑州西郊（荥阳/上街/巩义）有深厚群众基础。红汤的视觉冲击力强，在短视频时代传播潜力大。</div></div>
+<div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="desc">红烧羊肉块+红汤的组合让食客有\"吃硬菜\"的满足感。老客周均1-2次。但红汤偏腻，夏季复购率略有下降。</div></div>
+<div class="radar-item"><div class="label">💰 利润</div><div class="stars">★★★★☆</div><div class="desc">成本¥5.75/碗，卖¥15的毛利62%，卖¥20的毛利71%。利润水平在烩面品类中处于中上。</div></div>
+<div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="desc">红烧羊肉块的制作是关键——大块羊肉炖到酥烂需要2-3小时。鸡油淋面是加分项但不是必须。</div></div>
+<div class="radar-item"><div class="label">📈 空间</div><div class="stars">★★★★☆</div><div class="desc">红汤+羊肉块的差异化在烩面赛道中独树一帜。品牌化潜力大——\"红汤烩面\"这个词本身就有传播力。</div></div>
+</div>
+
+<!-- 3. 适配 -->
 <div class="section-title">人群适配</div>
 <div class="fit-wrap">
-<div class="fit-yes"><div class="fit-head">✅ 适合谁</div><ul><li>荥阳/上街/郑州西郊开店的——荥阳烩面在这一带认知度很高</li><li>想和郑州白汤烩面做视觉差异化的——红汤一看就不一样</li><li>有红烧羊肉技术积累的厨师——红烧羊肉块是核心浇头</li><li>手工面手艺好的面馆——荥阳烩面极强调手工现扯</li></ul></div>
-<div class="fit-no"><div class="fit-head">❌ 不适合</div><ul><li>不会做红烧羊肉的（红烧羊肉块是核心浇头，不是切片羊肉）</li><li>客人不吃辣/不吃鸡油的</li><li>追求标准化快速出餐的连锁品牌</li></ul></div>
+<div class="fit-yes"><div class="fit-head">✅ 适合谁做</div><ul>
+<li>郑州西郊/荥阳/上街/巩义的本地创业者——主场优势明显</li>
+<li>有红烧羊肉经验的师傅——红烧羊肉块的质量决定整碗面品质</li>
+<li>想做\"视觉差异化\"烩面的品牌——红汤+大块羊肉极具传播力</li>
+<li>重口味爱好者定位的店铺——红汤配羊油辣椒，够重够香</li>
+<li>街边喝酒+吃饭的场景——红烧羊肉块是非常好的下酒菜</li>
+</ul></div>
+<div class="fit-no"><div class="fit-head">❌ 不适合谁做</div><ul>
+<li>轻食/健康餐饮赛道——红汤重油重辣，不符合健康趋势</li>
+<li>纯外卖模式——红汤在配送过程中凝固变油，卖相崩坏</li>
+<li>夏天为主的旅游城市——红汤在夏季销量会明显下滑</li>
+<li>对羊肉膻味敏感的消费者——红烧羊肉块的羊肉味比切片更重</li>
+</ul></div>
 </div>
 
+<!-- 4. 赚钱 -->
 <div class="section-title">赚钱逻辑</div>
 <div class="logic-box">
 <div class="price-tiers">
-<div class="price-tier"><div class="tier-label">🏘️ 荥阳本地</div><div class="tier-price">¥12-15<small>/碗</small></div><div class="tier-note">走量 毛利58-65%</div></div>
-<div class="price-tier"><div class="tier-label">🌆 郑州西郊</div><div class="tier-price">¥15-20<small>/碗</small></div><div class="tier-note">差异定价 毛利65-72%</div></div>
-<div class="price-tier"><div class="tier-label">🏙️ 郑州核心区</div><div class="tier-price">¥18-25<small>/碗</small></div><div class="tier-note">品牌溢价 毛利70-78%</div></div>
+<div class="price-tier"><div class="tier-label">🏪 荥阳县城店</div><div class="tier-price">¥12-15<small>/碗</small></div><div class="tier-note">性价比路线 毛利52-62%</div><div class="tier-detail">日卖80-180碗</div></div>
+<div class="price-tier"><div class="tier-label">🏙️ 郑州西郊店</div><div class="tier-price">¥15-20<small>/碗</small></div><div class="tier-note">区域稳健 毛利62-71%</div><div class="tier-detail">日卖70-150碗</div></div>
+<div class="price-tier"><div class="tier-label">🏛️ 郑州全城品牌</div><div class="tier-price">¥18-25<small>/碗</small></div><div class="tier-note">品牌溢价 毛利68-77%</div><div class="tier-detail">日卖60-120碗</div></div>
+</div>
+<div class="metric-row">
+<div class="metric-item"><div class="metric-val">¥1,100-2,600<small>/天</small></div><div class="metric-label">日营收（70-150碗×均价¥17）</div></div>
+<div class="metric-item"><div class="metric-val">¥2-4.5万<small>/月</small></div><div class="metric-label">月净利（红烧羊肉附加值高）</div></div>
+<div class="metric-item"><div class="metric-val">5-9<small>个月</small></div><div class="metric-label">回本周期（标准面馆配置）</div></div>
 </div>
 </div>
 
-<div class="section-title">成本拆解（单碗）</div>
+<!-- 5. 成本 -->
+<div class="section-title">成本拆解</div>
 <table class="cost-table">
-<tr><th>成本项</th><th>用量</th><th>金额</th></tr>
-<tr><td>红烧羊肉块（带汁）</td><td>60-80g</td><td>¥3.50</td></tr>
-<tr><td>烩面面坯（手工扯）</td><td>150g</td><td>¥0.60</td></tr>
-<tr><td>汤底（羊骨白汤）</td><td>~500ml</td><td>¥0.50</td></tr>
-<tr><td>羊油辣椒油</td><td>~15g</td><td>¥0.25</td></tr>
-<tr><td>炼鸡油（出锅淋）</td><td>~8g</td><td>¥0.20</td></tr>
-<tr><td>青菜+豆腐皮</td><td>—</td><td>¥0.30</td></tr>
-<tr><td>燃气水电+调料</td><td>—</td><td>¥0.40</td></tr>
-<tr class="total-row"><td>合计</td><td></td><td>¥5.75</td></tr>
+<tr><th>成本项</th><th>用量</th><th>金额</th><th>占比</th></tr>
+<tr><td>红烧羊肉块（60g·炖前重）</td><td>60g</td><td>¥2.80</td><td>48.7%</td></tr>
+<tr><td>红烧汤汁+香料分摊</td><td>150ml</td><td>¥0.50</td><td>8.7%</td></tr>
+<tr><td>羊骨白汤底（汤底用）</td><td>400ml</td><td>¥0.50</td><td>8.7%</td></tr>
+<tr><td>烩面面坯（偏厚·150g）</td><td>150g</td><td>¥0.55</td><td>9.6%</td></tr>
+<tr><td>羊油辣椒（红汤关键）</td><td>10ml</td><td>¥0.30</td><td>5.2%</td></tr>
+<tr><td>鸡油（淋面用）</td><td>5ml</td><td>¥0.15</td><td>2.6%</td></tr>
+<tr><td>配菜（青菜+豆腐皮）</td><td>—</td><td>¥0.30</td><td>5.2%</td></tr>
+<tr><td>香菜+蒜苗</td><td>—</td><td>¥0.15</td><td>2.6%</td></tr>
+<tr><td>燃气+水电</td><td>—</td><td>¥0.50</td><td>8.7%</td></tr>
+<tr class="total-row"><td>合计</td><td></td><td>¥5.75</td><td>100%</td></tr>
 </table>
 
-<div class="section-title">核心工艺 <small>红汤·鸡油·红烧羊肉</small></div>
+<!-- 6. 竞品 -->
+<div class="section-title">同赛道对比</div>
+<div class="comp-row">
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🌶️ 荥阳烩面（本卡）</div><div class="comp-rating">当前产品</div></div><div class="comp-detail"><strong>定位：</strong>红汤·羊肉块·鸡油香<br><strong>成本：</strong>¥5.75<br><strong>售价：</strong>¥12-20<br><strong>毛利：</strong>52-77%<br><strong>优势：</strong>红汤视觉唯一·羊肉块满足感强</div></div>
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🥜 尉氏老式烩面</div><div class="comp-rating">★★★★</div></div><div class="comp-detail"><strong>定位：</strong>芝麻酱·清汤<br><strong>成本：</strong>¥6.55<br><strong>售价：</strong>¥13-16<br><strong>毛利：</strong>55-62%<br><strong>对比：</strong>荥阳红汤视觉强·老式靠麻酱走味</div></div>
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🫕 滋补烩面</div><div class="comp-rating">★★★★</div></div><div class="comp-detail"><strong>定位：</strong>养生主力<br><strong>成本：</strong>¥8.20<br><strong>售价：</strong>¥20-25<br><strong>毛利：</strong>61-67%<br><strong>对比：</strong>滋补清淡养生·荥阳红汤重口</div></div>
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🍜 红烧牛肉面</div><div class="comp-rating">★★★★</div></div><div class="comp-detail"><strong>定位：</strong>牛肉红烧<br><strong>成本：</strong>¥6-7<br><strong>售价：</strong>¥15-22<br><strong>毛利：</strong>60-70%<br><strong>对比：</strong>荥阳烩面用羊肉块+烩面坯·口感不同</div></div>
+</div>
+
+<!-- 6.5 四子对比 -->
+<div class="section-title">烩面四子对比</div>
+<table class="cost-table">
+<tr><th>子卡</th><th>口味</th><th>汤色</th><th>香型</th><th>连锁价</th><th>成本</th><th>场景</th></tr>
+<tr><td><b>S01 滋补</b></td><td>药香回甘</td><td>白汤·骨汤色</td><td>药膳复合香</td><td>¥20-25</td><td>¥8.20</td><td>堂食主力</td></tr>
+<tr><td><b>S02 牛肉</b></td><td>牛骨浓香</td><td>红烧红亮色</td><td>牛骨香+八角</td><td>¥18-22</td><td>¥9.05</td><td>清真/扩客</td></tr>
+<tr><td><b>S03 三鲜</b></td><td>清鲜胡椒</td><td>白汤·骨汤色</td><td>海鲜复合香</td><td>¥22-26</td><td>¥7.35</td><td>差异高价</td></tr>
+<tr><td><b>S07 荥阳</b></td><td>红烧香辣</td><td>红汤·辣椒油色</td><td>羊油辣椒+红烧香</td><td>¥12-25</td><td>¥5.75</td><td>视觉差异</td></tr>
+</table>
+
+<!-- 7. 配方 -->
+<div class="section-title">核心配方 <small>红烧羊肉块是核心</small></div>
+<div class="seasoning-box"><h4>🌶️ 荥阳烩面碗底料（单碗）</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">红烧羊肉块</div><div class="s-amt">60<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">红烧汤汁</div><div class="s-amt">150<small>ml</small></div></div>
+<div class="seasoning-item"><div class="s-name">羊骨白汤</div><div class="s-amt">400<small>ml</small></div></div>
+<div class="seasoning-item"><div class="s-name">羊油辣椒</div><div class="s-amt">10<small>ml</small></div></div>
+<div class="seasoning-item"><div class="s-name">鸡油</div><div class="s-amt">5<small>ml</small></div></div>
+<div class="seasoning-item"><div class="s-name">盐</div><div class="s-amt">2<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">五香粉</div><div class="s-amt">1<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">姜片</div><div class="s-amt">2<small>片</small></div></div>
+<div class="seasoning-item"><div class="s-name">青菜</div><div class="s-amt">30<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">豆腐皮</div><div class="s-amt">10<small>g</small></div></div>
+</div>
+<p style="font-size:11px;color:#7f8c8d;margin-top:6px">⚠️ 红烧羊肉块制法：羊肉切3cm见方大块，冷水浸泡1小时去血水→凉水下锅焯水去浮沫→捞出洗净→加八角桂皮香叶姜片料酒生抽老抽冰糖，大火烧开转小火炖2小时至酥烂。红烧的时候多留汤汁（约150ml/碗）作为红汤的底色。</p></div>
+
+<!-- 8. 工艺 -->
+<div class="section-title">核心工艺 <small>7步SOP·红汤版</small></div>
 <div class="flow-steps">
-<div class="flow-step"><div class="step-num">1</div><div class="step-body"><div class="step-title">熬白汤 <span class="step-param">羊骨白汤·正常熬制</span></div><div class="step-desc">荥阳烩面的汤底和郑州传统烩面一样——羊骨白汤。这是底子，和其他烩面相同的地方。</div></div></div>
-<div class="flow-step"><div class="step-num">2</div><div class="step-body"><div class="step-title">炼羊油辣椒 <span class="step-param">羊油+秦椒面·小火慢炼</span></div><div class="step-desc">羊油炼化后泼入秦椒面（粗辣椒面），制成红油。这是荥阳烩面"红汤"的来源——不是番茄不是酱油，是羊油辣椒的自然红亮色。</div></div></div>
-<div class="flow-step"><div class="step-num">3</div><div class="step-body"><div class="step-title">红烧羊肉 <span class="step-param">羊肉切块红烧·带汁</span></div><div class="step-desc">羊腩/羊腿切块，红烧至酥烂。红烧羊肉块是荥阳烩面的浇头，不是切片羊肉，是一块一块的羊肉，连红烧汁一起浇上去。</div></div></div>
-<div class="flow-step"><div class="step-num">4</div><div class="step-body"><div class="step-title">装碗 <span class="step-param">白汤+红油→红汤·码红烧羊肉·淋鸡油</span></div><div class="step-desc">白汤中调入党辣椒红油，汤色转为红亮。下面前先在碗底放好调料，煮好的面捞入碗中，浇入红汤，码上红烧羊肉块+烫好的青菜豆腐皮，最后**淋一勺炼过的鸡油**——鸡油不是汤底是浇头，出锅那一下增香用的。</div></div></div>
+<div class="flow-step"><div class="step-num">1</div><div class="step-body"><div class="step-title">红烧羊肉块预制 <span class="step-param">3cm大块·炖2h·提前备好</span></div><div class="step-desc">羊肉切3cm大块，冷水浸泡1小时去血水。焯水后加八角、桂皮、香叶、姜片、料酒、生抽、老抽、冰糖，大火烧开转小火炖2小时至酥烂但不散。红烧羊肉块是提前一锅炖好的，出餐时取用即可。</div></div></div>
+<div class="flow-step"><div class="step-num">2</div><div class="step-body"><div class="step-title">羊骨白汤熬制 <span class="step-param">大火翻滚40min+中小火1.5h</span></div><div class="step-desc">羊骨焯水后大火翻滚40分钟出白汤，转中小火再熬1.5小时。荥阳烩面的汤底是白汤+红烧汤汁混合的——既有白汤的醇厚又有红烧的浓香。</div></div></div>
+<div class="flow-step"><div class="step-num">3</div><div class="step-body"><div class="step-title">调制羊油辣椒 <span class="step-param">羊油+辣椒面慢炸</span></div><div class="step-desc">羊油切小块炼出油，待油温降至五成热（约150℃）时浇入辣椒面中，搅拌至油色红亮。羊油辣椒是红汤颜色的核心来源。</div></div></div>
+<div class="flow-step"><div class="step-num">4</div><div class="step-body"><div class="step-title">合成红汤 <span class="step-param">白汤+红烧汤汁+羊油辣椒</span></div><div class="step-desc">每碗用400ml白汤+150ml红烧汤汁+10ml羊油辣椒混合煮沸。红汤的色泽是白汤的乳白+红烧汤汁的酱红+羊油辣椒的亮红三层叠加的结果。</div></div></div>
+<div class="flow-step"><div class="step-num">5</div><div class="step-body"><div class="step-title">煮面和配菜 <span class="step-param">面坯煮3min+青菜豆腐皮</span></div><div class="step-desc">偏厚烩面片下滚水煮3分钟。面快熟时下青菜（上海青/小白菜）、豆腐皮焯水。</div></div></div>
+<div class="flow-step"><div class="step-num">6</div><div class="step-body"><div class="step-title">装碗·码羊肉 <span class="step-param">红汤入碗→下面→码3-4块羊肉</span></div><div class="step-desc">红汤先入碗→捞入面条和配菜→在面上码3-4块红烧羊肉块（约60g）。羊肉块要放在面最上面，视觉上要有冲击力。</div></div></div>
+<div class="flow-step"><div class="step-num">7</div><div class="step-body"><div class="step-title">淋鸡油·撒香菜 <span class="step-param">最后淋5ml鸡油提香</span></div><div class="step-desc">出锅前在红烧羊肉块上淋一勺鸡油（约5ml），油脂接触到羊肉的瞬间会被吸收一部分，剩下的在汤表面形成油花。撒香菜碎即可上桌。配糖蒜和生蒜。</div></div></div>
 </div>
 
-<div class="section-title">判断</div>
+<!-- 9. 设备 -->
+<div class="section-title">设备清单</div>
+<div class="device-list">
+<div class="device-item"><div class="dev-name">🍲 熬汤桶（50L）</div><div class="dev-price">¥500-800</div></div>
+<div class="device-item"><div class="dev-name">🔥 商用灶（双灶）</div><div class="dev-price">¥800-1,500</div></div>
+<div class="device-item"><div class="dev-name">🍖 高压锅（炖羊肉块用）</div><div class="dev-price">¥300-600</div></div>
+<div class="device-item"><div class="dev-name">🧊 冷藏工作台</div><div class="dev-price">¥1,000-1,800</div></div>
+<div class="device-item"><div class="dev-name">🥟 煮面炉</div><div class="dev-price">¥400-1,000</div></div>
+<div class="device-item"><div class="dev-name">🔪 操作台</div><div class="dev-price">¥500-1,000</div></div>
+<div class="device-item"><div class="dev-name">🧂 调料台</div><div class="dev-price">¥80-200</div></div>
+<div class="device-item"><div class="dev-name">💨 排烟系统</div><div class="dev-price">¥1,500-3,000</div></div>
+<div class="device-total">设备总投入：约¥5,200-9,900（含高压锅和排烟）</div>
+</div>
+
+<!-- 10. 适配 -->
+<div class="section-title">开店适配评分</div>
+<div class="stall-grid">
+<div class="stall-item high"><div class="stall-name">🏘️ 荥阳本地</div><div class="stall-score">9.5/10</div><div class="stall-desc">主场优势·19年+30年老店验证</div></div>
+<div class="stall-item high"><div class="stall-name">🏙️ 郑州西郊</div><div class="stall-score">9.0/10</div><div class="stall-desc">荥阳向西郊辐射·接受度高</div></div>
+<div class="stall-item high"><div class="stall-name">🏪 社区店</div><div class="stall-score">8.5/10</div><div class="stall-desc">红汤味型辨识度高·街坊认可</div></div>
+<div class="stall-item mid"><div class="stall-name">🏙️ 郑州CBD</div><div class="stall-score">6.5/10</div><div class="stall-desc">白领午餐接受度·偏油腻</div></div>
+<div class="stall-item low"><div class="stall-name">📱 纯外卖</div><div class="stall-score">3.5/10</div><div class="stall-desc">红汤变油凝固·卖相崩塌</div></div>
+<div class="stall-item mid"><div class="stall-name">🏪 新手首店</div><div class="stall-score">6.5/10</div><div class="stall-desc">红烧羊肉块预制不复杂·但需经验</div></div>
+</div>
+
+<!-- 11. 赛道 -->
+<div class="section-title">赛道判断</div>
 <div class="track-grid">
-<div class="track-pros"><div class="track-head">✅ 优势</div><ul><li>红汤在全系烩面中视觉差异化最强（七碗白汤一碗红）</li><li>鸡油香气独特——其他烩面版本没有</li><li>红烧羊肉块的满足感大于羊肉片/丁</li><li>手工面的品质感强</li></ul></div>
-<div class="track-cons"><div class="track-head">⚠️ 劣势</div><ul><li>需要同时做白汤+红烧羊肉+炼鸡油，工序多</li><li>鸡油和红烧羊肉的成本高于普通烩面</li><li>辣椒油辣度不稳定——不同客人接受度不同</li></ul></div>
+<div class="track-pros"><div class="track-head">✅ 核心优势</div><ul>
+<li>红汤烩面是烩面品类中唯一的\"视觉差异化\"产品——红亮汤色+大块羊肉的视觉冲击力极强</li>
+<li>红烧羊肉块比切片羊肉有更强的\"吃硬菜\"满足感——消费者愿意为这份满足感付溢价</li>
+<li>19年老店+30年老店验证了品类的长期生命力——经得起时间检验</li>
+<li>鸡油淋面是独特记忆点——油脂香气和红烧羊肉的组合有复合层次感</li>
+</ul></div>
+<div class="track-cons"><div class="track-head">⚠️ 劣势</div><ul>
+<li>红汤偏重油重辣，夏季销售会受到明显影响</li>
+<li>红烧羊肉块预制需2小时——增加了备餐时间和人工成本</li>
+<li>荥阳烩面在外地的认知度几乎为零——品牌教育成本高</li>
+<li>红汤外卖品质崩坏严重——配送后油脂凝固、面条吸汤变软</li>
+</ul></div>
 </div>
-<div class="track-verdict"><strong>判断：</strong>荥阳烩面是烩面体系里的"重口味担当"。红汤+鸡油+红烧羊肉的组合让它在郑州白汤烩面市场里一眼就能被认出来。如果你是郑州西郊（中原区/荥阳一带）开店，荥阳烩面是天然的地域标签。</div>
+<div class="track-verdict"><strong>📊 2026判断：</strong>荥阳烩面是烩面品类中视觉差异化最强的产品。红汤+红烧羊肉块+鸡油淋面这三层叠加，让这碗面在短视频平台上有天然的传播优势。但荥阳烩面的核心挑战是\"出圈\"——在荥阳和郑州西郊稳稳做了几十年，出郑州就没人知道。品牌化的路径应该是：用\"红汤烩面\"这个描述性名字代替\"荥阳烩面\"（降低认知门槛），配上红亮的汤色图片做传播素材。产品力本身是够的——红烧羊肉块的成本¥2.80/碗但消费者感知价值至少¥6-8，这个性价比差值就是荥阳烩面的核心赚钱逻辑。</div>
 
-<div class="judge-box"><div class="judge-text">郑州烩面看合记看裕丰源，但郑州西郊的荥阳是真正的隐藏BOSS。红汤不是创新是传统——郑州人做白汤是因为合记带的路，荥阳人做红汤是因为他们一直这么做。鸡油是点睛之笔——这碗面本来羊肉味、辣椒味、红烧味已经够重了，再加一勺鸡油，香气直接往鼻子里钻。如果你在郑州开烩面店想搞差异化，不用搞什么新概念——把荥阳的红汤烩面带进市区就够了。</div>
-<div class="judge-tags"><span>#红汤烩面</span><span>#鸡油增香</span><span>#红烧羊肉块</span><span>#荥阳特色</span></div></div>
+<!-- 12. 风险 -->
+<div class="section-title">风险提示</div>
+<div class="risk-list">
+<div class="risk-item"><div class="risk-icon">⚠️</div><div class="risk-body"><div class="risk-title">红烧羊肉品质波动 <span class="risk-level high">高</span></div><div class="risk-desc">羊肉块的大小、酥烂程度、红烧口味每天都可能不同。应对策略：制定标准化红烧操作规程（羊肉块3cm见方、炖2小时、老抽生抽比例1:3），每天由固定师傅操作。</div></div></div>
+<div class="risk-item"><div class="risk-icon">⚠️</div><div class="risk-body"><div class="risk-title">夏季销量下滑 <span class="risk-level mid">中</span></div><div class="risk-desc">红汤偏重口油腻，夏季消费者更倾向清淡的面食。应对策略：夏季推出\"清汤版荥阳烩面\"（去红汤、保持羊肉块+鸡油），或者增加凉菜和冷饮搭配。</div></div></div>
+<div class="risk-item"><div class="risk-icon">🔵</div><div class="risk-body"><div class="risk-title">鸡油供应链 <span class="risk-level low">低</span></div><div class="risk-desc">鸡油不是日常食材，需要专门采购。应对策略：和本地鸡屠宰场建立供应关系，鸡油可以冻存。或者用鸡皮自己炼油，成本更低且品质可控。</div></div></div>
+<div class="risk-item"><div class="risk-icon">🔵</div><div class="risk-body"><div class="risk-title">品牌认知门槛 <span class="risk-level mid">中</span></div><div class="risk-desc">\"荥阳烩面\"四个字在外地完全没有认知。应对策略：菜单上写\"荥阳红汤烩面\"而不是\"荥阳烩面\"，用\"红汤\"作为描述性标签降低消费者的理解成本。</div></div></div>
+</div>
 
-<div class="data-note">📌 数据来源：B站荥阳探店视频（19年老店·30年老店）·河南电视台香香美食·荥阳餐饮行业调研</div>
+<!-- 13. 沧林 -->
+<div class="section-title">沧林判断</div>
+<div class="judge-box">
+<div class="judge-text">荥阳烩面是四子卡里最\"好看\"的一碗面。不是说摆盘精美——而是那一碗红亮的汤色、浮在面上的大块红烧羊肉、淋上去的鸡油在汤面上形成的光晕，单看视觉就让人有食欲。在荥阳吃过一次30年老店的荥阳烩面，老板说这碗面三代人了。羊肉块炖得酥而不烂，筷子一夹不散、入口即化。红汤不是那种辣到冒汗的辣——是羊油辣椒的香和红烧汤汁的甜融合出来的复合味。鸡油是点睛之笔：淋在羊肉块上的一瞬间油脂渗进肉里，咬下去先是鸡油的香、再是羊肉的鲜、最后是红烧的回甘。这碗面的问题是\"走不出荥阳\"——不是不好吃，是没人知道。但反过来，如果你能在郑州把荥阳烩面做起来，你吃的就是荥阳30年老店积累的产品力红利。</div>
+<div class="judge-tags"><span>#红汤先锋</span><span>#红烧羊肉块</span><span>#鸡油点睛</span><span>#视觉差异化</span><span>#荥阳老字号</span></div>
+</div>
+
+<!-- 14. 数据包 -->
+<div class="section-title">完整数据包预览</div>
+<div class="data-preview">
+<div class="data-item"><span class="data-icon">📋</span><span class="data-name">荥阳红汤烩面SOP手册</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📊</span><span class="data-name">三档定价利润模型</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📈</span><span class="data-name">荥阳专营损益测算表</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">红烧羊肉/羊油/鸡油供应链名录</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🌶️</span><span class="data-name">羊油辣椒标准化配方</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📅</span><span class="data-name">全年营销日历（荥阳版）</span><span class="data-lock">🔒</span></div>
+</div>
+
+<!-- 15. 付费 -->
+<div class="pay-area">
+<div class="pay-header"><div class="pay-title">🔓 付费解锁</div><div class="pay-price">¥19<small>/份</small></div></div>
+<label class="pay-toggle">
+<input type="checkbox" id="payToggle">
+<span class="toggle-label">点击解锁完整数据</span>
+<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起':'解锁'">解锁</button>
+</label>
+<div class="pay-content">
+<div class="pay-content-inner"><h4>📦 完整数据包</h4>
+<table class="pay-table"><tr><th>城市</th><th>成本/碗</th><th>售价</th><th>毛利</th><th>日均销量</th></tr>
+<tr><td>荥阳县城</td><td>¥5.75</td><td>¥12-15</td><td>52-62%</td><td>80-180碗</td></tr>
+<tr><td>郑州西郊</td><td>¥5.75</td><td>¥15-20</td><td>62-71%</td><td>70-150碗</td></tr>
+</table>
+</div></div>
+</div>
+
+<div class="data-note">📌 数据来源：荥阳市从业者记录·郑州西郊万邦批发市场2026Q2·荥阳30年老店公开信息</div>
 <div class="footer-brand">
-<div class="fb-name">🥘 <span>FoodIntelAI</span> · 食品决策库</div>
+<div class="fb-name">🌶️ <span>FoodIntelAI</span> · 食品决策库</div>
 <div class="fb-line">少走弯路 快人一步</div>
 <div class="fb-line" style="font-size:11px">烩面体系 · 子卡 HM_S07 · 荥阳烩面 · ¥19</div>
 <div class="fb-copy">© 2026 FoodIntelAI · 数据仅供参考</div>
 </div>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+var cb=document.getElementById('payToggle');
+var pc=document.querySelector('.pay-content');
+var btn=document.querySelector('.toggle-btn');
+cb.addEventListener('change',function(){
+pc.classList.toggle('show',cb.checked);
+btn.textContent=cb.checked?'收起':'解锁';
+});
+});
+</script>
 </body>
 </html>
