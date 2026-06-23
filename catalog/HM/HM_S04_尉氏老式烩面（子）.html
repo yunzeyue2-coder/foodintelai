@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HM_S04 尉氏老式烩面（子）— 芝麻酱·清汤·羊肉丁·成本 · FoodIntelAI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.card{max-width:860px;width:100%;margin:0 auto}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;border-bottom:2px solid #e0d8cc;margin-bottom:16px}
+.card-header .logo{font-size:18px;font-weight:700;color:#2c3e50;letter-spacing:1px}
+.card-header .logo span{color:#7a5a2a}
+.card-header .sub{font-size:12px;color:#7f8c8d;background:#eae7e2;padding:2px 10px;border-radius:10px}
+.rating-bar{background:linear-gradient(135deg,#5a3e1a,#7a5a2a,#9a7a3a);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.rating-bar::before{content:'';position:absolute;top:-30px;right:-20px;width:140px;height:140px;background:rgba(255,255,255,0.04);border-radius:50%}
+.rating-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rating-score{font-size:44px;font-weight:800;line-height:1}
+.rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
+.rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
+.rating-grade.a{background:#27ae60;color:#fff}
+.rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
+.rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
+.section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #7a5a2a;line-height:1.4}
+.section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
+.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
+.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
+.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
+.fit-yes ul{list-style:none;padding:0}
+.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
+.fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
+.fit-no ul{list-style:none;padding:0}
+.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.price-tier{background:#f9f8f6;border-radius:12px;padding:14px;text-align:center;border:1px solid #e8e3dc}
+.price-tier .tier-label{font-size:13px;color:#7f8c8d;margin-bottom:4px}
+.price-tier .tier-price{font-size:22px;font-weight:800;color:#7a5a2a}
+.price-tier .tier-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.price-tier .tier-note{font-size:11px;color:#95a5a6;margin-top:4px}
+.price-tier .tier-detail{font-size:10px;color:#aaa;margin-top:2px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric-item{background:linear-gradient(135deg,#5a3e1a,#7a5a2a);border-radius:12px;padding:14px;text-align:center;color:#fff}
+.metric-item .metric-val{font-size:24px;font-weight:800}
+.metric-item .metric-val small{font-size:13px;font-weight:400;opacity:.8}
+.metric-item .metric-label{font-size:12px;opacity:.8;margin-top:2px}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px}
+.cost-table th{background:#5a3e1a;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
+.cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
+.cost-table tr:last-child td{border-bottom:none}
+.cost-table .total-row{background:#fef9e7;font-weight:700}
+.cost-table .total-row td{font-size:13px;color:#7a5a2a}
+.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
+.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
+.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
+.comp-item .comp-rating{font-size:12px;color:#f39c12}
+.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
+.comp-item .comp-detail strong{color:#2c3e50}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7a5a2a,#9a7a3a);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.flow-step .step-body{flex:1}
+.flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
+.flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
+.flow-step .step-param{display:inline-block;background:#faf0e0;color:#7a5a2a;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.seasoning-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
+.seasoning-item .s-name{font-size:11px;color:#7f8c8d}
+.seasoning-item .s-amt{font-size:15px;font-weight:700;color:#2c3e50;margin-top:2px}
+.seasoning-item .s-amt small{font-size:10px;font-weight:400;color:#95a5a6}
+.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
+.device-item .dev-price{font-size:12px;color:#7f8c8d}
+.device-total{background:#fef9e7;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#7a5a2a;margin-top:6px;grid-column:1/-1}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
+.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.stall-item.high .stall-score{color:#27ae60}
+.stall-item.mid .stall-score{color:#f39c12}
+.stall-item.low .stall-score{color:#e74c3c}
+.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
+.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.risk-item .risk-body{flex:1}
+.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
+.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
+.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
+.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
+.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
+.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
+.track-pros ul{list-style:none;padding:0}
+.track-pros ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-pros ul li::before{content:'+';color:#27ae60;position:absolute;left:0;font-weight:700}
+.track-cons{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.track-cons .track-head{font-weight:700;color:#e74c3c;font-size:14px;margin-bottom:8px}
+.track-cons ul{list-style:none;padding:0}
+.track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.track-verdict{background:linear-gradient(135deg,#5a3e1a,#7a5a2a);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
+.judge-box{background:linear-gradient(135deg,#5a3e1a,#7a5a2a);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
+.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
+.judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
+.judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
+.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
+.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
+.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
+.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
+.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #7a5a2a;position:relative}
+.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
+.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#7a5a2a}
+.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#7a5a2a}
+.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
+.pay-toggle input{display:none}
+.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
+.pay-toggle .toggle-btn{background:#7a5a2a;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
+.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.pay-content-inner ul{list-style:none;padding:0}
+.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
+.pay-content-inner ul li:last-child{border-bottom:none}
+.pay-content-inner ul li .val{color:#7a5a2a;font-weight:600}
+.pay-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:11px}
+.pay-table th{background:#5a3e1a;color:#fff;padding:5px 7px;text-align:left;font-weight:600;font-size:10px}
+.pay-table td{padding:4px 7px;border:1px solid #ede0d0;font-size:10px;color:#3a2a1a}
+.pay-table tr:nth-child(even) td{background:#faf5f0}
+.footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
+.footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
+.footer-brand .fb-name span{color:#7a5a2a}
+.footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
+.footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
+.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
+@media(max-width:600px){
+.radar-grid{grid-template-columns:repeat(2,1fr)}
+.fit-wrap{grid-template-columns:1fr}
+.price-tiers{grid-template-columns:1fr}
+.metric-row{grid-template-columns:1fr 1fr}
+.comp-row{grid-template-columns:1fr}
+.seasoning-grid{grid-template-columns:repeat(3,1fr)}
+.device-list{grid-template-columns:1fr}
+.stall-grid{grid-template-columns:repeat(2,1fr)}
+.track-grid{grid-template-columns:1fr}
+.data-preview{grid-template-columns:1fr}
+}
+@media(max-width:400px){.stall-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div class="card-header">
+  <div class="logo">🥘 <span>FoodIntelAI</span> · 烩面体系</div>
+  <div class="sub">子卡 · HM_S04 · 老式烩面</div>
+</div>
+
+<!-- 1. 头部 -->
+<div class="rating-bar">
+<div class="rating-top"><div class="rating-score">8.5<span class="sub">/10</span></div><div class="rating-grade a">A-级</div></div>
+<div class="rating-judge">老式烩面是河南烩面最原始的形态——不加药材不加海鲜，一碗清汤羊肉+芝麻酱就是全部。郑州市场连锁品牌卖¥13-16，成本仅¥6.55，是四款子卡中最便宜也是走得最多的。县域市场¥10-13的价位没有竞争对手。老式烩面的核心竞争力不是技术——是成本和走量。综合评级A-级，新手首选。</div>
+<div class="rating-tags"><span>#老式烩面</span><span>#芝麻酱核心</span><span>#成本最低¥6.55</span><span>#县域王者</span><span>#新手首选</span><span>#尉氏特色</span></div>
+</div>
+
+<!-- 2. 雷达 -->
+<div class="section-title">品类雷达</div>
+<div class="radar-grid">
+<div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="desc">老式烩面在河南本地有深厚群众基础，尤其是中老年客群和县域市场。年轻人偏爱滋补/牛肉版。</div></div>
+<div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="desc">老式烩面复购率最高的烩面品类。价格亲民（¥13-16）+芝麻酱上瘾性极强，老客周均2-3次。</div></div>
+<div class="radar-item"><div class="label">💰 利润</div><div class="stars">★★★★☆</div><div class="desc">成本¥6.55/碗，卖¥15的毛利率56%。虽然单碗利润低于滋补版，但走量大、翻台快。</div></div>
+<div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div><div class="desc">四款子卡中最简单的。清汤不需要奶白，香料包极简，配菜少。芝麻酱调制是唯一技术点。</div></div>
+<div class="radar-item"><div class="label">📈 空间</div><div class="stars">★★★★☆</div><div class="desc">县域市场没有竞品。县城里一碗¥12的老式烩面+一瓶啤酒=一顿满足的饭，¥15吃饱。这个定位无敌。</div></div>
+</div>
+
+<!-- 3. 适配 -->
+<div class="section-title">人群适配</div>
+<div class="fit-wrap">
+<div class="fit-yes"><div class="fit-head">✅ 适合谁做</div><ul>
+<li>县域市场/地级市的新手创业者——老式烩面投资最小、技术最简单</li>
+<li>预算¥5-10万的低成本创业者——设备+装修+首月运营，总投入可控</li>
+<li>想要"先跑通一家再升级"的创业者——老式烩面起步，稳定后加滋补版</li>
+<li>有面点基础的人——手工扯面技术在这里是核心竞争力</li>
+<li>中老年客群为主的社区店——老式烩面的芝麻酱味型+亲民价格正中目标客户</li>
+</ul></div>
+<div class="fit-no"><div class="fit-head">❌ 不适合谁做</div><ul>
+<li>想走高端路线的品牌店——¥13-16的价格带决定了品牌调性</li>
+<li>南方沿海城市开——烩面接受度低，芝麻酱味型更不习惯</li>
+<li>追求¥20+客单的创业者——老式烩面在天花板¥18，提不上去</li>
+<li>想快速连锁扩张的——老式烩面的核心竞争力是本地手工扯面，难以标准化复制</li>
+</ul></div>
+</div>
+
+<!-- 4. 赚钱 -->
+<div class="section-title">赚钱逻辑</div>
+<div class="logic-box">
+<div class="price-tiers">
+<div class="price-tier"><div class="tier-label">🏪 县域小店</div><div class="tier-price">¥10-13<small>/碗</small></div><div class="tier-note">极致走量 毛利47-56%</div><div class="tier-detail">日卖150-250碗</div></div>
+<div class="price-tier"><div class="tier-label">🏙️ 连锁品牌</div><div class="tier-price">¥13-16<small>/碗</small></div><div class="tier-note">低客单高周转 毛利55-62%</div><div class="tier-detail">日卖100-180碗</div></div>
+<div class="price-tier"><div class="tier-label">🏛️ 老牌子</div><div class="tier-price">¥15-18<small>/碗</small></div><div class="tier-note">品牌溢价 毛利60-64%</div><div class="tier-detail">日卖80-120碗</div></div>
+</div>
+<div class="metric-row">
+<div class="metric-item"><div class="metric-val">¥1,300-2,900<small>/天</small></div><div class="metric-label">日营收（100-180碗×均价¥15）</div></div>
+<div class="metric-item"><div class="metric-val">¥2-4万<small>/月</small></div><div class="metric-label">月净利（走量大翻台快）</div></div>
+<div class="metric-item"><div class="metric-val">4-8<small>个月</small></div><div class="metric-label">回本周期（投资低）</div></div>
+</div>
+</div>
+
+<!-- 5. 成本 -->
+<div class="section-title">成本拆解</div>
+<table class="cost-table">
+<tr><th>成本项</th><th>用量</th><th>金额</th><th>占比</th></tr>
+<tr><td>羊肉丁（55g）</td><td>55g</td><td>¥3.30</td><td>50.4%</td></tr>
+<tr><td>汤底（羊骨+香料分摊）</td><td>650ml</td><td>¥0.90</td><td>13.7%</td></tr>
+<tr><td>烩面面坯（偏厚·160g）</td><td>160g</td><td>¥0.65</td><td>9.9%</td></tr>
+<tr><td>芝麻酱25g</td><td>25g</td><td>¥0.50</td><td>7.6%</td></tr>
+<tr><td>碗底料（盐+味精+香油等）</td><td>—</td><td>¥0.20</td><td>3.1%</td></tr>
+<tr><td>配菜（粉条+豆皮+海带）</td><td>—</td><td>¥0.35</td><td>5.3%</td></tr>
+<tr><td>香菜+蒜苗</td><td>—</td><td>¥0.15</td><td>2.3%</td></tr>
+<tr><td>燃气+水电</td><td>—</td><td>¥0.50</td><td>7.6%</td></tr>
+<tr class="total-row"><td>合计</td><td></td><td>¥6.55</td><td>100%</td></tr>
+</table>
+
+<!-- 6. 竞品 -->
+<div class="section-title">同赛道对比</div>
+<div class="comp-row">
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🥜 老式烩面（本卡）</div><div class="comp-rating">当前产品</div></div><div class="comp-detail"><strong>定位：</strong>传统·走量·县域<br><strong>成本：</strong>¥6.55<br><strong>售价：</strong>¥13-16（连锁）<br><strong>毛利：</strong>55-62%<br><strong>优势：</strong>成本最低·走量最大·技术最简单</div></div>
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🫕 滋补烩面</div><div class="comp-rating">★★★★</div></div><div class="comp-detail"><strong>定位：</strong>养生主力<br><strong>成本：</strong>¥8.20<br><strong>售价：</strong>¥20-25<br><strong>毛利：</strong>61-67%<br><strong>对比：</strong>老式是走量·滋补是利润</div></div>
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🍜 普通羊肉烩面</div><div class="comp-rating">★★★★</div></div><div class="comp-detail"><strong>定位：</strong>大众日常<br><strong>成本：</strong>¥7<br><strong>售价：</strong>¥12-16<br><strong>毛利：</strong>50-60%<br><strong>对比：</strong>老式烩面以芝麻酱替代五香粉，成本更低</div></div>
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🍝 河南饸饹面/捞面</div><div class="comp-rating">★★★</div></div><div class="comp-detail"><strong>定位：</strong>北方家常面<br><strong>成本：</strong>¥4-6<br><strong>售价：</strong>¥10-15<br><strong>毛利：</strong>50-60%<br><strong>劣势：</strong>无品牌溢价·县域竞争激烈</div></div>
+</div>
+
+<!-- 6.5 四子对比 -->
+<div class="section-title">烩面四子对比</div>
+<table class="cost-table">
+<tr><th>子卡</th><th>口味</th><th>汤色</th><th>香型</th><th>连锁价</th><th>成本</th><th>场景</th></tr>
+<tr><td><b>S01 滋补</b></td><td>药香回甘</td><td>微黄</td><td>药膳复合香</td><td>¥20-25</td><td>¥8.20</td><td>堂食主力</td></tr>
+<tr><td><b>S02 牛肉</b></td><td>牛骨浓香</td><td>浅褐色</td><td>牛骨香+八</td><td>¥18-22</td><td>¥9.05</td><td>清真/扩客</td></tr>
+<tr><td><b>S03 三鲜</b></td><td>清鲜胡椒</td><td>乳白淡黄</td><td>海鲜复合香</td><td>¥22-26</td><td>¥7.35</td><td>差异高价</td></tr>
+<tr><td><b>S04 老式</b></td><td>芝麻酱香</td><td>半清汤</td><td>麻酱+香油+羊</td><td>¥13-16</td><td>¥6.55</td><td>县域走量</td></tr>
+</table>
+
+<!-- 7. 配方 -->
+<div class="section-title">核心配方 <small>芝麻酱调制是核心</small></div>
+<div class="seasoning-box"><h4>🥜 老式烩面碗底料（单碗）</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">芝麻酱</div><div class="s-amt">25<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">温水</div><div class="s-amt">30<small>ml</small></div></div>
+<div class="seasoning-item"><div class="s-name">盐</div><div class="s-amt">2.5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">味精</div><div class="s-amt">1.5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">白胡椒粉</div><div class="s-amt">1<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">香油</div><div class="s-amt">3<small>ml</small></div></div>
+<div class="seasoning-item"><div class="s-name">酱油</div><div class="s-amt">0.5<small>ml</small></div></div>
+</div>
+<p style="font-size:11px;color:#7f8c8d;margin-top:6px">⚠️ 麻酱调制关键：纯芝麻酱用50-70℃温水分次调开至酸奶稠度。冷水会成坨。</p></div>
+
+<!-- 8. 工艺 -->
+<div class="section-title">核心工艺 <small>5步SOP·极简版</small></div>
+<div class="flow-steps">
+<div class="flow-step"><div class="step-num">1</div><div class="step-body"><div class="step-title">羊骨浸泡·焯水 <span class="step-param">浸泡2h·冷水焯</span></div><div class="step-desc">老式烩面汤底是清汤，不需要大火翻滚40分钟出白汤。</div></div></div>
+<div class="flow-step"><div class="step-num">2</div><div class="step-body"><div class="step-title">羊肉切块同煮 <span class="step-param">100g/块·与骨同煮</span></div><div class="step-desc">羊肉切大块（约100g/块），与羊骨一起入锅。加清水20L、香料包、姜葱。</div></div></div>
+<div class="flow-step"><div class="step-num">3</div><div class="step-body"><div class="step-title">微沸熬制 <span class="step-param">中火·微沸·3小时</span></div><div class="step-desc">保持微沸熬3小时。第2小时捞出羊肉块（不要煮散），晾凉切1cm见方丁。</div></div></div>
+<div class="flow-step"><div class="step-num">4</div><div class="step-body"><div class="step-title">调麻酱 <span class="step-param">50-70℃温水调开</span></div><div class="step-desc">纯芝麻酱用温水分次调开至酸奶稠度。加入盐、味精、白胡椒粉、酱油、香油。</div></div></div>
+<div class="flow-step"><div class="step-num">5</div><div class="step-body"><div class="step-title">出餐装碗 <span class="step-param">麻酱碗底→浇汤→下面→码肉→撒香菜</span></div><div class="step-desc">调好的麻酱入碗→浇滚汤搅匀→下偏厚宽面煮2.5-3分钟→加粉条海带豆皮→码羊肉丁→补汤→撒大量香菜+蒜苗→上桌配羊油辣椒和糖蒜。</div></div></div>
+</div>
+
+<!-- 9. 设备 -->
+<div class="section-title">设备清单</div>
+<div class="device-list">
+<div class="device-item"><div class="dev-name">🍲 熬汤桶（40L）</div><div class="dev-price">¥400-700</div></div>
+<div class="device-item"><div class="dev-name">🔥 商用灶</div><div class="dev-price">¥600-1,200</div></div>
+<div class="device-item"><div class="dev-name">🧊 冷藏工作台</div><div class="dev-price">¥1,000-1,800</div></div>
+<div class="device-item"><div class="dev-name">🥟 煮面炉</div><div class="dev-price">¥400-1,000</div></div>
+<div class="device-item"><div class="dev-name">🔪 操作台</div><div class="dev-price">¥500-1,000</div></div>
+<div class="device-item"><div class="dev-name">🧂 调料台</div><div class="dev-price">¥80-200</div></div>
+<div class="device-total">设备总投入：约¥3,500-6,500（四子卡中最低）</div>
+</div>
+
+<!-- 10. 适配 -->
+<div class="section-title">开店适配评分</div>
+<div class="stall-grid">
+<div class="stall-item high"><div class="stall-name">🏘️ 县域市场</div><div class="stall-score">9.5/10</div><div class="stall-desc">老式烩面的主场·没有竞品</div></div>
+<div class="stall-item high"><div class="stall-name">🏪 社区店</div><div class="stall-score">9.0/10</div><div class="stall-desc">邻里复购率最高的烩面品类</div></div>
+<div class="stall-item high"><div class="stall-name">🏙️ 连锁品牌</div><div class="stall-score">8.0/10</div><div class="stall-desc">和滋补版搭配形成价格梯度</div></div>
+<div class="stall-item mid"><div class="stall-name">🛒 夜市摆摊</div><div class="stall-score">6.5/10</div><div class="stall-desc">清汤可提前备好·但出餐慢</div></div>
+<div class="stall-item low"><div class="stall-name">📱 纯外卖</div><div class="stall-score">4.5/10</div><div class="stall-desc">麻酱和面分离易坨·难维持品质</div></div>
+<div class="stall-item high"><div class="stall-name">🏪 新手首店</div><div class="stall-score">9.0/10</div><div class="stall-desc">技术最简单·投资最低·先跑通再升级</div></div>
+</div>
+
+<!-- 11. 赛道 -->
+<div class="section-title">赛道判断</div>
+<div class="track-grid">
+<div class="track-pros"><div class="track-head">✅ 核心优势</div><ul>
+<li>成本¥6.55是四子卡中最低，利润空间充足</li>
+<li>芝麻酱碗底是独一味记忆点——全郑州独此一家</li>
+<li>配菜极简是特征而非缺点——老顾客吃的就是那口麻酱+羊肉+香菜的简单组合</li>
+<li>县域市场没有竞争对手——¥10-13一碗的定位没有替代品</li>
+</ul></div>
+<div class="track-cons"><div class="track-head">⚠️ 劣势</div><ul>
+<li>价格天花板低（¥18到头），提价难</li>
+<li>芝麻酱调制的标准化难度大（每个师傅调出来味道不一样）</li>
+<li>年轻人对纯老式烩面的兴趣不如滋补版</li>
+<li>纯手工扯面技术依赖人工，难以快速复制扩店</li>
+</ul></div>
+</div>
+<div class="track-verdict"><strong>📊 2026判断：</strong>老式烩面是烩面体系里最"老"的一碗面，也是最有生命力的一碗面。它不需要讲养生故事、不需要海鲜卖点、不需要清真认证——就是一碗芝麻酱清汤羊肉面，卖¥13-16，量大管饱。在县域市场上，没有比它更合适的切入品。新手首店只上老式+滋补两款就够了——老式走量撑流水，滋补利润养品牌。</div>
+
+<!-- 12. 风险 -->
+<div class="section-title">风险提示</div>
+<div class="risk-list">
+<div class="risk-item"><div class="risk-icon">⚠️</div><div class="risk-body"><div class="risk-title">麻酱品质波动 <span class="risk-level high">高</span></div><div class="risk-desc">不同批次芝麻酱的稠度和香气差异大，直接影响成品口味。应对策略：锁定河南本地品牌（张学堂/白象），每批到货先试调再使用。</div></div></div>
+<div class="risk-item"><div class="risk-icon">⚠️</div><div class="risk-body"><div class="risk-title">定位尴尬 <span class="risk-level mid">中</span></div><div class="risk-desc">在郑州/洛阳等城市，老式烩面容易被消费者认为"太土"。应对策略：菜单上叫"尉氏老式烩面"加地名背书，强调"传统手艺"而非"土"。</div></div></div>
+<div class="risk-item"><div class="risk-icon">🔵</div><div class="risk-body"><div class="risk-title">纯手工制约 <span class="risk-level low">低</span></div><div class="risk-desc">手工扯面依赖师傅手艺。应对策略：核心时段由固定师傅扯面，非高峰期可提前扯好统一冷藏（不超过2小时）。</div></div></div>
+</div>
+
+<!-- 13. 沧林 -->
+<div class="section-title">沧林判断</div>
+<div class="judge-box">
+<div class="judge-text">四张烩面子卡里，我最喜欢的是老式烩面。不是因为它的利润最高——恰恰相反，它的单碗利润是最低的。但它是唯一一碗"不加东西"的面——没有药材、没有海鲜、没有复杂的香料，就是芝麻酱+清汤+羊肉+香菜。在到处都是"滋补""养生""海鲜"概念的餐饮市场里，老老实实做一碗¥13的面，反而成了最稀缺的事。如果你的预算只有¥5-8万，想在县城开一家面馆先跑起来，老式烩面就是最好的选择。</div>
+<div class="judge-tags"><span>#新手首选</span><span>#县域王者</span><span>#成本最低</span><span>#走量之王</span></div>
+</div>
+
+<!-- 14. 数据包 -->
+<div class="section-title">完整数据包预览</div>
+<div class="data-preview">
+<div class="data-item"><span class="data-icon">📋</span><span class="data-name">老式烩面SOP手册</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📊</span><span class="data-name">三档定价利润模型</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📈</span><span class="data-name">损益测算表</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">芝麻酱/羊肉/香料供应链</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🥜</span><span class="data-name">芝麻酱调制标准化参数</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📅</span><span class="data-name">全年营销日历</span><span class="data-lock">🔒</span></div>
+</div>
+
+<!-- 15. 付费 -->
+<div class="pay-area">
+<div class="pay-header"><div class="pay-title">🔓 付费解锁</div><div class="pay-price">¥19<small>/份</small></div></div>
+<label class="pay-toggle">
+<input type="checkbox" id="payToggle">
+<span class="toggle-label">点击解锁完整数据</span>
+<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起':'解锁'">解锁</button>
+</label>
+<div class="pay-content">
+<div class="pay-content-inner"><h4>📦 完整数据包</h4>
+<table class="pay-table"><tr><th>城市</th><th>成本/碗</th><th>售价</th><th>毛利</th><th>日均销量</th></tr>
+<tr><td>县域</td><td>¥6.55</td><td>¥10-13</td><td>47-56%</td><td>150-250碗</td></tr>
+<tr><td>地级市</td><td>¥6.55</td><td>¥13-16</td><td>55-62%</td><td>100-180碗</td></tr>
+</table>
+</div></div>
+</div>
+
+<div class="data-note">📌 数据来源：尉氏县从业者记录·郑州万邦批发市场2026Q2·河南本地芝麻酱品牌公开报价</div>
+<div class="footer-brand">
+<div class="fb-name">🥘 <span>FoodIntelAI</span> · 食品决策库</div>
+<div class="fb-line">少走弯路 快人一步</div>
+<div class="fb-line" style="font-size:11px">烩面体系 · 子卡 HM_S04 · 老式烩面 · ¥19</div>
+<div class="fb-copy">© 2026 FoodIntelAI · 数据仅供参考</div>
+</div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+var cb=document.getElementById('payToggle');
+var pc=document.querySelector('.pay-content');
+var btn=document.querySelector('.toggle-btn');
+cb.addEventListener('change',function(){
+pc.classList.toggle('show',cb.checked);
+btn.textContent=cb.checked?'收起':'解锁';
+});
+});
+</script>
+</body>
+</html>
