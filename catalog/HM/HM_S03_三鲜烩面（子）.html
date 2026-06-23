@@ -1,389 +1,391 @@
-     1|<!DOCTYPE html>
-     2|<html lang="zh-CN">
-     3|<head>
-     4|<meta charset="UTF-8">
-     5|<meta name="viewport" content="width=device-width, initial-scale=1.0">
-     6|<title>HM_S03 三鲜烩面（子）— 三骨汤·海鲜浇头·口味·成本 · FoodIntelAI</title>
-     7|<style>
-     8|*{margin:0;padding:0;box-sizing:border-box}
-     9|body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
-    10|.card{max-width:860px;width:100%;margin:0 auto}
-    11|.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;border-bottom:2px solid #e0d8cc;margin-bottom:16px}
-    12|.card-header .logo{font-size:18px;font-weight:700;color:#2c3e50;letter-spacing:1px}
-    13|.card-header .logo span{color:#0e6b82}
-    14|.card-header .sub{font-size:12px;color:#7f8c8d;background:#eae7e2;padding:2px 10px;border-radius:10px}
-    15|.rating-bar{background:linear-gradient(135deg,#0a4a5c,#0e6b82,#1496b0);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
-    16|.rating-bar::before{content:'';position:absolute;top:-30px;right:-20px;width:140px;height:140px;background:rgba(255,255,255,0.04);border-radius:50%}
-    17|.rating-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-    18|.rating-score{font-size:44px;font-weight:800;line-height:1}
-    19|.rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
-    20|.rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
-    21|.rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
-    22|.rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
-    23|.rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
-    24|.section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #0e6b82;line-height:1.4}
-    25|.section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
-    26|.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
-    27|.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
-    28|.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
-    29|.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
-    30|.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
-    31|.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
-    32|.fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
-    33|.fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
-    34|.fit-yes ul{list-style:none;padding:0}
-    35|.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
-    36|.fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
-    37|.fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
-    38|.fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
-    39|.fit-no ul{list-style:none;padding:0}
-    40|.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
-    41|.fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
-    42|.logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
-    43|.price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
-    44|.price-tier{background:#f9f8f6;border-radius:12px;padding:14px;text-align:center;border:1px solid #e8e3dc}
-    45|.price-tier .tier-label{font-size:13px;color:#7f8c8d;margin-bottom:4px}
-    46|.price-tier .tier-price{font-size:22px;font-weight:800;color:#0e6b82}
-    47|.price-tier .tier-price small{font-size:13px;font-weight:400;color:#7f8c8d}
-    48|.price-tier .tier-note{font-size:11px;color:#95a5a6;margin-top:4px}
-    49|.price-tier .tier-detail{font-size:10px;color:#aaa;margin-top:2px}
-    50|.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    51|.metric-item{background:linear-gradient(135deg,#0a4a5c,#0e6b82);border-radius:12px;padding:14px;text-align:center;color:#fff}
-    52|.metric-item .metric-val{font-size:24px;font-weight:800}
-    53|.metric-item .metric-val small{font-size:13px;font-weight:400;opacity:.8}
-    54|.metric-item .metric-label{font-size:12px;opacity:.8;margin-top:2px}
-    55|.cost-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px}
-    56|.cost-table th{background:#0a4a5c;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
-    57|.cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
-    58|.cost-table tr:last-child td{border-bottom:none}
-    59|.cost-table .total-row{background:#fef9e7;font-weight:700}
-    60|.cost-table .total-row td{font-size:13px;color:#0e6b82}
-    61|.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
-    62|.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
-    63|.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
-    64|.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
-    65|.comp-item .comp-rating{font-size:12px;color:#f39c12}
-    66|.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
-    67|.comp-item .comp-detail strong{color:#2c3e50}
-    68|.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
-    69|.flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
-    70|.flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0e6b82,#1496b0);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
-    71|.flow-step .step-body{flex:1}
-    72|.flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
-    73|.flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
-    74|.flow-step .step-param{display:inline-block;background:#e8f4f0;color:#0e6b82;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
-    75|.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
-    76|.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
-    77|.seasoning-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-    78|.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
-    79|.seasoning-item .s-name{font-size:11px;color:#7f8c8d}
-    80|.seasoning-item .s-amt{font-size:15px;font-weight:700;color:#2c3e50;margin-top:2px}
-    81|.seasoning-item .s-amt small{font-size:10px;font-weight:400;color:#95a5a6}
-    82|.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
-    83|.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
-    84|.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
-    85|.device-item .dev-price{font-size:12px;color:#7f8c8d}
-    86|.device-total{background:#fef9e7;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#0e6b82;margin-top:6px;grid-column:1/-1}
-    87|.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
-    88|.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
-    89|.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
-    90|.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
-    91|.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
-    92|.stall-item.high .stall-score{color:#27ae60}
-    93|.stall-item.mid .stall-score{color:#f39c12}
-    94|.stall-item.low .stall-score{color:#e74c3c}
-    95|.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
-    96|.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
-    97|.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
-    98|.risk-item .risk-body{flex:1}
-    99|.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
-   100|.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
-   101|.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
-   102|.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
-   103|.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
-   104|.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
-   105|.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-   106|.track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
-   107|.track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
-   108|.track-pros ul{list-style:none;padding:0}
-   109|.track-pros ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
-   110|.track-pros ul li::before{content:'+';color:#27ae60;position:absolute;left:0;font-weight:700}
-   111|.track-cons{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
-   112|.track-cons .track-head{font-weight:700;color:#e74c3c;font-size:14px;margin-bottom:8px}
-   113|.track-cons ul{list-style:none;padding:0}
-   114|.track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
-   115|.track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
-   116|.track-verdict{background:linear-gradient(135deg,#0a4a5c,#0e6b82);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
-   117|.judge-box{background:linear-gradient(135deg,#0a4a5c,#0e6b82);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
-   118|.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
-   119|.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
-   120|.judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
-   121|.judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
-   122|.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
-   123|.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
-   124|.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
-   125|.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
-   126|.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
-   127|.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #0e6b82;position:relative}
-   128|.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
-   129|.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#0e6b82}
-   130|.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#0e6b82}
-   131|.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
-   132|.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
-   133|.pay-toggle input{display:none}
-   134|.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
-   135|.pay-toggle .toggle-btn{background:#0e6b82;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
-   136|.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none}
-   137|.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
-   138|.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
-   139|.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
-   140|.pay-content-inner ul{list-style:none;padding:0}
-   141|.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
-   142|.pay-content-inner ul li:last-child{border-bottom:none}
-   143|.pay-content-inner ul li .val{color:#0e6b82;font-weight:600}
-   144|.pay-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:11px}
-   145|.pay-table th{background:#0a4a5c;color:#fff;padding:5px 7px;text-align:left;font-weight:600;font-size:10px}
-   146|.pay-table td{padding:4px 7px;border:1px solid #ede0d0;font-size:10px;color:#3a2a1a}
-   147|.pay-table tr:nth-child(even) td{background:#faf5f0}
-   148|.footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
-   149|.footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
-   150|.footer-brand .fb-name span{color:#0e6b82}
-   151|.footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
-   152|.footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
-   153|.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
-   154|@media(max-width:600px){
-   155|.radar-grid{grid-template-columns:repeat(2,1fr)}
-   156|.fit-wrap{grid-template-columns:1fr}
-   157|.price-tiers{grid-template-columns:1fr}
-   158|.metric-row{grid-template-columns:1fr 1fr}
-   159|.comp-row{grid-template-columns:1fr}
-   160|.seasoning-grid{grid-template-columns:repeat(3,1fr)}
-   161|.device-list{grid-template-columns:1fr}
-   162|.stall-grid{grid-template-columns:repeat(2,1fr)}
-   163|.track-grid{grid-template-columns:1fr}
-   164|.data-preview{grid-template-columns:1fr}
-   165|}
-   166|@media(max-width:400px){.stall-grid{grid-template-columns:1fr}}
-   167|</style>
-   168|</head>
-   169|<body>
-   170|<div class="card">
-   171|
-   172|<div class="card-header">
-   173|  <div class="logo">🥘 <span>FoodIntelAI</span> · 烩面体系</div>
-   174|  <div class="sub">子卡 · HM_S03 · 三鲜烩面</div>
-   175|</div>
-   176|
-   177|<!-- 1. 头部 -->
-   178|<div class="rating-bar">
-   179|<div class="rating-top"><div class="rating-score">7.0<span class="sub">/10</span></div><div class="rating-grade a">B-级</div></div>
-   180|<div class="rating-judge">三鲜烩面是烩面体系里最特殊的一碗——它用的不是羊骨汤，而是鸡骨+猪骨+鱼骨三骨复合汤，浇头是鱿鱼+虾仁+海参。郑州萧记的"三鲜"其实是羊肉+羊肚+羊汤，而这里是真正的海鲜三鲜。成本¥10.85/碗（全海鲜版）或¥7.35（替代版），卖¥22-26是合理区间。但这是差异化产品，出单占比不宜超过15%。</div>
-   181|<div class="rating-tags"><span>#海鲜烩面</span><span>#三骨汤</span><span>#差异高价</span><span>#白胡椒味型</span><span>#出单15%</span></div>
-   182|</div>
-   183|
-   184|<!-- 2. 雷达 -->
-   185|<div class="section-title">品类雷达</div>
-   186|<div class="radar-grid">
-   187|<div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★☆☆</div><div class="desc">海鲜+烩面的组合在河南市场认知度有限。海鲜烩面不是主流消费，需要靠差异化打出名声。</div></div>
-   188|<div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div><div class="desc">海鲜烩面复购率低于羊肉/牛肉版。消费者吃新鲜感多于日常消费，月均1-2次。</div></div>
-   189|<div class="radar-item"><div class="label">💰 利润</div><div class="stars">★★★★☆</div><div class="desc">替代版成本¥7.35，卖¥24的毛利率69%。全海鲜版成本¥10.85，卖¥30的毛利率64%。但销量低。</div></div>
-   190|<div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★★☆</div><div class="desc">三骨汤熬制比羊骨汤复杂——鸡猪鱼三种骨头处理方式不同。海鲜食材保鲜要求高。</div></div>
-   191|<div class="radar-item"><div class="label">📈 空间</div><div class="stars">★★★☆☆</div><div class="desc">差异化单品价值高但容量有限。适合作为"菜单上的惊喜"而非主力。外埠扩张有卖点。</div></div>
-   192|</div>
-   193|
-   194|<!-- 3. 适配 -->
-   195|<div class="section-title">人群适配</div>
-   196|<div class="fit-wrap">
-   197|<div class="fit-yes"><div class="fit-head">✅ 适合谁做</div><ul>
-   198|<li>已有滋补+牛肉烩面，想增加差异高价的烩面店</li>
-   199|<li>郑州商圈/商场店——海鲜烩面有面子属性，适合逛街消费</li>
-   200|<li>外埠烩面店——海鲜烩面在南方城市的接受度高于羊肉烩面</li>
-   201|<li>追求"菜单丰富度"的连锁品牌——三鲜是展示技术实力的单品</li>
-   202|</ul></div>
-   203|<div class="fit-no"><div class="fit-head">❌ 不适合谁做</div><ul>
-   204|<li>县域市场——海鲜烩面¥22+的定价在县城竞争力弱</li>
-   205|<li>新手首店——SKU少的时候先做好滋补和牛肉两款主力</li>
-   206|<li>没有稳定海鲜冻品渠道的内陆县城——海鲜品质不可控</li>
-   207|<li>只想做走量生意的——三鲜烩面注定不是走量款</li>
-   208|</ul></div>
-   209|</div>
-   210|
-   211|<!-- 4. 赚钱 -->
-   212|<div class="section-title">赚钱逻辑</div>
-   213|<div class="logic-box">
-   214|<div class="price-tiers">
-   215|<div class="price-tier"><div class="tier-label">🏪 普通小店</div><div class="tier-price">¥18-20<small>/碗</small></div><div class="tier-note">替代版 毛利56-63%</div><div class="tier-detail">日卖30-50碗</div></div>
-   216|<div class="price-tier"><div class="tier-label">🏙️ 连锁品牌</div><div class="tier-price">¥22-26<small>/碗</small></div><div class="tier-note">替代版操作 毛利64-70%</div><div class="tier-detail">日卖40-60碗</div></div>
-   217|<div class="price-tier"><div class="tier-label">👑 头牌/外埠</div><div class="tier-price">¥28-35<small>/碗</small></div><div class="tier-note">全海鲜版 品牌溢价</div><div class="tier-detail">日卖20-40碗</div></div>
-   218|</div>
-   219|<div class="metric-row">
-   220|<div class="metric-item"><div class="metric-val">¥800-1,500<small>/天</small></div><div class="metric-label">日营收（40-60碗×均价¥24）</div></div>
-   221|<div class="metric-item"><div class="metric-val">¥1-2万<small>/月</small></div><div class="metric-label">月净利</div></div>
-   222|<div class="metric-item"><div class="metric-val">差异品</div><div class="metric-label">非主力走量品</div></div>
-   223|</div>
-   224|</div>
-   225|
-   226|<!-- 5. 成本 -->
-   227|<div class="section-title">成本拆解 <small>全海鲜版 vs 替代版</small></div>
-   228|<table class="cost-table">
-   229|<tr><th>成本项</th><th>全海鲜版</th><th>替代版</th><th>说明</th></tr>
-   230|<tr><td>面条150g</td><td>¥0.80</td><td>¥0.80</td><td>相同</td></tr>
-   231|<tr><td>汤底分摊</td><td>¥0.65</td><td>¥0.65</td><td>鸡骨/猪骨/鱼骨/瑶柱</td></tr>
-   232|<tr><td>鱿鱼40g→20g</td><td>¥1.60</td><td>¥0.80</td><td>干货水发后3倍重量</td></tr>
-   233|<tr><td>虾仁40g</td><td>¥2.80</td><td>¥2.80</td><td>✅ 保留——食客最在意三鲜元素</td></tr>
-   234|<tr><td>海参25g→素替代</td><td>¥3.50</td><td>¥0.50</td><td>素海参/杏鲍菇替代</td></tr>
-   235|<tr><td>玉兰片+木耳+鹌鹑蛋+青菜</td><td>¥0.80</td><td>¥0.80</td><td>相同</td></tr>
-   236|<tr><td>碗底料</td><td>¥0.25</td><td>¥0.25</td><td>白胡椒为主</td></tr>
-   237|<tr><td>燃气+水电</td><td>¥0.45</td><td>¥0.35</td><td>—</td></tr>
-   238|<tr class="total-row"><td>合计</td><td>¥10.85</td><td>¥7.35</td><td>推荐替代版操作</td></tr>
-   239|</table>
-   240|
-   241|<!-- 6. 竞品 -->
-   242|<div class="section-title">同赛道对比</div>
-   243|<div class="comp-row">
-   244|<div class="comp-item"><div class="comp-header"><div class="comp-name">🦐 三鲜烩面（本卡）</div><div class="comp-rating">当前产品</div></div><div class="comp-detail"><strong>定位：</strong>海鲜烩面·差异化高价品<br><strong>成本：</strong>¥7.35（替代版）<br><strong>售价：</strong>¥22-26<br><strong>毛利：</strong>64-70%<br><strong>优势：</strong>全系最高毛利·差异化</div></div>
-   245|<div class="comp-item"><div class="comp-header"><div class="comp-name">🐑 萧记三鲜（郑州认知）</div><div class="comp-rating">★★★☆</div></div><div class="comp-detail"><strong>定位：</strong>羊肉+羊肚+羊汤<br><strong>成本：</strong>¥8<br><strong>售价：</strong>¥20-28<br><strong>毛利：</strong>58-65%<br><strong>差异：</strong>萧记版是羊肉三鲜·本卡是海鲜三鲜</div></div>
-   246|<div class="comp-item"><div class="comp-header"><div class="comp-name">🫕 滋补烩面</div><div class="comp-rating">★★★★</div></div><div class="comp-detail"><strong>定位：</strong>养生主力<br><strong>成本：</strong>¥8.20<br><strong>售价：</strong>¥20-25<br><strong>毛利：</strong>61-67%<br><strong>对比：</strong>滋补是主力日常品·三鲜是差异品</div></div>
-   247|<div class="comp-item"><div class="comp-header"><div class="comp-name">🐟 海鲜汤面（非烩面）</div><div class="comp-rating">★★★</div></div><div class="comp-detail"><strong>定位：</strong>沿海餐饮品类<br><strong>成本：</strong>¥8-12<br><strong>售价：</strong>¥25-38<br><strong>毛利：</strong>60-70%<br><strong>劣势：</strong>在郑州不是主流·竞争来自非烩面品类</div></div>
-   248|</div>
-   249|
-   250|<!-- 6.5 四子对比 -->
-   251|<div class="section-title">烩面四子对比</div>
-   252|<table class="cost-table">
-   253|<tr><th>子卡</th><th>口味</th><th>汤色</th><th>香型</th><th>连锁品牌价</th><th>场景</th></tr>
-   <tr><td><b>S01 滋补</b></td><td>药香回甘</td><td>白汤·骨汤色</td><td>药膳复合香·当归党参</td><td>¥20-25</td><td>主力利润款</td></tr>
-   <tr><td><b>S02 牛肉</b></td><td>牛骨浓香·清爽</td><td>红烧红亮色</td><td>牛骨香+八角桂皮</td><td>¥18-22</td><td>清真/扩客</td></tr>
-   <tr><td><b>S03 三鲜</b></td><td>清鲜鲜甜·胡椒味</td><td>白汤·骨汤色</td><td>海鲜复合香·煎鱼焦香</td><td>¥22-26</td><td>差异高价</td></tr>
-   <tr><td><b>S04 老式</b></td><td>朴素原味·芝麻酱</td><td>羊肉汤</td><td>芝麻酱+香油+羊肉</td><td>¥13-16</td><td>县域走量</td></tr>
-   258|</table>
-   259|
-   260|<!-- 7. 配方 -->
-   261|<div class="section-title">核心配方</div>
-   262|<div class="seasoning-box"><h4>🦐 三鲜烩面碗底料（单碗·约10g）</h4>
-   263|<div class="seasoning-grid">
-   264|<div class="seasoning-item"><div class="s-name">盐</div><div class="s-amt">3<small>g</small></div></div>
-   265|<div class="seasoning-item"><div class="s-name">鸡精</div><div class="s-amt">2.5<small>g</small></div></div>
-   266|<div class="seasoning-item"><div class="s-name">白胡椒粉</div><div class="s-amt">2<small>g</small></div></div>
-   267|<div class="seasoning-item"><div class="s-name">虾粉</div><div class="s-amt">1<small>g</small></div></div>
-   268|<div class="seasoning-item"><div class="s-name">白糖</div><div class="s-amt">0.5<small>g</small></div></div>
-   269|<div class="seasoning-item"><div class="s-name">蒜粉</div><div class="s-amt">0.5<small>g</small></div></div>
-   270|</div></div>
-   271|
-   272|<!-- 8. 工艺 -->
-   273|<div class="section-title">核心工艺 <small>6步SOP·鱼必须煎黄</small></div>
-   274|<div class="flow-steps">
-   275|<div class="flow-step"><div class="step-num">1</div><div class="step-body"><div class="step-title">处理骨头 <span class="step-param">鸡架拆油·猪骨焯水</span></div><div class="step-desc">鸡架拆去多余脂肪焯水洗净。猪骨焯水。这个汤不需要大火翻滚40分钟——三鲜汤是清鲜型不是浓白型。</div></div></div>
-   276|<div class="flow-step"><div class="step-num">2</div><div class="step-body"><div class="step-title">煎鲫鱼 <span class="step-param">鲫鱼煎至两面金黄·去腥关键</span></div><div class="step-desc">鲫鱼处理干净，煎至两面金黄——这是三鲜汤不腥的关键。不可省略这一步。</div></div></div>
-   277|<div class="flow-step"><div class="step-num">3</div><div class="step-body"><div class="step-title">三骨同熬 <span class="step-param">鸡+猪+鱼+瑶柱+白胡椒粒</span></div><div class="step-desc">所有骨头入锅加清水20L，大火烧沸后转中大火保持翻滚。下姜葱、白胡椒粒、瑶柱。</div></div></div>
-   278|<div class="flow-step"><div class="step-num">4</div><div class="step-body"><div class="step-title">控制时长 <span class="step-param">2.5-3小时·鱼骨不宜久煮</span></div><div class="step-desc">保持沸腾熬2.5-3小时——鱼骨汤不宜久煮（超过3小时会出酸味）。第2小时捞出金华火腿末留用。</div></div></div>
-   279|<div class="flow-step"><div class="step-num">5</div><div class="step-body"><div class="step-title">过滤出汤 <span class="step-param">过滤得清汤约15L·补至20L</span></div><div class="step-desc">汤色应为乳白，有复合鲜香味。汤中不加酱油/老抽——保持本色汤色是海鲜烩面的视觉识别。</div></div></div>
-   280|<div class="flow-step"><div class="step-num">6</div><div class="step-body"><div class="step-title">装碗出餐 <span class="step-param">先备海鲜料·快速出餐</span></div><div class="step-desc">鱿鱼切花刀焯30秒至卷曲。虾仁腌10分钟焯水。碗底料入碗→浇汤→下面→码鱿鱼卷+虾仁+海参+鹌鹑蛋+青菜→撒枸杞香菜。配姜丝浙醋上桌。</div></div></div>
-   281|</div>
-   282|
-   283|<!-- 9. 设备 -->
-   284|<div class="section-title">设备清单</div>
-   285|<div class="device-list">
-   286|<div class="device-item"><div class="dev-name">🍲 熬汤桶（50L）</div><div class="dev-price">¥600-900</div></div>
-   287|<div class="device-item"><div class="dev-name">🔥 商用灶</div><div class="dev-price">¥800-1,500</div></div>
-   288|<div class="device-item"><div class="dev-name">🧊 冷冻冰箱（海鲜专用）</div><div class="dev-price">¥1,500-2,500</div></div>
-   289|<div class="device-item"><div class="dev-name">🥟 煮面炉</div><div class="dev-price">¥500-1,200</div></div>
-   290|<div class="device-item"><div class="dev-name">🪟 不锈钢操作台</div><div class="dev-price">¥600-1,200</div></div>
-   291|<div class="device-item"><div class="dev-name">🧂 调料台</div><div class="dev-price">¥100-300</div></div>
-   292|<div class="device-total">设备投入：约¥5,500-10,500（多一台冷冻冰箱）</div>
-   293|</div>
-   294|
-   295|<!-- 10. 适配 -->
-   296|<div class="section-title">开店适配评分</div>
-   297|<div class="stall-grid">
-   298|<div class="stall-item high"><div class="stall-name">🏙️ 商圈店</div><div class="stall-score">8.5/10</div><div class="stall-desc">海鲜烩面的价值感知在商圈最强</div></div>
-   299|<div class="stall-item mid"><div class="stall-name">🏪 社区店</div><div class="stall-score">6.0/10</div><div class="stall-desc">社区客群对高价海鲜面接受度一般</div></div>
-   300|<div class="stall-item low"><div class="stall-name">🛒 夜市摆摊</div><div class="stall-score">4.0/10</div><div class="stall-desc">海鲜保鲜难·不适合摆摊</div></div>
-   301|<div class="stall-item mid"><div class="stall-name">🏛️ 写字楼</div><div class="stall-score">6.5/10</div><div class="stall-desc">午市可做但是高频复购难</div></div>
-   302|<div class="stall-item low"><div class="stall-name">📱 纯外卖</div><div class="stall-score">5.0/10</div><div class="stall-desc">海鲜食材外卖易变质·风险高</div></div>
-   303|<div class="stall-item high"><div class="stall-name">🏘️ 外埠店</div><div class="stall-score">8.0/10</div><div class="stall-desc">外地人更接受海鲜烩面而非羊肉</div></div>
-   304|</div>
-   305|
-   306|<!-- 11. 赛道 -->
-   307|<div class="section-title">赛道判断</div>
-   308|<div class="track-grid">
-   309|<div class="track-pros"><div class="track-head">✅ 优势</div><ul>
-   310|<li>烩面体系中最高的单碗毛利（替代版毛利率69%）</li>
-   311|<li>海鲜烩面的话题性和差异化价值高——顾客愿意拍照分享</li>
-   312|<li>三骨汤是技术壁垒——比羊骨汤复杂，不容易被跟风</li>
-   313|<li>外埠市场海鲜烩面接受度高于羊肉烩面</li>
-   314|</ul></div>
-   315|<div class="track-cons"><div class="track-head">⚠️ 劣势</div><ul>
-   316|<li>海鲜冻品保鲜要求高，库存风险大于肉类</li>
-   317|<li>郑州消费者对"海鲜烩面"的认知需要教育</li>
-   318|<li>单碗成本高（全海鲜版¥10.85），定价¥28+才有利润</li>
-   319|<li>出单占比低（≤15%），不适合做主角</li>
-   320|</ul></div>
-   321|</div>
-   322|<div class="track-verdict"><strong>📊 2026判断：</strong>三鲜烩面是烩面体系里的"奢侈品"。不是走量品，是菜单上用来标定档次和展示技术实力的那碗面。主力店必须有，但不能指望它赚钱。推荐替代版操作（保留虾仁+鱿鱼减半+素海参），成本可控到¥7.35，卖¥24毛利69%——这才是合理的利润模型。</div>
-   323|
-   324|<!-- 12. 风险 -->
-   325|<div class="section-title">风险提示</div>
-   326|<div class="risk-list">
-   327|<div class="risk-item"><div class="risk-icon">🛑</div><div class="risk-body"><div class="risk-title">海鲜食材安全 <span class="risk-level high">高</span></div><div class="risk-desc">鱿鱼/虾仁/海参等海鲜食材保质期短，在郑州内陆城市冷链配送要求高。应对策略：使用冷冻品替代鲜品，严格按先进先出管理库存，每日检查食材新鲜度。</div></div></div>
-   328|<div class="risk-item"><div class="risk-icon">⚠️</div><div class="risk-body"><div class="risk-title">消费者认知偏差 <span class="risk-level mid">中</span></div><div class="risk-desc">郑州消费者提到"三鲜烩面"第一反应是萧记的羊肉+羊肚+羊汤。应对策略：菜单上明确标注"海鲜三鲜烩面",用文字和图片强调海鲜概念。</div></div></div>
-   329|<div class="risk-item"><div class="risk-icon">⚠️</div><div class="risk-body"><div class="risk-title">成本波动 <span class="risk-level mid">中</span></div><div class="risk-desc">冷冻海鲜价格受进口关税和季节影响。应对策略：使用替代版方案，虾仁保留（最值钱的部分），海参用素替代。</div></div></div>
-   330|</div>
-   331|
-   332|<!-- 13. 沧林 -->
-   333|<div class="section-title">沧林判断</div>
-   334|<div class="judge-box">
-   335|<div class="judge-text">三鲜烩面是我在烩面体系里最犹豫要不要推的一张卡。从商业角度说，它出单占比低（≤15%）、对供应链要求高、消费者认知需要教育——怎么看都不是一个理性的选择。但我最后还是决定做，原因是一个店需要一碗"镇店的面"来标定你的水平上限。滋补烩面证明你懂养生，牛肉烩面证明你照顾不吃羊肉的客人，三鲜烩面证明你真的懂汤。三骨汤（鸡猪鱼）是最考验厨师对汤的理解的——三种骨头的处理方式完全不同，能做好三鲜汤的店，其他烩面不会差。</div>
-   336|<div class="judge-tags"><span>#差异高价品</span><span>#技术展示</span><span>#替代版操作</span><span>#出单15%</span></div>
-   337|</div>
-   338|
-   339|<!-- 14. 数据包 -->
-   340|<div class="section-title">完整数据包预览</div>
-   341|<div class="data-preview">
-   342|<div class="data-item"><span class="data-icon">📋</span><span class="data-name">三骨汤SOP手册（温度/时长/火力）</span><span class="data-lock">🔒</span></div>
-   343|<div class="data-item"><span class="data-icon">📊</span><span class="data-name">全海鲜版vs替代版成本对照</span><span class="data-lock">🔒</span></div>
-   344|<div class="data-item"><span class="data-icon">📈</span><span class="data-name">损益测算表</span><span class="data-lock">🔒</span></div>
-   345|<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">海鲜冻品供应链名录</span><span class="data-lock">🔒</span></div>
-   346|<div class="data-item"><span class="data-icon">🦐</span><span class="data-name">海鲜选料标准+采购指南</span><span class="data-lock">🔒</span></div>
-   347|<div class="data-item"><span class="data-icon">🧪</span><span class="data-name">三鲜变体：素三鲜/菌菇三鲜</span><span class="data-lock">🔒</span></div>
-   348|</div>
-   349|
-   350|<!-- 15. 付费 -->
-   351|<div class="pay-area">
-   352|<div class="pay-header"><div class="pay-title">🔓 付费解锁</div><div class="pay-price">¥19<small>/份</small></div></div>
-   353|<label class="pay-toggle">
-   354|<input type="checkbox" id="payToggle">
-   355|<span class="toggle-label">点击解锁完整数据</span>
-   356|<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起':'解锁'">解锁</button>
-   357|</label>
-   358|<div class="pay-content">
-   359|<div class="pay-content-inner"><h4>📦 完整数据包</h4>
-   360|<table class="pay-table"><tr><th>城市</th><th>成本/碗</th><th>售价</th><th>毛利</th><th>日均销量</th></tr>
-   361|<tr><td>郑州</td><td>¥7.35（替代）</td><td>¥22-26</td><td>64-70%</td><td>40-60碗</td></tr>
-   362|<tr><td>郑州（全海鲜）</td><td>¥10.85</td><td>¥28-35</td><td>62-69%</td><td>20-40碗</td></tr>
-   363|</table>
-   364|</div></div>
-   365|</div>
-   366|
-   367|<div class="data-note">📌 数据来源：郑州万邦批发市场2026Q2·红餐网品类报告·萧记三鲜公开资料</div>
-   368|<div class="footer-brand">
-   369|<div class="fb-name">🥘 <span>FoodIntelAI</span> · 食品决策库</div>
-   370|<div class="fb-line">少走弯路 快人一步</div>
-   371|<div class="fb-line" style="font-size:11px">烩面体系 · 子卡 HM_S03 · 三鲜烩面 · ¥19</div>
-   372|<div class="fb-copy">© 2026 FoodIntelAI · 数据仅供参考</div>
-   373|</div>
-   374|
-   375|</div>
-   376|
-   377|<script>
-   378|document.addEventListener('DOMContentLoaded',function(){
-   379|var cb=document.getElementById('payToggle');
-   380|var pc=document.querySelector('.pay-content');
-   381|var btn=document.querySelector('.toggle-btn');
-   382|cb.addEventListener('change',function(){
-   383|pc.classList.toggle('show',cb.checked);
-   384|btn.textContent=cb.checked?'收起':'解锁';
-   385|});
-   386|});
-   387|</script>
-   388|</body>
-   389|</html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HM_S03 三鲜烩面（子）— 三骨汤·海鲜浇头·口味·成本 · FoodIntelAI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;color:#1a1a2e;padding:20px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.card{max-width:860px;width:100%;margin:0 auto}
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:12px 0 8px;border-bottom:2px solid #e0d8cc;margin-bottom:16px}
+.card-header .logo{font-size:18px;font-weight:700;color:#2c3e50;letter-spacing:1px}
+.card-header .logo span{color:#0e6b82}
+.card-header .sub{font-size:12px;color:#7f8c8d;background:#eae7e2;padding:2px 10px;border-radius:10px}
+.rating-bar{background:linear-gradient(135deg,#0a4a5c,#0e6b82,#1496b0);border-radius:16px;padding:22px 26px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.rating-bar::before{content:'';position:absolute;top:-30px;right:-20px;width:140px;height:140px;background:rgba(255,255,255,0.04);border-radius:50%}
+.rating-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rating-score{font-size:44px;font-weight:800;line-height:1}
+.rating-score .sub{font-size:16px;font-weight:400;opacity:.7;margin-left:4px}
+.rating-grade{font-size:26px;font-weight:700;padding:2px 14px;border-radius:10px;background:rgba(255,255,255,0.15);display:inline-block}
+.rating-judge{font-size:15px;margin:10px 0 8px;opacity:.9;line-height:1.5}
+.rating-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.rating-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;color:rgba(255,255,255,0.9)}
+.section-title{font-size:18px;font-weight:700;color:#2c3e50;margin:22px 0 12px;padding-left:12px;border-left:4px solid #0e6b82;line-height:1.4}
+.section-title small{font-size:12px;font-weight:400;color:#95a5a6;margin-left:8px}
+.radar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.radar-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);text-align:center;border:1px solid #eee}
+.radar-item .label{font-size:14px;font-weight:600;color:#2c3e50;margin-bottom:6px}
+.radar-item .stars{color:#f39c12;font-size:16px;letter-spacing:1px;margin-bottom:4px}
+.radar-item .desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.fit-yes{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.fit-yes .fit-head{font-weight:700;color:#27ae60;font-size:15px;margin-bottom:8px}
+.fit-yes ul{list-style:none;padding:0}
+.fit-yes ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-yes ul li::before{content:'✓';color:#27ae60;position:absolute;left:0;font-weight:700}
+.fit-no{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.fit-no .fit-head{font-weight:700;color:#e74c3c;font-size:15px;margin-bottom:8px}
+.fit-no ul{list-style:none;padding:0}
+.fit-no ul li{font-size:13px;color:#2c3e50;padding:3px 0;position:relative;padding-left:16px}
+.fit-no ul li::before{content:'✗';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.logic-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.price-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.price-tier{background:#f9f8f6;border-radius:12px;padding:14px;text-align:center;border:1px solid #e8e3dc}
+.price-tier .tier-label{font-size:13px;color:#7f8c8d;margin-bottom:4px}
+.price-tier .tier-price{font-size:22px;font-weight:800;color:#0e6b82}
+.price-tier .tier-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.price-tier .tier-note{font-size:11px;color:#95a5a6;margin-top:4px}
+.price-tier .tier-detail{font-size:10px;color:#aaa;margin-top:2px}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric-item{background:linear-gradient(135deg,#0a4a5c,#0e6b82);border-radius:12px;padding:14px;text-align:center;color:#fff}
+.metric-item .metric-val{font-size:24px;font-weight:800}
+.metric-item .metric-val small{font-size:13px;font-weight:400;opacity:.8}
+.metric-item .metric-label{font-size:12px;opacity:.8;margin-top:2px}
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px}
+.cost-table th{background:#0a4a5c;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px}
+.cost-table td{padding:9px 12px;border-bottom:1px solid #f0ebe4;font-size:12px}
+.cost-table tr:last-child td{border-bottom:none}
+.cost-table .total-row{background:#fef9e7;font-weight:700}
+.cost-table .total-row td{font-size:13px;color:#0e6b82}
+.comp-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
+.comp-item{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border:1px solid #eee}
+.comp-item .comp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0ebe4}
+.comp-item .comp-name{font-weight:700;font-size:14px;color:#2c3e50}
+.comp-item .comp-rating{font-size:12px;color:#f39c12}
+.comp-item .comp-detail{font-size:12px;color:#555;line-height:1.7}
+.comp-item .comp-detail strong{color:#2c3e50}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.flow-step{background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.flow-step .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0e6b82,#1496b0);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.flow-step .step-body{flex:1}
+.flow-step .step-title{font-weight:700;font-size:14px;color:#2c3e50;margin-bottom:2px}
+.flow-step .step-desc{font-size:12px;color:#666;line-height:1.5}
+.flow-step .step-param{display:inline-block;background:#e8f4f0;color:#0e6b82;font-size:11px;padding:1px 8px;border-radius:6px;margin-top:3px;font-weight:600}
+.seasoning-box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:18px;border:1px solid #eee}
+.seasoning-box h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.seasoning-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.seasoning-item{background:#f9f8f6;border-radius:10px;padding:10px;text-align:center;border:1px solid #e8e3dc}
+.seasoning-item .s-name{font-size:11px;color:#7f8c8d}
+.seasoning-item .s-amt{font-size:15px;font-weight:700;color:#2c3e50;margin-top:2px}
+.seasoning-item .s-amt small{font-size:10px;font-weight:400;color:#95a5a6}
+.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.device-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.device-item .dev-name{font-size:13px;font-weight:600;color:#2c3e50}
+.device-item .dev-price{font-size:12px;color:#7f8c8d}
+.device-total{background:#fef9e7;border-radius:11px;padding:10px 14px;text-align:center;font-size:13px;font-weight:700;color:#0e6b82;margin-top:6px;grid-column:1/-1}
+.stall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stall-item{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee}
+.stall-item .stall-name{font-size:13px;font-weight:600;color:#2c3e50;margin-bottom:4px}
+.stall-item .stall-score{font-size:20px;font-weight:800;margin-bottom:2px}
+.stall-item .stall-desc{font-size:11px;color:#7f8c8d;line-height:1.4}
+.stall-item.high .stall-score{color:#27ae60}
+.stall-item.mid .stall-score{color:#f39c12}
+.stall-item.low .stall-score{color:#e74c3c}
+.risk-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.risk-item{background:#fff;border-radius:11px;padding:12px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:flex-start;gap:10px}
+.risk-item .risk-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.risk-item .risk-body{flex:1}
+.risk-item .risk-title{font-weight:600;font-size:13px;color:#2c3e50}
+.risk-item .risk-desc{font-size:12px;color:#7f8c8d;line-height:1.4;margin-top:2px}
+.risk-item .risk-level{display:inline-block;font-size:10px;padding:1px 8px;border-radius:8px;font-weight:600;margin-left:6px}
+.risk-item .risk-level.high{background:#fde8e8;color:#e74c3c}
+.risk-item .risk-level.mid{background:#fef9e7;color:#f39c12}
+.risk-item .risk-level.low{background:#e8f8e8;color:#27ae60}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.track-pros{background:#e8f8e8;border-radius:12px;padding:16px;border-left:4px solid #27ae60}
+.track-pros .track-head{font-weight:700;color:#27ae60;font-size:14px;margin-bottom:8px}
+.track-pros ul{list-style:none;padding:0}
+.track-pros ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-pros ul li::before{content:'+';color:#27ae60;position:absolute;left:0;font-weight:700}
+.track-cons{background:#fde8e8;border-radius:12px;padding:16px;border-left:4px solid #e74c3c}
+.track-cons .track-head{font-weight:700;color:#e74c3c;font-size:14px;margin-bottom:8px}
+.track-cons ul{list-style:none;padding:0}
+.track-cons ul li{font-size:12px;color:#2c3e50;padding:3px 0;padding-left:14px;position:relative}
+.track-cons ul li::before{content:'−';color:#e74c3c;position:absolute;left:0;font-weight:700}
+.track-verdict{background:linear-gradient(135deg,#0a4a5c,#0e6b82);border-radius:12px;padding:14px 18px;color:#fff;font-size:13px;line-height:1.7;margin-bottom:18px}
+.judge-box{background:linear-gradient(135deg,#0a4a5c,#0e6b82);border-radius:16px;padding:22px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden}
+.judge-box::before{content:'"';position:absolute;top:-10px;left:12px;font-size:80px;color:rgba(255,255,255,0.06);font-family:Georgia,serif}
+.judge-box .judge-text{font-size:14px;line-height:1.8;opacity:.92;margin-bottom:12px;text-indent:2em}
+.judge-box .judge-tags{display:flex;flex-wrap:wrap;gap:6px}
+.judge-box .judge-tags span{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:3px 12px;font-size:12px;color:rgba(255,255,255,0.85)}
+.data-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.data-preview .data-item{background:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);border:1px solid #eee;display:flex;align-items:center;gap:10px}
+.data-preview .data-item .data-icon{font-size:18px;width:28px;text-align:center}
+.data-preview .data-item .data-name{font-size:13px;font-weight:600;color:#2c3e50;flex:1}
+.data-preview .data-item .data-lock{font-size:11px;color:#e74c3c;font-weight:600;background:#fde8e8;padding:1px 8px;border-radius:8px}
+.pay-area{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px dashed #0e6b82;position:relative}
+.pay-area .pay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0ebe4}
+.pay-area .pay-header .pay-title{font-size:17px;font-weight:700;color:#0e6b82}
+.pay-area .pay-header .pay-price{font-size:20px;font-weight:800;color:#0e6b82}
+.pay-area .pay-header .pay-price small{font-size:13px;font-weight:400;color:#7f8c8d}
+.pay-toggle{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:#f9f8f6;border-radius:10px;cursor:pointer;user-select:none}
+.pay-toggle input{display:none}
+.pay-toggle .toggle-label{font-size:13px;color:#7f8c8d;flex:1}
+.pay-toggle .toggle-btn{background:#0e6b82;color:#fff;border:none;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.pay-content{display:none;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.pay-content-inner{background:#f9f8f6;border-radius:12px;padding:18px;min-height:120px;border:1px solid #eee}
+.pay-content-inner h4{font-size:14px;color:#2c3e50;margin-bottom:10px}
+.pay-content-inner ul{list-style:none;padding:0}
+.pay-content-inner ul li{font-size:12px;color:#555;padding:5px 0;border-bottom:1px solid #f0ebe4;display:flex;justify-content:space-between}
+.pay-content-inner ul li:last-child{border-bottom:none}
+.pay-content-inner ul li .val{color:#0e6b82;font-weight:600}
+.pay-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:11px}
+.pay-table th{background:#0a4a5c;color:#fff;padding:5px 7px;text-align:left;font-weight:600;font-size:10px}
+.pay-table td{padding:4px 7px;border:1px solid #ede0d0;font-size:10px;color:#3a2a1a}
+.pay-table tr:nth-child(even) td{background:#faf5f0}
+.footer-brand{text-align:center;padding:18px 0 10px;border-top:2px solid #e0d8cc;margin-top:10px}
+.footer-brand .fb-name{font-size:15px;font-weight:700;color:#2c3e50;letter-spacing:2px}
+.footer-brand .fb-name span{color:#0e6b82}
+.footer-brand .fb-line{font-size:12px;color:#7f8c8d;margin:6px 0 3px}
+.footer-brand .fb-copy{font-size:11px;color:#95a5a6;margin-top:4px}
+.data-note{background:#fef9e7;border-radius:10px;padding:10px 14px;font-size:12px;color:#7f8c8d;margin-bottom:18px;text-align:center;border:1px solid #f0e6cc}
+@media(max-width:600px){
+.radar-grid{grid-template-columns:repeat(2,1fr)}
+.fit-wrap{grid-template-columns:1fr}
+.price-tiers{grid-template-columns:1fr}
+.metric-row{grid-template-columns:1fr 1fr}
+.comp-row{grid-template-columns:1fr}
+.seasoning-grid{grid-template-columns:repeat(3,1fr)}
+.device-list{grid-template-columns:1fr}
+.stall-grid{grid-template-columns:repeat(2,1fr)}
+.track-grid{grid-template-columns:1fr}
+.data-preview{grid-template-columns:1fr}
+}
+@media(max-width:400px){.stall-grid{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="../../paywall.css">
+<link rel="stylesheet" href="../../paywall.css">
+</head>
+<body>
+<div class="card">
+
+<div class="card-header">
+<div class="logo">🥘 <span>FoodIntelAI</span> · 烩面体系</div>
+<div class="sub">子卡 · HM_S03 · 三鲜烩面</div>
+</div>
+
+<!-- 1. 头部 -->
+<div class="rating-bar">
+<div class="rating-top"><div class="rating-score">7.0<span class="sub">/10</span></div><div class="rating-grade a">B-级</div></div>
+<div class="rating-judge">三鲜烩面是烩面体系里最特殊的一碗——它用的不是羊骨汤，而是鸡骨+猪骨+鱼骨三骨复合汤，浇头是鱿鱼+虾仁+海参。郑州萧记的"三鲜"其实是羊肉+羊肚+羊汤，而这里是真正的海鲜三鲜。成本¥10.85/碗（全海鲜版）或¥7.35（替代版），卖¥22-26是合理区间。但这是差异化产品，出单占比不宜超过15%。</div>
+<div class="rating-tags"><span>#海鲜烩面</span><span>#三骨汤</span><span>#差异高价</span><span>#白胡椒味型</span><span>#出单15%</span></div>
+</div>
+
+<!-- 2. 雷达 -->
+<div class="section-title">品类雷达</div>
+<div class="radar-grid">
+<div class="radar-item"><div class="label">🔥 热度</div><div class="stars">★★★☆☆</div><div class="desc">海鲜+烩面的组合在河南市场认知度有限。海鲜烩面不是主流消费，需要靠差异化打出名声。</div></div>
+<div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div><div class="desc">海鲜烩面复购率低于羊肉/牛肉版。消费者吃新鲜感多于日常消费，月均1-2次。</div></div>
+<div class="radar-item"><div class="label">💰 利润</div><div class="stars">★★★★☆</div><div class="desc">替代版成本¥7.35，卖¥24的毛利率69%。全海鲜版成本¥10.85，卖¥30的毛利率64%。但销量低。</div></div>
+<div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★★☆</div><div class="desc">三骨汤熬制比羊骨汤复杂——鸡猪鱼三种骨头处理方式不同。海鲜食材保鲜要求高。</div></div>
+<div class="radar-item"><div class="label">📈 空间</div><div class="stars">★★★☆☆</div><div class="desc">差异化单品价值高但容量有限。适合作为"菜单上的惊喜"而非主力。外埠扩张有卖点。</div></div>
+</div>
+
+<!-- 3. 适配 -->
+<div class="section-title">人群适配</div>
+<div class="fit-wrap">
+<div class="fit-yes"><div class="fit-head">✅ 适合谁做</div><ul>
+<li>已有滋补+牛肉烩面，想增加差异高价的烩面店</li>
+<li>郑州商圈/商场店——海鲜烩面有面子属性，适合逛街消费</li>
+<li>外埠烩面店——海鲜烩面在南方城市的接受度高于羊肉烩面</li>
+<li>追求"菜单丰富度"的连锁品牌——三鲜是展示技术实力的单品</li>
+</ul></div>
+<div class="fit-no"><div class="fit-head">❌ 不适合谁做</div><ul>
+<li>县域市场——海鲜烩面¥22+的定价在县城竞争力弱</li>
+<li>新手首店——SKU少的时候先做好滋补和牛肉两款主力</li>
+<li>没有稳定海鲜冻品渠道的内陆县城——海鲜品质不可控</li>
+<li>只想做走量生意的——三鲜烩面注定不是走量款</li>
+</ul></div>
+</div>
+
+<!-- 4. 赚钱 -->
+<div class="section-title">赚钱逻辑</div>
+<div class="logic-box">
+<div class="price-tiers">
+<div class="price-tier"><div class="tier-label">🏪 普通小店</div><div class="tier-price">¥18-20<small>/碗</small></div><div class="tier-note">替代版 毛利56-63%</div><div class="tier-detail">日卖30-50碗</div></div>
+<div class="price-tier"><div class="tier-label">🏙️ 连锁品牌</div><div class="tier-price">¥22-26<small>/碗</small></div><div class="tier-note">替代版操作 毛利64-70%</div><div class="tier-detail">日卖40-60碗</div></div>
+<div class="price-tier"><div class="tier-label">👑 头牌/外埠</div><div class="tier-price">¥28-35<small>/碗</small></div><div class="tier-note">全海鲜版 品牌溢价</div><div class="tier-detail">日卖20-40碗</div></div>
+</div>
+<div class="metric-row">
+<div class="metric-item"><div class="metric-val">¥800-1,500<small>/天</small></div><div class="metric-label">日营收（40-60碗×均价¥24）</div></div>
+<div class="metric-item"><div class="metric-val">¥1-2万<small>/月</small></div><div class="metric-label">月净利</div></div>
+<div class="metric-item"><div class="metric-val">差异品</div><div class="metric-label">非主力走量品</div></div>
+</div>
+</div>
+
+<!-- 5. 成本 -->
+<div class="section-title">成本拆解 <small>全海鲜版 vs 替代版</small></div>
+<table class="cost-table">
+<tr><th>成本项</th><th>全海鲜版</th><th>替代版</th><th>说明</th></tr>
+<tr><td>面条150g</td><td>¥0.80</td><td>¥0.80</td><td>相同</td></tr>
+<tr><td>汤底分摊</td><td>¥0.65</td><td>¥0.65</td><td>鸡骨/猪骨/鱼骨/瑶柱</td></tr>
+<tr><td>鱿鱼40g→20g</td><td>¥1.60</td><td>¥0.80</td><td>干货水发后3倍重量</td></tr>
+<tr><td>虾仁40g</td><td>¥2.80</td><td>¥2.80</td><td>✅ 保留——食客最在意三鲜元素</td></tr>
+<tr><td>海参25g→素替代</td><td>¥3.50</td><td>¥0.50</td><td>素海参/杏鲍菇替代</td></tr>
+<tr><td>玉兰片+木耳+鹌鹑蛋+青菜</td><td>¥0.80</td><td>¥0.80</td><td>相同</td></tr>
+<tr><td>碗底料</td><td>¥0.25</td><td>¥0.25</td><td>白胡椒为主</td></tr>
+<tr><td>燃气+水电</td><td>¥0.45</td><td>¥0.35</td><td>—</td></tr>
+<tr class="total-row"><td>合计</td><td>¥10.85</td><td>¥7.35</td><td>推荐替代版操作</td></tr>
+</table>
+
+<!-- 6. 竞品 -->
+<div class="section-title">同赛道对比</div>
+<div class="comp-row">
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🦐 三鲜烩面（本卡）</div><div class="comp-rating">当前产品</div></div><div class="comp-detail"><strong>定位：</strong>海鲜烩面·差异化高价品<br><strong>成本：</strong>¥7.35（替代版）<br><strong>售价：</strong>¥22-26<br><strong>毛利：</strong>64-70%<br><strong>优势：</strong>全系最高毛利·差异化</div></div>
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🐑 萧记三鲜（郑州认知）</div><div class="comp-rating">★★★☆</div></div><div class="comp-detail"><strong>定位：</strong>羊肉+羊肚+羊汤<br><strong>成本：</strong>¥8<br><strong>售价：</strong>¥20-28<br><strong>毛利：</strong>58-65%<br><strong>差异：</strong>萧记版是羊肉三鲜·本卡是海鲜三鲜</div></div>
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🫕 滋补烩面</div><div class="comp-rating">★★★★</div></div><div class="comp-detail"><strong>定位：</strong>养生主力<br><strong>成本：</strong>¥8.20<br><strong>售价：</strong>¥20-25<br><strong>毛利：</strong>61-67%<br><strong>对比：</strong>滋补是主力日常品·三鲜是差异品</div></div>
+<div class="comp-item"><div class="comp-header"><div class="comp-name">🐟 海鲜汤面（非烩面）</div><div class="comp-rating">★★★</div></div><div class="comp-detail"><strong>定位：</strong>沿海餐饮品类<br><strong>成本：</strong>¥8-12<br><strong>售价：</strong>¥25-38<br><strong>毛利：</strong>60-70%<br><strong>劣势：</strong>在郑州不是主流·竞争来自非烩面品类</div></div>
+</div>
+
+<!-- 6.5 四子对比 -->
+<div class="section-title">烩面四子对比</div>
+<table class="cost-table">
+<tr><th>子卡</th><th>口味</th><th>汤色</th><th>香型</th><th>连锁品牌价</th><th>场景</th></tr>
+<tr><td><b>S01 滋补</b></td><td>药香回甘</td><td>白汤·骨汤色</td><td>药膳复合香·当归党参</td><td>¥20-25</td><td>主力利润款</td></tr>
+<tr><td><b>S02 牛肉</b></td><td>牛骨浓香·清爽</td><td>红烧红亮色</td><td>牛骨香+八角桂皮</td><td>¥18-22</td><td>清真/扩客</td></tr>
+<tr><td><b>S03 三鲜</b></td><td>清鲜鲜甜·胡椒味</td><td>白汤·骨汤色</td><td>海鲜复合香·煎鱼焦香</td><td>¥22-26</td><td>差异高价</td></tr>
+<tr><td><b>S04 老式</b></td><td>朴素原味·芝麻酱</td><td>羊肉汤</td><td>芝麻酱+香油+羊肉</td><td>¥13-16</td><td>县域走量</td></tr>
+</table>
+
+<!-- 7. 配方 -->
+<div class="section-title">核心配方</div>
+<div class="seasoning-box"><h4>🦐 三鲜烩面碗底料（单碗·约10g）</h4>
+<div class="seasoning-grid">
+<div class="seasoning-item"><div class="s-name">盐</div><div class="s-amt">3<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">鸡精</div><div class="s-amt">2.5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">白胡椒粉</div><div class="s-amt">2<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">虾粉</div><div class="s-amt">1<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">白糖</div><div class="s-amt">0.5<small>g</small></div></div>
+<div class="seasoning-item"><div class="s-name">蒜粉</div><div class="s-amt">0.5<small>g</small></div></div>
+</div></div>
+
+<!-- 8. 工艺 -->
+<div class="section-title">核心工艺 <small>6步SOP·鱼必须煎黄</small></div>
+<div class="flow-steps">
+<div class="flow-step"><div class="step-num">1</div><div class="step-body"><div class="step-title">处理骨头 <span class="step-param">鸡架拆油·猪骨焯水</span></div><div class="step-desc">鸡架拆去多余脂肪焯水洗净。猪骨焯水。这个汤不需要大火翻滚40分钟——三鲜汤是清鲜型不是浓白型。</div></div></div>
+<div class="flow-step"><div class="step-num">2</div><div class="step-body"><div class="step-title">煎鲫鱼 <span class="step-param">鲫鱼煎至两面金黄·去腥关键</span></div><div class="step-desc">鲫鱼处理干净，煎至两面金黄——这是三鲜汤不腥的关键。不可省略这一步。</div></div></div>
+<div class="flow-step"><div class="step-num">3</div><div class="step-body"><div class="step-title">三骨同熬 <span class="step-param">鸡+猪+鱼+瑶柱+白胡椒粒</span></div><div class="step-desc">所有骨头入锅加清水20L，大火烧沸后转中大火保持翻滚。下姜葱、白胡椒粒、瑶柱。</div></div></div>
+<div class="flow-step"><div class="step-num">4</div><div class="step-body"><div class="step-title">控制时长 <span class="step-param">2.5-3小时·鱼骨不宜久煮</span></div><div class="step-desc">保持沸腾熬2.5-3小时——鱼骨汤不宜久煮（超过3小时会出酸味）。第2小时捞出金华火腿末留用。</div></div></div>
+<div class="flow-step"><div class="step-num">5</div><div class="step-body"><div class="step-title">过滤出汤 <span class="step-param">过滤得清汤约15L·补至20L</span></div><div class="step-desc">汤色应为乳白，有复合鲜香味。汤中不加酱油/老抽——保持本色汤色是海鲜烩面的视觉识别。</div></div></div>
+<div class="flow-step"><div class="step-num">6</div><div class="step-body"><div class="step-title">装碗出餐 <span class="step-param">先备海鲜料·快速出餐</span></div><div class="step-desc">鱿鱼切花刀焯30秒至卷曲。虾仁腌10分钟焯水。碗底料入碗→浇汤→下面→码鱿鱼卷+虾仁+海参+鹌鹑蛋+青菜→撒枸杞香菜。配姜丝浙醋上桌。</div></div></div>
+</div>
+
+<!-- 9. 设备 -->
+<div class="section-title">设备清单</div>
+<div class="device-list">
+<div class="device-item"><div class="dev-name">🍲 熬汤桶（50L）</div><div class="dev-price">¥600-900</div></div>
+<div class="device-item"><div class="dev-name">🔥 商用灶</div><div class="dev-price">¥800-1,500</div></div>
+<div class="device-item"><div class="dev-name">🧊 冷冻冰箱（海鲜专用）</div><div class="dev-price">¥1,500-2,500</div></div>
+<div class="device-item"><div class="dev-name">🥟 煮面炉</div><div class="dev-price">¥500-1,200</div></div>
+<div class="device-item"><div class="dev-name">🪟 不锈钢操作台</div><div class="dev-price">¥600-1,200</div></div>
+<div class="device-item"><div class="dev-name">🧂 调料台</div><div class="dev-price">¥100-300</div></div>
+<div class="device-total">设备投入：约¥5,500-10,500（多一台冷冻冰箱）</div>
+</div>
+
+<!-- 10. 适配 -->
+<div class="section-title">开店适配评分</div>
+<div class="stall-grid">
+<div class="stall-item high"><div class="stall-name">🏙️ 商圈店</div><div class="stall-score">8.5/10</div><div class="stall-desc">海鲜烩面的价值感知在商圈最强</div></div>
+<div class="stall-item mid"><div class="stall-name">🏪 社区店</div><div class="stall-score">6.0/10</div><div class="stall-desc">社区客群对高价海鲜面接受度一般</div></div>
+<div class="stall-item low"><div class="stall-name">🛒 夜市摆摊</div><div class="stall-score">4.0/10</div><div class="stall-desc">海鲜保鲜难·不适合摆摊</div></div>
+<div class="stall-item mid"><div class="stall-name">🏛️ 写字楼</div><div class="stall-score">6.5/10</div><div class="stall-desc">午市可做但是高频复购难</div></div>
+<div class="stall-item low"><div class="stall-name">📱 纯外卖</div><div class="stall-score">5.0/10</div><div class="stall-desc">海鲜食材外卖易变质·风险高</div></div>
+<div class="stall-item high"><div class="stall-name">🏘️ 外埠店</div><div class="stall-score">8.0/10</div><div class="stall-desc">外地人更接受海鲜烩面而非羊肉</div></div>
+</div>
+
+<!-- 11. 赛道 -->
+<div class="section-title">赛道判断</div>
+<div class="track-grid">
+<div class="track-pros"><div class="track-head">✅ 优势</div><ul>
+<li>烩面体系中最高的单碗毛利（替代版毛利率69%）</li>
+<li>海鲜烩面的话题性和差异化价值高——顾客愿意拍照分享</li>
+<li>三骨汤是技术壁垒——比羊骨汤复杂，不容易被跟风</li>
+<li>外埠市场海鲜烩面接受度高于羊肉烩面</li>
+</ul></div>
+<div class="track-cons"><div class="track-head">⚠️ 劣势</div><ul>
+<li>海鲜冻品保鲜要求高，库存风险大于肉类</li>
+<li>郑州消费者对"海鲜烩面"的认知需要教育</li>
+<li>单碗成本高（全海鲜版¥10.85），定价¥28+才有利润</li>
+<li>出单占比低（≤15%），不适合做主角</li>
+</ul></div>
+</div>
+<div class="track-verdict"><strong>📊 2026判断：</strong>三鲜烩面是烩面体系里的"奢侈品"。不是走量品，是菜单上用来标定档次和展示技术实力的那碗面。主力店必须有，但不能指望它赚钱。推荐替代版操作（保留虾仁+鱿鱼减半+素海参），成本可控到¥7.35，卖¥24毛利69%——这才是合理的利润模型。</div>
+
+<!-- 12. 风险 -->
+<div class="section-title">风险提示</div>
+<div class="risk-list">
+<div class="risk-item"><div class="risk-icon">🛑</div><div class="risk-body"><div class="risk-title">海鲜食材安全 <span class="risk-level high">高</span></div><div class="risk-desc">鱿鱼/虾仁/海参等海鲜食材保质期短，在郑州内陆城市冷链配送要求高。应对策略：使用冷冻品替代鲜品，严格按先进先出管理库存，每日检查食材新鲜度。</div></div></div>
+<div class="risk-item"><div class="risk-icon">⚠️</div><div class="risk-body"><div class="risk-title">消费者认知偏差 <span class="risk-level mid">中</span></div><div class="risk-desc">郑州消费者提到"三鲜烩面"第一反应是萧记的羊肉+羊肚+羊汤。应对策略：菜单上明确标注"海鲜三鲜烩面",用文字和图片强调海鲜概念。</div></div></div>
+<div class="risk-item"><div class="risk-icon">⚠️</div><div class="risk-body"><div class="risk-title">成本波动 <span class="risk-level mid">中</span></div><div class="risk-desc">冷冻海鲜价格受进口关税和季节影响。应对策略：使用替代版方案，虾仁保留（最值钱的部分），海参用素替代。</div></div></div>
+</div>
+
+<!-- 13. 沧林 -->
+<div class="section-title">沧林判断</div>
+<div class="judge-box">
+<div class="judge-text">三鲜烩面是我在烩面体系里最犹豫要不要推的一张卡。从商业角度说，它出单占比低（≤15%）、对供应链要求高、消费者认知需要教育——怎么看都不是一个理性的选择。但我最后还是决定做，原因是一个店需要一碗"镇店的面"来标定你的水平上限。滋补烩面证明你懂养生，牛肉烩面证明你照顾不吃羊肉的客人，三鲜烩面证明你真的懂汤。三骨汤（鸡猪鱼）是最考验厨师对汤的理解的——三种骨头的处理方式完全不同，能做好三鲜汤的店，其他烩面不会差。</div>
+<div class="judge-tags"><span>#差异高价品</span><span>#技术展示</span><span>#替代版操作</span><span>#出单15%</span></div>
+</div>
+
+<!-- 14. 数据包 -->
+<div class="section-title">完整数据包预览</div>
+<div class="data-preview">
+<div class="data-item"><span class="data-icon">📋</span><span class="data-name">三骨汤SOP手册（温度/时长/火力）</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📊</span><span class="data-name">全海鲜版vs替代版成本对照</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">📈</span><span class="data-name">损益测算表</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🛒</span><span class="data-name">海鲜冻品供应链名录</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🦐</span><span class="data-name">海鲜选料标准+采购指南</span><span class="data-lock">🔒</span></div>
+<div class="data-item"><span class="data-icon">🧪</span><span class="data-name">三鲜变体：素三鲜/菌菇三鲜</span><span class="data-lock">🔒</span></div>
+</div>
+
+<!-- 15. 付费 -->
+<div class="pay-area">
+<div class="pay-header"><div class="pay-title">🔓 付费解锁</div><div class="pay-price">¥19<small>/份</small></div></div>
+<label class="pay-toggle">
+<input type="checkbox" id="payToggle">
+<span class="toggle-label">点击解锁完整数据</span>
+<button class="toggle-btn" onclick="document.getElementById('payToggle').checked=!document.getElementById('payToggle').checked;document.querySelector('.pay-content').classList.toggle('show');this.textContent=document.getElementById('payToggle').checked?'收起':'解锁'">解锁</button>
+</label>
+<div class="pay-content">
+<div class="pay-content-inner"><h4>📦 完整数据包</h4>
+<table class="pay-table"><tr><th>城市</th><th>成本/碗</th><th>售价</th><th>毛利</th><th>日均销量</th></tr>
+<tr><td>郑州</td><td>¥7.35（替代）</td><td>¥22-26</td><td>64-70%</td><td>40-60碗</td></tr>
+<tr><td>郑州（全海鲜）</td><td>¥10.85</td><td>¥28-35</td><td>62-69%</td><td>20-40碗</td></tr>
+</table>
+</div></div>
+</div>
+
+<div class="data-note">📌 数据来源：郑州万邦批发市场2026Q2·红餐网品类报告·萧记三鲜公开资料</div>
+<div class="footer-brand">
+<div class="fb-name">🥘 <span>FoodIntelAI</span> · 食品决策库</div>
+<div class="fb-line">少走弯路 快人一步</div>
+<div class="fb-line" style="font-size:11px">烩面体系 · 子卡 HM_S03 · 三鲜烩面 · ¥19</div>
+<div class="fb-copy">© 2026 FoodIntelAI · 数据仅供参考</div>
+</div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+var cb=document.getElementById('payToggle');
+var pc=document.querySelector('.pay-content');
+var btn=document.querySelector('.toggle-btn');
+cb.addEventListener('change',function(){
+pc.classList.toggle('show',cb.checked);
+btn.textContent=cb.checked?'收起':'解锁';
+});
+});
+</script>
+</body>
+</html>
