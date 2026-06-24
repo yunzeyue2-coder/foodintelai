@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BZ_08 鱼煲 · 煲系列</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e8e0;color:#1a1a1a;padding:20px 14px;line-height:1.7}
+.card{max-width:540px;margin:0 auto;background:#fdfaf7;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.header{background:linear-gradient(135deg,#4A2810,#6B3A1A,#8B5E3C);padding:22px 22px 18px;color:#fff}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.header-code{font-size:11px;opacity:.7;font-weight:600;letter-spacing:2px}
+.header-level{display:flex;gap:6px}
+.header-level span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.12)}
+.header h1{font-size:24px;font-weight:800;margin:4px 0 2px;letter-spacing:-.5px}
+.header .subtitle{font-size:12px;opacity:.8;line-height:1.4}
+.price-badge{font-size:16px;font-weight:800;color:#ffd700;margin-top:4px}
+.header-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.header-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
+.score-strip{background:#4A2810;color:#fff;padding:10px 18px;font-size:14px;font-weight:600;text-align:center}
+.score-strip strong{color:#ffd700}
+.section{padding:16px 18px;border-bottom:1px solid #ede0d0}
+.s-title{font-size:13px;font-weight:700;color:#6B3A1A;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.s-title::after{content:'';flex:1;height:1px;background:#ede0d0}
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+.tb th{background:#6B3A1A;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:11px}
+.tb td{padding:5px 8px;border-bottom:1px solid #ede0d0;color:#3a2a1a;font-size:11px}
+.tb tr:nth-child(even) td{background:#faf5f0}
+.spec-card{background:#f5ede0;border-radius:8px;padding:12px;margin:6px 0;border:1px solid #ede0d0}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#4a3a2a;line-height:1.6}
+.tip-box{background:#f5ede0;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.flow-step{display:flex;gap:8px;margin:6px 0;padding:8px 10px;background:#f5ede0;border-radius:6px;font-size:12px;color:#3a2a1a;align-items:flex-start}
+.flow-step .step-num{width:22px;height:22px;background:#6B3A1A;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.flow-step .step-body{flex:1}
+.flow-step .step-body strong{color:#6B3A1A}
+.ingr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px;color:#3a2a1a;background:#f5ede0;border-radius:8px;padding:10px 12px;margin:6px 0}
+.ingr-grid .ig-item{display:flex;justify-content:space-between;padding:2px 0}
+.ig-item .ig-name{color:#6B3A1A}
+.ig-item .ig-qty{font-weight:600}
+.risk-item{display:flex;gap:8px;margin:6px 0;padding:10px 12px;background:#fef2f0;border-radius:8px;font-size:12px;color:#4a3a2a;align-items:flex-start;border-left:3px solid #c0392b}
+.risk-item .ri-icon{font-size:14px;flex-shrink:0}
+.risk-item .ri-body{flex:1}
+.risk-item .ri-body strong{color:#c0392b}
+.judge-box{background:#fdf8f0;border-radius:10px;padding:14px;margin:6px 0;border:1px solid #ede0d0;font-size:12px;color:#3a2a1a;line-height:1.7}
+.judge-box .jb-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.data-note{font-size:10px;color:#999;line-height:1.8}
+.footer-brand{background:#3a2a1a;color:#fff;text-align:center;padding:20px}
+.footer-brand .fb-name{font-size:18px;font-weight:700;margin-bottom:2px}
+.footer-brand .fb-tagline{font-size:11px;opacity:.7;margin-bottom:10px}
+.footer-brand .fb-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.footer-brand .fb-links span{background:rgba(255,255,255,.12);padding:4px 12px;border-radius:16px;font-size:11px}
+.footer-brand .fb-series{font-size:10px;opacity:.5;margin-top:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-bottom:1px solid #eee5d8;text-align:center}
+.lock-icon{font-size:28px;margin-bottom:4px}
+.pay-area h3{font-size:15px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.pay-area .p-sub{font-size:11px;color:#b5aaa0;margin-bottom:10px}
+.price-tag{font-size:20px;font-weight:700;color:#6B3A1A}
+.price-tag small{font-size:12px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;width:100%;padding:12px;background:#6B3A1A;color:#fff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;margin-top:12px;border:none;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:6px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #6B3A1A}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5;font-size:11px}
+.recipe-line:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-code">BZ_08 · 煲系列</div>
+    <div class="header-level"><span>🐟 子卡 · ¥19</span></div>
+  </div>
+  <h1>🐟 鱼煲</h1>
+  <div class="subtitle">全年可做 · 鲜嫩入味 · 活鱼现杀有门槛</div>
+  <div class="price-badge">¥58-88/份 · 3-4人份</div>
+  <div class="header-tags">
+    <span>🐟 草鱼/巴沙鱼</span><span>🔥 酸菜/番茄/麻辣</span><span>💰 毛利58-65%</span><span>⭐⭐ 难度中</span><span>📅 全年</span>
+  </div>
+</div>
+
+<div class="score-strip">综合评分：<strong>6.8/10</strong> · 判定：<strong>△ 观察进入</strong>（全年可做·但鱼处理门槛高·利润中等）</div>
+
+<div class="section">
+  <div class="s-title">📊 五维雷达</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px;color:#3a2a1a">
+    <div><b>🔥 热度</b><span style="float:right;color:#6B3A1A;font-weight:700">6/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:60%;height:100%;background:#D4833A;border-radius:2px"></div></div>鱼品类热度中上·但煲类中不算顶流</div>
+    <div><b>🔄 复购</b><span style="float:right;color:#6B3A1A;font-weight:700">7/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:70%;height:100%;background:#D4833A;border-radius:2px"></div></div>鱼鲜嫩口感好·吃鱼的人每周都想吃</div>
+    <div><b>💰 利润</b><span style="float:right;color:#6B3A1A;font-weight:700">6/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:60%;height:100%;background:#D4833A;border-radius:2px"></div></div>草鱼¥6-8/斤·但鱼片出品率仅40-50%</div>
+    <div><b>⚡ 难度</b><span style="float:right;color:#6B3A1A;font-weight:700">5/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:50%;height:100%;background:#D4833A;border-radius:2px"></div></div>分越高越容易·片鱼刀工需要练习</div>
+    <div style="grid-column:1/-1"><b>🥊 竞争</b><span style="float:right;color:#6B3A1A;font-weight:700">7/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:70%;height:100%;background:#2E7D32;border-radius:2px"></div></div>分越高竞争越小·鱼煲专门店不多</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">👥 适合谁</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      • 有片鱼经验的厨师——草鱼整鱼去骨片鱼片需要熟练刀工<br>
+      • 夏季想找清爽煲品的顾客——鱼煲清淡不油腻，适合夏季<br>
+      • 想差异化竞争的煲店——鱼煲在郑州不多<br>
+      • 使用巴沙鱼柳降门槛的店主——免去活鱼处理，出品率90%+<br>
+      <br>
+      <b>❌ 不太适合：</b>没有片鱼经验的新手（活鱼处理门槛高）· 追求高毛利（出品率低）· 纯外卖（鱼配送后口感明显下降）
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>售价：</b>普通小店¥58-68/份 · 连锁品牌¥68-78/份 · 头牌¥78-98/份<br>
+      <b>原料成本：</b>草鱼2斤¥12-16（活）· 酸菜/番茄¥3-4 · 汤底调料¥2-3 · 配菜¥2-3 · 油+香料¥1<br>
+      <b>综合成本：</b>约¥20-27/份<br>
+      <b>毛利率：</b>58-65%<br>
+      <b>单份毛利：</b>¥35-48<br>
+      <b>日销预估：</b>堂食18-30份 · 外卖5-10份<br>
+      <b>日毛利贡献：</b>约¥630-1,440<br>
+      <b>盈利核心：</b>鱼煲毛利一般（出品率低），但客单价可做高（活鱼现杀有溢价）。巴沙鱼柳（¥12-15/斤·出品率90%+）可显著提升毛利。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <table class="tb">
+    <tr><th>品种</th><th>定价</th><th>毛利</th><th>难度</th><th>复购</th><th>适合新手</th></tr>
+    <tr><td><b>🐟 鱼煲</b></td><td>¥58-88</td><td>58-65%</td><td>⭐⭐ 中</td><td>高</td><td>△ 需经验</td></tr>
+    <tr><td>🐷 猪脚煲</td><td>¥58-78</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🐔 鸡煲</td><td>¥58-88</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🦆 黑鸭煲</td><td>¥68-88</td><td>62-68%</td><td>⭐⭐ 中</td><td>中</td><td>△ 可</td></tr>
+    <tr><td>🐮 牛腩煲</td><td>¥78-108</td><td>55-60%</td><td>⭐⭐ 中</td><td>高</td><td>△ 需经验</td></tr>
+  </table>
+  <div class="tip-box" style="margin-top:6px">
+    <p><b>鱼煲的竞争位置：</b>鱼煲是煲品类里的"差异化款"。做的人少、复购不错、全年可做。活鱼现杀有溢价能力，但鱼片刀工是门槛。巴沙鱼柳方案可降门槛但不如活鱼有卖点。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🌶️ 口味 · 颜色 · 口感</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>口味（三味型）：</b><br>
+      ① 酸菜味（经典）——酸菜+泡椒+鱼汤，酸辣开胃<br>
+      ② 番茄味（夏季推荐）——番茄+番茄酱，酸甜清爽<br>
+      ③ 麻辣味（秋冬）——豆瓣酱+干辣椒+花椒，麻辣鲜香<br>
+      <b>颜色：</b>酸菜→浅黄汤色+翠绿酸菜；番茄→红亮；麻辣→红油赤酱<br>
+      <b>口感：</b>鱼片嫩滑（草鱼片煮1-2分钟即熟），酸菜脆爽/番茄绵软/豆腐吸汤<br>
+      <b>香型：</b>酸菜→发酵酸香；番茄→酸甜果香；麻辣→麻辣复合
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 出品率</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>成品出品率：55-65%（草鱼）· 90%+（巴沙鱼柳）</b><br>
+      草鱼整鱼（2斤）→ 去鳞去内脏→去头去骨→片鱼片<br>
+      损耗主要在：鱼鳞内脏15%·鱼头鱼骨30%·片鱼损耗5%·煮后收缩5%<br>
+      <b>采购建议：</b>草鱼每份需采购1.8-2斤 → 得净鱼肉约400-450g<br>
+      出品率按最低值55%预估
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🧂 原料清单（酸菜味·单份基准）</div>
+  <div class="ingr-grid">
+    <div class="ig-item"><span class="ig-name">草鱼（活）</span><span class="ig-qty">约2斤</span></div>
+    <div class="ig-item"><span class="ig-name">或巴沙鱼柳</span><span class="ig-qty">500g（免处理）</span></div>
+    <div class="ig-item"><span class="ig-name">酸菜</span><span class="ig-qty">200g</span></div>
+    <div class="ig-item"><span class="ig-name">泡椒+泡姜</span><span class="ig-qty">30g+20g</span></div>
+    <div class="ig-item"><span class="ig-name">高汤/清水</span><span class="ig-qty">600ml</span></div>
+    <div class="ig-item"><span class="ig-name">豆腐/豆芽</span><span class="ig-qty">200g</span></div>
+    <div class="ig-item"><span class="ig-name">姜+蒜+葱+干辣椒+花椒</span><span class="ig-qty">50g+5g+3g</span></div>
+    <div class="ig-item"><span class="ig-name">料酒+白胡椒粉</span><span class="ig-qty">15ml+2g</span></div>
+    <div class="ig-item"><span class="ig-name">盐+鸡精</span><span class="ig-qty">适量</span></div>
+    <div class="ig-item"><span class="ig-name">油</span><span class="ig-qty">25ml</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔬 核心工艺SOP（酸菜鱼煲）</div>
+
+  <div class="flow-step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>片鱼：</strong>草鱼宰杀洗净→去头→沿脊骨片下两片鱼肉→去除腹刺→斜刀片鱼片（厚约3mm·第一刀不切断第二刀切断成蝴蝶片）→鱼骨斩段备用。鱼片加料酒+白胡椒粉+蛋清+淀粉抓匀腌制10分钟。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>炒酸菜：</strong>锅烧热下油20ml→姜蒜泡椒爆香→酸菜200g炒出香味（约2分钟）→关键：酸菜必须炒透才有发酵香。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>熬汤底：</strong>加高汤600ml→鱼骨入锅同煮→大火烧开转中火熬8-10分钟至汤色发白→捞出鱼骨→加盐鸡精调味。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>烫鱼片：</strong>转大火·汤沸腾后下鱼片→煮1-2分钟至鱼片变白卷起立即捞出→不要煮超过2分钟（鱼片老了就废了）。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">5</div>
+    <div class="step-body"><strong>装煲+激油：</strong>砂锅底放豆腐/豆芽→倒入酸菜汤底+鱼片→撒葱花+干辣椒花椒→另起锅烧油5ml至冒烟→淋在辣椒上（滋啦声·激发香味）→上桌保温。</div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">💡 关键参数</div>
+    <p>鱼片煮1分钟vs2分钟口感完全不同——1分钟嫩滑有弹性，2分钟略老但更入味。建议鱼片厚3mm煮1.5分钟最佳。巴沙鱼柳替代方案：免去片鱼步骤，直接切2cm厚片，腌制5分钟即可入汤煮2分钟。</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">🚫 别犯的错</div>
+    <p>① 鱼片切太薄（<2mm）→ 一下锅就碎。② 鱼片煮太久（>3分钟）→ 又老又柴。③ 酸菜不炒直接下汤 → 酸菜味出不来。④ 鱼骨没熬汤→汤底不够鲜。⑤ 用不粘锅片鱼→鱼片易破（用不锈钢刀+木质菜板）。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔧 设备清单</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <table class="tb">
+        <tr><th>设备</th><th>规格</th><th>单价</th></tr>
+        <tr><td>砂锅（10-12号）</td><td>耐高温·可直火</td><td>¥25-40/个</td></tr>
+        <tr><td>炒锅</td><td>直径40cm+</td><td>¥100-300</td></tr>
+        <tr><td>卡式炉</td><td>桌上保温用</td><td>¥150-300/台</td></tr>
+        <tr><td>片鱼刀</td><td>窄刃·锋利</td><td>¥30-80</td></tr>
+        <tr><td>卧式冷柜</td><td>冻鱼柳+配菜</td><td>¥1500-2500</td></tr>
+        <tr><td>操作台</td><td>不锈钢</td><td>¥800-1500</td></tr>
+        <tr><td>排风系统</td><td>堂食店必配</td><td>¥2000-5000</td></tr>
+      </table>
+      <b style="margin-top:6px;display:block">最低配置总投入：约¥3500-5500</b>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📍 开店适配评分</div>
+  <table class="tb">
+    <tr><th>场景</th><th>评分</th><th>理由</th></tr>
+    <tr><td>🏪 社区店</td><td>7/10 ✅</td><td>鱼鲜嫩老少皆宜</td></tr>
+    <tr><td>🎪 夜市摆摊</td><td>7/10 ✅</td><td>酸菜鱼激油有视觉表演感</td></tr>
+    <tr><td>🏪 档口外卖</td><td>5/10 △</td><td>配送后鱼片易碎</td></tr>
+    <tr><td>🏙️ 商圈店</td><td>7/10 ✅</td><td>活鱼现杀有溢价能力</td></tr>
+    <tr><td>🏢 写字楼午餐</td><td>6/10 △</td><td>片鱼出餐稍慢</td></tr>
+    <tr><td>🏘️ 县城/乡镇</td><td>8/10 ✅ 推荐</td><td>活鱼现杀有面子</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 30天验证路线</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>① 练刀工（第1-5天）：</b>每天片2条草鱼→练到刀工均匀+耗时&lt;5分钟/条<br>
+      <b>② 试品（第6-10天）：</b>做3轮鱼煲（酸菜/番茄/麻辣）→找10人盲测→定主力味型<br>
+      <b>③ 巴沙鱼 vs 活鱼对比（第11-15天）：</b>两种方案成本+口感对比→决定用哪种<br>
+      <b>④ 摆摊测试（第16-22天）：</b>夜市摆摊7天→测日销/客单价→观察激油环节的传播效果<br>
+      <b>⑤ 决策（第23-30天）：</b>综合数据决定做不做→找铺位/买设备/办证
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item">
+    <div class="ri-icon">🔪</div>
+    <div class="ri-body"><strong>鱼片刀工门槛：</strong>草鱼片鱼需要熟练刀工，新手练10条鱼才能稳定出品。 → 第一天用巴沙鱼柳替代（免片鱼·出品率90%+），熟练后再上活鱼。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🔥</div>
+    <div class="ri-body"><strong>鱼片煮老：</strong>鱼片下锅多30秒就老了，出餐高峰期容易出问题。 → 严格计时（1.5分钟）+ 鱼片单独烫熟再入锅（不等整锅烧开）。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🐟</div>
+    <div class="ri-body"><strong>鱼不新鲜：</strong>活鱼死了超过2小时再片→肉质松散腥味重。 → 每天采购活鱼+用巴沙鱼柳做冷冻备货（活鱼卖完切巴沙鱼）。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">💲</div>
+    <div class="ri-body"><strong>出品率低：</strong>草鱼出品率仅55-65%，鱼头鱼骨不可售。 → 鱼头鱼骨熬汤+单独卖鱼头煲/炸鱼骨，减少浪费。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">📱</div>
+    <div class="ri-body"><strong>外卖适配：</strong>配送后鱼片易碎、酸菜汤被配菜吸干。 → 鱼片+汤分装+配菜另放+附"将鱼片倒入汤中加热"指南。</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 赛道判断</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>优势（4条）：</b><br>
+      ① 活鱼现杀有溢价能力<br>
+      ② 三味型（酸菜/番茄/麻辣）适应不同季节<br>
+      ③ 巴沙鱼柳方案可降门槛<br>
+      ④ 激油环节有视觉表演感，适合短视频<br>
+      <br>
+      <b>劣势（4条）：</b><br>
+      ① 草鱼片鱼刀工门槛<br>
+      ② 出品率偏低（55-65%）<br>
+      ③ 活鱼不能隔夜，损耗风险高<br>
+      ④ 外卖适配难度大<br>
+      <br>
+      <b>趋势研判：</b>鱼煲是煲品类里的"夏季款"。酸菜味和番茄味在夏天天然受欢迎。建议和鸡煲/猪脚煲搭配卖——夏天主推鱼煲，冬天主推牛杂/羊肉。巴沙鱼柳方案是新手入场券，活鱼方案是老手溢价牌。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📌 沧林判断</div>
+  <div class="judge-box">
+    <div class="jb-label">🎯 品类判断 · 2026年6月</div>
+    <p>鱼煲做的是"鲜"字。活鱼现杀这个卖点在中低端餐饮里很有杀伤力——顾客进店看到鱼缸里游着鱼，信任感就建立了一半。</p>
+    <p style="margin-top:6px"><b>但鱼煲的坑也很明确：</b>刀工。郑州找一个能片鱼的师傅不容易，培训一个新手片鱼至少2周。如果店里的鱼片是碎的、厚薄不一的，顾客吃一次就不会来了。</p>
+    <p style="margin-top:6px"><b>我的建议：</b>先上巴沙鱼柳方案跑通模式，等生意稳定了再切活鱼。巴沙鱼柳的毛利其实比草鱼高（出品率90%+ vs 55-65%），而且省人工。顾客不太在意是不是活鱼——他们在意的是"嫩不嫩""有没有土腥味"，巴沙鱼柳在这两点上反而优于草鱼。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="font-size:12px;color:#3a2a1a;line-height:1.8;">
+    • <b>母卡：</b><a href="BZ_M01_煲系列创业母卡.html" style="color:#6B3A1A;">BZ_M01 煲系列创业母卡</a><br>
+    • <b>总纲：</b><a href="BZ_T01_煲系列总纲.html" style="color:#6B3A1A;">BZ_T01 煲系列总纲（免费）</a><br>
+    • <b>同系列：</b>鸡煲（BZ_01）· 猪脚煲（BZ_04）· 黑鸭煲（BZ_06）· 牛腩煲（BZ_03）· 牛杂煲（BZ_02）<br>
+    • <b>变体推荐：</b>酸菜鱼煲·番茄鱼煲·麻辣鱼煲·糟粕醋鱼煲
+  </div>
+</div>
+
+<div class="section" style="border-bottom:none;background:#faf5f0;">
+  <div class="s-title">📋 数据说明</div>
+  <div class="data-note">
+    · 鱼价基于郑州万邦批发市场2026年Q2批发价（草鱼¥6-8/斤·巴沙鱼柳¥12-15/斤）<br>
+    · 售价区间¥58-88参考2025-2026年郑州同品类煲店中位价<br>
+    · 毛利率按售价中位值¥68计算，实际因城市/批次浮动±8%<br>
+    · 出品率按行业保守最低值55%（草鱼）·90%（巴沙鱼柳）<br>
+    · 草鱼出品率因鱼的大小差异较大（45-65%·小鱼45%·大鱼55%），巴沙鱼柳约96%<br>
+    · 巴沙鱼柳方案为推荐降门槛方案，非传统做法<br>
+    · 数据采集截止：2026年6月<br>
+    · 微信：canglin1985 | 食品决策库 · 青葵亲研
+  </div>
+</div>
+
+<!-- ===== 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整数据包 · 精确到克</h3>
+  <div class="p-sub">6大模块：精确配比表·三味型配方·片鱼刀工教程·出品率测算表·巴沙鱼替代方案·供应链清单</div>
+  <div class="price-tag">¥19 <small>子卡解锁</small></div>
+  <button class="btn" onclick="document.getElementById('payContent').classList.toggle('show');this.textContent=this.textContent.includes('收起')?'展开':'🔓 付费解锁'">🔓 付费解锁</button>
+  <div class="note">付费后微信发送清晰版</div>
+  <div id="payContent" class="pay-content">
+
+    <div style="font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:6px">1️⃣ 精确配比表（酸菜鱼煲·单份基准）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>草鱼约2斤（净鱼肉约450g）</span><span>片3mm厚蝴蝶片·腌制10min</span></div>
+      <div class="recipe-line"><span>或巴沙鱼柳500g</span><span>切2cm厚片·免处理</span></div>
+      <div class="recipe-line"><span>酸菜200g</span><span>切段·炒透出香</span></div>
+      <div class="recipe-line"><span>泡椒30g+泡姜20g</span><span>切碎·爆香</span></div>
+      <div class="recipe-line"><span>高汤600ml</span><span>或清水+浓汤宝+鱼骨同熬</span></div>
+      <div class="recipe-line"><span>豆腐/豆芽200g</span><span>砂锅打底</span></div>
+      <div class="recipe-line"><span>姜15g+蒜15g+葱10g</span><span>爆香</span></div>
+      <div class="recipe-line"><span>干辣椒5g+花椒3g</span><span>激油用</span></div>
+      <div class="recipe-line"><span>料酒15ml+白胡椒粉2g+蛋清1个+淀粉5g</span><span>鱼片腌制</span></div>
+      <div class="recipe-line"><span>油25ml（底油15ml+激油10ml）</span><span>炒酸菜+激油</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">2️⃣ 番茄/麻辣味型切换</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>🍅 番茄鱼煲</span><span>酸菜替换为番茄丁300g+番茄酱40g+高汤500ml·不放辣椒</span></div>
+      <div class="recipe-line"><span>🌶️ 麻辣鱼煲</span><span>酸菜减至100g+豆瓣酱30g+干辣椒15g+花椒8g+火锅底料20g</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:6px">3️⃣ 片鱼刀工SOP（草鱼·5步）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>① 去鳞开膛</span><span>刮净鱼鳞·剪刀开膛去内脏·去鳃·冲净腹腔黑膜（去腥关键）</span></div>
+      <div class="recipe-line"><span>② 去头</span><span>在鳃后1cm处切下鱼头·鱼头可熬汤用</span></div>
+      <div class="recipe-line"><span>③ 片下鱼肉</span><span>沿脊骨从尾部片下两片完整鱼肉</span></div>
+      <div class="recipe-line"><span>④ 去腹刺</span><span>斜刀片去鱼腹上的排刺（手感摸到硬刺就切掉）</span></div>
+      <div class="recipe-line"><span>⑤ 片鱼片</span><span>斜刀30°片3mm厚蝴蝶片（第一刀不切断·第二刀切断）</span></div>
+      <div class="recipe-line"><span>总耗时</span><span>熟练后约3-5分钟/条（约2斤草鱼）</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">4️⃣ 出品率测算表</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>草鱼进价2斤</span><span>¥6-8/斤 → ¥12-16</span></div>
+      <div class="recipe-line"><span>去鳞去内脏-15%</span><span>150g↓</span></div>
+      <div class="recipe-line"><span>去头去骨-30%</span><span>300g↓（可熬汤）</span></div>
+      <div class="recipe-line"><span>片鱼损耗-5%</span><span>50g↓</span></div>
+      <div class="recipe-line"><span>煮后收缩-5%</span><span>50g↓</span></div>
+      <div class="recipe-line"><span>成品净鱼肉约450g</span><span>出品率约45%（含头骨汤约60%）</span></div>
+      <div class="recipe-line"><span>巴沙鱼柳500g→成品约480g</span><span>出品率约96%</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">4️⃣ 供应链清单</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>草鱼（活）</span><span>¥6-8/斤·万邦水产区·每日采购</span></div>
+      <div class="recipe-line"><span>巴沙鱼柳（冷冻）</span><span>¥12-15/斤·冻品区·可囤货</span></div>
+      <div class="recipe-line"><span>酸菜/泡椒</span><span>¥5-10/袋·调味品市场</span></div>
+      <div class="recipe-line"><span>番茄/豆腐</span><span>¥2-5/斤·蔬菜区</span></div>
+      <div class="recipe-line"><span>砂锅</span><span>¥25-40/个·中原陶瓷城</span></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-brand">
+  <div class="fb-name">🏺 食品决策库</div>
+  <div class="fb-tagline">煲系列 · 单品完整决策数据</div>
+  <div class="fb-links">
+    <span>💬 微信：canglin1985</span>
+    <span>📢 食品决策库</span>
+  </div>
+  <div class="fb-series">BZ_08 鱼煲（子）· 青葵亲研</div>
+</div>
+
+</div>
+</body>
+</html>

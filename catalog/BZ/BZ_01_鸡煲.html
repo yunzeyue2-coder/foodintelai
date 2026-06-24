@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BZ_01 鸡煲 · 煲系列</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e8e0;color:#1a1a1a;padding:20px 14px;line-height:1.7}
+.card{max-width:540px;margin:0 auto;background:#fdfaf7;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.header{background:linear-gradient(135deg,#4A2810,#6B3A1A,#8B5E3C);padding:22px 22px 18px;color:#fff}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.header-code{font-size:11px;opacity:.7;font-weight:600;letter-spacing:2px}
+.header-level{display:flex;gap:6px}
+.header-level span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.12)}
+.header h1{font-size:24px;font-weight:800;margin:4px 0 2px;letter-spacing:-.5px}
+.header .subtitle{font-size:12px;opacity:.8;line-height:1.4}
+.price-badge{font-size:16px;font-weight:800;color:#ffd700;margin-top:4px}
+.header-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.header-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
+.score-strip{background:#4A2810;color:#fff;padding:10px 18px;font-size:14px;font-weight:600;text-align:center}
+.score-strip strong{color:#ffd700}
+.section{padding:16px 18px;border-bottom:1px solid #ede0d0}
+.s-title{font-size:13px;font-weight:700;color:#6B3A1A;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.s-title::after{content:'';flex:1;height:1px;background:#ede0d0}
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+.tb th{background:#6B3A1A;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:11px}
+.tb td{padding:5px 8px;border-bottom:1px solid #ede0d0;color:#3a2a1a;font-size:11px}
+.tb tr:nth-child(even) td{background:#faf5f0}
+.spec-card{background:#faf0e8;border-radius:8px;padding:12px;margin:6px 0;border:1px solid #ede0d0}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#4a3a2a;line-height:1.6}
+.tip-box{background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.conclusion-list{counter-reset:conclusion;list-style:none;padding:0}
+.conclusion-list li{counter-increment:conclusion;padding:8px 0 8px 28px;position:relative;font-size:12.5px;border-bottom:1px dashed #ede0d0;color:#3a2a1a}
+.conclusion-list li:last-child{border-bottom:none}
+.conclusion-list li::before{content:counter(conclusion);position:absolute;left:0;top:8px;width:20px;height:20px;background:#6B3A1A;color:#fff;font-size:10px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.flow-step{display:flex;gap:8px;margin:6px 0;padding:8px 10px;background:#faf0e8;border-radius:6px;font-size:12px;color:#3a2a1a;align-items:flex-start}
+.flow-step .step-num{width:22px;height:22px;background:#6B3A1A;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.flow-step .step-body{flex:1}
+.flow-step .step-body strong{color:#6B3A1A}
+.ingr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px;color:#3a2a1a;background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0}
+.ingr-grid .ig-item{display:flex;justify-content:space-between;padding:2px 0}
+.ig-item .ig-name{color:#6B3A1A}
+.ig-item .ig-qty{font-weight:600}
+.risk-item{display:flex;gap:8px;margin:6px 0;padding:10px 12px;background:#fef2f0;border-radius:8px;font-size:12px;color:#4a3a2a;align-items:flex-start;border-left:3px solid #c0392b}
+.risk-item .ri-icon{font-size:14px;flex-shrink:0}
+.risk-item .ri-body{flex:1}
+.risk-item .ri-body strong{color:#c0392b}
+.judge-box{background:#fdf8f0;border-radius:10px;padding:14px;margin:6px 0;border:1px solid #ede0d0;font-size:12px;color:#3a2a1a;line-height:1.7}
+.judge-box .jb-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.grid2 .box{background:#faf0e8;border-radius:8px;padding:12px;font-size:12px;color:#4a3a2a;line-height:1.6;border:1px solid #ede0d0}
+.grid2 .box b{color:#6B3A1A}
+.data-note{font-size:10px;color:#999;line-height:1.8}
+.footer-brand{background:#3a2a1a;color:#fff;text-align:center;padding:20px}
+.footer-brand .fb-name{font-size:18px;font-weight:700;margin-bottom:2px}
+.footer-brand .fb-tagline{font-size:11px;opacity:.7;margin-bottom:10px}
+.footer-brand .fb-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.footer-brand .fb-links span{background:rgba(255,255,255,.12);padding:4px 12px;border-radius:16px;font-size:11px}
+.footer-brand .fb-series{font-size:10px;opacity:.5;margin-top:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-bottom:1px solid #eee5d8;text-align:center}
+.lock-icon{font-size:28px;margin-bottom:4px}
+.pay-area h3{font-size:15px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.pay-area .p-sub{font-size:11px;color:#b5aaa0;margin-bottom:10px}
+.price-tag{font-size:20px;font-weight:700;color:#6B3A1A}
+.price-tag small{font-size:12px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;width:100%;padding:12px;background:#6B3A1A;color:#fff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;margin-top:12px;border:none;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:6px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #6B3A1A}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5;font-size:11px}
+.recipe-line:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-code">BZ_01 · 煲系列</div>
+    <div class="header-level"><span>🍗 子卡 · ¥19</span></div>
+  </div>
+  <h1>🐔 鸡煲</h1>
+  <div class="subtitle">广式焖煲风格 · 酱香浓郁 · 全年可做</div>
+  <div class="price-badge">¥58-88/份 · 3-4人份</div>
+  <div class="header-tags">
+    <span>🍗 三黄鸡</span><span>🔥 酱香型</span><span>💰 毛利60-68%</span><span>⭐ 难度低</span><span>📅 全年</span>
+  </div>
+</div>
+
+<div class="score-strip">综合评分：<strong>7.9/10</strong> · 判定：<strong>✅ 推荐进入</strong>（热度顶流·难度低·全年可做·预制酱料成熟）</div>
+
+<div class="section">
+  <div class="s-title">📊 五维雷达</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px;color:#3a2a1a">
+    <div><b>🔥 热度</b><span style="float:right;color:#6B3A1A;font-weight:700">9/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:90%;height:100%;background:#D4833A;border-radius:2px"></div></div>抖音120亿播放·郑州增速最快品类</div>
+    <div><b>🔄 复购</b><span style="float:right;color:#6B3A1A;font-weight:700">7/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:70%;height:100%;background:#D4833A;border-radius:2px"></div></div>口味易疲劳·需变体轮换</div>
+    <div><b>💰 利润</b><span style="float:right;color:#6B3A1A;font-weight:700">7/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:70%;height:100%;background:#D4833A;border-radius:2px"></div></div>毛利60-68%·鸡价稳定</div>
+    <div><b>⚡ 难度</b><span style="float:right;color:#6B3A1A;font-weight:700">8/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:80%;height:100%;background:#2E7D32;border-radius:2px"></div></div>分越高越容易·预制酱料成熟</div>
+    <div style="grid-column:1/-1"><b>📐 空间</b><span style="float:right;color:#6B3A1A;font-weight:700">7/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:70%;height:100%;background:#D4833A;border-radius:2px"></div></div>市场还在增长·但窗口期约3年·需差异化突围</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">👥 适合谁</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      • 新手创业者——鸡煲是煲品类入门款，预制酱料成熟，出品稳定<br>
+      • 已有快餐店想加宵夜线——鸡煲出餐快，翻台节奏可控<br>
+      • 夜市/社区店——鸡煲自带烟火气，复购率高<br>
+      • 2人以上团队——后厨+前厅分工明确<br>
+      <br>
+      <b>❌ 不太适合：</b>纯外卖（鸡煲配送后口感下降明显）· 只有1人干所有活 · 想卖¥38以下的低价区间（鸡煲走量利润不够）
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>售价：</b>普通小店¥58-68/份 · 连锁品牌¥68-78/份 · 头牌¥78-88/份<br>
+      <b>原料成本：</b>三黄鸡600g ¥10-14 · 酱料包80g ¥4-5 · 高汤+配菜 ¥3-4 · 油+香料 ¥1-2<br>
+      <b>综合成本：</b>约¥18-25/份<br>
+      <b>毛利率：</b>60-68%<br>
+      <b>单份毛利：</b>¥38-52<br>
+      <b>日销预估：</b>堂食25-45份 · 外卖10-20份（午晚市各一轮）<br>
+      <b>日毛利贡献：</b>约¥950-2,340<br>
+      <b>盈利核心：</b>鸡的成本稳定（¥7-9/斤·波动小），酱料可批量预制。配菜+饮品是利润放大器——一桌加1份小菜+2杯饮品，客单价提升¥15-20。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <table class="tb">
+    <tr><th>品种</th><th>定价</th><th>毛利</th><th>难度</th><th>复购</th><th>适合新手</th></tr>
+    <tr><td><b>🐔 鸡煲</b></td><td>¥58-88</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🐷 猪脚煲</td><td>¥58-78</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🦆 黑鸭煲</td><td>¥68-88</td><td>62-68%</td><td>⭐⭐ 中</td><td>中</td><td>△ 可</td></tr>
+    <tr><td>🐮 牛腩煲</td><td>¥78-108</td><td>55-60%</td><td>⭐⭐ 中</td><td>高</td><td>△ 需经验</td></tr>
+    <tr><td>🐮 牛杂煲</td><td>¥68-98</td><td>55-62%</td><td>⭐⭐⭐ 中高</td><td>中</td><td>✘ 不推荐</td></tr>
+  </table>
+  <div class="tip-box" style="margin-top:6px">
+    <p><b>鸡煲的竞争位置：</b>在煲品类中，鸡煲是流量款——热度最高、难度最低、最适合新手入门。但正因如此，竞争也最激烈。你的差异化不在"做鸡煲"，在"做什么味型的鸡煲"。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🌶️ 口味 · 颜色 · 口感</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>口味：</b>酱香型（柱侯酱+海鲜酱+花生酱打底），咸鲜微甜。可做微辣/中辣/重辣三档<br>
+      <b>颜色：</b>酱红色（酱油+柱侯酱上色），表面油亮有光泽，配青红椒点缀<br>
+      <b>口感：</b>鸡肉嫩滑不柴（炖40-60分钟），酱汁浓稠挂肉，砂锅持续保温越吃越入味<br>
+      <b>香型：</b>酱香+姜蒜香+柱侯酱复合香，上桌开盖瞬间香气扑鼻
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 出品率</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>成品出品率：75-85%</b><br>
+      三黄鸡整鸡（去头爪内脏）→ 斩块 → 焯水控干 → 炒制 → 炖煮 → 装煲<br>
+      损耗主要在：解冻失水2-3% · 焯水收缩5-8% · 炖煮蒸发5-8% · 骨头占比15-20%<br>
+      <b>采购建议：</b>按每份600g净肉反算 → 每份需采购带骨鸡肉约750-800g<br>
+      出品率按最低值75%预估，实际可通过保水工艺提高
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🧂 原料清单（单份基准）</div>
+  <div class="ingr-grid">
+    <div class="ig-item"><span class="ig-name">三黄鸡（带骨）</span><span class="ig-qty">750g</span></div>
+    <div class="ig-item"><span class="ig-name">酱料包（预制）</span><span class="ig-qty">80g</span></div>
+    <div class="ig-item"><span class="ig-name">高汤</span><span class="ig-qty">500ml</span></div>
+    <div class="ig-item"><span class="ig-name">洋葱</span><span class="ig-qty">80g</span></div>
+    <div class="ig-item"><span class="ig-name">青红椒</span><span class="ig-qty">60g</span></div>
+    <div class="ig-item"><span class="ig-name">蒜瓣</span><span class="ig-qty">30g</span></div>
+    <div class="ig-item"><span class="ig-name">姜片</span><span class="ig-qty">20g</span></div>
+    <div class="ig-item"><span class="ig-name">葱段</span><span class="ig-qty">20g</span></div>
+    <div class="ig-item"><span class="ig-name">八角+桂皮+香叶</span><span class="ig-qty">5g</span></div>
+    <div class="ig-item"><span class="ig-name">油（底油+明油）</span><span class="ig-qty">40ml</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔬 核心工艺SOP</div>
+
+  <div class="flow-step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>预处理：</strong>三黄鸡斩3-4cm块，冷水浸泡30分钟去血水→沥干。加料酒10ml+生抽5ml+白胡椒粉1g抓匀，腌制10分钟。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>爆香：</strong>砂锅/炒锅大火烧热，下油30ml→姜片蒜瓣爆香20秒→加入鸡块翻炒至表面变色（约2-3分钟）。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>下酱：</strong>转中火，加入预制酱料80g翻炒均匀（约1分钟）→加入八角桂皮香叶→加入高汤500ml→大火烧开。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>炖煮：</strong>转小火·盖盖炖40-60分钟（三黄鸡40分钟·土鸡60分钟）→中途开盖翻一次，防粘底。炖至筷子能轻松扎入鸡腿最厚处即可。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">5</div>
+    <div class="step-body"><strong>收汁装煲：</strong>开盖·转大火收汁至浓稠（约2-3分钟）→加入洋葱青红椒翻炒30秒→淋明油10ml→移入预热好的砂锅→撒葱花/香菜→卡式炉上桌保温。</div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">💡 关键参数</div>
+    <p>炖40分钟vs60分钟口感完全不同——40分钟鸡肉嫩滑有弹性，60分钟肉骨分离更入味。新手建议先做40分钟版本，熟练后根据顾客反馈延长时间。</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">🚫 别犯的错</div>
+    <p>① 鸡块不要斩太小（<2cm）→ 炖完肉散。② 酱料不要过早下（鸡块没炒熟就放）→ 鸡肉不入味。③ 不要中途加冷水 → 蛋白质凝固肉质变柴。④ 砂锅用完别直接冲冷水 → 必裂。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔧 设备清单</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <table class="tb">
+        <tr><th>设备</th><th>规格</th><th>单价</th></tr>
+        <tr><td>砂锅（8-10号）</td><td>耐高温·可直火</td><td>¥20-35/个</td></tr>
+        <tr><td>炒锅/大锅</td><td>直径40cm+</td><td>¥100-300</td></tr>
+        <tr><td>卡式炉</td><td>桌上保温用</td><td>¥150-300/台</td></tr>
+        <tr><td>猛火灶</td><td>厨房爆炒用</td><td>¥500-1000</td></tr>
+        <tr><td>卧式冰柜</td><td>冻鸡+酱料</td><td>¥1500-2500</td></tr>
+        <tr><td>操作台</td><td>不锈钢</td><td>¥800-1500</td></tr>
+        <tr><td>排风系统</td><td>堂食店必配</td><td>¥2000-5000</td></tr>
+      </table>
+      <b style="margin-top:6px;display:block">最低配置总投入：约¥3000-5000（摆摊档口版）</b>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📍 开店适配评分</div>
+  <table class="tb">
+    <tr><th>场景</th><th>评分</th><th>理由</th></tr>
+    <tr><td>🏪 社区店</td><td>8/10 ✅</td><td>复购高·适合酱香口味</td></tr>
+    <tr><td>🎪 夜市摆摊</td><td>8/10 ✅</td><td>烟火气强·拉客效果好</td></tr>
+    <tr><td>🏪 档口外卖</td><td>6/10 △</td><td>配送后口感下降</td></tr>
+    <tr><td>🏙️ 商圈店</td><td>6/10 △</td><td>租金高·需翻台率支撑</td></tr>
+    <tr><td>🏢 写字楼午餐</td><td>5/10 △</td><td>出餐慢于快餐</td></tr>
+    <tr><td>🏘️ 县城/乡镇</td><td>9/10 ✅ 推荐</td><td>租金低·鸡煲有性价比</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item">
+    <div class="ri-icon">🔥</div>
+    <div class="ri-body"><strong>火候失控：</strong>炖煮时间不够（<40分钟）鸡肉没熟透或太硬；炖太久（>70分钟）肉散烂。 → 用定时器+每锅记录时间，找标准参数。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🍜</div>
+    <div class="ri-body"><strong>同质化：</strong>鸡煲是郑州增速最快品类，别人做酱香你也做酱香→只能拼价格。 → 差异化味型（黑鸭鸡煲/咖喱鸡煲/酸汤鸡煲），做别人没有的。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">💧</div>
+    <div class="ri-body"><strong>出品率不稳定：</strong>不同批次鸡含水量不同，出品率可能从85%掉到70%。 → 固定供货商+每批次抽测出品率，及时调整采购量。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🏪</div>
+    <div class="ri-body"><strong>翻台慢：</strong>现做40-60分钟+客人吃1-1.5小时=一张桌一天只能翻2-3次。 → 高峰期批量预制（一次炖3-5份）+套餐设计缩短点单时间。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">📱</div>
+    <div class="ri-body"><strong>外卖适配难：</strong>配送后酱汁凝固、鸡肉变干、砂锅无保温效果。 → 汤料分装+附复热指南+注明"建议堂食"。外卖控制在总营收30%以内。</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 赛道判断</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>优势（5条）：</b><br>
+      ① 鸡煲是煲类入门款，新手友好<br>
+      ② 全年可做，无明显淡季<br>
+      ③ 鸡肉成本稳定（¥7-9/斤·波动小）<br>
+      ④ 预制酱料成熟，出品标准化容易<br>
+      ⑤ 烟火气强，抖音/小红书传播效果好<br>
+      <br>
+      <b>劣势（3条）：</b><br>
+      ① 郑州鸡煲竞争加剧，同质化严重<br>
+      ② 纯外卖适配成本高<br>
+      ③ 利润受鸡价+酱料成本影响<br>
+      <br>
+      <b>趋势研判：</b>鸡煲市场还在增长，但窗口期有限。现在入局还有3年左右的先发优势。关键是在酱料味型上做出差异化——不要做"和隔壁一样"的鸡煲。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 30天验证路线</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>① 试品（第1-5天）：</b>按SOP做3轮鸡煲→找10人盲测→记录评分和改进点<br>
+      <b>② 摆摊跑数据（第6-12天）：</b>夜市摆摊7天→测日销/客单价/顾客反馈→日销&lt;¥500则换品<br>
+      <b>③ 财务核算（第13-18天）：</b>代入实际采购成本→算出品率/毛利→三个月保本线<br>
+      <b>④ 竞争调研（第19-22天）：</b>吃5家郑州鸡煲→记录定价/口味/产品结构→找差异化方向<br>
+      <b>⑤ 决策（第23-30天）：</b>综合所有数据→决定做不做·怎么做→找铺位/买设备/办证
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📌 沧林判断</div>
+  <div class="judge-box">
+    <div class="jb-label">🎯 品类判断 · 2026年6月</div>
+    <p>鸡煲是煲系列的入门款，新手想入煲赛道第一站就是鸡煲。预制酱料成熟、出品稳定、全年可做——这些没错。</p>
+    <p style="margin-top:6px">但正因为入门门槛低，郑州做鸡煲的人越来越多。你的鸡煲如果和隔壁味道一样，那顾客为什么选你？<b>鸡煲的竞争力不在"做得好"，在"做得和别人不一样"。</b></p>
+    <p style="margin-top:6px">要么在味型上做差异化（黑鸭鸡煲·咖喱鸡煲·酸汤鸡煲），要么在出餐效率上做优势（15分钟出餐·精准成本控制）。两条路选一条走，不要走中间。</p>
+  </div>
+</div>
+
+<div class="section" style="border-bottom:none">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="font-size:12px;color:#3a2a1a;line-height:1.8;">
+    • <b>母卡：</b><a href="BZ_M01_煲系列创业母卡.html" style="color:#6B3A1A;">BZ_M01 煲系列创业母卡</a><br>
+    • <b>总纲：</b><a href="BZ_T01_煲系列总纲.html" style="color:#6B3A1A;">BZ_T01 煲系列总纲（免费）</a><br>
+    • <b>同系列：</b>猪脚煲（BZ_04）· 黑鸭煲（BZ_06）· 牛腩煲（BZ_03）<br>
+    • <b>变体推荐：</b>麻辣鸡煲·咖喱鸡煲·酸汤鸡煲·藤椒鸡煲
+  </div>
+</div>
+
+<div class="section" style="border-bottom:none;background:#faf5f0;">
+  <div class="s-title">📋 数据说明</div>
+  <div class="data-note">
+    · 鸡价基于郑州万邦批发市场2026年Q2批发价（三黄鸡¥7-9/斤）<br>
+    · 售价区间¥58-88参考2025-2026年郑州同品类煲店中位价<br>
+    · 毛利率按售价中位值¥73计算，实际因城市/批次浮动±8%<br>
+    · 出品率按行业保守最低值75%预估<br>
+    · 数据采集截止：2026年6月<br>
+    · 微信：canglin1985 | 食品决策库 · 青葵亲研
+  </div>
+</div>
+
+<!-- ===== 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整数据包 · 精确到克</h3>
+  <div class="p-sub">6大模块：精确配比表·酱料配方SOP·批量出品SOP·成本对照表·变体方案·出品率测算表</div>
+  <div class="price-tag">¥19 <small>子卡解锁</small></div>
+  <button class="btn" onclick="document.getElementById('payContent').classList.toggle('show');this.textContent=this.textContent.includes('收起')?'展开':'🔓 付费解锁'">🔓 付费解锁</button>
+  <div class="note">付费后微信发送清晰版</div>
+  <div id="payContent" class="pay-content">
+
+    <div style="font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:6px">1️⃣ 精确配比表（单份基准）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>三黄鸡（带骨）750g</span><span>斩3-4cm块·冷水泡30min去血水</span></div>
+      <div class="recipe-line"><span>柱侯酱25g</span><span>广式煲灵魂酱料</span></div>
+      <div class="recipe-line"><span>海鲜酱15g</span><span>增鲜·提甜</span></div>
+      <div class="recipe-line"><span>花生酱10g</span><span>增稠·增香</span></div>
+      <div class="recipe-line"><span>沙茶酱10g</span><span>复合咸鲜</span></div>
+      <div class="recipe-line"><span>生抽15ml</span><span>上色+底味</span></div>
+      <div class="recipe-line"><span>老抽5ml</span><span>增色·不可多放</span></div>
+      <div class="recipe-line"><span>蚝油15g</span><span>增鲜·挂汁</span></div>
+      <div class="recipe-line"><span>冰糖10g</span><span>提鲜·增亮</span></div>
+      <div class="recipe-line"><span>料酒10ml</span><span>去腥</span></div>
+      <div class="recipe-line"><span>高汤500ml</span><span>鸡骨熬制或浓缩鸡汁化开</span></div>
+      <div class="recipe-line"><span>油+香料15g</span><span>姜蒜葱·八角桂皮香叶</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">2️⃣ 批量出品SOP（5份起）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>鸡块预处理</span><span>批量斩块3.75kg→浸泡→沥干→加料腌制</span></div>
+      <div class="recipe-line"><span>酱料预制</span><span>柱侯125g+海鲜75g+花生50g+沙茶50g+生抽75ml+老抽25ml+蚝油75g+冰糖50g→搅拌均匀分装80g/袋</span></div>
+      <div class="recipe-line"><span>高汤预制</span><span>鸡骨2kg+水8L熬2h→过滤→冷却分装500ml/袋</span></div>
+      <div class="recipe-line"><span>高峰期出餐</span><span>1人看2-3锅·每锅15-18分钟（含炒+炖+收汁）</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">3️⃣ 出品率测算表</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>生鸡进价750g</span><span>¥7-9/斤 → ¥10.5-13.5</span></div>
+      <div class="recipe-line"><span>解冻失水-3%</span><span>22.5g↓</span></div>
+      <div class="recipe-line"><span>焯水收缩-8%</span><span>60g↓</span></div>
+      <div class="recipe-line"><span>炖煮蒸发-8%</span><span>60g↓</span></div>
+      <div class="recipe-line"><span>骨头占比-15%</span><span>不可食部分</span></div>
+      <div class="recipe-line"><span>成品净肉约530g</span><span>出品率约71%</span></div>
+      <div class="recipe-line"><span>+酱汁+配菜后总重</span><span>约900-1000g（含汤汁）</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">4️⃣ 三种味型变体方案</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>🌶️ 麻辣鸡煲</span><span>酱料中加豆瓣酱20g+干辣椒10g+花椒5g+火锅底料15g</span></div>
+      <div class="recipe-line"><span>🍛 咖喱鸡煲</span><span>酱料中加咖喱粉15g+椰浆50ml+土豆块100g</span></div>
+      <div class="recipe-line"><span>🍅 酸汤鸡煲</span><span>酱料替换为酸汤底料80g+木姜子油3ml+番茄丁100g</span></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-brand">
+  <div class="fb-name">🏺 食品决策库</div>
+  <div class="fb-tagline">煲系列 · 单品完整决策数据</div>
+  <div class="fb-links">
+    <span>💬 微信：canglin1985</span>
+    <span>📢 食品决策库</span>
+  </div>
+  <div class="fb-series">BZ_01 鸡煲（子）· 青葵亲研</div>
+</div>
+
+</div>
+</body>
+</html>

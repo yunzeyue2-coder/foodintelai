@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BZ_02 牛杂煲 · 煲系列</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e8e0;color:#1a1a1a;padding:20px 14px;line-height:1.7}
+.card{max-width:540px;margin:0 auto;background:#fdfaf7;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.header{background:linear-gradient(135deg,#4A2810,#6B3A1A,#8B5E3C);padding:22px 22px 18px;color:#fff}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.header-code{font-size:11px;opacity:.7;font-weight:600;letter-spacing:2px}
+.header-level{display:flex;gap:6px}
+.header-level span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.12)}
+.header h1{font-size:24px;font-weight:800;margin:4px 0 2px;letter-spacing:-.5px}
+.header .subtitle{font-size:12px;opacity:.8;line-height:1.4}
+.price-badge{font-size:16px;font-weight:800;color:#ffd700;margin-top:4px}
+.header-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.header-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
+.score-strip{background:#4A2810;color:#fff;padding:10px 18px;font-size:14px;font-weight:600;text-align:center}
+.score-strip strong{color:#ffd700}
+.section{padding:16px 18px;border-bottom:1px solid #ede0d0}
+.s-title{font-size:13px;font-weight:700;color:#6B3A1A;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.s-title::after{content:'';flex:1;height:1px;background:#ede0d0}
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+.tb th{background:#6B3A1A;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:11px}
+.tb td{padding:5px 8px;border-bottom:1px solid #ede0d0;color:#3a2a1a;font-size:11px}
+.tb tr:nth-child(even) td{background:#faf5f0}
+.spec-card{background:#f5ede0;border-radius:8px;padding:12px;margin:6px 0;border:1px solid #ede0d0}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#4a3a2a;line-height:1.6}
+.tip-box{background:#f5ede0;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.flow-step{display:flex;gap:8px;margin:6px 0;padding:8px 10px;background:#f5ede0;border-radius:6px;font-size:12px;color:#3a2a1a;align-items:flex-start}
+.flow-step .step-num{width:22px;height:22px;background:#6B3A1A;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.flow-step .step-body{flex:1}
+.flow-step .step-body strong{color:#6B3A1A}
+.ingr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px;color:#3a2a1a;background:#f5ede0;border-radius:8px;padding:10px 12px;margin:6px 0}
+.ingr-grid .ig-item{display:flex;justify-content:space-between;padding:2px 0}
+.ig-item .ig-name{color:#6B3A1A}
+.ig-item .ig-qty{font-weight:600}
+.risk-item{display:flex;gap:8px;margin:6px 0;padding:10px 12px;background:#fef2f0;border-radius:8px;font-size:12px;color:#4a3a2a;align-items:flex-start;border-left:3px solid #c0392b}
+.risk-item .ri-icon{font-size:14px;flex-shrink:0}
+.risk-item .ri-body{flex:1}
+.risk-item .ri-body strong{color:#c0392b}
+.judge-box{background:#fdf8f0;border-radius:10px;padding:14px;margin:6px 0;border:1px solid #ede0d0;font-size:12px;color:#3a2a1a;line-height:1.7}
+.judge-box .jb-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.data-note{font-size:10px;color:#999;line-height:1.8}
+.footer-brand{background:#3a2a1a;color:#fff;text-align:center;padding:20px}
+.footer-brand .fb-name{font-size:18px;font-weight:700;margin-bottom:2px}
+.footer-brand .fb-tagline{font-size:11px;opacity:.7;margin-bottom:10px}
+.footer-brand .fb-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.footer-brand .fb-links span{background:rgba(255,255,255,.12);padding:4px 12px;border-radius:16px;font-size:11px}
+.footer-brand .fb-series{font-size:10px;opacity:.5;margin-top:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-bottom:1px solid #eee5d8;text-align:center}
+.lock-icon{font-size:28px;margin-bottom:4px}
+.pay-area h3{font-size:15px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.pay-area .p-sub{font-size:11px;color:#b5aaa0;margin-bottom:10px}
+.price-tag{font-size:20px;font-weight:700;color:#6B3A1A}
+.price-tag small{font-size:12px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;width:100%;padding:12px;background:#6B3A1A;color:#fff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;margin-top:12px;border:none;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:6px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #6B3A1A}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5;font-size:11px}
+.recipe-line:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-code">BZ_02 · 煲系列</div>
+    <div class="header-level"><span>🐮 子卡 · ¥19</span></div>
+  </div>
+  <h1>🐮 牛杂煲</h1>
+  <div class="subtitle">抖音顶流 · 南方口味 · 需本地化</div>
+  <div class="price-badge">¥68-98/份 · 3-4人份</div>
+  <div class="header-tags">
+    <span>🐮 牛杂</span><span>🔥 五香卤香</span><span>💰 毛利55-62%</span><span>⭐⭐⭐ 难度中高</span><span>📅 秋冬旺</span><span>📊 出品率约70%</span>
+  </div>
+</div>
+
+<div class="score-strip">综合评分：<strong>7.0/10</strong> · 判定：<strong>△ 观察进入</strong>（热度顶流·难度中高·南方口味需本地化·新手慎入）</div>
+
+<div class="section">
+  <div class="s-title">📊 五维雷达</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px;color:#3a2a1a">
+    <div><b>🔥 热度</b><span style="float:right;color:#6B3A1A;font-weight:700">9/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:90%;height:100%;background:#D4833A;border-radius:2px"></div></div>抖音80亿播放·煲品类顶流</div>
+    <div><b>🔄 复购</b><span style="float:right;color:#6B3A1A;font-weight:700">6/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:60%;height:100%;background:#D4833A;border-radius:2px"></div></div>内脏类口味两极分化·有人不吃</div>
+    <div><b>💰 利润</b><span style="float:right;color:#6B3A1A;font-weight:700">6/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:60%;height:100%;background:#D4833A;border-radius:2px"></div></div>牛杂¥12-18/斤·毛利55-62%</div>
+    <div><b>⚡ 难度</b><span style="float:right;color:#6B3A1A;font-weight:700">5/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:50%;height:100%;background:#D4833A;border-radius:2px"></div></div>分越高越容易·清洗+去异味工序复杂</div>
+    <div style="grid-column:1/-1"><b>🥊 竞争</b><span style="float:right;color:#6B3A1A;font-weight:700">7/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:70%;height:100%;background:#2E7D32;border-radius:2px"></div></div>分越高竞争越小·郑州牛杂煲店不多</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">👥 适合谁</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      • 有经验的老手——牛杂清洗/去异味需要专业工序，新手翻车率高<br>
+      • 抖音引流为主的店——牛杂煲上桌有视觉冲击力，天然适合短视频传播<br>
+      • 南方口味/两广人多的商圈——广式牛杂在南方有天然客群<br>
+      • 想差异化竞争的煲店——郑州牛杂煲不多，蓝海<br>
+      <br>
+      <b>❌ 不太适合：</b>没有餐饮经验的新手（难度中高）· 郑州本地传统社区（内脏接受度不如南方）· 一个人干所有活（清洗工序耗时）
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>售价：</b>普通小店¥68-78/份 · 连锁品牌¥78-88/份 · 头牌¥88-108/份<br>
+      <b>原料成本：</b>牛杂混合料750g ¥15-23 · 白萝卜¥1-2 · 香料卤包¥3-4 · 高汤¥1-2 · 油+香料¥1<br>
+      <b>综合成本：</b>约¥21-32/份<br>
+      <b>毛利率：</b>55-62%<br>
+      <b>单份毛利：</b>¥38-55<br>
+      <b>日销预估：</b>堂食15-25份 · 外卖5-10份<br>
+      <b>日毛利贡献：</b>约¥570-1,375<br>
+      <b>盈利核心：</b>牛杂下脚料成本低（¥12-18/斤），但清洗人工成本高。批量预制可摊薄人工。白萝卜低成本填充感知好。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <table class="tb">
+    <tr><th>品种</th><th>定价</th><th>毛利</th><th>难度</th><th>复购</th><th>适合新手</th></tr>
+    <tr><td><b>🐮 牛杂煲</b></td><td>¥68-98</td><td>55-62%</td><td>⭐⭐⭐ 中高</td><td>中</td><td>✘ 不推荐</td></tr>
+    <tr><td>🐷 猪脚煲</td><td>¥58-78</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🐔 鸡煲</td><td>¥58-88</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🦆 黑鸭煲</td><td>¥68-88</td><td>62-68%</td><td>⭐⭐ 中</td><td>中</td><td>△ 可</td></tr>
+    <tr><td>🐮 牛腩煲</td><td>¥78-108</td><td>55-60%</td><td>⭐⭐ 中</td><td>高</td><td>△ 需经验</td></tr>
+  </table>
+  <div class="tip-box" style="margin-top:6px">
+    <p><b>牛杂煲的竞争位置：</b>牛杂煲是煲品类里抖音流量最高的品类（80亿播放），郑州竞争者少。但清洗门槛高、内脏口味两极分化，不是所有人都能吃。建议有经验的老手做，新手不要碰。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🌶️ 口味 · 颜色 · 口感</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>口味：</b>五香卤水味型（八角桂皮香叶打底），咸鲜不辣。广式原味不加重辣——牛杂吃的是原味卤香，不是麻辣<br>
+      <b>颜色：</b>深卤色（老抽上色），白萝卜炖煮后呈半透明<br>
+      <b>口感：</b>牛肚爽脆、牛肠软糯、牛筋Q弹、牛肺绵密——一煲四种口感层次丰富。白萝卜吸饱卤汤后入口即化<br>
+      <b>香型：</b>卤香复合+八角桂皮香，上桌卤香扑鼻<br>
+      <b>⚠️ 南方口味标注：</b>牛杂煲源自广东，河南市场需本地化。建议配蒜蓉辣酱+芝麻酱蘸料，用浓厚卤汤盖过内脏味
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 出品率</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>成品出品率：约70%</b>（含清洗损耗按60%保守估算·熟练后可达70%）<br>
+      牛杂混合料（牛肚/牛肠/牛肺/牛筋）→ 清洗 → 焯水 → 卤制 → 切块 → 装煲<br>
+      损耗主要在：清洗损耗5-8%（脂肪杂质）· 焯水收缩10-15%· 卤制蒸发8-10%<br>
+      <b>清洗注意：</b>牛肠需翻面洗+盐搓+醋搓去异味，牛肚需刮去黑膜。清洗不到位→整个煲有异味<br>
+      出品率按最低值60%预估
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🧂 原料清单（单份基准）</div>
+  <div class="ingr-grid">
+    <div class="ig-item"><span class="ig-name">牛杂混合料</span><span class="ig-qty">750g</span></div>
+    <div class="ig-item"><span class="ig-name">白萝卜</span><span class="ig-qty">300g</span></div>
+    <div class="ig-item"><span class="ig-name">卤料包（八角桂皮香叶甘草等）</span><span class="ig-qty">15g</span></div>
+    <div class="ig-item"><span class="ig-name">高汤</span><span class="ig-qty">1L</span></div>
+    <div class="ig-item"><span class="ig-name">生抽</span><span class="ig-qty">20ml</span></div>
+    <div class="ig-item"><span class="ig-name">老抽</span><span class="ig-qty">10ml</span></div>
+    <div class="ig-item"><span class="ig-name">料酒</span><span class="ig-qty">20ml</span></div>
+    <div class="ig-item"><span class="ig-name">姜+葱+蒜</span><span class="ig-qty">60g</span></div>
+    <div class="ig-item"><span class="ig-name">盐+冰糖</span><span class="ig-qty">10g+8g</span></div>
+    <div class="ig-item"><span class="ig-name">油</span><span class="ig-qty">20ml</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔬 核心工艺SOP</div>
+
+  <div class="flow-step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>清洗（最重要步骤·新手翻车点）：</strong>牛肚刮去黑膜+盐搓→牛肠翻面去油脂+盐+醋搓洗→牛肺切块冲水至发白→牛筋洗净。全部冲洗干净→冷水浸泡30分钟。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>焯水：</strong>冷水下锅+姜片20g+料酒20ml→大火烧开焯5-8分钟→捞出冲净。分次焯水（牛肺先焯·牛肚牛肠后焯）——不同内脏成熟时间不同。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>卤制：</strong>另起锅加高汤1L+卤料包15g+生抽20ml+老抽10ml+冰糖8g→大火烧开→下牛杂→转小火·盖盖卤1-1.5小时。萝卜切滚刀块在出锅前20分钟下。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>浸泡：</strong>关火后牛杂在卤水中浸泡30分钟以上，让卤味渗透。热卤浸泡比卤完立刻捞好吃30%。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">5</div>
+    <div class="step-body"><strong>切块装煲：</strong>牛肚切条·牛肠切段·牛筋切片·牛肺切块→砂锅码好→加300ml原卤汤+萝卜→大火烧开→撒葱花/香菜→上桌保温。配蘸料：蒜蓉辣酱+沙茶酱+芝麻酱三选一。</div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">💡 关键参数</div>
+    <p>牛杂清洗是本卡最关键的工序——清洗不到位，后面所有步骤都白费。牛肠的异味主要来自内壁油脂，必须翻面刮干净。新手建议第一锅用纯冷冻牛杂（已初步处理），减少清洗难度。卤水可循环使用，越用越香。</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">🚫 别犯的错</div>
+    <p>① 不清洗干净直接焯水 → 整锅都是骚味。② 不同内脏一起下锅焯 → 熟的熟生的生。③ 卤水一次用完就倒 → 卤水用三次风味最好。④ 萝卜和牛杂同时下 → 萝卜烂成泥。⑤ 不做本地化直接上 → 河南人吃不惯广味。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔧 设备清单</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <table class="tb">
+        <tr><th>设备</th><th>规格</th><th>单价</th></tr>
+        <tr><td>砂锅（10-12号）</td><td>耐高温·可直火</td><td>¥25-40/个</td></tr>
+        <tr><td>卤桶/大汤桶</td><td>批量卤制用</td><td>¥100-300</td></tr>
+        <tr><td>卡式炉</td><td>桌上保温用</td><td>¥150-300/台</td></tr>
+        <tr><td>猛火灶</td><td>厨房卤制用</td><td>¥500-1000</td></tr>
+        <tr><td>四门冰柜</td><td>冻牛杂+卤水</td><td>¥1500-3000</td></tr>
+        <tr><td>操作台</td><td>不锈钢</td><td>¥800-1500</td></tr>
+        <tr><td>排风系统</td><td>堂食店必配</td><td>¥2000-5000</td></tr>
+      </table>
+      <b style="margin-top:6px;display:block">最低配置总投入：约¥4000-6000</b>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📍 开店适配评分</div>
+  <table class="tb">
+    <tr><th>场景</th><th>评分</th><th>理由</th></tr>
+    <tr><td>🏪 社区店</td><td>6/10 △</td><td>内脏接受度看社区人口结构</td></tr>
+    <tr><td>🎪 夜市摆摊</td><td>8/10 ✅ 推荐</td><td>抖音传播力最强的煲·视觉冲击强</td></tr>
+    <tr><td>🏪 档口外卖</td><td>5/10 △</td><td>配送后口感下降·异味可能变明显</td></tr>
+    <tr><td>🏙️ 商圈店</td><td>7/10 ✅</td><td>年轻人流量大·内脏接受度更高</td></tr>
+    <tr><td>🏢 写字楼午餐</td><td>4/10 ✘</td><td>出餐慢·午休时间不够</td></tr>
+    <tr><td>🏘️ 县城/乡镇</td><td>5/10 △</td><td>内脏接受度待验证</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 30天验证路线</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>① 试品+清洗测试（第1-6天）：</b>买冷冻已处理牛杂练清洗→做3轮牛杂煲→重点测试去异味效果<br>
+      <b>② 本地化测试（第7-12天）：</b>试3种蘸料方案（蒜蓉辣酱/沙茶芝麻酱/麻辣干碟）→找10个郑州本地人盲测<br>
+      <b>③ 夜市摆摊（第13-19天）：</b>夜市摆摊7天→用抖音拍牛杂煲开盖视频→测传播效果+日销<br>
+      <b>④ 成本核算（第20-25天）：</b>精确计算清洗人工成本+卤料成本+出品率→确认实际毛利<br>
+      <b>⑤ 决策（第26-30天）：</b>综合数据决定做不做→确认本地化方案
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item">
+    <div class="ri-icon">👃</div>
+    <div class="ri-body"><strong>清洗不净有异味：</strong>牛杂异味是最致命的差评来源。一个"这家的牛杂有骚味"就能让店关门。 → 清洗工序必须标准化SOP+双重检查（洗完后负责人闻一遍）。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🌍</div>
+    <div class="ri-body"><strong>南方口味·郑州接受度待验证：</strong>广式五香味河南人可能觉得"不够味"。 → 提供蘸料选择（蒜蓉辣酱/麻辣干碟）让顾客自己调口味。逐步增加辣度选项。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🔪</div>
+    <div class="ri-body"><strong>牛杂部位不统一：</strong>不同批次牛杂部位比例不同，出品不稳定。 → 指定供应商+固定配比（牛肚30%·牛肠25%·牛筋20%·牛肺25%）。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">💲</div>
+    <div class="ri-body"><strong>清洗人工成本高：</strong>一份牛杂清洗耗时10-15分钟，人工成本不容忽视。 → 批量清洗（一次洗5份量）+冷冻已处理牛杂（比生杂贵20%但省人工）。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">📱</div>
+    <div class="ri-body"><strong>外卖异味放大：</strong>牛杂在密闭外卖盒中闷30分钟，异味可能变重。 → 加薄荷叶+酸梅酱包去味+注明"建议堂食"。</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 赛道判断</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>优势（4条）：</b><br>
+      ① 抖音顶流，视觉冲击力强，天然适合短视频传播<br>
+      ② 牛杂成本可控（下脚料）<br>
+      ③ 郑州竞品少<br>
+      ④ 一煲四种口感（肚/肠/筋/肺），层次丰富<br>
+      <br>
+      <b>劣势（4条）：</b><br>
+      ① 清洗门槛高，新手翻车率极高<br>
+      ② 南方口味，河南市场需要本地化调整<br>
+      ③ 内脏口味两极分化，不是所有人都吃<br>
+      ④ 出餐效率低<br>
+      <br>
+      <b>趋势研判：</b>牛杂煲是"双刃剑"——抖音热度最高，但工艺门槛也最高。适合有经验的老手做差异化竞争，不适合新手。如果做，一定要在本地化上下功夫——郑州人不吃广式清卤牛杂，配重口味蘸料是必须的。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📌 沧林判断</div>
+  <div class="judge-box">
+    <div class="jb-label">🎯 品类判断 · 2026年6月</div>
+    <p>牛杂煲是煲品类里"高手玩的品类"。抖音80亿播放证明市场需求在，但你能不能吃下这口饭，取决于两件事：清洗和本地化。</p>
+    <p style="margin-top:6px"><b>清洗：</b>我在食品行业19年，看过太多牛杂店死在"有异味"上。清洗不是技术问题，是态度问题——不愿意花时间洗，那就不配做牛杂。</p>
+    <p style="margin-top:6px"><b>本地化：</b>广式牛杂拿过来直接卖，郑州人大概率不买账。建议做"改良版"——卤汤里加干辣椒和花椒（五香微辣），蘸料配蒜蓉辣酱+芝麻酱。既保留了广式的卤香底，又迎合了北方人口味。</p>
+    <p style="margin-top:6px">新手不要碰牛杂煲。先做鸡煲/猪脚煲跑通了，再来挑战牛杂。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="font-size:12px;color:#3a2a1a;line-height:1.8;">
+    • <b>母卡：</b><a href="BZ_M01_煲系列创业母卡.html" style="color:#6B3A1A;">BZ_M01 煲系列创业母卡</a><br>
+    • <b>总纲：</b><a href="BZ_T01_煲系列总纲.html" style="color:#6B3A1A;">BZ_T01 煲系列总纲（免费）</a><br>
+    • <b>同系列：</b>鸡煲（BZ_01）· 猪脚煲（BZ_04）· 黑鸭煲（BZ_06）· 牛腩煲（BZ_03）· 排骨煲（BZ_09）<br>
+    • <b>变体推荐：</b>广式五香牛杂煲·香辣牛杂煲（本地化）·番茄牛杂煲
+  </div>
+</div>
+
+<div class="section" style="border-bottom:none;background:#faf5f0;">
+  <div class="s-title">📋 数据说明</div>
+  <div class="data-note">
+    · 牛杂价基于郑州万邦批发市场2026年Q2批发价（牛杂混合料¥12-18/斤）<br>
+    · 售价区间¥68-98参考2025-2026年郑州同品类煲店中位价<br>
+    · 毛利率按售价中位值¥78计算，实际因城市/批次浮动±8%<br>
+    · 出品率按行业保守最低值约70%预估（含清洗损耗）<br>
+    · 牛杂煲为广式风味，标注"南方口味·需本地化调整"<br>
+    · 本地化推荐：卤汤加干辣椒花椒+配蒜蓉辣酱芝麻酱蘸料<br>
+    · 数据采集截止：2026年6月<br>
+    · 微信：canglin1985 | 食品决策库 · 青葵亲研
+  </div>
+</div>
+
+<!-- ===== 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整数据包 · 精确到克</h3>
+  <div class="p-sub">6大模块：精确配比表·清洗工序SOP·卤水配方·出品率测算表·本地化方案·供应链清单</div>
+  <div class="price-tag">¥19 <small>子卡解锁</small></div>
+  <button class="btn" onclick="document.getElementById('payContent').classList.toggle('show');this.textContent=this.textContent.includes('收起')?'展开':'🔓 付费解锁'">🔓 付费解锁</button>
+  <div class="note">付费后微信发送清晰版</div>
+  <div id="payContent" class="pay-content">
+
+    <div style="font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:6px">1️⃣ 精确配比表（单份基准）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>牛杂混合料750g</span><span>牛肚30%+牛肠25%+牛筋20%+牛肺25%</span></div>
+      <div class="recipe-line"><span>牛肚225g</span><span>刮黑膜+盐搓+冲净</span></div>
+      <div class="recipe-line"><span>牛肠190g</span><span>翻面去油脂+盐醋搓+冲净</span></div>
+      <div class="recipe-line"><span>牛筋150g</span><span>洗净即可</span></div>
+      <div class="recipe-line"><span>牛肺185g</span><span>切块冲水至发白</span></div>
+      <div class="recipe-line"><span>白萝卜300g</span><span>切滚刀块·出锅前20分钟下</span></div>
+      <div class="recipe-line"><span>卤料包15g</span><span>八角+桂皮+香叶+甘草+草果+陈皮</span></div>
+      <div class="recipe-line"><span>高汤1L</span><span>或清水+浓汤宝</span></div>
+      <div class="recipe-line"><span>生抽20ml+老抽10ml</span><span>底味+上色</span></div>
+      <div class="recipe-line"><span>姜20g+葱20g+蒜20g</span><span>焯水+卤制</span></div>
+      <div class="recipe-line"><span>冰糖8g+盐适量</span><span>调味</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">2️⃣ 清洗工序SOP（最详细版）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>牛肚清洗</span><span>黑膜面朝上→用刀刮去黑膜→粗盐100g搓洗2分钟→冲净→重复一次</span></div>
+      <div class="recipe-line"><span>牛肠清洗</span><span>翻面→剪刀去除内壁脂肪→粗盐80g+白醋30ml搓洗3分钟→冲净</span></div>
+      <div class="recipe-line"><span>牛肺清洗</span><span>切4cm块→流水冲30分钟至发白→挤干→再冲一次</span></div>
+      <div class="recipe-line"><span>牛筋清洗</span><span>流水冲净即可</span></div>
+      <div class="recipe-line"><span>清洗总耗时</span><span>约40-60分钟/批（5份量）·熟练后可缩短至30分钟</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">3️⃣ 卤水配方（10份量·可循环）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>高汤10L</span><span>牛骨/猪骨熬制</span></div>
+      <div class="recipe-line"><span>卤料包150g</span><span>八角50g+桂皮30g+香叶15g+甘草20g+草果15g+陈皮20g</span></div>
+      <div class="recipe-line"><span>生抽200ml+老抽100ml</span><span>底味+上色</span></div>
+      <div class="recipe-line"><span>冰糖80g+盐50g</span><span>调味</span></div>
+      <div class="recipe-line"><span>姜100g+葱100g+蒜80g</span><span>去腥增香</span></div>
+      <div class="recipe-line"><span>本地化改良</span><span>卤汤中加干辣椒30g+花椒15g（五香微辣版·适合河南市场）</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">4️⃣ 出品率测算表</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>牛杂进价750g</span><span>¥12-18/斤 → ¥18-27</span></div>
+      <div class="recipe-line"><span>清洗损耗-8%</span><span>60g↓（脂肪杂质）</span></div>
+      <div class="recipe-line"><span>焯水收缩-12%</span><span>90g↓</span></div>
+      <div class="recipe-line"><span>卤制蒸发-10%</span><span>75g↓</span></div>
+      <div class="recipe-line"><span>成品约525g</span><span>出品率约70%</span></div>
+      <div class="recipe-line"><span>+萝卜汤汁后总重</span><span>约900-1000g（含汤汁）</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">5️⃣ 供应链清单</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>牛杂混合料（冷冻已处理）</span><span>¥15-22/斤·适合新手·省清洗工序</span></div>
+      <div class="recipe-line"><span>牛杂混合料（生鲜）</span><span>¥12-18/斤·万邦鲜肉区·需自己清洗</span></div>
+      <div class="recipe-line"><span>卤料包</span><span>¥10-15/包·可自制或调味品市场采购</span></div>
+      <div class="recipe-line"><span>白萝卜</span><span>¥1.5-3/斤·万邦蔬菜区</span></div>
+      <div class="recipe-line"><span>砂锅</span><span>¥25-40/个·中原陶瓷城</span></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-brand">
+  <div class="fb-name">🏺 食品决策库</div>
+  <div class="fb-tagline">煲系列 · 单品完整决策数据</div>
+  <div class="fb-links">
+    <span>💬 微信：canglin1985</span>
+    <span>📢 食品决策库</span>
+  </div>
+  <div class="fb-series">BZ_02 牛杂煲（子）· 青葵亲研</div>
+</div>
+
+</div>
+</body>
+</html>

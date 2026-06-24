@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BZ_05 羊肉煲 · 煲系列</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e8e0;color:#1a1a1a;padding:20px 14px;line-height:1.7}
+.card{max-width:540px;margin:0 auto;background:#fdfaf7;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.header{background:linear-gradient(135deg,#4A2810,#6B3A1A,#8B5E3C);padding:22px 22px 18px;color:#fff}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.header-code{font-size:11px;opacity:.7;font-weight:600;letter-spacing:2px}
+.header-level{display:flex;gap:6px}
+.header-level span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.12)}
+.header h1{font-size:24px;font-weight:800;margin:4px 0 2px;letter-spacing:-.5px}
+.header .subtitle{font-size:12px;opacity:.8;line-height:1.4}
+.price-badge{font-size:16px;font-weight:800;color:#ffd700;margin-top:4px}
+.header-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.header-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
+.score-strip{background:#4A2810;color:#fff;padding:10px 18px;font-size:14px;font-weight:600;text-align:center}
+.score-strip strong{color:#ffd700}
+.section{padding:16px 18px;border-bottom:1px solid #ede0d0}
+.s-title{font-size:13px;font-weight:700;color:#6B3A1A;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.s-title::after{content:'';flex:1;height:1px;background:#ede0d0}
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+.tb th{background:#6B3A1A;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:11px}
+.tb td{padding:5px 8px;border-bottom:1px solid #ede0d0;color:#3a2a1a;font-size:11px}
+.tb tr:nth-child(even) td{background:#faf5f0}
+.spec-card{background:#f5ede0;border-radius:8px;padding:12px;margin:6px 0;border:1px solid #ede0d0}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#4a3a2a;line-height:1.6}
+.tip-box{background:#f5ede0;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.flow-step{display:flex;gap:8px;margin:6px 0;padding:8px 10px;background:#f5ede0;border-radius:6px;font-size:12px;color:#3a2a1a;align-items:flex-start}
+.flow-step .step-num{width:22px;height:22px;background:#6B3A1A;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.flow-step .step-body{flex:1}
+.flow-step .step-body strong{color:#6B3A1A}
+.ingr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px;color:#3a2a1a;background:#f5ede0;border-radius:8px;padding:10px 12px;margin:6px 0}
+.ingr-grid .ig-item{display:flex;justify-content:space-between;padding:2px 0}
+.ig-item .ig-name{color:#6B3A1A}
+.ig-item .ig-qty{font-weight:600}
+.risk-item{display:flex;gap:8px;margin:6px 0;padding:10px 12px;background:#fef2f0;border-radius:8px;font-size:12px;color:#4a3a2a;align-items:flex-start;border-left:3px solid #c0392b}
+.risk-item .ri-icon{font-size:14px;flex-shrink:0}
+.risk-item .ri-body{flex:1}
+.risk-item .ri-body strong{color:#c0392b}
+.judge-box{background:#fdf8f0;border-radius:10px;padding:14px;margin:6px 0;border:1px solid #ede0d0;font-size:12px;color:#3a2a1a;line-height:1.7}
+.judge-box .jb-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.data-note{font-size:10px;color:#999;line-height:1.8}
+.footer-brand{background:#3a2a1a;color:#fff;text-align:center;padding:20px}
+.footer-brand .fb-name{font-size:18px;font-weight:700;margin-bottom:2px}
+.footer-brand .fb-tagline{font-size:11px;opacity:.7;margin-bottom:10px}
+.footer-brand .fb-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.footer-brand .fb-links span{background:rgba(255,255,255,.12);padding:4px 12px;border-radius:16px;font-size:11px}
+.footer-brand .fb-series{font-size:10px;opacity:.5;margin-top:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-bottom:1px solid #eee5d8;text-align:center}
+.lock-icon{font-size:28px;margin-bottom:4px}
+.pay-area h3{font-size:15px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.pay-area .p-sub{font-size:11px;color:#b5aaa0;margin-bottom:10px}
+.price-tag{font-size:20px;font-weight:700;color:#6B3A1A}
+.price-tag small{font-size:12px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;width:100%;padding:12px;background:#6B3A1A;color:#fff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;margin-top:12px;border:none;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:6px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #6B3A1A}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5;font-size:11px}
+.recipe-line:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-code">BZ_05 · 煲系列</div>
+    <div class="header-level"><span>🐑 子卡 · ¥19</span></div>
+  </div>
+  <h1>🐑 羊肉煲</h1>
+  <div class="subtitle">冬季限定款 · 温补暖身 · 河南市场佳</div>
+  <div class="price-badge">¥82-128/份 · 3-4人份</div>
+  <div class="header-tags">
+    <span>🐑 羊腩/羊腿</span><span>🔥 红烧/清炖/药膳</span><span>💰 毛利50-58%</span><span>⭐⭐ 难度中</span><span>❄️ 冬季款</span>
+  </div>
+</div>
+
+<div class="score-strip">综合评分：<strong>6.2/10</strong> · 判定：<strong>△ 季节性进入</strong>（冬季刚需·河南羊肉消费大省·但成本高利润低·夏季慎入）</div>
+
+<div class="section">
+  <div class="s-title">📊 五维雷达</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px;color:#3a2a1a">
+    <div><b>🔥 热度</b><span style="float:right;color:#6B3A1A;font-weight:700">7/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:70%;height:100%;background:#D4833A;border-radius:2px"></div></div>冬季爆款·夏季冷淡</div>
+    <div><b>🔄 复购</b><span style="float:right;color:#6B3A1A;font-weight:700">6/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:60%;height:100%;background:#D4833A;border-radius:2px"></div></div>冬季复购高·但只做半年</div>
+    <div><b>💰 利润</b><span style="float:right;color:#6B3A1A;font-weight:700">5/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:50%;height:100%;background:#D4833A;border-radius:2px"></div></div>羊肉¥50-60/斤·毛利50-58%</div>
+    <div><b>⚡ 难度</b><span style="float:right;color:#6B3A1A;font-weight:700">7/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:70%;height:100%;background:#2E7D32;border-radius:2px"></div></div>分越高越容易·去膻是核心</div>
+    <div style="grid-column:1/-1"><b>🥊 竞争</b><span style="float:right;color:#6B3A1A;font-weight:700">7/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:70%;height:100%;background:#2E7D32;border-radius:2px"></div></div>分越高竞争越小·羊肉煲专门店不多</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">👥 适合谁</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      • 冬季想赚一波的餐饮店主——11-3月是羊肉煲绝对旺季<br>
+      • 河南本地人——河南是羊肉消费大省，羊肉汤/烩面有天然基础<br>
+      • 走中高端路线的品质店——羊肉煲客单价高（¥100+），有利润空间<br>
+      • 有去膻经验的老手——处理不好羊肉膻味，差评直接关门<br>
+      <br>
+      <b>❌ 不太适合：</b>全年开店想做满一年的（夏季客单量断崖）· 预算&lt;¥15万（羊肉成本高）· 新手（去膻需要经验）
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>售价：</b>普通小店¥82-98/份 · 连锁品牌¥98-118/份 · 头牌¥118-148/份<br>
+      <b>原料成本：</b>羊肉500g¥50-60 · 白萝卜/马蹄¥2-3 · 腐竹¥3-4 · 酱料药材¥4-5 · 高汤¥1<br>
+      <b>综合成本：</b>约¥60-73/份<br>
+      <b>毛利率：</b>50-58%<br>
+      <b>单份毛利：</b>¥42-68<br>
+      <b>日销预估：</b>冬季堂食20-35份 · 夏季5-10份<br>
+      <b>日毛利贡献（冬）：</b>约¥840-2,380<br>
+      <b>盈利核心：</b>羊肉煲是"赚半年吃一年"的品类。冬季3-4个月的利润要覆盖全年房租人工。定价走中高端路线，配酒水拉升客单价。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <table class="tb">
+    <tr><th>品种</th><th>定价</th><th>毛利</th><th>难度</th><th>复购</th><th>适合新手</th></tr>
+    <tr><td><b>🐑 羊肉煲</b></td><td>¥82-128</td><td>50-58%</td><td>⭐⭐ 中</td><td>中</td><td>△ 需经验</td></tr>
+    <tr><td>🐷 猪脚煲</td><td>¥58-78</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🐔 鸡煲</td><td>¥58-88</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🦆 黑鸭煲</td><td>¥68-88</td><td>62-68%</td><td>⭐⭐ 中</td><td>中</td><td>△ 可</td></tr>
+    <tr><td>🐮 牛杂煲</td><td>¥68-98</td><td>55-62%</td><td>⭐⭐⭐ 中高</td><td>中</td><td>✘ 不推荐</td></tr>
+  </table>
+  <div class="tip-box" style="margin-top:6px">
+    <p><b>羊肉煲的竞争位置：</b>羊肉煲是煲品类里的"冬季限定款"。河南羊肉消费大省优势明显，但注意——郑州一碗羊肉汤¥30，羊肉煲¥82起，定价必须让顾客觉得"值这个差价"。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🌶️ 口味 · 颜色 · 口感</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>口味（三味型）：</b><br>
+      ① 红烧味（最畅销）——豆瓣酱+柱侯酱+南乳，咸鲜浓郁<br>
+      ② 清炖味（保留原味）——白芷+当归+枸杞，药膳清甜<br>
+      ③ 葱爆味（锅气足）——大量京葱爆香+酱油，京葱羊肉经典搭配<br>
+      <b>颜色：</b>红烧→深酱色；清炖→清汤本色泛白；葱爆→金黄油亮<br>
+      <b>口感：</b>羊肉炖1.5-2h至酥烂，不膻不柴。腐竹/萝卜吸饱羊肉汤后是精华<br>
+      <b>香型：</b>红烧→酱香复合；清炖→药膳清香；葱爆→葱香肉香<br>
+      <b>❄️ 冬季限定：</b>建议每年10月上线·次年3月下架。夏季不出售。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 出品率</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>成品出品率：55-65%</b><br>
+      羊腩/羊腿（带骨）→ 切块 → 焯水 → 炖煮1.5-2h → 装煲<br>
+      损耗主要在：解冻失水3-5%·焯水收缩8-10%·炖煮蒸发15-18%·脂肪析出5-8%·骨头占比15-20%<br>
+      <b>采购建议：</b>按每份净肉400g反算 → 每份需采购羊肉约650-700g<br>
+      出品率按最低值55%预估
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🧂 原料清单（红烧味·单份基准）</div>
+  <div class="ingr-grid">
+    <div class="ig-item"><span class="ig-name">羊腩/羊腿（带骨）</span><span class="ig-qty">650g</span></div>
+    <div class="ig-item"><span class="ig-name">白萝卜/马蹄</span><span class="ig-qty">200g</span></div>
+    <div class="ig-item"><span class="ig-name">腐竹（泡发）</span><span class="ig-qty">80g</span></div>
+    <div class="ig-item"><span class="ig-name">豆瓣酱</span><span class="ig-qty">20g</span></div>
+    <div class="ig-item"><span class="ig-name">柱侯酱</span><span class="ig-qty">15g</span></div>
+    <div class="ig-item"><span class="ig-name">南乳2块+汁</span><span class="ig-qty">15ml</span></div>
+    <div class="ig-item"><span class="ig-name">生抽+老抽</span><span class="ig-qty">15ml+8ml</span></div>
+    <div class="ig-item"><span class="ig-name">冰糖</span><span class="ig-qty">10g</span></div>
+    <div class="ig-item"><span class="ig-name">高汤</span><span class="ig-qty">800ml</span></div>
+    <div class="ig-item"><span class="ig-name">姜+蒜+八角+桂皮+香叶+白芷</span><span class="ig-qty">50g+8g</span></div>
+    <div class="ig-item"><span class="ig-name">料酒+米醋</span><span class="ig-qty">20ml+5ml（去膻）</span></div>
+    <div class="ig-item"><span class="ig-name">油</span><span class="ig-qty">25ml</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔬 核心工艺SOP（红烧味）</div>
+
+  <div class="flow-step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>去膻预处理：</strong>羊肉切4cm块→冷水浸泡1小时去血水→沥干。冷水下锅+姜片20g+料酒20ml+米醋5ml→大火烧开焯5-8分钟→捞出冲净。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>炒酱：</strong>锅烧热下油25ml→姜蒜爆香→加豆瓣酱20g小火炒出红油（约1分钟）→加柱侯酱15g+南乳2块+南乳汁→炒匀。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>煸羊肉：</strong>转中火·下羊肉翻炒至表面微焦（约3-4分钟）→加生抽老抽冰糖→翻炒上色。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>炖煮：</strong>加高汤800ml（没过羊肉）→加八角桂皮香叶白芷→大火烧开→转小火·盖盖炖1.5-2h。腐竹/萝卜出锅前20分钟下。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">5</div>
+    <div class="step-body"><strong>收汁装煲：</strong>羊肉酥烂筷子能扎入→大火收汁至浓稠（约3-5分钟）→移入预热砂锅→撒香菜/葱花→上桌保温。</div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">💡 关键参数</div>
+    <p>羊肉去膻三重保障：①焯水加米醋 ②炖煮加白芷（白芷是去膻神器·不可缺）③出锅前放盐（盐放太早羊肉变硬且膻味封在肉里）。高压锅方案：焯水后入高压锅+酱料+高汤，上汽压20-25分钟。</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">🚫 别犯的错</div>
+    <p>① 羊肉不泡水不焯水 → 膻味重。② 盐放太早 → 羊肉变硬膻味锁住。③ 不用白芷 → 去膻效果差一半。④ 萝卜和羊肉同时下 → 萝卜烂。⑤ 以为羊肉煲能全年做 → 夏季客单量断崖。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔧 设备清单</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <table class="tb">
+        <tr><th>设备</th><th>规格</th><th>单价</th></tr>
+        <tr><td>砂锅（10-12号）</td><td>耐高温·可直火</td><td>¥25-40/个</td></tr>
+        <tr><td>大炖锅/高压锅</td><td>批量预制用</td><td>¥200-500</td></tr>
+        <tr><td>卡式炉</td><td>桌上保温用</td><td>¥150-300/台</td></tr>
+        <tr><td>猛火灶</td><td>厨房炒制用</td><td>¥500-1000</td></tr>
+        <tr><td>四门冰柜</td><td>冻羊肉+预制成品</td><td>¥1500-3000</td></tr>
+        <tr><td>操作台</td><td>不锈钢</td><td>¥800-1500</td></tr>
+        <tr><td>排风系统</td><td>堂食店必配</td><td>¥2000-5000</td></tr>
+      </table>
+      <b style="margin-top:6px;display:block">最低配置总投入：约¥4000-6000</b>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📍 开店适配评分</div>
+  <table class="tb">
+    <tr><th>场景</th><th>评分</th><th>理由</th></tr>
+    <tr><td>🏪 社区店</td><td>7/10 ✅ 冬季</td><td>冬季家庭聚餐首选</td></tr>
+    <tr><td>🎪 夜市摆摊</td><td>6/10 △ 冬季</td><td>冬季夜市·其他季节不建议</td></tr>
+    <tr><td>🏪 档口外卖</td><td>4/10 ✘</td><td>成本高·配送后口感差</td></tr>
+    <tr><td>🏙️ 商圈店</td><td>6/10 △ 冬季</td><td>客单价高撑得起租金但只做半年</td></tr>
+    <tr><td>🏢 写字楼午餐</td><td>4/10 ✘</td><td>炖煮时间长·人均¥80午餐太贵</td></tr>
+    <tr><td>🏘️ 县城/乡镇</td><td>8/10 ✅ 冬季</td><td>羊肉有排面·冬季聚餐首选</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 30天验证路线</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>① 去膻测试（第1-5天）：</b>试3种去膻方案（白芷/米醋/花椒水）→找10人盲测膻味接受度<br>
+      <b>② 试品（第6-10天）：</b>做3轮羊肉煲找10人测评→定主力味型<br>
+      <b>③ 竞品调研（第11-15天）：</b>吃郑州羊肉汤店·羊肉馆→记录定价/份量/口味→找差异化<br>
+      <b>④ 预售测试（第16-22天）：</b>朋友圈/社群预售+冬季限定品鉴会→测需求<br>
+      <b>⑤ 决策（第23-30天）：</b>综合数据决定做不做·定冬季菜单轮换方案
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item">
+    <div class="ri-icon">❄️</div>
+    <div class="ri-body"><strong>季节性断崖：</strong>6-8月营收可能只有冬季的20-30%，房租人工照付。 → 只做冬季限定（10-3月）+夏季切换清淡煲品/休店装修。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🐑</div>
+    <div class="ri-body"><strong>膻味处理不好：</strong>羊肉膻味是所有风险中最大的——一个差评就能让店关门。 → 白芷+米醋+花椒水三重去膻·每批羊肉先试煮确认无异味再正式出品。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">💲</div>
+    <div class="ri-body"><strong>羊肉成本高：</strong>¥50-60/斤·毛利50-58%是煲品类中最低的。 → 定价¥98+走中高端·配酒水拉升客单价·不要和羊肉汤比价。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🥊</div>
+    <div class="ri-body"><strong>同品类竞争：</strong>郑州羊肉汤¥30一碗、羊肉烩面¥15一碗，¥82的羊肉煲凭什么？ → 强调"一煲三吃"（吃肉→涮菜→喝汤）的体验感+聚餐场景。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">📱</div>
+    <div class="ri-body"><strong>外卖适配：</strong>配送后羊肉变硬、汤汁凝固。 → 冬季外卖需求确实存在·汤料分装+保温袋+附复热指南。</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 赛道判断</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>优势（4条）：</b><br>
+      ① 河南羊肉消费大省，市场基础好<br>
+      ② 冬季刚需，客单价高<br>
+      ③ 羊肉煲专门店在郑州不多<br>
+      ④ 中高端定位有利润空间<br>
+      <br>
+      <b>劣势（4条）：</b><br>
+      ① 季节性太强，只做半年<br>
+      ② 羊肉成本高，毛利最低<br>
+      ③ 去膻门槛高，新手翻车率大<br>
+      ④ 定价受羊肉汤/烩面等低价替代品压制<br>
+      <br>
+      <b>趋势研判：</b>羊肉煲是"赚半年钱"的品类。如果已经有其他煲品打底（鸡煲/猪脚煲），冬季加羊肉煲是很好的补充。不建议专门为羊肉煲开店——全年摊销成本太高。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📌 沧林判断</div>
+  <div class="judge-box">
+    <div class="jb-label">🎯 品类判断 · 2026年6月</div>
+    <p>羊肉煲在河南永远有市场——河南人冬天不吃羊肉汤就像没过年。但羊肉煲和羊肉汤是两个完全不同的生意：羊肉汤¥30一碗，一个人吃完就走；羊肉煲¥100起，一桌人坐两个小时。</p>
+    <p style="margin-top:6px">所以做羊肉煲不要和羊肉汤比价格——比的是体验、是聚餐场景、是一锅三吃的仪式感。</p>
+    <p style="margin-top:6px"><b>关键是去膻。</b>我在行业里19年，见过太多羊肉店死在膻味上。白芷是去膻神器，一定要放。另外建议用带骨羊肉——河南人觉得带骨的羊肉才真材实料、有啃头。</p>
+    <p style="margin-top:6px">冬季款建议10月中旬上线，3月中旬下架。不硬撑全年。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="font-size:12px;color:#3a2a1a;line-height:1.8;">
+    • <b>母卡：</b><a href="BZ_M01_煲系列创业母卡.html" style="color:#6B3A1A;">BZ_M01 煲系列创业母卡</a><br>
+    • <b>总纲：</b><a href="BZ_T01_煲系列总纲.html" style="color:#6B3A1A;">BZ_T01 煲系列总纲（免费）</a><br>
+    • <b>同系列：</b>鸡煲（BZ_01）· 猪脚煲（BZ_04）· 黑鸭煲（BZ_06）· 牛腩煲（BZ_03）<br>
+    • <b>变体推荐：</b>红烧羊肉煲·清炖羊肉煲·葱爆羊肉煲·支竹羊腩煲<br>
+    • <b>❄️ 冬季限定：</b>本卡数据基于10-3月旺季，夏季出品请参考母卡夏季运营方案
+  </div>
+</div>
+
+<div class="section" style="border-bottom:none;background:#faf5f0;">
+  <div class="s-title">📋 数据说明</div>
+  <div class="data-note">
+    · 羊肉价基于郑州万邦批发市场2026年Q2批发价（羊肉¥50-60/斤·冬季通常会涨10-15%）<br>
+    · 售价区间¥82-128参考2025-2026年郑州同品类煲店中位价<br>
+    · 毛利率按售价中位值¥98计算，实际因城市/批次浮动±8%<br>
+    · 出品率按行业保守最低值55%预估<br>
+    · ⚠️ 本卡标注「冬季款」——建议10月至次年3月出品，夏季不出售<br>
+    · 去膻方案为羊肉工艺核心，白芷为推荐必用香料<br>
+    · 数据采集截止：2026年6月<br>
+    · 微信：canglin1985 | 食品决策库 · 青葵亲研
+  </div>
+</div>
+
+<!-- ===== 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整数据包 · 精确到克</h3>
+  <div class="p-sub">6大模块：精确配比表·三重去膻方案·批量出品SOP·出品率测算表·冬季菜单规划·供应链清单</div>
+  <div class="price-tag">¥19 <small>子卡解锁</small></div>
+  <button class="btn" onclick="document.getElementById('payContent').classList.toggle('show');this.textContent=this.textContent.includes('收起')?'展开':'🔓 付费解锁'">🔓 付费解锁</button>
+  <div class="note">付费后微信发送清晰版</div>
+  <div id="payContent" class="pay-content">
+
+    <div style="font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:6px">1️⃣ 精确配比表（红烧味·单份基准）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>羊腩/羊腿（带骨）650g</span><span>切4cm块·冷水泡1h</span></div>
+      <div class="recipe-line"><span>豆瓣酱20g</span><span>炒出红油</span></div>
+      <div class="recipe-line"><span>柱侯酱15g</span><span>增复合酱香</span></div>
+      <div class="recipe-line"><span>南乳2块+南乳汁15ml</span><span>增色增香</span></div>
+      <div class="recipe-line"><span>生抽15ml+老抽8ml</span><span>底味+上色</span></div>
+      <div class="recipe-line"><span>冰糖10g</span><span>提鲜</span></div>
+      <div class="recipe-line"><span>白芷3g（去膻神器·必放）</span><span>和其他香料一起入锅</span></div>
+      <div class="recipe-line"><span>白萝卜200g</span><span>出锅前20分钟下</span></div>
+      <div class="recipe-line"><span>腐竹80g（泡发）</span><span>出锅前10分钟下</span></div>
+      <div class="recipe-line"><span>高汤800ml</span><span>或清水+浓汤宝</span></div>
+      <div class="recipe-line"><span>姜20g+蒜15g+八角2个+桂皮1段+香叶2片</span><span>爆香+香料</span></div>
+      <div class="recipe-line"><span>料酒20ml+米醋5ml</span><span>焯水去膻</span></div>
+      <div class="recipe-line"><span>油25ml</span><span>炒酱+煸肉</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">2️⃣ 三重去膻方案</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>第一重·焯水</span><span>冷水下锅+姜20g+料酒20ml+米醋5ml→大火烧开焯5-8min</span></div>
+      <div class="recipe-line"><span>第二重·香料</span><span>白芷3g（必放）+花椒3g→去膻增香</span></div>
+      <div class="recipe-line"><span>第三重·时间</span><span>炖煮≥1.5h·久炖后膻味挥发</span></div>
+      <div class="recipe-line"><span>验证方法</span><span>出锅前尝一小块：如果还有膻味→补白芷1g+延长炖20min</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">3️⃣ 批量出品SOP（5份起）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>批量预处理</span><span>羊肉3.25kg→浸泡1h→焯水→冲净</span></div>
+      <div class="recipe-line"><span>批量炖煮</span><span>炒酱→加羊肉翻炒→加高汤4L→大火烧开转小火炖1.5h（高压锅25min）</span></div>
+      <div class="recipe-line"><span>分装冷藏</span><span>每份羊肉约650g+萝卜+200ml原汤→冷藏可存3天</span></div>
+      <div class="recipe-line"><span>高峰期出餐</span><span>取预制品→砂锅加热5-8分钟→收汁→撒香菜上桌</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">4️⃣ 出品率测算表</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>羊肉进价650g</span><span>¥50-60/斤 → ¥65-78</span></div>
+      <div class="recipe-line"><span>解冻失水-5%</span><span>32.5g↓</span></div>
+      <div class="recipe-line"><span>焯水收缩-10%</span><span>65g↓</span></div>
+      <div class="recipe-line"><span>炖煮蒸发-18%</span><span>117g↓</span></div>
+      <div class="recipe-line"><span>脂肪析出-8%</span><span>52g↓</span></div>
+      <div class="recipe-line"><span>成品约383g</span><span>出品率约59%</span></div>
+      <div class="recipe-line"><span>+萝卜腐竹汤汁后总重</span><span>约750-850g（含汤汁）</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">5️⃣ 冬季菜单规划</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>10月上线</span><span>清炖羊肉煲·暖身预热·搭配鸡煲一起卖</span></div>
+      <div class="recipe-line"><span>11-12月旺季</span><span>红烧羊肉煲主力·配冬季饮品（姜茶/黄酒）</span></div>
+      <div class="recipe-line"><span>1-2月春节</span><span>羊腩煲大份+配菜套餐·家庭聚餐场景</span></div>
+      <div class="recipe-line"><span>3月下架</span><span>最后一周清库存·3月底切换回夏季菜单</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">6️⃣ 供应链清单</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>羊肉（鲜·国产）</span><span>¥50-60/斤·万邦鲜肉区·冬季涨价10-15%</span></div>
+      <div class="recipe-line"><span>羊肉（冻·进口）</span><span>¥40-50/斤·冻品区·适合批量预制</span></div>
+      <div class="recipe-line"><span>白芷（去膻必用）</span><span>¥20-30/斤·中药材市场/调味品市场</span></div>
+      <div class="recipe-line"><span>腐竹/马蹄</span><span>¥10-15/斤·干货区/蔬菜区</span></div>
+      <div class="recipe-line"><span>砂锅</span><span>¥25-40/个·中原陶瓷城</span></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-brand">
+  <div class="fb-name">🏺 食品决策库</div>
+  <div class="fb-tagline">煲系列 · 单品完整决策数据</div>
+  <div class="fb-links">
+    <span>💬 微信：canglin1985</span>
+    <span>📢 食品决策库</span>
+  </div>
+  <div class="fb-series">BZ_05 羊肉煲（子）· 青葵亲研</div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BZ_06 黑鸭煲 · 煲系列</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e8e0;color:#1a1a1a;padding:20px 14px;line-height:1.7}
+.card{max-width:540px;margin:0 auto;background:#fdfaf7;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.header{background:linear-gradient(135deg,#4A2810,#6B3A1A,#8B5E3C);padding:22px 22px 18px;color:#fff}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.header-code{font-size:11px;opacity:.7;font-weight:600;letter-spacing:2px}
+.header-level{display:flex;gap:6px}
+.header-level span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.12)}
+.header h1{font-size:24px;font-weight:800;margin:4px 0 2px;letter-spacing:-.5px}
+.header .subtitle{font-size:12px;opacity:.8;line-height:1.4}
+.price-badge{font-size:16px;font-weight:800;color:#ffd700;margin-top:4px}
+.header-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.header-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
+.score-strip{background:#4A2810;color:#fff;padding:10px 18px;font-size:14px;font-weight:600;text-align:center}
+.score-strip strong{color:#ffd700}
+.section{padding:16px 18px;border-bottom:1px solid #ede0d0}
+.s-title{font-size:13px;font-weight:700;color:#6B3A1A;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.s-title::after{content:'';flex:1;height:1px;background:#ede0d0}
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+.tb th{background:#6B3A1A;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:11px}
+.tb td{padding:5px 8px;border-bottom:1px solid #ede0d0;color:#3a2a1a;font-size:11px}
+.tb tr:nth-child(even) td{background:#faf5f0}
+.spec-card{background:#f5ede0;border-radius:8px;padding:12px;margin:6px 0;border:1px solid #ede0d0}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#4a3a2a;line-height:1.6}
+.tip-box{background:#f5ede0;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.flow-step{display:flex;gap:8px;margin:6px 0;padding:8px 10px;background:#f5ede0;border-radius:6px;font-size:12px;color:#3a2a1a;align-items:flex-start}
+.flow-step .step-num{width:22px;height:22px;background:#6B3A1A;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.flow-step .step-body{flex:1}
+.flow-step .step-body strong{color:#6B3A1A}
+.ingr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px;color:#3a2a1a;background:#f5ede0;border-radius:8px;padding:10px 12px;margin:6px 0}
+.ingr-grid .ig-item{display:flex;justify-content:space-between;padding:2px 0}
+.ig-item .ig-name{color:#6B3A1A}
+.ig-item .ig-qty{font-weight:600}
+.risk-item{display:flex;gap:8px;margin:6px 0;padding:10px 12px;background:#fef2f0;border-radius:8px;font-size:12px;color:#4a3a2a;align-items:flex-start;border-left:3px solid #c0392b}
+.risk-item .ri-icon{font-size:14px;flex-shrink:0}
+.risk-item .ri-body{flex:1}
+.risk-item .ri-body strong{color:#c0392b}
+.judge-box{background:#fdf8f0;border-radius:10px;padding:14px;margin:6px 0;border:1px solid #ede0d0;font-size:12px;color:#3a2a1a;line-height:1.7}
+.judge-box .jb-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.data-note{font-size:10px;color:#999;line-height:1.8}
+.footer-brand{background:#3a2a1a;color:#fff;text-align:center;padding:20px}
+.footer-brand .fb-name{font-size:18px;font-weight:700;margin-bottom:2px}
+.footer-brand .fb-tagline{font-size:11px;opacity:.7;margin-bottom:10px}
+.footer-brand .fb-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.footer-brand .fb-links span{background:rgba(255,255,255,.12);padding:4px 12px;border-radius:16px;font-size:11px}
+.footer-brand .fb-series{font-size:10px;opacity:.5;margin-top:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-bottom:1px solid #eee5d8;text-align:center}
+.lock-icon{font-size:28px;margin-bottom:4px}
+.pay-area h3{font-size:15px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.pay-area .p-sub{font-size:11px;color:#b5aaa0;margin-bottom:10px}
+.price-tag{font-size:20px;font-weight:700;color:#6B3A1A}
+.price-tag small{font-size:12px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;width:100%;padding:12px;background:#6B3A1A;color:#fff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;margin-top:12px;border:none;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:6px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #6B3A1A}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5;font-size:11px}
+.recipe-line:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-code">BZ_06 · 煲系列</div>
+    <div class="header-level"><span>🦆 子卡 · ¥19</span></div>
+  </div>
+  <h1>🦆 黑鸭煲</h1>
+  <div class="subtitle">甜麻辣风味 · 差异化款 · 年轻人最爱</div>
+  <div class="price-badge">¥68-88/份 · 3-4人份</div>
+  <div class="header-tags">
+    <span>🦆 冷冻鸭</span><span>🔥 甜麻辣</span><span>💰 毛利62-68%</span><span>⭐ 难度中</span><span>📅 全年</span>
+  </div>
+</div>
+
+<div class="score-strip">综合评分：<strong>7.8/10</strong> · 判定：<strong>✅ 推荐进入</strong>（差异化强·毛利高·原料成本低·竞争小）</div>
+
+<div class="section">
+  <div class="s-title">📊 五维雷达</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px;color:#3a2a1a">
+    <div><b>🔥 热度</b><span style="float:right;color:#6B3A1A;font-weight:700">6/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:60%;height:100%;background:#D4833A;border-radius:2px"></div></div>煲品类热度高·黑鸭煲是新概念需市场教育</div>
+    <div><b>🔄 复购</b><span style="float:right;color:#6B3A1A;font-weight:700">7/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:70%;height:100%;background:#D4833A;border-radius:2px"></div></div>甜辣口味上瘾性强·年轻人复购高</div>
+    <div><b>💰 利润</b><span style="float:right;color:#6B3A1A;font-weight:700">8/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:80%;height:100%;background:#D4833A;border-radius:2px"></div></div>鸭肉¥6-8/斤·毛利62-68%</div>
+    <div><b>⚡ 难度</b><span style="float:right;color:#6B3A1A;font-weight:700">7/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:70%;height:100%;background:#2E7D32;border-radius:2px"></div></div>分越高越容易·卤水配方是关键</div>
+    <div style="grid-column:1/-1"><b>🥊 竞争</b><span style="float:right;color:#6B3A1A;font-weight:700">6/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:60%;height:100%;background:#D4833A;border-radius:2px"></div></div>分越高竞争越小·二七区/金水区已开始扎堆·仍有空间但窗口期有限</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">👥 适合谁</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      • 想做差异化煲品的创业者——黑鸭煲甜麻辣味型独树一帜，不跟风酱香/红烧<br>
+      • 年轻人市场——甜辣口感符合年轻人口味偏好，配冰饮尤其受欢迎<br>
+      • 夜市/宵夜档——黑鸭煲适合"先吃鸭、后涮菜"的聚餐模式<br>
+      • 有卤味经验的老手——黑鸭卤水工艺和绝味/周黑鸭同源，上手快<br>
+      <br>
+      <b>❌ 不太适合：</b>传统中老年客群为主的社区（对甜辣接受度低）· 纯堂食不做外卖（黑鸭煲外卖适配成本高）
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>售价：</b>普通小店¥68-78/份 · 连锁品牌¥78-88/份 · 头牌¥88-108/份<br>
+      <b>原料成本：</b>冷冻鸭750g ¥9-12 · 黑鸭卤料包¥3-4 · 高汤¥1-2 · 配菜¥2-3 · 油+香料¥1<br>
+      <b>综合成本：</b>约¥16-22/份<br>
+      <b>毛利率：</b>62-68%<br>
+      <b>单份毛利：</b>¥46-56<br>
+      <b>日销预估：</b>堂食20-35份 · 外卖10-18份<br>
+      <b>日毛利贡献：</b>约¥920-2,580<br>
+      <b>盈利核心：</b>鸭肉原料最便宜（¥6-8/斤），卤水可循环使用越用越香。黑鸭的甜辣味型年轻人上瘾性强，复购率高。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <table class="tb">
+    <tr><th>品种</th><th>定价</th><th>毛利</th><th>难度</th><th>复购</th><th>适合新手</th></tr>
+    <tr><td><b>🦆 黑鸭煲</b></td><td>¥68-88</td><td>62-68%</td><td>⭐⭐ 中</td><td>中</td><td>△ 可</td></tr>
+    <tr><td>🐷 猪脚煲</td><td>¥58-78</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🐔 鸡煲</td><td>¥58-88</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🐮 牛腩煲</td><td>¥78-108</td><td>55-60%</td><td>⭐⭐ 中</td><td>高</td><td>△ 需经验</td></tr>
+    <tr><td>🐮 牛杂煲</td><td>¥68-98</td><td>55-62%</td><td>⭐⭐⭐ 中高</td><td>中</td><td>✘ 不推荐</td></tr>
+  </table>
+  <div class="tip-box" style="margin-top:6px">
+    <p><b>黑鸭煲的差异化位置：</b>在煲品类中，酱香/红烧/清炖是主流味型。黑鸭煲的甜麻辣味型是独一份的差异化，年轻客群天然偏好。二七区/金水区已出现扎堆迹象，现在入局还有窗口期——关键是在味型上做足差异化。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🌶️ 口味 · 颜色 · 口感</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>口味：</b>甜麻辣（源自武汉黑鸭工艺），甜味打底+麻味在中段+辣味收尾。层次分明，不辣嘴不烧胃<br>
+      <b>颜色：</b>深酱黑色（黑鸭卤水上色），表皮油亮呈深褐至黑色<br>
+      <b>口感：</b>鸭肉紧实有嚼劲（肉质纤维比鸡粗），卤煮后不柴。皮糯肉香，甜辣味挂在肉上<br>
+      <b>香型：</b>甜香+卤香+麻辣复合香，上桌甜味先到、辣味后起
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 出品率</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>成品出品率：70-75%</b><br>
+      冷冻鸭（整鸭或鸭腿）→ 解冻 → 卤制 → 斩块 → 装煲<br>
+      损耗主要在：解冻失水2-3% · 卤制收缩8-10% · 骨头占比25-30%<br>
+      <b>采购建议：</b>按每份净肉450g反算 → 每份需采购带骨鸭肉约650-700g<br>
+      出品率按最低值70%预估，实际可通过保水工艺提高
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🧂 原料清单（单份基准）</div>
+  <div class="ingr-grid">
+    <div class="ig-item"><span class="ig-name">冷冻鸭（整鸭/鸭腿）</span><span class="ig-qty">700g</span></div>
+    <div class="ig-item"><span class="ig-name">黑鸭卤料包</span><span class="ig-qty">60g</span></div>
+    <div class="ig-item"><span class="ig-name">高汤/清水</span><span class="ig-qty">600ml</span></div>
+    <div class="ig-item"><span class="ig-name">冰糖</span><span class="ig-qty">25g</span></div>
+    <div class="ig-item"><span class="ig-name">生抽</span><span class="ig-qty">20ml</span></div>
+    <div class="ig-item"><span class="ig-name">老抽</span><span class="ig-qty">10ml</span></div>
+    <div class="ig-item"><span class="ig-name">料酒</span><span class="ig-qty">15ml</span></div>
+    <div class="ig-item"><span class="ig-name">姜片+蒜瓣+葱段</span><span class="ig-qty">50g</span></div>
+    <div class="ig-item"><span class="ig-name">干辣椒+花椒+八角+桂皮</span><span class="ig-qty">12g</span></div>
+    <div class="ig-item"><span class="ig-name">配菜（千张·海带·藕片·土豆粉）</span><span class="ig-qty">200g</span></div>
+    <div class="ig-item"><span class="ig-name">油</span><span class="ig-qty">20ml</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔬 核心工艺SOP</div>
+
+  <div class="flow-step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>解冻+预处理：</strong>冷冻鸭提前一晚放冷藏解冻→洗净→冷水浸泡30分钟去血水→沥干。鸭腿划两刀方便入味。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>焯水：</strong>冷水下锅·加姜片15g+料酒15ml→大火烧开焯3-5分钟→捞出冲净浮沫。关键：充分去腥。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>卤制：</strong>另起锅加高汤600ml+黑鸭卤料包60g+冰糖25g+生抽20ml+老抽10ml+干辣椒花椒八角桂皮→大火烧开→下鸭→转小火·盖盖卤40-50分钟。卤水可循环使用。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>浸泡入味：</strong>关火后鸭在卤水中浸泡30分钟以上（越久越入味）。热卤浸泡是黑鸭风味的关键步骤——卤完立刻捞出风味不够。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">5</div>
+    <div class="step-body"><strong>斩块装煲：</strong>捞出鸭斩块（整鸭斩4-6块）→移入砂锅→加200ml原卤汤+配菜→大火烧开→撒葱花/芝麻→上桌保温。配干碟辣椒粉蘸食更佳。</div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">💡 关键参数</div>
+    <p>黑鸭味型的灵魂是甜麻辣的平衡——冰糖25g提供甜味基底，干辣椒提供辣度，花椒提供麻味。甜味不能太多（压不住辣）、不能太少（辣度不够柔和）。建议卤水第一锅试做后微调：甜不够加冰糖、辣不够加干辣椒、麻不够加花椒。</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">🚫 别犯的错</div>
+    <p>① 鸭不焯水直接卤 → 腥味重。② 卤完不浸泡直接捞 → 鸭肉表面有味里面白。③ 卤水一次用完就倒掉 → 黑鸭卤水越用越香，保存得当可用3-5次。④ 斩块太小（<3cm）→ 装煲后容易煮散。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔧 设备清单</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <table class="tb">
+        <tr><th>设备</th><th>规格</th><th>单价</th></tr>
+        <tr><td>砂锅（10-12号）</td><td>耐高温·可直火</td><td>¥25-40/个</td></tr>
+        <tr><td>卤桶/大汤桶</td><td>批量卤制用</td><td>¥100-300</td></tr>
+        <tr><td>卡式炉</td><td>桌上保温用</td><td>¥150-300/台</td></tr>
+        <tr><td>猛火灶</td><td>厨房卤制用</td><td>¥500-1000</td></tr>
+        <tr><td>卧式冰柜</td><td>冻鸭+卤水</td><td>¥1500-2500</td></tr>
+        <tr><td>操作台</td><td>不锈钢</td><td>¥800-1500</td></tr>
+        <tr><td>排风系统</td><td>堂食店必配</td><td>¥2000-5000</td></tr>
+      </table>
+      <b style="margin-top:6px;display:block">最低配置总投入：约¥3500-5500（摆摊档口版·卤桶可用大号不锈钢锅替代）</b>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📍 开店适配评分</div>
+  <table class="tb">
+    <tr><th>场景</th><th>评分</th><th>理由</th></tr>
+    <tr><td>🏪 社区店</td><td>7/10 ✅</td><td>复购需靠甜辣口味吸引年轻人</td></tr>
+    <tr><td>🎪 夜市摆摊</td><td>9/10 ✅ 推荐</td><td>甜辣味夜市绝配·配冰饮翻台快</td></tr>
+    <tr><td>🏪 档口外卖</td><td>6/10 △</td><td>配送后口感下降·需汤料分装</td></tr>
+    <tr><td>🏙️ 商圈店</td><td>7/10 ✅</td><td>年轻人多·甜辣味接受度高</td></tr>
+    <tr><td>🏢 写字楼午餐</td><td>5/10 △</td><td>卤制时间长·午餐时间有限</td></tr>
+    <tr><td>🏘️ 县城/乡镇</td><td>6/10 △</td><td>年轻客群少·甜辣接受度待验证</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 30天验证路线</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>① 试品（第1-5天）：</b>按SOP做3轮黑鸭煲→重点测试甜麻辣比例→找10人（半数为年轻人）盲测<br>
+      <b>② 竞品调研（第6-10天）：</b>郑州是否有同类黑鸭煲？查大众点评/美团→如果没有→差异化优势确认<br>
+      <b>③ 摆摊测试（第11-17天）：</b>夜市/大学城摆摊7天→测年轻人接受度→观察甜辣口味反馈→日销&lt;¥500则调整味型<br>
+      <b>④ 财务核算（第18-22天）：</b>代入实际采购成本→计算出品率/毛利→保本线→卤水循环使用降本测算<br>
+      <b>⑤ 决策（第23-30天）：</b>综合数据决定做不做→找铺位/买设备/办证
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item">
+    <div class="ri-icon">🍬</div>
+    <div class="ri-body"><strong>甜辣比例失衡：</strong>甜味太重像甜品、辣味太重烧胃、麻味太重麻嘴。 → 卤水每次按标准克数配比·记录每次调整·找到最适比例后定版。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🦆</div>
+    <div class="ri-body"><strong>鸭腥味处理不好：</strong>冷冻鸭腥味比鸡重，焯水不到位整个煲都是腥的。 → 冷水下锅焯水+姜料酒+卤水中加花椒去腥三重保障。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🎯</div>
+    <div class="ri-body"><strong>市场认知度低：</strong>"黑鸭煲"是什么？顾客不知道可能会不敢点。 → 试吃引流+菜单上写清楚口味描述（甜麻辣+绝味/周黑鸭同款风味）。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">💲</div>
+    <div class="ri-body"><strong>卤水成本容易算错：</strong>批量卤制+卤水循环使用，单份成本不好精确核算。 → 按卤料包成本÷预计使用次数+鸭肉成本+配菜成本三块分开算。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">📱</div>
+    <div class="ri-body"><strong>外卖适配：</strong>配送后鸭肉变干、甜味变淡、麻辣味减弱。 → 汤料分装+附甜辣酱包（顾客自己调味道）+注明"建议堂食"。</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 赛道判断</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>优势（5条）：</b><br>
+      ① 味型独一份——甜麻辣在煲品类里没有竞品<br>
+      ② 鸭肉成本最低（¥6-8/斤），利润空间大<br>
+      ③ 卤水可循环使用，越用越香，长期降低均摊成本<br>
+      ④ 年轻人天然偏好甜辣口味<br>
+      ⑤ 郑州黑鸭煲几乎空白<br>
+      <br>
+      <b>劣势（3条）：</b><br>
+      ① 市场教育成本——很多人不知道黑鸭煲是什么<br>
+      ② 冷冻鸭处理不好腥味重<br>
+      ③ 传统客群（中老年）接受度待验证<br>
+      <br>
+      <b>趋势研判：</b>黑鸭煲是煲系列的差异化王牌。绝味/周黑鸭证明了甜麻辣在中国市场的统治力，把这种味型做成煲是降维打击。唯一要做的是让人知道你卖的是什么。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📌 沧林判断</div>
+  <div class="judge-box">
+    <div class="jb-label">🎯 品类判断 · 2026年6月</div>
+    <p>黑鸭煲是我个人在这批煲里最看好的差异化产品。郑州已经有绝味/周黑鸭铺好了路——年轻人知道甜麻辣是什么味道，不需要你教育，你只需要告诉他们"我把这个味做成煲了"。</p>
+    <p style="margin-top:6px"><b>最大的机会：</b>煲品类里没有人做甜麻辣味型。你做就是第一个。先发优势至少能维持1-2年，等别人抄你的时候，你的口味已经建立口碑了。</p>
+    <p style="margin-top:6px"><b>最大的坑：</b>别做成"麻辣鸭煲"——黑鸭的核心是"甜"字打头。冰糖25g是标准量，不要因为觉得"做咸的不做甜的"就减糖。甜味不够，黑鸭就不是黑鸭了。</p>
+    <p style="margin-top:6px">推荐从夜市/大学城周边起步，目标客群就是年轻人。搭配冰镇酸梅汤（毛利85%），一套下来人均¥70-80。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="font-size:12px;color:#3a2a1a;line-height:1.8;">
+    • <b>母卡：</b><a href="BZ_M01_煲系列创业母卡.html" style="color:#6B3A1A;">BZ_M01 煲系列创业母卡</a><br>
+    • <b>总纲：</b><a href="BZ_T01_煲系列总纲.html" style="color:#6B3A1A;">BZ_T01 煲系列总纲（免费）</a><br>
+    • <b>同系列：</b>鸡煲（BZ_01）· 猪脚煲（BZ_04）· 牛腩煲（BZ_03）· 排骨煲（BZ_09）<br>
+    • <b>变体推荐：</b>甜麻辣黑鸭煲·藤椒黑鸭煲·蒜香黑鸭煲·酸笋黑鸭煲
+  </div>
+</div>
+
+<div class="section" style="border-bottom:none;background:#faf5f0;">
+  <div class="s-title">📋 数据说明</div>
+  <div class="data-note">
+    · 鸭价基于郑州万邦批发市场2026年Q2批发价（冷冻鸭¥6-8/斤）<br>
+    · 售价区间¥68-88参考2025-2026年郑州同品类煲店中位价<br>
+    · 毛利率按售价中位值¥78计算，实际因城市/批次浮动±8%<br>
+    · 出品率按行业保守最低值70%预估<br>
+    · 黑鸭味型参考武汉黑鸭工艺（绝味/周黑鸭风格），非传统广式煲<br>
+    · 数据采集截止：2026年6月<br>
+    · 微信：canglin1985 | 食品决策库 · 青葵亲研
+  </div>
+</div>
+
+<!-- ===== 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整数据包 · 精确到克</h3>
+  <div class="p-sub">6大模块：精确配比·黑鸭卤水配方·批量SOP·出品率测算·变体方案·卤水5次成本对照（首锅¥35→第5次仅¥2.5/份）</div>
+  <div class="price-tag">¥19 <small>子卡解锁</small></div>
+  <button class="btn" onclick="document.getElementById('payContent').classList.toggle('show');this.textContent=this.textContent.includes('收起')?'展开':'🔓 付费解锁'">🔓 付费解锁</button>
+  <div class="note">付费后微信发送清晰版</div>
+  <div id="payContent" class="pay-content">
+
+    <div style="font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:6px">1️⃣ 精确配比表（单份基准）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>冷冻鸭（整鸭/鸭腿）700g</span><span>提前冷藏解冻·冷水浸泡30min</span></div>
+      <div class="recipe-line"><span>黑鸭卤料包60g</span><span>秘制配比（见下方）</span></div>
+      <div class="recipe-line"><span>冰糖25g</span><span>甜味基底·黑鸭风味关键</span></div>
+      <div class="recipe-line"><span>生抽20ml</span><span>底味</span></div>
+      <div class="recipe-line"><span>老抽10ml</span><span>上色</span></div>
+      <div class="recipe-line"><span>料酒15ml</span><span>焯水去腥</span></div>
+      <div class="recipe-line"><span>高汤/清水600ml</span><span>卤制用·可复用</span></div>
+      <div class="recipe-line"><span>姜20g+蒜15g+葱10g</span><span>焯水+卤制用</span></div>
+      <div class="recipe-line"><span>干辣椒10g+花椒5g+八角3g+桂皮3g</span><span>麻辣来源</span></div>
+      <div class="recipe-line"><span>配菜200g</span><span>千张·海带·藕片·土豆粉</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">2️⃣ 黑鸭卤水秘制配方（10份量·可循环）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>高汤6L</span><span>鸡骨+猪骨熬制或清水+浓缩高汤</span></div>
+      <div class="recipe-line"><span>冰糖250g</span><span>甜味基底</span></div>
+      <div class="recipe-line"><span>生抽200ml+老抽100ml</span><span>底味+上色</span></div>
+      <div class="recipe-line"><span>干辣椒100g+花椒50g</span><span>麻辣主力</span></div>
+      <div class="recipe-line"><span>八角30g+桂皮20g+香叶10g+陈皮10g</span><span>卤料骨架</span></div>
+      <div class="recipe-line"><span>甘草15g+草果10g+丁香5g</span><span>增香·回甘</span></div>
+      <div class="recipe-line"><span>姜100g+蒜80g+葱80g</span><span>去腥增香</span></div>
+      <div class="recipe-line"><span>盐30g+鸡精15g</span><span>咸味调节</span></div>
+      <div class="recipe-line"><span>卤水保存</span><br>用后过滤→冷藏→每周烧开一次→可反复使用3-5次·越用越香</div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">3️⃣ 批量出品SOP（5份起）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>批量卤制</span><span>鸭子3.5kg→焯水→入卤桶→大火烧开转小火卤40-50分钟→关火浸泡30分钟</span></div>
+      <div class="recipe-line"><span>分装冷藏</span><span>卤好鸭斩块→每份500g分装→冷藏可存3天</span></div>
+      <div class="recipe-line"><span>高峰期出餐</span><span>取预制品→砂锅+原卤汤200ml+配菜→大火烧开2-3分钟→上桌</span></div>
+      <div class="recipe-line"><span>卤水循环</span><span>用完过滤→补调料和水→下次继续使用（第2次风味最好）</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">4️⃣ 三种味型变体方案</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>🌶️ 藤椒黑鸭煲</span><span>出餐前加藤椒油10ml+鲜藤椒5g，麻味升级</span></div>
+      <div class="recipe-line"><span>🧄 蒜香黑鸭煲</span><span>爆香时加蒜蓉40g+出锅前撒炸蒜粒15g</span></div>
+      <div class="recipe-line"><span>🥬 酸笋黑鸭煲</span><span>配菜中加入酸笋80g+酸辣椒20g，广西风味融合</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">5️⃣ 卤水循环使用成本测算</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>首锅卤料成本</span><span>约¥35-45（10份量）</span></div>
+      <div class="recipe-line"><span>第1次使用</span><span>每份分摊¥3.5-4.5</span></div>
+      <div class="recipe-line"><span>第2-3次（补料约40%）</span><span>每份分摊¥1.5-2</span></div>
+      <div class="recipe-line"><span>第4-5次（补料约60%）</span><span>每份分摊¥2-3</span></div>
+      <div class="recipe-line"><span>5次均摊</span><span>每份约¥2.5-3.5（远低于一次性卤料）</span></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-brand">
+  <div class="fb-name">🏺 食品决策库</div>
+  <div class="fb-tagline">煲系列 · 单品完整决策数据</div>
+  <div class="fb-links">
+    <span>💬 微信：canglin1985</span>
+    <span>📢 食品决策库</span>
+  </div>
+  <div class="fb-series">BZ_06 黑鸭煲（子）· 青葵亲研</div>
+</div>
+
+</div>
+</body>
+</html>

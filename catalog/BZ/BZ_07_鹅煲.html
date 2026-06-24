@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BZ_07 鹅煲 · 煲系列</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e8e0;color:#1a1a1a;padding:20px 14px;line-height:1.7}
+.card{max-width:540px;margin:0 auto;background:#fdfaf7;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.header{background:linear-gradient(135deg,#4A2810,#6B3A1A,#8B5E3C);padding:22px 22px 18px;color:#fff}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.header-code{font-size:11px;opacity:.7;font-weight:600;letter-spacing:2px}
+.header-level{display:flex;gap:6px}
+.header-level span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.12)}
+.header h1{font-size:24px;font-weight:800;margin:4px 0 2px;letter-spacing:-.5px}
+.header .subtitle{font-size:12px;opacity:.8;line-height:1.4}
+.price-badge{font-size:16px;font-weight:800;color:#ffd700;margin-top:4px}
+.header-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.header-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
+.score-strip{background:#4A2810;color:#fff;padding:10px 18px;font-size:14px;font-weight:600;text-align:center}
+.score-strip strong{color:#ffd700}
+.section{padding:16px 18px;border-bottom:1px solid #ede0d0}
+.s-title{font-size:13px;font-weight:700;color:#6B3A1A;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.s-title::after{content:'';flex:1;height:1px;background:#ede0d0}
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+.tb th{background:#6B3A1A;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:11px}
+.tb td{padding:5px 8px;border-bottom:1px solid #ede0d0;color:#3a2a1a;font-size:11px}
+.tb tr:nth-child(even) td{background:#faf5f0}
+.spec-card{background:#f5ede0;border-radius:8px;padding:12px;margin:6px 0;border:1px solid #ede0d0}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#4a3a2a;line-height:1.6}
+.tip-box{background:#f5ede0;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.flow-step{display:flex;gap:8px;margin:6px 0;padding:8px 10px;background:#f5ede0;border-radius:6px;font-size:12px;color:#3a2a1a;align-items:flex-start}
+.flow-step .step-num{width:22px;height:22px;background:#6B3A1A;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.flow-step .step-body{flex:1}
+.flow-step .step-body strong{color:#6B3A1A}
+.ingr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px;color:#3a2a1a;background:#f5ede0;border-radius:8px;padding:10px 12px;margin:6px 0}
+.ingr-grid .ig-item{display:flex;justify-content:space-between;padding:2px 0}
+.ig-item .ig-name{color:#6B3A1A}
+.ig-item .ig-qty{font-weight:600}
+.risk-item{display:flex;gap:8px;margin:6px 0;padding:10px 12px;background:#fef2f0;border-radius:8px;font-size:12px;color:#4a3a2a;align-items:flex-start;border-left:3px solid #c0392b}
+.risk-item .ri-icon{font-size:14px;flex-shrink:0}
+.risk-item .ri-body{flex:1}
+.risk-item .ri-body strong{color:#c0392b}
+.judge-box{background:#fdf8f0;border-radius:10px;padding:14px;margin:6px 0;border:1px solid #ede0d0;font-size:12px;color:#3a2a1a;line-height:1.7}
+.judge-box .jb-label{font-size:10px;font-weight:700;color:#6B3A1A;margin-bottom:4px}
+.data-note{font-size:10px;color:#999;line-height:1.8}
+.footer-brand{background:#3a2a1a;color:#fff;text-align:center;padding:20px}
+.footer-brand .fb-name{font-size:18px;font-weight:700;margin-bottom:2px}
+.footer-brand .fb-tagline{font-size:11px;opacity:.7;margin-bottom:10px}
+.footer-brand .fb-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.footer-brand .fb-links span{background:rgba(255,255,255,.12);padding:4px 12px;border-radius:16px;font-size:11px}
+.footer-brand .fb-series{font-size:10px;opacity:.5;margin-top:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-bottom:1px solid #eee5d8;text-align:center}
+.lock-icon{font-size:28px;margin-bottom:4px}
+.pay-area h3{font-size:15px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.pay-area .p-sub{font-size:11px;color:#b5aaa0;margin-bottom:10px}
+.price-tag{font-size:20px;font-weight:700;color:#6B3A1A}
+.price-tag small{font-size:12px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;width:100%;padding:12px;background:#6B3A1A;color:#fff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;margin-top:12px;border:none;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:6px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block;filter:blur(12px);pointer-events:none;user-select:none}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #6B3A1A}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5;font-size:11px}
+.recipe-line:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-code">BZ_07 · 煲系列</div>
+    <div class="header-level"><span>🦢 子卡 · ¥19</span></div>
+  </div>
+  <h1>🦢 鹅煲</h1>
+  <div class="subtitle">南方口味 · 中高端定位 · 潮汕/客家特色</div>
+  <div class="price-badge">¥88-128/份 · 3-4人份</div>
+  <div class="header-tags">
+    <span>🦢 鹅</span><span>🔥 卤水/焖煲</span><span>💰 毛利55-60%</span><span>⭐⭐⭐ 难度高</span><span>🌍 南方款</span>
+  </div>
+</div>
+
+<div class="score-strip">综合评分：<strong>5.8/10</strong> · 判定：<strong>✘ 慎入</strong>（郑州市场认知度低·难度高·成本高·仅推荐有潮汕/客家客群的区域）</div>
+
+<div class="section">
+  <div class="s-title">📊 五维雷达</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:12px;color:#3a2a1a">
+    <div><b>🔥 热度</b><span style="float:right;color:#6B3A1A;font-weight:700">5/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:50%;height:100%;background:#D4833A;border-radius:2px"></div></div>鹅品类区域性强·全国热度不高</div>
+    <div><b>🔄 复购</b><span style="float:right;color:#6B3A1A;font-weight:700">5/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:50%;height:100%;background:#D4833A;border-radius:2px"></div></div>郑州鹅消费习惯弱</div>
+    <div><b>💰 利润</b><span style="float:right;color:#6B3A1A;font-weight:700">6/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:60%;height:100%;background:#D4833A;border-radius:2px"></div></div>鹅¥14-18/斤·毛利55-60%</div>
+    <div><b>⚡ 难度</b><span style="float:right;color:#6B3A1A;font-weight:700">4/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:40%;height:100%;background:#D4833A;border-radius:2px"></div></div>分越高越容易·鹅肉处理不好易柴</div>
+    <div style="grid-column:1/-1"><b>🥊 竞争</b><span style="float:right;color:#6B3A1A;font-weight:700">8/10</span><div style="height:4px;background:#ede0d0;border-radius:2px;margin:2px 0"><div style="width:80%;height:100%;background:#2E7D32;border-radius:2px"></div></div>分越高竞争越小·郑州鹅煲几乎无竞品</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">👥 适合谁</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      • 有潮汕/客家客群的区域（南方人聚居区）<br>
+      • 走中高端路线的品质店——鹅煲客单价高（¥100+），有溢价空间<br>
+      • 有鹅肉处理经验的老手——鹅肉比鸡鸭难处理，易柴<br>
+      • 想做差异化竞争的餐饮老板——郑州鹅煲几乎空白<br>
+      <br>
+      <b>❌ 不太适合：</b>新手创业者（难度高·市场教育成本大）· 郑州本地传统社区（鹅肉消费习惯弱）· 追求高周转的档口（出餐慢）
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>售价：</b>普通小店¥88-98/份 · 连锁品牌¥98-118/份 · 头牌¥118-148/份<br>
+      <b>原料成本：</b>鹅（带骨）700g¥20-25 · 酱料卤包¥4-5 · 配菜¥2-3 · 高汤¥1-2 · 油+香料¥1<br>
+      <b>综合成本：</b>约¥28-36/份<br>
+      <b>毛利率：</b>55-60%<br>
+      <b>单份毛利：</b>¥48-72<br>
+      <b>日销预估：</b>堂食10-20份 · 外卖5-8份（增速慢）<br>
+      <b>日毛利贡献：</b>约¥480-1,440<br>
+      <b>盈利核心：</b>鹅煲客单价高、单份毛利高，但销量天花板低。适合作为菜单上的"形象款"拉升品牌调性，不适合走量。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <table class="tb">
+    <tr><th>品种</th><th>定价</th><th>毛利</th><th>难度</th><th>复购</th><th>适合新手</th></tr>
+    <tr><td><b>🦢 鹅煲</b></td><td>¥88-128</td><td>55-60%</td><td>⭐⭐⭐ 高</td><td>低</td><td>✘ 不推荐</td></tr>
+    <tr><td>🐷 猪脚煲</td><td>¥58-78</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🐔 鸡煲</td><td>¥58-88</td><td>60-68%</td><td>⭐ 低</td><td>高</td><td>✅ 是</td></tr>
+    <tr><td>🦆 黑鸭煲</td><td>¥68-88</td><td>62-68%</td><td>⭐⭐ 中</td><td>中</td><td>△ 可</td></tr>
+    <tr><td>🐮 牛腩煲</td><td>¥78-108</td><td>55-60%</td><td>⭐⭐ 中</td><td>高</td><td>△ 需经验</td></tr>
+  </table>
+  <div class="tip-box" style="margin-top:6px">
+    <p><b>鹅煲的竞争位置：</b>鹅煲是煲品类中最"小众"的选择。竞争极小（郑州几乎无竞品），但需求端也小。建议只作为品质店的补充SKU，不要把它当主力款。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🌶️ 口味 · 颜色 · 口感</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>口味：</b>卤水味型（潮汕卤鹅风格），咸鲜卤香。鹅肉纤维比鸡鸭粗，需长时间炖煮才能入味<br>
+      <b>颜色：</b>深酱色（老抽+卤水上色），表皮油亮<br>
+      <b>口感：</b>鹅肉紧实有嚼劲（比鸭肉更粗），炖1.5-2h至酥烂不柴。鹅皮厚糯富胶质，鹅掌/鹅翼是精华<br>
+      <b>香型：</b>卤香+八角桂皮+南姜复合香<br>
+      <b>⚠️ 南方口味标注：</b>鹅煲源自潮汕/客家地区，河南市场认知度低。建议从信阳焖鹅或潮汕卤鹅切入，主打中高端路线
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 出品率</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>成品出品率：65-70%</b><br>
+      鹅（整鹅或切块）→ 焯水 → 炖煮 → 斩块 → 装煲<br>
+      损耗主要在：解冻失水3-5%·焯水收缩5-8%·炖煮蒸发12-15%·骨头占比20-25%<br>
+      <b>采购建议：</b>按每份净肉500g反算 → 每份需采购鹅肉约700-750g<br>
+      出品率按最低值65%预估
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🧂 原料清单（单份基准）</div>
+  <div class="ingr-grid">
+    <div class="ig-item"><span class="ig-name">鹅（带骨切块）</span><span class="ig-qty">700g</span></div>
+    <div class="ig-item"><span class="ig-name">卤水料包</span><span class="ig-qty">20g</span></div>
+    <div class="ig-item"><span class="ig-name">高汤</span><span class="ig-qty">800ml</span></div>
+    <div class="ig-item"><span class="ig-name">生抽</span><span class="ig-qty">20ml</span></div>
+    <div class="ig-item"><span class="ig-name">老抽</span><span class="ig-qty">10ml</span></div>
+    <div class="ig-item"><span class="ig-name">蚝油</span><span class="ig-qty">15g</span></div>
+    <div class="ig-item"><span class="ig-name">冰糖</span><span class="ig-qty">12g</span></div>
+    <div class="ig-item"><span class="ig-name">料酒</span><span class="ig-qty">20ml</span></div>
+    <div class="ig-item"><span class="ig-name">姜+蒜+葱+南姜（可选）</span><span class="ig-qty">60g</span></div>
+    <div class="ig-item"><span class="ig-name">八角+桂皮+香叶+甘草+草果</span><span class="ig-qty">10g</span></div>
+    <div class="ig-item"><span class="ig-name">配菜（酸菜/蒜苗/萝卜）</span><span class="ig-qty">200g</span></div>
+    <div class="ig-item"><span class="ig-name">油</span><span class="ig-qty">20ml</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔬 核心工艺SOP</div>
+
+  <div class="flow-step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>预处理：</strong>鹅斩4-5cm块，冷水浸泡1小时去血水→沥干。冷水下锅+姜片+20ml料酒→大火烧开焯5分钟→捞出冲净。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>炒香：</strong>锅烧热下油20ml→姜蒜爆香→下鹅块翻炒至表面微黄（约3-4分钟）→鹅肉纤维粗，煸炒时间要比鸡鸭长才能去腥。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>卤制：</strong>加生抽20ml+老抽10ml+蚝油15g+冰糖12g→翻炒上色→加高汤800ml+卤料包→大火烧开→转小火·盖盖炖1.5-2h。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>配菜入锅：</strong>酸菜/萝卜在出锅前20分钟下。鹅肉比鸡鸭耐煮，配菜也要相应延后下锅。</div>
+  </div>
+  <div class="flow-step">
+    <div class="step-num">5</div>
+    <div class="step-body"><strong>收汁装煲：</strong>筷子能扎入鹅腿最厚处→大火收汁至浓稠（约3-5分钟）→移入砂锅→撒蒜苗/香菜→上桌保温。</div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">💡 关键参数</div>
+    <p>鹅肉比鸡鸭难处理——纤维粗、皮厚、脂肪层厚。炖煮时间至少1.5h，2h更佳。如果炖1h就出锅→鹅肉又硬又柴。南姜是潮汕卤鹅的灵魂香料，郑州可能不好买→可用普通姜+白芷替代。</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">🚫 别犯的错</div>
+    <p>① 鹅块斩太大（>5cm）→ 炖不烂。② 炖煮时间不够（<1.5h）→ 鹅肉咬不动。③ 不煸炒直接炖 → 腥味重。④ 和鸡鸭用同样的酱料 → 鹅肉厚实需要更重的味道。⑤ 以为郑州人爱吃鹅 → 市场教育成本高。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔧 设备清单</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <table class="tb">
+        <tr><th>设备</th><th>规格</th><th>单价</th></tr>
+        <tr><td>砂锅（12号+）</td><td>耐高温·可直火</td><td>¥30-50/个</td></tr>
+        <tr><td>卤桶/大炖锅</td><td>批量卤制用</td><td>¥100-300</td></tr>
+        <tr><td>卡式炉</td><td>桌上保温用</td><td>¥150-300/台</td></tr>
+        <tr><td>猛火灶</td><td>厨房炒制用</td><td>¥500-1000</td></tr>
+        <tr><td>四门冰柜</td><td>冻鹅+卤水</td><td>¥1500-3000</td></tr>
+        <tr><td>操作台</td><td>不锈钢</td><td>¥800-1500</td></tr>
+        <tr><td>排风系统</td><td>堂食店必配</td><td>¥2000-5000</td></tr>
+      </table>
+      <b style="margin-top:6px;display:block">最低配置总投入：约¥4000-6000</b>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📍 开店适配评分</div>
+  <table class="tb">
+    <tr><th>场景</th><th>评分</th><th>理由</th></tr>
+    <tr><td>🏪 社区店</td><td>4/10 ✘</td><td>普通社区鹅肉接受度低</td></tr>
+    <tr><td>🎪 夜市摆摊</td><td>3/10 ✘</td><td>出餐慢·客群不匹配</td></tr>
+    <tr><td>🏪 档口外卖</td><td>3/10 ✘</td><td>认知度低·配送后口感差</td></tr>
+    <tr><td>🏙️ 商圈店</td><td>6/10 △</td><td>有南/北方融合的商圈可试</td></tr>
+    <tr><td>🏢 写字楼午餐</td><td>3/10 ✘</td><td>贵·慢</td></tr>
+    <tr><td>🏘️ 县城/乡镇</td><td>5/10 △</td><td>信阳地区有鹅消费基础</td></tr>
+  </table>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 30天验证路线</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>① 调研（第1-5天）：</b>查郑州商圈是否有南方人聚居区（如南三环附近）→确认目标客群<br>
+      <b>② 试品（第6-10天）：</b>做3轮鹅煲→重点测试去腥和口感→找10人评估<br>
+      <b>③ 市场测试（第11-17天）：</b>朋友圈/社群预售→观察是否有需求→日销&lt;¥300则放弃<br>
+      <b>④ 成本核算（第18-22天）：</b>精确计算鹅肉成本+出品率+实际毛利<br>
+      <b>⑤ 决策（第23-30天）：</b>几乎确定不推荐单独做鹅煲。建议只作为已有煲店的补充SKU
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item">
+    <div class="ri-icon">🌍</div>
+    <div class="ri-body"><strong>郑州市场认知度极低：</strong>河南人吃鹅习惯远不如鸡鸭。很多人一辈子没吃过鹅肉。 → 试吃引流+写清楚口味描述+从信阳焖鹅切入（信阳菜在郑州有一定认知度）。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🍖</div>
+    <div class="ri-body"><strong>鹅肉处理难度高：</strong>鹅肉纤维比鸡鸭粗很多，火候不到又硬又柴。 → 至少炖2h+高压锅方案（25-30分钟）+用卤水浸泡入味。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">💲</div>
+    <div class="ri-body"><strong>成本高+销量低：</strong>鹅¥14-18/斤比鸡贵一倍，但销量可能不到鸡的1/3。 → 只作为形象款（拉升品牌调性），不做主力款。用鸡煲/猪脚煲养店，鹅煲做溢价。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">🥊</div>
+    <div class="ri-body"><strong>供应链难：</strong>郑州鹅的供应不如鸡鸭稳定，可能需要从信阳/固始进货。 → 提前确认供应商+冻鹅备货2周量。</div>
+  </div>
+  <div class="risk-item">
+    <div class="ri-icon">📱</div>
+    <div class="ri-body"><strong>外卖适配：</strong>配送后鹅肉更柴、卤汁凝固。 → 不做外卖或仅限同城配送。</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 赛道判断</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>优势（3条）：</b><br>
+      ① 郑州几乎无竞品<br>
+      ② 客单价高，单份毛利高<br>
+      ③ 品质感强，拉升品牌调性<br>
+      <br>
+      <b>劣势（5条）：</b><br>
+      ① 郑州鹅消费认知几乎为零<br>
+      ② 鹅肉处理难度高<br>
+      ③ 销量天花板低<br>
+      ④ 供应链不如鸡鸭成熟<br>
+      ⑤ 市场教育成本大<br>
+      <br>
+      <b>趋势研判：</b>鹅煲是煲品类里的"小众款"。不建议专门为鹅煲开店，但如果你已经有一家鸡煲/猪脚煲店，加一道鹅煲作为形象款是可以的。从信阳焖鹅切入比从潮汕卤鹅切入更容易让郑州人接受。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📌 沧林判断</div>
+  <div class="judge-box">
+    <div class="jb-label">🎯 品类判断 · 2026年6月</div>
+    <p>鹅煲在这个系列里第九名不是没道理的。郑州人吃的鹅太少了，市场教育成本比做一道菜高得多。</p>
+    <p style="margin-top:6px">如果你非要做鹅煲，我建议从信阳菜切入——信阳焖鹅在郑州有一定认知度，比潮汕卤鹅更容易让本地人接受。而且信阳菜本身在郑州就有市场（信阳人在郑州开店的不在少数）。</p>
+    <p style="margin-top:6px"><b>一句话：</b>鹅煲先别碰。等把鸡煲/猪脚煲/黑鸭煲跑通了，想加一道形象款的时候，再考虑鹅煲。现在做鹅煲就是给自己找麻烦。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="font-size:12px;color:#3a2a1a;line-height:1.8;">
+    • <b>母卡：</b><a href="BZ_M01_煲系列创业母卡.html" style="color:#6B3A1A;">BZ_M01 煲系列创业母卡</a><br>
+    • <b>总纲：</b><a href="BZ_T01_煲系列总纲.html" style="color:#6B3A1A;">BZ_T01 煲系列总纲（免费）</a><br>
+    • <b>同系列：</b>鸡煲（BZ_01）· 猪脚煲（BZ_04）· 黑鸭煲（BZ_06）· 牛腩煲（BZ_03）· 羊肉煲（BZ_05）<br>
+    • <b>变体推荐：</b>潮汕卤鹅煲·信阳焖鹅煲·客家咸菜鹅煲<br>
+    • <b>🌍 南方口味：</b>河南市场认知度低，建议从信阳菜切入
+  </div>
+</div>
+
+<div class="section" style="border-bottom:none;background:#faf5f0;">
+  <div class="s-title">📋 数据说明</div>
+  <div class="data-note">
+    · 鹅价基于行业批发参考（鹅¥14-18/斤·郑州万邦批发价可能浮动±20%）<br>
+    · 售价区间¥88-128参考2025-2026年一线城市鹅煲定价·郑州需下调10-15%<br>
+    · 毛利率按售价中位值¥98计算，实际因城市/批次浮动±8%<br>
+    · 出品率按行业保守最低值65%预估<br>
+    · ⚠️ 本卡标注「南方口味·需本地化调整」——河南市场鹅肉消费习惯弱<br>
+    · 数据采集截止：2026年6月<br>
+    · 微信：canglin1985 | 食品决策库 · 青葵亲研
+  </div>
+</div>
+
+<!-- ===== 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整数据包 · 精确到克</h3>
+  <div class="p-sub">3大核心模块：精确配比·本地化方案（信阳焖鹅/潮汕卤鹅）·出品率测算</div>
+  <div class="price-tag">¥19 <small>子卡解锁</small></div>
+  <button class="btn" onclick="document.getElementById('payContent').classList.toggle('show');this.textContent=this.textContent.includes('收起')?'展开':'🔓 付费解锁'">🔓 付费解锁</button>
+  <div class="note">付费后微信发送清晰版</div>
+  <div id="payContent" class="pay-content">
+
+    <div style="font-size:12px;font-weight:700;color:#6B3A1A;margin-bottom:6px">1️⃣ 精确配比表（单份基准）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>鹅（带骨）700g</span><span>斩4-5cm块·冷水泡1h</span></div>
+      <div class="recipe-line"><span>卤水料包20g</span><span>八角+桂皮+香叶+甘草+草果+南姜</span></div>
+      <div class="recipe-line"><span>生抽20ml+老抽10ml</span><span>底味+上色</span></div>
+      <div class="recipe-line"><span>蚝油15g</span><span>增鲜·挂汁</span></div>
+      <div class="recipe-line"><span>冰糖12g</span><span>提鲜</span></div>
+      <div class="recipe-line"><span>高汤800ml</span><span>没过鹅肉</span></div>
+      <div class="recipe-line"><span>酸菜/萝卜200g</span><span>出锅前20分钟下</span></div>
+      <div class="recipe-line"><span>姜20g+蒜15g+葱10g</span><span>爆香</span></div>
+      <div class="recipe-line"><span>油20ml</span><span>煸炒</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">2️⃣ 本地化方案（信阳焖鹅风味）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>信阳风格</span><span>卤水去南姜·加干辣椒10g+花椒5g+生抽增至30ml·主打微辣酱香</span></div>
+      <div class="recipe-line"><span>潮汕风格（原版）</span><span>保留南姜+加蒜蓉醋蘸料+卤鹅肠/鹅掌翼拼盘</span></div>
+      <div class="recipe-line"><span>推荐郑州方案</span><span>信阳风格起步·同时提供蒜蓉醋蘸料·试市场反应后再调整</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;margin:12px 0 6px">3️⃣ 出品率测算表</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span>鹅进价700g</span><span>¥14-18/斤 → ¥20-25</span></div>
+      <div class="recipe-line"><span>解冻失水-5%</span><span>35g↓</span></div>
+      <div class="recipe-line"><span>焯水收缩-8%</span><span>56g↓</span></div>
+      <div class="recipe-line"><span>炖煮蒸发-15%</span><span>105g↓</span></div>
+      <div class="recipe-line"><span>骨头占比-22%</span><span>154g↓</span></div>
+      <div class="recipe-line"><span>成品约350g</span><span>含骨出品率约65%</span></div>
+      <div class="recipe-line"><span>+配菜汤汁后总重</span><span>约700-800g（含汤汁）</span></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-brand">
+  <div class="fb-name">🏺 食品决策库</div>
+  <div class="fb-tagline">煲系列 · 单品完整决策数据</div>
+  <div class="fb-links">
+    <span>💬 微信：canglin1985</span>
+    <span>📢 食品决策库</span>
+  </div>
+  <div class="fb-series">BZ_07 鹅煲（子）· 青葵亲研</div>
+</div>
+
+</div>
+</body>
+</html>
