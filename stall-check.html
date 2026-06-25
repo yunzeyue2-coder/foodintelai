@@ -99,7 +99,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
     <div class="card-hdr"><span class="dot" style="background:#ff884d"></span>🛒 想卖什么</div>
     <div class="field">
       <span class="fl">选一个品类</span>
-      <div class="opt-group" id="cat" data-id="cat">
+      <div class="opt-group" data-id="cat-hot">
         <div class="opt" data-v="地摊小吃">🌯 烤苕皮</div>
         <div class="opt" data-v="地摊小吃">🥔 锅巴土豆</div>
         <div class="opt" data-v="地摊小吃">🍦 热奶宝</div>
@@ -548,13 +548,13 @@ var CATS = {
     dailyRev:[400,900],costRate:0.4,bestTime:'evening',seasonal:0,incomeCap:4},
   '早餐':{min:2,name:'早餐体系',cards:'',path:'',needPower:1,
     match:{夜市:1,学校:5,社区:5,工地:5,商业街:4,流动:2},
+    dailyRev:[200,500],costRate:0.3,bestTime:'morning',seasonal:0,incomeCap:2},
   '地摊小吃':{min:1,name:'地摊小吃',cards:'摊爆款',path:'地摊爆款',needPower:0,
     match:{夜市:5,学校:5,社区:4,工地:3,商业街:4,流动:5},
     dailyRev:[250,550],costRate:0.25,bestTime:'evening',seasonal:0,incomeCap:3},
   '饮品甜品':{min:2,name:'饮品甜品',cards:'饮品甜品',path:'其他',needPower:0,
     match:{夜市:5,学校:4,社区:3,工地:2,商业街:5,流动:4},
     dailyRev:[250,500],costRate:0.3,bestTime:'any',seasonal:1,incomeCap:2},
-    dailyRev:[200,500],costRate:0.3,bestTime:'morning',seasonal:0,incomeCap:2},
   '烤串':{min:2,name:'烤串/肉串',cards:'',path:'',needPower:0,
     match:{夜市:5,学校:3,社区:4,工地:4,商业街:3,流动:4},
     dailyRev:[300,650],costRate:0.35,bestTime:'evening',seasonal:0,incomeCap:3}
@@ -612,7 +612,15 @@ document.querySelectorAll('.opt-group').forEach(function(g) {
     if (!opt) return;
     g.querySelectorAll('.opt').forEach(function(o) { o.classList.remove('sel'); });
     opt.classList.add('sel');
-    updateButton();
+    var gCat = document.querySelector('.opt-group[data-id="cat"]');
+    if(gCat && g !== gCat && opt.getAttribute('data-v')){
+      var v = opt.getAttribute('data-v');
+      gCat.querySelectorAll('.opt').forEach(function(o){
+        if(o.getAttribute('data-v') === v) o.classList.add('sel');
+        else o.classList.remove('sel');
+      });
+    }
+    if(window._updateButton) window._updateButton(); else updateButton();
 // debug: 确认品类选择初始化
 console.log("stall-check loaded, CATS count:", Object.keys(CATS).length);
   });
