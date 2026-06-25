@@ -882,9 +882,9 @@ function toggleAllStall() {
     el.style.display = 'block';
     if(grid.innerHTML === '') {
       var html = '';
-      STALL_CATS.forEach(function(s){
+      STALL_CATS.forEach(function(s, idx){
         html += '<div style="margin-bottom:6px">';
-        html += '<div onclick="selectStallCat(\''+s.cat+'\',\''+s.single+'\')" style="cursor:pointer;font-size:11px;font-weight:600;color:#ff884d;margin-bottom:2px">'+s.emoji+' '+s.name+' ▸ 点击选定</div>';
+        html += '<div onclick="selectStallCat('+idx+')" style="cursor:pointer;font-size:11px;font-weight:600;color:#ff884d;margin-bottom:2px">'+s.emoji+' '+s.name+' ▸ 点击选定</div>';
         html += '</div>';
       });
       grid.innerHTML = html;
@@ -893,12 +893,14 @@ function toggleAllStall() {
     el.style.display = 'none';
   }
 }
-function selectStallCat(cat, single) {
+function selectStallCat(idx) {
+  var s = STALL_CATS[idx];
+  if(!s) return;
   var group = document.querySelector('.opt-group[data-id="cat"]');
   if(!group) return;
   var opts = group.querySelectorAll('.opt');
   opts.forEach(function(o){
-    if(o.textContent.trim().includes(single) || o.textContent.trim().includes(cat)) {
+    if(o.textContent.trim().includes(s.single) || o.textContent.trim().includes(s.cat)) {
       o.classList.add('sel');
     } else {
       o.classList.remove('sel');
