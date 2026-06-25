@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>TB_T01 铁板总纲 · 摆摊品类创业测评</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 顶部评级 HZ基调 ===== */
+.rating-bar{background:linear-gradient(135deg,#3a322a,#1a1512);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+/* ===== 公共section ===== */
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+/* ===== 项目速览 ===== */
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.radar-item.low{background:#f0f6ec}
+.radar-item.low .stars{color:#5a8f3c}
+
+/* ===== 适合谁 ===== */
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+/* ===== 逻辑块+指标卡 ===== */
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+/* ===== 表格 ===== */
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:8px 0}
+.tb th{background:#3a322a;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:11px}
+.tb td{padding:5px 8px;border-bottom:1px solid #eee5d8;color:#3a322a;font-size:11px}
+.tb tr:nth-child(even) td{background:#f8f4ef}
+.tb .hl{color:#C0392B;font-weight:700}
+
+/* ===== 赛道判断 ===== */
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+/* ===== 同赛道对比表 ===== */
+.comp-table{width:100%;border-collapse:collapse;font-size:11px;min-width:360px}
+.comp-table th{background:#3a322a;color:#fff;padding:8px 6px;text-align:left;font-weight:600;font-size:10px}
+.comp-table td{padding:7px 6px;border-bottom:1px solid #eee5d8;color:#3a322a;font-size:11px}
+.comp-table tr.current{background:#fef6ec}
+
+/* ===== 规格卡 ===== */
+.spec-card{background:#fdf8f0;border-radius:10px;padding:12px;margin:8px 0;border:1px solid #eee5d8}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#5a4f44;line-height:1.6}
+.tip-box{background:#fff8f0;border-radius:8px;padding:10px 12px;margin:6px 0}
+.tip-box .t-label{font-size:10px;font-weight:700;color:#E8652D;margin-bottom:2px}
+.tip-box p{font-size:11px;color:#5a4f44;line-height:1.5}
+
+/* ===== 摆摊指数 ===== */
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+
+/* ===== 时间投入 ===== */
+.time-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.time-card{background:#f8f4ef;border-radius:10px;padding:10px;text-align:center}
+.time-card .t-label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.time-card .t-val{font-size:18px;font-weight:800;color:#E8652D}
+.time-card .t-desc{font-size:10px;color:#5a4f44;margin-top:2px}
+.time-total{margin-top:8px;padding:10px;background:#fef2ee;border-radius:10px;text-align:center}
+.time-total .tt-label{font-size:10px;color:#7a7269;margin-bottom:2px}
+.time-total .tt-val{font-size:22px;font-weight:800;color:#C0392B}
+.time-total .tt-sub{font-size:10px;color:#5a4f44;margin-top:2px}
+
+/* ===== 风险 ===== */
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* ===== 沧林判断 ===== */
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+/* ===== 设备清单 ===== */
+.recipe-box{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px}
+.recipe-box .recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-box .recipe-line:last-child{border-bottom:none}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+/* ===== 30天路线 ===== */
+.day-step{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:12px;color:#3a322a;margin-bottom:4px}
+.day-badge{border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0;color:#fff}
+
+/* ===== 产品结构 ===== */
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+/* ===== 付费区 ===== */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:14px;text-align:left;border-top:1px solid #ddd4ca;padding-top:12px;filter:blur(4px);pointer-events:none;user-select:none}
+.pay-content.show{display:block}
+
+/* ===== 完整出摊包配方行 ===== */
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+/* ===== 底部 ===== */
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.consult-box{background:#3a322a;color:#fff;text-align:center;padding:16px}
+.consult-box .c-head{font-size:14px;font-weight:700;margin-bottom:4px}
+.consult-box .c-desc{font-size:11px;opacity:.7;margin-bottom:8px}
+.consult-box .c-wx{padding:8px 16px;background:rgba(255,255,255,.12);border-radius:6px;display:inline-block;font-size:13px;cursor:pointer}
+.consult-box .c-copy{font-size:10px;opacity:.5;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🥘 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥘 铁板总纲</h1>
+  <div style="font-size:12px;color:#b5aaa0">铁板豆腐·狼牙土豆·铁板鱿鱼·铁板烤肠 — 四品矩阵·一铁板通吃</div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.3</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">A级项目</span>
+  </div>
+  <div class="r-tagline">门槛最低的摆摊入门品类——铁板类不是单一产品，是「一块铁板+一勺酱+一把料」就能撑起一个摊的小吃品类群。</div>
+  <div class="r-tags">
+    <span>🥟 铁板豆腐</span>
+    <span>🥔 狼牙土豆</span>
+    <span>🦑 铁板鱿鱼</span>
+    <span>🌭 铁板烤肠</span>
+    <span>💰 综合毛利78-85%</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高·抖音30%+</div></div>
+    <div class="radar-item"><div class="label">💰 启动成本</div><div class="stars">★★★★★</div><div class="val">¥750起</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">78-85%毛利</div></div>
+    <div class="radar-item"><div class="label">⚔️ 竞争</div><div class="stars">★★★☆☆</div><div class="val">中高·易内卷</div></div>
+    <div class="radar-item low"><div class="label">🔧 技术门槛</div><div class="stars">★★☆☆☆</div><div class="val">极低·2天上手</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 摆摊新手·资金＜5,000</div>
+      <div class="fit-item fit-yes">✅ 兼职人群·每天出一晚</div>
+      <div class="fit-item fit-yes">✅ 学生/毕业生低成本试创业</div>
+      <div class="fit-item fit-yes">✅ 想做大众小吃的人</div>
+      <div class="fit-item fit-yes">✅ 夫妻档/家庭式经营</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 怕油烟怕40℃高温</div>
+      <div class="fit-item fit-no">❌ 不能坚持天天出摊</div>
+      <div class="fit-item fit-no">❌ 想月入3万+又不愿吃苦</div>
+      <div class="fit-item fit-no">❌ 城市禁露天明火区</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🥘 四品矩阵与定价 ===== -->
+<div class="section">
+  <div class="s-title">🥘 四品矩阵与定价</div>
+  <table class="tb">
+    <tr><th>产品</th><th>成本</th><th>售价</th><th>毛利</th><th>日销</th><th>日营收</th><th>角色</th></tr>
+    <tr><td>铁板豆腐</td><td>¥0.5-1.0</td><td>¥5-8</td><td class="hl">85-90%</td><td>50-80份</td><td>¥300-480</td><td>走量之王</td></tr>
+    <tr><td>狼牙土豆</td><td>¥0.8-1.5</td><td>¥6-10</td><td>80-85%</td><td>30-50份</td><td>¥240-400</td><td>拉新品</td></tr>
+    <tr><td>铁板鱿鱼</td><td>¥2-4</td><td>¥8-15</td><td>65-75%</td><td>20-40串</td><td>¥200-400</td><td>提客单</td></tr>
+    <tr><td>铁板烤肠</td><td>¥0.3-0.5</td><td>¥3-5</td><td class="hl">85-90%</td><td>50-150根</td><td>¥150-450</td><td>聚人气</td></tr>
+    <tr style="background:#fdf8f0;font-weight:700"><td>合计</td><td>—</td><td>—</td><td>78-85%</td><td>—</td><td>¥890-1,730</td><td>—</td></tr>
+  </table>
+  <div class="tip-box"><div class="t-label">📌 数据源</div><p>豆腐¥15-20/板(40块)·土豆¥1.0-1.5/斤·鱿鱼冻品¥12-18/斤·淀粉肠¥15-25/袋(50根) — 据1688+农产品批发市场2026年5月</p></div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 四品各有角色</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">铁板类是"高频+低价+高转化"模型——靠走量单品拉客，靠高毛利产品赚钱，四个SKU共用一铁板一酱料，翻台极快。</div>
+    <div class="l-title">📈 日营收拆解</div>
+    <div class="logic-item"><span>铁板豆腐（¥6×60份）</span><span class="v">¥360/天</span></div>
+    <div class="logic-item"><span>狼牙土豆（¥8×40份）</span><span class="v">¥320/天</span></div>
+    <div class="logic-item"><span>铁板鱿鱼（¥10×30串）</span><span class="v">¥300/天</span></div>
+    <div class="logic-item"><span>铁板烤肠（¥4×60根）</span><span class="v">¥240/天</span></div>
+    <div class="logic-item" style="border-top:2px solid #C0392B;padding-top:6px;margin-top:4px"><span><strong>合计日营收</strong></span><span class="v"><strong>¥1,220/天</strong></span></div>
+    <div class="logic-item"><span>综合原料成本</span><span class="v">¥207/天</span></div>
+    <div class="logic-item"><span><strong>日净利（旺季）</strong></span><span class="v" style="color:#5a8f3c"><strong>¥1,013/天</strong></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">旺季月净利</div>
+      <div class="m-val">¥25,000</div>
+      <div class="m-sub">25天出摊</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">淡季月净利</div>
+      <div class="m-val">¥15-18K</div>
+      <div class="m-sub">旺季×0.65</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">年均月净利</div>
+      <div class="m-val">¥18-22K</div>
+      <div class="m-sub">综合全年</div>
+    </div>
+  </div>
+  <div class="tip-box"><div class="t-label">⚠️ 注意</div><p>以上为夜市旺季理想数据。新摊前2周只有50-60%。雨天出摊减半，月均5-8天无法出摊。年有效出摊日约250-280天。</p></div>
+</div>
+
+<!-- ===== 💰 投资对比 ===== -->
+<div class="section">
+  <div class="s-title">💰 投资对比</div>
+  <table class="tb">
+    <tr><th>模式</th><th>投入</th><th>日营收</th><th>月净利</th><th>回本</th></tr>
+    <tr><td>三轮车流动（1人）</td><td>¥2,300-5,200</td><td>¥200-800</td><td>¥3,000-10,000</td><td>7-30天</td></tr>
+    <tr><td>夜市固定档口（1-2人）</td><td>¥5,000-10,000</td><td>¥500-2,000</td><td>¥6,000-18,000</td><td>1-3月</td></tr>
+    <tr><td>美食城档口（1-2人）</td><td>¥8,000-20,000</td><td>¥800-2,500</td><td>¥8,000-20,000</td><td>2-4月</td></tr>
+    <tr><td>街边小店（2-4人）</td><td>¥30,000-80,000</td><td>¥2,000-6,000</td><td>¥15,000-40,000</td><td>3-8月</td></tr>
+  </table>
+  <div class="spec-card"><div class="sc-title">📦 最低启动方案</div><div class="sc-body">折叠桌（¥200）+小号铁板炉（¥200）+燃气瓶（¥150）+首批料（¥200）= <strong>¥750开摊</strong>。先卖烤肠试水，日销50根就能回本。</div></div>
+</div>
+
+<!-- ===== 📈 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">品类认知成熟，不用教育市场</div>
+      <div class="t-item">投资极低（¥750起），试错成本全摆摊品类最低</div>
+      <div class="t-item">出餐极快（4分钟一单），翻台率秒杀卤味/炸鸡</div>
+      <div class="t-item">四季无淡季，雨雪除外</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">同质化严重——每个夜市都有铁板摊</div>
+      <div class="t-item">上限低——一个人撑死了月入2万</div>
+      <div class="t-item">油烟大，夏天高温劝退很多人</div>
+      <div class="t-item">完全依赖天气，雨天零收入</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>铁板类是摆摊最好的<b>入门品类</b>，没有之一。<br>
+    但天花板明显——适合当做创业第一步，不适合当终点。<br>
+    核心护城河不是铁板本身，而是<b>酱料配方</b>——用成品酱=无差异化。<br>
+    <strong>建议路径：</strong>铁板摊试水（3个月）→攒够经验资金→升级做炸鸡/卤味等上限更高的品类。
+  </div>
+</div>
+
+<!-- ===== 📈 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📈 同赛道对比</div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="border-radius:6px 0 0 0">项目</th>
+          <th style="text-align:center">投资</th>
+          <th style="text-align:center">难度</th>
+          <th style="text-align:center">利润</th>
+          <th style="text-align:center">竞争</th>
+          <th style="text-align:center;border-radius:0 6px 0 0">推荐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="current">
+          <td style="font-weight:700;color:#E8652D">🥘 铁板总纲</td>
+          <td style="text-align:center;color:#5a8f3c">★☆☆☆☆</td>
+          <td style="text-align:center;color:#5a8f3c">★★☆☆☆</td>
+          <td style="text-align:center;color:#E8652D">★★★★☆</td>
+          <td style="text-align:center;color:#C0392B">★★★★☆</td>
+          <td style="text-align:center;font-weight:700;color:#E8652D">A</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">🍗 韩式炸鸡</td>
+          <td style="text-align:center">★★★☆☆</td>
+          <td style="text-align:center">★★★☆☆</td>
+          <td style="text-align:center;color:#E8652D">★★★★☆</td>
+          <td style="text-align:center;color:#E8652D">★★★☆☆</td>
+          <td style="text-align:center;font-weight:700;color:#D4A574">A-</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="font-weight:600">🥘 卤味凉拌</td>
+          <td style="text-align:center">★★★☆☆</td>
+          <td style="text-align:center">★★★★☆</td>
+          <td style="text-align:center;color:#5a8f3c">★★★★★</td>
+          <td style="text-align:center;color:#5a8f3c">★★☆☆☆</td>
+          <td style="text-align:center;font-weight:700;color:#5a8f3c">A</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">🍢 烤串烧烤</td>
+          <td style="text-align:center">★★★★☆</td>
+          <td style="text-align:center">★★★★☆</td>
+          <td style="text-align:center;color:#5a8f3c">★★★★★</td>
+          <td style="text-align:center;color:#E8652D">★★★☆☆</td>
+          <td style="text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="font-weight:600">🥞 煎饼果子</td>
+          <td style="text-align:center">★★☆☆☆</td>
+          <td style="text-align:center">★★★☆☆</td>
+          <td style="text-align:center;color:#D4A574">★★★☆☆</td>
+          <td style="text-align:center;color:#E8652D">★★★☆☆</td>
+          <td style="text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 数据基于FoodIntelAI项目评估模型。铁板类以投资额极低（★☆☆）和技术门槛极低（★★☆☆）碾压其他品类。<br>
+    评分维度：投资回报30%·执行难度20%·市场竞争20%·复购能力20%·扩展空间10%
+  </div>
+</div>
+
+<!-- ===== 🗓️ 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div class="day-step" style="background:#fef2ee">
+    <span class="day-badge" style="background:#E8652D">Day 1</span>
+    <span style="flex:1">采购铁板炉+刀具+首批食材，在家试做铁板豆腐+土豆，跑通铁板控温→翻面→撒料全流程</span>
+  </div>
+  <div class="day-step" style="background:#fef6ec">
+    <span class="day-badge" style="background:#D4A574">Day 3</span>
+    <span style="flex:1">邀请20人试吃，收集酱料口味反馈，调整咸度/辣度/甜度配比</span>
+  </div>
+  <div class="day-step" style="background:#fef6ec">
+    <span class="day-badge" style="background:#D4A574">Day 7</span>
+    <span style="flex:1">第一次出摊试水（预备40份豆腐+20份土豆），测试人流、定价、最佳位置</span>
+  </div>
+  <div class="day-step" style="background:#f0f6ec">
+    <span class="day-badge" style="background:#5a8f3c">Day 15</span>
+    <span style="flex:1">根据出摊数据调整产品结构——添加铁板鱿鱼/烤肠扩充客单价</span>
+  </div>
+  <div class="day-step" style="background:#eef2ff">
+    <span class="day-badge" style="background:#4f6ef7">Day 30</span>
+    <span style="flex:1">复盘全月营收数据，决定是否长期经营、换位置或换项目</span>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键判断：</strong>30天能验证铁板摊可行性。如果第3周日均营收不到¥500，说明位置/产品/定价至少一个有问题。铁板类试错成本极低，不合适就换位置，不要死磕。
+  </div>
+</div>
+
+<!-- ===== 🛠️ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 固定设备（一次性投入）</div>
+  <div class="recipe-box" style="border-left:3px solid #E8652D">
+    <div class="recipe-line"><span class="k">铁板炉 60×40cm（双面加热）</span><span class="v">¥200-500</span></div>
+    <div class="recipe-line"><span class="k">液化气单灶 + 15kg气瓶</span><span class="v">¥200-350</span></div>
+    <div class="recipe-line"><span class="k">狼牙刀（波纹刀）</span><span class="v">¥15-25</span></div>
+    <div class="recipe-line"><span class="k">铁铲/刮板×2</span><span class="v">¥10-20</span></div>
+    <div class="recipe-line"><span class="k">不锈钢盆/收纳盒×6-8个</span><span class="v">¥50-80</span></div>
+    <div class="recipe-line"><span class="k">撒料瓶（三孔/五孔）×3-5个</span><span class="v">¥30-50</span></div>
+    <div class="recipe-line"><span class="k">保温桶 10L</span><span class="v">¥80-150</span></div>
+    <div class="recipe-line"><span class="k">电子秤（精确到g）</span><span class="v">¥30-50</span></div>
+    <div class="recipe-line"><span class="k">食品夹/一次性手套/口罩</span><span class="v">¥20-40</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 摊位配套（选择项）</div>
+  <div class="recipe-box" style="border-left:3px solid #D4A574">
+    <div class="recipe-line"><span class="k">二手三轮车（含简单改造）</span><span class="v">¥1,500-3,000</span></div>
+    <div class="recipe-line"><span class="k">折叠操作台/手推车</span><span class="v">¥200-400</span></div>
+    <div class="recipe-line"><span class="k">帐篷伞 3×3m（夜市必备）</span><span class="v">¥150-300</span></div>
+    <div class="recipe-line"><span class="k">折叠桌椅×2套</span><span class="v">¥100-200</span></div>
+    <div class="recipe-line"><span class="k">LED充电照明灯/招牌灯箱</span><span class="v">¥80-200</span></div>
+    <div class="recipe-line"><span class="k">收款码牌/价目表/菜单立牌</span><span class="v">¥20-50</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 耗材（首批）</div>
+  <div class="recipe-box" style="border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span class="k">嫩豆腐（2板=80块）</span><span class="v">¥30-40</span></div>
+    <div class="recipe-line"><span class="k">土豆 30斤</span><span class="v">¥30-45</span></div>
+    <div class="recipe-line"><span class="k">鱿鱼冻品 5kg</span><span class="v">¥60-90</span></div>
+    <div class="recipe-line"><span class="k">淀粉肠 2袋（100根）</span><span class="v">¥30-50</span></div>
+    <div class="recipe-line"><span class="k">铁板酱料（自制配料）1套</span><span class="v">¥40-60</span></div>
+    <div class="recipe-line"><span class="k">撒料（孜然/辣椒/花椒等）1套</span><span class="v">¥30-50</span></div>
+    <div class="recipe-line"><span class="k">液化气（15kg装）</span><span class="v">¥120-150</span></div>
+    <div class="recipe-line"><span class="k">打包盒/纸碗/竹签/塑料袋 500套</span><span class="v">¥80-120</span></div>
+  </div>
+
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#E8652D;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥750-1,200<br><span style="font-size:10px;color:#b5aaa0">已有桌+炉+气瓶</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥3,000-5,500<br><span style="font-size:10px;color:#b5aaa0">含车+帐篷+全部设备</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+      💡 铁板类是所有摆摊品类中<b style="color:#3a322a">起步成本最低</b>的。先卖烤肠和豆腐试水，日销50根就能回本。不必一次性配齐。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔥 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市</div>
+      <div class="s-bar"><div class="fill" style="width:95%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★ 主场</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">学校</div>
+      <div class="s-bar"><div class="fill" style="width:85%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆ 极佳</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">商圈</div>
+      <div class="s-bar"><div class="fill" style="width:80%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆ 极佳</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区</div>
+      <div class="s-bar"><div class="fill" style="width:60%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆ 一般</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏔️</div>
+      <div class="s-name">景区</div>
+      <div class="s-bar"><div class="fill" style="width:65%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆ 可做</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖</div>
+      <div class="s-bar"><div class="fill" style="width:30%;background:#b5aaa0"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★☆☆☆ 差</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 铁板类天然适合夜市和学校门口——高温铁板的烟火气本身就是最强的引流方式。外卖最差，因为铁板类讲的就是"现场感"。
+  </div>
+</div>
+
+<!-- ===== ⏱️ 时间投入 ===== -->
+<div class="section">
+  <div class="s-title">⏱️ 时间投入</div>
+  <div class="time-grid">
+    <div class="time-card">
+      <div class="t-label">备料</div>
+      <div class="t-val">1.5-2h</div>
+      <div class="t-desc">切菜+穿串+调酱+分装</div>
+    </div>
+    <div class="time-card">
+      <div class="t-label">出摊</div>
+      <div class="t-val">4-6h</div>
+      <div class="t-desc">铁板操作+售卖+补料</div>
+    </div>
+    <div class="time-card">
+      <div class="t-label">收摊</div>
+      <div class="t-val">0.5-1h</div>
+      <div class="t-desc">清洗铁板+归位+记账</div>
+    </div>
+  </div>
+  <div class="time-total">
+    <div class="tt-label">每日总耗时</div>
+    <div class="tt-val">6-9h</div>
+    <div class="tt-sub">时薪约¥125-170（日均¥1,013÷6-8h）·旺季</div>
+  </div>
+</div>
+
+<!-- ===== ⚠️ 最大风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">🌧️</span><span><strong>天气风险（致命）</strong>——铁板摊最怕下雨。月均5-8天雨天无法出摊，年有效出摊日仅250-280天。备料多了一定亏。</span></div>
+  <div class="risk-item"><span class="r-icon">⚔️</span><span><strong>竞争风险（慢性）</strong>——每个夜市都有铁板摊。酱料是核心护城河（见TB_V01）。用成品酱=无差异化=价格战。</span></div>
+  <div class="risk-item"><span class="r-icon">🌡️</span><span><strong>健康风险（长期）</strong>——铁板前40℃高温+油烟，夏天易中暑。长期站铁板前膝盖和腰容易出问题。</span></div>
+  <div class="risk-item"><span class="r-icon">💸</span><span><strong>价格战风险</strong>——铁板类门槛极低，容易陷入恶性价格战。定价不要低于同行，靠酱料差异化而非低价。</span></div>
+</div>
+
+<!-- ===== 🧠 沧林判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>铁板类是摆摊最好的入门品类，没有之一。</strong><br><br>
+      投资低（¥750就能试）、出餐快（4分钟一单）、毛利高（85%）、不挑位置（夜市/学校/工地都能卖）。<br><br>
+      但铁板类的问题是<strong>上限低</strong>——一个人撑死了月入2万。想靠铁板摊发财不现实，但靠它养家糊口绰绰有余。适合作为创业第一步，攒够经验+资金后再升级做其他品类。<br><br>
+      <strong>关键判断：</strong>摆摊前3个月最难熬，很多人干一周放弃了。坚持3个月如果日均营收不到500，说明位置或产品有问题，该换位置就换，不要死磕。<br><br>
+      铁板类的核心竞争力不是铁板本身，是<strong>酱料</strong>。没有好酱料就不要做铁板——用成品酱必死。
+    </div>
+    <div class="j-tags">
+      <span>#铁板总纲</span>
+      <span>#摆摊入门</span>
+      <span>#夜市摆摊</span>
+      <span>#最低成本创业</span>
+      <span>#酱料护城河</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 完整出摊包（数据全开·付费区） ===== -->
+<div style="padding:16px 18px;border-top:2px dashed #ddd4ca;border-bottom:1px solid #eee5d8">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#C0392B;color:#fff;border-radius:4px;font-weight:600">📦 完整出摊包 · 数据全开</span>
+  </div>
+  <div style="font-size:12px;color:#7a7269;text-align:center;margin-bottom:14px;line-height:1.5">你买的不是一个配方。是一套经过验证的铁板出摊方案。</div>
+
+  <!-- 1️⃣ 撒料配方精确到g -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 铁板核心撒料配方 — 精确到g</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #C0392B;margin-bottom:8px">
+    <div class="recipe-line"><span class="k">孜然粉（粗粒）</span><span class="v">25g</span></div>
+    <div class="recipe-line"><span class="k">细辣椒粉（二荆条）</span><span class="v">20g</span></div>
+    <div class="recipe-line"><span class="k">粗辣椒碎（子弹头）</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">花椒粉（大红袍）</span><span class="v">8g</span></div>
+    <div class="recipe-line"><span class="k">五香粉</span><span class="v">6g</span></div>
+    <div class="recipe-line"><span class="k">白胡椒粉</span><span class="v">5g</span></div>
+    <div class="recipe-line"><span class="k">白砂糖</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">盐（细盐）</span><span class="v">8g</span></div>
+    <div class="recipe-line"><span class="k">味精/鸡精</span><span class="v">6g</span></div>
+    <div class="recipe-line"><span class="k">熟白芝麻（碎）</span><span class="v">12g</span></div>
+    <div class="recipe-line"><span class="k">花生粉</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">小茴香粉</span><span class="v">5g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      💡 每份撒料约130g，可撒60-80份铁板豆腐或40份狼牙土豆。<br>
+      辣度三档：微辣减辣椒粉40%/中辣不变/重辣加50%+加辣椒油8g
+    </div>
+  </div>
+
+  <!-- 2️⃣ 铁板酱料配方 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">2️⃣ 铁板酱料（刷酱型）配方</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #D4A574;margin-bottom:8px">
+    <div class="recipe-line"><span class="k">甜面酱</span><span class="v">200g</span></div>
+    <div class="recipe-line"><span class="k">蒜蓉辣酱</span><span class="v">150g</span></div>
+    <div class="recipe-line"><span class="k">蚝油</span><span class="v">50g</span></div>
+    <div class="recipe-line"><span class="k">番茄酱</span><span class="v">30g</span></div>
+    <div class="recipe-line"><span class="k">生抽</span><span class="v">20g</span></div>
+    <div class="recipe-line"><span class="k">老抽</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">蒜末（鲜）</span><span class="v">30g</span></div>
+    <div class="recipe-line"><span class="k">白糖</span><span class="v">20g</span></div>
+    <div class="recipe-line"><span class="k">十三香</span><span class="v">5g</span></div>
+    <div class="recipe-line"><span class="k">清水（调稠度）</span><span class="v">80-120g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      💡 小火慢炒至冒泡即可，冷藏可存7天。<br>
+      每份酱料成本约¥4-5，可刷150-200份豆腐或土豆。<br>
+      <strong style="color:#C0392B">🔑 核心秘诀：</strong>出锅前撒一层混合撒料再刷酱，风味层次翻倍。
+    </div>
+  </div>
+
+  <!-- 3️⃣ 温度曲线 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">3️⃣ 温度曲线 — 铁板控温对照表</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:0;overflow:hidden;margin-bottom:8px">
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+      <span>品类</span><span>下板温度</span><span>翻面温度</span><span>出锅/时间</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>铁板豆腐</span><span>180°C</span><span>煎3min→翻</span><span>8min/单面酥脆</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>狼牙土豆</span><span>200°C</span><span>煎2min→翻</span><span>6min/外焦里糯</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>铁板鱿鱼</span><span>220°C</span><span>压1min→翻</span><span>3min/金黄色</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;background:#f5f0eb">
+      <span>铁板烤肠</span><span>200°C</span><span>滚动加热</span><span>4min/爆皮金黄</span>
+    </div>
+  </div>
+  <div style="background:#f5f0eb;border-radius:8px;padding:10px;font-size:11px;color:#5a4f44;line-height:1.6;margin-bottom:8px">
+    <strong>⚠️ 铁板控温三大铁律：</strong><br>
+    ① 铁板预热至少3分钟，用滴水流测试——水珠在板上跳舞而不是摊开才算到位<br>
+    ② 每下完一轮料温度降30-40°C，等10-15秒回升再下下一锅<br>
+    ③ 鱿鱼和土豆绝对不能同批下——温度需求差40°C
+  </div>
+
+  <!-- 4️⃣ 四品批量SOP -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">4️⃣ 批量SOP — 夜市档口版（备料50份量）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:0;overflow:hidden;margin-bottom:8px">
+    <div style="display:grid;grid-template-columns:1.2fr 1.5fr 1.5fr 1.2fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+      <span>品类</span><span>备料流程</span><span>铁板操作</span><span>总工时</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1.5fr 1.5fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>铁板豆腐</span><span>切1.5cm厚片→淡盐水泡30min→沥干</span><span>180°C两面煎至金黄→刷酱→撒料→葱花</span><span>1h</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1.5fr 1.5fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>狼牙土豆</span><span>土豆削皮→狼牙刀切条→清水浸泡去淀粉</span><span>200°C煎至焦脆→加洋葱→撒料→淋酱</span><span>1.5h</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1.5fr 1.5fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>铁板鱿鱼</span><span>解冻→去内脏→切花刀→竹签穿串</span><span>220°C压板+翻面→刷酱3次→撒料</span><span>1.5h</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1.5fr 1.5fr 1.2fr;font-size:11px;padding:8px 10px;background:#f5f0eb">
+      <span>铁板烤肠</span><span>拆袋→划花刀（每根4刀）→备用</span><span>200°C滚动至爆皮→刷酱→撒孜然</span><span>0.5h</span>
+    </div>
+  </div>
+
+  <!-- 5️⃣ 翻车方案 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">5️⃣ 翻车解决方案 — 发软/发黑/粘板/出汤/酱糊</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #E8652D;margin-bottom:8px">
+    <strong>🆘 铁板豆腐粘板：</strong><br>
+    原因：铁板温度不够/豆腐没沥干水分<br>
+    解决：铁板充分预热到180°C；豆腐下板前用厨房纸吸干表面水；刷一层薄油再下<br><br>
+    <strong>🆘 狼牙土豆"出汤"变软：</strong><br>
+    原因：土豆泡水时间太长/切太薄<br>
+    解决：浸泡不超过30min（去表面淀粉即可）；切1cm左右厚度；下板前充分沥干<br><br>
+    <strong>🆘 鱿鱼出水变煮：</strong><br>
+    原因：鱿鱼没完全解冻/铁板温度不够/一次下太多<br>
+    解决：必须完全解冻至室温；温度达到220°C再下；每次不超过5串<br><br>
+    <strong>🆘 酱料焦糊：</strong><br>
+    原因：火太大/酱含糖高/刷太早<br>
+    解决：酱料在出锅前30秒刷（不是一开始就刷）；中小火操作；酱汁可兑少量水稀释<br><br>
+    <strong>🆘 铁板油垢焦黑：</strong><br>
+    解决：每换一次品类用铲子刮干净铁板；收摊后用钢丝球+白醋擦洗；每月深度清洁一次
+  </div>
+
+  <!-- 6️⃣ 三款变体 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">6️⃣ 3款畅销变体方案 — 麻辣/蒜香/甜辣</div>
+  <div style="background:#f0f6ec;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🌶️ 麻辣版（在基础撒料上改）：</strong><br>
+    — 细辣椒粉20g→35g<br>
+    — 花椒粉8g→15g<br>
+    — 加麻椒粉5g（增加前段麻感）<br>
+    — 减白砂糖10g→5g<br>
+    特点：麻辣鲜香，川渝地区爆款，年轻人最爱
+  </div>
+  <div style="background:#fef6ec;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #D4A574;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🧄 蒜香版：</strong><br>
+    — 酱料中蒜末翻倍30g→60g<br>
+    — 撒料中加蒜粉10g替代等量花生粉<br>
+    — 出锅后淋一层蒜油<br>
+    特点：蒜香浓郁，中老年客群接受度最高，复购率王
+  </div>
+  <div style="background:#fef2ee;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #E8652D;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🍯 甜辣版（韩式风）：</strong><br>
+    — 酱料中加入韩式辣酱100g（替换等量蒜蓉辣酱）<br>
+    — 白糖20g→40g<br>
+    — 加蜂蜜15g<br>
+    特点：甜辣适口，女生和小学生回头率最高
+  </div>
+
+  <!-- 7️⃣ 实战备注 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">7️⃣ 实战备注 — 沧林踩过的铁板坑</div>
+  <div class="judge-box" style="border:1px solid #E8652D">
+    <div class="j-text">
+      • <strong>最大的坑——铁板不预热：</strong>第一次出摊心急，铁板刚热就把豆腐下上去。豆腐直接粘板上铲不下来，全废了。铁板必须预热3分钟以上，用滴水法测试——水珠能在板上"跳舞"才算到位。<br><br>
+      • <strong>酱料刷太早：</strong>一开始做的时候豆腐下板就刷酱。结果酱料在铁板上烤焦了，整块豆腐黑乎乎一股糊味。正确做法：快出锅前30秒才刷酱。<br><br>
+      • <strong>鱿鱼穿串前没切花刀：</strong>第一次做鱿鱼直接整条上铁板，里面熟了外面焦了。切花刀不止是为了好看——是为了受热均匀+酱料入味。<br><br>
+      • <strong>土豆切完没泡水：</strong>直接切完就下铁板，淀粉糊了一板。狼牙土豆一定要泡水去淀粉（20-30分钟），下板前沥干。<br><br>
+      • <strong>穿串用竹签要泡水：</strong>干的竹签上铁板容易烧断。穿串前竹签在水里泡10分钟，出摊前穿好。<br><br>
+      • <strong>定价参考：</strong>铁板豆腐¥5-8/份、狼牙土豆¥6-10、鱿鱼¥8-15、烤肠¥3-5。同行竞争参考：同类摊位要相差¥0.5-1即可，别打价格战。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📋 数据说明 ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">📋 数据说明</div>
+  <div style="font-size:10px;color:#7a7269;line-height:1.8;">
+    · 热度数据：YouTube/Douyin搜索结果统计（2026-06-19），300条样本中铁板类98条<br>
+    · 品类定义：百度百科"狼牙土豆"词条<br>
+    · 原料成本：1688批发报价+农业农村部批发市场2026年5月均价<br>
+    · 售价区间：美团/大众点评各城市抽样（一线/新一线/县城）<br>
+    · 日营收：抖音摆摊视频口述数据综合<br>
+    · 毛利率：原料毛利率，不含摊位费/人工/损耗<br>
+    · 以上为行业调研综合，实际因城市/供应链差异有浮动
+  </div>
+</div>
+
+<!-- ===== 🔒 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整项目评估数据包</h3>
+  <div class="p-sub">铁板四品全量数据分析·竞争格局·行业趋势·比上面多3倍数据</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✓</span>四品精确成本模型（含损耗率·单份成本精确到分）</div>
+    <div class="p-item"><span class="p-icon">✓</span>15城定价对比表（一线到县城·四品分别对比）</div>
+    <div class="p-item"><span class="p-icon">✓</span>铁板设备采购清单（含品牌+价格+1688链接）</div>
+    <div class="p-item"><span class="p-icon">✓</span>旺季/淡季/雨天三种营收预测模型（Excel计算器）</div>
+    <div class="p-item"><span class="p-icon">✓</span>铁板摊转门店完整预算清单+空间布局图</div>
+    <div class="p-item"><span class="p-icon">✓</span>5款独家酱料配方·精确到g·标准化量产版</div>
+    <div class="p-item"><span class="p-icon">✓</span>铁板类经营许可/食品流通证办理指引</div>
+  </div>
+  <div class="price-tag">¥39 <small>总纲解锁·母卡含完整数据</small></div>
+  <div class="btn" onclick="var p=document.getElementById('payData');p.classList.toggle('show');this.textContent=this.textContent.includes('展开')?'收起':'🔓 展开完整数据包'">🔓 展开完整数据包</div>
+  <div class="note">点开展示·模糊保护 · 清晰版联系沧林</div>
+  <div id="payData" class="pay-content">
+    <div class="spec-card"><div class="sc-title">📊 15城定价区间（2026年5月）</div><div class="sc-body">
+      <b>一线（北上广深）：</b>铁板豆腐¥8-10·狼牙土豆¥10-12·铁板鱿鱼¥13-18·烤肠¥5-6<br>
+      <b>新一线（成都武汉杭州）：</b>豆腐¥6-8·土豆¥8-10·鱿鱼¥10-15·烤肠¥4-5<br>
+      <b>二线（省会）：</b>豆腐¥5-7·土豆¥6-8·鱿鱼¥8-12·烤肠¥3-4<br>
+      <b>县城：</b>豆腐¥4-5·土豆¥5-6·鱿鱼¥6-8·烤肠¥2-3
+    </div></div>
+    <div class="spec-card"><div class="sc-title">📦 全量设备清单（含1688参考价）</div><div class="sc-body">
+      <b>铁板炉：</b>60×40cm双面不锈钢面板 ¥200-300(1688) / 80×50cm加厚 ¥350-500(1688) / 品牌电热铁板 ¥600-1200(京东)<br>
+      <b>三轮车：</b>旧货市场二手带棚 ¥1,200-2,000 / 新定制摆摊车 ¥3,500-6,000<br>
+      <b>燃气瓶：</b>15kg液化气 ¥120-150 / 充满约¥150<br>
+      <b>狼牙刀：</b>不锈钢双刃波纹刀 ¥15-25(1688)<br>
+      <b>酱料瓶：</b>300ml挤压式酱料瓶×4 ¥20-40(1688)<br>
+      <b>撒料瓶：</b>三孔不锈钢撒料瓶×5 ¥25-50(1688)<br>
+      <b>保温桶：</b>10L不锈钢保温桶 ¥80-150(1688)<br>
+      <b>照明：</b>LED充电式摆摊灯50W ¥60-120(1688)
+    </div></div>
+    <div class="spec-card"><div class="sc-title">📈 三种营收模型预测</div><div class="sc-body">
+      <b>旺季模型（4-10月·25天出摊）：</b><br>
+      日营收¥1,220→月营收¥30,500→原料成本¥5,175→摊位费¥1,000→燃气+杂费¥800→月净利¥23,525<br><br>
+      <b>淡季模型（11-3月·20天出摊）：</b><br>
+      日营收¥790（×0.65）→月营收¥15,800→原料成本¥3,350→摊位费¥1,000→燃气+杂费¥700→月净利¥10,750<br><br>
+      <b>雨天模型（月均6天）：</b><br>
+      雨天零收入→月均损失4-6天→年有效出摊日250-280天→年均月净利¥18,000-22,000
+    </div></div>
+  </div>
+</div>
+
+<div class="consult-box">
+  <div class="c-head">📱 咨询沧林</div>
+  <div class="c-desc">铁板系列任何问题，直接问</div>
+  <div class="c-wx" onclick="navigator.clipboard.writeText('canglin1985')">📋 复制微信号：canglin1985</div>
+  <div class="c-copy">微信复制 · 添加好友 · 直接开聊</div>
+</div>
+
+<div class="ftr">🍜 食品决策库 · FoodIntel AI · 铁板系列</div>
+
+</div>
+</body>
+</html>

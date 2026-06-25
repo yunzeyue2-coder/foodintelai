@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>DPJ_01 大盘鸡 · 档口单品测评</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#3a322a;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.08)}
+
+/* ===== 顶部评级 ===== */
+.rating-bar{background:linear-gradient(135deg,#3a322a,#1a1512);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+/* ===== Section通用 ===== */
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+/* ===== 项目速览 ===== */
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.radar-item.low{background:#f0f6ec}
+.radar-item.low .stars{color:#5a8f3c}
+
+/* ===== 适合谁 ===== */
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+/* ===== 逻辑块 ===== */
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+/* ===== 指标卡 ===== */
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+/* ===== 赛道判断 ===== */
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+/* ===== 30天验证 ===== */
+.day-step{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:12px;color:#3a322a;margin-bottom:4px}
+.day-badge{border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0;color:#fff}
+
+/* ===== 摆摊指数 ===== */
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+
+/* ===== 设备清单 ===== */
+.recipe-box{background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+/* ===== 工艺流程 ===== */
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+
+/* ===== 规格卡 ===== */
+.spec-card{background:#fdf8f0;border-radius:10px;padding:12px;margin:8px 0;border:1px solid #eee5d8}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#5a4f44;line-height:1.6}
+.tip-box{background:#fff8f0;border-radius:8px;padding:10px 12px;margin:6px 0}
+.tip-box .t-label{font-size:10px;font-weight:700;color:#E8652D;margin-bottom:2px}
+.tip-box p{font-size:11px;color:#5a4f44;line-height:1.5}
+
+/* ===== 时间投入 ===== */
+.time-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.time-card{background:#f8f4ef;border-radius:10px;padding:10px;text-align:center}
+.time-card .t-label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.time-card .t-val{font-size:18px;font-weight:800;color:#E8652D}
+.time-card .t-desc{font-size:10px;color:#5a4f44;margin-top:2px}
+.time-total{margin-top:8px;padding:10px;background:#fef2ee;border-radius:10px;text-align:center}
+.time-total .tt-label{font-size:10px;color:#7a7269;margin-bottom:2px}
+.time-total .tt-val{font-size:22px;font-weight:800;color:#C0392B}
+.time-total .tt-sub{font-size:10px;color:#5a4f44;margin-top:2px}
+
+/* ===== 风险 ===== */
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* ===== 沧林判断 ===== */
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+/* ===== 付费区 ===== */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+
+/* ===== 对比表 ===== */
+.comp-table{width:100%;border-collapse:collapse;font-size:11px;min-width:360px}
+.comp-table th{background:#3a322a;color:#fff;padding:8px 6px;text-align:left;font-weight:600;font-size:10px}
+.comp-table td{padding:7px 6px;border-bottom:1px solid #eee5d8;color:#3a322a;font-size:11px}
+.comp-table tr.current{background:#fef6ec}
+
+/* ===== 底部 ===== */
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+
+/* ===== 深色数据包区 ===== */
+.dark-pack{padding:18px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-top:2px dashed #2a2a4e}
+.dark-pack .dp-badge{display:inline-block;font-size:10px;padding:3px 10px;background:#e94560;color:#fff;border-radius:4px;font-weight:700;letter-spacing:1px;margin-bottom:10px}
+.dark-pack h3{font-size:16px;font-weight:800;color:#fff;margin-bottom:2px}
+.dark-pack .dp-sub{font-size:11px;color:#8899b0;margin-bottom:14px}
+.dark-pack .dp-card{background:#0f3460;border-radius:10px;padding:14px;margin-bottom:10px;border-left:3px solid #e94560}
+.dark-pack .dp-card .dc-title{font-size:12px;font-weight:700;color:#e94560;margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.dark-pack .dp-card .dc-body{font-size:11px;color:#c8d0e0;line-height:1.6}
+.dark-pack .dp-card .dc-body strong{color:#fff}
+.dark-pack .dp-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:11px;color:#c8d0e0;line-height:1.5}
+.dark-pack .dp-row:last-child{border-bottom:none}
+.dark-pack .dp-row .k{color:#8899b0;flex-shrink:0;max-width:65%}
+.dark-pack .dp-row .v{font-weight:600;color:#fff;text-align:right;flex-shrink:0}
+.dark-pack .dp-tip{background:rgba(233,69,96,.1);border-radius:6px;padding:8px 10px;font-size:10px;color:#8899b0;margin-top:6px;line-height:1.5}
+.dark-pack .dp-tip strong{color:#fff}
+.dark-pack .dp-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.dark-pack .dp-grid .dp-item{background:#16213e;border-radius:6px;padding:8px 10px}
+.dark-pack .dp-grid .dp-item .gi-label{font-size:9px;color:#8899b0;margin-bottom:2px}
+.dark-pack .dp-grid .dp-item .gi-val{font-size:11px;color:#fff;font-weight:600}
+.dark-pack .dp-flex{display:flex;gap:6px;margin-top:6px}
+.dark-pack .dp-half{flex:1;background:#16213e;border-radius:6px;padding:8px 10px;font-size:10px;color:#c8d0e0;line-height:1.5}
+.dark-pack .dp-half strong{color:#fff}
+.dark-pack .dp-inline{display:inline-block;font-size:10px;padding:1px 6px;border-radius:3px;margin-right:2px}
+.dark-pack .dp-green{background:rgba(46,204,113,.2);color:#2ecc71}
+.dark-pack .dp-yellow{background:rgba(241,196,15,.2);color:#f1c40f}
+.dark-pack .dp-red{background:rgba(233,69,96,.2);color:#e94560}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🥘 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥘 大盘鸡（档口版）</h1>
+  <div style="font-size:12px;color:#b5aaa0">新疆经典 · 一人份小份化 · 夜市档口/小摊新模式</div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">7.2</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">B+级项目</span>
+  </div>
+  <div class="r-tagline">大盘鸡正在从「大份聚餐菜品」向「一人份档口单品」转型——机会在夜市小份化，坑在出餐慢和面条配送。</div>
+  <div class="r-tags">
+    <span>🍗 1kg鸡肉基准</span>
+    <span>💰 投资8000+</span>
+    <span>👤 1-2人档口</span>
+    <span>⏱️ 35分钟工艺</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览5维</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">高·夜市新贵</div></div>
+    <div class="radar-item"><div class="label">💰 启动成本</div><div class="stars">★★☆☆☆</div><div class="val">¥8,000-15,000</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">62-68%毛利</div></div>
+    <div class="radar-item low"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中·控火+面</div></div>
+    <div class="radar-item"><div class="label">⚔️ 竞争</div><div class="stars">★★☆☆☆</div><div class="val">低·差异化大</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁/不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 夜市固定档口/小摊</div>
+      <div class="fit-item fit-yes">✅ 有餐饮经验想做差异化</div>
+      <div class="fit-item fit-yes">✅ 偏好重口味赛道</div>
+      <div class="fit-item fit-yes">✅ 想做一人份模式创新</div>
+      <div class="fit-item fit-yes">✅ 夫妻档口（1人炒1人下面）</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求出餐快（<5分钟）</div>
+      <div class="fit-item fit-no">❌ 完全餐饮零基础</div>
+      <div class="fit-item fit-no">❌ 只做外卖（面条配送问题）</div>
+      <div class="fit-item fit-no">❌ 一个人摆摊（忙不过来）</div>
+      <div class="fit-item fit-no">❌ 租金≥¥3,000/月的档口</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 核心逻辑：大盘鸡小份化</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">
+      传统大盘鸡=聚餐菜（¥88-128大份）。小份档口版=一人食（¥28-38）或两人食（¥48-68）。<br>
+      把大盘鸡拆成「小份炒制+皮带面分装」模式，降低消费门槛，提高翻台率。
+    </div>
+    <div class="l-title">📈 日营收拆解（小份档口）</div>
+    <div class="logic-item"><span>小份大盘鸡（¥32×25份）</span><span class="v">¥800/天</span></div>
+    <div class="logic-item"><span>大份大盘鸡（¥58×10份）</span><span class="v">¥580/天</span></div>
+    <div class="logic-item"><span>加料（皮带面+¥3×20份）</span><span class="v">¥60/天</span></div>
+    <div class="logic-item"><span>饮品/小食搭售</span><span class="v">¥120/天</span></div>
+    <div class="logic-item" style="border-top:2px solid #C0392B;padding-top:6px;margin-top:4px"><span><strong>合计日营收</strong></span><span class="v"><strong>¥1,560/天</strong></span></div>
+    <div class="logic-item"><span>原料成本（约38%）</span><span class="v">¥593/天</span></div>
+    <div class="logic-item"><span><strong>日净利（旺季）</strong></span><span class="v" style="color:#5a8f3c"><strong>¥967/天</strong></span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">旺季月净利</div>
+      <div class="m-val">¥24,000</div>
+      <div class="m-sub">25天出摊</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">淡季月净利</div>
+      <div class="m-val">¥12-15K</div>
+      <div class="m-sub">20天出摊×0.65</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">1-2月</div>
+      <div class="m-sub">含设备+首批备货</div>
+    </div>
+  </div>
+  <div class="tip-box"><div class="t-label">📌 定价策略</div><p>小份¥28-38（含面条）·大份¥48-68（够2-3人）·加面¥3-5。<br>参考2026年夜市调研：小份大盘鸡在成都/西安/郑州等城市已出现，定价¥28-35为主流区间。</p></div>
+</div>
+
+<!-- ===== 📈 赛道判断：大盘鸡vs黄焖鸡vs鸡公煲vs炒鸡 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 大盘鸡的优势</div>
+      <div class="t-item">认知成熟·新疆美食代表IP·不用教育市场</div>
+      <div class="t-item">小份化趋势刚起步·差异化空间大</div>
+      <div class="t-item">土豆焖化后汤汁挂面——天然碳水+蛋白组合，饱腹感强</div>
+      <div class="t-item">竞争品类中大盘鸡档口最少，蓝海窗口期</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 大盘鸡的劣势</div>
+      <div class="t-item">出餐慢（单锅35分钟）vs黄焖鸡5分钟</div>
+      <div class="t-item">纯鸡肉品类，素食客群直接过滤</div>
+      <div class="t-item">外卖面条配送问题无解——必坨</div>
+      <div class="t-item">口味地域差异大——新疆/西北vs南方接纳度不同</div>
+    </div>
+  </div>
+
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:8px">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="border-radius:6px 0 0 0">品类</th>
+          <th style="text-align:center">投资</th>
+          <th style="text-align:center">出餐</th>
+          <th style="text-align:center">利润</th>
+          <th style="text-align:center">竞争</th>
+          <th style="text-align:center;border-radius:0 6px 0 0">外卖</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="current">
+          <td style="font-weight:700;color:#E8652D">🥘 大盘鸡（本卡）</td>
+          <td style="text-align:center">¥8-15K</td>
+          <td style="text-align:center;color:#C0392B">★★☆☆☆ 慢</td>
+          <td style="text-align:center;color:#E8652D">★★★★☆ 高</td>
+          <td style="text-align:center;color:#5a8f3c">★★☆☆☆ 低</td>
+          <td style="text-align:center;color:#b5aaa0">★☆☆☆☆ 差</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">🍛 黄焖鸡</td>
+          <td style="text-align:center">¥5-10K</td>
+          <td style="text-align:center;color:#5a8f3c">★★★★★ 极快</td>
+          <td style="text-align:center;color:#D4A574">★★★☆☆ 中</td>
+          <td style="text-align:center;color:#C0392B">★★★★☆ 高</td>
+          <td style="text-align:center;color:#E8652D">★★★★☆ 可</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="font-weight:600">🥘 鸡公煲</td>
+          <td style="text-align:center">¥10-20K</td>
+          <td style="text-align:center;color:#D4A574">★★★☆☆ 中</td>
+          <td style="text-align:center;color:#E8652D">★★★★☆ 高</td>
+          <td style="text-align:center;color:#E8652D">★★★☆☆ 中</td>
+          <td style="text-align:center;color:#D4A574">★★★☆☆ 中</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">🍗 炒鸡（CJ体系）</td>
+          <td style="text-align:center">¥8-15K</td>
+          <td style="text-align:center;color:#E8652D">★★★☆☆ 中</td>
+          <td style="text-align:center;color:#5a8f3c">★★★★★ 极高</td>
+          <td style="text-align:center;color:#5a8f3c">★★☆☆☆ 低</td>
+          <td style="text-align:center;color:#D4A574">★★★☆☆ 中</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>大盘鸡档口版处于<b>品类红利期</b>——夜市小份化趋势下竞争极低，但出餐慢是硬伤。<br>
+    <strong>核心差异点：</strong>不是和炒鸡比，是和「30分钟以内的预期」比。只有提前做好预制料+优化流程才能跑通。<br>
+    适合<b>有餐饮基本功</b>的人做差异化，不适合纯新手盲目入局。
+  </div>
+</div>
+
+<!-- ===== 🗓️ 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div class="day-step" style="background:#fef2ee">
+    <span class="day-badge" style="background:#E8652D">Day 1</span>
+    <span style="flex:1">采购猛火灶+铁锅+香料首批，在家试做完整大盘鸡工艺——煸香料→炒鸡→焖土豆→下面条</span>
+  </div>
+  <div class="day-step" style="background:#fef6ec">
+    <span class="day-badge" style="background:#D4A574">Day 3</span>
+    <span style="flex:1">邀请15人试吃小份版，测试咸度/辣度/面条口感，摸清土豆焖制最佳时间</span>
+  </div>
+  <div class="day-step" style="background:#fef6ec">
+    <span class="day-badge" style="background:#D4A574">Day 7</span>
+    <span style="flex:1">第一次出摊试水（预备20份小份），测试夜市人流、定价接受度、高峰期出餐能力</span>
+  </div>
+  <div class="day-step" style="background:#f0f6ec">
+    <span class="day-badge" style="background:#5a8f3c">Day 15</span>
+    <span style="flex:1">优化流程——预制料提前备好，缩短单锅时间至20分钟以内；加皮带面作为利润款</span>
+  </div>
+  <div class="day-step" style="background:#eef2ff">
+    <span class="day-badge" style="background:#4f6ef7">Day 30</span>
+    <span style="flex:1">复盘日均营收+客单价+回头率，决定是否长期经营、换位置或升级为小店</span>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键判断：</strong>大盘鸡验证成本比铁板/炸鸡高（单批原料¥80+，设备¥8000+）。如果第3周日均营收不到¥600，说明位置或产品有问题。建议先试做20份邀请试吃再决定采购设备。<br>
+    <strong>容错率低：</strong>大盘鸡不是¥750能启动的项目。¥8,000起步，必须提前做足功课再投。
+  </div>
+</div>
+
+<!-- ===== 🍳 核心工艺（从CJ_V01扩写） ===== -->
+<div class="section">
+  <div class="s-title">🍳 核心工艺</div>
+  <div style="font-size:11px;color:#7a7269;margin-bottom:8px;line-height:1.5">从CJ_V01炒鸡工艺体系扩写·1kg鸡肉基准·35分钟工艺·配皮带面</div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc">煸炒香料 · 小火130-150°C ∥ 干辣椒+孜然粒+香菜籽+花椒出香后捞出备用</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc">炒鸡块 · 大火220°C+ ∥ 鸡块煸至表面金黄（4-5分钟）→+姜+蒜+番茄酱炒匀</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc">入香料+汤 · 大火烧开 ∥ 倒回香料+生抽+老抽+啤酒200ml+水300ml</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc">下土豆焖 · 中小火160-170°C ∥ 土豆3cm块入锅→盖盖焖25-30分钟→软糯不烂</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc">收尾 · 大火200°C+ ∥ +洋葱+青红椒→大火翻炒2分钟→汤汁收至浓稠关火</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">6</span>
+      <span class="ps-desc">煮面 · 宽水200°C ∥ 皮带面煮3-4分钟至透亮→捞入碗底</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">7</span>
+      <span class="ps-desc">合体 · 大盘鸡连汤带肉浇在面上 ∥ 土豆焖化的淀粉让汤汁浓稠挂面——灵魂所在</span>
+    </div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">🫓 皮带面制作（精确配方）</div>
+    <div class="sc-body">
+      <b>面粉：</b>中筋面粉300g · <b>水：</b>温水（40°C）150ml · <b>盐：</b>3g · <b>食用油：</b>5ml（揉面用）<br>
+      <b>步骤：</b>① 面粉+盐混合→温水缓慢倒入搅拌成絮→揉成光滑面团（8-10分钟）→盖膜醒20分钟<br>
+      ② 醒好面搓成条→切小剂子（约30g/个）→刷油→盖上保鲜膜再醒15分钟<br>
+      ③ 取剂子压扁→双手甩拉成宽面条（约2cm宽·30cm长）→沸水下锅煮3-4分钟<br>
+      <b>💡 关键：</b>面醒够时间才有筋道。如果赶时间可用鲜切宽面替代——风味会降低30%。
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:4px;line-height:1.6">
+    🔬 以上为1kg鸡肉基准（2-3份大份/4-5份小份）。档口操作可提前批量预制香料包+配菜包，单锅时间从35分钟降至18-20分钟。
+  </div>
+</div>
+
+<!-- ===== 🔥 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数（6场景）</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★ 主场</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">学校</div>
+      <div class="s-bar"><div class="fill" style="width:70%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆ 极佳</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">商圈</div>
+      <div class="s-bar"><div class="fill" style="width:65%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆ 可做</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区</div>
+      <div class="s-bar"><div class="fill" style="width:60%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆ 一般</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏔️</div>
+      <div class="s-name">景区</div>
+      <div class="s-bar"><div class="fill" style="width:75%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆ 可做</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖</div>
+      <div class="s-bar"><div class="fill" style="width:25%;background:#b5aaa0"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★☆☆☆☆ 差</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 大盘鸡不是摆摊品类而是<b>档口/小店品类</b>。夜市固定档口是第一选择。<br>
+    ⚠️ 外卖评分极低——面条配送必坨，大盘鸡的灵魂在于\"现炒现浇面\"，配送15分钟后面条口感断崖式下降。如果做外卖，建议面面分离包装，但整体体验仍不如堂食。<br>
+    🌟 <b>小份化趋势：</b>近年夜市出现单人份大盘鸡档口（成都/西安/郑州已验证），¥28-38一份含面，翻台率比传统大份高2-3倍。
+  </div>
+</div>
+
+<!-- ===== 🛠️ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 固定设备（一次性投入）</div>
+  <div class="recipe-box" style="border-left:3px solid #E8652D">
+    <div class="recipe-line"><span class="k">猛火灶（商用·单头）</span><span class="v">¥300-600</span></div>
+    <div class="recipe-line"><span class="k">熟铁炒锅 40cm（手工锻打）</span><span class="v">¥120-250</span></div>
+    <div class="recipe-line"><span class="k">液化气15kg+双阀门减压阀</span><span class="v">¥200-350</span></div>
+    <div class="recipe-line"><span class="k">不锈钢操作台 1.5m（带层架）</span><span class="v">¥400-800</span></div>
+    <div class="recipe-line"><span class="k">压面机（手摇·皮带面专用）</span><span class="v">¥150-300</span></div>
+    <div class="recipe-line"><span class="k">不锈钢汤桶 30L（煮面用）</span><span class="v">¥120-200</span></div>
+    <div class="recipe-line"><span class="k">漏勺/滤网/食品夹×3</span><span class="v">¥40-70</span></div>
+    <div class="recipe-line"><span class="k">电子秤（精确到g）</span><span class="v">¥30-50</span></div>
+    <div class="recipe-line"><span class="k">保温桶 20L（备汤/备面用）</span><span class="v">¥100-180</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 摊位配套（选择项）</div>
+  <div class="recipe-box" style="border-left:3px solid #D4A574">
+    <div class="recipe-line"><span class="k">夜市固定摊位（月租）</span><span class="v">¥800-2,500/月</span></div>
+    <div class="recipe-line"><span class="k">帐篷伞 3×3m（防雨防晒）</span><span class="v">¥150-300</span></div>
+    <div class="recipe-line"><span class="k">折叠桌椅×3套（用餐区）</span><span class="v">¥200-400</span></div>
+    <div class="recipe-line"><span class="k">LED充电照明灯×2</span><span class="v">¥80-150</span></div>
+    <div class="recipe-line"><span class="k">招牌灯箱（LED·50×80cm）</span><span class="v">¥200-500</span></div>
+    <div class="recipe-line"><span class="k">收款码牌/价目表/菜单牌</span><span class="v">¥30-60</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 耗材（首批·3天量）</div>
+  <div class="recipe-box" style="border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span class="k">整鸡（剁块）15kg</span><span class="v">¥240-360</span></div>
+    <div class="recipe-line"><span class="k">土豆 15kg</span><span class="v">¥15-22</span></div>
+    <div class="recipe-line"><span class="k">中筋面粉 10kg（皮带面用）</span><span class="v">¥30-50</span></div>
+    <div class="recipe-line"><span class="k">干辣椒+孜然+香料套装</span><span class="v">¥80-120</span></div>
+    <div class="recipe-line"><span class="k">啤酒（提鲜去腥）24罐</span><span class="v">¥60-100</span></div>
+    <div class="recipe-line"><span class="k">液化气（15kg加满）</span><span class="v">¥120-150</span></div>
+    <div class="recipe-line"><span class="k">打包盒/碗/筷/袋 500套</span><span class="v">¥100-180</span></div>
+    <div class="recipe-line"><span class="k">青红椒+洋葱+姜蒜等配菜</span><span class="v">¥50-80</span></div>
+  </div>
+
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#E8652D;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥6,000-8,500<br><span style="font-size:10px;color:#b5aaa0">已有车摊+简单设备</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥12,000-18,000<br><span style="font-size:10px;color:#b5aaa0">含全部设备+首批备货+月租</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+      💡 大盘鸡是档口品类中<b style="color:#3a322a">设备投入偏高</b>的——猛火灶+铁锅+压面机是硬性需求。<br>
+      建议先租夜市固定档口试1个月（月租约¥800-1,500），不要一上来就买三轮车做流动。<br>
+      压面机可以用手工替代（不买¥150-300），但高峰期会拉低出餐速度。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🧂 香料体系 ===== -->
+<div class="section">
+  <div class="s-title">🧂 香料体系</div>
+  <div style="font-size:11px;color:#7a7269;margin-bottom:6px">大盘鸡汤底·精确到g·1kg鸡肉基准</div>
+  <div class="recipe-box" style="border-left:3px solid #C0392B">
+    <div class="recipe-line"><span class="k">孜然粒（大盘鸡灵魂·整粒）</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">干辣椒（中辣·去籽·切段）</span><span class="v">20g</span></div>
+    <div class="recipe-line"><span class="k">香菜籽（层次感）</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">花椒粒（麻底）</span><span class="v">5g</span></div>
+    <div class="recipe-line"><span class="k">八角（增厚）</span><span class="v">2颗（约4g）</span></div>
+    <div class="recipe-line"><span class="k">桂皮（回甘）</span><span class="v">1小段（约3g）</span></div>
+    <div class="recipe-line"><span class="k">香叶（清香味）</span><span class="v">3片</span></div>
+    <div class="recipe-line"><span class="k">草果（去腥增厚）</span><span class="v">1颗（拍破）</span></div>
+    <div class="recipe-line"><span class="k">姜片+蒜瓣</span><span class="v">各20g+15g</span></div>
+    <div class="recipe-line"><span class="k">生抽+老抽</span><span class="v">50ml+20ml</span></div>
+    <div class="recipe-line"><span class="k">番茄酱（提色提鲜·可选）</span><span class="v">30g</span></div>
+    <div class="recipe-line"><span class="k">啤酒（去腥+麦香）</span><span class="v">200ml</span></div>
+    <div class="recipe-line"><span class="k">水（焖煮用）</span><span class="v">300ml</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      💡 孜然是灵魂——必须用<b>整粒孜然</b>而非孜然粉。整粒在煸炒阶段释放香气，不会变苦。<br>
+      干辣椒建议用<b>新疆线辣椒</b>（肉厚香浓）或<b>二荆条</b>（辣度温和香味足）。<br>
+      香菜籽是容易被忽略的一味——增加复合香料层次感，让大盘鸡味觉厚度明显提升。
+    </div>
+  </div>
+  <div class="spec-card">
+    <div class="sc-title">🥔 土豆焖制关键</div>
+    <div class="sc-body">
+      <b>土豆：</b>黄心土豆（糯性）·切3cm块·入锅前不泡水（保留表面淀粉帮助汤汁浓稠）<br>
+      <b>焖制：</b>下土豆后转中小火160-170°C·盖盖焖25-30分钟·中途尽量不要翻动（土豆容易碎）<br>
+      <b>判断标准：</b>筷子能轻松穿透但土豆块不散架为最佳。<br>
+      <b>⚠️ 禁忌：</b>不要一开始大火焖——外面烂了里面还是硬的。中小火慢焖是唯一正确路径。
+    </div>
+  </div>
+</div>
+
+<!-- ===== ⏱️ 时间投入 ===== -->
+<div class="section">
+  <div class="s-title">⏱️ 时间投入</div>
+  <div class="time-grid">
+    <div class="time-card">
+      <div class="t-label">备料</div>
+      <div class="t-val">2-3h</div>
+      <div class="t-desc">剁鸡块+切土豆+配香料+和面+醒面</div>
+    </div>
+    <div class="time-card">
+      <div class="t-label">出摊</div>
+      <div class="t-val">5-7h</div>
+      <div class="t-desc">现炒+焖煮+煮面+售卖+补料</div>
+    </div>
+    <div class="time-card">
+      <div class="t-label">收摊</div>
+      <div class="t-val">1-1.5h</div>
+      <div class="t-desc">洗锅刷碗+清理灶台+结算+次日备料</div>
+    </div>
+  </div>
+  <div class="time-total">
+    <div class="tt-label">每日总耗时</div>
+    <div class="tt-val">8-11.5h</div>
+    <div class="tt-sub">时薪约¥88-120（日均¥967÷8-11h）·旺季含周末</div>
+  </div>
+</div>
+
+<!-- ===== ⚠️ 最大风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">🥔</span><span><strong>土豆煮烂翻车</strong>——土豆焖过头散架变成\"土豆泥鸡\"。下土豆后25分钟内不要翻动，中小火慢焖。土豆品种选黄心糯土豆（不要脆土豆）。</span></div>
+  <div class="risk-item"><span class="r-icon">🍜</span><span><strong>面条提前做会坨</strong>——皮带面必须现拉现煮。提前10分钟以上做好的面条会粘连成团。档口版要\"有人点单才煮面\"，断不能预先煮好。</span></div>
+  <div class="risk-item"><span class="r-icon">⏱️</span><span><strong>出餐慢（致命伤）</strong>——一锅35分钟是硬伤。夜市高峰期（19:00-21:00）最多出3-4锅。预制料包+提前备好配菜可压缩至20分钟，但上限明显。</span></div>
+  <div class="risk-item"><span class="r-icon">🌏</span><span><strong>口味地域差异大</strong>——新疆大盘鸡香料重（孜然+香菜籽+花椒），南方城市可能不适应。建议起手做\"中辣微麻\"版，先试水再调整辣度。</span></div>
+  <div class="risk-item"><span class="r-icon">📦</span><span><strong>外卖面条坨化无解</strong>——大盘鸡配面注定不适合配送。面面分离包装能缓解1-2分钟，但整体体验比堂食差很多。外卖建议单独卖鸡+单独卖面料理包，或者干脆放弃外卖专注堂食/外带。</span></div>
+</div>
+
+<!-- ===== 🧠 沧林判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>大盘鸡小份档口化是一个被低估的机会。</strong><br><br>
+      它在夜市里很少见——不是因为不好吃，而是因为传统思维觉得大盘鸡=必须一大盘=适合聚餐不适合一个人吃。但2023-2026年，成都、西安、郑州的夜市已经跑通了这个模型。<br><br>
+      优势是<strong>竞争极低</strong>——你几乎<strong>找不到第二个大盘鸡档口</strong>。劣势也明显——<strong>出餐太慢</strong>是硬伤，不适合追求翻台率的场景。<br><br>
+      <strong>我的判断：</strong>适合有餐饮经验的人做<b>差异化档口</b>——不需要和炒鸡/黄焖鸡比速度，只需要比他们好吃。核心策略：<br>
+      ① 走<b>小份+现炒</b>路线，让客人看到你炒的过程（烟火气=最强广告）<br>
+      ② 用<b>香料包预制+配料切好备齐</b>把单锅时间压到20分钟<br>
+      ③ <b>放弃外卖</b>，专注夜市堂食+外带（面面分离包装外带能坚持15分钟）<br><br>
+      不建议纯新手做——<strong>¥8,000的试错成本不低</strong>。建议先花¥200在家试做5锅，跑通工艺再谈投资。
+    </div>
+    <div class="j-tags">
+      <span>#大盘鸡档口</span>
+      <span>#夜市小份化</span>
+      <span>#新疆美食</span>
+      <span>#一人份模式</span>
+      <span>#品类红利期</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 完整数据包 ===== -->
+<div style="padding:16px 18px;border-top:2px dashed #ddd4ca;border-bottom:1px solid #eee5d8">
+
+  <!-- 1️⃣ 精确配方 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 精确配方 — 小份/大份比例精确到g</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #C0392B;margin-bottom:8px">
+    <div class="recipe-line"><span class="k">小份（1人·含面）</span><span class="v">鸡肉250g·土豆120g·面100g</span></div>
+    <div class="recipe-line"><span class="k">大份（2-3人·含面）</span><span class="v">鸡肉500g·土豆200g·面150g</span></div>
+    <div class="recipe-line"><span class="k">整鸡去皮大骨出肉率</span><span class="v">约60-65%（1kg整鸡→650g净肉）</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      💡 精确香料比例+批量换算表见下方完整数据包
+    </div>
+  </div>
+
+  <!-- 7️⃣ 沧林踩坑 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">7️⃣ 实战备注 — 沧林踩过的坑</div>
+  <div class="judge-box" style="border:1px solid #E8652D">
+    <div class="j-text">
+      • <strong>最大的坑——土豆焖碎：</strong>第一次做大盘鸡，下土豆后大火焖了15分钟，翻锅一看——土豆全散了，整锅变成土豆泥汤。记住：土豆下锅后中小火25分钟，中途绝对不要翻动。<br><br>
+      • <strong>面条提前煮：</strong>出摊前煮好了一大盘皮带面准备着，结果10分钟后全部粘连成一团。皮带面必须<b>现拉现煮</b>——用压面机压好生面坯放着，有人点单才下锅。<br><br>
+      • <strong>香料炒糊：</strong>干辣椒+孜然下锅时火太大，5秒就黑了。香料必须小火（130-150°C）煸炒，出香立即捞出。连香料带油一起炒=必糊。<br><br>
+      • <strong>土豆选错品种：</strong>第一次用的脆土豆（适合炒土豆丝那种），焖了30分钟还是硬的。大盘鸡要用<b>黄心糯土豆</b>（淀粉含量高），焖出来才软糯浓稠。<br><br>
+      • <strong>啤酒的作用被低估：</strong>一开始没放啤酒，鸡肉腥味明显。啤酒不只去腥——麦芽糖分帮助上色+发酵风味增加层次感，是必需品不是可选品。<br><br>
+      • <strong>定价参考：</strong>小份¥28-38（含面·加肉¥10）·大份¥48-68（够2-3人）·加面¥3-5。同行参考：成都夜市大盘鸡档口小份¥32+面免费续，日均出70-90份。西安夜市大盘鸡小份¥28，日均50-70份。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📦 完整数据包·已解锁 ===== -->
+<div class="dark-pack">
+  <span class="dp-badge">📦 完整数据包 · 已解锁</span>
+  <div class="dp-sub">精确配方 · 批量SOP · 翻车方案 · 三款变体 · 皮带面配方 · 沧林踩坑 · 档口运营SOP</div>
+
+  <!-- 1️⃣ 精确配方 -->
+  <div class="dp-card">
+    <div class="dc-title">1️⃣ 精确配方 — 小份/大份·香料精确到g</div>
+    <div class="dc-body">
+      <div class="dp-row"><span class="k">小份（1人·含皮带面）</span><span class="v">鸡肉250g · 土豆120g · 皮带面100g</span></div>
+      <div class="dp-row"><span class="k">大份（2-3人·含皮带面）</span><span class="v">鸡肉500g · 土豆200g · 皮带面150g</span></div>
+      <div style="margin:6px 0 4px;font-size:10px;color:#e94560;font-weight:600">—— 小份香料包（精确到g） ——</div>
+      <div class="dp-row"><span class="k">孜然粒（整粒·灵魂）</span><span class="v">3g</span></div>
+      <div class="dp-row"><span class="k">干辣椒（新疆线椒/二荆条·切段）</span><span class="v">4g</span></div>
+      <div class="dp-row"><span class="k">香菜籽（层次感倍增）</span><span class="v">2g</span></div>
+      <div class="dp-row"><span class="k">花椒粒</span><span class="v">1g</span></div>
+      <div class="dp-row"><span class="k">八角</span><span class="v">0.5颗（约1g）</span></div>
+      <div class="dp-row"><span class="k">桂皮</span><span class="v">1小段（约1g）</span></div>
+      <div class="dp-row"><span class="k">香叶</span><span class="v">1片</span></div>
+      <div class="dp-row"><span class="k">草果·拍破</span><span class="v">0.5颗</span></div>
+      <div class="dp-row"><span class="k">姜片</span><span class="v">5g</span></div>
+      <div class="dp-row"><span class="k">蒜瓣·拍碎</span><span class="v">4g</span></div>
+      <div class="dp-row"><span class="k">生抽</span><span class="v">10ml</span></div>
+      <div class="dp-row"><span class="k">老抽</span><span class="v">4ml</span></div>
+      <div class="dp-row"><span class="k">番茄酱（提色·可选）</span><span class="v">5g</span></div>
+      <div class="dp-row"><span class="k">啤酒（去腥+麦香）</span><span class="v">50ml</span></div>
+      <div class="dp-row"><span class="k">水（焖煮用）</span><span class="v">80ml</span></div>
+      <div class="dp-row"><span class="k">洋葱+青红椒（收尾配色）</span><span class="v">各15g</span></div>
+      <div class="dp-tip">💡 大份香料量 ×2即可。孜然必须用整粒——煸炒出香后捞出，避免变苦。</div>
+    </div>
+  </div>
+
+  <!-- 2️⃣ 批量SOP -->
+  <div class="dp-card">
+    <div class="dc-title">2️⃣ 批量SOP — 5份/10份/30份备料版+时间线+并行操作</div>
+    <div class="dc-body">
+      <div class="dp-row"><span class="k"><strong style="color:#e94560">🥇 5份小份</strong> 备料45min·单锅20min·总约90min</span><span class="v">鸡肉1.25kg·土豆600g·面500g</span></div>
+      <div class="dp-row"><span class="k"><strong style="color:#e94560">🥇 10份小份</strong> 备料60min·2锅并行·总约70min</span><span class="v">鸡肉2.5kg·土豆1.2kg·面1kg</span></div>
+      <div class="dp-row"><span class="k"><strong style="color:#e94560">🥇 30份小份</strong> 备料90min·6锅并行(2灶)·总约100min</span><span class="v">鸡肉7.5kg·土豆3.6kg·面3kg</span></div>
+      <div style="margin:6px 0 4px;font-size:10px;color:#e94560;font-weight:600">—— 30份出餐时间线（2灶并行） ——</div>
+      <div class="dp-row"><span class="k">08:00-09:00 备料</span><span class="v">剁鸡7.5kg+切土豆3.6kg+配香料包30份</span></div>
+      <div class="dp-row"><span class="k">09:00-09:30 压面</span><span class="v">和面3kg→压面机出条→刷油分装30份生面坯</span></div>
+      <div class="dp-row"><span class="k">09:30-10:00 预制汤底</span><span class="v">鸡骨熬基础汤10L+香料包第一批熬煮</span></div>
+      <div class="dp-row"><span class="k">10:00-10:45 第1-5锅</span><span class="v">2灶同时炒→每灶制3锅（15min/锅含焖）</span></div>
+      <div class="dp-row"><span class="k">10:45-11:30 第6-10锅</span><span class="v">继续2灶并行→10:30起接单开卖</span></div>
+      <div class="dp-tip">💡 关键并行策略：A灶炒鸡焖土豆时，B灶煮面+热碗。香料包一次配好30份，炒一锅扔一包。鸡块可提前一晚腌制（生抽+啤酒+姜片冷藏）。</div>
+    </div>
+  </div>
+
+  <!-- 3️⃣ 翻车方案 -->
+  <div class="dp-card">
+    <div class="dc-title">3️⃣ 翻车方案 — 5大翻车情景+原因+解决方案</div>
+    <div class="dc-body">
+      <div class="dp-row"><span class="k"><span class="dp-inline dp-red">🥔 土豆煮烂</span> 焖碎成泥</span><span class="v">原因：大火翻动多·脆土豆品种</span></div>
+      <div class="dp-row"><span class="k"></span><span class="v" style="color:#2ecc71">方案：中小火160-170°C·盖盖24min不翻·选黄心糯土豆</span></div>
+      <div class="dp-row" style="border-top:1px solid rgba(255,255,255,.06);padding-top:4px"><span class="k"><span class="dp-inline dp-red">🍜 面条坨</span> 粘连成团</span><span class="v">原因：提前煮好放置过久</span></div>
+      <div class="dp-row"><span class="k"></span><span class="v" style="color:#2ecc71">方案：生面坯刷油备着·有人点单再煮·煮好15秒内捞入碗</span></div>
+      <div class="dp-row" style="border-top:1px solid rgba(255,255,255,.06);padding-top:4px"><span class="k"><span class="dp-inline dp-red">⏱️ 出餐慢</span> 等太久退单</span><span class="v">原因：单锅35min无预制</span></div>
+      <div class="dp-row"><span class="k"></span><span class="v" style="color:#2ecc71">方案：香料预配成包+鸡块提前腌+土豆切好泡水→单锅压至18min</span></div>
+      <div class="dp-row" style="border-top:1px solid rgba(255,255,255,.06);padding-top:4px"><span class="k"><span class="dp-inline dp-red">🌶️ 口味偏差</span> 太咸/太淡/不香</span><span class="v">原因：盐和香料比例失衡</span></div>
+      <div class="dp-row"><span class="k"></span><span class="v" style="color:#2ecc71">方案：生抽少放（起锅前尝味再加）·孜然粒煸香捞出（不是放进去煮）·啤酒不能省</span></div>
+      <div class="dp-row" style="border-top:1px solid rgba(255,255,255,.06);padding-top:4px"><span class="k"><span class="dp-inline dp-red">🍗 鸡肉老</span> 柴且韧</span><span class="v">原因：炒太久·鸡块太小</span></div>
+      <div class="dp-row"><span class="k"></span><span class="v" style="color:#2ecc71">方案：鸡块煸至金黄立刻停（约4min）·焖25min足够软烂·鸡块≥3cm</span></div>
+      <div class="dp-tip">💡 翻车不可怕，可怕的是不知道怎么救。记住：土豆碎了→捞出碎土豆+重新补切好的整块继续焖。面条坨了→倒掉重煮，别将就。</div>
+    </div>
+  </div>
+
+  <!-- 4️⃣ 3款变体 -->
+  <div class="dp-card">
+    <div class="dc-title">4️⃣ 3款畅销变体 — 配料调整方案</div>
+    <div class="dc-body">
+      <div class="dp-flex">
+        <div class="dp-half">
+          <div style="color:#e94560;font-weight:700;margin-bottom:4px">🌶️ 麻辣版</div>
+          <div>花椒 10g（多加9g）<br>干辣椒 30g（多加26g）<br>麻油 5ml（收尾淋）<br>起锅前+花椒粉1g<br>适用：川渝/湖南/云贵</div>
+        </div>
+        <div class="dp-half">
+          <div style="color:#e94560;font-weight:700;margin-bottom:4px">🍅 番茄版</div>
+          <div>番茄 200g（切块同土豆一起焖）<br>番茄酱 30g（多加25g）<br>白糖 5g（中和酸度）<br>减干辣椒至10g<br>适用：南方/不辣偏好/儿童客群</div>
+        </div>
+        <div class="dp-half">
+          <div style="color:#e94560;font-weight:700;margin-bottom:4px">🍯 酱香版</div>
+          <div>甜面酱 20g（炒鸡时加入）<br>黄豆酱 15g<br>老抽多加5ml（共9ml）<br>去皮花生 30g（收尾撒）<br>适用：北方/不嗜辣/浓郁偏好</div>
+        </div>
+      </div>
+      <div class="dp-tip">💡 建议首月只做1个经典版+1个变体，不要同时推3个。先跑通基础版再逐步加。</div>
+    </div>
+  </div>
+
+  <!-- 5️⃣ 皮带面配方 -->
+  <div class="dp-card">
+    <div class="dc-title">5️⃣ 皮带面配方 — 商用压面机参数+家庭手拉版</div>
+    <div class="dc-body">
+      <div style="margin-bottom:6px;font-size:10px;color:#e94560;font-weight:600">—— 商用压面机版（500g面粉基准·约5份小份） ——</div>
+      <div class="dp-row"><span class="k">中筋面粉（蛋白质10-11%）</span><span class="v">500g</span></div>
+      <div class="dp-row"><span class="k">温水（40°C）</span><span class="v">250ml</span></div>
+      <div class="dp-row"><span class="k">盐</span><span class="v">5g</span></div>
+      <div class="dp-row"><span class="k">食用油（揉面+刷面防粘）</span><span class="v">10ml</span></div>
+      <div class="dp-row"><span class="k">压面机厚度档位</span><span class="v">3-4档（约2mm厚）</span></div>
+      <div class="dp-row"><span class="k">切面宽度</span><span class="v">1.5cm（皮带面标准宽）</span></div>
+      <div class="dp-row"><span class="k">压面流程</span><span class="v">揉成团→醒20min→压5-6遍至光滑→出条→刷油防粘</span></div>
+      <div class="dp-row"><span class="k">保存方式</span><span class="v">分份刷油·保鲜膜包好·冷藏可放6h</span></div>
+      <div style="margin:6px 0 4px;font-size:10px;color:#f1c40f;font-weight:600">—— 家庭手拉版（300g面粉基准·约3份小份） ——</div>
+      <div class="dp-row"><span class="k">中筋面粉</span><span class="v">300g</span></div>
+      <div class="dp-row"><span class="k">温水（40°C）</span><span class="v">150ml</span></div>
+      <div class="dp-row"><span class="k">盐</span><span class="v">3g</span></div>
+      <div class="dp-row"><span class="k">食用油</span><span class="v">5ml</span></div>
+      <div class="dp-row"><span class="k">揉面时间</span><span class="v">8-10min至光滑</span></div>
+      <div class="dp-row"><span class="k">第一次醒面</span><span class="v">盖膜醒20min</span></div>
+      <div class="dp-row"><span class="k">搓条切剂</span><span class="v">搓长条→切30g/个剂子</span></div>
+      <div class="dp-row"><span class="k">刷油二次醒</span><span class="v">刷油盖膜醒15min</span></div>
+      <div class="dp-row"><span class="k">拉面手法</span><span class="v">压扁→双手甩拉→约2cm宽30cm长</span></div>
+      <div class="dp-row"><span class="k">煮面时间</span><span class="v">沸水3-4min至透亮浮起</span></div>
+      <div class="dp-tip">💡 商用必须上压面机——手拉在高峰期根本来不及。压面机¥150-300，一次压5份面坯备着。面坯刷油后叠放不粘，随用随煮。</div>
+    </div>
+  </div>
+
+  <!-- 6️⃣ 沧林踩坑 -->
+  <div class="dp-card">
+    <div class="dc-title">6️⃣ 沧林踩坑 — 8条实战血泪教训</div>
+    <div class="dc-body">
+      <div style="margin-bottom:4px"><span style="color:#e94560;font-weight:700">①</span> <strong style="color:#fff">土豆焖碎是最常见的翻车</strong> — 第一锅下土豆大火猛焖15min，翻锅一看全散了。记住：下土豆后转中小火，盖盖，25min内别翻！</div>
+      <div style="margin-bottom:4px"><span style="color:#e94560;font-weight:700">②</span> <strong style="color:#fff">面条提前煮=自杀</strong> — 出摊前煮好一盘皮带面备用，10min后全粘连了。皮带面必须现拉现煮，生面坯刷油备着，有人点单再下锅。</div>
+      <div style="margin-bottom:4px"><span style="color:#e94560;font-weight:700">③</span> <strong style="color:#fff">香料炒糊5秒就完蛋</strong> — 干辣椒+孜然下锅时火太大直接黑糊。香料必须小火130-150°C煸香即捞，连香料带油一起炒=必糊。</div>
+      <div style="margin-bottom:4px"><span style="color:#e94560;font-weight:700">④</span> <strong style="color:#fff">脆土豆焖不烂</strong> — 第一次用的脆土豆（炒土豆丝那种），焖30min还是硬的。大盘鸡必须用黄心糯土豆（淀粉含量高），焖出来才软糯浓稠。</div>
+      <div style="margin-bottom:4px"><span style="color:#e94560;font-weight:700">⑤</span> <strong style="color:#fff">啤酒不是可选品是必需品</strong> — 一开始没放啤酒，鸡肉腥味明显。啤酒去腥+麦芽糖上色+发酵风味增层次，200ml/1kg鸡肉不能少。</div>
+      <div style="margin-bottom:4px"><span style="color:#e94560;font-weight:700">⑥</span> <strong style="color:#fff">出餐预估太乐观</strong> — 以为35min一锅能接单，结果前两锅排队的人等20min全走了。实际必须预炒好2锅成品保温，高峰期边卖边炒。</div>
+      <div style="margin-bottom:4px"><span style="color:#e94560;font-weight:700">⑦</span> <strong style="color:#fff">定价过低小心亏本</strong> — 首日定价¥25/份，算完账发现扣掉摊位租金+原料+气钱，净利润不到¥5/份。建议小份至少¥28-32起步。</div>
+      <div style="margin-bottom:4px"><span style="color:#e94560;font-weight:700">⑧</span> <strong style="color:#fff">一人档口根本忙不过来</strong> — 一个人又要炒鸡又要煮面又要收钱，高峰期直接崩盘。最少2人配置：1人负责炒+焖+收钱，1人负责煮面+装碗+洗刷。</div>
+      <div class="dp-tip">💡 总结：大盘鸡档口是个好品类，但坑也多。以上8条沧林亲测踩过，每个坑都花过真金白银。看完记住，少走弯路。</div>
+    </div>
+  </div>
+
+  <!-- 7️⃣ 档口运营SOP -->
+  <div class="dp-card">
+    <div class="dc-title">7️⃣ 档口运营SOP — 开业前30天检查清单</div>
+    <div class="dc-body">
+      <div style="margin-bottom:6px"><span style="color:#f1c40f;font-weight:700">▸ 第30天·市场调研</span></div>
+      <div style="padding-left:10px;font-size:10px;color:#c8d0e0;line-height:1.5;margin-bottom:4px">确认选址（夜市/学校/商圈）·蹲点3晚记录人流·竞品餐单价格分析·目标客群画像</div>
+      <div style="margin-bottom:6px"><span style="color:#f1c40f;font-weight:700">▸ 第25天·设备采购</span></div>
+      <div style="padding-left:10px;font-size:10px;color:#c8d0e0;line-height:1.5;margin-bottom:4px">下单猛火灶+铁锅+压面机+操作台+汤桶·确认气源·试火测试·采购首批香料+调味料</div>
+      <div style="margin-bottom:6px"><span style="color:#f1c40f;font-weight:700">▸ 第20天·工艺跑通</span></div>
+      <div style="padding-left:10px;font-size:10px;color:#c8d0e0;line-height:1.5;margin-bottom:4px">在家试做完整大盘鸡工艺至少5锅·精确称重记录每锅数据·调整香料比例·确定最终配方</div>
+      <div style="margin-bottom:6px"><span style="color:#f1c40f;font-weight:700">▸ 第15天·试吃验证</span></div>
+      <div style="padding-left:10px;font-size:10px;color:#c8d0e0;line-height:1.5;margin-bottom:4px">邀请15-20人试吃小份版·收集反馈表（咸度/辣度/面条口感/分量）·调整至满意度≥80%</div>
+      <div style="margin-bottom:6px"><span style="color:#f1c40f;font-weight:700">▸ 第10天·供应链确认</span></div>
+      <div style="padding-left:10px;font-size:10px;color:#c8d0e0;line-height:1.5;margin-bottom:4px">确认鸡肉供应商（日供价+配送时间）·土豆/蔬菜日配·面粉/粮油批量采购·打包盒/碗定制</div>
+      <div style="margin-bottom:6px"><span style="color:#f1c40f;font-weight:700">▸ 第7天·试营业准备</span></div>
+      <div style="padding-left:10px;font-size:10px;color:#c8d0e0;line-height:1.5;margin-bottom:4px">准备20份小份原料·菜单牌/价目表/收款码·试营业3天·调整出餐流程·测算实际出餐时间</div>
+      <div style="margin-bottom:6px"><span style="color:#f1c40f;font-weight:700">▸ 第3天·宣传预热</span></div>
+      <div style="padding-left:10px;font-size:10px;color:#c8d0e0;line-height:1.5;margin-bottom:4px">朋友圈+周边微信群发开业信息·首日优惠方案（前20份半价/买一送一）·准备好评返现卡</div>
+      <div style="margin-bottom:6px"><span style="color:#f1c40f;font-weight:700">▸ 第1天·正式开业</span></div>
+      <div style="padding-left:10px;font-size:10px;color:#c8d0e0;line-height:1.5;margin-bottom:4px">提前2h到场备料·先预制3锅成品保温·高峰期1人炒1人下面·营业后核对每单成本</div>
+      <div class="dp-tip">💡 开业后第3天、第7天、第15天必须做三次复盘：日均营收、客单价、回头率、最大堵点。数据驱动的迭代才是档口活下去的关键。</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="ftr">FoodIntel AI · 沧林食品工作站 · DPJ_01 大盘鸡档口单卡</div>
+
+</div>
+</body>
+</html>

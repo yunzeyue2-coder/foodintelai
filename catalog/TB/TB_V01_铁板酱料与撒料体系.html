@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>铁板酱料与撒料体系 · 变体卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 变体提示条 ===== */
+.variant-bar{background:linear-gradient(90deg,#E8652D,#C0392B);padding:8px 18px;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:space-between}
+.variant-bar .v-label{font-weight:700;letter-spacing:1px}
+.variant-bar .v-link{color:rgba(255,255,255,.8);text-decoration:underline}
+
+/* ===== 顶部 ===== */
+.meta{padding:14px 18px;background:#fdf8f0;border-bottom:1px solid #eee5d8}
+.meta h1{font-size:20px;font-weight:800;color:#3a322a;margin-bottom:2px}
+.meta .sub{font-size:11px;color:#b5aaa0;margin-bottom:6px}
+.meta .price-tag{display:inline-block;background:#C0392B;color:#fff;font-size:11px;font-weight:700;padding:2px 10px;border-radius:4px}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+/* ===== 差异对比条 ===== */
+.diff-row{display:flex;gap:6px;margin-bottom:10px}
+.diff-box{flex:1;padding:10px;border-radius:10px;font-size:11px;line-height:1.6}
+.diff-box .d-label{font-size:9px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.diff-base{background:#f5f0eb;color:#7a7269}
+.diff-this{background:#fef6ec;color:#3a322a}
+.diff-this .d-label{color:#E8652D}
+
+/* ===== 酱料对比 ===== */
+.sauce-compare{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.sauce-item{padding:10px 12px;border-radius:10px;font-size:12px;display:flex;align-items:center;gap:8px}
+.sauce-item .s-icon{font-size:16px}
+.sauce-item .s-name{flex:1;font-weight:600;color:#3a322a}
+.sauce-item .s-ratio{color:#b5aaa0;font-size:10px}
+.sauce-main{background:#fef2ee;border:1px solid #fdd}
+.sauce-other{background:#f8f4ef}
+
+/* ===== 客群卡片 ===== */
+.crowd-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.crowd-card{padding:10px;border-radius:10px;text-align:center}
+.crowd-card .c-icon{font-size:20px;margin-bottom:2px}
+.crowd-card .c-name{font-size:11px;font-weight:600;color:#3a322a;margin-bottom:2px}
+.crowd-card .c-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.crowd-card .c-bar .fill{height:100%;border-radius:2px}
+
+/* ===== 配方展开 ===== */
+.recipe-box{background:#f8f4ef;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #C0392B}
+.recipe-line{display:flex;justify-content:space-between;padding:2px 0;font-size:12px;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+/* ===== 沧林判断 ===== */
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+/* ===== 付费区 ===== */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:#4a3f35;line-height:1.6}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:18px;text-align:center}
+.pay-area .price-tag{font-size:22px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:4px}
+
+/* ===== 工艺步骤 ===== */
+.step-card{background:#f8f4ef;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #E8652D}
+.step-card .step-title{font-weight:700;color:#3a322a;margin-bottom:4px;font-size:13px}
+.step-card .step-temp{display:inline-block;background:#3a322a;color:#fff;border-radius:3px;padding:1px 6px;font-size:10px;font-weight:600;margin-left:4px}
+
+/* ===== 翻车修正表 ===== */
+.fix-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.fix-card{padding:10px;border-radius:8px;font-size:11px;line-height:1.6}
+.fix-card .f-label{font-weight:700;margin-bottom:2px}
+
+/* ===== 变体周历 ===== */
+.week-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:8px 0}
+.week-day{padding:8px 10px;border-radius:8px;font-size:11px;background:#f8f4ef;border-left:3px solid #D4A574}
+.week-day .wd-name{font-weight:700;color:#3a322a}
+.week-day .wd-desc{color:#7a7269;font-size:10px;margin-top:2px}
+
+/* ===== 储存卡片 ===== */
+.store-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.store-card{padding:12px;border-radius:10px;font-size:11px;line-height:1.6}
+.store-card .s-label{font-weight:700;color:#3a322a;margin-bottom:4px;font-size:12px}
+.store-card .s-temp{font-size:10px;color:#7a7269}
+
+/* ===== 数据表 ===== */
+.data-table{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+.data-table th{background:#3a322a;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:10px}
+.data-table td{padding:5px 8px;border-bottom:1px solid #eee5d8;color:#4a3f35;font-size:11px}
+.data-table tr:nth-child(even) td{background:#f8f4ef}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 变体提示 ===== -->
+<div class="variant-bar">
+  <span class="v-label">🧬 VC工艺卡 · ¥39</span>
+  <a class="v-link" href="TB_M01.html">← 母卡：铁板项目体系 TB_M01</a>
+</div>
+
+<!-- ===== 产品头部 ===== -->
+<div class="meta">
+  <h1>🔩 铁板酱料与撒料体系</h1>
+  <div class="sub">铁板系列 · 一酱三用 · 四品通用 · 批量预制</div>
+  <span class="price-tag">¥39</span>
+</div>
+
+<!-- ===== 🔄 与母卡差异总览 ===== -->
+<div class="section">
+  <div class="s-title">🔄 与TB_M01差异总览</div>
+  <div class="diff-row">
+    <div class="diff-box diff-base">
+      <div class="d-label">TB_M01 母卡</div>
+      <div>完整铁板项目体系：<br>设备·成本·路线·赛道·工艺</div>
+    </div>
+    <div class="diff-box diff-this">
+      <div class="d-label">TB_V01 变体</div>
+      <div>铁板酱料撒料体系·一酱三用·批量预制<br>口味变体方案·酱料专属知识</div>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;line-height:1.5">
+    本卡仅展示铁板酱料与撒料体系。设备清单、30天验证路线、摆摊指数、时间投入等通用数据请参照 <a href="TB_M01.html" style="color:#E8652D">TB_M01 铁板项目体系</a>。
+  </div>
+</div>
+
+<!-- ===== 📊 母卡 vs 变体 ===== -->
+<div class="section">
+  <div class="s-title">📊 母卡 vs 变体</div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:320px">
+      <thead>
+        <tr style="background:#3a322a;color:#fff">
+          <th style="padding:8px 6px;text-align:left;border-radius:6px 0 0 0">维度</th>
+          <th style="padding:8px 4px;text-align:center">TB_M01 母卡</th>
+          <th style="padding:8px 6px;text-align:center;border-radius:0 6px 0 0">TB_V01 酱料卡</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #eee5d8">
+          <td style="padding:6px;font-weight:600;color:#3a322a">关注焦点</td>
+          <td style="padding:6px;text-align:center;color:#5a4f44">完整项目启动</td>
+          <td style="padding:6px;text-align:center;color:#E8652D;font-weight:700">酱料撒料标准化</td>
+        </tr>
+        <tr style="background:#f8f4ef;border-bottom:1px solid #eee5d8">
+          <td style="padding:6px;font-weight:600;color:#3a322a">酱料颗粒度</td>
+          <td style="padding:6px;text-align:center;color:#b5aaa0">★★☆☆☆ 概述</td>
+          <td style="padding:6px;text-align:center;color:#5a8f3c;font-weight:700">★★★★★ 精确到g</td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee5d8">
+          <td style="padding:6px;font-weight:600;color:#3a322a">一酱三用</td>
+          <td style="padding:6px;text-align:center;color:#D4A574">未涉及</td>
+          <td style="padding:6px;text-align:center;color:#5a8f3c;font-weight:700">核心体系</td>
+        </tr>
+        <tr style="background:#f8f4ef;border-bottom:1px solid #eee5d8">
+          <td style="padding:6px;font-weight:600;color:#3a322a">批量预制</td>
+          <td style="padding:6px;text-align:center;color:#D4A574">★★☆☆☆</td>
+          <td style="padding:6px;text-align:center;color:#E8652D;font-weight:700">★★★★★ 三档批量</td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee5d8">
+          <td style="padding:6px;font-weight:600;color:#3a322a">变体方案</td>
+          <td style="padding:6px;text-align:center;color:#b5aaa0">无</td>
+          <td style="padding:6px;text-align:center;color:#E8652D;font-weight:700">一周7种+地域版</td>
+        </tr>
+        <tr style="background:#f8f4ef;border-bottom:1px solid #eee5d8">
+          <td style="padding:6px;font-weight:600;color:#3a322a">翻车解决方案</td>
+          <td style="padding:6px;text-align:center;color:#b5aaa0">无</td>
+          <td style="padding:6px;text-align:center;color:#5a8f3c;font-weight:700">6大场景全覆盖</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="padding:6px;font-weight:600;color:#3a322a;border-radius:0 0 0 6px">出餐速度</td>
+          <td style="padding:6px;text-align:center;color:#D4A574">★★★★☆</td>
+          <td style="padding:6px;text-align:center;color:#5a8f3c;font-weight:700;border-radius:0 0 6px 0">★★★★★ 提升30%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== 🎯 为什么一酱三用 ===== -->
+<div class="section">
+  <div class="s-title">🎯 为什么一酱三用</div>
+  <div style="background:#f0f6ec;border-radius:10px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35;border-left:3px solid #5a8f3c">
+    <strong>传统铁板摊的问题：</strong><br>
+    豆腐一种酱、鱿鱼一种酱、土豆一种酱、烤肠一种酱——四种产品四种酱，备料耗时翻倍，出餐手忙脚乱，酱料浪费严重。
+  </div>
+  <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px">
+    <div style="background:#fef6ec;border-radius:8px;padding:10px 12px;font-size:12px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:16px;font-weight:700;color:#5a8f3c">📦</span>
+      <span><strong>减少备料种类 40%</strong><br><span style="color:#7a7269;font-size:11px">4种酱 → 1锅底酱+3种调法，仓库空间省一半</span></span>
+    </div>
+    <div style="background:#fef6ec;border-radius:8px;padding:10px 12px;font-size:12px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:16px;font-weight:700;color:#E8652D">⚡</span>
+      <span><strong>出餐速度提升 30%</strong><br><span style="color:#7a7269;font-size:11px">不用现调酱，拿产品→刷/浇/拌→撒料→出餐，单份15秒</span></span>
+    </div>
+    <div style="background:#fef6ec;border-radius:8px;padding:10px 12px;font-size:12px;display:flex;align-items:center;gap:8px">
+      <span style="font-size:16px;font-weight:700;color:#4f6ef7">💰</span>
+      <span><strong>酱料成本降低 35%</strong><br><span style="color:#7a7269;font-size:11px">批量采购原料，一锅出5斤成本¥18-22，单份酱成本¥0.15-0.8</span></span>
+    </div>
+  </div>
+  <div style="margin-top:8px;background:#fef2ee;border-radius:10px;padding:12px;font-size:11px;color:#5a4f44;line-height:1.6;border:1px dashed #ddd4ca">
+    <strong>💡 核心逻辑：</strong><br>
+    底酱负责「底味一致」→ 不同稀释/添加方式负责「口感差异」→ 撒料负责「香气层次」。<br>
+    酱管底味、撒料管提香——缺一不可，互相不抢。
+  </div>
+</div>
+
+<!-- ===== 🧪 酱料对比 ===== -->
+<div class="section">
+  <div class="s-title">🧪 酱料对比：三种用法</div>
+  <div class="sauce-compare">
+    <div class="sauce-item sauce-main">
+      <span class="s-icon">🖌️</span>
+      <span class="s-name">① 煎刷用法</span>
+      <span class="s-ratio">底酱:水 = 1:1</span>
+    </div>
+    <div class="sauce-item sauce-other">
+      <span class="s-icon">💧</span>
+      <span class="s-name">② 浇汁用法</span>
+      <span class="s-ratio">底酱:高汤 = 1:2</span>
+    </div>
+    <div class="sauce-item sauce-other">
+      <span class="s-icon">🥢</span>
+      <span class="s-name">③ 拌料用法</span>
+      <span class="s-ratio">底酱+辣椒油+醋+蒜水</span>
+    </div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 4px">三种用法横向对比</div>
+  <table class="data-table">
+    <tr><th>参数</th><th>煎刷</th><th>浇汁</th><th>拌料</th></tr>
+    <tr><td style="font-weight:600">适用产品</td><td>豆腐·鱿鱼·烤肠</td><td>铁板豆腐出锅</td><td>狼牙土豆</td></tr>
+    <tr><td style="font-weight:600">底酱稀释比</td><td>1:1（水）</td><td>1:2（高汤）</td><td>不稀释，加辅料</td></tr>
+    <tr><td style="font-weight:600">稠度</td><td>稀浆状</td><td>汤汁状</td><td>浓酱状</td></tr>
+    <tr><td style="font-weight:600">操作方式</td><td>铁板上刷一层</td><td>出锅后浇淋</td><td>趁热颠盆拌匀</td></tr>
+    <tr><td style="font-weight:600">单份用量</td><td>15-20g</td><td>25-30g</td><td>30-40g</td></tr>
+    <tr><td style="font-weight:600">调味层次</td><td>底味打底+撒料提香</td><td>底味为主+撒料点缀</td><td>底味+辅料复合味</td></tr>
+    <tr><td style="font-weight:600">出餐速度</td><td>8-10秒/份</td><td>5-8秒/份</td><td>10-15秒/份</td></tr>
+    <tr><td style="font-weight:600">最佳搭配撒料</td><td>通用撒料</td><td>通用撒料</td><td>通用撒料+辣椒油</td></tr>
+  </table>
+  <div style="margin-top:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6;border:1px dashed #ede5d0">
+    <strong>㊙️ 铁板摊主实战经验：</strong><br>
+    一锅底酱+三个兑法+通用撒料 = 4个产品。出摊前把三种调好的酱分别装挤压瓶/料缸，出单时随手拿对应的瓶。
+  </div>
+</div>
+
+<!-- ===== 📋 铁板底酱配方 ===== -->
+<div class="section">
+  <div class="s-title">📋 铁板底酱配方（5斤批）</div>
+  <div style="font-size:11px;color:#7a7269;margin-bottom:8px;line-height:1.5">
+    以下配方为五斤批量，精确到克。原料均可在当地批发市场或1688一站式采购。
+  </div>
+  <table class="data-table">
+    <tr><th>原料</th><th>用量</th><th>占比</th><th>品牌建议</th><th>单价</th></tr>
+    <tr><td>郫县豆瓣酱（剁细）</td><td>500g</td><td>22%</td><td>丹丹/鹃城牌</td><td>¥8/500g</td></tr>
+    <tr><td>黄豆酱</td><td>300g</td><td>13%</td><td>海天</td><td>¥5/300g</td></tr>
+    <tr><td>甜面酱</td><td>200g</td><td>9%</td><td>葱伴侣</td><td>¥3/200g</td></tr>
+    <tr><td>鲜蒜蓉</td><td>150g</td><td>7%</td><td>现剁（不能用蒜粉）</td><td>¥2/150g</td></tr>
+    <tr><td>姜末</td><td>50g</td><td>2%</td><td>鲜姜</td><td>¥0.5/50g</td></tr>
+    <tr><td>洋葱末</td><td>100g</td><td>4%</td><td>紫皮洋葱</td><td>¥0.8/100g</td></tr>
+    <tr><td>蚝油</td><td>100g</td><td>4%</td><td>李锦记/海天</td><td>¥3/100g</td></tr>
+    <tr><td>生抽</td><td>100g</td><td>4%</td><td>海天金标</td><td>¥2/100g</td></tr>
+    <tr><td>白糖</td><td>50g</td><td>2%</td><td>调节辣度平衡</td><td>¥0.5/50g</td></tr>
+    <tr><td>十三香</td><td>15g</td><td>0.7%</td><td>王守义</td><td>¥0.3/15g</td></tr>
+    <tr><td>清水</td><td>500g</td><td>22%</td><td>调整稠度</td><td>—</td></tr>
+    <tr><td>食用油</td><td>300g</td><td>13%</td><td>大豆油/菜籽油</td><td>¥3/300g</td></tr>
+    <tr style="font-weight:700;background:#f8f4ef"><td>合计</td><td>2,365g ≈ 5斤</td><td>100%</td><td colspan="2">总成本约 ¥28/批</td></tr>
+  </table>
+  <div style="margin-top:8px;font-size:11px;color:#7a7269;line-height:1.5;padding:8px 10px;background:#f5f0eb;border-radius:8px">
+    <strong>📌 原料采购提示：</strong><br>
+    · 郫县豆瓣酱必须剁细再下锅——整瓣豆瓣炒不开，成品有硬块<br>
+    · 蒜蓉必须现剁——蒜粉出不来蒜香味，且久煮发苦<br>
+    · 油用菜籽油更香，但成本高约30%；大豆油性价比最优<br>
+    · 建议批量采购：5斤配方 × 10批备料，单价再降15-20%
+  </div>
+</div>
+
+<!-- ===== 🔥 炒制工艺全流程 ===== -->
+<div class="section">
+  <div class="s-title">🔥 炒制工艺全流程</div>
+  <div style="font-size:11px;color:#7a7269;margin-bottom:8px">以下温度均为铁板锅实测值，使用红外测温枪校准。</div>
+
+  <div class="step-card" style="border-left-color:#C0392B">
+    <div class="step-title">① 热油 <span class="step-temp">150°C ±5°C</span></div>
+    <div>倒入300g食用油，中大火加热至150°C。判断标准：油面开始有纹路波动，放入一粒蒜蓉立刻浮起并快速冒泡——此时油温到位。</div>
+    <div style="color:#b5aaa0;font-size:10px;margin-top:4px">⏱ 时间：约1分30秒（取决于灶具火力）</div>
+  </div>
+
+  <div class="step-card" style="border-left-color:#E8652D">
+    <div class="step-title">② 爆香料 <span class="step-temp">140-150°C</span></div>
+    <div>下蒜蓉150g + 姜末50g + 洋葱末100g。保持中火（炉心直径8-10cm火焰），快速翻炒。判断标准：蒜蓉变至淡黄色、洋葱半透明、飘出明显蒜香——此时香气峰值。</div>
+    <div style="color:#b5aaa0;font-size:10px;margin-top:4px">⏱ 时间：约2分钟</div>
+    <div style="color:#b53b3b;font-size:10px;margin-top:2px">⚠️ 蒜蓉超过金黄色（160°C以上）会发苦，必须在此阶段完成</div>
+  </div>
+
+  <div class="step-card" style="border-left-color:#D4A574">
+    <div class="step-title">③ 炒豆瓣出红油 <span class="step-temp">120-135°C</span></div>
+    <div>下郫县豆瓣酱500g（剁细），转中小火。保持油温在120-135°C之间。判断标准：油色从浅黄转为橘红→深红，豆瓣水分持续蒸发、酱体变稠，闻到浓郁豆瓣酱香且无生豆味。锅铲划过酱底能见到油亮沟壑——红色素已充分溶入油中。</div>
+    <div style="color:#b5aaa0;font-size:10px;margin-top:4px">⏱ 时间：约5-6分钟 | 🔬 理想油温区间：125-130°C</div>
+    <div style="color:#b53b3b;font-size:10px;margin-top:2px">🔴 致命错误：油温超过145°C豆瓣立刻焦化，整锅报废。新手建议全程保持中小火，宁慢勿快。</div>
+  </div>
+
+  <div class="step-card" style="border-left-color:#5a8f3c">
+    <div class="step-title">④ 混合酱体 <span class="step-temp">130-140°C</span></div>
+    <div>下黄豆酱300g + 甜面酱200g + 蚝油100g + 生抽100g + 白糖50g。转中火，持续搅拌防止粘底。判断标准：所有酱料完全融合成均匀红褐色，无分层，酱面出现细密小泡连续冒起。</div>
+    <div style="color:#b5aaa0;font-size:10px;margin-top:4px">⏱ 时间：约3分钟 | 🔬 液面小泡均匀即充分融合</div>
+  </div>
+
+  <div class="step-card" style="border-left-color:#4f6ef7">
+    <div class="step-title">⑤ 加水熬制 <span class="step-temp">100°C → 95°C（慢熬）</span></div>
+    <div>下500g清水 + 15g十三香，大火煮至沸腾（100°C），立即转小火保持微沸（95-98°C）。判断标准：水面保持鱼眼泡状态（约2-3个/秒缓慢冒泡），酱面有油圈浮起。期间每30秒搅拌一次，沿锅底刮一圈防粘。</div>
+    <div style="color:#b5aaa0;font-size:10px;margin-top:4px">⏱ 时间：约10-12分钟 | 🔬 浓缩至酱体挂勺：舀起一勺倒下，酱汁能连续流下但不断线</div>
+  </div>
+
+  <div class="step-card" style="border-left-color:#7a7269">
+    <div class="step-title">⑥ 出锅冷却</div>
+    <div>关火后静置2分钟降温至80°C以下，再用不锈钢漏勺过滤（去除可能的酱块/香料残渣）。装入密封盒，自然冷却至室温（约25°C）再盖盖冷藏。热酱直接盖盖会产生冷凝水，稀释酱体加速变质。</div>
+    <div style="color:#b5aaa0;font-size:10px;margin-top:4px">⏱ 冷却至室温约40-60分钟 | 5斤产量约得3.8-4.2斤成品酱</div>
+  </div>
+
+  <div style="margin-top:8px;background:#fef2ee;border-radius:10px;padding:12px;font-size:11px;color:#5a4f44;line-height:1.6;border:1px dashed #ede5d0">
+    <strong>🔬 全程温度监控表（建议贴灶台）：</strong><br>
+    ①热油 150°C → ②爆香 140-150°C → ③豆瓣 120-135°C（关键段）→ ④混合 130-140°C → ⑤熬制 100°C→95°C微沸 → ⑥出锅 80°C以下<br>
+    <strong>工具推荐：</strong>红外测温枪（¥25-40，1688批发）——每次炒酱前校准一次，用一个月就有手感了。
+  </div>
+</div>
+
+<!-- ===== 🌶️ 通用撒料 ===== -->
+<div class="section">
+  <div class="s-title">🌶️ 通用撒料（1斤批）</div>
+  <div style="font-size:11px;color:#7a7269;margin-bottom:8px">干粉混合物，四品通用。酱管底味、撒料管提香——缺一不可。</div>
+  <table class="data-table">
+    <tr><th>原料</th><th>用量</th><th>占比</th><th>说明</th><th>成本</th></tr>
+    <tr><td>细辣椒面（二荆条:子弹头=7:3）</td><td>300g</td><td>30%</td><td>二荆条增香·子弹头增辣</td><td>¥6/300g</td></tr>
+    <tr><td>花椒粉（红花椒）</td><td>100g</td><td>10%</td><td>增麻提味</td><td>¥5/100g</td></tr>
+    <tr><td>孜然粉</td><td>150g</td><td>15%</td><td>铁板鱿鱼灵魂香气</td><td>¥3/150g</td></tr>
+    <tr><td>五香粉</td><td>50g</td><td>5%</td><td>复合底味</td><td>¥1/50g</td></tr>
+    <tr><td>熟白芝麻</td><td>200g</td><td>20%</td><td>必须熟的·生的有青草味</td><td>¥4/200g</td></tr>
+    <tr><td>白糖粉</td><td>100g</td><td>10%</td><td>平衡辣度·增加回甜</td><td>¥1/100g</td></tr>
+    <tr><td>味精/鸡精</td><td>50g</td><td>5%</td><td>提鲜</td><td>¥1/50g</td></tr>
+    <tr><td>细盐</td><td>50g</td><td>5%</td><td>打底咸味</td><td>¥0.2/50g</td></tr>
+    <tr style="font-weight:700;background:#f8f4ef"><td>合计</td><td>1,000g</td><td>100%</td><td>约1斤</td><td>¥21.2/批</td></tr>
+  </table>
+  <div style="margin-top:8px;font-size:11px;color:#7a7269;line-height:1.5">
+    <strong>💡 撒料制作要点：</strong><br>
+    · 所有粉料混合后过40目筛网——保证颗粒均匀，撒料时不堵瓶口<br>
+    · 熟芝麻可以买现成的，也可以自己炒：白芝麻干锅小火炒至微黄（约3分钟），闻到芝麻香即关火<br>
+    · 辣椒面配比不是死的——二荆条比例越高越香（但不够辣），子弹头比例越高越辣（但香味薄）。推荐7:3起步，根据当地口味微调<br>
+    · 一次性做1斤，密封瓶避光保存，常温保质3个月。建议1个月做一次，香味最浓<br>
+    · 每份用量约2-3g（撒料瓶晃两下），每份成本不到¥0.1
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6;border:1px dashed #ede5d0">
+    <strong>🔥 撒料瓶推荐：</strong>双孔不锈钢撒料瓶（口径4cm，孔距1.5cm），出粉均匀不堵。1688批发价¥3-5/个。出摊前装满一瓶，够卖一整天的量。
+  </div>
+</div>
+
+<!-- ===== 👥 客群画像 ===== -->
+<div class="section">
+  <div class="s-title">👥 客群画像</div>
+  <div style="font-size:11px;color:#7a7269;margin-bottom:8px">铁板酱料体系对应四类核心客群，不同产品侧重不同人群。</div>
+  <div class="crowd-grid">
+    <div class="crowd-card" style="background:#fef2ee">
+      <div class="c-icon">👩</div>
+      <div class="c-name">18-35岁女性</div>
+      <div class="c-bar"><div class="fill" style="width:80%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">铁板豆腐主力</div>
+    </div>
+    <div class="crowd-card" style="background:#fef6ec">
+      <div class="c-icon">👨</div>
+      <div class="c-name">学生/年轻男性</div>
+      <div class="c-bar"><div class="fill" style="width:85%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">烤肠·鱿鱼主力</div>
+    </div>
+    <div class="crowd-card" style="background:#f0f6ec">
+      <div class="c-icon">👶</div>
+      <div class="c-name">儿童/家庭</div>
+      <div class="c-bar"><div class="fill" style="width:60%;background:#5a8f3c"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">微辣/少辣版</div>
+    </div>
+    <div class="crowd-card" style="background:#eef2ff">
+      <div class="c-icon">🗺️</div>
+      <div class="c-name">夜宵/下班族</div>
+      <div class="c-bar"><div class="fill" style="width:75%;background:#4f6ef7"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">高复购客群</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fdf8f0;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>📊 数据洞察：</strong><br>
+    · 铁板豆腐女性客群占比约65-70%，购买决策受「颜值+香味」驱动<br>
+    · 烤肠/鱿鱼男性占比约55-60%，决策受「份量+辣度」驱动<br>
+    · 狼牙土豆学生群体占比最高（约45%），偏好「香辣+多口味变体」<br>
+    · 晚间9点后（夜宵时段）客单价提升约40%，建议推出双拼/三拼套餐<br>
+    · 儿童/家庭客群对辣度敏感，备一份减辣撒料（辣椒面减半+糖粉加倍）可转化
+  </div>
+</div>
+
+<!-- ===== ⚠️ 酱料专属风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 铁板酱料专属风险</div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6">
+    <span style="font-size:14px;flex-shrink:0;margin-top:1px;font-weight:700">1️⃣</span>
+    <span><strong>豆瓣炒糊风险</strong>——豆瓣酱含糖量高（约15-20%），油温超过145°C立刻焦化发苦，整锅酱报废。**这是新手翻车第一原因**。对策：保持中小火，感觉锅底发烫立刻离火降温。</span>
+  </div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6">
+    <span style="font-size:14px;flex-shrink:0;margin-top:1px;font-weight:700">2️⃣</span>
+    <span><strong>盐度叠加失控</strong>——郫县豆瓣酱+黄豆酱+甜面酱+生抽+蚝油五种含盐原料叠加，总钠含量每100g约3000-4000mg。新手容易「吃着不咸再加盐」，结果成品太咸无法补救。对策：配方中不加盐，靠酱料自带咸味已足够。</span>
+  </div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6">
+    <span style="font-size:14px;flex-shrink:0;margin-top:1px;font-weight:700">3️⃣</span>
+    <span><strong>保质期被低估</strong>——自制酱料不含防腐剂，5斤酱常温放置超过6小时就有微生物风险。摊主常犯的错误是「今天没用完明天继续用」。对策：当天酱料当天用完，没用完的必须4°C冷藏，不超过3天。每次取用必须用干净无水的勺子。</span>
+  </div>
+  <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6">
+    <span style="font-size:14px;flex-shrink:0;margin-top:1px;font-weight:700">4️⃣</span>
+    <span><strong>撒料受潮结块</strong>——铁板摊位湿度高（油烟+蒸汽），撒料瓶口长期敞开会导致粉料吸潮结块，撒不出粉。对策：每次收摊前密封撒料瓶，出摊时不要一次性倒满，半瓶半瓶装。撒料瓶内放一粒干大米（吸湿剂天然替代）。</span>
+  </div>
+  <div style="display:flex;gap:8px;padding:8px 0;font-size:12px;color:#5a4f44;line-height:1.6">
+    <span style="font-size:14px;flex-shrink:0;margin-top:1px;font-weight:700">5️⃣</span>
+    <span><strong>一酱三用的稀释比例不准</strong>——煎刷太稠挂不住、浇汁太淡没味道、拌料太咸齁嗓子。每次兑酱用带刻度的量杯，不要凭感觉。建议出摊前一次性兑好三瓶，贴标签标注稀释比例和用途。</span>
+  </div>
+</div>
+
+<!-- ===== 🧠 沧林判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      铁板酱料与撒料体系是铁板类项目<strong>最值得优先标准化</strong>的一个环节。<br><br>
+      我见过太多铁板摊主——产品不错、位置不错，但因为酱料不稳定（今天咸明天淡、这锅香那锅不香）导致复购率上不去。如果你只有一个晚上搞定酱料，把<strong>底酱炒制的温度卡准</strong>（125-135°C出红油）这件事做好，其他都可以慢慢调。<br><br>
+      一酱三用的逻辑不仅省时间省成本，更重要的是<strong>口味一致性</strong>——同一锅底酱出的豆腐和土豆，底味是统一的，顾客不会觉得「上次好吃这次不好吃」。<br><br>
+      撒料方面，铁板摊最大的误区是<strong>「撒料越复杂越好」</strong>。实际上八味撒料已经是商用集大成——少一味显单薄、多一味显杂乱。二荆条+子弹头7:3的配比经过上百个摊主验证，不建议新手自行改动。<br><br>
+      <strong>一条忠告：</strong>先跑通原味一酱三用（豆腐+鱿鱼+土豆+烤肠），两个月后再考虑口味变体。摊位的核心竞争力是「味道稳定」，不是「花样多」。
+    </div>
+    <div class="j-tags">
+      <span>#铁板酱料</span>
+      <span>#一酱三用</span>
+      <span>#标准化</span>
+      <span>#炒酱温度</span>
+      <span>#摆摊</span>
+      <span>#通用撒料</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 完整配方包（数据全开版） ===== -->
+<div style="padding:16px 18px;border-top:2px dashed #ddd4ca;border-bottom:1px solid #eee5d8">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#5a8f3c;color:#fff;border-radius:4px;font-weight:600">💎 完整配方包 · 数据全开</span>
+  </div>
+  <div style="font-size:12px;color:#7a7269;text-align:center;margin-bottom:14px;line-height:1.5">铁板酱料与撒料体系 — 完整配方包 · 精确配比到克</div>
+
+  <!-- ===== 1️⃣ 三档批量配方 ===== -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 三档批量配方（2.5斤 / 5斤 / 10斤）</div>
+  <div style="font-size:10px;color:#b5aaa0;margin-bottom:6px">一档适合试水日销30份以下，二档适合稳定期日销60份，三档适合周末高峰期或批量预制。</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:0;overflow:hidden;margin-bottom:8px">
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+      <span>原料</span><span>2.5斤批</span><span>5斤批</span><span>10斤批</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>郫县豆瓣酱</span><span>250g</span><span>500g</span><span>1,000g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>黄豆酱</span><span>150g</span><span>300g</span><span>600g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>甜面酱</span><span>100g</span><span>200g</span><span>400g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>鲜蒜蓉</span><span>75g</span><span>150g</span><span>300g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>姜末</span><span>25g</span><span>50g</span><span>100g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>洋葱末</span><span>50g</span><span>100g</span><span>200g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>蚝油</span><span>50g</span><span>100g</span><span>200g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>生抽</span><span>50g</span><span>100g</span><span>200g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>白糖</span><span>25g</span><span>50g</span><span>100g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>十三香</span><span>8g</span><span>15g</span><span>30g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>清水</span><span>250g</span><span>500g</span><span>1,000g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>食用油</span><span>150g</span><span>300g</span><span>600g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;font-weight:700;background:#f8f4ef">
+      <span>成品酱量 ≈</span><span>2.0-2.2斤</span><span>3.8-4.2斤</span><span>7.5-8.5斤</span>
+    </div>
+    <div style="padding:8px 10px;font-size:10px;color:#b5aaa0;border-top:1px solid #e8dfd5">
+      💡 成品酱量因熬制浓缩程度不同有±10%偏差。按比例放大即可，不需要调整配方比例。
+    </div>
+  </div>
+
+  <!-- ===== 2️⃣ 批量SOP ===== -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">2️⃣ 批量SOP（5斤批标准版）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #E8652D">
+    <strong>⏱ 总耗时：约25-30分钟（不含冷却）</strong><br><br>
+    <strong>准备阶段（出摊前）：</strong><br>
+    ✅ 称好所有原料，分别入碗（不要边炒边称）<br>
+    ✅ 蒜剁蓉、姜切末、洋葱切碎——全部备好<br>
+    ✅ 郫县豆瓣提前剁细（整瓣炒不开）<br>
+    ✅ 准备红外测温枪校准<br><br>
+    <strong>炒制阶段（按顺序）：</strong><br>
+    🔥 Step① 热油150°C → 1.5分钟<br>
+    🔥 Step② 爆香料140-150°C → 2分钟<br>
+    🔥 Step③ 炒豆瓣120-135°C出红油 → 5-6分钟<br>
+    🔥 Step④ 混合酱体130-140°C → 3分钟<br>
+    🔥 Step⑤ 加水熬煮100°C→95°C微沸 → 10-12分钟<br>
+    🔥 Step⑥ 关火降温至80°C以下 → 过滤装盒<br><br>
+    <strong>批量注意：</strong><br>
+    · 10斤批炒制时间延长约40%（锅大散热慢，需要多搅拌）<br>
+    · 2.5斤批时间缩短约30%（锅小升温快，注意防焦）<br>
+    · 建议单批次最大量不超过10斤——超过10斤锅底受热不均，翻车率上升<br>
+    · 如需大量备货：分两锅炒（每锅5-8斤），品质更可控
+  </div>
+
+  <!-- ===== 3️⃣ 三档稀释标准 ===== -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">3️⃣ 三种用法精确稀释标准</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:0;overflow:hidden;margin-bottom:8px">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+      <span>用法</span><span>稀释比例</span><span>成品稠度判断</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>🖌️ 煎刷</span><span>底酱100g + 水100g</span><span>稀浆状，刷子蘸取能均匀刷开<br>太稠→刷不匀粘铁板 | 太稀→没味道</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>💧 浇汁</span><span>底酱100g + 高汤200g</span><span>稀汤汁状，勺子舀起能自由流下<br>高汤用猪骨+鸡架熬的，没有可用清水+鸡精3g替代</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr;font-size:11px;padding:8px 10px">
+      <span>🥢 拌料</span><span>底酱100g + 辣椒油20g + 醋15g + 蒜水30g</span><span>浓酱状，能均匀裹在土豆表面<br>蒜水：蒜蓉10g+水20g浸泡10分钟</span>
+    </div>
+  </div>
+
+  <!-- ===== 4️⃣ 翻车解决方案 ===== -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">4️⃣ 翻车解决方案（6大场景）</div>
+  <div class="fix-grid">
+    <div class="fix-card" style="background:#fef2f2;border:1px solid #fdd">
+      <div class="f-label" style="color:#b53b3b">😰 酱太咸</div>
+      <div style="color:#5a4f44;font-size:10px">
+        <strong>原因：</strong>豆瓣酱/黄豆酱/生抽叠加咸度过高<br>
+        <strong>补救：</strong>加白糖10g+水50g稀释（每500g酱），搅匀后小火收2分钟<br>
+        <strong>预防：</strong>配方中不加额外盐
+      </div>
+    </div>
+    <div class="fix-card" style="background:#fef6ec;border:1px solid #fde">
+      <div class="f-label" style="color:#D4A574">😐 酱太淡</div>
+      <div style="color:#5a4f44;font-size:10px">
+        <strong>原因：</strong>水加多了/熬制时间不够<br>
+        <strong>补救：</strong>小火继续熬5分钟浓缩，或加生抽10g+蚝油5g<br>
+        <strong>预防：</strong>严格按照配方水量，不要凭感觉加水
+      </div>
+    </div>
+    <div class="fix-card" style="background:#f0f6ec;border:1px solid #dfe">
+      <div class="f-label" style="color:#5a8f3c">😒 酱不香</div>
+      <div style="color:#5a4f44;font-size:10px">
+        <strong>原因：</strong>豆瓣没炒出红油/蒜蓉没爆香<br>
+        <strong>补救：</strong>另起锅加油20g+蒜蓉10g小火炸香，混入酱中<br>
+        <strong>预防：</strong>炒豆瓣阶段必须达到125-135°C持续5分钟
+      </div>
+    </div>
+    <div class="fix-card" style="background:#fef2ee;border:1px solid #fdd">
+      <div class="f-label" style="color:#E8652D">🤢 酱发苦</div>
+      <div style="color:#5a4f44;font-size:10px">
+        <strong>原因：</strong>豆瓣炒糊（油温>145°C）/蒜蓉炸焦<br>
+        <strong>补救：</strong>加白糖15g+清水30g稀释苦味，无法完全去除<br>
+        <strong>预防：</strong>全程控温，豆瓣阶段不超过140°C
+      </div>
+    </div>
+    <div class="fix-card" style="background:#eef2ff;border:1px solid #dde">
+      <div class="f-label" style="color:#4f6ef7">⏳ 保质期短</div>
+      <div style="color:#5a4f44;font-size:10px">
+        <strong>原因：</strong>容器不干净/热酱盖盖/取用沾水<br>
+        <strong>补救：</strong>分装小瓶，每次只取当天的量<br>
+        <strong>预防：</strong>彻底冷却至25°C再盖盖，每次用干净无水勺
+      </div>
+    </div>
+    <div class="fix-card" style="background:#f5f0eb;border:1px solid #ede5d0">
+      <div class="f-label" style="color:#7a7269">🧂 撒料不香</div>
+      <div style="color:#5a4f44;font-size:10px">
+        <strong>原因：</strong>辣椒面/孜然存放超过3个月香味挥发<br>
+        <strong>补救：</strong>每次少量制作，1个月内用完<br>
+        <strong>预防：</strong>避光密封保存，不要放在铁板旁边受热
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 5️⃣ 一周变体方案 ===== -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">5️⃣ 一周变体方案（每天换个口味）</div>
+  <div style="font-size:10px;color:#b5aaa0;margin-bottom:6px">底酱和撒料不变，通过加一味料实现口味切换。新摊主建议周一至周五只做原味，周末加变体试水。</div>
+  <div class="week-grid">
+    <div class="week-day" style="border-left-color:#E8652D">
+      <div class="wd-name">🌶️ 周一 · 香辣版</div>
+      <div class="wd-desc">底酱加辣椒油20g/份<br>撒料加辣椒粉5g/份</div>
+    </div>
+    <div class="week-day" style="border-left-color:#D4A574">
+      <div class="wd-name">🧄 周二 · 蒜香版</div>
+      <div class="wd-desc">底酱加鲜蒜蓉30%/份<br>撒料加蒜粉3g/份</div>
+    </div>
+    <div class="week-day" style="border-left-color:#5a8f3c">
+      <div class="wd-name">🌿 周三 · 藤椒版</div>
+      <div class="wd-desc">撒料中花椒粉换藤椒粉<br>麻味更清新有层次</div>
+    </div>
+    <div class="week-day" style="border-left-color:#4f6ef7">
+      <div class="wd-name">🌰 周四 · 黑椒版</div>
+      <div class="wd-desc">撒料加粗粒黑胡椒10%<br>适合铁板烤肠</div>
+    </div>
+    <div class="week-day" style="border-left-color:#C0392B">
+      <div class="wd-name">🔥 周五 · 火鸡面版</div>
+      <div class="wd-desc">撒料加火鸡面酱粉5g/份<br>学生最爱·复购率最高变体</div>
+    </div>
+    <div class="week-day" style="border-left-color:#b5aaa0">
+      <div class="wd-name">🍯 周六 · 甜辣版</div>
+      <div class="wd-desc">底酱加韩式辣酱+蜂蜜<br>甜辣平衡·女性客群爆款</div>
+    </div>
+    <div class="week-day" style="border-left-color:#8b4513;grid-column:1/-1;border-left-width:3px">
+      <div class="wd-name">🎲 周日 · 随机版/顾客定制版</div>
+      <div class="wd-desc">让顾客选一种变体，或推出「盲盒口味」增加趣味性。提前备好辣椒油、藤椒粉、黑胡椒、蒜蓉、蜂蜜五样辅料即可覆盖80%变体需求。</div>
+    </div>
+  </div>
+
+  <!-- ===== 6️⃣ 储存与复热 ===== -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">6️⃣ 储存与复热方案</div>
+  <div class="store-grid">
+    <div class="store-card" style="background:#fef6ec">
+      <div class="s-label">🧊 底酱冷藏储存</div>
+      <div class="s-temp">温度：2-4°C</div>
+      <div style="color:#4a3f35;font-size:10px;line-height:1.6;margin-top:4px">
+        <strong>保质期：</strong>密封盒冷藏7天<br>
+        <strong>最佳使用期：</strong>3天内<br>
+        <strong>变质信号：</strong>表面发霉/变色/酸臭味<br>
+        <strong>分装建议：</strong>按单日用量分装小盒，减少反复取用
+      </div>
+    </div>
+    <div class="store-card" style="background:#f0f6ec">
+      <div class="s-label">🌡️ 底酱冷冻储存</div>
+      <div class="s-temp">温度：-18°C</div>
+      <div style="color:#4a3f35;font-size:10px;line-height:1.6;margin-top:4px">
+        <strong>保质期：</strong>30天<br>
+        <strong>冷冻分装：</strong>200g/袋，按份量冻<br>
+        <strong>解冻方法：</strong>冷藏室12小时慢解冻，或隔水60°C加热5分钟<br>
+        <strong>复热后口感：</strong>冷冻酱复热口感保持90%以上
+      </div>
+    </div>
+    <div class="store-card" style="background:#fef2ee">
+      <div class="s-label">🧂 撒料常温储存</div>
+      <div class="s-temp">温度：15-25°C · 避光</div>
+      <div style="color:#4a3f35;font-size:10px;line-height:1.6;margin-top:4px">
+        <strong>保质期：</strong>密封瓶3个月<br>
+        <strong>最佳使用期：</strong>1个月内<br>
+        <strong>变质信号：</strong>结块/哈喇味/颜色发暗<br>
+        <strong>防潮技巧：</strong>瓶内放干大米一粒吸湿
+      </div>
+    </div>
+    <div class="store-card" style="background:#eef2ff">
+      <div class="s-label">🔥 出摊携带</div>
+      <div class="s-temp">环境温度：5-35°C</div>
+      <div style="color:#4a3f35;font-size:10px;line-height:1.6;margin-top:4px">
+        <strong>保温桶：</strong>不锈钢保温桶50-55°C保温<br>
+        <strong>挤压瓶：</strong>稀释后酱料装挤压瓶，出单即用<br>
+        <strong>撒料瓶：</strong>双孔不锈钢瓶，装满够卖一天<br>
+        <strong>夏季注意：</strong>气温超过30°C时，未稀释底酱也需冷藏
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 7️⃣ 复热方案 ===== -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">7️⃣ 酱料复热方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #D4A574">
+    <div style="margin-bottom:6px;line-height:1.7">
+      <strong>冷酱状态：</strong>4°C冷藏（隔夜或冷冻保存）<br><br>
+      <strong>方法一 · 隔水加热（推荐）：</strong><br>
+      不锈钢盆/碗放入70°C热水中，边加热边搅拌，至酱汁回归50-55°C即可使用。<br>
+      时间：约5分钟（200g） / 约10分钟（500g）<br><br>
+      <strong>方法二 · 小火直接加热（应急）：</strong><br>
+      酱入锅，加10g清水防粘，最小火慢搅至酱体变软。<br>
+      时间：约3分钟（200g）<br>
+      注意：锅底必须持续搅动，否则局部过热会焦化<br><br>
+      <strong>判断标准：</strong>酱汁流动性恢复，舀起能连续流下即到位。<br><br>
+      <strong>❌ 禁忌：</strong><br>
+      — 不可微波炉回温：局部沸腾导致水分蒸发不均，酱体颗粒化<br>
+      — 不可大火直接加热：糖分焦化发苦，酱体变稠<br>
+      — 不可反复加热冷却：每加热一次风味衰减约15%，最多复热2次<br><br>
+      <strong>摆摊实操：</strong>早上出摊前一次性熬好当天用量，保温桶50-55°C保存。如中途酱变稠，加少量热水（每100g酱+5-10g水）搅匀即可恢复。
+    </div>
+  </div>
+
+  <!-- ===== 8️⃣ 修正表 ===== -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">8️⃣ 铁板酱料平衡修正表</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:0;overflow:hidden;margin-bottom:8px">
+    <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+      <span>问题</span><span>修正方法</span><span>用量（每500g酱）</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>太咸</span><span>加白糖+水稀释</span><span>糖15g + 水50g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>太淡</span><span>小火浓缩或加生抽</span><span>熬5分钟 / 生抽10g+蚝油5g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>不香</span><span>补炒蒜蓉混入</span><span>另起锅蒜蓉10g炸香混入</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>发苦（轻微）</span><span>加白糖压苦+稀释</span><span>糖15g + 水30g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>发苦（严重）</span><span>无法挽救，倒掉重做</span><span>—</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>太稠</span><span>加温水搅匀</span><span>水+20g起逐步加</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.5fr 1.5fr 1fr;font-size:11px;padding:8px 10px">
+      <span>太稀</span><span>小火收汁</span><span>继续熬3-5分钟</span>
+    </div>
+  </div>
+
+  <!-- ===== 9️⃣ 沧林实战备注 ===== -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">9️⃣ 沧林实战备注</div>
+  <div class="judge-box" style="border:1px solid #E8652D">
+    <div class="j-text">
+      • <strong>温度是酱料唯一的门槛：</strong>炒豆瓣的最佳油温是125-135°C。买一个红外测温枪（¥25），头三次炒酱每步都测，形成肌肉记忆后就不需要了。<br><br>
+      • <strong>品牌替换不是等量替换：</strong>不同品牌的豆瓣酱咸度/发酵程度不同。鹃城牌偏咸且颜色深，丹丹牌偏淡且颜色红。换品牌后先做小样测试，不要直接大批量做。<br><br>
+      • <strong>一个摊主的真实数据：</strong>我用5斤配方做一次底酱，成本¥28，能出约4斤成品酱。用于铁板豆腐可卖约130-150份（每份30g酱），酱料成本每份¥0.19-0.22。豆腐本钱¥0.5-0.8/份，卖¥5-6，毛利83-87%。<br><br>
+      • <strong>一酱三用最实用场景：</strong>狼牙土豆用拌料（底酱+辣椒油+醋+蒜水）→ 铁板豆腐用浇汁（底酱+高汤）→ 鱿鱼用煎刷（底酱+水）→ 烤肠直接底酱刷。四个产品一套酱，出摊只需带三瓶稀释好的酱+一瓶撒料。<br><br>
+      • <strong>出摊清单（酱料类）：</strong>底酱一瓶（未稀释·备用）、煎刷酱一瓶（稀释·挤压瓶）、浇汁酱一瓶（稀释）、拌料酱一瓶（已加辅料）、撒料一瓶（双孔瓶）、辣椒油一瓶、蒜水一瓶。挤在一个收纳盒里，出摊5分钟摆好。<br><br>
+      • <strong>一条铁律：</strong>新摊主前三个月不要碰变体。原味一酱三用跑通→回头客稳定→老客问「有没有别的口味」→再加变体。顺序错了，变体=自杀。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔒 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>铁板酱料与撒料完整体系</h3>
+  <div class="p-sub">你买的是铁板酱料体系的专属数据。<br>母卡体系请见TB_M01。</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span><span>一酱三用核心逻辑——煎刷/浇汁/拌料完整方案</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>铁板底酱配方——5斤批精确到g</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>三档批量配方——2.5斤/5斤/10斤完整配比</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>炒制工艺全流程——六步温度/时间/状态判断（摄氏度）</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>通用撒料配方（1斤批）——铁板四品通用</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>三种用法精确稀释标准</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>翻车解决方案——太咸/太淡/不香/发苦/保质期短/撒料不香</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>一周变体方案——每日一换口味，底酱不变</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>储存与复热方案——冷藏/冷冻/解冻/摆摊携带</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>铁板酱料平衡修正表——7大问题精确到g</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>客群画像——4类客群·定向打法</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>沧林实战备注——温度门槛·品牌替换·真实成本数据</span></div>
+  </div>
+  <div style="font-size:11px;color:#C0392B;font-weight:600;margin-bottom:6px">掌握一酱三用，铁板出餐快人一步</div>
+  <div class="price-tag">¥39 <small>VC工艺卡 · 一次解锁</small></div>
+  <a class="btn" href="#">立即解锁 →</a>
+  <div class="note">解锁后发编号给客服，秒发完整版</div>
+</div>
+
+<div class="ftr">FoodIntel AI · 沧林食品工作站 · 铁板酱料与撒料体系 TB_V01</div>
+
+</div>
+</body>
+</html>

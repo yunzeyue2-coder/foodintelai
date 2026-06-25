@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>狼牙土豆 · 摆摊单品测评 · FoodIntelAI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 顶部评级 ===== */
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+/* ===== 项目速览 ===== */
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+/* ===== 适合谁 ===== */
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+/* ===== 逻辑块 ===== */
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+/* ===== 指标卡 ===== */
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+/* ===== 摆摊指数 ===== */
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+
+/* ===== 风险 ===== */
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* ===== 沧林判断 ===== */
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+/* ===== 数据表格 ===== */
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+.tb th{background:#3a322a;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:11px}
+.tb td{padding:5px 8px;border-bottom:1px solid #ede0d0;color:#3a2a1a;font-size:11px}
+.tb tr:nth-child(even) td{background:#faf5f0}
+
+/* ===== 规格卡片 ===== */
+.spec-card{background:#f8f4ef;border-radius:10px;padding:14px;margin:6px 0;border-left:3px solid #C0392B}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#4a3f35;line-height:1.7}
+
+/* ===== 提示框 ===== */
+.tip-box{background:#fef6ec;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #f0e6da}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#D4A574;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#5a4f44;line-height:1.6}
+
+/* ===== 流程步骤 ===== */
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-arrow{color:#ccc;font-size:10px}
+
+/* ===== 30天路线 ===== */
+.d30-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:12px;color:#3a322a;margin-bottom:4px}
+.d30-badge{color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0}
+
+/* ===== 配方行 ===== */
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:#4a3f35}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+/* ===== 赛道判断 ===== */
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+/* ===== 付费区 ===== */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+
+/* ===== 付费展开内容 ===== */
+.locked-section{display:none}
+
+/* ===== 底部 ===== */
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🥔 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+    <div style="font-size:11px;color:#b5aaa0;font-weight:600;letter-spacing:2px">TB_02 · 铁板系列</div>
+    <span style="font-size:9px;padding:2px 8px;border-radius:3px;background:#fef2ee;color:#E8652D;font-weight:600">🥔 单品子卡</span>
+  </div>
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥔 狼牙土豆</h1>
+  <div style="font-size:12px;color:#b5aaa0">2026抖音最火摆摊单品 · 切制·煮制·拌料全流程</div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">7.9</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">B+级单品</span>
+  </div>
+  <div class="r-tagline">抖音2026年出现频率最高的摆摊单品，门槛低、毛利高，但竞争已进入白热化阶段。</div>
+  <div class="r-tags">
+    <span>🔥 抖音热门</span>
+    <span>🥔 成本¥0.8-1.5/份</span>
+    <span>💰 售价¥6-10</span>
+    <span>🔄 常和铁板豆腐搭配</span>
+    <span>👤 1人可做</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item high"><div class="label">⚡ 出餐速度</div><div class="stars">★★★★★</div><div class="val">极快</div></div>
+    <div class="radar-item high"><div class="label">💰 毛利</div><div class="stars">★★★★★</div><div class="val">80-85%</div></div>
+    <div class="radar-item high"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div><div class="val">低</div></div>
+    <div class="radar-item" style="background:#f5f0eb"><div class="label">⚔️ 竞争</div><div class="stars" style="color:#C0392B">★★★★☆</div><div class="val">激烈</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 纯新手摆摊</div>
+      <div class="fit-item fit-yes">✅ 预算≤¥2000</div>
+      <div class="fit-item fit-yes">✅ 1人独立操作</div>
+      <div class="fit-item fit-yes">✅ 夜市/学校门口</div>
+      <div class="fit-item fit-yes">✅ 副业试水</div>
+      <div class="fit-item fit-yes">✅ 铁板豆腐套餐搭档</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求高客单价</div>
+      <div class="fit-item fit-no">❌ 想差异化竞争</div>
+      <div class="fit-item fit-no">❌ 外卖为主要渠道</div>
+      <div class="fit-item fit-no">❌ 社区/非人流位置</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是土豆</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">顾客买的是：麻辣鲜香 × 脆糯口感 × 出餐快不用等</div>
+    <div class="l-title">📈 利润来源</div>
+    <div class="logic-item"><span>基础份（¥6-8）</span><span class="v">毛利82%</span></div>
+    <div class="logic-item"><span>加料（火腿肠/藕片/豆皮+¥2-5）</span><span class="v">毛利75%</span></div>
+    <div class="logic-item"><span>套餐搭售（+铁板豆腐）</span><span class="v">客单价拉高60%</span></div>
+    <div class="logic-item"><span>多口味选择（糖醋/蒜香）</span><span class="v">复购率+35%</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">日营收</div>
+      <div class="m-val">¥300-600</div>
+      <div class="m-sub">纯狼牙土豆摊位</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">月净利</div>
+      <div class="m-val">¥3000-7000</div>
+      <div class="m-sub">出摊20天</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">3-7天</div>
+      <div class="m-sub">含设备工具</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fef2ee;border-radius:10px;text-align:center">
+    <div style="font-size:10px;color:#7a7269;margin-bottom:2px">搭配铁板豆腐一起卖</div>
+    <div style="font-size:18px;font-weight:800;color:#C0392B">日营收¥600-1000</div>
+    <div style="font-size:10px;color:#5a4f44;margin-top:2px">双品组合才是正确摆摊姿势</div>
+  </div>
+</div>
+
+<!-- ===== 🗓️ 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div class="d30-item" style="background:#fef2ee">
+      <span class="d30-badge" style="background:#E8652D">Day 1</span>
+      <span style="flex:1">试做5份狼牙土豆，跑通切制→煮制→拌料全流程</span>
+    </div>
+    <div class="d30-item" style="background:#fef6ec">
+      <span class="d30-badge" style="background:#D4A574">Day 3</span>
+      <span style="flex:1">邀请10人试吃，确定脆糯度偏好和辣度基准线</span>
+    </div>
+    <div class="d30-item" style="background:#fef6ec">
+      <span class="d30-badge" style="background:#D4A574">Day 7</span>
+      <span style="flex:1">第一次摆摊（预备30份），测人流×定价×话术</span>
+    </div>
+    <div class="d30-item" style="background:#f0f6ec">
+      <span class="d30-badge" style="background:#5a8f3c">Day 15</span>
+      <span style="flex:1">根据出摊数据调整口味，加1-2款加料选项</span>
+    </div>
+    <div class="d30-item" style="background:#eef2ff">
+      <span class="d30-badge" style="background:#4f6ef7">Day 30</span>
+      <span style="flex:1">复盘日均营收，决定是否搭配铁板豆腐长期做</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键判断：</strong>30天能验证单品可行性。如果第3周日均营收不到¥200，说明位置或定价有问题。狼牙土豆纯单品天花板低，建议Day15后搭配铁板豆腐组合出摊。
+  </div>
+</div>
+
+<!-- ===== 📈 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">用户认知极高，不用教育市场</div>
+      <div class="t-item">设备极简，总投资≤¥2000</div>
+      <div class="t-item">出餐快（煮拌不到2分钟）适合高峰期</div>
+      <div class="t-item">毛利80%+，小吃品类第一梯队</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">同质化严重，一个夜市可能3-5家狼牙土豆</div>
+      <div class="t-item">单品客单价太低（¥6-10），天花板明显</div>
+      <div class="t-item">土豆煮制品质不稳定，翻车率高</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>狼牙土豆已过红利期，进入存量竞争阶段。<br>
+    纯卖狼牙土豆利润有限，必须搭配铁板豆腐或其他高客单价单品。<br>
+    如果你在夜市/学校门口有位置——它仍然是最容易验证、最容易出摊的入门级单品之一。适合作为组合摊的引流品，不适合作为唯一收入来源。
+  </div>
+</div>
+
+<!-- ===== 🔥 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市</div>
+      <div class="s-bar"><div class="fill" style="width:95%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">学校</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">商圈</div>
+      <div class="s-bar"><div class="fill" style="width:55%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区</div>
+      <div class="s-bar"><div class="fill" style="width:40%;background:#b5aaa0"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★☆☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#fef6ec">
+      <div class="s-icon">🏔️</div>
+      <div class="s-name">景区</div>
+      <div class="s-bar"><div class="fill" style="width:65%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖</div>
+      <div class="s-bar"><div class="fill" style="width:25%;background:#b5aaa0"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★☆☆☆</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 狼牙土豆的核心场景是夜市和学校门口——人流量大、出餐快、边走边吃。商圈和社区需求偏低。外卖配送后口感下降明显，不推荐。
+  </div>
+</div>
+
+<!-- ===== ⚠️ 专属风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 专属风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><span><strong>煮过头变面糊：</strong>狼牙土豆的灵魂是脆糯之间的口感。多煮10秒就面了、少煮10秒就生硬。煮制时间±5秒直接影响复购率。</span></div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><span><strong>氧化变黑：</strong>切好的土豆条放在空气里超过30分钟就开始发灰，卖相直接扣分。泡水不换水也一样变黑。</span></div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><span><strong>拌料过咸：</strong>底酱+熟油辣椒+蒜水+通用撒料层层加味，新手最容易翻车的就是咸过头。每份拌料必须精确称量。</span></div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><span><strong>竞争严重：</strong>狼牙土豆是摆摊入门门槛最低的单品之一，一个夜市3-5家很常见。没有口味差异化就只能打价格战。</span></div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><span><strong>纯品天花板低：</strong>客单价¥6-10，纯利润¥4-8/份。一天卖50份也就¥300营收。不搭配其他单品很难月入过万。</span></div>
+</div>
+
+<!-- ===== 🧠 沧林判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      狼牙土豆不是新鲜品类，但它是<strong>最适合新手验证摆摊逻辑</strong>的单品。<br><br>
+      总投资¥1000-1500就能出摊，切煮拌三步操作极简。但它的问题也很明显：<strong>客单价低、同质化严重、纯品天花板低</strong>。<br><br>
+      我的建议是：<strong>用它验证，不靠它赚钱</strong>——作为组合摊的引流品（搭配铁板豆腐或油炸串串），靠高毛利加料和套餐拉高客单价。如果你只有狼牙土豆一个单品，20天还不加铁板豆腐，趁早换项目。
+    </div>
+    <div class="j-tags">
+      <span>#狼牙土豆</span>
+      <span>#摆摊入门</span>
+      <span>#夜市创业</span>
+      <span>#铁板系列</span>
+      <span>#低门槛创业</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🥔 选材标准 ===== -->
+<div class="section">
+  <div class="s-title">🥔 选材标准</div>
+  <table class="tb">
+    <tr><th>土豆类型</th><th>特点</th><th>推荐度</th><th>参考价</th></tr>
+    <tr><td>黄心土豆（荷兰薯）</td><td>脆糯适中，色泽金黄好看</td><td style="color:#5a8f3c;font-weight:700">✅ 首推</td><td>¥1.2-1.8/斤</td></tr>
+    <tr><td>红皮土豆</td><td>质地更脆，适合喜欢脆口顾客</td><td style="color:#D4A574;font-weight:700">✅ 可选</td><td>¥1.5-2.0/斤</td></tr>
+    <tr><td>白心土豆</td><td>淀粉含量高，煮后发面</td><td style="color:#b53b3b">⚠️ 慎用</td><td>¥1.0-1.5/斤</td></tr>
+    <tr><td>粉质土豆（老土豆）</td><td>一煮就烂，无法成型</td><td style="color:#b53b3b;font-weight:700">❌ 不要用</td><td>—</td></tr>
+  </table>
+  <div class="spec-card">
+    <div class="sc-title">📐 精确选材标准</div>
+    <div class="sc-body">
+      <strong>单品规格：</strong>单个土豆150-250g为宜，太大切条粗细不均，太小出成率低。<br>
+      <strong>新鲜度判断：</strong>表皮光滑无发芽无青斑，捏起来硬实不发软。<br>
+      <strong>储存方式：</strong>阴凉通风处存放，避免阳光直射。购入后3天内用完最佳。<br>
+      <strong>批发建议：</strong>首单不超过10斤试做，确定口感偏好后再批量。批量建议50斤起批（¥1.0-1.2/斤）。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔪 切制工艺 ===== -->
+<div class="section">
+  <div class="s-title">🔪 切制工艺</div>
+  <table class="tb">
+    <tr><th>步骤</th><th>操作</th><th>关键参数</th></tr>
+    <tr><td>1. 去皮</td><td>削皮后立即泡入清水</td><td>防氧化变黑，水温≤20°C</td></tr>
+    <tr><td>2. 切片</td><td>用波纹刀切成厚片</td><td><strong>精确厚度：1.2-1.5cm</strong><br>太薄煮后散架，太厚不入味</td></tr>
+    <tr><td>3. 切条</td><td>再切成宽条</td><td><strong>精确宽度：1.5-2.0cm</strong><br>截面呈狼牙犬齿状</td></tr>
+    <tr><td>4. 泡水</td><td>清水浸泡去表面淀粉</td><td><strong>浸泡时间：10-15分钟</strong><br>中途换水1次，水变混即换</td></tr>
+    <tr><td>5. 沥干</td><td>捞出沥干水分</td><td>沥干5分钟再煮，防止降低水温</td></tr>
+    <tr><td>6. 保存</td><td>泡水冷藏可存1-2天</td><td>真空包装冷藏可存3天</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="tip-label">🔪 波纹刀选购</div>
+    <p>推荐购买<strong>双刃不锈钢波纹刀</strong>（¥15-25），刀齿间距5-8mm最合适。太密切出来狼牙纹不明显，太疏口感粗糙。拼多多/1688搜"狼牙土豆波纹刀"即可。</p>
+  </div>
+  <div class="spec-card" style="border-left-color:#E8652D">
+    <div class="sc-title">💡 出成率计算</div>
+    <div class="sc-body">
+      1斤去皮的黄心土豆 → 约750-800g土豆条（去皮+切边损耗20-25%）<br>
+      1斤生土豆条 → 煮熟后约900g（吸水增重10-12%）<br>
+      <strong>标准每份用量：</strong>200g生土豆条（煮熟后约220-225g）<br>
+      1斤土豆 ≈ 可做3份狼牙土豆（不含损耗约4份）
+    </div>
+  </div>
+</div>
+
+<!-- ===== ♨️ 煮制工艺 ===== -->
+<div class="section">
+  <div class="s-title">♨️ 煮制工艺</div>
+  <table class="tb">
+    <tr><th>步骤</th><th>操作</th><th>关键参数</th></tr>
+    <tr><td>1. 烧水</td><td>大锅加足水，大火烧开</td><td>水量≥土豆体积的3倍，防止水温骤降</td></tr>
+    <tr><td>2. 下土豆</td><td>水沸腾后下土豆条</td><td>轻轻拨散，防止粘连</td></tr>
+    <tr><td>3. 计时</td><td>从水再次沸腾开始计时</td><td><strong>脆口50秒 / 标准60秒 / 糯口70秒</strong></td></tr>
+    <tr><td>4. 捞出</td><td>立即捞出沥干</td><td><strong>不过凉水</strong>——过凉水会变硬，失去糯感</td></tr>
+    <tr><td>5. 摊凉</td><td>摊开放置自然降温</td><td>2-3分钟即可拌料</td></tr>
+  </table>
+
+  <div class="spec-card" style="border-left-color:#D4A574">
+    <div class="sc-title">📊 煮制温度与时间对照表</div>
+    <div class="sc-body">
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1.2fr;font-size:10px;font-weight:700;padding:4px 0;border-bottom:1px solid #ede0d0;color:#3a322a">
+        <span>口感偏好</span><span>煮制时间</span><span>成品特征</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1.2fr;font-size:11px;padding:4px 0;border-bottom:1px dashed #ede0d0">
+        <span>极致脆口</span><span>45秒</span><span>中心微生，脆感突出</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1.2fr;font-size:11px;padding:4px 0;border-bottom:1px dashed #ede0d0;background:#faf5f0">
+        <span>标准脆口</span><span>50秒</span><span>外脆内微糯，最主流</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1.2fr;font-size:11px;padding:4px 0;border-bottom:1px dashed #ede0d0">
+        <span>脆糯平衡</span><span>60秒</span><span>半数顾客偏好点</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1.2fr;font-size:11px;padding:4px 0;border-bottom:1px dashed #ede0d0;background:#faf5f0">
+        <span>偏糯口感</span><span>70秒</span><span>糯感明显，边缘微烂</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr 1.2fr;font-size:11px;padding:4px 0">
+        <span>极致软糯</span><span>80秒</span><span>接近土豆泥状态（❌过头）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">⚠️ 煮制关键——高峰期出餐方案</div>
+    <p><strong>预先煮好法：</strong>出摊前煮好一批土豆条至7分熟（40秒），捞出摊凉备用。客人点单时滚水中回煮15-20秒+拌料，总出餐时间<30秒。<br><br>
+    <strong>注意：</strong>预煮的土豆条放久了会发面。建议每30分钟煮一批新的，每次预煮量不超过20份。<br><br>
+    <strong>水的重要性：</strong>煮过3-4锅后水变浑浊，淀粉浓度升高，煮出来的土豆发粘。建议每4锅换一次水。</p>
+  </div>
+</div>
+
+<!-- ===== 🌶️ 拌料配方 ===== -->
+<div class="section">
+  <div class="s-title">🌶️ 拌料配方（每份）</div>
+  <table class="tb">
+    <tr><th>原料</th><th>用量</th><th>说明</th></tr>
+    <tr><td>铁板底酱</td><td>15g</td><td>见TB_V01底酱配方</td></tr>
+    <tr><td>熟油辣椒</td><td>10g</td><td>四川二荆条+菜籽油炼制</td></tr>
+    <tr><td>香醋（保宁醋最佳）</td><td>5g</td><td>提酸爽，不可或缺</td></tr>
+    <tr><td>蒜水</td><td>5g</td><td>蒜末1:3泡水，现泡现用</td></tr>
+    <tr><td>通用撒料</td><td>3g</td><td>见TB_V01通用撒料</td></tr>
+    <tr><td>香油（芝麻油）</td><td>2g</td><td>最后加，增香提味</td></tr>
+    <tr><td>白糖</td><td>1g</td><td>中和辣味，提鲜（可选）</td></tr>
+    <tr><td>葱花/香菜/折耳根</td><td>适量</td><td>顾客自选，推荐全配</td></tr>
+  </table>
+  <div class="spec-card" style="border-left-color:#5a8f3c">
+    <div class="sc-title">🧂 拌料关键操作</div>
+    <div class="sc-body">
+      <strong>拌料顺序很重要：</strong>土豆捞出沥干 → 放入拌料盆 → 加底酱+熟油辣椒 → 加醋+蒜水+撒料 → 颠匀（15秒）→ 加香油 → 再颠5秒 → 装碗撒葱花。<br><br>
+      <strong>为什么先加酱后加醋？</strong>醋最后加容易被土豆吸收表面变酸。先加底酱让酱覆盖土豆表面，醋最后加在表面形成酸香口感。<br><br>
+      <strong>最佳拌料温度：</strong>土豆条温度在50-60°C时拌料最好——此时土豆表面微湿能挂住酱料，温度太高醋会挥发，太低酱料挂不住。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔄 口味变体 ===== -->
+<div class="section">
+  <div class="s-title">🔄 口味变体（4款）</div>
+  <table class="tb">
+    <tr><th>口味</th><th>调整方案</th><th>适合客群</th><th>推荐度</th></tr>
+    <tr><td>经典麻辣</td><td>标准配方不变</td><td>主流大众</td><td style="color:#E8652D;font-weight:700">🔥 最高频</td></tr>
+    <tr><td>糖醋麻辣</td><td>醋8g+白糖5g（替代醋5g）</td><td>女生/小孩/学生</td><td style="color:#5a8f3c;font-weight:700">高复购</td></tr>
+    <tr><td>蒜香浓郁</td><td>蒜水5g→10g+蒜末3g现撒</td><td>年轻人/重口味</td><td style="color:#D4A574;font-weight:700">差异化</td></tr>
+    <tr><td>藤椒清爽</td><td>花椒粉1g→藤椒油3g+减辣椒5g</td><td>追新口味/夏季</td><td>区域特色</td></tr>
+  </table>
+  <div class="tip-box">
+    <div class="tip-label">💡 摆摊建议</div>
+    <p>第一天出摊只卖<strong>经典麻辣+糖醋麻辣</strong>两款就够了。太多口味选择反而让顾客犹豫，拖慢出餐速度。2周后加第三款蒜香作为利润款（蒜末成本极低，可多加¥1-2）。藤椒款作为区域性特色，不适合全国推广。</p>
+  </div>
+</div>
+
+<!-- ===== 💰 成本利润详情 ===== -->
+<div class="section">
+  <div class="s-title">💰 成本利润详情</div>
+  <table class="tb">
+    <tr><th>项目</th><th>金额</th><th>占比</th></tr>
+    <tr><td>每份土豆成本（200g生重）</td><td>¥0.4-0.6</td><td>35-40%</td></tr>
+    <tr><td>拌料（底酱+辣椒+醋+撒料等）</td><td>¥0.4-0.8</td><td>35-45%</td></tr>
+    <tr><td>纸碗+竹签+塑料袋</td><td>¥0.1-0.2</td><td>8-10%</td></tr>
+    <tr><td>燃气/水电分摊</td><td>¥0.05-0.1</td><td>3-5%</td></tr>
+    <tr style="font-weight:700;background:#faf0e8"><td><strong>综合成本（纯品）</strong></td><td><strong>¥0.95-1.7/份</strong></td><td>100%</td></tr>
+    <tr><td>售价</td><td>¥6-10/份</td><td>—</td></tr>
+    <tr style="font-weight:700;background:#e8f5e0;color:#2a7a2a"><td><strong>毛利率</strong></td><td><strong>80-85%</strong></td><td>小吃品类顶格</td></tr>
+  </table>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;color:#7a7269">加火腿肠（+¥2-3）</div>
+      <div style="font-size:16px;font-weight:800;color:#5a8f3c">¥2.8-4.0</div>
+      <div style="font-size:10px;color:#5a4f44">额外毛利</div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;color:#7a7269">加藕片/豆皮（+¥2-3）</div>
+      <div style="font-size:16px;font-weight:800;color:#5a8f3c">¥2.0-3.5</div>
+      <div style="font-size:10px;color:#5a4f44">额外毛利</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🛠️ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 必备设备</div>
+  <div class="spec-card" style="border-left-color:#E8652D">
+    <div class="recipe-line"><span class="k">不锈钢煮锅（口径30cm+）</span><span class="v" style="color:#E8652D">¥30-60</span></div>
+    <div class="recipe-line"><span class="k">卡式炉+气罐（或电磁炉）</span><span class="v" style="color:#E8652D">¥80-150</span></div>
+    <div class="recipe-line"><span class="k">不锈钢拌料盆×2（大号）</span><span class="v" style="color:#E8652D">¥20-40</span></div>
+    <div class="recipe-line"><span class="k">波纹刀（双刃不锈钢）</span><span class="v" style="color:#E8652D">¥15-25</span></div>
+    <div class="recipe-line"><span class="k">漏勺+食品夹</span><span class="v" style="color:#E8652D">¥15-30</span></div>
+    <div class="recipe-line"><span class="k">电子秤（精确到1g）</span><span class="v" style="color:#E8652D">¥25-50</span></div>
+    <div class="recipe-line"><span class="k">计时器（防水款）</span><span class="v" style="color:#E8652D">¥10-20</span></div>
+    <div class="recipe-line"><span class="k">调料瓶/挤酱瓶×6-8个</span><span class="v" style="color:#E8652D">¥15-30</span></div>
+    <div class="recipe-line"><span class="k">不锈钢盆/收纳盒×4-6个</span><span class="v" style="color:#E8652D">¥30-50</span></div>
+    <div class="recipe-line" style="border-top:1px solid #ede0d0;padding-top:6px;margin-top:4px"><span class="k"><strong>小计</strong></span><span class="v" style="color:#3a322a;font-weight:800"><strong>¥240-455</strong></span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px;margin-top:8px">🔸 摊位配套</div>
+  <div class="spec-card" style="border-left-color:#D4A574">
+    <div class="recipe-line"><span class="k">折叠桌（1.2m×0.6m）</span><span class="v">¥50-100</span></div>
+    <div class="recipe-line"><span class="k">折叠椅×2</span><span class="v">¥40-80</span></div>
+    <div class="recipe-line"><span class="k">帐篷伞（3×3m）</span><span class="v">¥100-200</span></div>
+    <div class="recipe-line"><span class="k">LED照明灯+充电宝</span><span class="v">¥40-80</span></div>
+    <div class="recipe-line"><span class="k">招牌灯箱/价格牌</span><span class="v">¥30-80</span></div>
+    <div class="recipe-line"><span class="k">收款码牌</span><span class="v">¥5-10</span></div>
+    <div class="recipe-line" style="border-top:1px solid #ede0d0;padding-top:6px;margin-top:4px"><span class="k"><strong>小计</strong></span><span class="v" style="color:#3a322a;font-weight:800"><strong>¥265-550</strong></span></div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fef6ec;border-radius:10px;text-align:center">
+    <div style="font-size:12px;font-weight:700;color:#E8652D;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥600-1,000<br><span style="font-size:10px;color:#b5aaa0">已有折叠桌+卡式炉</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥1,200-1,800<br><span style="font-size:10px;color:#b5aaa0">含帐篷+全部配件</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📋 数据说明 ===== -->
+<div class="section" style="background:#faf5f0;">
+  <div class="s-title">📋 数据说明</div>
+  <div style="font-size:10px;color:#999;line-height:1.8;">
+    · 品类定义：百度百科"狼牙土豆"词条（原产四川乐山）<br>
+    · 原料价格：据农业农村部批发市场2026年5月均价+1688批发报价<br>
+    · 售价区间：美团/大众点评各城市抽样（2026-06）<br>
+    · 日销量：据抖音"狼牙土豆摆摊"视频口述数据综合<br>
+    · 工艺参数：行业通用狼牙土豆标准+沧林实测验证<br>
+    · 评级模型：FoodIntelAI项目评估模型V2.0
+  </div>
+</div>
+
+<!-- ===== 🔒 付费区：完整出摊包 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>完整出摊包 · 数据全开</h3>
+  <div class="p-sub">你买的不是一个配方。是一套经过验证的出摊方案。<br>切制尺寸精确到mm · 煮制温度精确到°C · 批量SOP · 翻车修正</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span><span>精确切制尺寸——土豆切片1.2cm·切条1.5cm，误差±1mm</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>煮制温度时间表——5档口感精确对照表（45秒→80秒）</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>批量SOP——10斤/30斤/50斤配方精确到g</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>3款畅销变体配方——糖醋麻辣/蒜香浓郁/藤椒清爽完整配比</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>翻车修正方案——煮过头/氧化变黑/拌料过咸/粘锅/回生5大常见问题</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>铁板底酱+通用撒料完整配方（TB_V01独立配方）</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span>出摊备料清单+每小时补料节奏表</span></div>
+  </div>
+  <div class="price-tag">¥19 <small>单品解锁</small></div>
+  <a class="btn" href="#">🔓 立即解锁 · ¥19</a>
+  <div class="note">解锁后可永久查看 · 支持PDF导出</div>
+</div>
+
+<!-- ===== 💎 付费解锁内容 ===== -->
+<div class="locked-section" style="padding:16px 18px;border-top:2px dashed #ddd4ca;border-bottom:1px solid #eee5d8">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#C0392B;color:#fff;border-radius:4px;font-weight:600">📦 解锁后内容 · 数据全开</span>
+  </div>
+  <div style="font-size:12px;color:#7a7269;text-align:center;margin-bottom:14px;line-height:1.5">以下内容解锁后可见——精确到mm/g/°C的完整出摊方案。</div>
+
+  <!-- 1️⃣ 精确切制尺寸 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 精确切制尺寸 — 切片/切条/出成率精确到mm</div>
+  <div class="spec-card" style="border-left-color:#C0392B">
+    <div class="recipe-line"><span class="k">去皮后切片厚度</span><span class="v">1.2-1.5cm（±1mm）</span></div>
+    <div class="recipe-line"><span class="k">切条宽度</span><span class="v">1.5-2.0cm（±1mm）</span></div>
+    <div class="recipe-line"><span class="k">每份生重（标准份）</span><span class="v">200g（±5g）</span></div>
+    <div class="recipe-line"><span class="k">每份生重（大份）</span><span class="v">300g（±5g）</span></div>
+    <div class="recipe-line"><span class="k">标准份出成</span><span class="v">1斤去皮土豆≈3-4份</span></div>
+    <div class="recipe-line"><span class="k">波纹刀推荐齿距</span><span class="v">5-8mm（双刃）</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      💡 切条截面呈狼牙犬齿状是辨识度来源。波纹刀切的时候用力要均匀，一刀到底不要来回锯，否则截面不平整，煮出来形状不好看。
+    </div>
+  </div>
+
+  <!-- 2️⃣ 煮制温度时间表 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">2️⃣ 煮制温度时间表 — 5档精确对照</div>
+  <div class="spec-card" style="padding:0;overflow:hidden;border-left:3px solid #D4A574">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr 1.5fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+      <span>口感</span><span>沸煮时间</span><span>中心温度</span><span>成品特征</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr 1.5fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #ede0d0">
+      <span>极致脆口</span><span>45秒</span><span>72-78°C</span><span>中心微生·脆感突出</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr 1.5fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #ede0d0;background:#faf5f0">
+      <span>标准脆口</span><span>50秒</span><span>78-82°C</span><span>外脆内微糯·主流</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr 1.5fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #ede0d0">
+      <span>脆糯平衡</span><span>60秒</span><span>82-85°C</span><span>半数顾客偏好点</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr 1.5fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #ede0d0;background:#faf5f0">
+      <span>偏糯口感</span><span>70秒</span><span>85-88°C</span><span>糯感明显·边缘微烂</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr 1.5fr;font-size:11px;padding:8px 10px;background:#fef2ee">
+      <span style="color:#C0392B">⚠️ 过头</span><span>80秒+</span><span>88°C+</span><span>土豆泥状态·不适用</span>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#5a4f44;line-height:1.6;padding:8px 0 4px">
+    <strong>沸水温度基准：</strong>标准大气压下100°C。高原地区（海拔1000m以上）沸点约96-97°C，需每降低1°C增加5秒煮制时间。<br>
+    <strong>预煮方案：</strong>出摊前煮至40秒（7分熟）捞出摊凉，高峰期回煮15-20秒即可出餐。
+  </div>
+
+  <!-- 3️⃣ 批量SOP -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">3️⃣ 批量SOP — 10斤/30斤/50斤精准配方</div>
+  <div class="spec-card" style="padding:0;overflow:hidden;border-left:3px solid #5a8f3c">
+    <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+      <span>原料</span><span>10斤土豆</span><span>30斤土豆</span><span>50斤土豆</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #ede0d0">
+      <span>去皮后净重</span><span>≈7.5-8斤</span><span>≈22.5-24斤</span><span>≈37.5-40斤</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #ede0d0;background:#faf5f0">
+      <span>可出标准份</span><span>≈30-40份</span><span>≈90-120份</span><span>≈150-200份</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #ede0d0">
+      <span>铁板底酱用量</span><span>450-600g</span><span>1.35-1.8kg</span><span>2.25-3.0kg</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #ede0d0;background:#faf5f0">
+      <span>熟油辣椒用量</span><span>300-400g</span><span>0.9-1.2kg</span><span>1.5-2.0kg</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #ede0d0">
+      <span>通用撒料用量</span><span>90-120g</span><span>270-360g</span><span>450-600g</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;background:#faf5f0">
+      <span>预估备料耗时</span><span>1.5h</span><span>3-4h</span><span>5-7h</span>
+    </div>
+  </div>
+
+  <!-- 4️⃣ 3款变体配方 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">4️⃣ 3款畅销变体配方 — 糖醋麻辣/蒜香浓郁/藤椒清爽</div>
+  <div style="background:#f0f6ec;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🍬 糖醋麻辣版（女生/学生最爱）：</strong><br>
+    — 基础配方中醋5g → 8g（增加60%）<br>
+    — 加白糖5g（原配方不加糖）<br>
+    — 熟油辣椒不变，底酱减3g（防过咸）<br>
+    — 加白芝麻2g点缀<br>
+    特点：入口酸甜，中段麻辣，收口回甘。女生复购率最高的变体。<br>
+    <strong>售价建议：</strong>同价（¥6-10），不加价。
+  </div>
+  <div style="background:#fef6ec;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #D4A574;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🧄 蒜香浓郁版（年轻人/重口味）：</strong><br>
+    — 蒜水5g → 10g（翻倍）<br>
+    — 加生蒜末3g拌匀后撒在表面<br>
+    — 减香醋5g → 3g（酸味会压蒜香）<br>
+    — 加香油3g（额外1g增强油脂感）<br>
+    特点：蒜香突出，口感厚重，适合搭配烤串或铁板豆腐。<br>
+    <strong>售价建议：</strong>可加价¥1-2（蒜末成本¥0.05）。
+  </div>
+  <div style="background:#fef2ee;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #E8652D;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🌿 藤椒清爽版（夏季/追新口味）：</strong><br>
+    — 原花椒粉1g → 替换为藤椒油3g（出锅后淋）<br>
+    — 熟油辣椒10g → 5g（减半，藤椒味为主）<br>
+    — 加鲜青椒碎2g（装饰+增清新感）<br>
+    — 加香菜碎量翻倍（搭配藤椒风味）<br>
+    特点：麻味清新不燥，辣度降低，夏季清爽感突出。适合南方市场。<br>
+    <strong>售价建议：</strong>可加价¥1-2，作为夏季限定。
+  </div>
+
+  <!-- 5️⃣ 翻车修正 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">5️⃣ 翻车修正方案 — 5大常见问题</div>
+  <div class="judge-box" style="border:1px solid #E8652D">
+    <div class="j-text">
+      <strong>🆘 煮过头（变面/散架）：</strong><br>
+      原因：水不够多（水量<土豆3倍）/煮太久/沸点低<br>
+      解决：水量至少为土豆体积3倍；严格计时用防水计时器；高原每降1°C加5秒<br><br>
+      <strong>🆘 氧化变黑（灰褐色影响卖相）：</strong><br>
+      原因：切后未立即泡水/泡水不换水/暴露空气超过30分钟<br>
+      解决：切完立即泡清水；每30分钟换一次水；泡水时加1茶匙白醋（护色不酸）<br><br>
+      <strong>🆘 拌料过咸（顾客反馈咸）：</strong><br>
+      原因：底酱+熟油辣椒+撒料叠加盐分超标<br>
+      解决：每份料单独称量，不要凭手感倒；减撒料1g或底酱3g试味；备一份淡版底酱（减半盐）<br><br>
+      <strong>🆘 土豆粘锅/粘在一起：</strong><br>
+      原因：淀粉没泡干净/下锅时水不够沸腾/<br>
+      解决：泡够15分钟换水1次；水必须是100°C沸腾再下锅；下完后用漏勺轻轻拨散<br><br>
+      <strong>🆘 回生变硬（出锅后放久了变硬）：</strong><br>
+      原因：煮得不够透（<40秒）/过凉水了/出锅后放太久<br>
+      解决：至少煮够45秒；绝对不过凉水；煮好拌料后15分钟内出餐完毕；预煮方案控制在7分熟<br><br>
+      <strong>🆘 油温类翻车（搭配铁板豆腐一起做时）：</strong><br>
+      原因：共用灶具火力分配不合理<br>
+      解决：铁板豆腐用卡式炉，煮土豆用电磁炉，双炉同时进行互不影响
+    </div>
+  </div>
+
+  <!-- 6️⃣ 铁板底酱+通用撒料 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">6️⃣ 铁板底酱基础配方 — 精确到g</div>
+  <div class="spec-card" style="border-left-color:#C0392B">
+    <div class="recipe-line"><span class="k">郫县豆瓣酱（剁细）</span><span class="v">200g</span></div>
+    <div class="recipe-line"><span class="k">甜面酱</span><span class="v">100g</span></div>
+    <div class="recipe-line"><span class="k">蒜蓉辣酱</span><span class="v">80g</span></div>
+    <div class="recipe-line"><span class="k">番茄酱</span><span class="v">50g</span></div>
+    <div class="recipe-line"><span class="k">蚝油</span><span class="v">30g</span></div>
+    <div class="recipe-line"><span class="k">生抽</span><span class="v">20g</span></div>
+    <div class="recipe-line"><span class="k">白砂糖</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">熟芝麻</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">菜籽油</span><span class="v">50g</span></div>
+    <div class="recipe-line"><span class="k">水（调稠度用）</span><span class="v">50-80g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      💡 小火炒香豆瓣酱出红油 → 加甜面酱/蒜蓉辣酱/番茄酱炒匀 → 加蚝油生抽糖 → 加水调至可流动状 → 撒芝麻出锅。冷藏可存7天，冷冻可存30天。<br>
+      每份用量15g，约可拌30-35份狼牙土豆。
+    </div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">7️⃣ 通用撒料配方 — 精确到g</div>
+  <div class="spec-card" style="border-left-color:#D4A574">
+    <div class="recipe-line"><span class="k">细辣椒粉（二荆条）</span><span class="v">30g</span></div>
+    <div class="recipe-line"><span class="k">孜然粉</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">花椒粉（红花椒）</span><span class="v">8g</span></div>
+    <div class="recipe-line"><span class="k">白芝麻（熟）</span><span class="v">12g</span></div>
+    <div class="recipe-line"><span class="k">白砂糖</span><span class="v">8g</span></div>
+    <div class="recipe-line"><span class="k">味精</span><span class="v">5g</span></div>
+    <div class="recipe-line"><span class="k">盐</span><span class="v">6g</span></div>
+    <div class="recipe-line"><span class="k">五香粉</span><span class="v">4g</span></div>
+    <div class="recipe-line"><span class="k">蒜粉</span><span class="v">4g</span></div>
+    <div class="recipe-line"><span class="k">姜粉</span><span class="v">2g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      💡 所有干料混合研磨均匀（可用料理机打5秒）。每份撒料约94g，可撒30份左右。密封避光保存1个月。<br>
+      🔬 辣度三档：微辣减辣椒粉30%/中辣不变/重辣加50%+加辣椒油5g
+    </div>
+  </div>
+
+  <!-- 8️⃣ 实战备注 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">8️⃣ 实战备注 — 沧林踩过的坑</div>
+  <div class="judge-box" style="border:1px solid #E8652D">
+    <div class="j-text">
+      • <strong>最大的坑——煮制时间：</strong>第一次出摊用了凭感觉计时，煮了大概2分钟，土豆全散了，拌出来一坨一坨的。后来防水计时器是摊上最重要的工具。<br><br>
+      • <strong>底酱量要精准：</strong>很多人觉得"多加底酱更入味"，结果咸到没法吃。15g就是15g，电子秤称好再放。每份底酱用挤酱瓶挤，比勺子准。<br><br>
+      • <strong>泡水不换=白泡：</strong>土豆切完泡水去淀粉这个步骤，很多人泡了一锅水就不管了。水变混了淀粉还在表面，煮出来粘锅黏糊。10分钟必须换一次水。<br><br>
+      • <strong>摆在中间还是两边：</strong>狼牙土豆适合摆在夜市场口或者人流通道两边，不适合夹在其它小吃中间。原因是它出餐快可以快速消化排队，又是边走边吃型，放在人流大位置最好。<br><br>
+      • <strong>定价参考：</strong>小份¥6/大份¥10，加火腿肠+¥3，加藕片+¥2，加豆皮+¥2。组合套餐：狼牙土豆+铁板豆腐=¥15。同行定价参考：大学城夜市普遍¥8-12大份。
+    </div>
+  </div>
+
+  <!-- 9️⃣ 出摊备料清单 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">9️⃣ 出摊备料清单 + 每小时补料节奏</div>
+  <div class="spec-card" style="border-left-color:#4f6ef7">
+    <div style="font-size:11px;font-weight:700;color:#3a322a;margin-bottom:6px">📋 出摊前备料清单</div>
+    <div class="recipe-line"><span class="k">☐ 土豆（已去皮切好泡水）</span><span class="v">预计份数×200g</span></div>
+    <div class="recipe-line"><span class="k">☐ 铁板底酱（装挤酱瓶）</span><span class="v">每份15g×份数</span></div>
+    <div class="recipe-line"><span class="k">☐ 熟油辣椒（装挤酱瓶）</span><span class="v">每份10g×份数</span></div>
+    <div class="recipe-line"><span class="k">☐ 蒜水（装瓶）</span><span class="v">每份5g×份数</span></div>
+    <div class="recipe-line"><span class="k">☐ 香醋（装瓶）</span><span class="v">每份5g×份数</span></div>
+    <div class="recipe-line"><span class="k">☐ 通用撒料（装撒料瓶）</span><span class="v">每份3g×份数</span></div>
+    <div class="recipe-line"><span class="k">☐ 香油（装瓶）</span><span class="v">每份2g×份数</span></div>
+    <div class="recipe-line"><span class="k">☐ 葱花/香菜（切好保鲜盒）</span><span class="v">各200g起</span></div>
+    <div class="recipe-line"><span class="k">☐ 纸碗+竹签+塑料袋</span><span class="v">预计份数×1.2倍</span></div>
+    <div class="recipe-line"><span class="k">☐ 加料（火腿肠/藕片/豆皮）</span><span class="v">预计加料率30%</span></div>
+    <div style="margin-top:8px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      <strong>🕐 补料节奏（4小时夜市参考）：</strong><br>
+      • 18:00 首批煮好40份预煮土豆（40秒）<br>
+      • 19:00 高峰期，补煮20份预煮（同时现煮备用）<br>
+      • 20:00 补第二批预煮30份（7分熟）<br>
+      • 21:00 最后一轮补煮，剩余预计份数煮完<br>
+      • 21:30 清理收摊
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔗 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid" style="display:flex;flex-direction:column;gap:6px">
+    <a class="rel-item" href="TB_V01.html" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s">
+      <span style="font-size:16px">🧂</span>
+      <span style="flex:1;font-weight:600">TB_V01 铁板底酱+通用撒料</span>
+      <span style="color:#ccc;font-size:10px">→</span>
+    </a>
+    <a class="rel-item" href="TB_01.html" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s">
+      <span style="font-size:16px">🥘</span>
+      <span style="flex:1;font-weight:600">TB_01 铁板豆腐</span>
+      <span style="color:#ccc;font-size:10px">→</span>
+    </a>
+  </div>
+</div>
+
+<div class="ftr">FoodIntel AI · 沧林食品工作站 · 铁板系列 TB_02</div>
+
+</div>
+</body>
+</html>

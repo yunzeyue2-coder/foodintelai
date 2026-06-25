@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ST_03 酸汤火锅底料（零售版）</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e8e0;color:#1a1a1a;padding:20px 14px;line-height:1.7}
+.card{max-width:540px;margin:0 auto;background:#fdfaf7;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.header{background:linear-gradient(135deg,#6a1a1a,#8B1A1A,#C0392B);padding:22px 22px 18px;color:#fff}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.header-code{font-size:11px;opacity:.7;font-weight:600;letter-spacing:2px}
+.header-level{display:flex;gap:6px}
+.header-level span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.12)}
+.header h1{font-size:24px;font-weight:800;margin:4px 0 2px;letter-spacing:-.5px}
+.header .subtitle{font-size:12px;opacity:.8;line-height:1.4}
+.price-badge{font-size:16px;font-weight:800;color:#ffd700;margin-top:4px}
+.header-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.header-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
+.score-strip{background:#6a1a1a;color:#fff;padding:10px 18px;font-size:14px;font-weight:600;text-align:center}
+.score-strip strong{color:#ffd700}
+.section{padding:16px 18px;border-bottom:1px solid #ede0d0}
+.s-title{font-size:13px;font-weight:700;color:#8B1A1A;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.s-title::after{content:'';flex:1;height:1px;background:#ede0d0}
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+.tb th{background:#8B1A1A;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:11px}
+.tb td{padding:5px 8px;border-bottom:1px solid #ede0d0;color:#3a2a1a;font-size:11px}
+.tb tr:nth-child(even) td{background:#faf5f0}
+.spec-card{background:#faf0e8;border-radius:8px;padding:12px;margin:6px 0;border:1px solid #ede0d0}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#8B1A1A;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#4a3a2a;line-height:1.6}
+.tip-box{background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#8B1A1A;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.conclusion-list{counter-reset:conclusion;list-style:none;padding:0}
+.conclusion-list li{counter-increment:conclusion;padding:8px 0 8px 28px;position:relative;font-size:12.5px;border-bottom:1px dashed #ede0d0;color:#3a2a1a}
+.conclusion-list li:last-child{border-bottom:none}
+.conclusion-list li::before{content:counter(conclusion);position:absolute;left:0;top:8px;width:20px;height:20px;background:#8B1A1A;color:#fff;font-size:10px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.flow-step{display:flex;gap:8px;margin:6px 0;padding:8px 10px;background:#faf0e8;border-radius:6px;font-size:12px;color:#3a2a1a;align-items:flex-start}
+.flow-step .step-num{width:22px;height:22px;background:#8B1A1A;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.flow-step .step-body{flex:1}
+.flow-step .step-body strong{color:#8B1A1A}
+.ingr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px;color:#3a2a1a;background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0}
+.ingr-grid .ig-item{display:flex;justify-content:space-between;padding:2px 0}
+.ig-item .ig-name{color:#8B1A1A}
+.ig-item .ig-qty{font-weight:600}
+.checklist{list-style:none;padding:0;font-size:12px;color:#3a2a1a}
+.checklist li{padding:5px 0 5px 22px;position:relative;border-bottom:1px dashed #f0e8d8}
+.checklist li:last-child{border-bottom:none}
+.checklist li::before{content:'☐';position:absolute;left:0;color:#8B1A1A;font-size:14px}
+.data-note{font-size:10px;color:#999;line-height:1.8}
+.footer-brand{background:#3a2a1a;color:#fff;text-align:center;padding:20px}
+.footer-brand .fb-name{font-size:18px;font-weight:700;margin-bottom:2px}
+.footer-brand .fb-tagline{font-size:11px;opacity:.7;margin-bottom:10px}
+.footer-brand .fb-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.footer-brand .fb-links span{background:rgba(255,255,255,.12);padding:4px 12px;border-radius:16px;font-size:11px}
+.footer-brand .fb-series{font-size:10px;opacity:.5;margin-top:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-bottom:1px solid #eee5d8;text-align:center}
+.lock-icon{font-size:28px;margin-bottom:4px}
+.pay-area h3{font-size:15px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.pay-area .p-sub{font-size:11px;color:#b5aaa0;margin-bottom:10px}
+.price-tag{font-size:20px;font-weight:700;color:#C0392B}
+.price-tag small{font-size:12px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;width:100%;padding:12px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;margin-top:12px;border:none;cursor:pointer}
+.pay-area .note{font-size:10px;color:#b5aaa0;margin-top:6px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px;filter:blur(4px);pointer-events:none;user-select:none}
+.pay-content.show{display:block;filter:blur(4px)}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #C0392B}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5;font-size:11px}
+.recipe-line:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="card">
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-code">ST_03 · 酸汤系列</div>
+    <div class="header-level"><span>🌶️ 子卡 · ¥19</span></div>
+  </div>
+  <h1>🥫 酸汤火锅底料（零售版）</h1>
+  <div class="subtitle">发酵30天 · 均质灌装 · 巴氏杀菌 · 零售袋装/瓶装 · 酸汤品类零售化延伸</div>
+  <div class="price-badge">¥15-25/包</div>
+  <div class="header-tags">
+    <span>🥫 零售袋装</span><span>🔥 发酵30天</span><span>💰 毛利65-75%</span><span>🌿 巴氏杀菌</span><span>🕐 保质期6个月</span>
+  </div>
+</div>
+
+<div class="score-strip">综合评分：<strong>8.3/10</strong> · 判定：<strong>推荐进入</strong>（酸汤品类零售化延伸 · 发酵工艺壁垒强 · 高毛利标品 · 零售渠道适配）</div>
+
+<div class="section">
+  <div class="s-title">👥 适合谁</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      • 酸汤鱼/酸汤火锅店主——已有酸汤发酵能力，零售化延伸增加SKU和利润<br>
+      • 有发酵经验的小作坊/初创品牌——酸汤底料核心壁垒在发酵工艺，门槛不高但口感差异大<br>
+      • 想做电商/社区团购/特产伴手礼——酸汤火锅底料是贵州特色标品，小红书/抖音话题度高<br>
+      • 有真空灌装+巴氏杀菌设备的——如果没有可找OEM代工（费用¥0.3-0.8/袋）<br>
+      • 覆盖火锅店/商超/社区店/直播电商多渠道——零售底料毛利65-75%，远高于堂食产品<br>
+      <br>
+      <b>❌ 不太适合：</b>无冷链配送能力 · 没有发酵场地（需干净有恒温条件） · 只想做纯线下堂食不碰零售
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <b>售价：</b>袋装酸汤火锅底料（200g/包）¥15-18 / （500g/包）¥22-25 / 瓶装酸汤底料（500ml）¥25-38<br>
+      <b>原料成本：</b>番茄辣椒基料¥1.5-2.5/包 · 糯米/酒曲¥0.3-0.5/包 · 包装袋/瓶¥0.5-1.5/个 · 辅料（盐/糖/香料）¥0.2-0.3/包<br>
+      <b>综合成本：</b>约¥2.5-5.8/包（200g装）、¥4.5-8.5/包（500g装）<br>
+      <b>毛利率：</b>65-75%<br>
+      <b>单包毛利：</b>¥10-16（200g装）<br>
+      <b>月销预估：</b>2000-5000包（线上+线下），旺季（冬季+春节）可达8000包+<br>
+      <b>月毛利贡献：</b>约¥2万-8万<br>
+      <b>盈利核心：</b>发酵基料自制成本极低（发酵后综合成本约¥3-5/kg），零售包装标品售价高，毛利率碾压堂食。批量生产边际成本递减，出货量越大利润越可观。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🏁 赛道判断</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+    <div style="background:#faf0e8;border-radius:6px;padding:8px 10px;"><span style="font-size:10px;color:#999;">市场成熟度</span><div style="font-size:13px;font-weight:600;color:#8B1A1A;">成长期</div></div>
+    <div style="background:#faf0e8;border-radius:6px;padding:8px 10px;"><span style="font-size:10px;color:#999;">竞争强度</span><div style="font-size:13px;font-weight:600;color:#8B1A1A;">中低</div></div>
+    <div style="background:#faf0e8;border-radius:6px;padding:8px 10px;"><span style="font-size:10px;color:#999;">品类空间</span><div style="font-size:13px;font-weight:600;color:#8B1A1A;">中-大</div></div>
+    <div style="background:#faf0e8;border-radius:6px;padding:8px 10px;"><span style="font-size:10px;color:#999;">全国适配度</span><div style="font-size:13px;font-weight:600;color:#8B1A1A;">8/10</div></div>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">📌 赛道点评</div>
+    <p>酸汤火锅底料零售化是酸汤品类增长最快的细分赛道之一。2025年淘宝/拼多多酸汤底料搜索量同比+120%，但渗透率仍远低于番茄锅底/菌菇锅底。贵州本地品牌（玉梦¥15-18/包、黔小妹¥12-15/包）占据电商头部，但全国消费者认知仍处早期。酸汤底料差异化优势：发酵工艺不可复制（番茄+辣椒+糯米+酒曲自然发酵），比复合调味料的口感壁垒高。适合做"贵州特色火锅底料"伴手礼定位、社区团购走量、以及直播间的视觉型产品（红酸汤倒入锅中画面冲击强）。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📖 产品说</div>
+  <div class="spec-card">
+    <div class="sc-title">酸汤火锅底料 · 零售化标准品</div>
+    <div class="sc-body">
+      <b>产品形态：</b>200g/500g真空袋装（液体浓缩版）+ 500ml瓶装（调好可直接做锅底的液体版）。袋装适合家庭DIY煮火锅，瓶装适合直接煮面/煮菜。<br><br>
+      <b>核心差异：</b>市场上绝大多数的火锅底料是牛油/清油复合调味料——而酸汤底料是发酵产物，有天然的酸香、醇厚感和益生菌代谢物。发酵30天以上的酸汤，风味层次远高于勾兑酸味。自酿酸汤可以做出差异化，避免价格战。<br><br>
+      <b>双线策略：</b>① 浓缩版（加水稀释5-8倍做火锅锅底）——物流成本低，适合线上电商；② 即用版（已调配好，加热即煮）——适合商超/便利店即食场景。
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔧 核心工艺</div>
+
+  <div class="spec-card">
+    <div class="sc-title">🍅 酸汤发酵配方（50kg批次）</div>
+    <div class="ingr-grid">
+      <div class="ig-item"><span class="ig-name">小番茄</span><span class="ig-qty">30kg（贵州毛辣角为佳）</span></div>
+      <div class="ig-item"><span class="ig-name">红辣椒</span><span class="ig-qty">8kg（二荆条+小米辣1:1）</span></div>
+      <div class="ig-item"><span class="ig-name">糯米粉</span><span class="ig-qty">2kg（炒制后加入）</span></div>
+      <div class="ig-item"><span class="ig-name">酒曲</span><span class="ig-qty">50g（甜酒曲）</span></div>
+      <div class="ig-item"><span class="ig-name">盐</span><span class="ig-qty">1kg（防腐+调味）</span></div>
+      <div class="ig-item"><span class="ig-name">姜/蒜</span><span class="ig-qty">各0.5kg</span></div>
+    </div>
+    <div style="font-size:11px;color:#555;margin-top:6px;">发酵条件：土陶坛或304不锈钢罐，密封避光，恒温25-30℃，发酵30天后即可使用。发酵越久酸香越醇厚（60天以上为佳）。</div>
+  </div>
+
+  <div class="spec-card">
+    <div class="sc-title">🏭 酸汤底料生产流程</div>
+    <div class="flow-step">
+      <div class="step-num">1</div>
+      <div class="step-body"><strong>发酵（30天）：</strong>番茄辣椒洗净晾干→切碎混匀→加糯米粉/酒曲/盐→入坛密封→恒温25-30℃发酵30天以上。</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">2</div>
+      <div class="step-body"><strong>调配：</strong>发酵好的酸汤基料+高汤浓缩液+木姜子油+香料提取液（八角/桂皮/香叶）按配方比例混合搅拌。</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">3</div>
+      <div class="step-body"><strong>均质：</strong>调配后的酸汤送入均质机（20-30MPa），使料液微粒化、乳化，口感细腻不分层。</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">4</div>
+      <div class="step-body"><strong>真空灌装：</strong>均质后立即灌装，真空封口。袋装采用铝箔复合膜真空袋，瓶装采用耐高温玻璃瓶+旋盖。</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">5</div>
+      <div class="step-body"><strong>巴氏杀菌（80℃/15min）：</strong>灌装后的产品送入巴氏杀菌线，80℃恒温保持15分钟，杀灭致病菌和酵母菌，延长保质期。</div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">6</div>
+      <div class="step-body"><strong>冷却检验：</strong>杀菌后冷水冷却至室温→检查真空度/密封性→喷码贴标→装箱入库。</div>
+    </div>
+    <div class="tip-box">
+      <div class="tip-label">💡 关键参数</div>
+      <p>均质压力20-30MPa——压力太低乳化不充分（分层），太高破坏风味物质。巴氏杀菌80℃/15min——温度过高会使酸汤风味劣化（番茄发酵物高温产生异味），时间不足杀不死芽孢。真空度≥-0.08MPa为合格。保质期6个月（常温避光），开袋后冷藏可保存7天。</p>
+    </div>
+  </div>
+
+  <div class="spec-card">
+    <div class="sc-title">🧪 零售版酸汤底料配方（浓缩型 · 500g装成品）</div>
+    <div class="tip-box">
+      <div class="tip-label">🍲 浓缩版配方</div>
+      <p>发酵酸汤基料300g + 高汤浓缩液100g + 木姜子油2ml + 盐8g + 白糖5g + 香料提取液10ml（八角1g+桂皮1g+香叶0.5g煮水50ml）。成品加水1:5稀释后即为火锅锅底。</p>
+    </div>
+    <div class="tip-box">
+      <div class="tip-label">🍜 即用版配方</div>
+      <p>发酵酸汤基料200g + 高汤（非浓缩）250g + 木姜子油3ml + 盐5g + 白糖3g + 香料粉（八角粉0.5g+香叶粉0.3g）。开袋加热即食，可直接做火锅锅底或酸汤面/粉的汤底。</p>
+    </div>
+    <div class="tip-box">
+      <div class="tip-label">💡 替代方案</div>
+      <p>无自酿发酵条件：可向贵州酸汤厂采购基料（玉梦/黔小妹 ¥6-10/kg），再自行调配+灌装+杀菌+贴牌。初期OEM代工模式更轻（¥0.3-0.8/袋灌装费），重点打磨配方和包装设计。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 成本利润分析</div>
+  <table class="tb">
+    <tr><th>项目</th><th>200g袋装（¥15-18）</th><th>500g袋装（¥22-25）</th><th>500ml瓶装（¥25-38）</th></tr>
+    <tr><td>发酵基料</td><td>¥1.0-1.5</td><td>¥2.5-3.5</td><td>¥2.0-3.0</td></tr>
+    <tr><td>包装材料</td><td>¥0.5-0.8</td><td>¥0.8-1.2</td><td>¥1.5-2.5</td></tr>
+    <tr><td>辅料+香料</td><td>¥0.2-0.3</td><td>¥0.5-0.8</td><td>¥0.5-1.0</td></tr>
+    <tr><td>灌装/杀菌/人工摊</td><td>¥0.8-1.2</td><td>¥1.2-2.0</td><td>¥1.5-2.5</td></tr>
+    <tr><td style="font-weight:700;">总成本</td><td style="font-weight:700;">¥2.5-3.8</td><td style="font-weight:700;">¥5.0-7.5</td><td style="font-weight:700;">¥5.5-9.0</td></tr>
+    <tr><td style="font-weight:700;">毛利额</td><td style="font-weight:700;">¥11.2-15.5</td><td style="font-weight:700;">¥14.5-20.0</td><td style="font-weight:700;">¥16.0-32.0</td></tr>
+    <tr><td style="font-weight:700;">毛利率</td><td style="font-weight:700;">70-78%</td><td style="font-weight:700;">65-75%</td><td style="font-weight:700;">60-76%</td></tr>
+  </table>
+  <div class="spec-card">
+    <div class="sc-title">月销3000包利润模型（200g装为主）</div>
+    <div class="sc-body">
+      200g装2000包 × 毛利¥13 = ¥26,000<br>
+      500g装800包 × 毛利¥17 = ¥13,600<br>
+      500ml瓶装200瓶 × 毛利¥22 = ¥4,400<br>
+      月合计毛利约¥44,000<br>
+      月销5000包（旺季）≈ 月毛利¥72,000<br>
+      <b>月净利贡献（扣除渠道费+物流约30%）：</b>约¥30,000-50,000<br>
+      数据依据：2026年酸汤底料原料批发均价+包装材料电商报价+OEM代工行业参考价
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">⚠️ 风险</div>
+  <ol class="conclusion-list">
+    <li><b>保质期短：</b>巴氏杀菌非无菌灌装，冷藏6个月/常温3个月（部分低酸度批次更短）——建议标注"开袋后冷藏保存7天"，批量生产后做加速老化实验验证保质期</li>
+    <li><b>汤底分层：</b>均质不充分或配方中油脂/水相比例失调——均质压力需≥20MPa，可加0.1-0.3%黄原胶做稳定剂（需检测合规）</li>
+    <li><b>发酵批次不稳定：</b>温度/湿度/菌种差异导致不同批次酸汤风味不一致——记录每批次发酵参数（温度曲线/时间/pH值），标准化投料比例</li>
+    <li><b>胀袋/漏气：</b>真空不足或封口不良——每袋逐个检漏，真空度≥-0.08MPa，封口宽度≥8mm</li>
+    <li><b>竞争壁垒低：</b>贵州酸汤厂（玉梦/黔小妹）已有规模优势和品牌认知——差异化定位（如有机发酵/老坛发酵/特定辣度），而非低价竞争</li>
+    <li><b>物流成本：</b>零售包装需要外箱+防震泡沫，液体重物流成本高——浓缩版节省物流成本约40%，优先推浓缩版线上</li>
+  </ol>
+</div>
+
+<div class="section">
+  <div class="s-title">📋 启动清单</div>
+  <ul class="checklist">
+    <li>发酵坛/不锈钢发酵罐（至少50L起步，304食品级不锈钢）</li>
+    <li>番茄（贵州毛辣角最佳）、辣椒、糯米、酒曲（发酵原料源头）</li>
+    <li>均质机（实验室级20-30MPa，约¥3,000-8,000；或找OEM代工灌装）</li>
+    <li>真空包装机（食品级，¥2,000-5,000；袋装用铝箔复合膜真空袋）</li>
+    <li>巴氏杀菌设备（小型水浴式杀菌槽约¥5,000-15,000；或找代工厂杀菌线）</li>
+    <li>包装袋/瓶+标签设计（标签需标注：配料表·保质期·储存条件·SC编号/QB标准）</li>
+    <li>食品经营许可证+SC生产许可证（委托加工需对方有SC资质）</li>
+    <li>电商详情页/小红书种草素材（酸汤倒入锅中的视频是绝佳种草内容）</li>
+    <li>小规模试产：先做50-100包送亲友/老客户试吃，收集反馈调配方，再批量生产</li>
+  </ul>
+</div>
+
+<div class="section">
+  <div class="s-title">📍 适合场景</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      • <b>线上电商：</b>淘宝/拼多多/抖音小店/微店——酸汤底料搜索量年增120%，蓝海品类<br>
+      • <b>社区团购/生鲜电商：</b>美团优选/多多买菜/叮咚买菜——社区家庭火锅场景高频消费<br>
+      • <b>商超便利店：</b>盒马/永辉/沃尔玛——需要SC资质+进场费（约¥5,000-20,000/品）<br>
+      • <b>伴手礼/土特产店：</b>贵州酸汤底料作为酸汤系列伴手礼，品牌溢价空间大<br>
+      • <b>不太适合：</b>无SC资质小规模纯手工（只能私域卖）· 无冷链的低温季（夏季物流易胀袋）· 主打低价的拼多多白牌（利润薄）
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💬 出摊话术</div>
+  <div class="tip-box">
+    <div class="tip-label">📢 线上话术（电商标题）</div>
+    <p>"贵州酸汤火锅底料｜30天老坛发酵｜红酸汤火锅锅底｜酸汤鱼底料｜自酿非勾兑｜¥15起"</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">📱 直播话术</div>
+    <p>"家人们这个酸汤底料不一样——我们是贵州老坛30天自然发酵的，不是那种醋精勾兑的酸味。你看这个颜色，红亮亮的番茄红——倒进锅里煮开，香味一下就出来了。一包加水煮开就是火锅锅底，煮面煮鱼煮肥牛都好吃！"</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">🛒 线下话术（商超推广）</div>
+    <p>"酸汤火锅试一下不？和番茄锅底不一样，这个是贵州红酸汤发酵的，酸中带辣特别开胃。一包能煮一锅，2-3人份刚好。"</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">⚠️ 避坑指南</div>
+  <div class="tip-box">
+    <div class="tip-label">🚫 别省均质这一步</div>
+    <p>很多小作坊酸汤底料拿搅拌机打一打就灌装——放两个月上层清汤下层沉淀。必须用均质机（20-30MPa）做乳化处理，让料液微粒化均匀分布。没有均质机就不要走零售线，只做堂食供应即可。</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">🚫 巴氏杀菌温度不能随便提高</div>
+    <p>巴氏杀菌80℃/15min不是越高越好。有人觉得85℃/20min更保险，结果酸汤风味变差——番茄发酵物的芳香物质对高温敏感，超过82℃就开始分解，产生'煮熟味'。用温控精准的水浴杀菌槽，温差控制在±1℃。</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">🚫 真空袋别买便宜货</div>
+    <p>真空袋推荐用NY/PE/AL复合结构的铝箔袋（尼龙+聚乙烯+铝箔），阻氧性最好。便宜的真空袋阻隔性差，酸汤中的酸性物质会慢慢氧化变质。200g袋装采购价¥0.5-0.8/个，不要为了省¥0.2用低规格袋——胀袋退货的损失远超省下的包装费。</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">🚫 保质期标注要保守</div>
+    <p>小作坊自己做老化实验不够充分的话，保质期先标3个月。等经过夏季高温测试、确认6个月无质检问题后再更新标注。标6个月但实际上3个月就变质——退货+投诉+差评，口碑直接归零。食品安全法对保质期标注有严格要求，宁可短一点。</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div style="font-size:12px;color:#3a2a1a;line-height:1.8;">
+    • <b>母卡：</b><a href="ST_M01%20贵州酸汤创业母卡.html" style="color:#C0392B;">ST_M01 贵州酸汤创业母卡</a><br>
+    • <b>ST系列：</b>酸汤鱼（ST_01）· 酸汤夺夺粉（ST_02）· 酸汤米线（ST_04）· 酸汤肥牛（ST_08）<br>
+    • <b>扩展线：</b>酸汤火锅底料餐饮装（ST_10）· 酸汤蘸水底料（ST_11）<br>
+    • <b>变体：</b>白酸汤火锅底料 · 青酸汤火锅底料 · 番茄酸汤火锅底料（不辣版）
+  </div>
+</div>
+
+<div class="section" style="border-bottom:none;background:#faf5f0;">
+  <div class="s-title">📋 数据说明</div>
+  <div class="data-note">
+    · 原料价格基于农业农村部2026年5月批发均价+1688电商报价（番茄¥3-5/kg、辣椒¥8-15/kg）<br>
+    · 售价区间¥15-25参考2025-2026年酸汤底料电商及商超零售价（玉梦¥15-18、黔小妹¥12-15、自有品牌集中¥15-25）<br>
+    · 毛利率按售价中位值¥18计算，实际因渠道/包装规格/促销浮动±10%<br>
+    · 发酵参数参考贵州黔东南传统酸汤发酵工艺及食品工程学验证数据<br>
+    · 杀菌参数参考GB/T 19855《调味品杀菌工艺规范》<br>
+    · 数据采集截止：2026年6月<br>
+    · 微信：canglin1985 | 食品决策库 · 青葵亲研
+  </div>
+</div>
+
+<!-- ===== 付费锁定区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整数据包 · 精确到克</h3>
+  <div class="p-sub">6大模块：精确发酵配方·灌装杀菌参数·OEM代工资源·翻车处理全案·包装选型方案·成本Excel表</div>
+  <div class="price-tag">¥19 <small>子卡解锁</small></div>
+  <button class="btn" onclick="var p=document.getElementById('payContent');p.classList.toggle('show');this.textContent=this.textContent.includes('展开')?'收起':'🔓 展开完整数据包'">🔓 展开完整数据包</button>
+  <div class="note">点开展示完整数据（带模糊保护）· 清晰版联系沧林</div>
+  <div id="payContent" class="pay-content">
+
+    <div style="font-size:12px;font-weight:700;color:#8B1A1A;margin-bottom:6px">1️⃣ 发酵配方（50kg基准）</div>
+    <div class="recipe-box"><div class="recipe-line"><span>番茄30kg+辣椒8kg</span><span>洗净切碎·混匀</span></div>
+    <div class="recipe-line"><span>糯米粉2kg+酒曲50g</span><span>炒熟糯米粉后加入</span></div>
+    <div class="recipe-line"><span>盐1kg+姜蒜各500g</span><span>防腐+调味底味</span></div>
+    <div class="recipe-line"><span>发酵参数</span><span>30天·恒温25-30℃·密封避光</span></div></div>
+
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">2️⃣ 灌装杀菌参数</div>
+    <div class="recipe-box"><div class="recipe-line"><span>均质压力</span><span>20-30MPa（乳化均匀不分层）</span></div>
+    <div class="recipe-line"><span>巴氏杀菌</span><span>80℃·15min·±1℃控温</span></div>
+    <div class="recipe-line"><span>真空度要求</span><span>≥-0.08MPa·逐袋检漏</span></div>
+    <div class="recipe-line"><span>冷却方式</span><span>常温水淋冷却至室温</span></div></div>
+
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px">3️⃣ 批量生产SOP</div>
+    <div class="recipe-box"><div class="recipe-line"><span>发酵排程</span><span>每30天投产一批，滚动生产保障连续供货</span></div>
+    <div class="recipe-line"><span>灌装日产能</span><span>1台真空机每小时300-500包（单封口线）</span></div>
+    <div class="recipe-line"><span>产能瓶颈</span><span>杀菌槽容量决定批次量，建议杀菌槽≥100L/批次</span></div></div>
+
+  </div>
+</div>
+
+<div class="footer-brand">
+  <div class="fb-name">🍜 食品决策库</div>
+  <div class="fb-tagline">酸汤系列 · 单品完整决策数据</div>
+  <div class="fb-links">
+    <span>💬 微信：canglin1985</span>
+    <span>📢 食品决策库</span>
+  </div>
+  <div class="fb-series">ST_03 酸汤火锅底料（零售版）（子）· 青葵亲研</div>
+</div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var btn=document.querySelector('.btn');
+  var pc=document.getElementById('payContent');
+  if(btn&&pc){
+    btn.onclick=function(){
+      pc.classList.toggle('show');
+      this.textContent=this.textContent.includes('展开')?'收起':'🔓 展开完整数据包'
+    }
+  }
+});
+function copyWx(){
+  var e=document.createElement('textarea');
+  e.value='canglin1985';
+  document.body.appendChild(e);
+  e.select();
+  document.execCommand('copy');
+  document.body.removeChild(e);
+  alert('✅ 微信号已复制：canglin1985');
+}
+</script>
+
+</body>
+</html>

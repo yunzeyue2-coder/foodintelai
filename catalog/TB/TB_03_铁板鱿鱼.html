@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>铁板鱿鱼 · 创业项目测评</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 顶部评级 ===== */
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+/* ===== 项目速览 ===== */
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+/* ===== 适合谁 ===== */
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+/* ===== 逻辑块 ===== */
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+/* ===== 指标卡 ===== */
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+/* ===== 赛道判断 ===== */
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+/* ===== 产品结构 ===== */
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+/* ===== 摆摊指数 ===== */
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+
+/* ===== 风险 ===== */
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* ===== 沧林判断 ===== */
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+/* ===== 工艺框架 ===== */
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-arrow{color:#ccc;font-size:10px}
+
+/* ===== 同赛道对比 ===== */
+.comp-grid{display:grid;grid-template-columns:1fr;gap:6px}
+.comp-row{display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:11px;padding:8px 10px;border-radius:8px;align-items:center}
+.comp-row .c-label{font-weight:600;color:#3a322a}
+.comp-row .c-star{text-align:center;color:#5a4f44}
+
+/* ===== 关联产品 ===== */
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px;transition:.15s}
+.rel-item:active{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+
+/* ===== 付费区 ===== */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.locked-section{display:none}
+
+/* ===== 底部 ===== */
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+
+/* ===== 选料表 ===== */
+.spec-card{background:#f8f4ef;border-radius:10px;padding:14px;margin:6px 0;border-left:3px solid #E8652D}
+.spec-card .sc-body{font-size:12px;color:#4a3f35;line-height:1.7}
+.tip-box{background:#faf0e8;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #ede0d0}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#E8652D;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3a2a;line-height:1.6}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+/* ===== 温度曲线表 ===== */
+.temp-table{background:#f8f4ef;border-radius:10px;overflow:hidden;margin:6px 0}
+.temp-header{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff}
+.temp-row{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;font-size:11px;padding:7px 10px;border-bottom:1px solid #e8dfd5}
+.temp-row:last-child{border-bottom:none}
+.temp-row:nth-child(even){background:#f5f0eb}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🦑 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🦑 铁板鱿鱼</h1>
+  <div style="font-size:12px;color:#b5aaa0">铁板系列 · 客单最高 · 酱是灵魂</div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">7.8</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">B+级项目</span>
+  </div>
+  <div class="r-tagline">铁板系列客单价最高的单品，但毛利最低、竞争激烈。核心竞争力不是鱿鱼，是酱料体系。</div>
+  <div class="r-tags">
+    <span>🔥 客单最高</span>
+    <span>💰 投资1500+</span>
+    <span>👤 1人可做</span>
+    <span>🔄 酱料驱动复购</span>
+    <span>📈 日营收¥300-800</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览 5维 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">💵 客单价</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item"><div class="label">💰 毛利</div><div class="stars">★★★☆☆</div><div class="val">65-75%</div></div>
+    <div class="radar-item high"><div class="label">🎨 视觉冲击</div><div class="stars">★★★★★</div><div class="val">极高</div></div>
+    <div class="radar-item"><div class="label">⚔️ 竞争</div><div class="stars">★★★★☆</div><div class="val">激烈</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 夜市摆摊老手</div>
+      <div class="fit-item fit-yes">✅ 有铁板操作经验</div>
+      <div class="fit-item fit-yes">✅ 个人档（1人）</div>
+      <div class="fit-item fit-yes">✅ 已有铁板摊位加品</div>
+      <div class="fit-item fit-yes">✅ 酱料研发能力者</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 彻底的小白新手</div>
+      <div class="fit-item fit-no">❌ 怕油烟味</div>
+      <div class="fit-item fit-no">❌ 期望高毛利品类</div>
+      <div class="fit-item fit-no">❌ 无法解决鱿鱼损耗</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是鱿鱼</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">顾客买的是：铁板烟火气 × 酱料香气 × 当面剪制的仪式感</div>
+    <div class="l-title">📈 利润来源</div>
+    <div class="logic-item"><span>整只鱿鱼（主力产品）</span><span class="v">毛利65-75%</span></div>
+    <div class="logic-item"><span>鱿鱼须（降低成本）</span><span class="v">毛利70-80%</span></div>
+    <div class="logic-item"><span>酱料变体（辣/甜/蒜香）</span><span class="v">加¥1-3</span></div>
+    <div class="logic-item"><span>搭售饮品/烤肠</span><span class="v">增收15-25%</span></div>
+    <div class="logic-item"><span>铁板视觉效应</span><span class="v">自然引流50%+</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">日营收</div>
+      <div class="m-val">¥300-800</div>
+      <div class="m-sub">4-6小时出摊</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">月净利</div>
+      <div class="m-val">¥3000-8000</div>
+      <div class="m-sub">出摊20天</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">3-7天</div>
+      <div class="m-sub">含设备</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>赚钱关键：</strong>铁板鱿鱼本质是"视觉引流+酱料消化"。铁板滋滋冒烟的烟火气自然吸引路人，酱料形成复购。一个夜市摊日均客单200-300人次的流量池中，鱿鱼转化率约8-12%。如果所在夜市日均人流量不足500，建议不做主力品。
+  </div>
+</div>
+
+<!-- ===== 📈 同赛道对比（整只鱿鱼vs鱿鱼须vs鱿鱼圈） ===== -->
+<div class="section">
+  <div class="s-title">📈 同赛道对比</div>
+  <div class="comp-grid">
+    <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr 0.8fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff;border-radius:6px;gap:0">
+      <span>产品形态</span><span style="text-align:center">成本</span><span style="text-align:center">毛利</span><span style="text-align:center">卖相</span><span style="text-align:center">操作</span><span style="text-align:center">推荐</span>
+    </div>
+    <div class="comp-row" style="background:#fef6ec">
+      <span class="c-label">🦑 整只鱿鱼</span>
+      <span class="c-star">¥2-4</span>
+      <span class="c-star" style="color:#E8652D">★★★</span>
+      <span class="c-star" style="color:#E8652D">★★★★★</span>
+      <span class="c-star">★★★</span>
+      <span class="c-star" style="font-weight:700;color:#E8652D">B+</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">🦑 鱿鱼须</span>
+      <span class="c-star">¥1-2</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★</span>
+      <span class="c-star">★★</span>
+      <span class="c-star" style="color:#5a8f3c">★★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#D4A574">B</span>
+    </div>
+    <div class="comp-row" style="background:#f8f4ef">
+      <span class="c-label">⭕ 鱿鱼圈</span>
+      <span class="c-star">¥3-5</span>
+      <span class="c-star">★★</span>
+      <span class="c-star">★★★</span>
+      <span class="c-star">★★★★</span>
+      <span class="c-star" style="font-weight:700;color:#b5aaa0">C+</span>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 <strong>推荐策略：</strong>整只鱿鱼做主力引流（视觉），鱿鱼须做利润补充（低成本高毛利）。鱿鱼圈不推荐——成本高、卖相不如整只、操作优势不突出。三品可共用一套酱料体系，降低SKU管理成本。
+  </div>
+</div>
+
+<!-- ===== 🦑 选料标准 ===== -->
+<div class="section">
+  <div class="s-title">🦑 选料标准</div>
+  <div class="spec-card">
+    <div class="sc-body">
+      <div style="display:grid;grid-template-columns:1fr 0.8fr 0.8fr 1fr;font-size:10px;font-weight:700;padding:4px 0;border-bottom:1px solid #e8dfd5;margin-bottom:6px">
+        <span>类型</span><span style="text-align:center">规格</span><span style="text-align:center">进价</span><span style="text-align:center">推荐理由</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 0.8fr 0.8fr 1fr;font-size:11px;padding:5px 0;border-bottom:1px dashed #e8dfd5">
+        <span style="font-weight:600">整只鱿鱼（大）</span><span style="text-align:center">200-300g/只</span><span style="text-align:center;font-weight:600;color:#E8652D">¥12-18/斤</span><span style="color:#5a8f3c">✅ 卖相最好·主力品</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 0.8fr 0.8fr 1fr;font-size:11px;padding:5px 0;border-bottom:1px dashed #e8dfd5">
+        <span style="font-weight:600">整只鱿鱼（中）</span><span style="text-align:center">150-200g/只</span><span style="text-align:center;font-weight:600;color:#E8652D">¥10-15/斤</span><span style="color:#D4A574">⚠️ 性价比款</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 0.8fr 0.8fr 1fr;font-size:11px;padding:5px 0;border-bottom:1px dashed #e8dfd5">
+        <span style="font-weight:600">鱿鱼须</span><span style="text-align:center">散装称重</span><span style="text-align:center;font-weight:600;color:#5a8f3c">¥10-15/斤</span><span style="color:#D4A574">⚠️ 成本低·利润高</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 0.8fr 0.8fr 1fr;font-size:11px;padding:5px 0">
+        <span style="font-weight:600">鱿鱼圈（预切）</span><span style="text-align:center">袋装</span><span style="text-align:center;font-weight:600">¥15-20/斤</span><span style="color:#b53b3b">❌ 不推荐·价高卖相差</span>
+      </div>
+    </div>
+  </div>
+  <div class="tip-box"><div class="tip-label">💡 选购要点</div><p>选颜色淡白、肉质有弹性的冰鲜鱿鱼。不要选发红或发黄的——不新鲜。冻品选真空包装的，价格稳定。鱿鱼一天用多少化多少，化冻后不能复冻。进货渠道：冻品批发市场¥12-15/斤（整箱30斤起），1688批发¥13-18/斤（散单）。推荐整只200-300g规格，卖相和成本平衡最佳。</p></div>
+  <div class="tip-box"><div class="tip-label">📦 储存标准</div><p>冻品：-18°C冷冻储存，保质期6-8个月。解冻：提前一晚放0-4°C冷藏解冻（12-15小时），或流水解冻30分钟。解冻后的鱿鱼24小时内用完，不可复冻。每天按预估销量的80%解冻，留20%冻品救急。</p></div>
+</div>
+
+<!-- ===== 🧊 预处理（扩写） ===== -->
+<div class="section">
+  <div class="s-title">🧊 预处理</div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc">解冻：冷藏12h或流水30min，至鱿鱼完全软化</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc">清理：去内脏·去眼睛·去嘴·去吸盘硬环·撕黑膜</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc">改刀：鱿鱼身划网格花刀（间距0.5cm，不切断），须切6-8cm段</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc">腌制：料酒10g+姜片3片+白胡椒粉2g+盐1g，腌10分钟（≤30min）</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc">控水：用厨房纸彻底吸干表面水分（否则铁板变煮鱿鱼）</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">6</span>
+      <span class="ps-desc">串签：整只鱿鱼用两根竹签十字固定，须穿串（6-8根须/串）</span>
+    </div>
+  </div>
+  <div class="tip-box"><div class="tip-label">⚠️ 关键时间控制</div><p>鱿鱼最多腌30分钟，超过肉质变老发硬。腌制后必须彻底控水——带水下锅铁板温度骤降，鱿鱼出水变成"煮鱿鱼"，口感全毁。建议预处理流程控制在20分钟内完成，鱿鱼从解冻到上铁板不超过2小时。</p></div>
+  <div style="background:#fef2ee;border-radius:8px;padding:8px 10px;font-size:11px;color:#5a4f44;line-height:1.6;margin-top:6px">
+    <strong>预处理产能参考：</strong>1人操作，30分钟可预处理20-25只整鱿鱼+2kg鱿鱼须。高峰期前1.5小时开始备料，确保出摊前全部就绪。
+  </div>
+</div>
+
+<!-- ===== 🔥 煎制工艺（扩写+温度曲线） ===== -->
+<div class="section">
+  <div class="s-title">🔥 煎制工艺</div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc">热板：铁板中火烧至200°C（手距铁板10cm感到灼热），刷薄油</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc">下鱿鱼：花刀面朝下，铲子压平让花刀开花（视觉关键）</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc">煎一面：中火煎2分钟至花刀纹路清晰，不要翻动</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc">翻面：翻面再煎1.5分钟，鱿鱼自然卷曲</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc">刷酱：两面刷底酱，让酱在铁板上焦化（约30秒）</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">6</span>
+      <span class="ps-desc">剪块：剪刀当面剪成小块（视觉冲击·吸引围观）</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">7</span>
+      <span class="ps-desc">撒料：撒孜然+辣椒粉+芝麻，翻拌均匀</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">8</span>
+      <span class="ps-desc">出餐：装纸碗，竹签插好，配一瓣柠檬</span>
+    </div>
+  </div>
+
+  <!-- 温度曲线表 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 6px">🌡️ 鱿鱼不同厚度煎制时间对照</div>
+  <div class="temp-table">
+    <div class="temp-header">
+      <span>鱿鱼类型</span><span style="text-align:center">厚度</span><span style="text-align:center">煎制时间</span><span style="text-align:center">火候</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">整只鱿鱼（大）</span>
+      <span style="text-align:center">1.5-2cm</span>
+      <span style="text-align:center;font-weight:700;color:#E8652D">3.5-4min</span>
+      <span style="text-align:center">中火200°C</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">整只鱿鱼（中）</span>
+      <span style="text-align:center">1-1.5cm</span>
+      <span style="text-align:center;font-weight:700">3-3.5min</span>
+      <span style="text-align:center">中火200°C</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">鱿鱼须</span>
+      <span style="text-align:center">0.5-1cm</span>
+      <span style="text-align:center;font-weight:700;color:#5a8f3c">2-2.5min</span>
+      <span style="text-align:center">中火200°C</span>
+    </div>
+    <div class="temp-row">
+      <span style="font-weight:600">鱿鱼圈</span>
+      <span style="text-align:center">0.8-1.2cm</span>
+      <span style="text-align:center;font-weight:700">2.5-3min</span>
+      <span style="text-align:center">中火200°C</span>
+    </div>
+  </div>
+
+  <div class="tip-box"><div class="tip-label">🔥 火候口诀</div><p>"鱿鱼下锅压出声，花刀开花再翻身；一面两分一面分半，酱焦剪块撒料全。" ——铁板鱿鱼全程约4-5分钟。超过5分钟鱿鱼必老，咬不动是铁板鱿鱼第一大翻车原因。</p></div>
+</div>
+
+<!-- ===== 💰 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">💰 成本利润</div>
+  <div class="spec-card" style="border-left:3px solid #C0392B">
+    <div class="sc-body">
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr;font-size:10px;font-weight:700;padding:4px 0;border-bottom:1px solid #e8dfd5;margin-bottom:6px">
+        <span>成本项目</span><span style="text-align:center">整只（200-300g）</span><span style="text-align:center">小串/鱿鱼须</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr;font-size:11px;padding:5px 0;border-bottom:1px dashed #e8dfd5">
+        <span>鱿鱼原料</span><span style="text-align:center">¥2-4</span><span style="text-align:center">¥1-2</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr;font-size:11px;padding:5px 0;border-bottom:1px dashed #e8dfd5">
+        <span>酱料+撒料</span><span style="text-align:center">¥0.3-0.5</span><span style="text-align:center">¥0.15-0.3</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr;font-size:11px;padding:5px 0;border-bottom:1px dashed #e8dfd5">
+        <span>竹签+纸碗</span><span style="text-align:center">¥0.1-0.15</span><span style="text-align:center">¥0.08-0.12</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr;font-size:11px;padding:5px 0;border-bottom:1px dashed #e8dfd5">
+        <span>燃气/电费</span><span style="text-align:center">¥0.05-0.1</span><span style="text-align:center">¥0.03-0.05</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr;font-size:11px;font-weight:700;padding:6px 0;border-bottom:1px dashed #e8dfd5;background:#faf0e8;border-radius:4px;margin:4px 0">
+        <span style="color:#C0392B">综合成本</span><span style="text-align:center;color:#C0392B">¥2.5-4.8</span><span style="text-align:center;color:#C0392B">¥1.3-2.5</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr;font-size:11px;padding:5px 0;border-bottom:1px dashed #e8dfd5">
+        <span>售价</span><span style="text-align:center;font-weight:700;color:#E8652D">¥12-15</span><span style="text-align:center;font-weight:700;color:#E8652D">¥8-12</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr;font-size:12px;font-weight:800;padding:6px 0;background:#e8f5e0;border-radius:4px;margin-top:4px">
+        <span style="color:#2a7a2a">毛利率</span><span style="text-align:center;color:#2a7a2a">65-75%</span><span style="text-align:center;color:#2a7a2a">70-80%</span>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:11px;color:#5a4f44">整只售价建议</span>
+    <span style="font-size:16px;font-weight:800;color:#E8652D">¥12-15</span>
+    <span style="font-size:11px;color:#5a4f44">每串净赚</span>
+    <span style="font-size:16px;font-weight:800;color:#5a8f3c">¥8-11</span>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 注意：铁板鱿鱼的毛利在铁板四品中最低，主要因为鱿鱼原料成本较高（占营收35-45%）。但客单价最高，每串绝对利润额大。鱿鱼须品毛利高10-15%，建议作为利润补充品，同时上架可降综合成本。
+  </div>
+</div>
+
+<!-- ===== ⚠️ 操作风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 操作风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><span><strong>鱿鱼咬不动</strong>——煎太久（＞5分钟）或火候太大。控制全程4-4.5分钟，花刀深度足够可缩短煎制时间。</span></div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><span><strong>鱿鱼出水变煮</strong>——铁板温度不够（＜180°C）或腌制后没控干水分。下锅前务必用厨房纸吸干。</span></div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><span><strong>酱发苦</strong>——酱刷太早或铁板温度过高。应在出锅前1分钟刷酱，让酱在铁板上焦化30秒即可。</span></div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><span><strong>卖不完损耗大</strong>——鱿鱼化冻后不能复冻。每天按预估销量的80%解冻，剩的熟鱿鱼次日可做炒鱿鱼/凉拌，但口感下降50%。</span></div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><span><strong>铁板粘锅</strong>——铁板温度太高或油量不足。铁板每次刷油要均匀，200°C下油量约20-30ml/次。</span></div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><span><strong>油烟问题</strong>——铁板鱿鱼油烟较大，城管/环保限制多的区域慎选。建议配备小型油烟净化器（¥200-400）。</span></div>
+</div>
+
+<!-- ===== 🗓️ 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#E8652D;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1-3</span>
+      <span style="flex:1">试做10份整只鱿鱼+5份鱿鱼须，跑通解冻清理→腌制冷藏→煎制刷酱全流程</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 4-7</span>
+      <span style="flex:1">邀请15-20人试吃，测试2-3款酱料比例，收集反馈确认主力酱</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 8-14</span>
+      <span style="flex:1">第一次摆摊（预备30只整鱿鱼+2kg须），测试位置·人流·定价·出餐速度</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 15-21</span>
+      <span style="flex:1">优化产品结构：确定整只/须比例、调定价、加搭售品（饮品/烤肠）</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 22-30</span>
+      <span style="flex:1">复盘日均营收、成本结构、客单价；决定长期经营/调整/换项目</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键判断：</strong>30天能验证铁板鱿鱼可行性。如果第3周日均营收不到¥200（整只30只+须15份×出摊4h），说明位置/酱料/定价至少一个有问题。不建议死磕超过60天。铁板鱿鱼的"黄金窗口"是第2-3周——第1周纯磨合，第2周开始回流客，第3周应该能感知到"有没有做起来"。
+  </div>
+</div>
+
+<!-- ===== 🔥 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">学校</div>
+      <div class="s-bar"><div class="fill" style="width:65%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">商圈</div>
+      <div class="s-bar"><div class="fill" style="width:80%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区</div>
+      <div class="s-bar"><div class="fill" style="width:45%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★☆☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏔️</div>
+      <div class="s-name">景区</div>
+      <div class="s-bar"><div class="fill" style="width:70%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖</div>
+      <div class="s-bar"><div class="fill" style="width:20%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★☆☆☆☆</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 铁板鱿鱼严重依赖"现场烟火气"引流，外卖指数极低（到手凉了就不好吃）。夜市是唯一推荐的主战场——铁板滋滋声+酱料香气+当面剪块的仪式感=天然流量发动机。社区不推荐：居民对油烟敏感，且消费频次支撑不起日均200+营收。学校需看管理政策，很多学校周边禁止明火。
+  </div>
+</div>
+
+<!-- ===== ⏱️ 时间投入 ===== -->
+<div class="section">
+  <div class="s-title">⏱️ 时间投入</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;color:#7a7269;margin-bottom:2px">备料</div>
+      <div style="font-size:18px;font-weight:800;color:#E8652D">1.5h</div>
+      <div style="font-size:10px;color:#5a4f44;margin-top:2px">解冻+清理+腌制+串签</div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;color:#7a7269;margin-bottom:2px">出摊</div>
+      <div style="font-size:18px;font-weight:800;color:#E8652D">4-6h</div>
+      <div style="font-size:10px;color:#5a4f44;margin-top:2px">煎制+售卖+补酱补料</div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;color:#7a7269;margin-bottom:2px">收摊</div>
+      <div style="font-size:18px;font-weight:800;color:#E8652D">0.5h</div>
+      <div style="font-size:10px;color:#5a4f44;margin-top:2px">清洗铁板+归位+记账</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fef2ee;border-radius:10px;text-align:center">
+    <div style="font-size:10px;color:#7a7269;margin-bottom:2px">每日总耗时</div>
+    <div style="font-size:22px;font-weight:800;color:#C0392B">6-8h</div>
+    <div style="font-size:10px;color:#5a4f44;margin-top:2px">时薪约¥50-100（日均¥300-800÷8h）——铁板系列中线水平</div>
+  </div>
+</div>
+
+<!-- ===== 📈 赛道判断（铁板赛道整体） ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">客单价高（¥12-15），单串利润额可观</div>
+      <div class="t-item">铁板烟火气天然引流，视觉冲击力强</div>
+      <div class="t-item">当街剪块动作本身就是广告</div>
+      <div class="t-item">酱料可做差异化，复购有抓手</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">毛利65-75%，铁板四品中最低</div>
+      <div class="t-item">鱿鱼原料价格波动大（受海产季节影响）</div>
+      <div class="t-item">损耗难以控制，解冻后不可复冻</div>
+      <div class="t-item">油烟大，部分城市环保限制严格</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>铁板鱿鱼处于成熟盈利期，非爆发期。<br>
+    适合已有摊位+想加单品的老手；不适合作为第一个项目起步。<br>
+    酱料能力是核心竞争力——没有独家酱=同质化竞争=价格战。<br>
+    如果你已经有一个铁板摊位，加这个品类的边际成本极低（仅增加冻品备料），强烈推荐。<br>
+    但如果是从零起步、只有¥2000预算——建议优先考虑铁板豆腐/烤肠等低客单易上手的品类。
+  </div>
+</div>
+
+<!-- ===== 🧠 沧林判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      铁板鱿鱼不是新手友好的项目。<br><br>
+      但它是铁板系列中<strong>客单价最高、视觉效果最好、最容易被围观</strong>的单品。<br><br>
+      如果你已经有酱料基础（无论自己研发还是找到靠谱货源），铁板鱿鱼可以成为夜市摊的"引流发动机"——鱿鱼的香气和滋滋声本身就是最好的路牌广告。<br><br>
+      但如果你只能买到批发市场通货酱、没有控温经验、不能接受前两三周日均营收不到¥300——不要做铁板鱿鱼，去做铁板豆腐。<br><br>
+      一句话结论：<strong>酱料够好就做，酱料不行就别碰。</strong>
+    </div>
+    <div class="j-tags">
+      <span>#铁板鱿鱼</span>
+      <span>#摆摊项目</span>
+      <span>#夜市创业</span>
+      <span>#酱料驱动</span>
+      <span>#铁板系列</span>
+      <span>#烟火气引流</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔪 核心工艺（半锁） ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc">解冻清理</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc">改刀花刀</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc">200°C铁板煎制</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc">刷酱焦化</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc">剪块撒料</span>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#b5aaa0;line-height:1.6;padding:8px 0 4px;text-align:center">
+    💡 工艺框架你看得明白，<br>精确到克数的酱料配方和操作细节——解锁后查看。
+  </div>
+</div>
+
+<!-- ===== 🔗 关联产品 ===== -->
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="TB_01_铁板豆腐.html"><span class="r-emoji">🧈</span><span class="r-name">铁板豆腐</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="TB_02_铁板烤肠.html"><span class="r-emoji">🌭</span><span class="r-name">铁板烤肠</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="TB_04_铁板土豆.html"><span class="r-emoji">🥔</span><span class="r-name">铁板土豆</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="TB_V01_铁板通用酱.html"><span class="r-emoji">🥫</span><span class="r-name">铁板通用酱料体系</span><span class="r-arrow">→</span></a>
+  </div>
+</div>
+
+<!-- ===== 🔒 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>完整出摊方案</h3>
+  <div class="p-sub">精确克数 · 温度曲线 · 批量SOP · 翻车方案 · 3款酱料变体</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✔</span><span>精确温度曲线：鱿鱼不同厚度煎制时间对照表（已含锁外预览）</span></div>
+    <div class="p-item"><span class="p-icon">✔</span><span>3款酱料变体配方：经典甜辣酱/蒜香酱/麻辣酱（精确到g）</span></div>
+    <div class="p-item"><span class="p-icon">✔</span><span>批量SOP：10kg/20kg/30kg量化配比</span></div>
+    <div class="p-item"><span class="p-icon">✔</span><span>翻车方案：咬不动/出水/酱苦/卖不完·四套解决方案</span></div>
+    <div class="p-item"><span class="p-icon">✔</span><span>独家铁板鱿鱼撒料配方（精确到0.1g）</span></div>
+    <div class="p-item"><span class="p-icon">✔</span><span>沧林踩坑实录：从试做到日销80串的完整记录</span></div>
+  </div>
+  <div class="price-tag">¥19 <small>基础版</small> — ¥39 <small>完整版</small></div>
+  <a class="btn" href="#">🔓 解锁完整方案</a>
+  <div class="note">解锁后永久查看 · 含后续更新</div>
+</div>
+
+<!-- ===== 🔓 付费展开内容（解锁后显示） ===== -->
+<div class="locked-section">
+
+<div style="padding:16px 18px;border-bottom:1px solid #eee5d8">
+  <div style="text-align:center;margin-bottom:12px">
+    <span style="font-size:11px;padding:3px 10px;background:#C0392B;color:#fff;border-radius:4px;font-weight:600">📦 完整数据包 · 已解锁</span>
+  </div>
+
+  <!-- 1️⃣ 3款酱料变体 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 3款酱料变体配方</div>
+
+  <div style="background:#fef2ee;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #E8652D;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🌶️ 经典甜辣酱（主力款·走量80%）：</strong>
+    <div class="recipe-line"><span class="k">韩式辣酱</span><span class="v">200g</span></div>
+    <div class="recipe-line"><span class="k">番茄酱</span><span class="v">80g</span></div>
+    <div class="recipe-line"><span class="k">蜂蜜</span><span class="v">40g</span></div>
+    <div class="recipe-line"><span class="k">蒜蓉</span><span class="v">25g</span></div>
+    <div class="recipe-line"><span class="k">生抽</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">白糖</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">辣椒粉</span><span class="v">8g</span></div>
+    <div class="recipe-line"><span class="k">水</span><span class="v">60g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🔥 小火烧至冒泡即关火，全程搅拌不粘锅。每份酱可用30-40串鱿鱼。</div>
+  </div>
+
+  <div style="background:#f0f6ec;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🧄 蒜香酱（利润款·客单价+¥1-2）：</strong>
+    <div class="recipe-line"><span class="k">蒜蓉（新鲜）</span><span class="v">100g</span></div>
+    <div class="recipe-line"><span class="k">蚝油</span><span class="v">60g</span></div>
+    <div class="recipe-line"><span class="k">生抽</span><span class="v">40g</span></div>
+    <div class="recipe-line"><span class="k">白糖</span><span class="v">20g</span></div>
+    <div class="recipe-line"><span class="k">白胡椒粉</span><span class="v">3g</span></div>
+    <div class="recipe-line"><span class="k">玉米油</span><span class="v">30g</span></div>
+    <div class="recipe-line"><span class="k">黄油</span><span class="v">15g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🧈 先下油+蒜蓉炒香，再下其他料，小火熬5分钟。蒜香浓郁，奶香回甘。成本比甜辣酱高30%，但客单价可以+¥2。</div>
+  </div>
+
+  <div style="background:#fef6ec;border-radius:10px;padding:14px;margin-bottom:8px;border-left:3px solid #D4A574;font-size:12px;line-height:1.8;color:#4a3f35">
+    <strong>🔥 麻辣酱（差异化款·男性客群）：</strong>
+    <div class="recipe-line"><span class="k">郫县豆瓣酱</span><span class="v">100g</span></div>
+    <div class="recipe-line"><span class="k">豆豉</span><span class="v">20g</span></div>
+    <div class="recipe-line"><span class="k">花椒粉</span><span class="v">8g</span></div>
+    <div class="recipe-line"><span class="k">干辣椒碎</span><span class="v">15g</span></div>
+    <div class="recipe-line"><span class="k">蒜蓉</span><span class="v">30g</span></div>
+    <div class="recipe-line"><span class="k">生抽</span><span class="v">20g</span></div>
+    <div class="recipe-line"><span class="k">白糖</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">十三香</span><span class="v">3g</span></div>
+    <div class="recipe-line"><span class="k">油</span><span class="v">50g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">🌶️ 豆瓣酱剁细，小火炒出红油再下其他料。麻味突出、辣味厚重，配冰啤酒绝佳。夜市男性客群转化率比甜辣酱高40%。</div>
+  </div>
+
+  <!-- 2️⃣ 批量SOP -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">2️⃣ 批量SOP — 10kg/20kg/30kg版</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span>原料/鱿鱼量</span><span style="text-align:center">10kg鱿鱼</span><span style="text-align:center">20kg鱿鱼</span><span style="text-align:center">30kg鱿鱼</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">预估出串</span><span style="text-align:center">60-80串</span><span style="text-align:center">120-160串</span><span style="text-align:center">180-240串</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">甜辣酱需量</span><span style="text-align:center">1.5-2份</span><span style="text-align:center">3-4份</span><span style="text-align:center">5-6份</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">撒料需量</span><span style="text-align:center">200g</span><span style="text-align:center">400g</span><span style="text-align:center">600g</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">备料耗时</span><span style="text-align:center">1.5h</span><span style="text-align:center">2.5h</span><span style="text-align:center">3.5h</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <span style="font-weight:600">预估净利</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥480-800</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥960-1600</span><span style="text-align:center;color:#5a8f3c;font-weight:700">¥1440-2400</span>
+    </div>
+  </div>
+
+  <!-- 3️⃣ 撒料配方 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">3️⃣ 铁板鱿鱼专用撒料（精确到g）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #C0392B;margin-bottom:8px">
+    <div class="recipe-line"><span class="k">孜然粉</span><span class="v">50g（整粒孜然打粉，比成品孜然粉香3倍）</span></div>
+    <div class="recipe-line"><span class="k">细辣椒粉</span><span class="v">30g</span></div>
+    <div class="recipe-line"><span class="k">熟白芝麻（碎）</span><span class="v">25g</span></div>
+    <div class="recipe-line"><span class="k">花椒粉</span><span class="v">8g</span></div>
+    <div class="recipe-line"><span class="k">白砂糖</span><span class="v">12g</span></div>
+    <div class="recipe-line"><span class="k">盐</span><span class="v">6g</span></div>
+    <div class="recipe-line"><span class="k">味精</span><span class="v">5g</span></div>
+    <div class="recipe-line"><span class="k">花生粉</span><span class="v">10g</span></div>
+    <div class="recipe-line"><span class="k">五香粉</span><span class="v">4g</span></div>
+    <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+      💡 每份约150g，可撒25-30串。三档辣度：微辣-辣椒粉20g/中辣-30g/重辣-45g+加辣椒油5ml。<br>
+      关键：孜然整粒现打比成品孜然粉香气高2-3倍。这是很多摊主不知道的秘密。
+    </div>
+  </div>
+
+  <!-- 4️⃣ 翻车方案 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">4️⃣ 翻车解决方案</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #E8652D;margin-bottom:8px">
+    <strong>🆘 鱿鱼咬不动：</strong><br>
+    原因：煎太久（＞5分钟）/花刀太浅/鱿鱼不新鲜<br>
+    解决：全程控制在4-4.5分钟；花刀深度至少0.5cm且间距≤0.5cm；买回来的鱿鱼先检查弹性——手指按下去不回弹就是老鱿鱼<br><br>
+    <strong>🆘 出水变煮鱿鱼：</strong><br>
+    原因：铁板温度＜180°C/腌制后没控水/鱿鱼太厚<br>
+    解决：铁板先预热至200°C再下油；腌制后用厨房纸双面吸干；厚鱿鱼片开或花刀加深<br><br>
+    <strong>🆘 酱发苦：</strong><br>
+    原因：刷酱太早/铁板温度过高/酱含糖焦化过度<br>
+    解决：出锅前1分钟刷酱（酱在铁板上停留不超过40秒）；铁板温度降到180°C左右再刷；含糖高的酱（如甜辣酱）尤其要注意<br><br>
+    <strong>🆘 卖不完怎么办：</strong><br>
+    方案A：当晚降价处理（最后1小时¥10→¥8，宁可少赚别亏）<br>
+    方案B：熟鱿鱼冷藏，次日做凉拌鱿鱼（口感下降但能卖）<br>
+    方案C：切碎做鱿鱼炒饭/炒面（成本¥2卖¥12，毛利高）<br>
+    方案D：冻品剩了别化——冻着明天再化。化了的剩了送人/自己吃<br><br>
+    <strong>🆘 铁板焦糊粘锅：</strong><br>
+    原因：铁板温度≥230°C/油量不足/铁板不干净<br>
+    解决：每次煎完一轮用铁板铲刮净残渣；每3轮补刷一次油；收摊后趁热用粗盐+钢丝球清洗
+  </div>
+
+  <!-- 5️⃣ 温度曲线详表 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">5️⃣ 温度曲线 — 连续出串对照表</div>
+  <div class="temp-table">
+    <div class="temp-header" style="grid-template-columns:1fr 1fr 1.2fr 1.2fr">
+      <span>煎制轮次</span><span style="text-align:center">下锅铁板温</span><span style="text-align:center">煎毕铁板温</span><span style="text-align:center">回升需时</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1.2fr 1.2fr">
+      <span>第1轮（1-3串）</span><span style="text-align:center">200°C</span><span style="text-align:center">185°C</span><span style="text-align:center">—</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1.2fr 1.2fr">
+      <span>第2轮（4-6串）</span><span style="text-align:center">200°C</span><span style="text-align:center">180°C</span><span style="text-align:center">15秒</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1.2fr 1.2fr">
+      <span>第3轮（7-9串）</span><span style="text-align:center">200°C</span><span style="text-align:center">172°C</span><span style="text-align:center">30秒</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1.2fr 1.2fr">
+      <span>第4轮（10-12串）</span><span style="text-align:center">200°C</span><span style="text-align:center">165°C</span><span style="text-align:center">45秒</span>
+    </div>
+    <div class="temp-row" style="grid-template-columns:1fr 1fr 1.2fr 1.2fr">
+      <span>第5轮后（13串+）</span><span style="text-align:center">200°C</span><span style="text-align:center">160°C以下</span><span style="text-align:center">60秒或停火升温</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 连续出串超过5轮（15+串）后铁板温度明显下降，建议每5轮后停火加热1分钟。铁板保温厚度建议≥1cm（薄铁板温度波动大，影响出品一致性）。燃气铁板比电热铁板升温快30%，但控温难度更高。
+  </div>
+
+  <!-- 6️⃣ 沧林踩坑 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">6️⃣ 实战备注 — 沧林踩过的坑</div>
+  <div class="judge-box" style="border:1px solid #E8652D">
+    <div class="j-text">
+      • <strong>最大的坑——酱刷太早：</strong>第一次做铁板鱿鱼，鱿鱼刚下锅就刷酱，结果酱在铁板上焦了3分钟，整批鱿鱼苦得像中药。正确操作：鱿鱼快出锅前1分钟才刷酱，让酱在铁板上焦化30-40秒足够。<br><br>
+      • <strong>控水比控温重要：</strong>第二次翻车是腌制后没控干水，上铁板瞬间"滋啦"声变成"咕嘟"声——铁板温度从200°C掉到160°C，鱿鱼变成了煮鱿鱼。从那之后，厨房纸吸干成了我的必做步骤。<br><br>
+      • <strong>花刀深度不是装饰：</strong>前几次花刀划得太浅（约2mm），煎完花刀纹路不明显，顾客说"这跟普通煎鱿鱼有什么区别？"。后来改成0.5cm深+间距0.5cm，煎出来花纹清晰，卖相提升一个档次。<br><br>
+      • <strong>铁板尺寸决定效率：</strong>最开始用的30cm×40cm小铁板，一次只能煎3串，高峰期排队排到天荒地老。换成40cm×60cm大铁板后一次煎6-8串，出餐效率翻倍。如果你的夜市位子好，直接上大铁板。<br><br>
+      • <strong>定价参考：</strong>整只鱿鱼¥12-15，鱿鱼须¥8-12，大串¥15-18（限地区高消费夜市）。同行调研：大学城夜市¥10-12整只，商圈夜市¥12-15整只，景区¥15-20整只。根据位置定价，但不要低于¥10——低于¥10顾客反而会觉得不新鲜。
+    </div>
+  </div>
+</div>
+
+</div><!-- /.locked-section -->
+
+<div class="ftr">FoodIntel AI · 沧林食品工作站</div>
+
+</div>
+</body>
+</html>

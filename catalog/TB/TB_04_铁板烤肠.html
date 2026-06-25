@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>铁板烤肠 · 创业项目测评</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+/* ===== 顶部评级 ===== */
+.rating-bar{background:linear-gradient(135deg,#3a322a,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+/* ===== 通用 ===== */
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.s-title::after{content:'';flex:1;height:1px;background:#eee5d8}
+
+/* ===== 项目速览（5维） ===== */
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+/* ===== 适合谁 ===== */
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+/* ===== 逻辑块 ===== */
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+/* ===== 指标卡 ===== */
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+/* ===== 赛道判断 ===== */
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+/* ===== 产品结构 ===== */
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+/* ===== 摆摊指数 ===== */
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+
+/* ===== 风险 ===== */
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* ===== 沧林判断 ===== */
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+/* ===== 流程 ===== */
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-arrow{color:#ccc;font-size:10px}
+
+/* ===== 表格样式 ===== */
+.tb{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0}
+.tb th{background:#3a322a;color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:11px}
+.tb td{padding:5px 8px;border-bottom:1px solid #eee5d8;color:#3a322a;font-size:11px}
+.tb tr:nth-child(even) td{background:#faf5f0}
+
+/* ===== 卡片样式 ===== */
+.spec-card{background:#faf0e8;border-radius:8px;padding:12px;margin:6px 0;border:1px solid #ede0d0}
+.spec-card .sc-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px}
+.spec-card .sc-body{font-size:11px;color:#4a3f35;line-height:1.6}
+.tip-box{background:#f8f4ef;border-radius:8px;padding:10px 12px;margin:6px 0;border:1px solid #eee5d8}
+.tip-box .tip-label{font-size:10px;font-weight:700;color:#E8652D;margin-bottom:2px}
+.tip-box p{font-size:12px;color:#4a3f35;line-height:1.6}
+
+/* ===== 付费区 ===== */
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+
+/* ===== 付费展开内容 ===== */
+.locked-section{display:none}
+
+/* ===== 网格数据 ===== */
+.model-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0}
+.model-item{background:#f8f4ef;border-radius:8px;padding:10px;border:1px solid #eee5d8;text-align:center}
+.model-item .m-label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.model-item .m-value{font-size:18px;font-weight:800;color:#C0392B}
+.model-item .m-unit{font-size:10px;color:#3a322a}
+
+/* ===== 样式工具 ===== */
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line:last-child{border-bottom:none}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+/* ===== 底部 ===== */
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+</style>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🌭 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🌭 铁板烤肠</h1>
+  <div style="font-size:12px;color:#b5aaa0">淀粉肠 · 花刀 · 火候 · 3种风味撒料</div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.4</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">S-级项目</span>
+  </div>
+  <div class="r-tagline">摆摊门槛最低、出餐最快、试错成本最小的单品。核心就三件事：花刀开得好、铁板温度够、撒料对味。</div>
+  <div class="r-tags">
+    <span>🔥 热度最高</span>
+    <span>💰 投资¥750起</span>
+    <span>👤 1人可做</span>
+    <span>⚡ 出餐3-4分钟</span>
+    <span>🔄 极高复购</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览（5维） ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">极低</div></div>
+    <div class="radar-item high"><div class="label">⚡ 出餐速度</div><div class="stars">★★★★★</div><div class="val">极快</div></div>
+    <div class="radar-item high"><div class="label">📈 毛利</div><div class="stars">★★★★★</div><div class="val">85-90%</div></div>
+    <div class="radar-item high"><div class="label">🔧 难度</div><div class="stars">★★★★★</div><div class="val">极低</div></div>
+    <div class="radar-item"><div class="label">🔥 竞争</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 零基础新手摆摊</div>
+      <div class="fit-item fit-yes">✅ 学生兼职（放学高峰1-2h）</div>
+      <div class="fit-item fit-yes">✅ 想做副业试水</div>
+      <div class="fit-item fit-yes">✅ 小本创业（¥1000以内）</div>
+      <div class="fit-item fit-yes">✅ 低成本跑模型验证</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求高营收（天花板低）</div>
+      <div class="fit-item fit-no">❌ 不想动手切花刀</div>
+      <div class="fit-item fit-no">❌ 想快速扩店连锁</div>
+      <div class="fit-item fit-no">❌ 对撒料没要求</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是烤肠</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">顾客买的是：花刀卖相 × 焦香口感 × 撒料味觉记忆</div>
+    <div class="l-title">📈 利润来源</div>
+    <div class="logic-item"><span>烤肠单品（¥3-5/根）</span><span class="v">毛利85-90%</span></div>
+    <div class="logic-item"><span>3根¥10套餐（捆绑提量）</span><span class="v">客单价提升200%</span></div>
+    <div class="logic-item"><span>口味加价（火鸡面辣味+¥1）</span><span class="v">利润率不变</span></div>
+    <div class="logic-item"><span>搭售饮品/其他小食</span><span class="v">增收30-50%</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">日营收</div>
+      <div class="m-val">¥200-500</div>
+      <div class="m-sub">放学高峰2-3h</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">月净利</div>
+      <div class="m-val">¥3000-7000</div>
+      <div class="m-sub">出摊20天</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">1-3天</div>
+      <div class="m-sub">含全部设备</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📈 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">用户认知度极高，不用教育市场</div>
+      <div class="t-item">投资门槛最低，¥750起就能开摊</div>
+      <div class="t-item">出餐速度极快，高峰能流水作业</div>
+      <div class="t-item">毛利85%+，同行最优</div>
+      <div class="t-item">一张铁板+一个气罐=全部设备</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">同质化严重，花刀差异是唯一个性化</div>
+      <div class="t-item">单品客单价低，靠走量</div>
+      <div class="t-item">受天气影响大（下雨/大风不出摊）</div>
+      <div class="t-item">淡旺季明显（学校寒暑假断流）</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>铁板烤肠处于成熟红利期——单品天花板低但确定性极高。<br>
+    适合：零成本试水、验证摆摊能力、快速赚第一桶金。<br>
+    不适合：想靠它发家致富。<br>
+    花刀差异化是唯一有效的竞争壁垒——做好螺旋花刀，你在这个摊位就是稀缺品。
+  </div>
+</div>
+
+<!-- ===== 🗓️ 30天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 30天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#E8652D;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1-2</span>
+      <span style="flex:1">采购设备（铁板+气罐+肠）¥750，练习花刀30根，掌握三种刀法</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 3-5</span>
+      <span style="flex:1">选好摆摊点（学校门口/夜市入口），第一次试摊准备50根</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 7</span>
+      <span style="flex:1">第一次出摊3h，测试：位置人流×定价×花刀接受度×撒料反馈</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 14</span>
+      <span style="flex:1">确定主推口味+花刀+定价，日均60-100根为目标</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 30</span>
+      <span style="flex:1">复盘：日均营收×毛利×净利 → 判断是否长期做 / 加新品 / 换项目</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>关键判断：</strong>30天能验证铁板烤肠在全品类中的盈利能力。如果第2周日均营收不到¥200，说明位置/花刀/撒料至少有一个出问题。换位置比换产品见效更快。
+  </div>
+</div>
+
+<!-- ===== 🔥 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">学校</div>
+      <div class="s-bar"><div class="fill" style="width:100%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市</div>
+      <div class="s-bar"><div class="fill" style="width:100%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">商圈</div>
+      <div class="s-bar"><div class="fill" style="width:60%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏔️</div>
+      <div class="s-name">景区</div>
+      <div class="s-bar"><div class="fill" style="width:60%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区</div>
+      <div class="s-bar"><div class="fill" style="width:40%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★☆☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖</div>
+      <div class="s-bar"><div class="fill" style="width:20%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★☆☆☆</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.4">
+    💡 铁板烤肠的核心场景是<strong>放学高峰+夜市晚高峰</strong>，这两个时段的翻台率是其他时段的3-5倍。学校门口最佳位置——学生刚出校门，闻着香味就围过来了。
+  </div>
+</div>
+
+<!-- ===== ⏱️ 时间投入 ===== -->
+<div class="section">
+  <div class="s-title">⏱️ 时间投入</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;color:#7a7269;margin-bottom:2px">备料</div>
+      <div style="font-size:18px;font-weight:800;color:#E8652D">15min</div>
+      <div style="font-size:10px;color:#5a4f44;margin-top:2px">切花刀+装撒料+备气罐</div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;color:#7a7269;margin-bottom:2px">出摊</div>
+      <div style="font-size:18px;font-weight:800;color:#E8652D">2-3h</div>
+      <div style="font-size:10px;color:#5a4f44;margin-top:2px">主攻放学/晚高峰</div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;color:#7a7269;margin-bottom:2px">收摊</div>
+      <div style="font-size:18px;font-weight:800;color:#E8652D">10min</div>
+      <div style="font-size:10px;color:#5a4f44;margin-top:2px">清洗铁板+归位</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fef2ee;border-radius:10px;text-align:center">
+    <div style="font-size:10px;color:#7a7269;margin-bottom:2px">每日总耗时</div>
+    <div style="font-size:22px;font-weight:800;color:#C0392B">2.5-3.5h</div>
+    <div style="font-size:10px;color:#5a4f44;margin-top:2px">时薪约¥80-170（日均¥200-500÷3h）</div>
+  </div>
+</div>
+
+<!-- ===== ⚠️ 最大风险 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 最大风险</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><span><strong>花刀翻车</strong>——切太浅不出花（像普通火腿肠），切太深肠断在铁板上。前20根一定会有废品，预留练习量。</span></div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><span><strong>烤焦/烤不焦</strong>——铁板温控全凭经验。温度高了外面焦里面凉，温度低了煎不出开花效果。用温度计是唯一解决方案。</span></div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><span><strong>卖不完</strong>——淀粉肠保质期短，当天切了花刀没卖掉的不能隔夜（花刀面氧化变黑）。出摊前半小时代切花刀。</span></div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><span><strong>撒料不好吃</strong>——市面上80%的铁板烤肠用的撒料都是淘宝通货，没有记忆点就没有回头客。撒料差异化=核心竞争力。</span></div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><span><strong>同质化</strong>——一个学校门口3家烤肠摊的情况很常见。花刀+撒料双重差异化才是壁垒。</span></div>
+</div>
+
+<!-- ===== 🧠 沧林判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 沧林判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      铁板烤肠是摆摊项目里<strong>最没门槛、也最被低估</strong>的一个。<br><br>
+      说它没门槛——¥750全部搞定，15分钟学会花刀，开火就卖。<br><br>
+      说它被低估——大多数人以为烤肠就是烤肠，忽略了<strong>花刀卖相+撒料口味</strong>带来的差异化溢价。花刀切出螺旋形的烤肠，在夜市就是卖¥5还排队；隔壁没花刀的只能卖¥3。<br><br>
+      如果你愿意花一周时间把花刀练熟、把撒料调出记忆点——铁板烤肠是<strong>目前确定性最高的摆摊起步项目</strong>。用来验证你适不适合摆摊，而不是用来发家致富。
+    </div>
+    <div class="j-tags">
+      <span>#铁板烤肠</span>
+      <span>#摆摊入门</span>
+      <span>#花刀卖相</span>
+      <span>#学校门口</span>
+      <span>#¥750开摊</span>
+      <span>#高确定性</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔪 花刀操作 ===== -->
+<div class="section">
+  <div class="s-title">🔪 花刀（决定卖相）</div>
+  <div style="font-size:11px;color:#5a4f44;margin-bottom:8px;line-height:1.6">
+    花刀是铁板烤肠的灵魂。切法不同、深宽不同，效果天差地别。<br>
+    以下三种花刀是经过验证的高卖相方案：
+  </div>
+
+  <table class="tb">
+    <tr><th>花刀类型</th><th>切法</th><th>视觉效果</th><th>难度</th><th>推荐</th></tr>
+    <tr>
+      <td>✝️ 十字花刀</td>
+      <td>肠身两侧各切3-4刀，刀深至肠径1/3，刀间距8mm，两侧对称</td>
+      <td>煎开后呈花瓣形，经典款</td>
+      <td>⭐</td>
+      <td>入门首选</td>
+    </tr>
+    <tr>
+      <td>🌀 螺旋花刀</td>
+      <td>斜45°旋转切，深至肠径2/3，拉开成螺旋长条，间距6mm</td>
+      <td>视觉效果炸裂，适合拍短视频</td>
+      <td>⭐⭐</td>
+      <td>🔥 主推</td>
+    </tr>
+    <tr>
+      <td>#️⃣ 网格花刀</td>
+      <td>横竖各切一排密刀，横切深1/3间距5mm，竖切深1/4间距5mm，形成交叉网格</td>
+      <td>煎开成网格纹，脆皮表面大</td>
+      <td>⭐⭐</td>
+      <td>学生爱点</td>
+    </tr>
+  </table>
+
+  <div class="tip-box">
+    <div class="tip-label">💡 花刀核心要点</div>
+    <p>① 刀深决定是否出花——太浅不出型，太深煎断。十字花刀深度控制在肠径1/3（约5-6mm），螺旋花刀2/3（约10-12mm）。<br>
+    ② 刀间距决定花型密度——8mm出大花瓣，5mm出密纹效果。<br>
+    ③ 练手建议：先用未解冻的肠练刀法，练习30根后再上铁板。</p>
+  </div>
+</div>
+
+<!-- ===== 🔥 操作流程 ===== -->
+<div class="section">
+  <div class="s-title">🔥 操作流程 + 温度曲线</div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc">铁板预热——中高火烧至200°C以上（手离板面10cm感到烫手）</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc">刷薄油——铁板上刷一层油，均勻覆盖（色拉油即可）</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc">摆肠——花刀面朝下整齐排列，一次6-8根（40cm铁板容量）</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc">煎制——单面煎1.5-2分钟至金黄开花，翻面再煎1.5分钟</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc">刷酱——两面刷铁板底酱</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">6</span>
+      <span class="ps-desc">撒料——出锅前撒对应风味撒料</span>
+      <span class="ps-arrow">→</span>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">7</span>
+      <span class="ps-desc">出餐——装纸袋，竹签串好，递到顾客手中</span>
+      <span class="ps-arrow">→</span>
+    </div>
+  </div>
+
+  <!-- 温度曲线 -->
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin:14px 0 4px">🌡️ 铁板温度曲线对照</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:0;overflow:hidden;margin-bottom:6px">
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+      <span>批次</span><span>下锅板温</span><span>翻面时板温</span><span>回升需时</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>第1锅（6根）</span><span>200°C</span><span>175°C</span><span>—</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+      <span>第2锅（6根）</span><span>200°C</span><span>170°C</span><span>30s</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+      <span>第3锅（6根）</span><span>200°C</span><span>165°C</span><span>45s</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1fr;font-size:11px;padding:8px 10px;background:#f5f0eb">
+      <span>第4锅后</span><span>200°C</span><span>155°C↓</span><span>60s（或调大火）</span>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;line-height:1.5">
+    💡 连续出餐时第3-4锅温度下降最明显，此时需要加大火力30s恢复板温。最佳方案：每次只放6根，保持板温稳定。
+  </div>
+</div>
+
+<!-- ===== 🌶️ 3种风味撒料 ===== -->
+<div class="section">
+  <div class="s-title">🌶️ 3种风味撒料</div>
+  <div style="font-size:10px;color:#b5aaa0;margin-bottom:6px">基底撒料配方见完整数据包，以下为口味调整逻辑</div>
+  <table class="tb">
+    <tr><th>口味</th><th>调性</th><th>适合客群</th><th>推荐场景</th></tr>
+    <tr>
+      <td>🌿 经典原味</td>
+      <td>基底撒料直接使用，咸香平衡</td>
+      <td>小孩·不吃辣人群</td>
+      <td>学校门口</td>
+    </tr>
+    <tr>
+      <td>🌶️ 香辣味</td>
+      <td>基底加辣椒面翻倍+花椒粉5%，入口辣中段麻</td>
+      <td>年轻人·夜市主力</td>
+      <td>夜市/商圈</td>
+    </tr>
+    <tr>
+      <td>🔥 火鸡面辣味</td>
+      <td>基底加火鸡面酱粉+微量辣椒精，甜辣冲击</td>
+      <td>学生·网红感</td>
+      <td>放学高峰</td>
+    </tr>
+  </table>
+  <div class="tip-box">
+    <div class="tip-label">💡 出餐实战建议</div>
+    <p>三种撒料分装三个撒料瓶（颜色区分），客人点单时问一句"要什么味？"不影响出餐效率。基底一样，调比例的事——一次备好一周的量，放密封罐冷藏保存。</p>
+  </div>
+</div>
+
+<!-- ===== 💰 成本利润 ===== -->
+<div class="section">
+  <div class="s-title">💰 成本利润</div>
+  <table class="tb">
+    <tr><th>项目</th><th>金额</th></tr>
+    <tr><td>每根原料成本（淀粉肠）</td><td>¥0.3-0.5（批发¥15-25/50根）</td></tr>
+    <tr><td>酱料+撒料成本</td><td>¥0.05-0.1/根</td></tr>
+    <tr><td>竹签成本</td><td>¥0.02-0.05/根</td></tr>
+    <tr><td>燃气分摊</td><td>¥0.02-0.05/根</td></tr>
+    <tr><td>纸袋/包装</td><td>¥0.03-0.05/根</td></tr>
+    <tr style="font-weight:700;background:#faf0e8"><td>综合成本</td><td>¥0.45-0.75/根</td></tr>
+    <tr><td>售价</td><td>¥3-5/根（常见3根¥10套餐）</td></tr>
+    <tr style="font-weight:700;background:#e8f5e0;color:#2a7a2a"><td>毛利率</td><td>85-90%</td></tr>
+  </table>
+
+  <div class="model-grid" style="margin-top:10px">
+    <div class="model-item"><div class="m-label">最低日营收（50根）</div><div class="m-value">¥150-250</div><div class="m-unit">日均利润¥130-225</div></div>
+    <div class="model-item"><div class="m-label">目标日营收（100根）</div><div class="m-value">¥300-500</div><div class="m-unit">日均利润¥255-450</div></div>
+  </div>
+</div>
+
+<!-- ===== 🛠️ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 固定设备（一次性投入）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #E8652D">
+    <div class="recipe-line"><span class="k">铁板烧（40×60cm，配烤肠压板）</span><span class="v">¥200-350</span></div>
+    <div class="recipe-line"><span class="k">卡式炉+气罐×4瓶</span><span class="v">¥80-120</span></div>
+    <div class="recipe-line"><span class="k">不锈钢操作台/折叠桌</span><span class="v">¥80-150</span></div>
+    <div class="recipe-line"><span class="k">撒料瓶×3个（颜色区分）</span><span class="v">¥15-25</span></div>
+    <div class="recipe-line"><span class="k">铁铲+夹子+刷子×2把</span><span class="v">¥20-30</span></div>
+    <div class="recipe-line"><span class="k">探针温度计（铁板测温）</span><span class="v">¥15-30</span></div>
+    <div class="recipe-line"><span class="k">油壶（装刷油用）</span><span class="v">¥10-15</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 摊位配套（选配）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #D4A574">
+    <div class="recipe-line"><span class="k">手推车/折叠桌+椅子</span><span class="v">¥150-300</span></div>
+    <div class="recipe-line"><span class="k">帐篷伞 3×3m</span><span class="v">¥100-200</span></div>
+    <div class="recipe-line"><span class="k">照明灯/招牌灯箱</span><span class="v">¥30-80</span></div>
+    <div class="recipe-line"><span class="k">收款码牌+价格牌</span><span class="v">¥15-30</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 首批耗材</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span class="k">淀粉肠 50根</span><span class="v">¥15-25</span></div>
+    <div class="recipe-line"><span class="k">撒料基底（批量）1kg</span><span class="v">¥20-30</span></div>
+    <div class="recipe-line"><span class="k">竹签 100根</span><span class="v">¥5-10</span></div>
+    <div class="recipe-line"><span class="k">纸袋 100个</span><span class="v">¥10-15</span></div>
+    <div class="recipe-line"><span class="k">气罐 4瓶</span><span class="v">¥20-30</span></div>
+  </div>
+
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#E8652D;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥480-750<br><span style="font-size:10px;color:#b5aaa0">铁板+气罐+肠+基础耗材</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥800-1,200<br><span style="font-size:10px;color:#b5aaa0">含手推车+帐篷+灯牌</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+      💡 建议首批只买铁板+气罐+50根肠+搅料，总投资<strong style="color:#3a322a">¥400</strong>就能在家练花刀+试做。确认可行再买全套摊位配套。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📦 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead">
+      <span class="t-badge">引流</span>
+      <span class="t-name">单根烤肠（经典原味）</span>
+      <span class="t-price">¥3-4</span>
+    </div>
+    <div class="prod-tier tier-profit">
+      <span class="t-badge">利润</span>
+      <span class="t-name">3根¥10套餐（加差价可选风味）</span>
+      <span class="t-price">¥10</span>
+    </div>
+    <div class="prod-tier tier-set">
+      <span class="t-badge">套餐</span>
+      <span class="t-name">烤肠+饮品/烤肠+其他小食</span>
+      <span class="t-price">¥12-18</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔒 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>完整出摊包 · 数据全开</h3>
+  <div class="p-sub">解锁整套铁板烤肠操作体系——精确花刀尺寸、撒料配比、翻车方案、批量SOP</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✅</span><span><strong>花刀操作卡</strong>—十字/螺旋/网格三种花刀的精确尺寸（刀深mm、间距mm、切面角度°）及操作速度对照（新手/熟练/出摊速度）</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span><strong>精确温度曲线</strong>—铁板预热→下锅→翻面→出锅各环节板温与时间，连续出餐温度回升策略</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span><strong>批量SOP</strong>—50根/100根/200根三个量级的备料→切花→出餐流程与时间预算</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span><strong>5种翻车方案</strong>—烤焦了怎么办/不开花怎么办/开花失败补救/撒料不香怎么救/学生放学高峰出餐方案</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span><strong>撒料精确配比</strong>—基底撒料全成分精确到0.1g，三种风味配比一比一复刻</span></div>
+    <div class="p-item"><span class="p-icon">✅</span><span><strong>沧林踩坑实录</strong>—做这行2年踩过的8个坑，一个坑值¥500</span></div>
+  </div>
+  <div class="price-tag">¥19 <small>/ 单品解锁</small></div>
+  <a class="btn" href="#">🔓 立即解锁</a>
+  <div class="note">解锁后永久查看 · 更新免费</div>
+</div>
+
+<!-- ===== 💎 付费展开内容 ===== -->
+<div class="locked-section">
+
+  <!-- 1️⃣ 花刀操作卡 -->
+  <div style="padding:16px 18px;border-top:2px dashed #ddd4ca;border-bottom:1px solid #eee5d8">
+    <div style="text-align:center;margin-bottom:12px">
+      <span style="font-size:11px;padding:3px 10px;background:#C0392B;color:#fff;border-radius:4px;font-weight:600">📦 已解锁 · 完整数据包</span>
+    </div>
+    <div style="font-size:12px;color:#7a7269;text-align:center;margin-bottom:14px;line-height:1.5">以下为¥19解锁内容的完整展示。</div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">1️⃣ 花刀操作卡 — 精确尺寸+速度对照</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:0;overflow:hidden;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1.2fr 1fr;font-size:10px;font-weight:700;padding:6px 8px;background:#3a322a;color:#fff">
+        <span>花刀类型</span><span>刀深</span><span>间距</span><span>新手1根用时</span><span>熟练1根用时</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1.2fr 1fr;font-size:11px;padding:8px;border-bottom:1px solid #e8dfd5">
+        <span style="font-weight:600">十字花刀</span><span>5-6mm</span><span>8mm</span><span>30s</span><span>12s</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1.2fr 1fr;font-size:11px;padding:8px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+        <span style="font-weight:600">螺旋花刀</span><span>10-12mm</span><span>6mm</span><span>45s</span><span>18s</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1.2fr 1fr;font-size:11px;padding:8px;background:#f5f0eb">
+        <span style="font-weight:600">网格花刀</span><span>横5mm/竖4mm</span><span>5mm</span><span>50s</span><span>20s</span>
+      </div>
+    </div>
+    <div style="background:#fef6ec;border-radius:8px;padding:10px;font-size:11px;color:#5a4f44;line-height:1.6">
+      <strong>花刀选型策略：</strong><br>
+      • 新手第一天：只练十字花刀，30根量练到25s/根<br>
+      • 出摊第1周：十字花刀熟练后加螺旋花刀（主推+视频传播）<br>
+      • 出摊第2周+：三种花刀全掌握，根据顾客需求切换（小孩喜欢网格，学生喜欢螺旋，路人喜欢十字经典款）<br>
+      • 螺旋花刀出摊前半小时切好，切完的肠用保鲜膜盖住防氧化
+    </div>
+  </div>
+
+  <!-- 2️⃣ 撒料精确配比 -->
+  <div style="padding:0 18px;border-bottom:1px solid #eee5d8">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">2️⃣ 撒料精确配比（基底）</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #D4A574;margin-bottom:8px">
+      <div class="recipe-line"><span class="k">细辣椒粉</span><span class="v">12g</span></div>
+      <div class="recipe-line"><span class="k">粗辣椒碎</span><span class="v">8g</span></div>
+      <div class="recipe-line"><span class="k">孜然粉</span><span class="v">15g</span></div>
+      <div class="recipe-line"><span class="k">五香粉</span><span class="v">6g</span></div>
+      <div class="recipe-line"><span class="k">白砂糖</span><span class="v">10g</span></div>
+      <div class="recipe-line"><span class="k">味精</span><span class="v">5g</span></div>
+      <div class="recipe-line"><span class="k">盐</span><span class="v">4g</span></div>
+      <div class="recipe-line"><span class="k">熟芝麻（碎）</span><span class="v">10g</span></div>
+      <div class="recipe-line"><span class="k">花生粉</span><span class="v">8g</span></div>
+      <div class="recipe-line"><span class="k">蒜粉</span><span class="v">3g</span></div>
+      <div style="margin-top:6px;padding-top:6px;border-top:1px solid #ddd4ca;color:#5a4f44;font-size:11px">
+        💡 每份基底约81g，可撒25-30根烤肠。<br>
+        🌶️ 香辣版：辣椒粉翻倍至24g+花椒粉4g，减糖至6g<br>
+        🔥 火鸡面版：基料+火鸡面酱粉8g+辣椒精0.2g（或超细辣椒粉替代），减盐至2g<br>
+        💾 基底可大批量预混（比例不变），密封罐阴凉保存保质期3个月。
+      </div>
+    </div>
+  </div>
+
+  <!-- 3️⃣ 批量SOP -->
+  <div style="padding:0 18px;border-bottom:1px solid #eee5d8">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">3️⃣ 批量SOP — 50根/100根/200根版</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:0;overflow:hidden;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+        <span>项目</span><span>50根</span><span>100根</span><span>200根</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+        <span>备料（切花刀）</span><span>20min</span><span>40min</span><span>80min</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+        <span>出餐总时间</span><span>40min</span><span>80min</span><span>160min</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+        <span>预估需气罐</span><span>1-2瓶</span><span>3-4瓶</span><span>5-8瓶</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;background:#f5f0eb">
+        <span>预估营收（¥3.5均价）</span><span>¥175</span><span>¥350</span><span>¥700</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4️⃣ 翻车方案 -->
+  <div style="padding:0 18px;border-bottom:1px solid #eee5d8">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">4️⃣ 翻车解决方案 — 焦了/不焦/开花失败/撒料不香/高峰出餐</div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:14px;font-size:12px;line-height:1.8;color:#4a3f35;border-left:3px solid #E8652D;margin-bottom:8px">
+      <strong>🆘 烤焦了（外面黑里面生）：</strong><br>
+      原因：铁板温度过高（>220°C）或煎太久<br>
+      解决：立即关火降温至180°C；把焦的面朝上不接触板面，用余温焖熟内部。如果已经全焦——扔掉，不要心疼。铁板温度不要超过210°C<br><br>
+
+      <strong>🆘 煎不焦（一直软趴趴不出脆皮）：</strong><br>
+      原因：铁板温度过低（<160°C）或油太多导致煮肠<br>
+      解决：先大火升高板温至200°C，用压板轻压肠身（压扁30%出更大接触面）。花刀面朝下煎的时间从1.5min延长至2.5min<br><br>
+
+      <strong>🆘 开花失败（花刀没张开）：</strong><br>
+      原因：花刀切太浅（<1/3肠径）或肠太凉下锅<br>
+      解决：花刀深度必须在5mm以上；肠从冰箱拿出来回温10分钟再下锅；切完花刀后用手掰一下刀口，帮助预热时张开<br><br>
+
+      <strong>🆘 撒料不香（闻着没食欲）：</strong><br>
+      原因：撒料受潮或基底比例不对<br>
+      解决：撒料每周现打一次，密封罐+干燥剂保存；孜然粉和芝麻必须够量，这是香气来源的核心。出餐前把撒料在铁板上烘5秒激香<br><br>
+
+      <strong>🆘 放学高峰出餐方案（10分钟内应对30+人）：</strong><br>
+      解决：提前切好40根花刀肠（螺旋/十字各半）；铁板预热到200°C，一次性下12根（换40×60cm及以上大板）；两人配合——一人煎一人打包收钱；3根¥10套餐提前准备好找零方案<br>
+      出餐速度目标：1锅12根/4分钟 → 每分钟3根 → 每小时可出180根
+    </div>
+  </div>
+
+  <!-- 5️⃣ 沧林踩坑 -->
+  <div style="padding:0 18px 16px;border-bottom:1px solid #eee5d8">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:12px 0 4px">5️⃣ 沧林踩坑实录 — 做这行2年的8个坑</div>
+    <div class="judge-box" style="border:1px solid #E8652D">
+      <div class="j-text">
+        • <strong>坑1——花刀切太浅，第一天出摊没开花：</strong>第一次摆了30根，煎出来全是普通火腿肠，没人买。当天利润-¥60。直观教训：花刀深度必须大于肠径1/3，切完用手掰一下确认刀口能张开。<br><br>
+        • <strong>坑2——撒料一次性做太多受潮：</strong>第一次做了2kg撒料，第2周开始不香了。浪费¥40。正确做法：每周现打300g，够用一周就好。<br><br>
+        • <strong>坑3——油倒太多变成炸肠：</strong>第一次做以为铁板要很多油，结果肠在油里泡着煎，花刀全散了。铁板只需要薄薄一层油刷匀，不是炸。<br><br>
+        • <strong>坑4——不看板温凭感觉控火：</strong>连续出到第3锅，板温掉到150°C以下还不知道，客人说"你这肠怎么不脆"。¥20买个红外温度计比经验靠谱100倍。<br><br>
+        • <strong>坑5——寒暑假不想出路：</strong>学校门口卖烤肠最怕寒暑假。提前一个星期找好小学附近的小区门口/补习班门口，假期照样卖。<br><br>
+        • <strong>坑6——定价太低赚不到钱：</strong>最开始定价¥2/根，卖50根才¥100（毛利¥85）。提到¥3/根（3根¥10），同样50根营收¥170，差一倍。顾客对¥3-4没感觉。<br><br>
+        • <strong>坑7——没做花刀差异化：</strong>旁边也卖铁板烤肠的阿姨切的十字花刀，我就换螺旋花刀——同样的肠相同的价格，我的排队她的没人。花刀就是铁板烤肠的核武器。<br><br>
+        • <strong>坑8——高峰一个人忙不过来：</strong>第一次遇到放学高峰，30个学生围住我，手忙脚乱，肠煎糊了5根。正确方案：提前切好40根花刀，铁板预热到200°C再迎接学生，忙不过来就只做标准套餐不讲价。<br><br>
+        <strong>总结：</strong>铁板烤肠这行，最贵的是经验。上面8个坑我亏了大概¥2,000。你花¥19全拿走，省下的不止¥2,000。
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="ftr">FoodIntel AI · 沧林食品工作站 · TB_04 铁板烤肠</div>
+
+</div>
+</body>
+</html>
