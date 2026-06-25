@@ -14,6 +14,12 @@ const STORE_DATA = [
   {p:"CJ",n:"炒鸡体系",e:"🍳",c:[{f:"catalog/CJ/CJ_T01_炒鸡总纲.html",n:"CJ_T01_炒鸡总纲"},{f:"catalog/CJ/CJ_M01_炒鸡创业母卡.html",n:"CJ_M01_炒鸡创业母卡"},{f:"catalog/CJ/CJ_V01_炒鸡工艺体系.html",n:"CJ_V01_炒鸡工艺体系"},{f:"catalog/CJ/CJ_V02_炒鸡配套体系.html",n:"CJ_V02_炒鸡配套体系"},{f:"catalog/CJ/CJ_01_临沂炒鸡.html",n:"CJ_01_临沂炒鸡（子）"},{f:"catalog/CJ/CJ_02_枣庄辣子鸡.html",n:"CJ_02_枣庄辣子鸡（子）"},{f:"catalog/CJ/CJ_03_糖醋麻辣炒鸡（子）.html",n:"CJ_03_糖醋麻辣炒鸡（子）"}]},
   {p:"GS",n:"贵州酸汤",e:"🥘",c:[{f:"catalog/GS/GS_M01_贵州酸汤创业母卡.html",n:"GS_M01_贵州酸汤创业母卡"},{f:"catalog/GS/GS_T01_贵州酸汤总纲.html",n:"GS_T01_贵州酸汤总纲"},{f:"catalog/GS/GS_V01_贵州酸汤发酵高汤体系.html",n:"GS_V01_贵州酸汤发酵高汤体系"},{f:"catalog/GS/GS_V02_贵州酸汤蘸水蘸料体系.html",n:"GS_V02_贵州酸汤蘸水蘸料体系"},{f:"catalog/GS/GS_V03_贵州酸汤涮品搭配体系.html",n:"GS_V03_贵州酸汤涮品搭配体系"}]},
   {p:"BZ",n:"煲系列",e:"🏺",c:[{f:"catalog/BZ/BZ_T01_煲系列总纲.html",n:"BZ_T01_煲系列总纲"},{f:"catalog/BZ/BZ_M01_煲系列创业母卡.html",n:"BZ_M01_煲系列创业母卡"},{f:"catalog/BZ/BZ_01_鸡煲.html",n:"BZ_01 鸡煲"},{f:"catalog/BZ/BZ_02_牛杂煲.html",n:"BZ_02 牛杂煲"},{f:"catalog/BZ/BZ_03_牛腩煲.html",n:"BZ_03 牛腩煲"},{f:"catalog/BZ/BZ_04_猪脚煲.html",n:"BZ_04 猪脚煲"},{f:"catalog/BZ/BZ_05_羊肉煲.html",n:"BZ_05 羊肉煲"},{f:"catalog/BZ/BZ_06_黑鸭煲.html",n:"BZ_06 黑鸭煲"},{f:"catalog/BZ/BZ_07_鹅煲.html",n:"BZ_07 鹅煲"},{f:"catalog/BZ/BZ_08_鱼煲.html",n:"BZ_08 鱼煲"},{f:"catalog/BZ/BZ_09_排骨煲.html",n:"BZ_09 排骨煲"}]},
+    {p:"HLT",n:"胡辣汤系列",e:"🥣",c:[
+    {f:"catalog/HLT/HLT_T01_胡辣汤总纲.html",n:"HLT_T01 胡辣汤总纲（免费）"},
+    {f:"catalog/HLT/HLT_M01_胡辣汤创业母卡.html",n:"HLT_M01 胡辣汤创业母卡（¥39）"},
+    {f:"catalog/HLT/HLT_01_逍遥镇胡辣汤.html",n:"HLT_01 逍遥镇胡辣汤（¥19）"},
+    {f:"catalog/HLT/HLT_02_北舞渡胡辣汤.html",n:"HLT_02 北舞渡胡辣汤（¥19）"}
+  ]},
   {p:"SG",n:"砂锅系列",e:"🏺",c:[{f:"catalog/SG/SG_T01_砂锅总纲.html",n:"SG_T01_砂锅总纲"},{f:"catalog/SG/SG_M01_砂锅创业母卡.html",n:"SG_M01_砂锅创业母卡"},{f:"catalog/SG/SG_01_砂锅肥肠.html",n:"SG_01 砂锅肥肠"},{f:"catalog/SG/SG_02_砂锅鸡.html",n:"SG_02 砂锅鸡"},{f:"catalog/SG/SG_03_砂锅牛肉.html",n:"SG_03 砂锅牛肉"},{f:"catalog/SG/SG_04_砂锅豆腐.html",n:"SG_04 砂锅豆腐"},{f:"catalog/SG/SG_05_砂锅什锦.html",n:"SG_05 砂锅什锦"},{f:"catalog/SG/SG_06_腊味煲仔饭.html",n:"SG_06 腊味煲仔饭"},{f:"catalog/SG/SG_07_排骨煲仔饭.html",n:"SG_07 排骨煲仔饭"},{f:"catalog/SG/SG_08_砂锅丸子.html",n:"SG_08 砂锅丸子"},{f:"catalog/SG/SG_09_砂锅白肉.html",n:"SG_09 砂锅白肉"},{f:"catalog/SG/SG_10_砂锅粥.html",n:"SG_10 砂锅粥"}]},
   {p:"ST",n:"贵州酸汤·单品",e:"🥘",c:[
     {f:"catalog/其他/ST_M01 贵州酸汤创业母卡.html",n:"ST_M01 贵州酸汤创业母卡"},
