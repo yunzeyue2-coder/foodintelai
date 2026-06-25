@@ -668,8 +668,11 @@ function evaluate() {
   var gapRisks = [];
 
   // 1. Budget (25)
-  var needBudget = cdata.min + (tricycle >= 2 ? 2 : 0);
-  var budgetOk = budget >= needBudget ? 25 : (budget > 0 ? 10 : 0);
+  var budgetLevels = [0, 500, 1000, 2000, 5000, 10000];
+  var tricycleCost = tricycle >= 2 ? 800 : 0;
+  var needAmount = budgetLevels[cdata.min] + tricycleCost;
+  var haveAmount = budgetLevels[budget] || 0;
+  var budgetOk = haveAmount >= needAmount ? 25 : (haveAmount > 0 ? 10 : 0);
   baseScore += budgetOk;
   details.push({icon: budgetOk >= 25 ? '✅' : '⚠️', label: '预算：' + getLabel('budget').split('（')[0], val: budgetOk + '/25', cls: budgetOk >= 25 ? 'risk-l' : 'risk-m'});
   if (budgetOk < 25) risks.push('预算偏低，' + cdata.name + (tricycle >= 2 ? '加三轮车费用可能不够' : '建议先折叠桌起步'));
@@ -700,8 +703,8 @@ function evaluate() {
   if (!health) risks.push('摆摊食品需要健康证，几十块钱办一个');
 
   // 5. Time + stick (15)
-  var timePts = [0, 5, 8, 12][time - 1] || 0;
-  var stickPts = [0, 5, 10][stick] || 0;
+  var timePts = [0, 4, 7, 10][time - 1] || 0;
+  var stickPts = [0, 2, 5][stick] || 0;
   baseScore += timePts + stickPts;
   var timeLabels = ['不定时', '早上+中午', '下午4-8点', '中午+晚上'][time - 1] || '下午4-8点';
   var stickLabels = ['有空就干', '试试看', '全职干'][stick];
@@ -711,6 +714,7 @@ function evaluate() {
 
   // 6. Loss + rain (10)
   var lossPts = (waste ? 5 : 0) + (rain ? 5 : 0);
+  if (cdata.seasonal) gapRisks.push('该品类受季节影响·营收可能淡旺季差异30-50%·全年均摊后月收入低于预期');
   baseScore += lossPts;
   details.push({icon: lossPts >= 10 ? '✅' : '⚠️', label: '损耗接受度+天气接受度', val: lossPts + '/10', cls: lossPts >= 10 ? 'risk-l' : 'risk-m'});
   if (!waste) risks.push('摆摊一定有损耗，卖不掉就得扔，备料别太多');
