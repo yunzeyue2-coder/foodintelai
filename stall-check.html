@@ -288,11 +288,11 @@ function toggleAllStall() {
   if(el.style.display === 'none') {
     el.style.display = 'block';
     if(grid.innerHTML === '') {
-      var html = '<div style="margin-bottom:6px;font-size:10px;color:#6b7a8a">点击链接直达单品卡</div>';
+      var html = '';
       STALL_CATS.forEach(function(s){
         html += '<div style="margin-bottom:6px">';
-        html += '<div style="font-size:11px;font-weight:600;color:#ff884d;margin-bottom:2px">'+s.emoji+' '+s.name+'（'+s.count+'张）</div>';
-        html += '<div style="display:flex;flex-wrap:wrap;gap:2px">';
+        html += '<div onclick="selectStallCat(''+s.cat+'',''+s.single+'')" style="cursor:pointer;font-size:11px;font-weight:600;color:#ff884d;margin-bottom:2px">'+s.emoji+' '+s.name+'（'+s.count+'张）▸ 点击选定</div>';
+        html += '<div style="display:flex;flex-wrap:wrap;gap:2px;padding-left:6px">';
         s.cards.forEach(function(cd){
           html += '<a href="https://foodintelai.com/'+cd.f+'" target="_blank" style="display:inline-block;padding:3px 6px;background:#0b0f14;border:1px solid #2a3442;border-radius:4px;text-decoration:none;color:#b0c0c0;font-size:9px">'+cd.n+'</a>';
         });
@@ -303,6 +303,20 @@ function toggleAllStall() {
   } else {
     el.style.display = 'none';
   }
+}
+function selectStallCat(cat, single) {
+  var group = document.querySelector('.opt-group[data-id="cat"]');
+  if(!group) return;
+  var opts = group.querySelectorAll('.opt');
+  opts.forEach(function(o){
+    if(o.textContent.trim().includes(single) || o.textContent.trim().includes(cat)) {
+      o.classList.add('sel');
+    } else {
+      o.classList.remove('sel');
+    }
+  });
+  document.getElementById('allStallList').style.display = 'none';
+  updateButton();
 }
 function selectStallCat(el) {
   var cat = el.getAttribute('data-stall-cat');
