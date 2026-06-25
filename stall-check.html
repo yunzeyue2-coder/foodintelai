@@ -300,20 +300,19 @@ function toggleAllStall() {
 function selectStallCat(el) {
   var cat = el.getAttribute('data-stall-cat');
   var single = el.getAttribute('data-stall-single');
-  // 写入hidden input
-  var input = document.getElementById('selectedCat');
-  if(input) input.value = cat;
-  // 同步更新热品区选中状态
-  var hot = document.querySelector('.opt-group[data-id="cat-hot"]');
-  if(hot){
-    hot.querySelectorAll('.opt').forEach(function(o){
-      if(o.getAttribute('data-v') === cat) o.classList.add('sel');
-      else o.classList.remove('sel');
-    });
-  }
+  // 找到品类选择组中对应单品
+  var group = document.querySelector('.opt-group[data-id="cat"]');
+  if(!group) return;
+  var opts = group.querySelectorAll('.opt');
+  opts.forEach(function(o){
+    if(o.textContent.trim().includes(single) || o.textContent.trim().includes(cat)) {
+      o.classList.add('sel');
+    } else {
+      o.classList.remove('sel');
+    }
+  });
   // 关闭面板
-  var list = document.getElementById('allStallList');
-  if(list) list.style.display = 'none';
+  document.getElementById('allStallList').style.display = 'none';
   updateButton();
 }
 </script>
@@ -586,8 +585,7 @@ function getLabel(grp) {
 }
 
 function updateButton() {
-  var catInput = document.getElementById('selectedCat');
-  var cat = catInput ? catInput.value : getVal('cat');
+  var cat = getVal('cat');
   var loc = getVal('loc');
   var btn = $('evalBtn');
   var hint = $('hintMsg');
@@ -609,28 +607,14 @@ function updateButton() {
 }
 
 document.querySelectorAll('.opt-group').forEach(function(g) {
-  g.addEventListener('click', function(e) {
+  console.log('opt-group clicked'); g.addEventListener('click', function(e) {
     var opt = e.target.closest('.opt');
     if (!opt) return;
     g.querySelectorAll('.opt').forEach(function(o) { o.classList.remove('sel'); });
     opt.classList.add('sel');
-    // 热品区点击时同步到出摊规划的cat组
-    var gCat = document.querySelector('.opt-group[data-id="cat"]');
-    if(gCat && g !== gCat){
-      var v = opt.getAttribute('data-v');
-      gCat.querySelectorAll('.opt').forEach(function(o){ 
-        if(o.getAttribute('data-v') === v) o.classList.add('sel');
-        else o.classList.remove('sel');
-      });
-    }
-    // 热品区点击时把值存入hidden input
-    var gHot = document.querySelector('.opt-group[data-id="cat-hot"]');
-    if(gHot && g === gHot){
-      var v = opt.getAttribute('data-v');
-      var input = document.getElementById('selectedCat');
-      if(input) input.value = v;
-    }
     updateButton();
+// debug: 确认品类选择初始化
+console.log("stall-check loaded, CATS count:", Object.keys(CATS).length);
   });
 });
 
@@ -644,10 +628,11 @@ $('resetBtn').addEventListener('click', function() {
 });
 
 updateButton();
+// debug: 确认品类选择初始化
+console.log("stall-check loaded, CATS count:", Object.keys(CATS).length);
 try { document.getElementById('jsFail').style.display = 'none'; } catch(e){}
 
 function evaluate() {
-
   var tricycle = parseInt(getVal('tricycle')) || 0;
   var budget = parseInt(getVal('budget')) || 0;
   var loc = getVal('loc');
@@ -655,8 +640,7 @@ function evaluate() {
   var fee = parseInt(getVal('fee')) || 0;
   var power = parseInt(getVal('power')) || 0;
   var health = parseInt(getVal('health')) || 0;
-  var catInput = document.getElementById('selectedCat');
-  var cat = catInput ? catInput.value : getVal('cat');
+  var cat = getVal('cat');
   var time = parseInt(getVal('time')) || 1;
   var hours = parseInt(getVal('hours')) || 0;
   var season = parseInt(getVal('season')) || 0;
