@@ -101,21 +101,7 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
     <!-- Section 1: 必要条件 -->
     <div class="form-card" style="border-left:3px solid #ff6b6b">
       <div class="card-hdr"><span class="dot" style="background:#ff6b6b"></span>🔴 必要条件 <span class="sub">— 缺一不可，不满足不开店</span></div>
-      <div class="form-row" style="margin-bottom:12px">
-        <div class="form-group">
-          <label>想做的品类</label>
-          <select id="fcat">
-            <option value="0" selected>先看看，不定品类</option>
-            <option value="bz">🏺 煲系列（正餐·鸡煲/牛杂煲/猪脚煲·¥40-70）</option>
-            <option value="sg">🍲 砂锅系列（快餐·砂锅肥肠/鸡/煲仔饭·¥20-40）</option>
-            <option value="cj">🍗 炒鸡（档口/小店·¥12-28）</option>
-            <option value="gs">🍅 贵州酸汤（火锅/粉·¥30-60）</option>
-            <option value="bbq">🔥 烧烤（夜市·¥30-80）</option>
-            <option value="other">其他</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
+<div class="form-row">
         <div class="form-group">
           <label>总投资预算</label>
           <select id="f8">
@@ -223,6 +209,11 @@ h1{font-size:20px;font-weight:700;margin-bottom:4px}
             <option value="傣舂舂菜">· 傣舂舂菜</option>
             <option value="酱料">· 酱料</option>
             <option value="素菜">· 素菜</option>
+            <!-- 新增开店品类 -->
+            <option value="煲系列">🏺 煲系列（正餐·鸡煲/猪脚煲·¥40-70）</option>
+            <option value="砂锅系列">🍲 砂锅系列（快餐·砂锅肥肠/鸡·¥20-40）</option>
+            <option value="炒鸡">🍗 炒鸡（档口/小店·¥12-28）</option>
+            <option value="贵州酸汤">🍅 贵州酸汤（火锅/粉·¥30-60）</option>
           </select>
         </div>
         <div class="form-group">
@@ -365,7 +356,10 @@ const CAT_DATA = {
   '烧腊': {g:72,m:72,st:72,sc:68,risk:50,se:78,sp:72,rev:[1000,2200],cost:[350,800],pb:[5,10],minBud:2,minCash:2,level:2,avgSurvival:38,refPb:'5-10'},
   '炸串': {g:75,m:82,st:78,sc:72,risk:40,se:60,sp:72,rev:[700,1500],cost:[200,500],pb:[3,6],minBud:1,minCash:1,level:1,avgSurvival:40,refPb:'3-6'},
   '酱料': {g:68,m:82,st:82,sc:68,risk:35,se:65,sp:82,rev:[500,1200],cost:[150,400],pb:[3,6],minBud:1,minCash:1,level:1,avgSurvival:45,refPb:'3-8'},
-  '素菜': {g:68,m:82,st:75,sc:65,risk:35,se:65,sp:68,rev:[400,800],cost:[120,300],pb:[2,5],minBud:1,minCash:1,level:1,avgSurvival:45,refPb:'2-6'},
+  素菜': {g:68,m:82,st:75,sc:65,risk:35,se:65,sp:68,rev:[400,800],cost:[120,300],pb:[2,5],minBud:1,minCash:1,level:1,avgSurvival:45,refPb:'2-6'},
+  '煲系列': {g:78,m:65,st:65,sc:72,risk:55,se:78,sp:72,rev:[2500,5000],cost:[900,2000],pb:[8,15],minBud:3,minCash:3,level:3,avgSurvival:38,refPb:'8-15'},
+  '砂锅系列': {g:82,m:70,st:72,sc:75,risk:45,se:75,sp:68,rev:[1500,3500],cost:[500,1300],pb:[6,12],minBud:2,minCash:2,level:2,avgSurvival:40,refPb:'6-12'},
+  '贵州酸汤': {g:88,m:70,st:62,sc:65,risk:50,se:72,sp:55,rev:[2000,4000],cost:[700,1500],pb:[8,14],minBud:3,minCash:3,level:3,avgSurvival:42,refPb:'8-14'},
 };
 
 function v(id){return document.getElementById(id)}
@@ -519,6 +513,30 @@ function run(){
 
   // ========== 4. 产品推荐 ==========
   const prodData = {
+    '煲系列(BZ)':[
+      {n:'煲系列总纲（免费）',p:'免费',l:'catalog/BZ/BZ_T01_煲系列总纲.html',r:'先看品类全貌'},
+      {n:'煲系列创业母卡',p:'¥39',l:'catalog/BZ/BZ_M01_煲系列创业母卡.html',r:'开店决策'},
+      {n:'BZ_04 猪脚煲（创业单品）',p:'¥19',l:'catalog/BZ/BZ_04_猪脚煲.html',r:'高毛利正餐'},
+    ],
+    '砂锅系列(SG)':[
+      {n:'砂锅总纲（免费）',p:'免费',l:'catalog/SG/SG_T01_砂锅总纲.html',r:'先看品类全貌'},
+      {n:'砂锅创业母卡',p:'¥39',l:'catalog/SG/SG_M01_砂锅创业母卡.html',r:'快餐线决策'},
+    ],
+    '炒鸡(CJ)':[
+      {n:'糖醋麻辣炒鸡（子）',p:'¥19',l:'catalog/CJ/CJ_03_糖醋麻辣炒鸡（子）.html',r:'夜市爆款'},
+    ],
+    '贵州酸汤(GS)':[
+      {n:'贵州酸汤总纲（免费）',p:'免费',l:'catalog/GS/GS_T01_贵州酸汤总纲.html',r:'先看品类全貌'},
+    ],
+    '烧烤(BBQ)':[
+      {n:'中式烧烤创业母卡',p:'¥39',l:'catalog/BBQ/BBQ_M01_中式烧烤创业母卡.html',r:'完整烤串模型'},
+      {n:'烧烤总纲',p:'¥9.9',l:'catalog/BBQ/BBQ_T01_中式烧烤总纲.html',r:'先看品类全貌'},
+    ],
+    '摆摊小吃(XC)':[
+      {n:'烤苕皮',p:'¥19',l:'catalog/地摊爆款/XC_T001_烤苕皮.html',r:'物料¥2卖¥11·毛利75-82%'},
+      {n:'锅巴土豆',p:'¥19',l:'catalog/地摊爆款/XC_T002_锅巴土豆.html',r:'物料¥1.34卖¥8·毛利77-85%'},
+      {n:'热奶宝',p:'¥19',l:'catalog/地摊爆款/XC_T003_热奶宝.html',r:'物料¥2.5卖¥10·毛利73-80%'},
+    ],
     '卤味':[
       {n:'卤鸭脖创业母卡',p:'¥39',l:'catalog/LW/LW001%20卤鸭脖（母）LW_001.html',r:'标准化高·新手友好'},
       {n:'卤鸭翅（母）',p:'¥39',l:'catalog/LW/LW002%20卤鸭翅（母）LW_002.html',r:'出品率高·利润稳'},
