@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>快速开店体验 · FoodIntelAI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#0b0f14;color:#e6e6e6;min-height:100vh}
+.container{max-width:560px;margin:0 auto;padding:16px}
+.brand{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.brand .name{font-size:14px;font-weight:700;color:#00ff88}
+.brand .tag{font-size:10px;color:#6b7a8a;background:#1e2a38;padding:3px 10px;border-radius:10px}
+h1{font-size:20px;font-weight:700;margin-bottom:4px}
+.sub{font-size:11px;color:#6b7a8a;margin-bottom:18px;line-height:1.4}
+/* Form cards */
+.form-card{background:#121824;border-radius:14px;padding:14px;margin-bottom:12px}
+.card-hdr{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:10px;letter-spacing:1px}
+.card-hdr .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.card-hdr .sub{font-size:10px;font-weight:400;color:#6b7a8a;margin:0}
+.form-row{display:flex;gap:8px;margin-bottom:8px}
+.form-row:last-child{margin-bottom:0}
+.form-group{flex:1}
+.form-group label{display:block;font-size:9px;color:#6b7a8a;margin-bottom:2px;font-weight:600}
+.form-group select,.form-group input{width:100%;padding:8px 9px;background:#0b0f14;border:1px solid #2a3442;color:#e6e6e6;border-radius:8px;font-size:12px;outline:none;appearance:none;transition:.15s;box-sizing:border-box}
+.form-group select:focus,.form-group input:focus{border-color:#00ff88}
+.form-group select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7a8a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:24px}
+.btn-submit{width:100%;padding:14px;background:#00ff88;border:none;color:#000;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:.15s;margin-top:4px}
+.btn-submit:hover{background:#00cc6a}
+.btn-submit:disabled{opacity:.3;cursor:not-allowed}
+/* Result */
+.result{display:none;animation:fadeIn .5s ease}
+.result.show{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.rs-hdr{text-align:center;padding:16px 0 8px}
+.rs-hdr .grade{font-size:14px;font-weight:600;margin-bottom:2px}
+.rs-hdr .big{font-size:56px;font-weight:900;line-height:1}
+.rs-hdr .sub{font-size:11px;color:#6b7a8a}
+/* Must-check section */
+.block{margin:10px 0;border-radius:12px;padding:14px;animation:fadeIn .5s ease}
+.block-title{font-size:11px;font-weight:700;margin-bottom:6px;letter-spacing:1px}
+.must-block{background:#1e0f0f;border-left:3px solid #ff6b6b}
+.must-block .block-title{color:#ff6b6b}
+.obj-block{background:#0f1a25;border-left:3px solid #4db8ff}
+.obj-block .block-title{color:#4db8ff}
+.risk-block{background:#1e1a0f;border-left:3px solid #ddaa44}
+.risk-block .block-title{color:#ddaa44}
+.check-item{display:flex;align-items:center;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,.04)}
+.check-item:last-child{border-bottom:none}
+.check-item .icon{width:20px;font-size:14px;text-align:center}
+.check-item .label{flex:1;color:#b0c0c0}
+.check-item .val{font-size:11px;font-weight:700}
+.obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.obj-item{background:#0b0f14;border-radius:8px;padding:8px;text-align:center}
+.obj-item .v{font-size:14px;font-weight:700;color:#4db8ff}
+.obj-item .l{font-size:9px;color:#6b7a8a;margin-top:1px}
+.risk-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin:2px 4px 2px 0;font-weight:600}
+.risk-h{color:#ff6b6b;border:1px solid rgba(255,75,75,.2);background:rgba(255,75,75,.06)}
+.risk-m{color:#ddaa44;border:1px solid rgba(255,204,0,.15);background:rgba(255,204,0,.05)}
+.risk-l{color:#6b7a8a}
+/* Derive & metrics */
+.derive-box{background:#121824;border-radius:14px;padding:14px;margin:10px 0}
+.derive-box h3{font-size:11px;font-weight:700;margin-bottom:8px;color:#4db8ff;letter-spacing:1px}
+.derive-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.derive-item{background:#0b0f14;border-radius:8px;padding:10px;text-align:center}
+.derive-item .dv{font-size:17px;font-weight:700;color:#00ff88;margin-bottom:2px}
+.derive-item .dv2{font-size:14px;font-weight:600;color:#ff884d}
+.derive-item .dl{font-size:10px;color:#6b7a8a}
+/* Radar */
+.radar-wrap{background:#121824;border-radius:14px;padding:10px;margin:12px 0;text-align:center}
+.radar-wrap canvas{width:100%;max-width:280px;height:auto}
+/* Dim bars */
+.dim-list{margin:12px 0}
+.dim-item{display:flex;align-items:center;padding:5px 0;border-bottom:1px solid #1a2835;font-size:11px}
+.dim-item:last-child{border-bottom:none}
+.dim-item .dn{width:48px;color:#8b9aaa;font-weight:600;flex-shrink:0;font-size:10px}
+.dim-item .db{flex:1;height:8px;background:#1a2835;border-radius:4px;margin:0 6px}
+.dim-item .df{height:100%;border-radius:4px;transition:width .6s}
+.dim-item .ds{width:26px;text-align:right;font-weight:700;font-size:10px}
+.death-box{background:#1e0f0f;border-radius:10px;padding:10px;margin:10px 0;border:1px solid rgba(255,75,75,.15);font-size:11px;color:#ff6b6b;line-height:1.5}
+.action-box{text-align:center;padding:8px 0}
+.action-box .re-btn{display:inline-block;padding:7px 16px;background:transparent;border:1px solid #2a3442;color:#6b7a8a;border-radius:8px;font-size:11px;cursor:pointer;margin-top:4px}
+.link{font-size:10px;color:#4db8ff;text-decoration:none;background:#0f1a25;padding:3px 10px;border-radius:10px;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="brand">
+    <div class="name">🥘 FoodIntelAI</div>
+    <div class="tag" id="sourceTag">开店体检</div>
+    <a href="stall-check.html" class="link">想摆摊试水？→</a>
+  </div>
+
+  <h1>快速开店体验</h1>
+  <p class="sub">三层评估 · 必要条件 → 客观条件 → 风险预警 · 匹配真实经营模型</p>
+
+  <!-- Form -->
+  <div id="formArea">
+
+    <!-- Section 1: 必要条件 -->
+    <div class="form-card" style="border-left:3px solid #ff6b6b">
+      <div class="card-hdr"><span class="dot" style="background:#ff6b6b"></span>🔴 必要条件 <span class="sub">— 缺一不可，不满足不开店</span></div>
+<div class="form-row">
+        <div class="form-group">
+          <label>总投资预算</label>
+          <select id="f8">
+            <option value="1">＜5万</option>
+            <option value="2" selected>5-10万</option>
+            <option value="3">10-20万</option>
+            <option value="4">20-50万</option>
+            <option value="5">＞50万</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>流动资金可撑</label>
+          <select id="f10" style="border-color:#ff884d">
+            <option value="1"><1个月</option>
+            <option value="2" selected>1-3个月</option>
+            <option value="3">3-6个月</option>
+            <option value="4">>6个月</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>技术来源</label>
+          <select id="f13">
+            <option value="0">啥都不会，准备边学边干</option>
+            <option value="1">自学过一些</option>
+            <option value="2" selected>有师傅/有配方</option>
+            <option value="3">加盟品牌/连锁</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>能否全职投入</label>
+          <select id="f5">
+            <option value="0">每天＜2h（兼职搭着做）</option>
+            <option value="1" selected>每天2-4h</option>
+            <option value="2">每天4-8h</option>
+            <option value="3">全职（全天驻店）</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>最大可承受亏损</label>
+          <select id="f12" style="border-color:#ff6b6b">
+            <option value="0">不能亏</option>
+            <option value="1" selected>1-3万</option>
+            <option value="2">3-10万</option>
+            <option value="3">>10万</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>餐饮经验</label>
+          <select id="f4">
+            <option value="0">无经验</option>
+            <option value="1"><1年</option>
+            <option value="2" selected>1-3年</option>
+            <option value="3">3-5年</option>
+            <option value="4">5年以上</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: 客观条件 -->
+    <div class="form-card" style="border-left:3px solid #4db8ff">
+      <div class="card-hdr"><span class="dot" style="background:#4db8ff"></span>🔵 客观条件 <span class="sub">— 你的牌，决定上限</span></div>
+      <div class="form-row">
+        <div class="form-group" style="flex:1.6">
+          <label>品类</label>
+          <select id="f1" onchange="hideWarn()">
+            <option value="">请选择品类</option>
+            <!-- 卤味体系 -->
+            <option value="卤味">· 卤味</option>
+            <option value="卤牛肉">· 卤牛肉</option>
+            <option value="卤鹅">· 卤鹅</option>
+            <option value="卤猪系列">· 卤猪系列</option>
+            <!-- 炸鸡体系 -->
+            <option value="潮汕南乳炸鸡">· 潮汕南乳炸鸡</option>
+            <option value="韩式炸鸡">· 韩式炸鸡</option>
+            <!-- 冷吃体系 -->
+            <option value="冷吃红油">· 冷吃红油</option>
+            <option value="擂辣椒">· 擂辣椒</option>
+            <option value="炒鸡">· 炒鸡</option>
+            <option value="酸汤">· 贵州酸汤</option>
+            <option value="火锅">· 火锅</option>
+            <option value="河南烩面">· 河南烩面</option>
+            <!-- 刚需早餐 -->
+            <option value="早餐面点">· 早餐面点</option>
+            <option value="云南米线">· 云南米线</option>
+            <!-- 饮品甜品 -->
+            <option value="饮品甜品">· 饮品甜品</option>
+            <!-- 烧烤小吃 -->
+            <option value="小吃烤串">· 小吃烤串</option>
+            <option value="烧烤">· 烧烤</option>
+            <option value="烤鱼">· 烤鱼</option>
+            <option value="炸串">· 炸串</option>
+            <option value="麻辣烫冒菜">· 麻辣烫冒菜</option>
+            <!-- 韩式体系 -->
+            <option value="韩式烤肉">· 韩式烤肉</option>
+            <option value="韩式快餐">· 韩式快餐</option>
+            <option value="拌菜泡菜">· 拌菜泡菜</option>
+            <!-- 细分品类 -->
+            <option value="小龙虾">· 小龙虾</option>
+            <option value="烧腊">· 烧腊</option>
+            <option value="傣舂舂菜">· 傣舂舂菜</option>
+            <option value="酱料">· 酱料</option>
+            <option value="素菜">· 素菜</option>
+            <!-- 新增开店品类 -->
+            <option value="煲系列">🏺 煲系列（正餐·鸡煲/猪脚煲·¥40-70）</option>
+            <option value="砂锅系列">🍲 砂锅系列（快餐·砂锅肥肠/鸡·¥20-40）</option>
+            <option value="炒鸡">🍗 炒鸡（档口/小店·¥12-28）</option>
+            <option value="贵州酸汤">🍅 贵州酸汤（火锅/粉·¥30-60）</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>城市等级</label>
+          <select id="f2">
+            <option value="4">县城·乡镇</option>
+            <option value="3">二三线</option>
+            <option value="2">新一线</option>
+            <option value="1">一线</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>商圈类型</label>
+          <select id="f3" onchange="hideWarn()">
+            <option value="" selected>请选择</option>
+            <option value="社区">社区</option>
+            <option value="写字楼">写字楼</option>
+            <option value="商场">商场/美食城</option>
+            <option value="学校">学校</option>
+            <option value="夜市">夜市/步行街</option>
+            <option value="景区">景区</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>门店面积</label>
+          <select id="f9">
+            <option value="1" selected>摆摊/档口</option>
+            <option value="2"><10㎡</option>
+            <option value="3">10-20㎡</option>
+            <option value="4">20-50㎡</option>
+            <option value="5">>50㎡</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>启动团队</label>
+          <select id="f6">
+            <option value="0" selected>一个人</option>
+            <option value="1">两人</option>
+            <option value="2">3-5人</option>
+            <option value="3">5人以上</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>线上运营能力</label>
+          <select id="f7">
+            <option value="0">不会</option>
+            <option value="1" selected>基础（会发朋友圈）</option>
+            <option value="2">熟悉（外卖+团购）</option>
+            <option value="3">熟练（短视频+直播）</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: 风险信号 -->
+    <div class="form-card" style="border-left:3px solid #ddaa44">
+      <div class="card-hdr"><span class="dot" style="background:#ddaa44"></span>🟡 风险信号 <span class="sub">— 提前预警，知道坑在哪</span></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>周边竞品</label>
+          <select id="f14">
+            <option value="0">没有直接竞品</option>
+            <option value="1" selected>1-2家同类</option>
+            <option value="2">3-5家</option>
+            <option value="3">饱和（卷了）</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>供应链熟悉度</label>
+          <select id="f11">
+            <option value="0">完全不了解</option>
+            <option value="1" selected>一般了解</option>
+            <option value="2">有渠道资源</option>
+            <option value="3">非常熟悉</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>证照/合规进度</label>
+          <select id="f15" style="border-color:#ddaa44">
+            <option value="0">不了解门槛</option>
+            <option value="1">还没开始办</option>
+            <option value="2" selected>在办了</option>
+            <option value="3">已办好</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>经营时段</label>
+          <select id="f16">
+            <option value="0">只做午市/晚市</option>
+            <option value="1" selected>午+晚两段</option>
+            <option value="2">全时段（早中晚）</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-submit" onclick="run()" id="runBtn">📊 生成评估报告</button>
+    <div id="pageWarn" style="display:none;margin-top:8px;padding:8px 12px;background:#1e0f0f;border-radius:8px;font-size:11px;color:#ff6b6b;text-align:center;border:1px solid rgba(255,75,75,.15)"></div>
+  </div>
+
+  <!-- Result -->
+  <div class="result" id="resultArea"></div>
+</div>
+
+<script>
+// ============================================================
+// 品类基础数据
+// ============================================================
+const CAT_DATA = {
+  '卤味': {g:75,m:72,st:78,sc:70,risk:55,se:75,sp:75,rev:[800,1500],cost:[300,600],pb:[6,12],minBud:2,minCash:2,level:2,avgSurvival:38,refPb:'6-12'},
+  '冷吃红油': {g:82,m:88,st:80,sc:75,risk:45,se:72,sp:72,rev:[1000,2000],cost:[350,700],pb:[4,8],minBud:1,minCash:2,level:2,avgSurvival:38,refPb:'4-8'},
+  '擂辣椒': {g:85,m:88,st:85,sc:78,risk:40,se:65,sp:72,rev:[800,1800],cost:[200,500],pb:[3,8],minBud:1,minCash:1,level:1,avgSurvival:40,refPb:'3-8'},
+  '潮汕南乳炸鸡': {g:90,m:78,st:82,sc:80,risk:50,se:65,sp:78,rev:[1200,2500],cost:[450,900],pb:[4,7],minBud:2,minCash:2,level:1,avgSurvival:25,refPb:'4-7'},
+  '炒鸡': {g:60,m:65,st:65,sc:68,risk:65,se:78,sp:68,rev:[1500,3000],cost:[500,1200],pb:[8,15],minBud:3,minCash:3,level:3,avgSurvival:35,refPb:'8-15'},
+  '酸汤': {g:88,m:70,st:62,sc:65,risk:50,se:72,sp:55,rev:[2000,4000],cost:[700,1500],pb:[8,14],minBud:3,minCash:3,level:3,avgSurvival:42,refPb:'8-14'},
+  '早餐面点': {g:70,m:78,st:72,sc:75,risk:35,se:85,sp:72,rev:[600,1200],cost:[200,500],pb:[3,8],minBud:1,minCash:1,level:1,avgSurvival:45,refPb:'3-8'},
+  '饮品甜品': {g:82,m:85,st:92,sc:85,risk:50,se:50,sp:80,rev:[800,1800],cost:[250,550],pb:[3,7],minBud:1,minCash:2,level:1,avgSurvival:25,refPb:'3-7'},
+  '小吃烤串': {g:72,m:75,st:68,sc:65,risk:55,se:55,sp:70,rev:[1000,2500],cost:[350,800],pb:[6,12],minBud:2,minCash:2,level:2,avgSurvival:38,refPb:'6-12'},
+  '傣舂舂菜': {g:78,m:88,st:55,sc:50,risk:40,se:60,sp:45,rev:[700,1500],cost:[200,500],pb:[4,10],minBud:1,minCash:1,level:1,avgSurvival:38,refPb:'4-10'},
+  '韩式炸鸡': {g:78,m:75,st:82,sc:78,risk:55,se:60,sp:75,rev:[1000,2200],cost:[400,850],pb:[5,10],minBud:2,minCash:2,level:1,avgSurvival:28,refPb:'5-10'},
+  '卤牛肉': {g:72,m:70,st:72,sc:68,risk:50,se:72,sp:72,rev:[900,1800],cost:[350,700],pb:[5,10],minBud:2,minCash:2,level:2,avgSurvival:38,refPb:'5-12'},
+  '卤鹅': {g:72,m:70,st:72,sc:65,risk:50,se:72,sp:72,rev:[800,1600],cost:[300,650],pb:[5,10],minBud:2,minCash:2,level:2,avgSurvival:38,refPb:'5-12'},
+  '卤猪系列': {g:72,m:72,st:72,sc:68,risk:50,se:72,sp:72,rev:[800,1600],cost:[300,600],pb:[5,10],minBud:2,minCash:2,level:2,avgSurvival:38,refPb:'5-12'},
+  '火锅': {g:68,m:70,st:75,sc:72,risk:65,se:82,sp:78,rev:[2500,5000],cost:[900,2000],pb:[10,18],minBud:4,minCash:4,level:3,avgSurvival:35,refPb:'10-18'},
+  '河南烩面': {g:78,m:72,st:72,sc:72,risk:40,se:82,sp:72,rev:[1000,2200],cost:[350,800],pb:[4,8],minBud:2,minCash:2,level:2,avgSurvival:42,refPb:'4-8'},
+  '烧烤': {g:75,m:78,st:75,sc:70,risk:50,se:60,sp:72,rev:[1200,2800],cost:[400,1000],pb:[5,10],minBud:2,minCash:2,level:2,avgSurvival:35,refPb:'5-12'},
+  '烤鱼': {g:80,m:75,st:72,sc:68,risk:55,se:65,sp:72,rev:[1500,3500],cost:[500,1200],pb:[6,12],minBud:3,minCash:3,level:2,avgSurvival:35,refPb:'6-12'},
+  '麻辣烫冒菜': {g:82,m:82,st:82,sc:78,risk:45,se:72,sp:78,rev:[800,1800],cost:[250,600],pb:[3,6],minBud:2,minCash:2,level:1,avgSurvival:38,refPb:'3-6'},
+  '韩式烤肉': {g:72,m:75,st:75,sc:72,risk:60,se:75,sp:78,rev:[2000,4500],cost:[700,1800],pb:[8,15],minBud:4,minCash:3,level:3,avgSurvival:30,refPb:'8-15'},
+  '韩式快餐': {g:75,m:72,st:75,sc:72,risk:50,se:72,sp:72,rev:[1200,2500],cost:[400,900],pb:[5,10],minBud:2,minCash:2,level:2,avgSurvival:38,refPb:'5-10'},
+  '拌菜泡菜': {g:72,m:82,st:78,sc:68,risk:40,se:65,sp:68,rev:[600,1200],cost:[200,450],pb:[3,6],minBud:1,minCash:1,level:1,avgSurvival:42,refPb:'3-8'},
+  '小龙虾': {g:82,m:82,st:72,sc:68,risk:60,se:55,sp:75,rev:[2000,4500],cost:[700,1800],pb:[6,12],minBud:3,minCash:3,level:3,avgSurvival:35,refPb:'6-12'},
+  '云南米线': {g:78,m:70,st:72,sc:72,risk:40,se:80,sp:72,rev:[800,2000],cost:[300,700],pb:[4,8],minBud:2,minCash:2,level:2,avgSurvival:42,refPb:'4-8'},
+  '烧腊': {g:72,m:72,st:72,sc:68,risk:50,se:78,sp:72,rev:[1000,2200],cost:[350,800],pb:[5,10],minBud:2,minCash:2,level:2,avgSurvival:38,refPb:'5-10'},
+  '炸串': {g:75,m:82,st:78,sc:72,risk:40,se:60,sp:72,rev:[700,1500],cost:[200,500],pb:[3,6],minBud:1,minCash:1,level:1,avgSurvival:40,refPb:'3-6'},
+  '酱料': {g:68,m:82,st:82,sc:68,risk:35,se:65,sp:82,rev:[500,1200],cost:[150,400],pb:[3,6],minBud:1,minCash:1,level:1,avgSurvival:45,refPb:'3-8'},
+  素菜': {g:68,m:82,st:75,sc:65,risk:35,se:65,sp:68,rev:[400,800],cost:[120,300],pb:[2,5],minBud:1,minCash:1,level:1,avgSurvival:45,refPb:'2-6'},
+  '煲系列': {g:78,m:65,st:65,sc:72,risk:55,se:78,sp:72,rev:[2500,5000],cost:[900,2000],pb:[8,15],minBud:3,minCash:3,level:3,avgSurvival:38,refPb:'8-15'},
+  '砂锅系列': {g:82,m:70,st:72,sc:75,risk:45,se:75,sp:68,rev:[1500,3500],cost:[500,1300],pb:[6,12],minBud:2,minCash:2,level:2,avgSurvival:40,refPb:'6-12'},
+  '贵州酸汤': {g:88,m:70,st:62,sc:65,risk:50,se:72,sp:55,rev:[2000,4000],cost:[700,1500],pb:[8,14],minBud:3,minCash:3,level:3,avgSurvival:42,refPb:'8-14'},
+};
+
+function v(id){return document.getElementById(id)}
+function showWarn(m){var w=v('pageWarn');if(!w)return;w.textContent=m;w.style.display='block';w.scrollIntoView({behavior:'smooth',block:'center'})}
+function hideWarn(){var w=v('pageWarn');if(w)w.style.display='none'}
+
+function run(){
+  const cat = v('f1').value, biz = v('f3').value;
+  hideWarn();
+  if(!cat){showWarn('请先选择品类');return}
+  if(!biz){showWarn('请先选择商圈类型');return}
+  const cd = CAT_DATA[cat];
+  if(!cd){showWarn('该品类数据暂缺，请刷新重试');return}
+
+  // 读取所有数值
+  const f = {
+    f1:cat, f2:parseInt(v('f2').value), f3:biz, f4:parseInt(v('f4').value),
+    f5:parseInt(v('f5').value), f6:parseInt(v('f6').value), f7:parseInt(v('f7').value),
+    f8:parseInt(v('f8').value), f9:parseInt(v('f9').value), f10:parseInt(v('f10').value),
+    f11:parseInt(v('f11').value), f12:parseInt(v('f12').value), f13:parseInt(v('f13').value),
+    f14:parseInt(v('f14').value), f15:parseInt(v('f15').value), f16:parseInt(v('f16').value)
+  };
+
+  // ========== 1. 必要条件检查 ==========
+  const checks = [];
+
+  // 预算 vs 品类门槛
+  const budOk = f.f8 >= cd.minBud;
+  checks.push({label:'启动资金 ≥ '+['<5万','5-10万','10-20万','20-50万','>50万'][cd.minBud-1], pass:budOk, detail:'该品类最低启动线', v:['<5万','5-10万','10-20万','20-50万','>50万'][f.f8-1]});
+
+  // 流动资金
+  const cashOk = f.f10 >= 2;
+  checks.push({label:'流动资金 ≥ 1-3个月', pass:cashOk, detail:'<1个月=现金流红线', v:['<1个月','1-3个月','3-6个月','>6个月'][f.f10-1]});
+
+  // 技术来源
+  const techOk = f.f13 >= 2;
+  checks.push({label:'有技术来源（师傅/配方/加盟）', pass:techOk, detail:'边学边干失败率极高', v:['无','自学','有师傅','加盟'][f.f13]});
+
+  // 全职投入
+  const fullOk = f.f5 >= 2;
+  checks.push({label:'每天投入 ≥ 4h', pass:fullOk, detail:'兼职开店十开九关', v:['<2h','2-4h','4-8h','全职'][f.f5]});
+
+  // 亏损承受
+  const lossOk = f.f12 >= 1;
+  checks.push({label:'能承受一定亏损', pass:lossOk, detail:'亏本接受度', v:['不能亏','1-3万','3-10万','>10万'][f.f12]});
+
+  const mustScore = Math.round(checks.filter(c=>c.pass).length / checks.length * 100);
+  const mustBlocked = checks.filter(c=>!c.pass).length >= 2;
+
+  // ========== 2. 客观条件 ==========
+  const bz = {社区:1.0,写字楼:0.95,商场:0.85,学校:1.1,夜市:1.15,景区:0.75}[biz]||0.9;
+  const cm = [1.2, 1.0, 0.85, 0.7][f.f2]||1.0;
+  const bm = [0.5, 0.75, 1.0, 1.15, 1.25][f.f8]||0.8;
+  const em = [0.5, 0.7, 0.9, 1.1, 1.25][f.f4]||0.8;
+  const tm = [0.35, 0.6, 0.85, 1.05][f.f5]||0.85;
+  const teamm = [0.35, 0.85, 1.0, 1.15][f.f6]||0.8;
+  const om = [0.5, 0.8, 1.0, 1.15][f.f7]||0.8;
+  const am = [0.6, 0.7, 0.95, 1.0, 0.85][f.f9]||0.85;
+  const cashm = [0.35, 0.65, 0.9, 1.15][f.f10]||0.65;
+  const sfm = [0.5, 0.8, 1.05, 1.15][f.f11]||0.8;
+  const lossm = [0.4, 0.75, 1.0, 1.1][f.f12]||0.75;
+  const techm = [0.4, 0.75, 1.05, 1.15][f.f13]||0.75;
+  const compm = [1.15, 1.0, 0.8, 0.5][f.f14]||0.9;
+  const licensem = [0.5, 0.7, 0.9, 1.1][f.f15]||0.8;
+  const timem = [0.7, 1.0, 1.05][f.f16]||0.9;
+
+  const op = (em*0.15 + tm*0.15 + teamm*0.1 + om*0.12 + sfm*0.1 + cashm*0.15 + techm*0.13 + licensem*0.1);
+  const compFactor = bz * cm * am * timem * compm;
+
+  // 8维
+  const dims = [
+    {l:'品类时机', s:Math.round(Math.min(100, cd.g * cm * bz * 0.85 + 8))},
+    {l:'选址匹配', s:Math.round(Math.min(100, bz * cm * 88 * 0.55 + cd.sc * 0.2 + 12))},
+    {l:'市场需求', s:Math.round(Math.min(100, cd.sc * cm * bz * 0.55 + cd.g * 0.2 + 12))},
+    {l:'经营能力', s:Math.round(Math.min(100, op * 68 + 12))},
+    {l:'资金结构', s:Math.round(Math.min(100, bm * cashm * lossm * 78 + 10))},
+    {l:'供应链', s:Math.round(Math.min(100, cd.sp * sfm * 0.5 + sfm * 30 + 10))},
+    {l:'运营基础', s:Math.round(Math.min(100, om * cd.st * 0.4 + f.f7*8 + tm*5 + 10))},
+    {l:'抗风险', s:Math.round(Math.min(100, lossm * cashm * cm * 48 + cd.risk * 0.35 + 10))},
+  ];
+  dims.forEach(d => d.s = Math.min(100, Math.max(8, d.s)));
+
+  const w = [0.10, 0.30, 0.08, 0.15, 0.20, 0.05, 0.05, 0.07];
+  let total = 0; dims.forEach((d,i)=>total+=d.s*w[i]); total=Math.round(total);
+
+  let grd, gc, gl;
+  if(total>=80){grd='A';gc='#00ff88';gl='推荐进入'}
+  else if(total>=65){grd='B';gc='#88ddaa';gl='谨慎进入'}
+  else if(total>=50){grd='C';gc='#ddaa44';gl='暂不建议'}
+  else{grd='D';gc='#ff6b6b';gl='不建议'}
+
+  // 推导
+  const baseRev = cd.rev[0] + (cd.rev[1]-cd.rev[0]) * (total/100) * 0.6;
+  const revFactor = cm * bz * bm * op;
+  const avgRev = Math.round(baseRev * revFactor);
+  const revLow = Math.round(avgRev * 0.75);
+  const revHigh = Math.round(avgRev * 1.15);
+  const costLow = Math.round(cd.cost[0] * revFactor);
+  const costHigh = Math.round(cd.cost[1] * revFactor);
+  const marginLow = revLow - costHigh;
+  const marginHigh = revHigh - costLow;
+  const invest = [5000, 8000, 15000, 35000, 80000][f.f8-1]||20000;
+  const pbLow = Math.round(invest / Math.max(1, marginHigh));
+  const pbHigh = Math.round(invest / Math.max(1, marginLow*0.7));
+
+  const survival = Math.round(Math.min(95, total*0.55 + cashm*15 + em*6 + techm*4 + 8));
+  const profit = Math.round(Math.min(90, total*0.50 + om*5 + sfm*5 + 8));
+  const expand = Math.round(Math.min(85, total*0.30 + teamm*5 + bm*6 + cashm*4 + 5));
+
+  let fragile = '低';
+  if(dims.filter(d=>d.s<50).length>=3 || f.f10<=1 || f.f12<=0) fragile='高';
+  else if(dims.filter(d=>d.s<55).length>=2 || f.f10<=2) fragile='中';
+
+  // ========== 3. 风险信号 ==========
+  const risks = [];
+  if(f.f10<=1) risks.push({l:'现金流风险（高）', d:'流动资金不足1个月，第2-3个月极易断裂', s:'h'});
+  if(f.f12<=0) risks.push({l:'亏损承受力（高）', d:'不能承受亏损=焦虑运营=决策变形', s:'h'});
+  if(f.f13<=0) risks.push({l:'技术风险（高）', d:'无技术来源，做不出产品的店必死', s:'h'});
+  if(f.f5<=0) risks.push({l:'投入风险（高）', d:'<2h/天的兼职工时，餐饮无法盈利', s:'h'});
+  if(dims.filter(d=>d.s<55).length>=3) risks.push({l:'多维度短板', d:dims.filter(d=>d.s<55).map(d=>d.l).join('+')+'均低于标准', s:'h'});
+  if(f.f14>=2) risks.push({l:'竞争风险', d:'周边'+['','','3-5家同类','竞争饱和'][f.f14]+'，利润会被挤压', s:'m'});
+  if(f.f15<=0) risks.push({l:'合规风险', d:'不了解证照/消防/排烟门槛，可能开了被查', s:'m'});
+  if(f.f11<=0) risks.push({l:'供应链风险', d:'完全不了解供应渠道，成本和质量不可控', s:'m'});
+  if(f.f4<=0 && cd.level>=2) risks.push({l:'经验不匹配', d:'零经验+品类难度'+cd.level+'级（3级最难），失败率高', s:'m'});
+  if(invest > 50000 && f.f10<=2) risks.push({l:'资金错配', d:'大投入+紧现金流=账面看着有钱但周转不开', s:'m'});
+
+  // 死亡路径（基于行业调研4条主线）
+  let death = '', deathIcon='⚠️';
+  const fatal = risks.filter(r=>r.s==='h');
+  // 路径1: 资金枯竭型
+  if(f.f10<=1 || (f.f10<=2 && invest > 30000)) {
+    death = '☠️ 资金枯竭路径 — 行业数据显示50%以上倒闭源于资金链断裂。流动资金不足'+['1个月','1-3个月'][f.f10-1]+'，实际回本周期可能比预期更长，建议预留至少6个月运营资金。';
+    deathIcon='☠️';
+  }
+  // 路径2: 选址错位型
+  else if(dims[1].s<55 && (f.f9<=2)) {
+    death = '☠️ 选址错位路径 — 行业调研显示选址匹配度可贡献30-40%的成功概率。当前选址评分偏低，建议实地做分时段人流计数再确认。';
+    deathIcon='☠️';
+  }
+  // 路径3+4: 成本失控/同质化竞争
+  else if(fatal.length>=1) {
+    death = '☠️ 致命风险：'+fatal[0].l+'。'+fatal[0].d;
+    deathIcon='☠️';
+  } else if(risks.filter(r=>r.s==='m').length>=3) {
+    death = '⚠️ 中等级别风险较多（'+risks.filter(r=>r.s==='m').map(r=>r.l).join(' · ')+'），经营难度偏大。建议做好成本预案和差异化定位。';
+  } else if(risks.length===0) {
+    death = '✅ 当前各项风险较低，可以按计划推进。建议保持6个月现金流储备应对波动。';
+  } else {
+    death = '⚠️ 存在'+risks.length+'项风险，主要关注资金和选址两个核心维度。';
+  }
+
+  // ========== 4. 产品推荐 ==========
+  const prodData = {
+    '煲系列(BZ)':[
+      {n:'煲系列总纲（免费）',p:'免费',l:'catalog/BZ/BZ_T01_煲系列总纲.html',r:'先看品类全貌'},
+      {n:'煲系列创业母卡',p:'¥39',l:'catalog/BZ/BZ_M01_煲系列创业母卡.html',r:'开店决策'},
+      {n:'BZ_04 猪脚煲（创业单品）',p:'¥19',l:'catalog/BZ/BZ_04_猪脚煲.html',r:'高毛利正餐'},
+    ],
+    '砂锅系列(SG)':[
+      {n:'砂锅总纲（免费）',p:'免费',l:'catalog/SG/SG_T01_砂锅总纲.html',r:'先看品类全貌'},
+      {n:'砂锅创业母卡',p:'¥39',l:'catalog/SG/SG_M01_砂锅创业母卡.html',r:'快餐线决策'},
+    ],
+    '炒鸡(CJ)':[
+      {n:'糖醋麻辣炒鸡（子）',p:'¥19',l:'catalog/CJ/CJ_03_糖醋麻辣炒鸡（子）.html',r:'夜市爆款'},
+    ],
+    '贵州酸汤(GS)':[
+      {n:'贵州酸汤总纲（免费）',p:'免费',l:'catalog/GS/GS_T01_贵州酸汤总纲.html',r:'先看品类全貌'},
+    ],
+    '烧烤(BBQ)':[
+      {n:'中式烧烤创业母卡',p:'¥39',l:'catalog/BBQ/BBQ_M01_中式烧烤创业母卡.html',r:'完整烤串模型'},
+      {n:'烧烤总纲',p:'¥9.9',l:'catalog/BBQ/BBQ_T01_中式烧烤总纲.html',r:'先看品类全貌'},
+    ],
+    '摆摊小吃(XC)':[
+      {n:'烤苕皮',p:'¥19',l:'catalog/地摊爆款/XC_T001_烤苕皮.html',r:'物料¥2卖¥11·毛利75-82%'},
+      {n:'锅巴土豆',p:'¥19',l:'catalog/地摊爆款/XC_T002_锅巴土豆.html',r:'物料¥1.34卖¥8·毛利77-85%'},
+      {n:'热奶宝',p:'¥19',l:'catalog/地摊爆款/XC_T003_热奶宝.html',r:'物料¥2.5卖¥10·毛利73-80%'},
+    ],
+    '卤味':[
+      {n:'卤鸭脖创业母卡',p:'¥39',l:'catalog/LW/LW001%20卤鸭脖（母）LW_001.html',r:'标准化高·新手友好'},
+      {n:'卤鸭翅（母）',p:'¥39',l:'catalog/LW/LW002%20卤鸭翅（母）LW_002.html',r:'出品率高·利润稳'},
+    ],
+    '冷吃红油':[
+      {n:'冷吃红油创业母卡',p:'¥39',l:'catalog/其他/LC_001%20冷吃红油创业母卡.html',r:'毛利高·适合摆摊'},
+      {n:'冷吃牛肉条（子）',p:'¥19',l:'catalog/其他/LC_002%20冷吃牛肉条（子）.html',r:'头牌产品'},
+    ],
+    '擂辣椒':[
+      {n:'擂辣椒·街头档口创业母卡',p:'¥39',l:'catalog/其他/LL_M01%20擂辣椒·街头档口创业母卡.html',r:'投资低至2000元·毛利80%+'},
+      {n:'擂辣椒皮蛋（子）',p:'¥19',l:'catalog/其他/LL_01%20擂辣椒皮蛋（子）.html',r:'第一爆款'},
+    ],
+    '潮汕南乳炸鸡':[
+      {n:'潮汕南乳炸鸡总纲',p:'¥9.9',l:'catalog/NR/NR_T01%20潮汕南乳炸鸡总纲.html',r:'先看品类全貌'},
+      {n:'南乳大鸡腿（子）',p:'¥19',l:'catalog/NR/NR_01%20南乳大鸡腿（子）.html',r:'流量核心·毛利56%+'},
+    ],
+    '炒鸡':[
+      {n:'炒鸡创业母卡',p:'¥39',l:'catalog/CJ/CJ_M01_炒鸡创业母卡.html',r:'需后厨经验'},
+    ],
+    '酸汤':[
+      {n:'贵州酸汤创业母卡',p:'¥39',l:'catalog/其他/ST_M01%20贵州酸汤创业母卡.html',r:'酸汤热度高·完整商业模型'},
+    ],
+    '早餐面点':[
+      {n:'鲜肉包（母）',p:'¥39',l:'catalog/其他/鲜肉包（母）MP_001.html',r:'早餐刚需回本快'},
+      {n:'煎饼果子（母）',p:'¥39',l:'catalog/其他/煎饼果子（母）MP_008.html',r:'单品利润高'},
+    ],
+    '饮品甜品':[
+      {n:'五指毛桃椰乳（母）',p:'¥39',l:'catalog/其他/五指毛桃椰乳（母）TS_065.html',r:'毛利极高'},
+      {n:'斑斓冻（母）',p:'¥39',l:'catalog/其他/斑斓冻（母）TS_003.html',r:'网红属性'},
+    ],
+    '小吃烤串':[
+      {n:'烤鱼总纲',p:'¥9.9',l:'catalog/KY/KY_T01_烤鱼总纲.html',r:'夜市爆品'},
+      {n:'烧烤创业母卡',p:'¥39',l:'catalog/BBQ/BBQ_M01_中式烧烤创业母卡.html',r:'完整烤串模型'},
+    ],
+    '傣舂舂菜':[
+      {n:'傣舂鸡脚（母）',p:'¥39',l:'catalog/其他/傣舂鸡脚（母）DC_001.html',r:'视觉强·适合短视频'},
+      {n:'傣舂大虾（母）',p:'¥39',l:'catalog/其他/傣舂大虾（母）DC_003.html',r:'客单高利润大'},
+    ],
+    '韩式炸鸡':[
+      {n:'原味黄金炸鸡（母）',p:'¥39',l:'catalog/其他/原味黄金炸鸡（母）HZ_001.html',r:'零基础可做'},
+      {n:'蜜汁酱裹鸡块（母）',p:'¥39',l:'catalog/其他/蜜汁酱裹鸡块（母）HZ_002.html',r:'复购率最高'},
+    ],
+    '卤牛肉':[
+      {n:'五香牛腱',p:'¥39',l:'catalog/B/B01%20五香牛腱.html',r:'冷吃热卖双场景'},
+    ],
+    '卤鹅':[
+      {n:'五香鹅翅',p:'¥39',l:'catalog/E/E01%20五香鹅翅.html',r:'卤鹅经典款'},
+    ],
+    '卤猪系列':[
+      {n:'五香猪头肉（母）',p:'¥39',l:'catalog/Z/Z01%20五香猪头肉（母）.html',r:'卤味基础款'},
+    ],
+    '火锅':[
+      {n:'火锅创业母卡',p:'¥39',l:'catalog/HG/HG_M01_火锅创业母卡.html',r:'完整火锅模型'},
+      {n:'火锅总纲',p:'¥9.9',l:'catalog/HG/HG_T01_火锅总纲.html',r:'先看品类全貌'},
+    ],
+    '河南烩面':[
+      {n:'河南烩面创业母卡',p:'¥39',l:'catalog/HM/HM_M01_河南烩面创业母卡.html',r:'烩面完整模型'},
+      {n:'河南烩面总纲',p:'¥9.9',l:'catalog/HM/HM_T01_河南烩面总纲.html',r:'先看品类全貌'},
+    ],
+    '烧烤':[
+      {n:'中式烧烤创业母卡',p:'¥39',l:'catalog/BBQ/BBQ_M01_中式烧烤创业母卡.html',r:'完整烤串模型'},
+      {n:'烧烤总纲',p:'¥9.9',l:'catalog/BBQ/BBQ_T01_中式烧烤总纲.html',r:'先看品类全貌'},
+    ],
+    '烤鱼':[
+      {n:'烤鱼创业母卡',p:'¥39',l:'catalog/KY/KY_M01_烤鱼创业母卡.html',r:'夜市爆品'},
+      {n:'烤鱼总纲',p:'¥9.9',l:'catalog/KY/KY_T01_烤鱼总纲.html',r:'先看品类全貌'},
+    ],
+    '麻辣烫冒菜':[
+      {n:'麻辣烫冒菜创业母卡',p:'¥39',l:'catalog/MLT/MLT_M01_麻辣烫冒菜创业母卡.html',r:'标准化强'},
+      {n:'麻辣烫冒菜总纲',p:'¥9.9',l:'catalog/MLT/MLT_T01_麻辣烫冒菜总纲.html',r:'先看品类全貌'},
+    ],
+    '韩式烤肉':[
+      {n:'秘制大块肉',p:'¥39',l:'catalog/KR/KR_001_秘制大块肉.html',r:'韩式烤肉头牌'},
+    ],
+    '韩式快餐':[
+      {n:'石锅拌饭',p:'¥39',l:'catalog/KF/KF_001_石锅拌饭.html',r:'韩式快餐基础'},
+    ],
+    '拌菜泡菜':[
+      {n:'韩式辣白菜系列',p:'¥19',l:'catalog/PC/PC_K01_韩式辣白菜系列.html',r:'毛利高标准化'},
+    ],
+    '小龙虾':[
+      {n:'小龙虾创业母卡',p:'¥39',l:'catalog/XLX/XLX_M01_小龙虾创业母卡.html',r:'季节爆品'},
+      {n:'小龙虾总纲',p:'¥9.9',l:'catalog/XLX/XLX_T01_小龙虾总纲.html',r:'先看品类全貌'},
+    ],
+    '云南米线':[
+      {n:'云南米线创业母卡',p:'¥39',l:'catalog/YN/YN_M01_云南米线创业母卡.html',r:'刚需品类'},
+      {n:'云南米线总纲',p:'¥9.9',l:'catalog/YN/YN_T01_云南米线总纲.html',r:'先看品类全貌'},
+    ],
+    '烧腊':[
+      {n:'烧腊创业母卡',p:'¥39',l:'catalog/SL/SL_M01_烧腊创业母卡.html',r:'技术门槛高毛利'},
+      {n:'烧腊总纲',p:'¥9.9',l:'catalog/SL/SL_T01_烧腊总纲.html',r:'先看品类全貌'},
+    ],
+    '炸串':[
+      {n:'炸串创业母卡',p:'¥39',l:'catalog/ZHA/ZHA_M01_炸串创业母卡.html',r:'摆摊首选'},
+      {n:'炸串总纲',p:'¥9.9',l:'catalog/ZHA/ZHA_T01_炸串总纲.html',r:'先看品类全貌'},
+    ],
+    '酱料':[
+      {n:'韩式烤肉蘸酱',p:'¥19',l:'catalog/JL/JL_020_韩式烤肉蘸酱.html',r:'通用酱料'},
+    ],
+    '素菜':[
+      {n:'甜辣藕片（素菜·免费）',p:'免费',l:'catalog/SC/SC01%20甜辣藕片（素菜·免费）.html',r:'素菜引流款'},
+    ],
+  };
+  const products = prodData[cat]||[];
+
+  render(f, checks, mustScore, mustBlocked, cat, cd, total, grd, gc, gl,
+    survival, profit, expand, dims, risks, death,
+    revLow, revHigh, marginLow, marginHigh, pbLow, pbHigh, fragile, products, deathIcon);
+}
+
+function render(f, checks, mustScore, mustBlocked, cat, cd, total, grd, gc, gl,
+  survival, profit, expand, dims, risks, death,
+  revL, revH, marginL, marginH, pbL, pbH, fragile, products, deathIcon){
+
+  v('formArea').style.display='none';
+  const a=v('resultArea');a.className='result show';
+
+  // 必要条件渲染
+  const checkH = checks.map(c => `
+    <div class="check-item">
+      <div class="icon">${c.pass?'✅':'❌'}</div>
+      <div class="label">${c.label}</div>
+      <div class="val" style="color:${c.pass?'#00ff88':'#ff6b6b'}">${c.v}</div>
+    </div>
+  `).join('');
+
+  // 客观条件
+  const objH = `
+    <div class="obj-item"><div class="v">${cat}</div><div class="l">品类</div></div>
+    <div class="obj-item"><div class="v">${['一线','新一线','二三线','县城'][f.f2-1]||'—'}</div><div class="l">城市</div></div>
+    <div class="obj-item"><div class="v">${f.f3}</div><div class="l">商圈</div></div>
+    <div class="obj-item"><div class="v">${['摆摊/档口','<10㎡','10-20㎡','20-50㎡','>50㎡'][f.f9-1]}</div><div class="l">面积</div></div>
+    <div class="obj-item"><div class="v">${['一个人','两人','3-5人','5人以上'][f.f6]}</div><div class="l">团队</div></div>
+    <div class="obj-item"><div class="v">${['无','<1年','1-3年','3-5年','5年+'][f.f4]}</div><div class="l">经验</div></div>
+  `;
+
+  // 风险渲染
+  let riskH = '';
+  if(risks.length===0){
+    riskH = '<div class="check-item"><div class="icon">✅</div><div class="label" style="color:#00ff88">当前未检出明显风险</div></div>';
+  } else {
+    riskH = risks.map(r => `
+      <div class="check-item">
+        <div class="icon">${r.s==='h'?'🛑':'⚠️'}</div>
+        <div class="label">${r.d}</div>
+        <div style="text-align:right"><span class="risk-tag ${r.s==='h'?'risk-h':'risk-m'}">${r.s==='h'?'致命':'中等'}</span></div>
+      </div>
+    `).join('');
+  }
+
+  const pbRange = pbL>0&&pbH>0?`${Math.min(pbL,pbH)}-${Math.max(pbL,pbH)}`:'待定';
+
+  // 短板优势
+  const bad = dims.filter(d=>d.s<55).sort((a,b)=>a.s-b.s);
+  const good = dims.filter(d=>d.s>=75);
+  let badH='',goodH='';
+  if(bad.length) badH=bad.map(d=>`<div class="check-item"><div class="icon">⚠️</div><div class="label" style="color:#ddaa44">${d.l}（${d.s}/100）— 主要短板，重点关注</div></div>`).join('');
+  if(good.length) goodH=good.map(d=>`<div class="check-item"><div class="icon">⭐</div><div class="label" style="color:#00ff88">${d.l}（${d.s}/100）— 核心优势</div></div>`).join('');
+
+  a.innerHTML=`
+    <div class="rs-hdr">
+      <div class="grade" style="color:${gc}">${gl}</div>
+      <div class="big" style="color:${gc}">${total}</div>
+      <div class="sub">综合评分 / 100 · ${grd} 级</div>
+    </div>
+
+    <div style="margin:10px 0;padding:8px 10px;background:#0f1a25;border-radius:8px;font-size:9px;color:#6b7a8a;text-align:center;border:1px solid #1a2835;line-height:1.4">
+      ⚠️ 理论模型推导，仅供参考。实际经营以实际为准。
+    </div>
+
+    <!-- 必要条件 -->
+    <div class="block must-block">
+      <div class="block-title">🔴 必要条件 · 缺一不可</div>
+      ${checkH}
+      <div style="margin-top:5px;font-size:11px;color:${mustScore>=80?'#00ff88':mustScore>=60?'#ddaa44':'#ff6b6b'};font-weight:600">
+        ${mustScore>=80?'✅ 必要条件基本满足':mustScore>=60?'⚠️ 部分条件欠缺，建议补齐再动手':'🛑 多项条件不满足，不建议此时开店'}
+      </div>
+    </div>
+
+    <!-- 客观条件 + 推导数据合并 -->
+    <div class="block obj-block">
+      <div class="block-title">🔵 客观条件 · 你的牌</div>
+      <div class="obj-grid">${objH}</div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid #1a2835">
+        <div class="derive-grid">
+          <div class="derive-item"><div class="dv">¥${revL.toLocaleString()}-${revH.toLocaleString()}</div><div class="dl">预计月营收</div></div>
+          <div class="derive-item"><div class="dv2" style="font-size:13px">¥${marginL.toLocaleString()}-${marginH.toLocaleString()}</div><div class="dl">预计月净利润</div></div>
+          <div class="derive-item"><div class="dv" style="font-size:15px">${pbRange}个月</div><div class="dl">预计回本周期</div></div>
+          <div class="derive-item"><div class="dv" style="font-size:15px;color:${fragile==='高'?'#ff6b6b':fragile==='中'?'#ddaa44':'#00ff88'}">${fragile}</div><div class="dl">系统脆弱度</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 风险信号 + 死亡路径合并 -->
+    <div class="block risk-block">
+      <div class="block-title">🟡 风险信号 · 预警清单</div>
+      ${riskH}
+      <div class="death-box" style="margin-top:8px;font-size:11px">${deathIcon} ${death}</div>
+    </div>
+
+    <!-- 核心指标 -->
+    <div class="derive-box" style="border-left:3px solid ${survival>=70?'#00ff88':survival>=55?'#ddaa44':'#ff6b6b'}">
+      <h3>🎯 核心指标</h3>
+      <div class="derive-grid">
+        <div class="derive-item"><div class="dv" style="color:${survival>=70?'#00ff88':survival>=55?'#ddaa44':'#ff6b6b'};font-size:15px">${survival}%</div><div class="dl">生存概率</div></div>
+        <div class="derive-item"><div class="dv" style="color:#00ff88;font-size:15px">${profit}%</div><div class="dl">盈利概率</div></div>
+        <div class="derive-item"><div class="dv" style="font-size:15px;color:#4db8ff">${expand}%</div><div class="dl">扩张可能</div></div>
+        <div class="derive-item"><div class="dv" style="font-size:12px;color:#8b9aaa">${cat}</div><div class="dl">当前品类</div></div>
+      </div>
+    </div>
+
+    <div class="radar-wrap"><canvas id="rdChart" width="300" height="300"></canvas></div>
+
+    <div class="dim-list">${dims.map(d=>{
+      const c=d.s>=70?'#00ff88':d.s>=55?'#ddaa44':'#ff6b6b';
+      return `<div class="dim-item"><div class="dn">${d.l.slice(0,4)}</div><div class="db"><div class="df" style="width:${d.s}%;background:${c}"></div></div><div class="ds" style="color:${c}">${d.s}</div></div>`;
+    }).join('')}</div>
+
+    ${badH?`<div class="block must-block"><div class="block-title">⚠️ 主要短板</div>${badH}</div>`:''}
+    ${goodH?`<div class="block obj-block"><div class="block-title">⭐ 核心优势</div>${goodH}</div>`:''}
+
+    <!-- 行业参照 -->
+    <div class="derive-box" style="font-size:10px">
+      <h3>📊 行业参照（供对比）</h3>
+      <div class="derive-grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="derive-item"><div class="dv" style="font-size:13px;color:#6b7a8a">${cd.avgSurvival||'35'}%</div><div class="dl">品类首年存活率</div></div>
+        <div class="derive-item"><div class="dv" style="font-size:13px;color:#6b7a8a">${['—','32%','38%','45%','52%'][f.f2]||'40%'}</div><div class="dl">所在城市首年存活率</div></div>
+        <div class="derive-item"><div class="dv" style="font-size:13px;color:#6b7a8a">${cd.refPb||'6-12'}个月</div><div class="dl">行业平均回本周期</div></div>
+      </div>
+      <div style="margin-top:5px;color:#4a5a6a;font-size:9px;line-height:1.4">
+        数据来源：美团研究院2025·红餐网2024·餐饮老板内参2025·中国饭店协会2024
+      </div>
+    </div>
+
+    <!-- 产品推荐 -->
+    ${products.length?`
+    <div class="derive-box">
+      <h3>📖 该品类推荐产品卡</h3>
+      ${products.map(p=>`
+        <a class="prod-card" href="${p.l}" style="display:block;padding:10px 12px;background:#0b0f14;border-radius:8px;margin-bottom:6px;text-decoration:none;color:inherit;border:1px solid #2a3442">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:13px;font-weight:600">${p.n}</span>
+            <span style="font-size:10px;color:#00ff88">${p.p} →</span>
+          </div>
+          <div style="font-size:10px;color:#6b7a8a;margin-top:2px">${p.r}</div>
+        </a>
+      `).join('')}
+    </div>
+    `:''}
+    
+    <!-- 同类推荐 -->
+    ${function(){
+      var recMap = {
+        '卤味':['卤牛肉','卤鹅','卤猪系列'],
+        '冷吃红油':['擂辣椒','炒鸡'],
+        '潮汕南乳炸鸡':['韩式炸鸡','炸串'],
+        '炒鸡':['酸汤','麻辣烫冒菜'],
+        '酸汤':['炒鸡','火锅'],
+        '火锅':['酸汤','麻辣烫冒菜'],
+        '烧烤':['烤鱼','炸串','小吃烤串'],
+        '烤鱼':['烧烤','炸串'],
+        '炸串':['烧烤','小吃烤串'],
+        '小吃烤串':['烧烤','烤鱼','炸串'],
+        '早餐面点':['云南米线','饮品甜品'],
+        '饮品甜品':['早餐面点','柠檬茶'],
+        '韩式烤肉':['韩式快餐','拌菜泡菜']
+      };
+      var rc = recMap[cat]||[];
+      if(!rc.length) return '';
+      var html = '<div class="derive-box"><h3>📌 同类推荐</h3>';
+      rc.forEach(function(r){
+        var pd = prodData[r];
+        if(pd && pd.length){
+          html += '<a class="prod-card" href="'+pd[0].l+'" style="display:block;padding:10px 12px;background:#0b0f14;border-radius:8px;margin-bottom:6px;text-decoration:none;color:inherit;border:1px solid #2a3442">';
+          html += '<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;font-weight:600">'+pd[0].n+'</span><span style="font-size:10px;color:#00ff88">'+pd[0].p+' →</span></div>';
+          html += '<div style="font-size:10px;color:#6b7a8a;margin-top:2px">'+r+'</div></a>';
+        }
+      });
+      return html + '</div>';
+    }()}
+    
+    <div class="action-box">
+      <button class="re-btn" onclick="restart()">🔄 重新评估</button>
+    </div>
+  `;
+
+  setTimeout(()=>drawRadar(dims),100);
+  window.scrollTo({top:0});
+}
+
+function drawRadar(dims){
+  const c=v('rdChart');if(!c)return;
+  const ctx=c.getContext('2d'), cx=150, cy=150, r=120, n=dims.length, as=2*Math.PI/n;
+  ctx.clearRect(0,0,300,300);
+  for(let l=0.25;l<=1;l+=0.25){ctx.beginPath();ctx.strokeStyle='#1a2835';ctx.lineWidth=0.5;
+    for(let i=0;i<n;i++){const a=-Math.PI/2+i*as,x=cx+r*l*Math.cos(a),y=cy+r*l*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}
+    ctx.closePath();ctx.stroke()}
+  for(let i=0;i<n;i++){const a=-Math.PI/2+i*as;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));ctx.strokeStyle='#1a2835';ctx.lineWidth=0.5;ctx.stroke()}
+  ctx.beginPath();
+  for(let i=0;i<n;i++){const a=-Math.PI/2+i*as,v=dims[i].s/100,x=cx+r*v*Math.cos(a),y=cy+r*v*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}
+  ctx.closePath();ctx.fillStyle='rgba(0,255,136,.08)';ctx.fill();ctx.strokeStyle='#00ff88';ctx.lineWidth=2;ctx.stroke();
+  ctx.font='9px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  for(let i=0;i<n;i++){const a=-Math.PI/2+i*as,lx=cx+(r+18)*Math.cos(a),ly=cy+(r+18)*Math.sin(a);ctx.fillStyle='#6b7a8a';ctx.fillText(dims[i].l.slice(0,5),lx,ly);
+    const v=dims[i].s/100,px=cx+r*v*Math.cos(a),py=cy+r*v*Math.sin(a);ctx.beginPath();ctx.arc(px,py,3,0,2*Math.PI);ctx.fillStyle=dims[i].s>=70?'#00ff88':dims[i].s>=55?'#ddaa44':'#ff6b6b';ctx.fill()}
+}
+
+function restart(){v('formArea').style.display='block';v('resultArea').className='result';v('resultArea').innerHTML='';window.scrollTo({top:0})}
+
+// URL source tracking
+(function(){const s=new URLSearchParams(location.search).get('from');if(s)v('sourceTag').textContent='来自：'+s})();
+</script>
+</body>
+</html>

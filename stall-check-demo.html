@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>地摊评估 · 3s</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0a12;font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:#fff}
+.start-btn{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:#0a0a12;cursor:pointer}
+.start-btn .sb-inner{text-align:center}
+.start-btn .sb-title{font-size:24px;font-weight:800;color:#fff;margin-bottom:8px}
+.start-btn .sb-sub{font-size:12px;color:rgba(255,255,255,.3);margin-bottom:20px}
+.start-btn .sb-btn{display:inline-block;padding:12px 40px;background:linear-gradient(135deg,#FF6B35,#E8652D);color:#fff;border-radius:10px;font-size:16px;font-weight:700;border:none;cursor:pointer}
+.start-btn .sb-btn:hover{opacity:.9}
+.stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .5s}
+.stage.active{opacity:1;pointer-events:auto}
+
+/* Scene 0: Intro */
+.intro-title{font-size:32px;font-weight:800;margin-bottom:8px;animation:popIn .6s both}
+.intro-sub{font-size:14px;color:#aaa;animation:popIn .6s .15s both}
+.intro-ring{position:absolute;border:2px solid rgba(255,255,255,.1);border-radius:50%;animation:ringExpand 1.5s ease-out both}
+@keyframes popIn{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes ringExpand{0%{width:0;height:0;opacity:.6}100%{width:300px;height:300px;opacity:0}}
+
+/* Scene 1: Scan items */
+.scan-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:20px;width:100%;max-width:400px}
+.scan-card{background:rgba(15,18,25,.85);border:1.5px solid;border-radius:12px;padding:14px 8px;text-align:center;animation:cardAppear .5s both}
+.scan-card .emoji{font-size:28px;margin-bottom:4px}
+.scan-card .name{font-size:11px;font-weight:600;color:#ccc}
+@keyframes cardAppear{0%{transform:translateY(30px) scale(.8);opacity:0}100%{transform:translateY(0) scale(1);opacity:1}}
+
+/* Scene 2: Eval */
+.eval-items{width:100%;max-width:360px;padding:0 20px}
+.eval-row{display:flex;align-items:center;margin-bottom:10px;animation:rowIn .4s both}
+.eval-label{font-size:12px;width:90px;flex-shrink:0;color:#ccc}
+.eval-bar-wrap{flex:1;height:10px;background:rgba(30,30,40,.6);border-radius:5px;overflow:hidden}
+.eval-bar{height:100%;border-radius:5px;transition:width 1s ease}
+.eval-pct{font-size:11px;width:36px;text-align:right;font-weight:700}
+@keyframes rowIn{0%{transform:translateX(-20px);opacity:0}100%{transform:translateX(0);opacity:1}}
+
+/* Spinner */
+.spinner{position:relative;width:60px;height:60px;margin-bottom:20px}
+.spinner div{position:absolute;width:12px;height:12px;border-radius:50%;animation:spinDot 1.2s ease-in-out infinite}
+@keyframes spinDot{0%,100%{transform:scale(.3);opacity:.3}50%{transform:scale(1);opacity:1}}
+
+/* Scene 3: Result */
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:10px 20px;width:100%;max-width:400px}
+.result-card{background:rgba(15,18,25,.85);border:1.5px solid;border-radius:12px;padding:12px 6px;text-align:center;animation:cardPop .6s both}
+.result-card .emoji{font-size:26px;margin-bottom:2px}
+.result-card .name{font-size:10px;font-weight:600;color:#aaa;margin-bottom:2px}
+.result-card .score{font-size:22px;font-weight:800}
+.result-card .stars{font-size:7px;margin-top:2px}
+@keyframes cardPop{0%{transform:scale(0) rotate(-10deg);opacity:0}60%{transform:scale(1.1) rotate(2deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+
+.cta{position:absolute;bottom:50px;font-size:13px;font-weight:700;color:rgba(255,255,255,.7);animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+.particle{position:absolute;border-radius:50%;pointer-events:none;animation:float linear infinite}
+@keyframes float{0%{transform:translateY(0) scale(1);opacity:.4}100%{transform:translateY(-100vh) scale(0);opacity:0}}
+</style>
+</head>
+<body>
+
+<div class="start-btn" id="startBtn">
+  <div class="sb-inner">
+    <div class="sb-title">🎯 地摊评估</div>
+    <div class="sb-sub">点击开始 · 3秒演示</div>
+    <button class="sb-btn" onclick="startDemo()">▶ 开始</button>
+  </div>
+</div>
+
+<div id="s0" class="stage active">
+  <div class="intro-ring" style="width:0;height:0" id="ring"></div>
+  <div class="intro-title">🥢 地摊决策</div>
+  <div class="intro-sub">AI 评估你的摆摊潜力</div>
+</div>
+
+<!-- Scene 1: Scan Items -->
+<div id="s1" class="stage">
+  <div style="font-size:18px;font-weight:700;margin-bottom:16px;margin-top:30px">📋 选择品类</div>
+  <div class="scan-grid" id="scanGrid"></div>
+</div>
+
+<!-- Scene 2: Eval -->
+<div id="s2" class="stage">
+  <div style="font-size:18px;font-weight:700;margin-bottom:20px">🔍 评估分析中</div>
+  <div class="spinner" id="spinner"></div>
+  <div class="eval-items" id="evalItems"></div>
+</div>
+
+<!-- Scene 3: Result -->
+<div id="s3" class="stage">
+  <div style="font-size:18px;font-weight:700;margin-top:30px;margin-bottom:12px">📊 评估结果</div>
+  <div class="result-grid" id="resultGrid"></div>
+  <div class="cta">👆 查看完整评估报告</div>
+</div>
+
+<script>
+const ITEMS = [
+  {n:'冰豆花',e:'🥣',c:'#FF6B35',s:'7.2',st:3},
+  {n:'烤芝士条',e:'🧀',c:'#00B4D8',s:'6.8',st:3},
+  {n:'梅花糕',e:'🌸',c:'#F72585',s:'7.0',st:3},
+  {n:'车轮饼',e:'🫓',c:'#7209B7',s:'7.0',st:3},
+  {n:'炸鲜奶',e:'🥛',c:'#06D6A0',s:'8.4',st:4},
+  {n:'烤苕皮',e:'🌶️',c:'#FFD166',s:'7.8',st:3}
+];
+const COLORS = ['#FF6B35','#00B4D8','#F72585','#7209B7','#06D6A0','#FFD166'];
+const LABELS = ['💰 成本评估','🔥 热度分析','⚔️ 竞争判断','📈 利润测算','🔧 难度评估','⭐ 综合评分'];
+const PCS = 30;
+
+let s0=document.getElementById('s0'),s1=document.getElementById('s1'),
+    s2=document.getElementById('s2'),s3=document.getElementById('s3');
+let ring=document.getElementById('ring');
+let scanGrid=document.getElementById('scanGrid');
+let spinner=document.getElementById('spinner');
+let evalItems=document.getElementById('evalItems');
+let resultGrid=document.getElementById('resultGrid');
+
+// Init particles
+for(let i=0;i<PCS;i++){
+  let p=document.createElement('div');
+  p.className='particle';
+  p.style.width=p.style.height=(1+Math.random()*2)+'px';
+  p.style.background=COLORS[Math.floor(Math.random()*6)];
+  p.style.left=Math.random()*100+'%';
+  p.style.top=Math.random()*100+'%';
+  p.style.animationDuration=(5+Math.random()*10)+'s';
+  p.style.animationDelay=Math.random()*5+'s';
+  document.body.appendChild(p);
+}
+
+// Build scan grid
+ITEMS.forEach((item,i)=>{
+  let card=document.createElement('div');
+  card.className='scan-card';
+  card.style.borderColor=item.c;
+  card.style.animationDelay=(i*0.08)+'s';
+  card.innerHTML=`<div class="emoji">${item.e}</div><div class="name">${item.n}</div>`;
+  scanGrid.appendChild(card);
+});
+
+// Build spinner dots
+let spinColors=['#FF6B35','#00B4D8','#F72585','#7209B7','#06D6A0','#FFD166'];
+spinColors.forEach((c,i)=>{
+  let d=document.createElement('div');
+  let ang=i*60*Math.PI/180;
+  let r=25;
+  d.style.left=(30+Math.cos(ang)*r-6)+'px';
+  d.style.top=(30+Math.sin(ang)*r-6)+'px';
+  d.style.background=c;
+  d.style.animationDelay=-(i*0.2)+'s';
+  spinner.appendChild(d);
+});
+
+// Build eval rows
+LABELS.forEach((l,i)=>{
+  let row=document.createElement('div');
+  row.className='eval-row';
+  row.style.animationDelay=(i*0.1)+'s';
+  row.innerHTML=`<div class="eval-label">${l}</div>
+    <div class="eval-bar-wrap"><div class="eval-bar" id="bar${i}" style="width:0%;background:${COLORS[i]}"></div></div>
+    <div class="eval-pct" id="pct${i}" style="color:${COLORS[i]}">0%</div>`;
+  evalItems.appendChild(row);
+});
+
+// Build result cards
+ITEMS.forEach((item,i)=>{
+  let card=document.createElement('div');
+  card.className='result-card';
+  card.style.borderColor=item.c;
+  card.style.animationDelay=(i*0.1)+'s';
+  let stars='';
+  for(let j=0;j<5;j++)stars+=j<item.st?'★':'☆';
+  card.innerHTML=`<div class="emoji">${item.e}</div>
+    <div class="name">${item.n}</div>
+    <div class="score" style="color:${item.c}">${item.s}</div>
+    <div class="stars" style="color:${item.c}">${stars}</div>`;
+  resultGrid.appendChild(card);
+});
+
+// Animation timeline
+let started=false;
+function startDemo(){
+  document.getElementById('startBtn').style.display='none';
+  started=true;
+}
+let start=Date.now();
+
+function tick(){
+  if(!started){requestAnimationFrame(tick);return}
+  let t=(Date.now()-start)/1000;
+  
+  // Ring expand effect
+  if(t<0.8){
+    let p=t/0.8*300;
+    ring.style.width=ring.style.height=p+'px';
+    ring.style.opacity=1-t/0.8;
+  }
+  
+  // Scene transitions
+  if(t>=0.7 && t<1.5){
+    s0.classList.remove('active');
+    s1.classList.add('active');
+  }
+  if(t>=1.5 && t<2.5){
+    s1.classList.remove('active');
+    s2.classList.add('active');
+    // Animate bars
+    for(let i=0;i<6;i++){
+      let d=i*0.1;
+      if(t-1.5>d){
+        let p=Math.min((t-1.5-d)*25,100);
+        document.getElementById('bar'+i).style.width=p+'%';
+        document.getElementById('pct'+i).textContent=Math.round(p)+'%';
+      }
+    }
+  }
+  if(t>=2.5){
+    s2.classList.remove('active');
+    s3.classList.add('active');
+  }
+  
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body></html>
