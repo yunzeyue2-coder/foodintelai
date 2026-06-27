@@ -21,6 +21,7 @@ const STORE_DATA = [
     {f:"catalog/HLT/HLT_02_北舞渡胡辣汤.html",n:"HLT_02 北舞渡胡辣汤（¥19）"}
   ]},
   {p:"SG",n:"砂锅系列",e:"🏺",c:[{f:"catalog/SG/SG_T01_砂锅总纲.html",n:"SG_T01_砂锅总纲"},{f:"catalog/SG/SG_M01_砂锅创业母卡.html",n:"SG_M01_砂锅创业母卡"},{f:"catalog/SG/SG_01_砂锅肥肠.html",n:"SG_01 砂锅肥肠"},{f:"catalog/SG/SG_02_砂锅鸡.html",n:"SG_02 砂锅鸡"},{f:"catalog/SG/SG_03_砂锅牛肉.html",n:"SG_03 砂锅牛肉"},{f:"catalog/SG/SG_04_砂锅豆腐.html",n:"SG_04 砂锅豆腐"},{f:"catalog/SG/SG_05_砂锅什锦.html",n:"SG_05 砂锅什锦"},{f:"catalog/SG/SG_06_腊味煲仔饭.html",n:"SG_06 腊味煲仔饭"},{f:"catalog/SG/SG_07_排骨煲仔饭.html",n:"SG_07 排骨煲仔饭"},{f:"catalog/SG/SG_08_砂锅丸子.html",n:"SG_08 砂锅丸子"},{f:"catalog/SG/SG_09_砂锅白肉.html",n:"SG_09 砂锅白肉"},{f:"catalog/SG/SG_10_砂锅粥.html",n:"SG_10 砂锅粥"}]},
+  {p:"BZ",n:"包子系列",e:"🥟",c:[{f:"catalog/包子/MP_T01_包子总纲.html",n:"MP_T01 包子总纲（免费）"},{f:"catalog/包子/MP_M01_包子创业母卡.html",n:"MP_M01 包子创业母卡"},{f:"catalog/其他/鲜肉包（母）MP_001.html",n:"鲜肉包（母）MP_001"},{f:"catalog/其他/梅菜扣肉包（母）MP_002.html",n:"梅菜扣肉包（母）MP_002"},{f:"catalog/其他/小笼包（母）MP_003.html",n:"小笼包（母）MP_003"},{f:"catalog/其他/灌汤包（母）MP_004.html",n:"灌汤包（母）MP_004"},{f:"catalog/其他/生煎包（母）MP_005.html",n:"生煎包（母）MP_005"},{f:"catalog/其他/大葱肉包（母）MP_019.html",n:"大葱肉包（母）MP_019"},{f:"catalog/其他/酱肉包（母）MP_016.html",n:"酱肉包（母）MP_016"}]},
   {p:"ST",n:"贵州酸汤·单品",e:"🥘",c:[
     {f:"catalog/其他/ST_M01 贵州酸汤创业母卡.html",n:"ST_M01 贵州酸汤创业母卡"},
     {f:"catalog/其他/ST_01 酸汤鱼（子）.html",n:"ST_01 酸汤鱼（子）"},
