@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:transparent;font-family:'SF Mono',ui-monospace,'Cascadia Code',monospace}
+.wrap{position:relative;width:100%;background:#060a12;border-radius:12px;overflow:hidden;min-height:720px}
+canvas#bg{position:absolute;inset:0;width:100%;height:100%}
+.ui{position:relative;z-index:2;padding:20px 18px 16px}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.logo{font-size:10px;letter-spacing:3px;color:#22d3ee;opacity:.7;text-transform:uppercase}
+.badge{font-size:9px;letter-spacing:2px;color:#ffd700;opacity:.6;border:1px solid rgba(255,215,0,.2);padding:3px 8px;border-radius:3px}
+.status-row{display:flex;gap:16px;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:#22d3ee;animation:pulse 2s infinite}
+.dot.g{background:#34d399;animation-delay:.3s}
+.dot.y{background:#fbbf24;animation-delay:.6s}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+/* capital rail */
+.rail{position:relative;height:28px;border:1px solid rgba(255,215,0,.15);border-radius:4px;margin-bottom:12px;overflow:hidden;display:flex;align-items:center;padding:0 12px;background:rgba(255,215,0,.02)}
+.rail-label{font-size:9px;letter-spacing:2px;color:rgba(255,215,0,.5);white-space:nowrap}
+.rail-track{flex:1;height:1px;background:rgba(255,215,0,.08);margin:0 10px;position:relative;overflow:hidden}
+.rail-particle{position:absolute;width:24px;height:1px;background:linear-gradient(90deg,transparent,#ffd700,transparent);animation:railflow 3s linear infinite}
+.rail-particle:nth-child(2){animation-delay:-1s}
+.rail-particle:nth-child(3){animation-delay:-2s}
+@keyframes railflow{from{left:-24px}to{left:100%}}
+
+/* source node */
+.source{border:1px solid rgba(34,211,238,.3);border-radius:6px;padding:10px 14px;margin-bottom:10px;background:rgba(34,211,238,.04);display:flex;align-items:center;gap:10px;position:relative;overflow:hidden}
+.source::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(34,211,238,.04),transparent);animation:shimmer 3s linear infinite}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.source-title{font-size:11px;color:#e2e8f0;letter-spacing:1px;font-weight:600}
+.source-sub{font-size:9px;color:rgba(148,163,184,.5);letter-spacing:.5px;margin-top:2px}
+.source-id{font-size:8px;color:rgba(34,211,238,.4);letter-spacing:2px}
+
+/* traffic bar */
+.traffic{border:1px dashed rgba(251,146,60,.2);border-radius:4px;padding:7px 12px;margin-bottom:10px;background:rgba(251,146,60,.02);display:flex;align-items:center;gap:8px}
+.traffic-label{font-size:9px;color:rgba(251,146,60,.6);letter-spacing:2px}
+.traffic-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:8px;color:rgba(251,146,60,.4);border:1px solid rgba(251,146,60,.1);padding:2px 6px;border-radius:2px;letter-spacing:1px}
+
+/* modules grid */
+.modules{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.mod{border-radius:6px;overflow:hidden;cursor:pointer;transition:transform .2s}
+.mod:hover{transform:translateY(-2px)}
+.mod-header{padding:7px 10px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;position:relative;overflow:hidden}
+.mod-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:currentColor;opacity:.2}
+.mod.p .mod-header{color:#a78bfa;background:rgba(167,139,250,.08)}
+.mod.m .mod-header{color:#34d399;background:rgba(52,211,153,.08)}
+.mod.c .mod-header{color:#fb923c;background:rgba(251,146,60,.08)}
+.mod.f .mod-header{color:#f472b6;background:rgba(244,114,182,.08)}
+.mod-body{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-top:none;border-radius:0 0 6px 6px}
+.node{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.03);position:relative;transition:background .2s}
+.node:last-child{border-bottom:none}
+.node:hover{background:rgba(255,255,255,.03)}
+.node-name{font-size:9px;color:#cbd5e1;letter-spacing:.5px;font-weight:600}
+.node-sub{font-size:8px;color:rgba(100,116,139,.7);letter-spacing:.5px;margin-top:2px}
+.node-dot{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:4px;height:4px;border-radius:50%}
+.mod.p .node-dot{background:#a78bfa;opacity:.4}
+.mod.m .node-dot{background:#34d399;opacity:.4}
+.mod.c .node-dot{background:#fb923c;opacity:.4}
+.mod.f .node-dot{background:#f472b6;opacity:.4}
+
+/* flow canvas overlay */
+#flowCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+
+/* data system */
+.data-sys{border:1px solid rgba(244,114,182,.15);border-radius:6px;background:rgba(244,114,182,.02);margin-bottom:10px;overflow:hidden}
+.data-header{padding:7px 12px;font-size:9px;color:rgba(244,114,182,.6);letter-spacing:2px;border-bottom:1px solid rgba(244,114,182,.08);display:flex;align-items:center;gap:8px}
+.data-nodes{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
+.dnode{padding:8px 6px;border-right:1px solid rgba(255,255,255,.03);text-align:center;cursor:pointer;transition:background .2s}
+.dnode:last-child{border-right:none}
+.dnode:hover{background:rgba(244,114,182,.05)}
+.dnode-name{font-size:8px;color:#cbd5e1;letter-spacing:.5px;font-weight:600;margin-bottom:2px}
+.dnode-sub{font-size:7px;color:rgba(100,116,139,.6)}
+
+/* bottom rail */
+.bottom-rail{display:flex;align-items:center;justify-content:space-between}
+.version{font-size:8px;color:rgba(100,116,139,.4);letter-spacing:3px}
+.metrics{display:flex;gap:12px}
+.metric{text-align:center}
+.metric-val{font-size:11px;color:#22d3ee;font-weight:700;font-variant-numeric:tabular-nums}
+.metric-label{font-size:7px;color:rgba(100,116,139,.5);letter-spacing:1px;margin-top:1px}
+</style>
+
+<div class="wrap" id="wrap">
+<canvas id="bg"></canvas>
+<canvas id="flowCanvas"></canvas>
+
+<div class="ui">
+  <!-- Top bar -->
+  <div class="topbar">
+    <div>
+      <div class="logo">FoodIntelAI · 食品企业操作系统</div>
+    </div>
+    <div class="status-row">
+      <div class="dot"></div><span style="font-size:8px;color:rgba(34,211,238,.4);letter-spacing:1px">SYSTEM LIVE</span>
+      <div class="dot g"></div><span style="font-size:8px;color:rgba(52,211,153,.4);letter-spacing:1px">DATA FLOW</span>
+      <div class="dot y"></div><span style="font-size:8px;color:rgba(251,191,36,.4);letter-spacing:1px">CAPITAL</span>
+      <div class="badge">V2.0</div>
+    </div>
+  </div>
+
+  <!-- Capital rail top -->
+  <div class="rail">
+    <div class="rail-label">💰 资金系统</div>
+    <div class="rail-track">
+      <div class="rail-particle"></div>
+      <div class="rail-particle"></div>
+      <div class="rail-particle"></div>
+    </div>
+    <div class="rail-label" style="font-size:8px;opacity:.6">采购 → 库存 → 账期 → 回款 → 现金流</div>
+  </div>
+
+  <!-- Source node -->
+  <div class="source">
+    <div style="width:6px;height:6px;border-radius:50%;background:#22d3ee;animation:pulse 1.5s infinite;flex-shrink:0"></div>
+    <div>
+      <div class="source-id">SOURCE NODE · 00</div>
+      <div class="source-title">市场洞察 / 用户需求（隐性需求挖掘）</div>
+      <div class="source-sub">用户不会直接告诉你要什么 · 需要翻译成产品定义</div>
+    </div>
+    <div style="margin-left:auto;text-align:right">
+      <div style="font-size:8px;color:rgba(34,211,238,.3);letter-spacing:1px">INPUT</div>
+      <div style="font-size:9px;color:#22d3ee;margin-top:2px">↓</div>
+    </div>
+  </div>
+
+  <!-- Traffic bar -->
+  <div class="traffic">
+    <div class="traffic-label">📡 流量系统</div>
+    <div class="traffic-tags">
+      <div class="tag">短视频</div>
+      <div class="tag">KOL种草</div>
+      <div class="tag">广告投放</div>
+      <div class="tag">私域裂变</div>
+      <div class="tag">直播带货</div>
+    </div>
+    <div style="margin-left:auto;font-size:8px;color:rgba(251,146,60,.3);letter-spacing:1px">OVERLAY · ALL MODULES</div>
+  </div>
+
+  <!-- 4 core modules -->
+  <div class="modules" id="modules">
+    <div class="mod p" onclick="sendPrompt('详细讲解食品企业产品系统的核心模块和运营逻辑')">
+      <div class="mod-header">产品系统 <span style="float:right;opacity:.4">01</span></div>
+      <div class="mod-body">
+        <div class="node"><div class="node-name">产品定义</div><div class="node-sub">品类 · 口味 · 规格</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">产品研发</div><div class="node-sub">配方 · 工艺 · 测试</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">包装定价</div><div class="node-sub">设计 · 规格 · 策略</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">市场定位</div><div class="node-sub">人群 · 场景 · 竞争</div><div class="node-dot"></div></div>
+      </div>
+    </div>
+    <div class="mod m" onclick="sendPrompt('详细讲解食品企业制造系统的核心模块和成本控制')">
+      <div class="mod-header">制造系统 <span style="float:right;opacity:.4">02</span></div>
+      <div class="mod-body">
+        <div class="node"><div class="node-name">采购供应链</div><div class="node-sub">原料 · 辅料 · 包材</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">生产加工</div><div class="node-sub">流水线 · 设备 · 产能</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">品质管控</div><div class="node-sub">标准 · 检测 · 食安</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">成本核算</div><div class="node-sub">物料 · 人工 · 摊销</div><div class="node-dot"></div></div>
+      </div>
+    </div>
+    <div class="mod c" onclick="sendPrompt('详细讲解食品企业渠道系统的布局策略')">
+      <div class="mod-header">渠道系统 <span style="float:right;opacity:.4">03</span></div>
+      <div class="mod-body">
+        <div class="node"><div class="node-name">线下门店</div><div class="node-sub">直营 · 加盟 · 档口</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">电商平台</div><div class="node-sub">抖音 · 美团 · 小程序</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">商超分销</div><div class="node-sub">KA · 便利店 · 社区</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">私域渠道</div><div class="node-sub">社群 · 团购 · 分销</div><div class="node-dot"></div></div>
+      </div>
+    </div>
+    <div class="mod f" onclick="sendPrompt('详细讲解食品企业交易履约系统和冷链物流')">
+      <div class="mod-header">交易履约 <span style="float:right;opacity:.4">04</span></div>
+      <div class="mod-body">
+        <div class="node"><div class="node-name">交易系统</div><div class="node-sub">下单 · 支付 · 结算</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">冷链配送</div><div class="node-sub">仓储 · 运输 · 时效</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">库存管理</div><div class="node-sub">周转 · 安全水位</div><div class="node-dot"></div></div>
+        <div class="node"><div class="node-name">履约保障</div><div class="node-sub">异常 · 赔付 · 时效</div><div class="node-dot"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data system -->
+  <div class="data-sys">
+    <div class="data-header">
+      <div style="width:5px;height:5px;border-radius:50%;background:#f472b6;animation:pulse 1.8s infinite"></div>
+      数据系统 ⇄ 用户系统（持续交互 · 闭环驱动）
+      <div style="margin-left:auto;font-size:8px;color:rgba(244,114,182,.3)">DATA LAYER · 05</div>
+    </div>
+    <div class="data-nodes">
+      <div class="dnode" onclick="sendPrompt('食品企业客户服务体系如何搭建？')"><div class="dnode-name">客户服务</div><div class="dnode-sub">咨询 · 投诉</div></div>
+      <div class="dnode" onclick="sendPrompt('食品复购体系设计方法？')"><div class="dnode-name">复购体系</div><div class="dnode-sub">触达 · 激活</div></div>
+      <div class="dnode" onclick="sendPrompt('食品会员管理系统如何设计？')"><div class="dnode-name">会员管理</div><div class="dnode-sub">等级 · 积分</div></div>
+      <div class="dnode" onclick="sendPrompt('食品数据洞察分析维度？')"><div class="dnode-name">数据洞察</div><div class="dnode-sub">画像 · 分析</div></div>
+      <div class="dnode" onclick="sendPrompt('食品裂变增长策略有哪些？')"><div class="dnode-name">裂变增长</div><div class="dnode-sub">推荐 · 拼团</div></div>
+      <div class="dnode" onclick="sendPrompt('食品业绩分析看哪些核心指标？')"><div class="dnode-name">业绩分析</div><div class="dnode-sub">SKU · 利润</div></div>
+    </div>
+  </div>
+
+  <!-- Capital rail bottom -->
+  <div class="rail" style="margin-bottom:10px">
+    <div class="rail-label" style="font-size:8px;opacity:.5">资金流</div>
+    <div class="rail-track">
+      <div class="rail-particle" style="animation-direction:reverse"></div>
+      <div class="rail-particle" style="animation-direction:reverse;animation-delay:-.8s"></div>
+    </div>
+    <div class="rail-label" style="font-size:8px;color:rgba(255,215,0,.35)">采购现款 → 库存占款 → 渠道账期 → 回款 → 健康现金流</div>
+  </div>
+
+  <!-- Bottom metrics -->
+  <div class="bottom-rail">
+    <div class="version">FOODINTELAI · 食品企业操作系统 V2 · 六维动态架构</div>
+    <div class="metrics">
+      <div class="metric"><div class="metric-val" id="m1">6</div><div class="metric-label">SYSTEMS</div></div>
+      <div class="metric"><div class="metric-val" id="m2">24</div><div class="metric-label">MODULES</div></div>
+      <div class="metric"><div class="metric-val" id="m3" style="color:#34d399">--</div><div class="metric-label">FLOW/S</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ── Grid background canvas ──
+const bgCanvas = document.getElementById('bg');
+const bgCtx = bgCanvas.getContext('2d');
+const wrap = document.getElementById('wrap');
+
+function resizeCanvases() {
+  const r = wrap.getBoundingClientRect();
+  bgCanvas.width = r.width; bgCanvas.height = r.height;
+  flowCanvas.width = r.width; flowCanvas.height = r.height;
+}
+
+function drawGrid() {
+  const w = bgCanvas.width, h = bgCanvas.height;
+  bgCtx.clearRect(0,0,w,h);
+  bgCtx.strokeStyle = 'rgba(255,255,255,0.022)';
+  bgCtx.lineWidth = 0.5;
+  const gs = 28;
+  for (let x = 0; x < w; x += gs) { bgCtx.beginPath(); bgCtx.moveTo(x,0); bgCtx.lineTo(x,h); bgCtx.stroke(); }
+  for (let y = 0; y < h; y += gs) { bgCtx.beginPath(); bgCtx.moveTo(0,y); bgCtx.lineTo(w,y); bgCtx.stroke(); }
+  // corner dots
+  bgCtx.fillStyle = 'rgba(34,211,238,0.12)';
+  for (let x = 0; x < w; x += gs*3) for (let y = 0; y < h; y += gs*3) { bgCtx.beginPath(); bgCtx.arc(x,y,1,0,Math.PI*2); bgCtx.fill(); }
+}
+
+// ── Flow particle canvas ──
+const flowCanvas = document.getElementById('flowCanvas');
+const fCtx = flowCanvas.getContext('2d');
+
+// Define flow paths as sequences of waypoints
+const colors = ['#22d3ee','#34d399','#a78bfa','#fb923c','#f472b6','#ffd700'];
+const particles = [];
+
+function getModuleCenter(idx) {
+  const mods = document.querySelectorAll('.mod');
+  if (!mods[idx]) return null;
+  const r = mods[idx].getBoundingClientRect();
+  const wr = wrap.getBoundingClientRect();
+  return { x: r.left - wr.left + r.width/2, y: r.top - wr.top + r.height/2 };
+}
+
+function getElCenter(el) {
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  const wr = wrap.getBoundingClientRect();
+  return { x: r.left - wr.left + r.width/2, y: r.top - wr.top + r.height/2 };
+}
+
+// Spawn particles along predefined routes
+function spawnParticle() {
+  const routes = [
+    // source → mod0 (product)
+    () => { const s=getElCenter(document.querySelector('.source')), e=getModuleCenter(0); if(!s||!e) return null; return {pts:[s,{x:e.x,y:s.y},{x:e.x,y:e.y}],col:'#22d3ee'}; },
+    // mod0 → mod1
+    () => { const s=getModuleCenter(0), e=getModuleCenter(1); if(!s||!e) return null; return {pts:[s,{x:(s.x+e.x)/2,y:s.y-10},e],col:'#a78bfa'}; },
+    // mod1 → mod2
+    () => { const s=getModuleCenter(1), e=getModuleCenter(2); if(!s||!e) return null; return {pts:[s,{x:(s.x+e.x)/2,y:s.y-10},e],col:'#34d399'}; },
+    // mod2 → mod3
+    () => { const s=getModuleCenter(2), e=getModuleCenter(3); if(!s||!e) return null; return {pts:[s,{x:(s.x+e.x)/2,y:s.y-10},e],col:'#fb923c'}; },
+    // mod3 → data layer
+    () => { const s=getModuleCenter(3), e=getElCenter(document.querySelector('.data-sys')); if(!s||!e) return null; return {pts:[s,{x:s.x,y:e.y}],col:'#f472b6'}; },
+    // data → mod0 (feedback)
+    () => { const s=getElCenter(document.querySelector('.data-sys')), e=getModuleCenter(0); if(!s||!e) return null; return {pts:[s,{x:30,y:s.y},{x:30,y:e.y},e],col:'#22d3ee'}; },
+    // data → mod1 (feedback)
+    () => { const s=getElCenter(document.querySelector('.data-sys')), e=getModuleCenter(1); if(!s||!e) return null; return {pts:[s,{x:s.x,y:e.y+80},{x:e.x,y:e.y+80},e],col:'#34d399'}; },
+    // traffic → mod2
+    () => { const s=getElCenter(document.querySelector('.traffic')), e=getModuleCenter(2); if(!s||!e) return null; return {pts:[s,{x:e.x,y:s.y},e],col:'#fb923c'}; },
+  ];
+  const r = routes[Math.floor(Math.random()*routes.length)]();
+  if (!r || !r.pts || r.pts.some(p=>!p)) return;
+  particles.push({ pts: r.pts, t: 0, speed: 0.004 + Math.random()*0.006, col: r.col, size: 2 + Math.random()*2, tail: 0.15 + Math.random()*0.2 });
+}
+
+function lerpPts(pts, t) {
+  if (pts.length === 2) {
+    return { x: pts[0].x + (pts[1].x-pts[0].x)*t, y: pts[0].y + (pts[1].y-pts[0].y)*t };
+  }
+  const seg = 1/(pts.length-1);
+  const idx = Math.min(Math.floor(t/seg), pts.length-2);
+  const lt = (t - idx*seg)/seg;
+  return { x: pts[idx].x + (pts[idx+1].x-pts[idx].x)*lt, y: pts[idx].y + (pts[idx+1].y-pts[idx].y)*lt };
+}
+
+let frameCount = 0;
+function animateFlow() {
+  fCtx.clearRect(0,0,flowCanvas.width,flowCanvas.height);
+  frameCount++;
+  if (frameCount % 18 === 0) spawnParticle();
+
+  for (let i = particles.length-1; i >= 0; i--) {
+    const p = particles[i];
+    p.t += p.speed;
+    if (p.t > 1) { particles.splice(i,1); continue; }
+
+    // Draw tail
+    const steps = 12;
+    for (let s = 0; s < steps; s++) {
+      const tt = Math.max(0, p.t - p.tail * (s/steps));
+      const pos = lerpPts(p.pts, tt);
+      const alpha = (1 - s/steps) * 0.6;
+      const r = p.size * (1 - s/steps * 0.6);
+      fCtx.beginPath();
+      fCtx.arc(pos.x, pos.y, r, 0, Math.PI*2);
+      fCtx.fillStyle = p.col + Math.round(alpha*255).toString(16).padStart(2,'0');
+      fCtx.fill();
+    }
+    // Head glow
+    const pos = lerpPts(p.pts, p.t);
+    fCtx.beginPath();
+    fCtx.arc(pos.x, pos.y, p.size*1.4, 0, Math.PI*2);
+    fCtx.fillStyle = p.col + 'cc';
+    fCtx.fill();
+  }
+
+  // Draw static connector lines (faint)
+  fCtx.setLineDash([3,6]);
+  fCtx.lineWidth = 0.5;
+  const mods = [0,1,2,3].map(getModuleCenter);
+  for (let i=0; i<3; i++) {
+    if (!mods[i]||!mods[i+1]) continue;
+    fCtx.beginPath();
+    fCtx.moveTo(mods[i].x, mods[i].y - 20);
+    fCtx.lineTo(mods[i+1].x, mods[i+1].y - 20);
+    fCtx.strokeStyle = ['rgba(167,139,250,.12)','rgba(52,211,153,.12)','rgba(251,146,60,.12)'][i];
+    fCtx.stroke();
+  }
+  fCtx.setLineDash([]);
+
+  requestAnimationFrame(animateFlow);
+}
+
+// ── Metrics counter ──
+let flowCount = 0;
+setInterval(() => {
+  flowCount = (flowCount + Math.floor(Math.random()*12+6)) % 999;
+  const el = document.getElementById('m3');
+  if (el) el.textContent = flowCount;
+}, 800);
+
+// ── Init ──
+resizeCanvases();
+drawGrid();
+animateFlow();
+window.addEventListener('resize', () => { resizeCanvases(); drawGrid(); });
+</script>
