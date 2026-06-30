@@ -276,7 +276,7 @@ body{
 .nav-links a{padding:6px 10px;font-size:12px;color:#7a7269;text-decoration:none;border-radius:6px;transition:.15s}
 .nav-links a:hover{background:#e8dcc8;color:#1a1a1a}
 .nav-links a.active{background:#C0392B;color:#fff;font-weight:600}
-.nav-actions{display:flex;align-items:center;gap:4px}
+.nav-actions{display:flex;align-items:center;gap:4px;margin-left:auto}
 .share-btn,.bookmark-btn{border:none;background:none;font-size:17px;cursor:pointer;padding:4px 6px;border-radius:6px;transition:.15s;line-height:1;color:var(--muted)}
 .share-btn:hover,.bookmark-btn:hover{background:var(--tag-bg);color:var(--text)}
 .share-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99;background:rgba(0,0,0,.12);opacity:0;pointer-events:none;transition:.2s}
@@ -527,16 +527,14 @@ body{
     {g:"火锅/汤锅",emoji:"🫕",items:["HG","GS","MLT","XLX","KY","BZ","SG"]},
     {g:"粉面系",emoji:"🍜",items:["HM","YN"]},
     {g:"韩式系",emoji:"🥩",items:["KF","JL","PC"]},
-    {g:"其他",emoji:"🍳",items:["CJ","JX","LB","BZ2"]}
+    {g:"其他",emoji:"🍳",items:["CJ","JX","LB","BZ2","LSF","SX"]}
   ];
-  document.addEventListener('DOMContentLoaded',function(){
+  function renderSysGrid(){
     var el = document.getElementById('storeSystemGrid');
     if(!el)return;
-    // 从全局 STORE_DATA 查
+    if(typeof STORE_DATA === 'undefined'){setTimeout(renderSysGrid,200);return;}
     var lookup = {};
-    if(typeof STORE_DATA !== 'undefined'){
-      STORE_DATA.forEach(function(d){lookup[d.p]=d;});
-    }
+    STORE_DATA.forEach(function(d){lookup[d.p]=d;});
     var html = '';
     SYS_GROUPS.forEach(function(gp){
       html += '<div class="sys-group">';
@@ -554,7 +552,8 @@ body{
       html += '</div></div>';
     });
     el.innerHTML = html;
-  });
+  }
+  document.addEventListener('DOMContentLoaded',renderSysGrid);
   </script>
 
   <!-- ===== ⑥ 选址测评 ===== -->

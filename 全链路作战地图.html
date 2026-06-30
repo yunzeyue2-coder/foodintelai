@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>全链路作战地图 · 食品决策库</title>
+<style>
+.wrap *{margin:0;padding:0;box-sizing:border-box}
+body{background:transparent}
+.wrap{position:relative;width:100%;background:#060a12;border-radius:12px;overflow:hidden;min-height:720px;font-family:'SF Mono',ui-monospace,'Cascadia Code',monospace}
+@media(max-width:500px){.wrap{min-height:520px;border-radius:8px}}
+@media(max-width:380px){.wrap{min-height:440px}.modules{grid-template-columns:1fr 1fr!important}.data-nodes{grid-template-columns:repeat(3,1fr)!important}}
+canvas#bg{position:absolute;inset:0;width:100%;height:100%}
+.ui{position:relative;z-index:2;padding:20px 18px 16px}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.logo{font-size:10px;letter-spacing:3px;color:#22d3ee;opacity:.7;text-transform:uppercase}
+.badge{font-size:9px;letter-spacing:2px;color:#ffd700;opacity:.6;border:1px solid rgba(255,215,0,.2);padding:3px 8px;border-radius:3px}
+.status-row{display:flex;gap:16px;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:#22d3ee;animation:pulse 2s infinite}
+.dot.g{background:#34d399;animation-delay:.3s}
+.dot.y{background:#fbbf24;animation-delay:.6s}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+/* capital rail */
+.rail{position:relative;height:28px;border:1px solid rgba(255,215,0,.15);border-radius:4px;margin-bottom:12px;overflow:hidden;display:flex;align-items:center;padding:0 12px;background:rgba(255,215,0,.02)}
+.rail-label{font-size:9px;letter-spacing:2px;color:rgba(255,215,0,.5);white-space:nowrap}
+.rail-track{flex:1;height:1px;background:rgba(255,215,0,.08);margin:0 10px;position:relative;overflow:hidden}
+.rail-particle{position:absolute;width:24px;height:1px;background:linear-gradient(90deg,transparent,#ffd700,transparent);animation:railflow 3s linear infinite}
+.rail-particle:nth-child(2){animation-delay:-1s}
+.rail-particle:nth-child(3){animation-delay:-2s}
+@keyframes railflow{from{left:-24px}to{left:100%}}
+
+/* source node */
+.source{border:1px solid rgba(34,211,238,.3);border-radius:6px;padding:10px 14px;margin-bottom:10px;background:rgba(34,211,238,.04);display:flex;align-items:center;gap:10px;position:relative;overflow:hidden}
+.source::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(34,211,238,.04),transparent);animation:shimmer 3s linear infinite}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.source-title{font-size:11px;color:#e2e8f0;letter-spacing:1px;font-weight:600}
+.source-sub{font-size:9px;color:rgba(148,163,184,.5);letter-spacing:.5px;margin-top:2px}
+.source-id{font-size:8px;color:rgba(34,211,238,.4);letter-spacing:2px}
+
+/* traffic bar */
+.traffic{border:1px dashed rgba(251,146,60,.2);border-radius:4px;padding:7px 12px;margin-bottom:10px;background:rgba(251,146,60,.02);display:flex;align-items:center;gap:8px}
+.traffic-label{font-size:9px;color:rgba(251,146,60,.6);letter-spacing:2px}
+.traffic-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:8px;color:rgba(251,146,60,.4);border:1px solid rgba(251,146,60,.1);padding:2px 6px;border-radius:2px;letter-spacing:1px}
+
+/* modules grid */
+.modules{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.mod{border-radius:6px;overflow:hidden;cursor:pointer;transition:transform .2s}
+.mod:hover{transform:translateY(-2px)}
+.mod-header{padding:7px 10px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;position:relative;overflow:hidden}
+.mod-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:currentColor;opacity:.2}
+.mod.p .mod-header{color:#a78bfa;background:rgba(167,139,250,.08)}
+.mod.m .mod-header{color:#34d399;background:rgba(52,211,153,.08)}
+.mod.c .mod-header{color:#fb923c;background:rgba(251,146,60,.08)}
+.mod.f .mod-header{color:#f472b6;background:rgba(244,114,182,.08)}
+.mod-body{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-top:none;border-radius:0 0 6px 6px}
+.node{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.03);position:relative;transition:background .2s}
+.node:last-child{border-bottom:none}
+.node:hover{background:rgba(255,255,255,.03)}
+.node-name{font-size:9px;color:#cbd5e1;letter-spacing:.5px;font-weight:600}
+.node-sub{font-size:8px;color:rgba(100,116,139,.7);letter-spacing:.5px;margin-top:2px}
+.node-dot{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:4px;height:4px;border-radius:50%}
+.mod.p .node-dot{background:#a78bfa;opacity:.4}
+.mod.m .node-dot{background:#34d399;opacity:.4}
+.mod.c .node-dot{background:#fb923c;opacity:.4}
+.mod.f .node-dot{background:#f472b6;opacity:.4}
+
+/* flow canvas overlay */
+#flowCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+
+/* data system */
+.data-sys{border:1px solid rgba(244,114,182,.15);border-radius:6px;background:rgba(244,114,182,.02);margin-bottom:10px;overflow:hidden}
+.data-header{padding:7px 12px;font-size:9px;color:rgba(244,114,182,.6);letter-spacing:2px;border-bottom:1px solid rgba(244,114,182,.08);display:flex;align-items:center;gap:8px}
+.data-nodes{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
+.dnode{padding:8px 6px;border-right:1px solid rgba(255,255,255,.03);text-align:center;cursor:pointer;transition:background .2s}
+.dnode:last-child{border-right:none}
+.dnode:hover{background:rgba(244,114,182,.05)}
+.dnode-name{font-size:8px;color:#cbd5e1;letter-spacing:.5px;font-weight:600;margin-bottom:2px}
+.dnode-sub{font-size:7px;color:rgba(100,116,139,.6)}
+
+/* bottom rail */
+.bottom-rail{display:flex;align-items:center;justify-content:space-between}
+.version{font-size:8px;color:rgba(100,116,139,.4);letter-spacing:3px}
+.metrics{display:flex;gap:12px}
+.metric{text-align:center}
+.metric-val{font-size:11px;color:#22d3ee;font-weight:700;font-variant-numeric:tabular-nums}
+.metric-label{font-size:7px;color:rgba(100,116,139,.5);letter-spacing:1px;margin-top:1px}
+</style>
+
+</head>
+<body>
+
+<div class="wrap" id="wrap">
+<canvas id="bg"></canvas>
+<canvas id="flowCanvas"></canvas>
+
+<div class="ui">
+  <!-- Top bar -->
+  <div class="topbar">
+    <div>
+      <div class="logo" style="line-height:1.3">
+        <span style="font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.3);display:block;margin-bottom:2px">FOODINTELAI · 食品决策库</span>
+        <span style="font-size:13px;font-weight:700;letter-spacing:2px;color:#e2e8f0">全链路作战地图</span>
+      </div>
+    </div>
+    <div class="status-row">
+      <div class="dot"></div><span style="font-size:8px;color:rgba(34,211,238,.4);letter-spacing:1px">SYSTEM LIVE</span>
+      <div class="dot g"></div><span style="font-size:8px;color:rgba(52,211,153,.4);letter-spacing:1px">DATA FLOW</span>
+      <div class="dot y"></div><span style="font-size:8px;color:rgba(251,191,36,.4);letter-spacing:1px">CAPITAL</span>
+      <div class="badge">V2.0</div>
+    </div>
+  </div>
+
+  <!-- Capital rail top -->
+  <div class="rail">
+    <div class="rail-label">💰 资金系统</div>
+    <div class="rail-track">
+      <div class="rail-particle"></div>
+      <div class="rail-particle"></div>
+      <div class="rail-particle"></div>
+    </div>
+    <div class="rail-label" style="font-size:8px;opacity:.6;cursor:pointer" onclick="showCapital('overview')">💰 资金系统 · 点击查看详情 →</div>
+  </div>
+
+  <!-- Source node -->
+  <div class="source">
+    <div style="width:6px;height:6px;border-radius:50%;background:#22d3ee;animation:pulse 1.5s infinite;flex-shrink:0"></div>
+    <div>
+      <div class="source-id">SOURCE NODE · 00</div>
+      <div class="source-title">市场洞察 / 用户需求（隐性需求挖掘）</div>
+      <div class="source-sub">用户不会直接告诉你要什么 · 需要翻译成产品定义</div>
+    </div>
+    <div style="margin-left:auto;text-align:right">
+      <div style="font-size:8px;color:rgba(34,211,238,.3);letter-spacing:1px">INPUT</div>
+      <div style="font-size:9px;color:#22d3ee;margin-top:2px">↓</div>
+    </div>
+  </div>
+
+  <!-- Traffic bar -->
+  <div class="traffic">
+    <div class="traffic-label">📡 流量系统</div>
+    <div class="traffic-tags">
+      <div class="tag">短视频</div>
+      <div class="tag">KOL种草</div>
+      <div class="tag">广告投放</div>
+      <div class="tag">私域裂变</div>
+      <div class="tag">直播带货</div>
+    </div>
+    <div style="margin-left:auto;font-size:8px;color:rgba(251,146,60,.3);letter-spacing:1px">OVERLAY · ALL MODULES</div>
+  </div>
+
+  <!-- 4 core modules -->
+  <div class="modules" id="modules">
+    <div class="mod p" onclick="showProd('define')">
+      <div class="mod-header">产品系统 <span style="float:right;opacity:.4">01</span></div>
+      <div class="mod-body">
+        <div class="node" onclick="event.stopPropagation();showProd('define')">
+          <div class="node-name">产品定义</div>
+          <div class="node-sub">品类 · 口味 · 规格</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(167,139,250,.5);margin-top:2px">品类通过率 23-31%</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showProd('rd')">
+          <div class="node-name">产品研发</div>
+          <div class="node-sub">配方 · 工艺 · 测试</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(167,139,250,.5);margin-top:2px">平均周期 3-9个月</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showProd('pack')">
+          <div class="node-name">包装定价</div>
+          <div class="node-sub">设计 · 规格 · 策略</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(167,139,250,.5);margin-top:2px">包装占成本 8-15%</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showProd('market')">
+          <div class="node-name">市场定位</div>
+          <div class="node-sub">人群 · 场景 · 竞争</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(167,139,250,.5);margin-top:2px">定价倍率 2.5-4.5x</div>
+        </div>
+      </div>
+    </div>
+    <div class="mod m" onclick="showMfg('supply')">
+      <div class="mod-header">制造系统 <span style="float:right;opacity:.4">02</span></div>
+      <div class="mod-body">
+        <div class="node" onclick="event.stopPropagation();showMfg('supply')">
+          <div class="node-name">采购供应链</div>
+          <div class="node-sub">原料 · 辅料 · 包材</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(52,211,153,.5);margin-top:2px">原料占成本 45-65%</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showMfg('production')">
+          <div class="node-name">生产加工</div>
+          <div class="node-sub">流水线 · 设备 · 产能</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(52,211,153,.5);margin-top:2px">产能利用率≥75%盈利</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showMfg('quality')">
+          <div class="node-name">品质管控</div>
+          <div class="node-sub">标准 · 检测 · 食安</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(52,211,153,.5);margin-top:2px">不合格率≤1.5%</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showMfg('cost')">
+          <div class="node-name">成本核算</div>
+          <div class="node-sub">物料 · 人工 · 摊销</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(52,211,153,.5);margin-top:2px">人工占成本 15-25%</div>
+        </div>
+      </div>
+    </div>
+    <div class="mod c" onclick="openChannel()">
+      <div class="mod-header">渠道系统 <span style="float:right;opacity:.4">03</span></div>
+      <div class="mod-body">
+        <div class="node" onclick="event.stopPropagation();showChan('offline')">
+          <div class="node-name">线下门店</div>
+          <div class="node-sub">直营 · 加盟 · 档口</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(251,146,60,.5);margin-top:2px">回款7-15天</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showChan('ecom')">
+          <div class="node-name">电商平台</div>
+          <div class="node-sub">抖音2-5% · 美团18-25%</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(251,146,60,.5);margin-top:2px">ROI 1:2~1:6</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showChan('ka')">
+          <div class="node-name">商超分销</div>
+          <div class="node-sub">KA扣点15-30%</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(251,146,60,.5);margin-top:2px">账期45-90天⚠️</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showChan('private')">
+          <div class="node-name">私域渠道</div>
+          <div class="node-sub">0%平台费 · LTV 3:1~6:1</div>
+          <div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:#34d399;margin-top:2px">回款即时 ✅</div>
+        </div>
+      </div>
+    </div>
+    <div class="mod f" onclick="showFulfill('trade')">
+      <div class="mod-header">交易履约 <span style="float:right;opacity:.4">04</span></div>
+      <div class="mod-body">
+        <div class="node" onclick="event.stopPropagation();showFulfill('trade')">
+          <div class="node-name">交易系统</div><div class="node-sub">下单 · 支付 · 结算</div><div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(244,114,182,.5);margin-top:2px">支付成功率≥98%</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showFulfill('coldchain')">
+          <div class="node-name">冷链配送</div><div class="node-sub">仓储 · 运输 · 时效</div><div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(244,114,182,.5);margin-top:2px">冷链损耗率≤2%</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showFulfill('stock')">
+          <div class="node-name">库存管理</div><div class="node-sub">周转 · 安全水位</div><div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(244,114,182,.5);margin-top:2px">周转健康≤30天</div>
+        </div>
+        <div class="node" onclick="event.stopPropagation();showFulfill('guarantee')">
+          <div class="node-name">履约保障</div><div class="node-sub">异常 · 赔付 · 时效</div><div class="node-dot"></div>
+          <div class="node-tag" style="font-size:7px;color:rgba(244,114,182,.5);margin-top:2px">准时履约率≥95%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data system -->
+  <div class="data-sys">
+    <div class="data-header">
+      <div style="width:5px;height:5px;border-radius:50%;background:#f472b6;animation:pulse 1.8s infinite"></div>
+      数据系统 ⇄ 用户系统（持续交互 · 闭环驱动）
+      <div style="margin-left:auto;font-size:8px;color:rgba(244,114,182,.3)">DATA LAYER · 05</div>
+    </div>
+    <div class="data-nodes">
+      <div class="dnode" onclick="showData('service')"><div class="dnode-name">客户服务</div><div class="dnode-sub">咨询 · 投诉</div></div>
+      <div class="dnode" onclick="showData('repurchase')"><div class="dnode-name">复购体系</div><div class="dnode-sub">触达 · 激活</div></div>
+      <div class="dnode" onclick="showData('member')"><div class="dnode-name">会员管理</div><div class="dnode-sub">等级 · 积分</div></div>
+      <div class="dnode" onclick="showData('insight')"><div class="dnode-name">数据洞察</div><div class="dnode-sub">画像 · 分析</div></div>
+      <div class="dnode" onclick="showData('growth')"><div class="dnode-name">裂变增长</div><div class="dnode-sub">推荐 · 拼团</div></div>
+      <div class="dnode" onclick="showData('analytics')"><div class="dnode-name">业绩分析</div><div class="dnode-sub">SKU · 利润</div></div>
+    </div>
+  </div>
+
+  <!-- Capital rail bottom -->
+  <div class="rail" style="margin-bottom:10px">
+    <div class="rail-label" style="font-size:8px;opacity:.5">资金流</div>
+    <div class="rail-track">
+      <div class="rail-particle" style="animation-direction:reverse"></div>
+      <div class="rail-particle" style="animation-direction:reverse;animation-delay:-.8s"></div>
+    </div>
+    <div class="rail-label" style="font-size:8px;color:rgba(255,215,0,.35)">采购现款 → 库存占款 → 渠道账期（KA:45-90天⚠ · 外卖:7-15天✓） → 回款 → 健康现金流</div>
+  </div>
+
+  <!-- Bottom metrics -->
+  <div class="bottom-rail">
+    <div class="version">FOODINTELAI · 食品决策库 · 全链路作战地图 · V8 · 685张卡 · 31品类 · 六系统全接入 · 数据基准 2026-06-28</div>
+    <div class="metrics">
+      <div class="metric"><div class="metric-val" id="m1">0</div><div class="metric-label">卡片总数</div></div>
+      <div class="metric"><div class="metric-val" id="m2">0</div><div class="metric-label">品类分类</div></div>
+      <div class="metric"><div class="metric-val" id="m3" style="color:#34d399">0</div><div class="metric-label">已注册</div></div>
+    </div>
+  </div>
+
+<!-- 交易履约面板 -->
+<div id="fulfillPanel" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.75);backdrop-filter:blur(4px)" onclick="closeFulfill()">
+  <div onclick="event.stopPropagation()" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:480px;background:#0a0f1a;border:1px solid rgba(244,114,182,.3);border-radius:12px;overflow:hidden;max-height:85vh;overflow-y:auto">
+    <div style="background:rgba(244,114,182,.08);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(244,114,182,.15)">
+      <div><div style="font-size:9px;letter-spacing:2px;color:rgba(244,114,182,.6)">交易履约 · 04</div><div id="fulfillTitle" style="font-size:14px;font-weight:700;color:#e2e8f0;margin-top:2px"></div></div>
+      <div onclick="closeFulfill()" style="cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;line-height:1">×</div>
+    </div>
+    <div id="fulfillBody" style="padding:14px 16px"></div>
+  </div>
+</div>
+<!-- 数据系统面板 -->
+<div id="dataPanel" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.75);backdrop-filter:blur(4px)" onclick="closeData()">
+  <div onclick="event.stopPropagation()" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:480px;background:#0a0f1a;border:1px solid rgba(244,114,182,.25);border-radius:12px;overflow:hidden;max-height:85vh;overflow-y:auto">
+    <div style="background:rgba(244,114,182,.06);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(244,114,182,.12)">
+      <div><div style="font-size:9px;letter-spacing:2px;color:rgba(244,114,182,.5)">数据系统 · 05</div><div id="dataTitle" style="font-size:14px;font-weight:700;color:#e2e8f0;margin-top:2px"></div></div>
+      <div onclick="closeData()" style="cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;line-height:1">×</div>
+    </div>
+    <div id="dataBody" style="padding:14px 16px"></div>
+  </div>
+</div>
+<!-- 资金系统面板 -->
+<div id="capitalPanel" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.75);backdrop-filter:blur(4px)" onclick="closeCapital()">
+  <div onclick="event.stopPropagation()" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:480px;background:#0a0f1a;border:1px solid rgba(255,215,0,.3);border-radius:12px;overflow:hidden;max-height:85vh;overflow-y:auto">
+    <div style="background:rgba(255,215,0,.06);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,215,0,.15)">
+      <div><div style="font-size:9px;letter-spacing:2px;color:rgba(255,215,0,.6)">资金系统</div><div id="capitalTitle" style="font-size:14px;font-weight:700;color:#e2e8f0;margin-top:2px"></div></div>
+      <div onclick="closeCapital()" style="cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;line-height:1">×</div>
+    </div>
+    <div id="capitalBody" style="padding:14px 16px"></div>
+  </div>
+</div>
+<!-- 制造系统面板 -->
+<div id="mfgPanel" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)" onclick="closeMfg()">
+  <div id="mfgInner" onclick="event.stopPropagation()" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:480px;background:#0a0f1a;border:1px solid rgba(52,211,153,.3);border-radius:12px;overflow:hidden;max-height:85vh;overflow-y:auto">
+    <div style="background:rgba(52,211,153,.08);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(52,211,153,.15)">
+      <div>
+        <div style="font-size:9px;letter-spacing:2px;color:rgba(52,211,153,.6)">制造系统 · 02</div>
+        <div id="mfgTitle" style="font-size:14px;font-weight:700;color:#e2e8f0;margin-top:2px"></div>
+      </div>
+      <div onclick="closeMfg()" style="cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;line-height:1">×</div>
+    </div>
+    <div id="mfgBody" style="padding:14px 16px"></div>
+  </div>
+</div>
+
+<!-- 产品系统面板 -->
+<div id="prodPanel" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)" onclick="closeProd()">
+  <div id="prodInner" onclick="event.stopPropagation()" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:480px;background:#0a0f1a;border:1px solid rgba(167,139,250,.3);border-radius:12px;overflow:hidden;max-height:85vh;overflow-y:auto">
+    <div style="background:rgba(167,139,250,.08);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(167,139,250,.15)">
+      <div>
+        <div style="font-size:9px;letter-spacing:2px;color:rgba(167,139,250,.6)">产品系统 · 01</div>
+        <div id="prodTitle" style="font-size:14px;font-weight:700;color:#e2e8f0;margin-top:2px"></div>
+      </div>
+      <div onclick="closeProd()" style="cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;line-height:1">×</div>
+    </div>
+    <div id="prodBody" style="padding:14px 16px"></div>
+  </div>
+</div>
+
+<!-- 渠道数据面板 -->
+<div id="chanPanel" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.7);backdrop-filter:blur(4px)" onclick="closeChan()">
+  <div id="chanInner" onclick="event.stopPropagation()" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:480px;background:#0a0f1a;border:1px solid rgba(251,146,60,.3);border-radius:12px;overflow:hidden;max-height:85vh;overflow-y:auto">
+    <div style="background:rgba(251,146,60,.08);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(251,146,60,.15)">
+      <div>
+        <div style="font-size:9px;letter-spacing:2px;color:rgba(251,146,60,.6)">渠道系统 · 03</div>
+        <div id="chanTitle" style="font-size:14px;font-weight:700;color:#e2e8f0;margin-top:2px"></div>
+      </div>
+      <div onclick="closeChan()" style="cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;line-height:1">×</div>
+    </div>
+    <div id="chanBody" style="padding:14px 16px"></div>
+  </div>
+</div>
+</div>
+</div>
+
+<script>
+// ── Grid background canvas ──
+const bgCanvas = document.getElementById('bg');
+const bgCtx = bgCanvas.getContext('2d');
+const wrap = document.getElementById('wrap');
+
+// ── 智能暂停：不可见时停止动画，省CPU ──
+let isVisible = true;
+let animFrameId = null;
+
+function pauseAnim() {
+  isVisible = false;
+  if (animFrameId) {
+    cancelAnimationFrame(animFrameId);
+    animFrameId = null;
+  }
+}
+
+function resumeAnim() {
+  isVisible = true;
+  animateFlow();
+}
+
+if (typeof IntersectionObserver !== 'undefined') {
+  new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      e.isIntersecting ? resumeAnim() : pauseAnim();
+    });
+  }).observe(wrap);
+}
+
+function resizeCanvases() {
+  const r = wrap.getBoundingClientRect();
+  bgCanvas.width = r.width; bgCanvas.height = r.height;
+  flowCanvas.width = r.width; flowCanvas.height = r.height;
+}
+
+function drawGrid() {
+  const w = bgCanvas.width, h = bgCanvas.height;
+  bgCtx.clearRect(0,0,w,h);
+  bgCtx.strokeStyle = 'rgba(255,255,255,0.022)';
+  bgCtx.lineWidth = 0.5;
+  const gs = 28;
+  for (let x = 0; x < w; x += gs) { bgCtx.beginPath(); bgCtx.moveTo(x,0); bgCtx.lineTo(x,h); bgCtx.stroke(); }
+  for (let y = 0; y < h; y += gs) { bgCtx.beginPath(); bgCtx.moveTo(0,y); bgCtx.lineTo(w,y); bgCtx.stroke(); }
+  // corner dots
+  bgCtx.fillStyle = 'rgba(34,211,238,0.12)';
+  for (let x = 0; x < w; x += gs*3) for (let y = 0; y < h; y += gs*3) { bgCtx.beginPath(); bgCtx.arc(x,y,1,0,Math.PI*2); bgCtx.fill(); }
+}
+
+// ── Flow particle canvas ──
+const flowCanvas = document.getElementById('flowCanvas');
+const fCtx = flowCanvas.getContext('2d');
+
+// Define flow paths as sequences of waypoints
+const colors = ['#22d3ee','#34d399','#a78bfa','#fb923c','#f472b6','#ffd700'];
+const particles = [];
+
+function getModuleCenter(idx) {
+  const mods = document.querySelectorAll('.mod');
+  if (!mods[idx]) return null;
+  const r = mods[idx].getBoundingClientRect();
+  const wr = wrap.getBoundingClientRect();
+  return { x: r.left - wr.left + r.width/2, y: r.top - wr.top + r.height/2 };
+}
+
+function getElCenter(el) {
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  const wr = wrap.getBoundingClientRect();
+  return { x: r.left - wr.left + r.width/2, y: r.top - wr.top + r.height/2 };
+}
+
+// Spawn particles along predefined routes
+function spawnParticle() {
+  const routes = [
+    // source → mod0 (product)
+    () => { const s=getElCenter(document.querySelector('.source')), e=getModuleCenter(0); if(!s||!e) return null; return {pts:[s,{x:e.x,y:s.y},{x:e.x,y:e.y}],col:'#22d3ee'}; },
+    // mod0 → mod1
+    () => { const s=getModuleCenter(0), e=getModuleCenter(1); if(!s||!e) return null; return {pts:[s,{x:(s.x+e.x)/2,y:s.y-10},e],col:'#a78bfa'}; },
+    // mod1 → mod2
+    () => { const s=getModuleCenter(1), e=getModuleCenter(2); if(!s||!e) return null; return {pts:[s,{x:(s.x+e.x)/2,y:s.y-10},e],col:'#34d399'}; },
+    // mod2 → mod3
+    () => { const s=getModuleCenter(2), e=getModuleCenter(3); if(!s||!e) return null; return {pts:[s,{x:(s.x+e.x)/2,y:s.y-10},e],col:'#fb923c'}; },
+    // mod3 → data layer
+    () => { const s=getModuleCenter(3), e=getElCenter(document.querySelector('.data-sys')); if(!s||!e) return null; return {pts:[s,{x:s.x,y:e.y}],col:'#f472b6'}; },
+    // data → mod0 (feedback)
+    () => { const s=getElCenter(document.querySelector('.data-sys')), e=getModuleCenter(0); if(!s||!e) return null; return {pts:[s,{x:30,y:s.y},{x:30,y:e.y},e],col:'#22d3ee'}; },
+    // data → mod1 (feedback)
+    () => { const s=getElCenter(document.querySelector('.data-sys')), e=getModuleCenter(1); if(!s||!e) return null; return {pts:[s,{x:s.x,y:e.y+80},{x:e.x,y:e.y+80},e],col:'#34d399'}; },
+    // traffic → mod2
+    () => { const s=getElCenter(document.querySelector('.traffic')), e=getModuleCenter(2); if(!s||!e) return null; return {pts:[s,{x:e.x,y:s.y},e],col:'#fb923c'}; },
+    // mod2(渠道) → mod3(履约)
+    () => { const s=getModuleCenter(2), e=getModuleCenter(3); if(!s||!e) return null; return {pts:[s,{x:s.x,y:e.y+20},{x:e.x,y:e.y+20},e],col:'#fb923c'}; },
+    // source → mod2(渠道) 直连
+    () => { const s=getElCenter(document.querySelector('.source')), e=getModuleCenter(2); if(!s||!e) return null; return {pts:[s,{x:s.x,y:(s.y+e.y)/2},{x:e.x,y:(s.y+e.y)/2},e],col:'#ffd700'}; },
+    // data → mod3(履约) feedback
+    () => { const s=getElCenter(document.querySelector('.data-sys')), e=getModuleCenter(3); if(!s||!e) return null; return {pts:[s,{x:e.x,y:s.y},e],col:'#f472b6'}; },
+  ];
+  const r = routes[Math.floor(Math.random()*routes.length)]();
+  if (!r || !r.pts || r.pts.some(p=>!p)) return;
+  particles.push({ pts: r.pts, t: 0, speed: 0.004 + Math.random()*0.006, col: r.col, size: 2 + Math.random()*2, tail: 0.15 + Math.random()*0.2 });
+}
+
+function lerpPts(pts, t) {
+  if (pts.length === 2) {
+    return { x: pts[0].x + (pts[1].x-pts[0].x)*t, y: pts[0].y + (pts[1].y-pts[0].y)*t };
+  }
+  const seg = 1/(pts.length-1);
+  const idx = Math.min(Math.floor(t/seg), pts.length-2);
+  const lt = (t - idx*seg)/seg;
+  return { x: pts[idx].x + (pts[idx+1].x-pts[idx].x)*lt, y: pts[idx].y + (pts[idx+1].y-pts[idx].y)*lt };
+}
+
+let frameCount = 0;
+function animateFlow() {
+  if (!isVisible) { animFrameId = null; return; }
+  // 如果canvas尺寸为0，跳过本帧等待resize
+  if (flowCanvas.width === 0 || flowCanvas.height === 0) {
+    animFrameId = requestAnimationFrame(animateFlow);
+    return;
+  }
+  fCtx.clearRect(0,0,flowCanvas.width,flowCanvas.height);
+  frameCount++;
+  if (frameCount % 12 === 0) spawnParticle();
+  if (frameCount % 30 === 0) spawnParticle(); // 双重生成，粒子更密
+
+  for (let i = particles.length-1; i >= 0; i--) {
+    const p = particles[i];
+    p.t += p.speed;
+    if (p.t > 1) { particles.splice(i,1); continue; }
+
+    // Draw tail
+    const steps = 12;
+    for (let s = 0; s < steps; s++) {
+      const tt = Math.max(0, p.t - p.tail * (s/steps));
+      const pos = lerpPts(p.pts, tt);
+      const alpha = (1 - s/steps) * 0.6;
+      const r = p.size * (1 - s/steps * 0.6);
+      fCtx.beginPath();
+      fCtx.arc(pos.x, pos.y, r, 0, Math.PI*2);
+      fCtx.fillStyle = p.col + Math.round(alpha*255).toString(16).padStart(2,'0');
+      fCtx.fill();
+    }
+    // Head glow
+    const pos = lerpPts(p.pts, p.t);
+    fCtx.beginPath();
+    fCtx.arc(pos.x, pos.y, p.size*1.4, 0, Math.PI*2);
+    fCtx.fillStyle = p.col + 'cc';
+    fCtx.fill();
+  }
+
+  // Draw static connector lines (faint)
+  fCtx.setLineDash([3,6]);
+  fCtx.lineWidth = 0.5;
+  const mods = [0,1,2,3].map(getModuleCenter);
+  for (let i=0; i<3; i++) {
+    if (!mods[i]||!mods[i+1]) continue;
+    fCtx.beginPath();
+    fCtx.moveTo(mods[i].x, mods[i].y - 20);
+    fCtx.lineTo(mods[i+1].x, mods[i+1].y - 20);
+    fCtx.strokeStyle = ['rgba(167,139,250,.12)','rgba(52,211,153,.12)','rgba(251,146,60,.12)'][i];
+    fCtx.stroke();
+  }
+  fCtx.setLineDash([]);
+
+  animFrameId = requestAnimationFrame(animateFlow);
+}
+
+// ── Metrics counter（真实数据 · 全站档案 2026-06-28）──
+const SITE_STATS = {
+  cards: 685,       // ③已审核卡片总数
+  categories: 31,   // 品类分类数
+  registered: 677,  // card-catalog.js已注册
+};
+
+function animateCount(el, target, duration) {
+  if (!el) return;
+  let cur = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    cur = Math.min(cur + step, target);
+    el.textContent = Math.floor(cur);
+    if (cur >= target) clearInterval(timer);
+  }, 16);
+}
+
+setTimeout(() => {
+  animateCount(document.getElementById('m1'), SITE_STATS.cards, 1200);
+  animateCount(document.getElementById('m2'), SITE_STATS.categories, 800);
+  animateCount(document.getElementById('m3'), SITE_STATS.registered, 1000);
+}, 400);
+
+// ── Init ──
+function initAll() {
+  resizeCanvases();
+  drawGrid();
+  // 强制检查canvas尺寸，如果为0则延迟重试
+  if (bgCanvas.width === 0 || bgCanvas.height === 0) {
+    setTimeout(initAll, 100);
+    return;
+  }
+  animateFlow();
+}
+
+// 多重触发确保粒子在各种渲染环境都能启动
+resizeCanvases();
+drawGrid();
+setTimeout(initAll, 50);
+setTimeout(initAll, 200);
+setTimeout(initAll, 500);
+
+window.addEventListener('resize', () => { resizeCanvases(); drawGrid(); });
+
+// ResizeObserver 监听wrap尺寸变化
+if (typeof ResizeObserver !== 'undefined') {
+  new ResizeObserver(() => { resizeCanvases(); drawGrid(); }).observe(wrap);
+}
+
+// ── 交易履约 + 数据系统 + 资金系统数据 ──
+const FULFILL_DATA = {
+  trade:{title:'交易系统',rows:[
+    {l:'支付成功率基准',v:'≥98%（低于此值影响转化）'},
+    {l:'订单处理时效',v:'线上下单→仓库接单≤15分钟'},
+    {l:'平台结算周期',v:'抖音T+7 · 美团T+1 · 天猫T+7'},
+    {l:'退款率行业均值',v:'食品类3%-8%（生鲜偏高）'},
+    {l:'满减提升客单',v:'设置门槛比直接打折客单高15%-30%'},
+    {l:'微信支付手续费',v:'0.6%（普通商户）'},
+    {l:'优惠券核销率',v:'35%-55%（设有效期提升紧迫感）'},
+  ],warn:'结算账期过长占压现金流，初创期优先选T+1结算渠道。',tip:'满¥99减¥15比直接打9折客单价更高，设计满减比打折更有效。'},
+  coldchain:{title:'冷链配送',rows:[
+    {l:'冷链配送成本',v:'占货值8%-15%'},
+    {l:'冷链损耗率',v:'≤2%（超出检查包装和断链环节）'},
+    {l:'冷藏运输温度',v:'0-4°C（全程监控）'},
+    {l:'冷冻运输温度',v:'≤-15°C'},
+    {l:'顺丰冷链寄付',v:'¥25-45/件（1kg内）'},
+    {l:'前置仓覆盖半径',v:'3km内30分钟达（生鲜标准）'},
+    {l:'自建冷库投入',v:'100吨级约¥80-150万'},
+    {l:'第三方冷库租金',v:'¥15-30/吨/天（城市核心区）'},
+  ],warn:'断链一次可能导致整批货损失，冷链记录仪是必备工具不是可选项。',tip:'优先用顺丰/京东冷链测试，跑通后再考虑自建或区域第三方。'},
+  stock:{title:'库存管理',rows:[
+    {l:'周转天数健康值',v:'≤30天（超45天需促销清货）'},
+    {l:'安全库存公式',v:'日均销量×(采购周期+安全天数)'},
+    {l:'仓储成本',v:'常温1%-3%/月 · 冷链3%-6%/月'},
+    {l:'库存准确率',v:'≥99.5%（低于此需盘点排查）'},
+    {l:'ERP系统投入',v:'SaaS版¥500-3,000/月'},
+    {l:'季节备货系数',v:'旺季前30天备货×1.5-2倍'},
+    {l:'报废损失率警戒',v:'≤0.5%（超出核查先进先出执行）'},
+  ],warn:'超期库存是食品最大隐性亏损——过期食品直接计入损失。',tip:'严格执行FIFO，标注入库日期，临期30天内启动促销或内部消化。'},
+  guarantee:{title:'履约保障',rows:[
+    {l:'准时履约率基准',v:'≥95%（低于此影响平台权重）'},
+    {l:'破损率控制目标',v:'≤1%（超出检查包装标准）'},
+    {l:'客诉响应时效',v:'≤2小时首次回复（平台考核指标）'},
+    {l:'食品类退货率',v:'行业均值3%-8%'},
+    {l:'赔付成本占比',v:'占GMV 0.5%-2%（控制在1%内为优）'},
+    {l:'食品投诉处理时限',v:'监管投诉需48小时内处理并回复'},
+    {l:'召回应急预案',v:'建立48小时内全渠道下架能力'},
+  ],warn:'一条未处理的食安投诉可能引发监管介入——建立SOP比事后补救成本低10倍。',tip:'主动赔付成本远低于差评流量损失，合理投诉快速赔付比争论更划算。'}
+};
+
+const DATA_SYS = {
+  service:{title:'客户服务',rows:[
+    {l:'首次响应时效',v:'≤2小时（平台考核基准）'},
+    {l:'问题解决率',v:'≥85%一次性解决'},
+    {l:'客服人效',v:'1人可服务200-400个日活用户'},
+    {l:'投诉转化复购',v:'优质处理后15%-25%投诉用户变回购'},
+    {l:'NPS均值·食品行业',v:'35-55（优秀≥60）'},
+  ],warn:'差评删除成本极高，预防胜于补救——包装说明清晰可减少30%客诉。',tip:'建立FAQ知识库，常见问题机器人处理，人工聚焦复杂投诉，效率提升50%+'},
+  repurchase:{title:'复购体系',rows:[
+    {l:'食品复购率均值',v:'20%-40%（私域可达50%+）'},
+    {l:'复购周期·零食',v:'7-14天'},
+    {l:'复购周期·调味品',v:'30-60天'},
+    {l:'复购周期·饮品',v:'3-7天'},
+    {l:'最优触达时机',v:'首单后第5天·第13天·第30天'},
+    {l:'流失用户召回成本',v:'是新客获取成本的2-5倍'},
+  ],warn:'停止触达30天以上的用户流失率超60%，建立自动化触达比人工跟进有效。',tip:'首单包装开箱体验、赠品、手写卡片可将复购率提升15%-20%。'},
+  member:{title:'会员管理',rows:[
+    {l:'会员转化率',v:'注册用户→付费会员5%-15%'},
+    {l:'会员ARPU',v:'比非会员高40%-80%'},
+    {l:'会员等级层数',v:'建议3-4层（过多反而混乱）'},
+    {l:'积分兑换率',v:'健康值30%-60%'},
+    {l:'年费会员留存率',v:'食品类60%-75%'},
+    {l:'最受欢迎权益',v:'早购权+专属价+免运费'},
+  ],warn:'积分规则过于复杂会降低参与度——简单直接比花哨体系更有效。',tip:'先做好分层运营（普通/活跃/VIP），跑通后再考虑积分体系。'},
+  insight:{title:'数据洞察',rows:[
+    {l:'核心看板指标',v:'DAU/MAU · GMV · 客单价 · 复购率'},
+    {l:'SKU分析四象限',v:'销量·毛利·复购·退货率'},
+    {l:'用户分层模型',v:'RFM（最近购买/频率/金额）'},
+    {l:'漏斗关键节点',v:'曝光→点击→加购→支付→复购'},
+    {l:'A/B测试周期',v:'≥7天有效样本'},
+    {l:'数据采集工具',v:'神策/GrowingIO·¥2-10万/年'},
+  ],warn:'数据孤岛是最常见问题——电商/私域/线下数据不打通，决策就是瞎猜。',tip:'从3个指标开始：日销额、复购率、退货率，跑通后再扩展维度。'},
+  growth:{title:'裂变增长',rows:[
+    {l:'拼团转化率',v:'食品类20%-35%（高于其他品类）'},
+    {l:'分销佣金区间',v:'8%-20%'},
+    {l:'裂变系数K值',v:'K>1病毒式增长·K=0.5-1有效增长'},
+    {l:'老带新成本',v:'¥5-25/人（远低于广告获客）'},
+    {l:'拼团有效时长',v:'24-48小时（紧迫感最强）'},
+    {l:'社群裂变峰值',v:'晚8-10点发起转化率最高'},
+  ],warn:'裂变设计不当会吸引羊毛党，拉来大量不复购用户，反而增加成本。',tip:'裂变奖励设置为产品而非现金，可过滤羊毛党并提升产品体验。'},
+  analytics:{title:'业绩分析',rows:[
+    {l:'利润健康三看',v:'毛利率·净利率·现金流同看'},
+    {l:'SKU集中度',v:'20%爆款贡献70%-80%销售额'},
+    {l:'品类毛利基准',v:'零食45%-65% · 调味品40%-60% · 生鲜25%-40%'},
+    {l:'费效比警戒线',v:'营销费用/GMV>25%需优化投放'},
+    {l:'损益平衡点',v:'固定成本÷毛利率=保本营业额'},
+    {l:'月度分析周期',v:'每月15日前出上月完整报告'},
+  ],warn:'只看销售额不看毛利是最常见错误——冲GMV冲出亏损的案例比比皆是。',tip:'定期淘汰低销低毛SKU，聚焦资源在高销高毛的核心单品上。'}
+};
+
+const CAPITAL_DATA = {
+  overview:{title:'资金系统',rows:[
+    {l:'现金流健康线',v:'账上现金≥3个月固定支出'},
+    {l:'采购付款',v:'现款享3%-5%折扣·月结为行业通行'},
+    {l:'KA渠道账期',v:'45-90天（严重占压资金）⚠️'},
+    {l:'电商平台回款',v:'抖音T+7 · 美团T+1 · 天猫T+7'},
+    {l:'私域回款',v:'即时到账（最优）✅'},
+    {l:'库存占流动资金',v:'初创期40%-60%'},
+    {l:'现金周转天数',v:'健康值≤45天（DIO+DSO-DPO）'},
+    {l:'供应链融资工具',v:'应收账款保理·存货质押融资'},
+    {l:'备用资金建议',v:'启动资金×1.5倍·留足6个月运营'},
+    {l:'食品融资难点',v:'保质期短·抵押物少·季节性强'},
+  ],warn:'资金链断裂是食品创业死亡第一原因——账面盈利但现金流为负同样会倒闭。',tip:'优先做现金流好的渠道（私域/外卖），KA等规模上来后再进，避免被账期拖死。'}
+};
+
+function renderPanel(data, color) {
+  let h = '<table style="width:100%;border-collapse:collapse;margin-bottom:12px">';
+  data.rows.forEach(r => {
+    h += `<tr><td style="padding:5px 0;font-size:10px;color:${color};width:130px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;padding-right:8px">${r.l}</td><td style="padding:5px 0;font-size:11px;color:#e2e8f0;font-weight:600;border-bottom:1px solid rgba(255,255,255,.04)">${r.v}</td></tr>`;
+  });
+  h += '</table>';
+  if (data.warn) h += `<div style="background:rgba(239,68,68,.08);border-left:3px solid #ef4444;border-radius:4px;padding:8px 10px;font-size:10px;color:#fca5a5;margin-bottom:8px;line-height:1.6">⚠️ ${data.warn}</div>`;
+  if (data.tip) h += `<div style="background:rgba(52,211,153,.08);border-left:3px solid #34d399;border-radius:4px;padding:8px 10px;font-size:10px;color:#6ee7b7;line-height:1.6">💡 ${data.tip}</div>`;
+  h += '<div style="margin-top:12px;font-size:8px;color:rgba(100,116,139,.4);letter-spacing:1px">数据来源：美团研究院 · 食品内参 · FBIF · 尼尔森IQ · 华创证券 · 2026.06</div>';
+  return h;
+}
+
+function showFulfill(k){const d=FULFILL_DATA[k];if(!d)return;document.getElementById('fulfillTitle').textContent=d.title;document.getElementById('fulfillBody').innerHTML=renderPanel(d,'rgba(244,114,182,.7)');document.getElementById('fulfillPanel').style.display='block';}
+function closeFulfill(){document.getElementById('fulfillPanel').style.display='none';}
+function showData(k){const d=DATA_SYS[k];if(!d)return;document.getElementById('dataTitle').textContent=d.title;document.getElementById('dataBody').innerHTML=renderPanel(d,'rgba(244,114,182,.6)');document.getElementById('dataPanel').style.display='block';}
+function closeData(){document.getElementById('dataPanel').style.display='none';}
+function showCapital(k){const d=CAPITAL_DATA[k];if(!d)return;document.getElementById('capitalTitle').textContent=d.title;document.getElementById('capitalBody').innerHTML=renderPanel(d,'rgba(255,215,0,.7)');document.getElementById('capitalPanel').style.display='block';}
+function closeCapital(){document.getElementById('capitalPanel').style.display='none';}
+
+
+// ── 制造系统数据（行业基准 2026）──
+const MFG_DATA = {
+  supply: {
+    title: '采购供应链',
+    rows: [
+      {l:'原料占总成本', v:'45%-65%（肉类食品可达70%）'},
+      {l:'核心原料供应商', v:'≥2家备选，单一依赖风险极高'},
+      {l:'原料价格波动周期', v:'猪肉3-4年猪周期·蔬菜季节性±30%'},
+      {l:'安全库存天数', v:'原料7-15天·包材15-30天'},
+      {l:'采购付款账期', v:'现款享3%-5%折扣·月结通行'},
+      {l:'供应商审核频率', v:'核心供应商每年至少1次现场审核'},
+      {l:'原料损耗率', v:'肉类1%-3%·蔬菜5%-12%·冷冻品0.5%-1%'},
+      {l:'包材MOQ', v:'纸盒3,000-5,000个·复合袋5,000-10,000个'},
+      {l:'冷链原料入库温标', v:'冷藏0-4°C·冷冻≤-18°C'},
+    ],
+    warn: '单一供应商依赖是供应链最大风险——原料涨价或断供直接停产。',
+    tip: '与供应商建立长期合作，承诺年采购量换取价格锁定，可降低10%-15%采购成本。'
+  },
+  production: {
+    title: '生产加工',
+    rows: [
+      {l:'产能利用率盈亏线', v:'≥75%才能摊薄固定成本实现盈利'},
+      {l:'食品工厂人效', v:'人均日产值¥800-2,000（规模效应明显）'},
+      {l:'班组生产效率', v:'熟练工比新工效率高40%-60%'},
+      {l:'设备折旧年限', v:'食品机械5-10年·冷链设备8-12年'},
+      {l:'水电气成本占比', v:'1%-4%（烘焙/热加工类偏高）'},
+      {l:'换产清洁时间', v:'过敏原换产需≥2小时彻底清洁'},
+      {l:'代工厂起订量', v:'¥3-10万/批次（视品类和工厂规模）'},
+      {l:'OEM工厂加工费', v:'占零售价8%-18%（不含原料）'},
+      {l:'自建工厂投入', v:'小型¥50-200万·中型¥500万-2000万'},
+    ],
+    warn: '初创品牌自建工厂是最常见的重资产陷阱——先代工跑量，验证后再考虑自建。',
+    tip: '找已有SC/QS资质的代工厂合作，可节省6-12个月建厂认证时间，快速上市。'
+  },
+  quality: {
+    title: '品质管控',
+    rows: [
+      {l:'成品不合格率警戒线', v:'≤1.5%（超出需排查工艺问题）'},
+      {l:'微生物检测项目', v:'菌落总数·大肠菌群·致病菌（必检）'},
+      {l:'理化检测周期', v:'每批次抽检·季度全项送第三方'},
+      {l:'食品召回成本', v:'小型召回¥50-200万·严重可达千万级'},
+      {l:'SC（食品生产许可）', v:'申请周期3-6个月·年审1次'},
+      {l:'HACCP认证', v:'建立需3-6个月·出口必备'},
+      {l:'保质期测试方法', v:'加速试验：37°C/75%RH，1个月≈6个月常温'},
+      {l:'过敏原管理', v:'大豆/花生/小麦/牛奶/蛋类需标注+隔离生产'},
+      {l:'客诉率行业均值', v:'≤0.3%（超出影响平台店铺评分）'},
+    ],
+    warn: '食品安全零容忍——一次食安事故可能直接终结品牌，品质管控是最低成本的风险控制。',
+    tip: '建立进货检验+过程控制+出厂检验三道防线，记录可追溯，出问题有据可查。'
+  },
+  cost: {
+    title: '成本核算',
+    rows: [
+      {l:'物料成本（BOM）', v:'占总成本45%-65%'},
+      {l:'人工成本', v:'占总成本15%-25%（劳动密集型偏高）'},
+      {l:'制造费用摊销', v:'占总成本8%-15%（水电/折旧/维修）'},
+      {l:'综合毛利率健康线', v:'≥45%（零食类）/ ≥35%（餐饮供应链）'},
+      {l:'损耗率控制目标', v:'综合损耗≤3%（超出需排查工艺/仓储）'},
+      {l:'规模效应拐点', v:'月产值≥¥50万后边际成本明显下降'},
+      {l:'单品保本量', v:'固定成本÷（售价-变动成本）= 保本销量'},
+      {l:'代工vs自产成本差', v:'规模<500万/年代工更优·超过考虑自建'},
+      {l:'库存周转天数', v:'健康值≤30天·超45天需排查滞销'},
+    ],
+    warn: '最常见成本核算错误：漏算老板人工、物流损耗、退货处理成本，导致账面盈利实际亏损。',
+    tip: '用完全成本法核算，把所有隐性成本算进去，再谈定价和毛利——没算清楚就定价是在赌博。'
+  }
+};
+
+function showMfg(key) {
+  const d = MFG_DATA[key];
+  if (!d) return;
+  document.getElementById('mfgTitle').textContent = d.title;
+  let html = '<table style="width:100%;border-collapse:collapse;margin-bottom:12px">';
+  d.rows.forEach(r => {
+    html += '<tr><td style="padding:5px 0;font-size:10px;color:rgba(52,211,153,.7);width:130px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;padding-right:8px">' + r.l + '</td>';
+    html += '<td style="padding:5px 0;font-size:11px;color:#e2e8f0;font-weight:600;border-bottom:1px solid rgba(255,255,255,.04)">' + r.v + '</td></tr>';
+  });
+  html += '</table>';
+  if (d.warn) html += '<div style="background:rgba(239,68,68,.08);border-left:3px solid #ef4444;border-radius:4px;padding:8px 10px;font-size:10px;color:#fca5a5;margin-bottom:8px;line-height:1.6">⚠️ ' + d.warn + '</div>';
+  if (d.tip) html += '<div style="background:rgba(52,211,153,.08);border-left:3px solid #34d399;border-radius:4px;padding:8px 10px;font-size:10px;color:#6ee7b7;line-height:1.6">💡 ' + d.tip + '</div>';
+  html += '<div style="margin-top:12px;font-size:8px;color:rgba(100,116,139,.4);letter-spacing:1px">数据来源：食品内参 · FBIF · 华创证券 · 中国食品工业协会 · 2026.06</div>';
+  document.getElementById('mfgBody').innerHTML = html;
+  document.getElementById('mfgPanel').style.display = 'block';
+}
+
+function closeMfg() { document.getElementById('mfgPanel').style.display = 'none'; }
+
+
+// ── 产品系统数据（行业基准 2026）──
+const PROD_DATA = {
+  define: {
+    title: '产品定义',
+    rows: [
+      {l:'品类立项通过率', v:'23%-31%（10个概念约3个进入研发）'},
+      {l:'消费者口味偏好', v:'咸鲜>辣>甜>酸（中国市场主流）'},
+      {l:'新品口味测试轮次', v:'平均3-5轮盲测'},
+      {l:'规格组合建议', v:'引流款1-2个·利润款2-3个·形象款1个'},
+      {l:'SKU数量警戒线', v:'初创期≤8个SKU，超出管理成本激增'},
+      {l:'单品月销保活线', v:'≥200单（电商）/ ≥50kg（商超）'},
+      {l:'SKU年淘汰率', v:'行业平均35%-45%'},
+      {l:'爆款集中度', v:'头部20% SKU贡献70%-80%销售额'},
+    ],
+    warn: '新品立项最常见的错误：按老板口味定产品，不做消费者验证。',
+    tip: '先用最小可行产品（MVP）在本地/私域测试口味，跑通后再放量生产。'
+  },
+  rd: {
+    title: '产品研发',
+    rows: [
+      {l:'快消食品研发周期', v:'3-9个月（含测试迭代）'},
+      {l:'配方迭代平均次数', v:'8-15次（口味+工艺联调）'},
+      {l:'食品安全检测费', v:'¥3,000-15,000/款（全项检测）'},
+      {l:'保质期加速测试', v:'37°C/75%RH加速6个月≈常温18个月'},
+      {l:'研发成本占销售额', v:'头部品牌3%-5%，初创期1%-2%'},
+      {l:'配方保密手段', v:'核心香料/工艺拆分供应，单一供应商不掌握全貌'},
+      {l:'工艺标准化指标', v:'色差ΔE≤2，水分活度Aw≤0.85（常温类）'},
+      {l:'新品上市失败率', v:'行业平均70%-85%（上市1年内下架）'},
+    ],
+    warn: '压缩研发周期是高风险操作——保质期测试不足、食安隐患是召回的主要原因。',
+    tip: '中央厨房/代工厂合作研发可压缩周期30%-50%，适合初创品牌快速出品。'
+  },
+  pack: {
+    title: '包装定价',
+    rows: [
+      {l:'包装成本占总成本', v:'8%-15%（零食类可达20%）'},
+      {l:'食品定价倍率', v:'出厂价×2.5-4.5=建议零售价'},
+      {l:'经销商利润空间', v:'15%-25%（保证渠道推力）'},
+      {l:'KA零售商加价率', v:'25%-40%'},
+      {l:'心理定价区间', v:'¥9.9/19.9/39.9/59.9（消费阻力最小）'},
+      {l:'包装设计费', v:'¥8,000-50,000（品牌设计公司）'},
+      {l:'最小起订量·纸盒', v:'3,000-5,000个'},
+      {l:'最小起订量·铝膜袋', v:'5,000-10,000个'},
+      {l:'规格策略', v:'引流款小包装（低客单）+ 利润款家庭装（高客单）'},
+    ],
+    warn: '定价过低难以支撑渠道费用和品牌投入，初创品牌定价宁高勿低，后续可做促销。',
+    tip: '包装是货架上的销售员，食品包装ROI研究显示，优化包装可提升转化率15%-30%。'
+  },
+  market: {
+    title: '市场定位',
+    rows: [
+      {l:'目标人群精度', v:'核心用户画像≤3个，超出则定位模糊'},
+      {l:'25-35岁女性消费力', v:'贡献食品电商销售额55%-65%'},
+      {l:'下沉市场渗透率', v:'三四线城市食品消费年增8%-12%'},
+      {l:'场景定位价值', v:'明确消费场景可提升复购率25%-40%'},
+      {l:'竞品价格带监控', v:'定价不超过竞品均价±20%（价格锚点效应）'},
+      {l:'品类竞争密度警戒', v:'抖音同类目月销TOP20差价<30%即红海'},
+      {l:'差异化维度优先级', v:'口味>场景>包装>价格>品牌（初创期）'},
+      {l:'区域集中策略', v:'优先做透1个城市再扩，避免资源分散'},
+    ],
+    warn: '最常见定位错误：人群定位"18-45岁所有人"——等于没有定位。',
+    tip: '找到竞争最弱的场景切入（如：专门做夜宵场景的卤味），比正面竞争更有效。'
+  }
+};
+
+function showProd(key) {
+  const d = PROD_DATA[key];
+  if (!d) return;
+  document.getElementById('prodTitle').textContent = d.title;
+  let html = '<table style="width:100%;border-collapse:collapse;margin-bottom:12px">';
+  d.rows.forEach(r => {
+    html += '<tr><td style="padding:5px 0;font-size:10px;color:rgba(167,139,250,.7);width:130px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;padding-right:8px">' + r.l + '</td>';
+    html += '<td style="padding:5px 0;font-size:11px;color:#e2e8f0;font-weight:600;border-bottom:1px solid rgba(255,255,255,.04)">' + r.v + '</td></tr>';
+  });
+  html += '</table>';
+  if (d.warn) html += '<div style="background:rgba(239,68,68,.08);border-left:3px solid #ef4444;border-radius:4px;padding:8px 10px;font-size:10px;color:#fca5a5;margin-bottom:8px;line-height:1.6">⚠️ ' + d.warn + '</div>';
+  if (d.tip) html += '<div style="background:rgba(167,139,250,.08);border-left:3px solid #a78bfa;border-radius:4px;padding:8px 10px;font-size:10px;color:#c4b5fd;line-height:1.6">💡 ' + d.tip + '</div>';
+  html += '<div style="margin-top:12px;font-size:8px;color:rgba(100,116,139,.4);letter-spacing:1px">数据来源：FBIF · 尼尔森IQ · 欧睿国际 · 食品内参 · 2026.06</div>';
+  document.getElementById('prodBody').innerHTML = html;
+  document.getElementById('prodPanel').style.display = 'block';
+}
+
+function closeProd() { document.getElementById('prodPanel').style.display = 'none'; }
+
+
+// ── 渠道数据 ──
+const CHAN_DATA = {
+  offline: {
+    title: '线下门店',
+    rows: [
+      {l:'模式', v:'直营 / 加盟 / 档口'},
+      {l:'回款周期', v:'7-15天（外卖）'},
+      {l:'美团抽成', v:'15%-25%（含配送服务费）'},
+      {l:'饿了么抽成', v:'16%-24%'},
+      {l:'配送成本', v:'占订单5%-8%'},
+      {l:'外卖ROI', v:'1:3~1:6（含满减/红包）'},
+      {l:'客单价·正餐', v:'¥40-60'},
+      {l:'客单价·快餐', v:'¥20-35'},
+    ],
+    warn: '外卖平台抽成+配送≈30%-33%，毛利低于40%的品类慎入外卖。',
+    tip: '档口优先做堂食+外卖双线，降低平台依赖。'
+  },
+  ecom: {
+    title: '电商平台',
+    rows: [
+      {l:'抖音扣点', v:'2%-5%（食品类目）'},
+      {l:'达人佣金', v:'15%-30%，头部可达40%'},
+      {l:'千川/抖加ROI', v:'1:2~1:4'},
+      {l:'快手扣点', v:'2%-5%'},
+      {l:'快手ROI', v:'1:1.5~1:3.5'},
+      {l:'抖音客单价', v:'¥40-80'},
+      {l:'快手客单价', v:'¥30-55'},
+      {l:'综合成本占比', v:'15%-30%'},
+      {l:'回款周期', v:'15-30天'},
+      {l:'直播坑位费·头部', v:'¥5万-30万+'},
+      {l:'直播坑位费·中腰部', v:'¥5,000-30,000'},
+      {l:'直播佣金', v:'食品类15%-35%'},
+      {l:'直播转化率', v:'3%-8%（高于服装美妆）'},
+    ],
+    warn: '直播综合成本25%-45%，坑位费+佣金吃掉大部分毛利，适合冲量不适合赚钱。',
+    tip: '零食品牌抖音靠¥19.9低价爆款快速放量，再用复购拉LTV。'
+  },
+  ka: {
+    title: '商超分销（KA/便利店）',
+    rows: [
+      {l:'KA综合扣点', v:'15%-30%（含后台返利/节庆/促销）'},
+      {l:'大型KA进场费', v:'¥1万-5万/单品/店'},
+      {l:'中型超市进场费', v:'¥3,000-1.5万'},
+      {l:'条码费', v:'¥500-2,000/条码'},
+      {l:'端架陈列费', v:'¥500-3,000/月'},
+      {l:'堆头费', v:'¥1,000-5,000/月'},
+      {l:'账期·大型KA', v:'45-90天 ⚠️'},
+      {l:'账期·便利店', v:'30-60天'},
+      {l:'便利店综合扣点', v:'10%-20%'},
+      {l:'渠道加价率', v:'5%-8%（终端进货价）'},
+    ],
+    warn: 'KA账期45-90天严重占压现金流，进场费沉没成本高，小品牌慎入大KA。',
+    tip: '优先进社区型超市和便利店，账期短、进场费低，跑通后再谈KA。'
+  },
+  private: {
+    title: '私域渠道',
+    rows: [
+      {l:'平台费率', v:'0%'},
+      {l:'综合成本占比', v:'5%-15%（最低）'},
+      {l:'获客成本·裂变', v:'¥1-5/人'},
+      {l:'获客成本·公域引流', v:'¥8-15/人'},
+      {l:'月复购率', v:'20%-40%，头部50%+'},
+      {l:'LTV/CAC', v:'3:1~6:1'},
+      {l:'首单客单价', v:'¥19.9-39.9（拉新）'},
+      {l:'复购客单价', v:'¥50-120'},
+      {l:'回款周期', v:'即时 ✅'},
+      {l:'标杆案例', v:'东方甄选自营复购率59%'},
+    ],
+    warn: '私域冷启动慢，需要持续内容运营，不适合无内容能力的团队直接押注。',
+    tip: '私域是利润最高的渠道，ROI达到后其他渠道可作为引流入口向私域沉淀。'
+  }
+};
+
+function showChan(key) {
+  const d = CHAN_DATA[key];
+  if (!d) return;
+  document.getElementById('chanTitle').textContent = d.title;
+  let html = '<table style="width:100%;border-collapse:collapse;margin-bottom:12px">';
+  d.rows.forEach(r => {
+    html += '<tr><td style="padding:5px 0;font-size:10px;color:rgba(251,146,60,.7);width:120px;border-bottom:1px solid rgba(255,255,255,.04)">' + r.l + '</td>';
+    html += '<td style="padding:5px 0;font-size:11px;color:#e2e8f0;font-weight:600;border-bottom:1px solid rgba(255,255,255,.04)">' + r.v + '</td></tr>';
+  });
+  html += '</table>';
+  if (d.warn) html += '<div style="background:rgba(239,68,68,.08);border-left:3px solid #ef4444;border-radius:4px;padding:8px 10px;font-size:10px;color:#fca5a5;margin-bottom:8px;line-height:1.6">⚠️ ' + d.warn + '</div>';
+  if (d.tip) html += '<div style="background:rgba(52,211,153,.08);border-left:3px solid #34d399;border-radius:4px;padding:8px 10px;font-size:10px;color:#6ee7b7;line-height:1.6">💡 ' + d.tip + '</div>';
+  html += '<div style="margin-top:12px;font-size:8px;color:rgba(100,116,139,.4);letter-spacing:1px">数据来源：FoodTalks · 蝉妈妈 · 华创证券 · 美团研究院 · 食品内参 · 2026.06</div>';
+  document.getElementById('chanBody').innerHTML = html;
+  document.getElementById('chanPanel').style.display = 'block';
+}
+
+function openChannel() { showChan('ecom'); }
+function closeChan() { document.getElementById('chanPanel').style.display = 'none'; }
+
+</script>
+</body>
+</html>

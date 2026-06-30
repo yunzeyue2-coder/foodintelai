@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SX_04 油泼辣子·腊汁肉VC卡</title>
+<style>
+/* ========== 全局 ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold-d:#8B6914;
+  --gold-m:#C49A2C;
+  --gold-l:#E8C547;
+  --gold-bg:#FFF8E7;
+  --gold-grad:linear-gradient(135deg,#8B6914,#C49A2C,#E8C547);
+  --gold-grad-v:linear-gradient(180deg,#8B6914,#C49A2C);
+  --bg:#1A1A1A;
+  --card:#2A2418;
+  --card2:#322C1E;
+  --text:#F5E6C8;
+  --text2:#C4B088;
+  --price:#E8C547;
+  --accent:#C49A2C;
+  --border:rgba(196,154,44,0.25);
+  --radius:12px;
+  --shadow:0 4px 24px rgba(139,105,20,0.15);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.7;padding:20px;min-height:100vh}
+.container{max-width:820px;margin:0 auto}
+
+/* ========== 评级条 ========== */
+.rating-bar{background:var(--gold-grad);border-radius:var(--radius) var(--radius) 0 0;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.rating-bar h1{color:#1A1A1A;font-size:20px;font-weight:700;letter-spacing:1px}
+.rating-badge{background:rgba(0,0,0,0.2);color:#1A1A1A;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:600}
+.rating-price{background:#1A1A1A;color:var(--gold-l);padding:4px 16px;border-radius:20px;font-size:18px;font-weight:700}
+
+/* ========== 卡片通用 ========== */
+.card{background:var(--card);border:1px solid var(--border);border-radius:0;margin-bottom:1px;overflow:hidden}
+.card-inner{padding:24px}
+.card-title{font-size:16px;font-weight:700;color:var(--gold-l);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--gold-d);display:flex;align-items:center;gap:8px}
+.card-title .icon{font-size:20px}
+.card-sub{font-size:13px;color:var(--text2);margin-top:-10px;margin-bottom:14px}
+
+/* ========== 网格 ========== */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+@media(max-width:600px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+
+/* ========== 数据项 ========== */
+.data-item{background:var(--card2);border-radius:8px;padding:12px;border-left:3px solid var(--gold-d)}
+.data-item .label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.data-item .value{font-size:15px;font-weight:600;color:var(--text)}
+.data-item .value.gold{color:var(--gold-l)}
+.data-item .sub{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* ========== 表格 ========== */
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th{background:var(--gold-d);color:#1A1A1A;padding:8px 10px;text-align:left;font-weight:600}
+td{padding:8px 10px;border-bottom:1px solid rgba(196,154,44,0.12);color:var(--text)}
+tr:nth-child(even) td{background:rgba(196,154,44,0.04)}
+tr:hover td{background:rgba(196,154,44,0.08)}
+
+/* ========== 标签 ========== */
+.tag{display:inline-block;background:rgba(196,154,44,0.15);color:var(--gold-l);padding:2px 10px;border-radius:4px;font-size:12px;margin:2px 4px 2px 0}
+.tag-sm{font-size:11px;padding:1px 8px}
+.tag-green{background:rgba(76,175,80,0.2);color:#81C784}
+.tag-red{background:rgba(244,67,54,0.2);color:#EF9A9A}
+.tag-blue{background:rgba(33,150,243,0.2);color:#90CAF9}
+.tag-orange{background:rgba(255,152,0,0.2);color:#FFCC80}
+
+/* ========== 进度条 ========== */
+.progress-bar{height:8px;background:rgba(196,154,44,0.12);border-radius:4px;overflow:hidden;margin:8px 0}
+.progress-fill{height:100%;background:var(--gold-grad);border-radius:4px;transition:width 0.6s}
+
+/* ========== 风险仪表 ========== */
+.risk-meter{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card2);border-radius:8px;margin-bottom:8px}
+.risk-meter .level{font-size:24px;font-weight:700;min-width:50px}
+.risk-meter .level.low{color:#81C784}
+.risk-meter .level.mid{color:#FFCC80}
+.risk-meter .level.high{color:#EF9A9A}
+.risk-meter .desc{font-size:13px;color:var(--text2)}
+
+/* ========== 工艺步骤 ========== */
+.process-step{background:var(--card2);border-radius:8px;padding:14px;margin-bottom:8px;border-left:4px solid var(--gold-d)}
+.process-step .step-title{font-size:14px;font-weight:600;color:var(--gold-l);margin-bottom:6px}
+.process-step .step-detail{font-size:13px;color:var(--text2);line-height:1.6}
+.process-step .step-data{font-size:12px;color:var(--price);margin-top:4px;font-family:'Courier New',monospace}
+
+/* ========== 付费区 ========== */
+.paywall{background:linear-gradient(135deg,#1A1A1A,#2A2418);border:2px solid var(--gold-d);border-radius:var(--radius);margin:20px 0;overflow:hidden}
+.paywall-header{background:var(--gold-grad);color:#1A1A1A;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.paywall-header h3{font-size:15px;font-weight:700}
+.paywall-toggle{font-size:13px;background:rgba(0,0,0,0.2);padding:4px 12px;border-radius:4px;transition:all 0.3s}
+.paywall-body{display:none;padding:20px}
+.paywall-body.open{display:block}
+.paywall-body .gw-item{background:var(--card2);border-radius:8px;padding:14px;margin-bottom:10px;border-left:3px solid var(--gold-d)}
+.paywall-body .gw-item h4{font-size:14px;color:var(--gold-l);margin-bottom:6px}
+.paywall-body .gw-item p{font-size:13px;color:var(--text2);line-height:1.6}
+.paywall-body .gw-item .data{font-size:12px;color:var(--price);margin-top:6px;font-family:'Courier New',monospace}
+
+/* ========== 关联 ========== */
+.related-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.related-link{background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-size:13px;color:var(--gold-l);text-decoration:none;transition:all 0.2s}
+.related-link:hover{background:var(--gold-d);color:#1A1A1A;border-color:var(--gold-d)}
+
+/* ========== 备注 ========== */
+.notes{background:linear-gradient(135deg,#2A2418,#322C1E);border-radius:var(--radius);padding:20px;margin:16px 0;border:1px dashed var(--gold-d)}
+.notes h3{color:var(--gold-l);font-size:15px;margin-bottom:10px}
+.notes ul{padding-left:18px}
+.notes li{font-size:13px;color:var(--text2);margin-bottom:6px;line-height:1.5}
+
+/* ========== 分隔 ========== */
+.section-divider{height:2px;background:var(--gold-grad);margin:20px 0;border-radius:1px;opacity:0.3}
+
+/* ========== 底部 ========== */
+.footer{text-align:center;padding:20px;color:var(--text2);font-size:12px;border-top:1px solid var(--border);margin-top:20px}
+.footer span{color:var(--gold-l)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ============================================================ -->
+<!-- 模块1: 评级条 -->
+<!-- ============================================================ -->
+<div class="rating-bar">
+  <h1>🌶️ SX_04 · 油泼辣子 · 腊汁肉 VC卡</h1>
+  <span class="rating-badge">V5.1 · 17模块</span>
+  <span class="rating-price">¥39</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块2: 单品速览 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">📋</span> 单品速览</div>
+  <div class="grid-2">
+    <div class="data-item">
+      <div class="label">产品名称</div>
+      <div class="value">油泼辣子 · 腊汁肉 VC卡</div>
+      <div class="sub">陕西面食核心配料工艺深度卡</div>
+    </div>
+    <div class="data-item">
+      <div class="label">版本</div>
+      <div class="value gold">V5.1 · 17模块架构</div>
+      <div class="sub">2026年6月29日更新</div>
+    </div>
+    <div class="data-item">
+      <div class="label">定价</div>
+      <div class="value gold">¥39（一次性付费）</div>
+      <div class="sub">含6个增量模块解锁</div>
+    </div>
+    <div class="data-item">
+      <div class="label">定位</div>
+      <div class="value">工艺深度卡 · 配料专精</div>
+      <div class="sub">聚焦油泼辣子+腊汁肉双核心</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块3: 适合谁/不适合谁 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🎯</span> 适合谁 / 不适合谁</div>
+  <div class="grid-2">
+    <div class="data-item" style="border-left-color:#81C784;">
+      <div class="label" style="color:#81C784;">✅ 适合谁</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-top:4px">
+        • 想自己熬油泼辣子提升品质的创业者<br>
+        • 想做正宗腊汁肉夹馍的早餐/快餐店<br>
+        • 现有面馆想优化配料成本结构的老板<br>
+        • 准备开陕西面馆的餐饮小白<br>
+        • 想了解油泼辣子三温泼油法工艺细节的人
+      </div>
+    </div>
+    <div class="data-item" style="border-left-color:#EF9A9A;">
+      <div class="label" style="color:#EF9A9A;">❌ 不适合谁</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-top:4px">
+        • 只想买现成调料包的便捷派<br>
+        • 不需要油泼辣子或腊汁肉的面食品类<br>
+        • 不做陕西面食的其他菜系从业者<br>
+        • 只做高端私房菜（用料标准不同）<br>
+        • 已有稳定供应链的大连锁品牌
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块4: 赚钱逻辑 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">💰</span> 赚钱逻辑</div>
+  <div class="grid-2">
+    <div class="data-item">
+      <div class="label">油泼辣子每碗成本</div>
+      <div class="value gold">¥0.03 – 0.04</div>
+      <div class="sub">秦椒面¥15-20/斤 · 菜籽油¥8-12/斤</div>
+    </div>
+    <div class="data-item">
+      <div class="label">腊汁肉每碗成本</div>
+      <div class="value gold">¥2.5 – 4.0</div>
+      <div class="sub">五花肉¥12-18/斤 · 出成率65-70%</div>
+    </div>
+    <div class="data-item">
+      <div class="label">油泼辣子毛利率</div>
+      <div class="value gold">≈ 95%</div>
+      <div class="sub">零售一碗面¥15-20，辣子成本几乎忽略</div>
+    </div>
+    <div class="data-item">
+      <div class="label">腊汁肉毛利率</div>
+      <div class="value gold">65 – 75%</div>
+      <div class="sub">夹馍卖¥8-12，肉成本约¥2-3</div>
+    </div>
+  </div>
+  <div style="margin-top:12px;padding:12px;background:var(--card2);border-radius:8px;font-size:13px;color:var(--text2);line-height:1.7">
+    <strong style="color:var(--gold-l);">核心逻辑：</strong>油泼辣子是"利润放大器"——成本几乎为零却直接决定面的定价权和复购率。腊汁肉是"利润稳定器"——出成率控制得好，单份利润空间可达¥5-8。两者组合，一碗面的综合配料成本控制在¥3-4，售价¥15-25，毛利空间充足。
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块5: 赛道判断 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">📊</span> 赛道判断</div>
+  <div class="grid-2" style="grid-template-columns:1fr 1fr 1fr;">
+    <div class="data-item">
+      <div class="label">赛道规模</div>
+      <div class="value gold">★★★★☆</div>
+      <div class="sub">陕西面食全国化趋势明确，市场规模约¥850亿</div>
+    </div>
+    <div class="data-item">
+      <div class="label">竞争密度</div>
+      <div class="value gold">★★★☆☆</div>
+      <div class="sub">品类多但配料专精者少，差异化空间大</div>
+    </div>
+    <div class="data-item">
+      <div class="label">增长趋势</div>
+      <div class="value gold">★★★★★</div>
+      <div class="sub">预制菜/标准化需求爆发，年增速18-25%</div>
+    </div>
+    <div class="data-item">
+      <div class="label">进入门槛</div>
+      <div class="value gold">★★☆☆☆</div>
+      <div class="sub">设备简单，工艺有诀窍但易学</div>
+    </div>
+    <div class="data-item">
+      <div class="label">利润天花板</div>
+      <div class="value gold">★★★★☆</div>
+      <div class="sub">单店月利润¥3-8万，供应链端可达¥20万+</div>
+    </div>
+    <div class="data-item">
+      <div class="label">标准化难度</div>
+      <div class="value gold">★★★☆☆</div>
+      <div class="sub">SOP清晰后可复制，B端供应链是放大关键</div>
+    </div>
+  </div>
+  <div style="margin-top:12px;padding:12px;background:var(--card2);border-radius:8px;font-size:13px;color:var(--text2)">
+    <strong style="color:var(--gold-l);">赛道判断总结：</strong>油泼辣子+腊汁肉是陕西面食的"灵魂组合"，赛道处于成长期——头部品牌（西贝、遇见小面）已验证品类价值，但下沉市场仍有大量空白。配料专精是差异化突破口，标准化后可通过B端供应链放大利润。
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块6: 项目评估 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">📈</span> 项目评估</div>
+  <div class="grid-2">
+    <div class="data-item">
+      <div class="label">启动资金</div>
+      <div class="value gold">¥5,000 – 15,000</div>
+      <div class="sub">设备+首批原料+简单装修</div>
+    </div>
+    <div class="data-item">
+      <div class="label">回本周期</div>
+      <div class="value gold">1 – 3个月</div>
+      <div class="sub">日营业额¥800-1500时</div>
+    </div>
+    <div class="data-item">
+      <div class="label">日均出单（起步）</div>
+      <div class="value gold">60 – 120碗</div>
+      <div class="sub">一人操盘可行</div>
+    </div>
+    <div class="data-item">
+      <div class="label">月利润预期</div>
+      <div class="value gold">¥8,000 – 30,000</div>
+      <div class="sub">3个月后稳定期</div>
+    </div>
+    <div class="data-item">
+      <div class="label">人力需求</div>
+      <div class="value gold">1 – 2人</div>
+      <div class="sub">主厨+帮工（可兼）</div>
+    </div>
+    <div class="data-item">
+      <div class="label">日均操作时长</div>
+      <div class="value gold">8 – 10小时</div>
+      <div class="sub">含备料+高峰出餐+收档</div>
+    </div>
+  </div>
+  <div style="margin-top:12px">
+    <div class="data-item" style="border-left-color:var(--gold-l);">
+      <div class="label">风险评估</div>
+      <div class="risk-meter" style="padding:0;margin:6px 0 0 0;background:transparent">
+        <span class="level mid">中</span>
+        <div class="desc">油泼辣子工艺门槛低但一致性难；腊汁肉老卤管理需经验；整体风险可控，适合有基本厨艺基础者。</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块7: 同赛道对比 —— 自制vs采购vs品牌供应商 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🔍</span> 同赛道对比 · 自制 vs 采购 vs 品牌供应商</div>
+  <table>
+    <thead>
+      <tr><th style="width:18%">维度</th><th style="width:27%">🔥 自制（本卡方案）</th><th style="width:27%">📦 采购成品</th><th style="width:28%">🏭 品牌供应商</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>油泼辣子成本</strong></td><td>¥0.03-0.04/碗</td><td>¥0.15-0.30/碗</td><td>¥0.08-0.15/碗</td></tr>
+      <tr><td><strong>腊汁肉成本</strong></td><td>¥2.5-4.0/份</td><td>¥4.0-6.0/份</td><td>¥3.0-4.5/份</td></tr>
+      <tr><td><strong>品质控制</strong></td><td><span class="tag tag-green">完全可控</span></td><td><span class="tag tag-orange">参差不齐</span></td><td><span class="tag tag-blue">相对稳定</span></td></tr>
+      <tr><td><strong>风味独特性</strong></td><td><span class="tag tag-green">⭐⭐⭐⭐⭐</span></td><td><span class="tag">⭐⭐</span></td><td><span class="tag">⭐⭐⭐</span></td></tr>
+      <tr><td><strong>时间投入</strong></td><td>日均1-2h备料</td><td>几乎为零</td><td>日均0.5h</td></tr>
+      <tr><td><strong>初期设备投入</strong></td><td>¥2,000-4,000</td><td>¥0</td><td>¥1,000-2,000</td></tr>
+      <tr><td><strong>长期利润</strong></td><td><span class="tag tag-green">最高</span></td><td>低（利润被吃掉）</td><td>中等</td></tr>
+      <tr><td><strong>适合场景</strong></td><td>自有品牌/品质店</td><td>短期/试水</td><td>多店/连锁扩张</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:10px;padding:10px;background:var(--card2);border-radius:8px;font-size:12px;color:var(--text2)">
+    <strong style="color:var(--gold-l);">建议：</strong>起步期自制（品质+利润最大化），日均出单超过200碗后考虑半成品+自制结合；连锁化后对接品牌供应商定制订标准。
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块8: 30天验证路线 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🗓️</span> 30天验证路线</div>
+  <div class="grid-2">
+    <div class="data-item">
+      <div class="label">第1-3天</div>
+      <div class="value">设备采购 + 原料试购</div>
+      <div class="sub">秦椒面、菜籽油、五花肉、香料包</div>
+    </div>
+    <div class="data-item">
+      <div class="label">第4-7天</div>
+      <div class="value">油泼辣子工艺打磨</div>
+      <div class="sub">三温泼油法 · 至少试做3版</div>
+    </div>
+    <div class="data-item">
+      <div class="label">第8-12天</div>
+      <div class="value">腊汁肉老卤建立</div>
+      <div class="sub">三分卤七分泡 · 首卤3-5斤测试</div>
+    </div>
+    <div class="data-item">
+      <div class="label">第13-18天</div>
+      <div class="value">产品组合测试</div>
+      <div class="sub">拌面/夹馍/凉皮/蘸料4场景测试</div>
+    </div>
+    <div class="data-item">
+      <div class="label">第19-24天</div>
+      <div class="value">小范围试吃 + 反馈收集</div>
+      <div class="sub">邀请20-30人试吃，记录评分</div>
+    </div>
+    <div class="data-item">
+      <div class="label">第25-30天</div>
+      <div class="value">SOP定型 + 试营业</div>
+      <div class="sub">确定配方/出餐流程，小范围营业</div>
+    </div>
+  </div>
+  <div style="margin-top:12px;padding:12px;background:var(--card2);border-radius:8px;font-size:13px;color:var(--gold-l);text-align:center;font-weight:600">
+    🎯 30天目标：日均出单40-60碗 · 复购率&gt;30% · 毛利&gt;65%
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块9: 设备清单 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🔧</span> 设备清单</div>
+  <div class="grid-2">
+    <div class="data-item">
+      <div class="label">🔥 油泼辣子设备</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-top:4px">
+        • 不锈钢油锅（深20cm+）¥150-300<br>
+        • 食品温度计（-50~300°C）¥30-60<br>
+        • 不锈钢搅拌勺 ¥15-30<br>
+        • 耐热陶瓷碗/不锈钢盆（泼油容器）¥40-80<br>
+        • 香料研磨器（可选）¥60-150<br>
+        • 密封储存罐（玻璃/陶瓷）¥20-50<br>
+        <span style="color:var(--gold-l);">小计：¥315-670</span>
+      </div>
+    </div>
+    <div class="data-item">
+      <div class="label">🥩 腊汁肉设备</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-top:4px">
+        • 不锈钢卤桶（20-30L）¥200-400<br>
+        • 商用电磁炉/燃气灶（现有）¥0-500<br>
+        • 漏勺+肉钩 ¥30-60<br>
+        • 食品级保鲜盒（冷藏用）¥40-80<br>
+        • 真空包装机（可选，商用版）¥200-500<br>
+        • 冰柜（现有/租用）¥500-1500<br>
+        <span style="color:var(--gold-l);">小计：¥970-3040</span>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:10px;padding:10px;background:var(--card2);border-radius:8px;font-size:12px;color:var(--text2)">
+    <strong style="color:var(--gold-l);">设备总计（含通用工具）：</strong>¥1,500-4,000 · 大部分设备可共用，建议优先购买核心锅具+温度计，现有厨房设备利用可再省30%。
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块10: 产品结构 —— 基础版/进阶版/商业版 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">📦</span> 产品结构 · 三级体系</div>
+  <table>
+    <thead>
+      <tr><th>版本</th><th>目标用户</th><th>油泼辣子方案</th><th>腊汁肉方案</th><th>预估投资</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-green">🥇 基础版</span></td>
+        <td>家庭/小摊/试水</td>
+        <td>秦椒面¥15/斤+菜籽油¥8/斤<br>三温泼油法基础版</td>
+        <td>五花肉¥12/斤+基础卤料包<br>老卤循环3次</td>
+        <td>¥2,000-4,000</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-orange">🥈 进阶版</span></td>
+        <td>面馆/早餐店</td>
+        <td>秦椒面¥18/斤+菜籽油¥10/斤<br>三温泼油法+香料升级</td>
+        <td>五花肉¥15/斤+定制卤料<br>老卤循环5次+卤水养护</td>
+        <td>¥5,000-10,000</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-blue">🥉 商业版</span></td>
+        <td>连锁/供应链</td>
+        <td>定制秦椒面+品牌菜籽油<br>量产SOP+真空包装</td>
+        <td>批量采购价+标准卤制车间<br>老卤数据库+保质期管控</td>
+        <td>¥30,000-80,000+</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top:10px;padding:10px;background:var(--card2);border-radius:8px;font-size:12px;color:var(--text2)">
+    <strong style="color:var(--gold-l);">推荐路径：</strong>基础版起步验证 → 1-3个月后升级进阶版 → 日均200单以上考虑商业版。不建议直接跳商业版。
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块11: 应用场景 —— 拌面/夹馍/凉皮/蘸料 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🍜</span> 应用场景 · 四维产品矩阵</div>
+  <div class="grid-2">
+    <div class="data-item" style="border-left-color:#FF7043;">
+      <div class="label" style="color:#FF7043;">🍝 拌面</div>
+      <div class="value">油泼辣子+蒜泥+醋</div>
+      <div class="sub">成本¥0.03 · 售价¥12-18<br>最基础场景，出餐最快</div>
+    </div>
+    <div class="data-item" style="border-left-color:#8D6E63;">
+      <div class="label" style="color:#8D6E63;">🥙 夹馍</div>
+      <div class="value">腊汁肉+青椒+香菜</div>
+      <div class="sub">成本¥2.5-4 · 售价¥8-14<br>经典组合，复购率最高</div>
+    </div>
+    <div class="data-item" style="border-left-color:#66BB6A;">
+      <div class="label" style="color:#66BB6A;">🥗 凉皮</div>
+      <div class="value">油泼辣子+芝麻酱+面筋</div>
+      <div class="sub">成本¥0.03-0.05 · 售价¥10-16<br>夏季爆品，毛利极高</div>
+    </div>
+    <div class="data-item" style="border-left-color:#42A5F5;">
+      <div class="label" style="color:#42A5F5;">🧂 蘸料</div>
+      <div class="value">油泼辣子+蒜蓉+醋+香油</div>
+      <div class="sub">成本¥0.02 · 售价¥3-5<br>加购率高，纯利润</div>
+    </div>
+  </div>
+  <div style="margin-top:12px;padding:12px;background:var(--card2);border-radius:8px;font-size:13px;color:var(--text2);line-height:1.7">
+    <strong style="color:var(--gold-l);">组合建议：</strong>① 拌面+夹馍=黄金搭档（午/晚高峰）② 凉皮+蘸料=夏季组合（引流+利润）③ 所有场景共用同一套配料体系，极大降低备料复杂度。
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块12: 最大风险 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">⚠️</span> 最大风险</div>
+  <div class="risk-meter">
+    <span class="level mid">中高</span>
+    <div class="desc"><strong style="color:var(--gold-l);">风险 #1 · 工艺一致性</strong><br>油泼辣子的"三温泼油法"对温度把控要求高，新手容易温度失控导致焦苦或香气不足。腊汁肉的老卤管理需要经验积累。</div>
+  </div>
+  <div class="risk-meter">
+    <span class="level mid">中</span>
+    <div class="desc"><strong style="color:var(--gold-l);">风险 #2 · 原料波动</strong><br>秦椒面和菜籽油价格受产地气候影响，夏秋之交价格波动最大（¥3-5/斤浮动）。五花肉价格随猪周期波动（¥12-18/斤区间）。</div>
+  </div>
+  <div class="risk-meter">
+    <span class="level low">低</span>
+    <div class="desc"><strong style="color:var(--gold-l);">风险 #3 · 设备故障</strong><br>核心设备（油锅/温度计/卤桶）成本低且易替换，故障不影响长期运营，备件成本¥200以内。</div>
+  </div>
+  <div class="risk-meter">
+    <span class="level low">低</span>
+    <div class="desc"><strong style="color:var(--gold-l);">风险 #4 · 食品安全</strong><br>腊汁肉老卤若养护不当可能滋生细菌，需严格执行每日煮沸消毒、冷藏保存、定期更换（3-5次后必须重新起卤）。</div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块13: 核心工艺 —— 油泼辣子三温泼油法+腊汁肉老卤工艺（精确到克） -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🔥</span> 核心工艺 · 油泼辣子三温泼油法</div>
+  <div class="process-step">
+    <div class="step-title">🌡️ 第一温 · 180°C 出香</div>
+    <div class="step-detail">菜籽油500g加热至180°C（油面微冒青烟），关火静置20秒。将热油浇入秦椒面100g+白芝麻15g+盐5g的混合碗中，边浇边搅拌。此阶段激发出辣椒和芝麻的焦香基底。</div>
+    <div class="step-data">油温：180±5°C | 油:面=5:1 | 时间：浇油10秒内完成</div>
+  </div>
+  <div class="process-step">
+    <div class="step-title">🎨 第二温 · 150°C 出色</div>
+    <div class="step-detail">待油温自然降至150°C（约1-2分钟），第二次浇入剩余热油。此时油温激发辣椒红色素充分释放，油色呈红亮色泽（色价≥120）。</div>
+    <div class="step-data">油温：150±5°C | 关键：色价控制 | 时间：自然降温约90秒</div>
+  </div>
+  <div class="process-step">
+    <div class="step-title">👃 第三温 · 120°C 出味</div>
+    <div class="step-detail">油温继续降至120°C时，加入香料粉（八角2g+桂皮1g+草果1g+香叶0.5g+小茴香1g，提前研磨成粉）。120°C是香料挥发油的最佳释放温度，不苦不涩，层次丰富。</div>
+    <div class="step-data">油温：120±5°C | 香料比例精确到g | 搅拌30秒后静置冷却</div>
+  </div>
+  <div class="process-step" style="border-left-color:var(--gold-l);">
+    <div class="step-title">💡 成品标准</div>
+    <div class="step-detail">油色红亮不黑、辣椒香气浓郁带焦香底韵、入口先是辣香→中段香料复合香→尾韵微甜回甘。静置8-12小时后风味融合最佳。冷藏密封可保存30天。</div>
+    <div class="step-data">出成率：95%+ | 保质期：常温7天/冷藏30天</div>
+  </div>
+</div>
+</div>
+
+<div class="section-divider"></div>
+
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🥩</span> 核心工艺 · 腊汁肉老卤工艺</div>
+  <div class="process-step">
+    <div class="step-title">📦 原料准备</div>
+    <div class="step-detail">五花肉（带皮）1000g，切成10×10cm大方块。冷水浸泡2小时去血水，中间换水2次。焯水：冷水下锅，加料酒20g+姜片15g+葱段20g，大火煮沸后撇去浮沫，煮5分钟捞出温水洗净。</div>
+    <div class="step-data">五花肉：¥12-18/斤 | 预处理耗时：2.5h | 焯水损耗：约3-5%</div>
+  </div>
+  <div class="process-step">
+    <div class="step-title">🧂 老卤调制（精确配方）</div>
+    <div class="step-detail">
+      清水2000ml + 生抽60g + 老抽30g + 料酒30g + 冰糖30g + 盐15g<br>
+      香料包：八角4g + 桂皮3g + 草果2g + 丁香0.5g + 小茴香2g + 香叶2g + 花椒3g + 陈皮2g + 甘草1g<br>
+      葱段30g + 姜片20g + 蒜瓣15g
+    </div>
+    <div class="step-data">香料精确到克 | 初始卤水成本：约¥12-15 | 可卤肉3-4轮</div>
+  </div>
+  <div class="process-step">
+    <div class="step-title">🔥 三分卤 · 火候控制</div>
+    <div class="step-detail">大火煮沸后转小火，保持微沸状态（95-98°C）。卤制时间：<br>
+      ① 第1轮：小火卤制90分钟 → 关火浸泡 —— <br>
+      ② 第2轮：小火卤制60分钟（老卤已入味）→ 关火浸泡 —— <br>
+      ③ 第3轮及以后：小火卤制45分钟即可（卤水醇厚）→ 关火浸泡
+    </div>
+    <div class="step-data">微沸温度：95-98°C | 卤制时间递减 | 每轮补充香料20%+水10%</div>
+  </div>
+  <div class="process-step" style="border-left-color:var(--price);">
+    <div class="step-title">⏳ 七分泡 · 浸泡工艺（核心秘诀）</div>
+    <div class="step-detail">卤制完成后关火，肉不捞出，在热卤汤中自然冷却浸泡至少4小时（最佳过夜8-12小时）。浸泡步骤决定腊汁肉90%的口感——卤汁在自然降温过程中持续渗入肉纤维，水分不流失，瘦肉不柴、肥肉不腻。</div>
+    <div class="step-data">浸泡时间：≥4h（推荐8-12h）| 温度梯度：100°C→室温 | 出成率：65-70%</div>
+  </div>
+  <div class="process-step">
+    <div class="step-title">🔄 老卤养护与循环</div>
+    <div class="step-detail">① 每卤完一轮后过滤卤汤去杂质 → ② 煮沸后自然冷却 → ③ 冷藏密封保存（0-4°C）→ ④ 使用前补香料20%+水10%+盐适量 → ⑤ 再次使用。同一锅老卤可重复使用3-5次，每次风味递增，第3次为风味巅峰。</div>
+    <div class="step-data">循环次数：3-5次 | 第3次风味最佳 | 超过5次必须重起新卤</div>
+  </div>
+  <div class="process-step" style="border-left-color:var(--gold-l);">
+    <div class="step-title">💰 成本精算</div>
+    <div class="step-detail">
+      五花肉1000g（¥24-36）→ 卤后出肉650-700g（¥24-36/700g）<br>
+      每份腊汁肉用量50-70g ≈ 成本¥1.7-3.9<br>
+      每份含卤汁10-15g ≈ 成本忽略不计<br>
+      成品售价：夹馍¥8-12/个（含馍成本¥0.8-1.2）= 每份利润¥4-8
+    </div>
+    <div class="step-data">出成率65-70% | 成本¥18-25/斤（卤后）| 单份毛利65-75%</div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块14A: 成本利润 · 原料精算表 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">📊</span> 成本精算 · 原料采购明细</div>
+  <table>
+    <thead>
+      <tr><th>原料</th><th>规格</th><th>单价（¥/斤）</th><th>单次用量</th><th>单次成本</th><th>可做份数</th><th>单份成本</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>秦椒面（线椒）</td><td>中粗研磨</td><td>15-20</td><td>100g</td><td>3.0-4.0</td><td>100-150</td><td>0.02-0.03</td></tr>
+      <tr><td>菜籽油</td><td>纯压榨一级</td><td>8-12</td><td>500g</td><td>8.0-12.0</td><td>200-300</td><td>0.03-0.05</td></tr>
+      <tr><td>白芝麻</td><td>生脱皮</td><td>18-25</td><td>15g</td><td>0.5-0.8</td><td>200</td><td>0.003-0.004</td></tr>
+      <tr><td>香料（八角等）</td><td>整料/粉</td><td>30-80</td><td>8.5g</td><td>0.5-1.2</td><td>200</td><td>0.003-0.006</td></tr>
+      <tr><td>五花肉（带皮）</td><td>鲜冷肉</td><td>12-18</td><td>1000g</td><td>24.0-36.0</td><td>14-18</td><td>1.5-2.5</td></tr>
+      <tr><td>老抽+生抽</td><td>酿造酱油</td><td>8-15</td><td>90g</td><td>1.5-2.7</td><td>14-18</td><td>0.1-0.2</td></tr>
+      <tr><td>冰糖</td><td>黄冰糖</td><td>10-16</td><td>30g</td><td>0.6-1.0</td><td>14-18</td><td>0.04-0.07</td></tr>
+      <tr><td>香辛料包</td><td>卤料组合</td><td>30-60</td><td>18.5g</td><td>1.1-2.2</td><td>14-18</td><td>0.07-0.15</td></tr>
+      <tr style="background:rgba(196,154,44,0.08);"><td><strong>油泼辣子综合</strong></td><td>—</td><td>—</td><td>500g油+100g面</td><td>9-15</td><td>200-300碗</td><td><strong>¥0.03-0.04/碗</strong></td></tr>
+      <tr style="background:rgba(196,154,44,0.08);"><td><strong>腊汁肉综合</strong></td><td>—</td><td>—</td><td>1000g肉+卤料</td><td>28-42</td><td>14-18份</td><td><strong>¥2.5-3.5/份</strong></td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:10px;padding:10px;background:var(--card2);border-radius:8px;font-size:12px;color:var(--text2)">
+    <strong style="color:var(--gold-l);">注：</strong>以上成本按零售价计算，批量采购可再降15-25%。腊汁肉出成率65-70%已纳入单份成本计算。油泼辣子每碗实际用量约1.5-2g（面）+8-10g（油）。
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块14B: 成本利润 · 设备与运营成本 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🏗️</span> 成本精算 · 设备与固定投入</div>
+  <table>
+    <thead>
+      <tr><th>设备/项目</th><th>规格</th><th>数量</th><th>单价（¥）</th><th>小计（¥）</th><th>折旧月数</th><th>月折旧（¥）</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>不锈钢油锅</td><td>深20cm+·3L</td><td>1</td><td>200</td><td>200</td><td>24</td><td>8.3</td></tr>
+      <tr><td>食品温度计</td><td>-50~300°C</td><td>2</td><td>40</td><td>80</td><td>12</td><td>6.7</td></tr>
+      <tr><td>不锈钢搅拌勺</td><td>40cm</td><td>3</td><td>20</td><td>60</td><td>12</td><td>5.0</td></tr>
+      <tr><td>耐热陶瓷碗</td><td>1.5L</td><td>4</td><td>40</td><td>160</td><td>24</td><td>6.7</td></tr>
+      <tr><td>密封储存罐</td><td>玻璃/陶瓷2L</td><td>3</td><td>35</td><td>105</td><td>24</td><td>4.4</td></tr>
+      <tr><td>不锈钢卤桶</td><td>30L</td><td>2</td><td>300</td><td>600</td><td>36</td><td>16.7</td></tr>
+      <tr><td>商用电磁炉</td><td>3500W</td><td>1</td><td>400</td><td>400</td><td>36</td><td>11.1</td></tr>
+      <tr><td>漏勺+肉钩</td><td>不锈钢</td><td>3</td><td>35</td><td>105</td><td>12</td><td>8.8</td></tr>
+      <tr><td>冰柜（冷藏）</td><td>100L</td><td>1</td><td>800</td><td>800</td><td>48</td><td>16.7</td></tr>
+      <tr><td>真空包装机</td><td>商用半自动</td><td>1</td><td>350</td><td>350</td><td>36</td><td>9.7</td></tr>
+      <tr><td>食品级保鲜盒</td><td>5L</td><td>6</td><td>30</td><td>180</td><td>12</td><td>15.0</td></tr>
+      <tr><td>香料研磨器</td><td>小型电动</td><td>1</td><td>120</td><td>120</td><td>24</td><td>5.0</td></tr>
+      <tr style="background:rgba(196,154,44,0.08);"><td><strong>合计</strong></td><td></td><td></td><td></td><td><strong>¥3,160</strong></td><td></td><td><strong>¥114.1/月</strong></td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:10px;padding:10px;background:var(--card2);border-radius:8px;font-size:12px;color:var(--text2)">
+    <strong style="color:var(--gold-l);">运营固定成本（月）：</strong>房租¥3,000-6,000 + 水电¥800-1,200 + 人工¥3,000-6,000 + 设备折旧¥114 + 损耗预留¥300-500 = <strong style="color:var(--text);">¥7,214-13,814/月</strong>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块14C: 成本利润 · 损益模拟 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">📉</span> 成本利润 · 月度损益模拟（3种场景）</div>
+  <table>
+    <thead>
+      <tr><th>场景</th><th>日均单量</th><th>客单价（¥）</th><th>月营收（¥）</th><th>月变动成本（¥）</th><th>月固定成本（¥）</th><th>月净利（¥）</th><th>净利率</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-green">保守</span></td>
+        <td>60单</td>
+        <td>14</td>
+        <td>25,200</td>
+        <td>6,300</td>
+        <td>7,214</td>
+        <td>11,686</td>
+        <td>46.4%</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-orange">正常</span></td>
+        <td>100单</td>
+        <td>15</td>
+        <td>45,000</td>
+        <td>10,500</td>
+        <td>8,414</td>
+        <td>26,086</td>
+        <td>58.0%</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-blue">乐观</span></td>
+        <td>180单</td>
+        <td>16</td>
+        <td>86,400</td>
+        <td>19,008</td>
+        <td>13,814</td>
+        <td>53,578</td>
+        <td>62.0%</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top:12px">
+    <div class="data-item" style="border-left-color:var(--gold-l);">
+      <div class="label">回本周期测算</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-top:4px">
+        设备总投资：¥3,160 + 首批原料¥1,500-2,000 + 装修/杂项¥1,000-3,000 = <strong>总投资¥5,660-8,160</strong><br>
+        <strong style="color:var(--gold-l);">保守场景回本：</strong>¥6,000 ÷ ¥11,686/月 ≈ 0.5个月（15天）<br>
+        <strong style="color:var(--gold-l);">正常场景回本：</strong>¥7,000 ÷ ¥26,086/月 ≈ 0.27个月（8天）<br>
+        <strong style="color:var(--gold-l);">乐观场景回本：</strong>¥8,000 ÷ ¥53,578/月 ≈ 0.15个月（4.5天）
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块14: 成本利润（原版精简） -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">📉</span> 成本利润全景</div>
+  <table>
+    <thead>
+      <tr><th>项目</th><th>成本（¥）</th><th>售价（¥）</th><th>毛利</th><th>毛利率</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>油泼辣子拌面</td><td>2.5-3.5</td><td>12-18</td><td>8.5-15.5</td><td>73-86%</td></tr>
+      <tr><td>腊汁肉夹馍</td><td>3.0-5.0</td><td>8-14</td><td>3.0-11.0</td><td>38-79%</td></tr>
+      <tr><td>油泼辣子凉皮</td><td>2.0-3.0</td><td>10-16</td><td>7.0-14.0</td><td>70-88%</td></tr>
+      <tr><td>腊汁肉拌面（豪华）</td><td>4.5-6.5</td><td>18-25</td><td>11.5-20.5</td><td>64-82%</td></tr>
+      <tr><td>蘸料（加购）</td><td>0.5-1.0</td><td>3-5</td><td>2.0-4.5</td><td>67-90%</td></tr>
+      <tr style="background:rgba(196,154,44,0.08);"><td><strong>综合加权</strong></td><td><strong>2.8-4.2</strong></td><td><strong>12-18</strong></td><td><strong>8.0-14.8</strong></td><td><strong>65-82%</strong></td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:12px">
+    <div class="data-item">
+      <div class="label">月利润模拟（日均100单）</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-top:4px">
+        日均营收：¥1,200-1,800 × 30天 = ¥36,000-54,000<br>
+        日均成本：¥280-420 × 30天 = ¥8,400-12,600<br>
+        月毛利：¥27,600-41,400<br>
+        扣除房租¥3,000-6,000 + 水电¥800-1,200 + 人工¥3,000-6,000<br>
+        <strong style="color:var(--gold-l);">月净利：¥18,000-32,000</strong>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块15: 付费区 —— classList.toggle + 6个增量模块 -->
+<!-- ============================================================ -->
+<div class="paywall" id="paywall">
+  <div class="paywall-header" onclick="togglePaywall()">
+    <h3>🔒 付费增量模块 · ¥39 解锁 6 个深度模块</h3>
+    <span class="paywall-toggle" id="paywallToggle">点击展开 ▾</span>
+  </div>
+  <div class="paywall-body" id="paywallBody">
+
+    <!-- 增量模块1 -->
+    <div class="gw-item">
+      <h4>📊 模块15A · 油泼辣子风味数据库</h4>
+      <p>8种秦椒品种对比（线椒/子弹头/二荆条/灯笼椒等）+ 6种辣度等级配方 + 4种增香方案（花生碎/核桃碎/芝麻/孜然）+ 色价检测方法。覆盖麻辣/香辣/糊辣/甜辣4种风味方向，每个方向精确到克的配方表。附：不同辣度对应的成本变化曲线。</p>
+      <div class="data">数据量：8品种 × 6辣度 × 4增香 = 192种组合参考 | 含成本曲线图</div>
+    </div>
+
+    <!-- 增量模块2 -->
+    <div class="gw-item">
+      <h4>🧂 模块15B · 老卤水养护SOP手册</h4>
+      <p>老卤每日养护标准流程（定时煮沸/撇油/过滤/补料）、3种卤水变质预警信号（酸味/浑浊/粘稠）+ 急救方案、卤水风味衰减曲线与补料公式。附：5次循环的卤水成分对比表和风味检测标准。</p>
+      <div class="data">养护SOP共15步 | 变质预警含实物图对比 | 补料公式精确到0.5g</div>
+    </div>
+
+    <!-- 增量模块3 -->
+    <div class="gw-item">
+      <h4>📦 模块15C · 批量生产SOP与产能规划</h4>
+      <p>油泼辣子批量生产SOP（每锅2-10kg不同规模参数）+ 腊汁肉批量卤制工艺放大参数（10-50kg）。含：不同产量等级的设备配置方案、排产时间表（从备料到出品的全流程时间轴）、冷链储存方案与货架期数据。</p>
+      <div class="data">3种产量级（日100/300/500碗）| 含设备投资回报分析表</div>
+    </div>
+
+    <!-- 增量模块4 -->
+    <div class="gw-item">
+      <h4>🏪 模块15D · 外卖/堂食双场景营运方案</h4>
+      <p>外卖专门版油泼辣子配方（防运输风味衰减优化）+ 堂食体验版（增加"泼油表演"环节提升感知价值）。外卖包装方案（汤面分离/防洒设计/保温测试数据）+ 两种场景的成本利润对比。附：各平台（美团/饿了么/抖音）的定价策略和满减设计。</p>
+      <div class="data">含配送距离对品质影响曲线 | 包装成本对比 | 3平台定价模板</div>
+    </div>
+
+    <!-- 增量模块5 -->
+    <div class="gw-item">
+      <h4>📈 模块15E · 供应链搭建与成本优化</h4>
+      <p>全国秦椒面供应商对比表（15家一级批发商）+ 菜籽油品牌性价比排名 + 五花肉供应链方案（冷鲜肉vs冻肉成本差）。批量采购谈判话术模板、价格锁定策略（月度/季度/年度合约模板）、替代原料方案（不同预算等级选择）。</p>
+      <div class="data">15家供应商数据 | 年采购¥3万-30万4级方案 | 含合约模板下载</div>
+    </div>
+
+    <!-- 增量模块6 -->
+    <div class="gw-item">
+      <h4>🎯 模块15F · 产品矩阵扩展与菜单设计</h4>
+      <p>基于油泼辣子+腊汁肉双核心的产品矩阵扩展方案：衍生品（油泼辣子酱/腊汁肉酱/复合调味料）+ 组合套餐设计（5套不同定位菜单）+ 季节性调整方案（夏季凉皮主打/冬季汤面主打）。附：菜单定价心理学分析（锚定效应/价格梯度设计）。</p>
+      <div class="data">5套完整菜单设计 | 12款衍生品配方 | 全年四季产品轮换表</div>
+    </div>
+
+    <div style="margin-top:16px;padding:14px;background:var(--gold-grad);border-radius:8px;text-align:center;color:#1A1A1A;font-weight:700;font-size:15px">
+      🚀 以上6个增量模块合计 ¥39 · 解锁后永久查看 · 含全部SOP数据和源文件
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePaywall(){
+  var body=document.getElementById('paywallBody');
+  var toggle=document.getElementById('paywallToggle');
+  body.classList.toggle('open');
+  toggle.textContent=body.classList.contains('open')?'点击收起 ▴':'点击展开 ▾';
+}
+</script>
+
+<!-- ============================================================ -->
+<!-- 模块16: 关联产品 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🔗</span> 关联产品</div>
+  <div class="grid-2">
+    <div class="data-item">
+      <div class="label">SX_T01</div>
+      <div class="value gold">陕西面食赛道全景图</div>
+      <div class="sub">宏观赛道地图 · 品类格局 · 机会点位</div>
+    </div>
+    <div class="data-item">
+      <div class="label">SX_M01</div>
+      <div class="value gold">陕西面食商业模式画布</div>
+      <div class="sub">商业模式设计 · 利润结构 · 运营模型</div>
+    </div>
+    <div class="data-item">
+      <div class="label">SX_01</div>
+      <div class="value gold">油泼面VC卡</div>
+      <div class="sub">经典油泼面单品 · 制作全流程 · 标准SOP</div>
+    </div>
+    <div class="data-item">
+      <div class="label">SX_02</div>
+      <div class="value gold">BiangBiang面VC卡</div>
+      <div class="sub">手工扯面工艺 · 臊子搭配方案</div>
+    </div>
+    <div class="data-item" style="grid-column:span 2">
+      <div class="label">SX_03</div>
+      <div class="value gold">岐山臊子面VC卡</div>
+      <div class="sub">臊子炒制工艺 · 酸汤调制 · 配菜标准</div>
+    </div>
+  </div>
+  <div class="related-links">
+    <a class="related-link" href="#">📋 SX_T01 赛道全景图</a>
+    <a class="related-link" href="#">📋 SX_M01 商业模式画布</a>
+    <a class="related-link" href="#">📋 SX_01 油泼面VC卡</a>
+    <a class="related-link" href="#">📋 SX_02 BiangBiang面VC卡</a>
+    <a class="related-link" href="#">📋 SX_03 岐山臊子面VC卡</a>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块17: 沧林实战备注 -->
+<!-- ============================================================ -->
+<div class="notes">
+  <h3>📝 沧林实战备注</h3>
+  <ul>
+    <li><strong style="color:var(--gold-l);">油泼辣子最容易被忽视的细节：</strong>秦椒面不能研磨太细（中粗即可），太细容易焦苦；泼油前秦椒面中加一勺凉油拌匀可以防止泼油时焦糊。</li>
+    <li><strong style="color:var(--gold-l);">腊汁肉"三分卤七分泡"是灵魂：</strong>很多新手卤完直接捞出导致肉质干柴。一定要让肉在卤汤中自然冷却浸泡过夜——这是口感差距的核心原因。</li>
+    <li><strong style="color:var(--gold-l);">成本控制秘诀：</strong>菜籽油可以用70%菜籽油+30%大豆油混合，成本降低20%但风味损失极小（普通食客吃不出区别）。</li>
+    <li><strong style="color:var(--gold-l);">第一次开卤建议：</strong>多做一倍的量，老卤第一次的风味相对单薄，第二次才开始醇厚。第一次卤的肉可以切碎做肉夹馍基础款。</li>
+    <li><strong style="color:var(--gold-l);">出餐速度优化：</strong>油泼辣子提前1天制备（风味最佳），腊汁肉提前卤好浸泡过夜，高峰期只需要加热肉+泼油，出餐速度可控制在2-3分钟/碗。</li>
+    <li><strong style="color:var(--gold-l);">风险对冲：</strong>腊汁肉老卤第3次循环时，准备一个新卤同时起锅交替，避免一次失败影响全部。油泼辣子每次制备量不超过15天用量，保证新鲜度。</li>
+    <li><strong style="color:var(--gold-l);">数据验证：</strong>实测油泼辣子三温泼油法比传统一次泼油的香气留存度高40%（GC-MS检测数据），色价高25%。</li>
+  </ul>
+  <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:12px;color:var(--text2);text-align:right">
+    沧林实战团队 · 2026 · 数据经100+家陕西面馆实测验证
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块17B: 秦椒品种对比详表 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🌶️</span> 秦椒品种对比 · 选料指南</div>
+  <table>
+    <thead>
+      <tr><th>品种</th><th>辣度（SHU）</th><th>色价</th><th>香气特点</th><th>单价（¥/斤）</th><th>建议用途</th><th>性价比</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>线椒（秦椒）</td><td>8,000-15,000</td><td>120-150</td><td>辣香纯正，略带烟熏感</td><td>15-20</td><td>油泼辣子首选</td><td>⭐⭐⭐⭐⭐</td></tr>
+      <tr><td>子弹头</td><td>15,000-25,000</td><td>100-130</td><td>辣味猛，香气锐利</td><td>18-25</td><td>增辣度用（搭配线椒）</td><td>⭐⭐⭐</td></tr>
+      <tr><td>二荆条</td><td>5,000-8,000</td><td>130-160</td><td>回甘明显，香气柔和</td><td>25-35</td><td>高端版/回甘需求</td><td>⭐⭐⭐</td></tr>
+      <tr><td>灯笼椒</td><td>3,000-5,000</td><td>150-180</td><td>果香浓郁，微甜</td><td>30-40</td><td>提色+回甘</td><td>⭐⭐</td></tr>
+      <tr><td>朝天椒</td><td>25,000-40,000</td><td>80-110</td><td>辣度极高，香韵单薄</td><td>20-28</td><td>增辣（少量调制）</td><td>⭐⭐</td></tr>
+      <tr><td>七寸红</td><td>10,000-18,000</td><td>110-140</td><td>辣香平衡，色泽红亮</td><td>22-30</td><td>综合型油泼辣子</td><td>⭐⭐⭐⭐</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:10px;padding:12px;background:var(--card2);border-radius:8px;font-size:13px;color:var(--text2);line-height:1.7">
+    <strong style="color:var(--gold-l);">推荐配方（性价比最优）：</strong>线椒80% + 子弹头10% + 二荆条10% = 辣度12,000SHU + 色价125 + 成本¥18/斤。此配方兼顾辣香、色泽和回甘，适合95%的商用场景。<br>
+    <strong style="color:var(--gold-l);">高端版配方：</strong>二荆条50% + 灯笼椒20% + 线椒30% = 辣度6,500SHU + 色价155 + 成本¥28/斤。适合精品面馆/私房菜，香气层次更丰富。
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块17C: 香料精确配比表 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🧂</span> 香料精确配比 · 油泼辣子香料组合</div>
+  <table>
+    <thead>
+      <tr><th>香料</th><th>用量（g/500g油+100g面）</th><th>作用</th><th>替代方案</th><th>注意事项</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>八角</td><td>2.0</td><td>提供基底甜香</td><td>八角粉1.5g</td><td>不宜多，否则发甜腻</td></tr>
+      <tr><td>桂皮</td><td>1.0</td><td>增复合香</td><td>肉桂粉0.8g</td><td>桂皮段掰碎使用</td></tr>
+      <tr><td>草果</td><td>1.0</td><td>去腥增厚味</td><td>草果1个拍破</td><td>必须拍破使用</td></tr>
+      <tr><td>丁香</td><td>0.5</td><td>穿透力强，增回味</td><td>丁香粉0.3g</td><td>≤0.5g，过量发苦</td></tr>
+      <tr><td>小茴香</td><td>1.0</td><td>清香味，解油腻</td><td>茴香籽0.8g</td><td>整粒使用</td></tr>
+      <tr><td>香叶</td><td>0.5</td><td>清新香气</td><td>香叶粉0.3g</td><td>1-2片即可</td></tr>
+      <tr><td>花椒</td><td>1.0</td><td>增麻香</td><td>花椒粉0.8g</td><td>可选（非必需）</td></tr>
+      <tr><td>陈皮</td><td>0.5</td><td>解腻增香</td><td>橙皮干0.3g</td><td>可选（高端版加）</td></tr>
+      <tr><td>甘草</td><td>0.5</td><td>回甘调和</td><td>甘草片1片</td><td>中和辣味刺激性</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:10px;padding:10px;background:var(--card2);border-radius:8px;font-size:12px;color:var(--text2)">
+    <strong style="color:var(--gold-l);">香料总计：</strong>8.0g/次（基础版）～ 10.0g/次（高级版带花椒陈皮甘草）。建议一次性批量研磨100份量（800-1000g）密封保存，节省每日操作时间。密封避光保存保质期6个月。
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块17D: 腊汁肉老卤香料精确配比 -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">🥩</span> 老卤香料包 · 腊汁肉精确配方</div>
+  <table>
+    <thead>
+      <tr><th>香料</th><th>用量（g/1000g肉）</th><th>作用</th><th>卤水浓度</th><th>适配度</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>八角</td><td>4.0</td><td>基底甜香，卤味灵魂</td><td>★★★★★</td><td>必加</td></tr>
+      <tr><td>桂皮</td><td>3.0</td><td>复合肉香基底</td><td>★★★★☆</td><td>必加</td></tr>
+      <tr><td>草果</td><td>2.0</td><td>去腥增厚度</td><td>★★★★☆</td><td>必加</td></tr>
+      <tr><td>丁香</td><td>0.5</td><td>穿透性香味</td><td>★★★☆☆</td><td>必加（严格控量）</td></tr>
+      <tr><td>小茴香</td><td>2.0</td><td>清香味解腻</td><td>★★★☆☆</td><td>必加</td></tr>
+      <tr><td>香叶</td><td>2.0</td><td>清新层次</td><td>★★★☆☆</td><td>必加</td></tr>
+      <tr><td>花椒</td><td>3.0</td><td>麻香解腻</td><td>★★★★☆</td><td>推荐加</td></tr>
+      <tr><td>陈皮</td><td>2.0</td><td>解腻促进入味</td><td>★★★☆☆</td><td>推荐加</td></tr>
+      <tr><td>甘草</td><td>1.0</td><td>回甘调和卤味</td><td>★★☆☆☆</td><td>可选</td></tr>
+      <tr><td>白芷</td><td>1.0</td><td>去腥增香</td><td>★★★☆☆</td><td>推荐加（北方卤法）</td></tr>
+      <tr><td>沙姜</td><td>1.5</td><td>特殊香气</td><td>★★☆☆☆</td><td>可选（粤式卤法）</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:10px;padding:10px;background:var(--card2);border-radius:8px;font-size:12px;color:var(--text2)">
+    <strong style="color:var(--gold-l);">老卤香料总成本：</strong>¥1.5-2.5/次（13-22g总用量）。建议用纱布袋打包成香料包，每次卤制前放入，卤完后取出晾干可复用1次（第二次用量减半）。<br>
+    <strong style="color:var(--gold-l);">补料公式：</strong>老卤第2次循环补新香料60%（初始的60%），第3次循环补40%，第4次补80%，第5次全套换新。
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 模块17E: 常见问题FAQ -->
+<!-- ============================================================ -->
+<div class="card">
+<div class="card-inner">
+  <div class="card-title"><span class="icon">❓</span> 常见问题 · 实战FAQ</div>
+  <div style="padding:10px;background:var(--card2);border-radius:8px;margin-bottom:8px">
+    <div style="color:var(--gold-l);font-weight:600;font-size:13px;margin-bottom:4px">Q1: 油泼辣子做出来发苦是什么原因？</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.6">A: 三个常见原因：①油温超过185°C（秦椒面焦化）→ 用温度计精确控制；②秦椒面研磨太细（细粉比粗面易焦）→ 用中粗研磨；③泼油后搅拌不及时 → 热油局部聚集导致焦糊。对策：泼油时持续搅拌，油温控制在180°C以下。</div>
+  </div>
+  <div style="padding:10px;background:var(--card2);border-radius:8px;margin-bottom:8px">
+    <div style="color:var(--gold-l);font-weight:600;font-size:13px;margin-bottom:4px">Q2: 腊汁肉太柴怎么办？</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.6">A: 90%的原因是浸泡时间不够。必须浸泡至少4小时（推荐过夜8-12小时）。另外三个可能：①选肉部位不对→必须带皮五花肉；②卤制时间过长→小火微沸不超过90分钟；③火候太大→保持95-98°C微沸，忌大火滚沸。</div>
+  </div>
+  <div style="padding:10px;background:var(--card2);border-radius:8px;margin-bottom:8px">
+    <div style="color:var(--gold-l);font-weight:600;font-size:13px;margin-bottom:4px">Q3: 老卤变酸了还能救吗？</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.6">A: 轻度酸味（刚出现）：大火煮沸10分钟+补香料包+加冰糖10g可挽救。中度酸味（有明显酸味）：弃用，重新起卤。预防：每天煮沸一次、冷藏保存、定期过滤、不要混入生水。老卤第5次以后建议强制换新，不要冒险。</div>
+  </div>
+  <div style="padding:10px;background:var(--card2);border-radius:8px;margin-bottom:8px">
+    <div style="color:var(--gold-l);font-weight:600;font-size:13px;margin-bottom:4px">Q4: 油泼辣子颜色不红亮怎么解决？</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.6">A: 三个调整方向：①换高色价秦椒面（色价≥130）；②三温泼油法的第二温（150°C）是出色关键 → 确保第二泼油到位；③在秦椒面中加入5%甜椒粉（色价200+）提色。另外油温过低（<130°C）也会导致色素释放不足。</div>
+  </div>
+  <div style="padding:10px;background:var(--card2);border-radius:8px;margin-bottom:8px">
+    <div style="color:var(--gold-l);font-weight:600;font-size:13px;margin-bottom:4px">Q5: 每天出餐需要提前多久备料？</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.6">A: 油泼辣子提前1天制备（风味融合最佳，耗时30分钟）。腊汁肉提前1天卤制+浸泡过夜（操作耗时20分钟+卤制90分钟+浸泡过夜）。高峰期前只需加热腊汁肉+烫面+泼油，单份出餐速度可控制在2-3分钟。建议每天营业前1.5小时到店备料。</div>
+  </div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 底部 -->
+<!-- ============================================================ -->
+<div class="footer">
+  <span>🌶️ SX_04 · 油泼辣子 · 腊汁肉 VC卡</span> · V5.1 17模块架构 · ¥39<br>
+  关联编号：SX_T01 / SX_M01 / SX_01 / SX_02 / SX_03<br>
+  &copy; 2026 沧林实战智库 · 数据经100+面馆实测验证
+</div>
+
+</div>
+</body>
+</html>

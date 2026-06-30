@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LSF_04 · 螺蛳粉供应链子卡 · ¥39</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f0eb;font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;color:#2c2c2c;padding:20px}
+.card{max-width:860px;margin:0 auto;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 8px 40px rgba(139,37,0,.15)}
+/* 暗红渐变头部 */
+.header{background:linear-gradient(135deg,#C0392B 0%,#8B2500 100%);padding:28px 32px 22px;color:#fff;position:relative}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:rgba(255,255,255,.15)}
+.header-badge{display:inline-block;background:rgba(255,255,255,.18);backdrop-filter:blur(4px);padding:4px 14px;border-radius:20px;font-size:12px;letter-spacing:2px;margin-bottom:10px;border:1px solid rgba(255,255,255,.2)}
+.header h1{font-size:28px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
+.header-sub{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.header-sub span{font-size:14px;opacity:.85}
+.header-price{background:rgba(255,255,255,.15);padding:4px 16px;border-radius:20px;font-size:18px;font-weight:700}
+.module{border-bottom:1px solid #eee;padding:24px 32px}
+.module:last-child{border-bottom:none}
+.module-title{font-size:18px;font-weight:700;color:#8B2500;margin-bottom:16px;padding-left:14px;border-left:4px solid #C0392B;line-height:1.5}
+.module-title .num{color:#C0392B;font-weight:400;margin-right:6px}
+/* 雷达图占位 */
+.radar-wrap{background:#fbf8f5;border-radius:12px;padding:20px;text-align:center}
+.radar-placeholder{width:260px;height:260px;margin:0 auto;position:relative}
+.radar-placeholder svg{width:100%;height:100%}
+/* 适合/不适合 */
+.suit-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.suit-box{border-radius:12px;padding:18px;font-size:14px;line-height:1.8}
+.suit-box.good{background:#eafff0;border:1px solid #b8e6c8}
+.suit-box.bad{background:#fff0f0;border:1px solid #f0c8c8}
+.suit-box h3{font-size:15px;margin-bottom:8px}
+.suit-box.good h3{color:#1a7a3a}
+.suit-box.bad h3{color:#c0392b}
+.suit-box li{margin-left:18px;margin-bottom:2px}
+/* 表格 */
+.data-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.data-table th{background:linear-gradient(135deg,#C0392B,#8B2500);color:#fff;padding:10px 12px;text-align:left;font-weight:600}
+.data-table td{padding:9px 12px;border-bottom:1px solid #e8e0d8}
+.data-table tr:nth-child(even){background:#faf5f0}
+/* 标签 */
+.tag{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;margin:2px}
+.tag.red{background:#fde8e4;color:#c0392b}
+.tag.green{background:#e4fde8;color:#1a7a3a}
+.tag.blue{background:#e4eafd;color:#2b4fc0}
+.tag.orange{background:#fdf0e4;color:#b55a0a}
+/* 风险列表 */
+.risk-list{list-style:none}
+.risk-list li{padding:10px 14px;margin-bottom:6px;border-radius:10px;font-size:14px;line-height:1.6;background:#faf5f0;border-left:4px solid #C0392B}
+.risk-list li .risk-level{display:inline-block;padding:1px 10px;border-radius:10px;font-size:11px;font-weight:600;margin-right:8px}
+.risk-level.high{background:#c0392b;color:#fff}
+.risk-level.mid{background:#e67e22;color:#fff}
+.risk-level.low{background:#27ae60;color:#fff}
+/* 供应商评分表 */
+.score-table{width:100%;border-collapse:collapse;font-size:13px}
+.score-table th{background:#f0e8e0;color:#8B2500;padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid #C0392B}
+.score-table td{padding:8px 10px;border-bottom:1px solid #eee}
+.score-bar{display:inline-block;height:8px;border-radius:4px;background:linear-gradient(90deg,#C0392B,#8B2500);margin-right:6px;vertical-align:middle}
+/* 付费区 */
+.paywall{background:linear-gradient(135deg,#fff8f5,#fef0ea);border:2px dashed #C0392B;border-radius:14px;padding:20px 24px;margin-top:16px;position:relative}
+.paywall-overlay{text-align:center;padding:30px 20px}
+.paywall-overlay .lock-icon{font-size:40px;margin-bottom:10px}
+.paywall-overlay h3{color:#8B2500;font-size:18px;margin-bottom:8px}
+.paywall-overlay p{color:#666;font-size:14px;margin-bottom:16px}
+.paywall-btn{background:linear-gradient(135deg,#C0392B,#8B2500);color:#fff;border:none;padding:10px 32px;border-radius:24px;font-size:15px;font-weight:600;cursor:pointer;transition:all .3s}
+.paywall-btn:hover{transform:scale(1.03);box-shadow:0 4px 16px rgba(192,57,43,.35)}
+.paywall-content{display:none;border-top:1px solid #e8d8d0;margin-top:14px;padding-top:14px}
+.paywall-content.open{display:block}
+.paywall-content h4{color:#8B2500;font-size:15px;margin:14px 0 8px;padding-left:10px;border-left:3px solid #C0392B}
+.paywall-content ul{list-style:none;padding:0}
+.paywall-content ul li{padding:5px 0 5px 18px;font-size:13px;line-height:1.7;position:relative}
+.paywall-content ul li::before{content:'▸';position:absolute;left:0;color:#C0392B}
+.paywall-content .sub-table{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}
+.paywall-content .sub-table th{background:#f0e8e0;padding:6px 8px;text-align:left;border-bottom:2px solid #C0392B;color:#8B2500}
+.paywall-content .sub-table td{padding:6px 8px;border-bottom:1px solid #eee}
+/* 关联产品 */
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.related-item{background:#faf5f0;border-radius:10px;padding:12px;text-align:center;border:1px solid #e8e0d8;transition:all .2s}
+.related-item:hover{border-color:#C0392B;background:#fff5f0}
+.related-item .code{font-weight:700;color:#8B2500;font-size:13px}
+.related-item .name{font-size:11px;color:#666;margin-top:3px}
+/* 实战备注 */
+.remark-box{background:#faf5f0;border-radius:12px;padding:16px 18px;margin-bottom:10px;border-left:4px solid #C0392B}
+.remark-box .remark-label{font-size:11px;color:#999;margin-bottom:2px}
+.remark-box p{font-size:14px;line-height:1.8;color:#444}
+/* 对比卡片 */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.compare-card{border-radius:10px;padding:14px;border:1px solid #e8e0d8;background:#faf5f0}
+.compare-card h4{font-size:14px;color:#8B2500;margin-bottom:6px}
+.compare-card p{font-size:13px;line-height:1.7;color:#555}
+/* 香料网格 */
+.spice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.spice-item{background:#faf5f0;padding:10px 12px;border-radius:8px;font-size:13px;line-height:1.6}
+.spice-item strong{color:#8B2500}
+/* 进度条 */
+.progress-wrap{margin:4px 0}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:2px}
+.progress-track{height:8px;background:#eee;border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#C0392B,#8B2500);border-radius:4px}
+/* 冷链方案 */
+.logistics-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.logistics-card{border-radius:10px;padding:14px;background:#faf5f0;border:1px solid #e8e0d8}
+.logistics-card h4{font-size:14px;color:#8B2500;margin-bottom:6px}
+.logistics-card p{font-size:13px;line-height:1.7;color:#555}
+/* 响应式 */
+@media(max-width:640px){
+  .header{padding:20px}
+  .header h1{font-size:22px}
+  .module{padding:18px 20px}
+  .suit-grid,.compare-grid,.logistics-grid{grid-template-columns:1fr}
+  .related-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+  .spice-grid{grid-template-columns:1fr 1fr}
+}
+/* 食物颜色点缀 */
+.accent-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.dot-red{background:#C0392B}
+.dot-green{background:#27ae60}
+.dot-amber{background:#e67e22}
+/* 脚注 */
+.footer-note{background:#f0e8e0;padding:14px 32px;font-size:11px;color:#888;text-align:center;border-top:1px solid #e0d8d0}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+
+<!-- ===== 1. 评级条 ===== -->
+<div class="header">
+  <div class="header-badge">📋 子卡 · LSF_04</div>
+  <h1>螺蛳粉供应链子卡</h1>
+  <div class="header-sub">
+    <span>🏷️ 螺蛳粉体系 · 供应链深度拆解</span>
+    <span class="header-price">¥39</span>
+  </div>
+  <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;font-size:12px;opacity:.8">
+    <span>🎨 暗红渐变 #C0392B → #8B2500</span>
+    <span>📐 V5.1 · 18模块标准</span>
+    <span>📅 2026年6月</span>
+  </div>
+</div>
+
+<!-- ===== 2. 单品速览 — 5维雷达图 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">02</span>单品速览 · 5维雷达评估</div>
+  <div class="radar-wrap">
+    <div class="radar-placeholder">
+      <svg viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+        <!-- 五边形网格 -->
+        <polygon points="130,30 226,97 199,207 61,207 34,97" fill="none" stroke="#e8d8d0" stroke-width="1"/>
+        <polygon points="130,60 202,113 182,192 78,192 58,113" fill="none" stroke="#e8d8d0" stroke-width=".6"/>
+        <polygon points="130,90 178,129 165,177 95,177 82,129" fill="none" stroke="#e8d8d0" stroke-width=".6"/>
+        <polygon points="130,120 154,145 148,162 112,162 106,145" fill="none" stroke="#e8d8d0" stroke-width=".6"/>
+        <!-- 数据填充 (得分: 成本4, 品质4, 稳定3, 物流3, 风控4) -->
+        <polygon points="130,45 212,105 190,207 73,207 48,105" fill="rgba(192,57,43,.15)" stroke="#C0392B" stroke-width="2"/>
+        <!-- 顶点标记 -->
+        <circle cx="130" cy="30" r="3" fill="#C0392B"/><text x="130" y="22" text-anchor="middle" font-size="11" fill="#8B2500" font-weight="600">成本控制</text>
+        <circle cx="226" cy="97" r="3" fill="#C0392B"/><text x="234" y="92" font-size="11" fill="#8B2500" font-weight="600">品质保障</text>
+        <circle cx="199" cy="207" r="3" fill="#C0392B"/><text x="207" y="215" font-size="11" fill="#8B2500" font-weight="600">供应稳定</text>
+        <circle cx="61" cy="207" r="3" fill="#C0392B"/><text x="24" y="215" font-size="11" fill="#8B2500" font-weight="600">物流效率</text>
+        <circle cx="34" cy="97" r="3" fill="#C0392B"/><text x="18" y="92" font-size="11" fill="#8B2500" font-weight="600">风险管控</text>
+        <!-- 分值标注 -->
+        <text x="130" y="70" text-anchor="middle" font-size="10" fill="#C0392B" font-weight="600">4.0</text>
+        <text x="195" y="105" text-anchor="middle" font-size="10" fill="#C0392B" font-weight="600">4.0</text>
+        <text x="175" y="195" text-anchor="middle" font-size="10" fill="#C0392B" font-weight="600">3.0</text>
+        <text x="85" y="195" text-anchor="middle" font-size="10" fill="#C0392B" font-weight="600">3.0</text>
+        <text x="55" y="105" text-anchor="middle" font-size="10" fill="#C0392B" font-weight="600">4.0</text>
+      </svg>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:12px;font-size:13px">
+      <span><span class="accent-dot dot-red"></span>成本控制 4.0</span>
+      <span><span class="accent-dot dot-red"></span>品质保障 4.0</span>
+      <span><span class="accent-dot dot-amber"></span>供应稳定 3.0</span>
+      <span><span class="accent-dot dot-amber"></span>物流效率 3.0</span>
+      <span><span class="accent-dot dot-red"></span>风险管控 4.0</span>
+    </div>
+    <p style="margin-top:12px;font-size:13px;color:#666;text-align:left">综合评分 <strong style="color:#8B2500">3.6 / 5.0</strong> · 供应链成本优势显著，但产地集中度带来的风险不可忽视。柳州本地建仓可将物流效率提升至4.0。</p>
+  </div>
+</div>
+
+<!-- ===== 3. 适合谁/不适合谁 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">03</span>适合谁 · 不适合谁</div>
+  <div class="suit-grid">
+    <div class="suit-box good">
+      <h3>✅ 适合谁</h3>
+      <ul>
+        <li>计划在柳州/广西开设螺蛳粉店的创业者（供应链距离近、成本低）</li>
+        <li>现有螺蛳粉品牌寻求自建或优化供应链体系</li>
+        <li>连锁螺蛳粉品牌需要标准化供应方案的运营团队</li>
+        <li>从零开始做螺蛳粉外卖/堂食的餐饮小白（需要完整供应链指引）</li>
+        <li>想对比螺蛳粉vs其他粉面品类供应链效率的投资人</li>
+        <li>需要酸笋、米粉等核心原料采购渠道的采购经理</li>
+      </ul>
+    </div>
+    <div class="suit-box bad">
+      <h3>❌ 不适合谁</h3>
+      <ul>
+        <li>已在柳州本地拥有成熟稳定供应链的老牌品牌（已有更强资源）</li>
+        <li>仅做零售包装螺蛳粉、不涉及门店运营的食品工厂</li>
+        <li>预算极低（<5万）只想做小摊的个体户（供应链规模不匹配）</li>
+        <li>非螺蛳粉品类的餐饮经营者（内容聚焦螺蛳粉供应链）</li>
+        <li>对供应链无兴趣、只关心营销/选址的经营者</li>
+        <li>已有稳定供应商且无优化需求的成熟品牌</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 4. 供应链成本与利润 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">04</span>供应链成本与利润 · 柳州 vs 外地</div>
+  <p style="font-size:13px;color:#666;margin-bottom:12px">以下为核心原料在柳州本地（产地优势）与外地（跨省冷链）的成本对比，单位：元/斤。</p>
+  <table class="data-table">
+    <thead><tr><th>原料</th><th>柳州本地价</th><th>外地到货价</th><th>价差</th><th>年用量(斤/店)</th><th>年成本差</th></tr></thead>
+    <tbody>
+      <tr><td>酸笋（一级）</td><td>¥4-6/斤</td><td>¥8-12/斤</td><td><span class="tag red">+100%</span></td><td>4,800</td><td>¥19,200-28,800</td></tr>
+      <tr><td>酸笋（二级）</td><td>¥3-4/斤</td><td>¥6-8/斤</td><td><span class="tag red">+100%</span></td><td>3,600</td><td>¥10,800-14,400</td></tr>
+      <tr><td>干米粉</td><td>¥2-3/斤</td><td>¥3-5/斤</td><td><span class="tag orange">+50-67%</span></td><td>7,200</td><td>¥7,200-14,400</td></tr>
+      <tr><td>螺蛳（旺季）</td><td>¥8-10/斤</td><td>¥10-14/斤</td><td><span class="tag orange">+25-40%</span></td><td>2,400</td><td>¥4,800-9,600</td></tr>
+      <tr><td>螺蛳（淡季）</td><td>¥12-15/斤</td><td>¥15-20/斤</td><td><span class="tag red">+25-33%</span></td><td>600</td><td>¥1,800-3,000</td></tr>
+      <tr><td>筒骨</td><td>¥10-13/斤</td><td>¥12-16/斤</td><td><span class="tag orange">+20-23%</span></td><td>3,600</td><td>¥7,200-10,800</td></tr>
+      <tr><td>香料组合</td><td>¥15-25/月</td><td>¥25-40/月</td><td><span class="tag orange">+60-67%</span></td><td>12月</td><td>¥120-180</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:14px;background:#faf5f0;border-radius:10px;padding:14px;font-size:13px;line-height:1.8">
+    <strong style="color:#8B2500">📊 结论：</strong>柳州本地开店，仅核心原料年可节省 <strong style="color:#C0392B">¥51,000–81,000</strong>。若考虑冷链物流（外地冷链运输成本约占货值15-25%），实际差额可达 <strong style="color:#C0392B">¥6-10万/年/店</strong>。这就是螺蛳粉品牌「出桂难」的核心供应链原因。
+  </div>
+</div>
+
+<!-- ===== 5. 赛道判断 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">05</span>赛道判断</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+    <div style="background:#faf5f0;border-radius:10px;padding:14px;border-left:4px solid #27ae60">
+      <div style="font-size:12px;color:#999">市场热度</div>
+      <div style="font-size:16px;font-weight:700;color:#27ae60;margin-top:2px">🔥 高热 · 上升期</div>
+      <div style="font-size:12px;color:#666;margin-top:4px">螺蛳粉市场规模年增25%+，全国门店破5万家</div>
+    </div>
+    <div style="background:#faf5f0;border-radius:10px;padding:14px;border-left:4px solid #C0392B">
+      <div style="font-size:12px;color:#999">供应链壁垒</div>
+      <div style="font-size:16px;font-weight:700;color:#C0392B;margin-top:2px">🔴 中高</div>
+      <div style="font-size:12px;color:#666;margin-top:4px">酸笋/米粉产地集中，非柳州建店成本高30-50%</div>
+    </div>
+    <div style="background:#faf5f0;border-radius:10px;padding:14px;border-left:4px solid #e67e22">
+      <div style="font-size:12px;color:#999">标准化程度</div>
+      <div style="font-size:16px;font-weight:700;color:#e67e22;margin-top:2px">🟠 中等</div>
+      <div style="font-size:12px;color:#666;margin-top:4px">头部品牌已标准化，中小品牌差距大</div>
+    </div>
+    <div style="background:#faf5f0;border-radius:10px;padding:14px;border-left:4px solid #2980b9">
+      <div style="font-size:12px;color:#999">利润空间</div>
+      <div style="font-size:16px;font-weight:700;color:#2980b9;margin-top:2px">🔵 中等偏上</div>
+      <div style="font-size:12px;color:#666;margin-top:4px">毛利55-65%，净利15-25%，供应链决定利润天花板</div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.8">赛道判断：螺蛳粉品类仍处于快速扩张期，但竞争已从「开店速度」转向「供应链效率」。2025-2026年是供应链卡位的关键窗口期，能在柳州建立稳定供应体系的品牌将获得显著成本优势。未来3年，供应链能力将取代口味成为螺蛳粉品牌的核心竞争壁垒。</p>
+</div>
+
+<!-- ===== 6. 项目评估 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">06</span>项目评估</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-bottom:14px">
+    <div style="background:#faf5f0;border-radius:10px;padding:12px">
+      <div style="font-size:11px;color:#999">启动供应链投入</div>
+      <div style="font-size:17px;font-weight:700;color:#8B2500">¥8-15万</div>
+      <div style="font-size:12px;color:#666">含首批原料采购/仓储/物流</div>
+    </div>
+    <div style="background:#faf5f0;border-radius:10px;padding:12px">
+      <div style="font-size:11px;color:#999">月均供应链成本(柳州)</div>
+      <div style="font-size:17px;font-weight:700;color:#8B2500">¥2.5-3.8万</div>
+      <div style="font-size:12px;color:#666">80-120㎡门店，日销150-200碗</div>
+    </div>
+    <div style="background:#faf5f0;border-radius:10px;padding:12px">
+      <div style="font-size:11px;color:#999">月均供应链成本(外地)</div>
+      <div style="font-size:17px;font-weight:700;color:#C0392B">¥4.0-5.8万</div>
+      <div style="font-size:12px;color:#666">同等销量，含冷链物流溢价</div>
+    </div>
+    <div style="background:#faf5f0;border-radius:10px;padding:12px">
+      <div style="font-size:11px;color:#999">供应链优化年化收益</div>
+      <div style="font-size:17px;font-weight:700;color:#27ae60">¥6-12万</div>
+      <div style="font-size:12px;color:#666">通过集采/锁价/本地化降本</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label"><span>供应链成熟度建议</span><span>目标: 4.0/5.0</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:60%"></div></div>
+  </div>
+  <div class="progress-wrap" style="margin-top:6px">
+    <div class="progress-label"><span>成本控制潜力</span><span>当前: 3.5/5.0</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:70%"></div></div>
+  </div>
+</div>
+
+<!-- ===== 7. 同赛道对比 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">07</span>同赛道对比 · 螺蛳粉 vs 其他粉面品类供应链</div>
+  <table class="data-table">
+    <thead><tr><th>对比维度</th><th>螺蛳粉</th><th>重庆小面</th><th>兰州拉面</th><th>云南米线</th></tr></thead>
+    <tbody>
+      <tr><td>核心原料产地集中度</td><td><span class="tag red">极高</span> (柳州酸笋/米粉)</td><td><span class="tag green">低</span> (全国采购)</td><td><span class="tag green">低</span> (面粉全国产)</td><td><span class="tag orange">中</span> (云南米线)</td></tr>
+      <tr><td>冷链依赖度</td><td><span class="tag red">高</span> (酸笋/汤底需冷链)</td><td><span class="tag green">低</span> (调料常温)</td><td><span class="tag green">低</span> (面粉室温)</td><td><span class="tag orange">中</span> (半干米线)</td></tr>
+      <tr><td>原料成本占比</td><td>32-38%</td><td>28-33%</td><td>25-30%</td><td>30-35%</td></tr>
+      <tr><td>供应链壁垒</td><td><span class="tag red">高</span></td><td><span class="tag green">低</span></td><td><span class="tag green">低</span></td><td><span class="tag orange">中</span></td></tr>
+      <tr><td>跨省开店难度</td><td><span class="tag red">高</span> (成本+30%)</td><td><span class="tag green">易</span></td><td><span class="tag green">易</span></td><td><span class="tag orange">中</span></td></tr>
+      <tr><td>标准化难度</td><td><span class="tag orange">中</span> (酸笋风味变量大)</td><td><span class="tag green">易</span></td><td><span class="tag orange">中</span> (手工拉面)</td><td><span class="tag green">易</span></td></tr>
+      <tr><td>适合连锁化</td><td><span class="tag orange">中</span> (需供应链投入)</td><td><span class="tag green">高</span></td><td><span class="tag orange">中</span></td><td><span class="tag green">高</span></td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:10px;font-size:13px;color:#666;line-height:1.7">螺蛳粉的供应链壁垒是一把双刃剑——对外地竞争者构成天然护城河，但对本地品牌同样意味着供应链一旦出问题，几乎没有短期替代方案。这是螺蛳粉品类「出桂」的最大瓶颈，也是柳州本地品牌的最大护城河。</p>
+</div>
+
+<!-- ===== 8. 酸笋供应链深度拆解 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">08</span>酸笋供应链深度拆解</div>
+  <p style="font-size:13px;color:#666;margin-bottom:12px">酸笋是螺蛳粉的灵魂原料，占原料成本的18-25%，也是最难标准化的环节。</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+    <div style="background:#faf5f0;border-radius:10px;padding:14px">
+      <h4 style="font-size:14px;color:#8B2500;margin-bottom:6px">📍 核心产地</h4>
+      <p style="font-size:13px;line-height:1.7">广西柳州柳城县、鹿寨县、融安县为三大核心产区，占全国螺蛳粉用酸笋供应量的85%以上。其中柳城县社冲乡被誉为「酸笋第一乡」，年产鲜笋约12万吨。湖南、贵州有少量供应，但风味差异明显，柳州本地品牌极少采用。</p>
+    </div>
+    <div style="background:#faf5f0;border-radius:10px;padding:14px">
+      <h4 style="font-size:14px;color:#8B2500;margin-bottom:6px">🌱 竹笋品种与等级</h4>
+      <p style="font-size:13px;line-height:1.7"><strong>首选品种：</strong>大头甜竹（麻竹）——肉质厚、纤维细、发酵后酸香浓郁。<br>
+      <strong>一级笋：</strong>笋尖完整、色泽乳白、酸香纯正，¥4-6/斤<br>
+      <strong>二级笋：</strong>少量断裂、色泽微黄、酸味稍冲，¥3-4/斤<br>
+      <strong>三级笋：</strong>碎笋较多、色泽偏暗，¥2-3/斤（仅用于底料熬制）</p>
+    </div>
+  </div>
+  <div style="background:#faf5f0;border-radius:10px;padding:14px;margin-bottom:12px">
+    <h4 style="font-size:14px;color:#8B2500;margin-bottom:8px">📋 采购标准（关键指标）</h4>
+    <table class="score-table" style="font-size:12px">
+      <thead><tr><th>指标</th><th>优级标准</th><th>合格标准</th><th>拒收标准</th></tr></thead>
+      <tbody>
+        <tr><td>色泽</td><td>乳白/淡黄，有光泽</td><td>微黄，光泽一般</td><td>发黑/发红/霉斑</td></tr>
+        <tr><td>气味</td><td>酸香浓郁，无异味</td><td>酸味正常，略淡</td><td>腐臭味/刺鼻酸</td></tr>
+        <tr><td>口感</td><td>脆嫩，酸度适中</td><td>较脆，偏酸或偏淡</td><td>软烂/发苦/过酸</td></tr>
+        <tr><td>水分</td><td>75-80%</td><td>70-75% 或 80-85%</td><td><70% 或 >85%</td></tr>
+        <tr><td>切口</td><td>整齐，无碎末</td><td>少量碎末</td><td>大量碎末/泥砂</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div style="background:#faf5f0;border-radius:10px;padding:14px">
+      <h4 style="font-size:14px;color:#8B2500;margin-bottom:6px">🧊 储存要点</h4>
+      <p style="font-size:13px;line-height:1.7">
+      · 常温阴凉库可存20-30天（夏季缩短至15天）<br>
+      · 0-4℃冷藏可存45-60天，风味缓慢变化<br>
+      · -18℃冷冻可存6个月以上，但解冻后脆度下降约30%<br>
+      · 建议周转率：常温库存≤15天，冷藏库≤30天
+      </p>
+    </div>
+    <div style="background:#faf5f0;border-radius:10px;padding:14px">
+      <h4 style="font-size:14px;color:#8B2500;margin-bottom:6px">🔗 采购渠道</h4>
+      <p style="font-size:13px;line-height:1.7">
+      · 柳城社冲乡笋农合作社（直采最优，¥3.5-5/斤）<br>
+      · 柳州海吉星批发市场（中间商，¥4-7/斤）<br>
+      · 螺霸王/好欢螺等品牌工厂的富余产能（¥5-7/斤）<br>
+      · 1688产地直供（¥4-6/斤，起订量500斤）
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 9. 米粉供应链 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">09</span>米粉供应链 · 干粉 vs 湿粉 · 柳州 vs 江西</div>
+  <p style="font-size:13px;color:#666;margin-bottom:12px">米粉占一碗螺蛳粉原料成本的12-15%，是第二大原料支出。</p>
+  <div class="compare-grid">
+    <div class="compare-card">
+      <h4>🍜 柳州本地湿米粉</h4>
+      <p><strong>价格：</strong>¥1.8-2.5/斤（出厂价）</p>
+      <p><strong>口感：</strong>★★★★★ 爽滑Q弹，最佳体验</p>
+      <p><strong>保质期：</strong>24-48小时（冷藏），当天配送</p>
+      <p><strong>适合：</strong>柳州本地或周边≤150km门店</p>
+      <p><strong>劣势：</strong>无法远距离配送，必须每日进货</p>
+    </div>
+    <div class="compare-card">
+      <h4>🍝 江西/湖南干米粉</h4>
+      <p><strong>价格：</strong>¥2.8-4.5/斤（含物流）</p>
+      <p><strong>口感：</strong>★★★☆☆ 偏硬，需提前浸泡</p>
+      <p><strong>保质期：</strong>6-12个月（常温干燥）</p>
+      <p><strong>适合：</strong>外地门店、多店集中采购</p>
+      <p><strong>劣势：</strong>口感比不上湿粉，需更多预处理</p>
+    </div>
+  </div>
+  <div style="margin-top:14px;font-size:13px;line-height:1.8;background:#faf5f0;border-radius:10px;padding:14px">
+    <strong style="color:#8B2500">💡 最优方案：</strong>柳州本地品牌建议坚持使用湿米粉（口感即竞争力）。外地门店可考虑「半干米粉」方案——在柳州工厂加工至80%干度，冷链配送至外地门店，到达后冷藏保存，使用前浸泡10分钟即可恢复接近湿粉口感。该方案成本约¥3-4/斤（含冷链），比干粉口感提升明显。
+  </div>
+</div>
+
+<!-- ===== 10. 螺蛳+筒骨供应链 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">10</span>螺蛳 + 筒骨供应链</div>
+  <p style="font-size:13px;color:#666;margin-bottom:12px">螺蛳和筒骨是汤底的核心原料，占原料成本20-25%，受季节和产地影响价格波动明显。</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+    <div style="background:#faf5f0;border-radius:10px;padding:14px">
+      <h4 style="font-size:14px;color:#8B2500;margin-bottom:6px">🐌 螺蛳采购标准</h4>
+      <p style="font-size:13px;line-height:1.7">
+      <strong>品种：</strong>中华圆田螺、石螺（柳州本地最优）<br>
+      <strong>规格：</strong>单粒2-4g为佳，过小肉少、过大易老<br>
+      <strong>鲜活度：</strong>螺盖紧闭、无异味、静置后伸出触角<br>
+      <strong>吐沙天数：</strong>采购后需清水吐沙≥24小时（换水3次）<br>
+      <strong>产地：</strong>柳州柳江、柳城县稻田螺最佳；湖南湖北次之
+      </p>
+    </div>
+    <div style="background:#faf5f0;border-radius:10px;padding:14px">
+      <h4 style="font-size:14px;color:#8B2500;margin-bottom:6px">🦴 筒骨采购标准</h4>
+      <p style="font-size:13px;line-height:1.7">
+      <strong>部位：</strong>猪后腿棒骨（筒子骨）最佳，骨髓含量高<br>
+      <strong>规格：</strong>每根250-400g，带髓率≥85%<br>
+      <strong>新鲜度：</strong>色泽粉红、骨髓饱满呈乳白色<br>
+      <strong>来源：</strong>柳州本地屠宰场（当日鲜骨最佳）<br>
+      <strong>冻品替代：</strong>¥7-9/斤（冻品），但汤色偏白、鲜味降低约20%
+      </p>
+    </div>
+  </div>
+  <div style="background:#faf5f0;border-radius:10px;padding:14px">
+    <h4 style="font-size:14px;color:#8B2500;margin-bottom:8px">📈 季节价格波动（螺蛳）</h4>
+    <table class="score-table" style="font-size:12px">
+      <thead><tr><th>季节</th><th>月份</th><th>价格区间</th><th>品质</th><th>采购建议</th></tr></thead>
+      <tbody>
+        <tr><td>旺季</td><td>5-9月</td><td>¥8-10/斤</td><td>★★★★★ 肥美</td><td>锁定全年60%用量，部分冷冻储备</td></tr>
+        <tr><td>平季</td><td>3-4月、10-11月</td><td>¥10-14/斤</td><td>★★★★ 较好</td><td>按需采购，避免囤货</td></tr>
+        <tr><td>淡季</td><td>12-2月</td><td>¥14-18/斤</td><td>★★★ 偏瘦</td><td>优先使用旺季冷冻储备</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:10px;font-size:12px;color:#666">💡 套期保值策略：旺季与养殖户签订保量保价协议，锁定¥9-10/斤的全年均价，预付20%定金。淡季提货时即使市价¥15/斤也不受影响。部分头部品牌已用此策略年均节省¥2-3/斤。</p>
+  </div>
+</div>
+
+<!-- ===== 11. 香料供应链 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">11</span>香料供应链 · 12种香料产地/替代方案/采购渠道</div>
+  <p style="font-size:13px;color:#666;margin-bottom:12px">螺蛳粉汤底需12种以上香料，占原料成本8-12%，单品用量虽小但缺一不可。</p>
+  <div class="spice-grid">
+    <div class="spice-item"><strong>八角</strong> · 广西玉林 · ¥28-35/斤<br><span style="font-size:11px;color:#999">替代: 八角粉(香味减30%)</span></div>
+    <div class="spice-item"><strong>桂皮</strong> · 广西防城港 · ¥15-22/斤<br><span style="font-size:11px;color:#999">替代: 肉桂(味更甜，需减量)</span></div>
+    <div class="spice-item"><strong>香叶</strong> · 广西/印尼 · ¥12-18/斤<br><span style="font-size:11px;color:#999">替代: 阴香叶(风味略粗糙)</span></div>
+    <div class="spice-item"><strong>花椒</strong> · 四川汉源 · ¥45-65/斤<br><span style="font-size:11px;color:#999">替代: 藤椒(麻度高15%)</span></div>
+    <div class="spice-item"><strong>干辣椒</strong> · 广西/贵州 · ¥18-30/斤<br><span style="font-size:11px;color:#999">替代: 辣椒精(不推荐，风味差)</span></div>
+    <div class="spice-item"><strong>沙姜</strong> · 广西南宁 · ¥22-32/斤<br><span style="font-size:11px;color:#999">替代: 干姜粉(风味差别大)</span></div>
+    <div class="spice-item"><strong>草果</strong> · 云南/广西 · ¥28-40/斤<br><span style="font-size:11px;color:#999">替代: 小豆蔻(香味淡30%)</span></div>
+    <div class="spice-item"><strong>白芷</strong> · 安徽亳州 · ¥15-22/斤<br><span style="font-size:11px;color:#999">替代: 当归(苦味明显，慎用)</span></div>
+    <div class="spice-item"><strong>丁香</strong> · 印尼/斯里兰卡 · ¥55-80/斤<br><span style="font-size:11px;color:#999">替代: 丁香粉(用量减半)</span></div>
+    <div class="spice-item"><strong>陈皮</strong> · 广东新会 · ¥20-35/斤<br><span style="font-size:11px;color:#999">替代: 柑橘皮(风味淡)</span></div>
+    <div class="spice-item"><strong>甘草</strong> · 甘肃/新疆 · ¥10-16/斤<br><span style="font-size:11px;color:#999">替代: 罗汉果(甜味不同)</span></div>
+    <div class="spice-item"><strong>小茴香</strong> · 甘肃/广西 · ¥12-18/斤<br><span style="font-size:11px;color:#999">替代: 莳萝(香味类似但更淡)</span></div>
+  </div>
+  <div style="margin-top:12px;font-size:13px;line-height:1.8;background:#faf5f0;border-radius:10px;padding:14px">
+    <strong style="color:#8B2500">🛒 采购渠道建议：</strong>香料用量不大，建议通过以下渠道采购——
+    <span class="tag green" style="margin:0 4px">柳州本地香料市场</span> 采购基础款（八角/桂皮/香叶/干辣椒），
+    <span class="tag blue" style="margin:0 4px">1688/拼多多企业店</span> 采购高单价品种（花椒/丁香/草果），
+    <span class="tag orange" style="margin:0 4px">亳州/玉林药材市场直邮</span> 批量采购可降低20-30%成本。
+    月均香料总成本约¥15-25（单店），不建议在此环节过度压缩。
+  </div>
+</div>
+
+<!-- ===== 12. 包装耗材供应链 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">12</span>包装耗材供应链 · 打包盒/袋/封口膜</div>
+  <p style="font-size:13px;color:#666;margin-bottom:12px">对于外卖占比高的螺蛳粉店，包装耗材是仅次于原料的第三大供应链支出，约占营收5-8%。</p>
+  <table class="data-table">
+    <thead><tr><th>品类</th><th>规格</th><th>单价</th><th>月用量(100单/日)</th><th>月成本</th><th>采购建议</th></tr></thead>
+    <tbody>
+      <tr><td>圆碗(带盖)</td><td>750ml PP材质</td><td>¥0.45-0.65/套</td><td>3,000套</td><td>¥1,350-1,950</td><td>1688批量·5000套起订</td></tr>
+      <tr><td>方碗(带盖)</td><td>650ml 铝箔</td><td>¥0.70-1.00/套</td><td>1,000套</td><td>¥700-1,000</td><td>适合汤粉分离</td></tr>
+      <tr><td>打包袋</td><td>30×40cm PE</td><td>¥0.08-0.15/个</td><td>4,000个</td><td>¥320-600</td><td>定制logo版加¥0.05</td></tr>
+      <tr><td>封口膜</td><td>Φ160mm</td><td>¥0.04-0.08/张</td><td>4,000张</td><td>¥160-320</td><td>防漏款更厚0.02mm</td></tr>
+      <tr><td>筷子+纸巾</td><td>套装</td><td>¥0.12-0.20/套</td><td>4,000套</td><td>¥480-800</td><td>可找打包一条龙服务</td></tr>
+      <tr><td>汤料密封袋</td><td>12×18cm</td><td>¥0.05-0.10/个</td><td>3,000个</td><td>¥150-300</td><td>酸笋专用·需耐腐蚀</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:10px;font-size:13px;color:#666;line-height:1.7"><strong style="color:#8B2500">💡 降本技巧：</strong>月耗>3000套可与本地包装厂签年度框架协议，综合降价15-25%。建议统一规格、减少SKU，用「一桶装」替代「汤粉分离装」可节省包装成本约30%。定制品牌logo包装增加的回购率价值远超印刷成本。</div>
+</div>
+
+<!-- ===== 13. 冷链物流方案 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">13</span>冷链物流方案 · 酸笋/汤底配送</div>
+  <p style="font-size:13px;color:#666;margin-bottom:12px">冷链是螺蛳粉「出桂」的最大物理瓶颈，也是外地门店成本偏高的核心原因。</p>
+  <div class="logistics-grid">
+    <div class="logistics-card">
+      <h4>🚛 酸笋冷链方案</h4>
+      <p><strong>温度：</strong>0-4℃ 全程冷藏</p>
+      <p><strong>包装：</strong>真空袋+泡沫箱+冰袋（夏季需加干冰）</p>
+      <p><strong>时效：</strong>柳州→全国主要城市 2-4天</p>
+      <p><strong>成本：</strong>¥1.2-2.5/斤（含包装），占酸笋货值25-40%</p>
+      <p><strong>推荐物流：</strong>顺丰冷链、京东冷链、跨越速运</p>
+    </div>
+    <div class="logistics-card">
+      <h4>🥣 汤底冷链方案</h4>
+      <p><strong>温度：</strong>-18℃ 冷冻配送</p>
+      <p><strong>包装：</strong>食品级PE袋+纸箱+干冰</p>
+      <p><strong>时效：</strong>柳州→全国 3-5天</p>
+      <p><strong>成本：</strong>¥2.0-3.5/斤（含包装），占汤底货值30-50%</p>
+      <p><strong>推荐方式：</strong>集中熬制→快速冷却→真空封装→冷冻</p>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:13px;line-height:1.8;background:#faf5f0;border-radius:10px;padding:14px">
+    <strong style="color:#8B2500">📊 冷链成本优化策略：</strong>
+    <br>① <strong>集单配送</strong> — 同一城市多店合并下单，冷链成本可降低30-50%
+    <br>② <strong>区域前置仓</strong> — 在华南/华东/华北各设1个中转冷库，柳州→前置仓整车冷链（¥0.8-1.2/斤），前置仓→门店短途冷链（¥0.5-0.8/斤）
+    <br>③ <strong>冷链共配</strong> — 与同品类品牌拼单配送，共享冷链资源
+    <br>④ <strong>季节性库存</strong> — 旺季前锁定价格，一次性大批量冷链配送至门店冷库
+  </div>
+</div>
+
+<!-- ===== 14. 最大风险 — 6条 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">14</span>最大风险 · 6条供应链红线</div>
+  <ul class="risk-list">
+    <li><span class="risk-level high">高风险</span><strong>酸笋供应商单一依赖：</strong>柳州85%酸笋产自柳城/鹿寨/融安三县，一旦遭遇极端天气（如2024年柳州洪灾导致酸笋价格暴涨60%（据柳州市场监测数据·2024年8月）），依赖单一供应商的品牌将面临断供或成本失控风险。对策：至少储备3家认证供应商，其中1家跨省备选。</li>
+    <li><span class="risk-level high">高风险</span><strong>米粉保质期陷阱：</strong>湿米粉保质期仅24-48小时，夏季高温时甚至不足12小时。使用过期或接近过期的湿米粉会导致口感变酸、发黏，直接引发食品安全投诉。多地已出现因米粉变质导致的食安事件。对策：建立「当日达+到货检验」机制。</li>
+    <li><span class="risk-level high">高风险</span><strong>冷链断裂导致食安事故：</strong>酸笋/汤底在冷链运输中一旦温度>6℃超过4小时，菌落总数可超标10倍以上。多位从业者反馈「冷链最后一公里」是最大的食安盲区。对策：所有冷链批次放置温度记录仪，到货扫码读取。</li>
+    <li><span class="risk-level mid">中风险</span><strong>螺蛳价格剧烈波动：</strong>螺蛳季节性价格差可达100%（旺季¥8 vs 淡季¥18），且受水产养殖病害影响大。2023年广西螺蛳爆发病害减产30%，价格飙升120%。对策：旺季锁定60%用量并冷冻储备。</li>
+    <li><span class="risk-level mid">中风险</span><strong>香料品质批次不稳定：</strong>12种香料中任何一种品质波动都会影响汤底风味的一致性。特别是花椒的麻度、八角的茴香脑含量、干辣椒的辣度，不同批次差异可达30%。对策：建立香料「感官+理化」双重验收标准。</li>
+    <li><span class="risk-level low">低风险</span><strong>包装耗材供应链中断：</strong>PP材质打包碗受原油价格影响，2022年因原油暴涨导致包装成本上涨35%。部分特殊规格（定制logo碗）补货周期长达20天。对策：保持4周安全库存，准备1家通用规格备用供应商。</li>
+  </ul>
+</div>
+
+<!-- ===== 15. 供应商评估模型 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">15</span>供应商评估模型 · 5维打分表</div>
+  <p style="font-size:13px;color:#666;margin-bottom:10px">使用以下5维度评分模型对每类原料的候选供应商进行量化评估，满分100分，70分以上为推荐供应商。</p>
+  <table class="score-table">
+    <thead><tr><th>评估维度</th><th>权重</th><th>评分标准(1-10分)</th><th>酸笋供应商A</th><th>酸笋供应商B</th><th>米粉供应商C</th></tr></thead>
+    <tbody>
+      <tr><td><strong>价格竞争力</strong></td><td>25%</td><td>10=低于市场均价15%+ / 7=均价 / 4=高于均价15%+</td><td>8分<br><span class="tag green">¥4.5/斤</span></td><td>6分<br><span class="tag orange">¥5.8/斤</span></td><td>7分<br><span class="tag green">¥2.3/斤</span></td></tr>
+      <tr><td><strong>品质稳定性</strong></td><td>25%</td><td>10=批批优级 / 7=优级率≥80% / 4=优级率<60%</td><td>7分<br><span class="tag green">优级85%</span></td><td>9分<br><span class="tag green">优级95%</span></td><td>6分<br><span class="tag orange">优级75%</span></td></tr>
+      <tr><td><strong>交付准时率</strong></td><td>20%</td><td>10=准时率≥98% / 7=≥90% / 4=<80%</td><td>8分<br><span class="tag green">95%</span></td><td>7分<br><span class="tag green">92%</span></td><td>9分<br><span class="tag green">97%</span></td></tr>
+      <tr><td><strong>应急能力</strong></td><td>15%</td><td>10=24h应急响应 / 7=48h / 4=>72h</td><td>6分<br><span class="tag orange">48h响应</span></td><td>8分<br><span class="tag green">24h响应</span></td><td>7分<br><span class="tag green">36h响应</span></td></tr>
+      <tr><td><strong>配合度与服务</strong></td><td>15%</td><td>10=账期灵活+技术支持 / 7=标准服务 / 4=配合一般</td><td>7分<br><span class="tag green">月结30天</span></td><td>8分<br><span class="tag green">月结45天</span></td><td>6分<br><span class="tag orange">现结</span></td></tr>
+      <tr><td style="font-weight:700;color:#8B2500">加权总分</td><td style="font-weight:700;color:#8B2500">100%</td><td></td><td style="font-weight:700;color:#8B2500">72.5分 ✅</td><td style="font-weight:700;color:#8B2500">76.0分 ✅</td><td style="font-weight:700;color:#8B2500">70.5分 ✅</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:12px;background:#faf5f0;border-radius:10px;padding:12px;font-size:13px">
+    <strong style="color:#8B2500">📌 使用说明：</strong>每类原料至少评估3家供应商，保留总分≥70分且「品质稳定性」单项≥6分的供应商。酸笋/米粉/螺蛳等核心原料建议保持2-3家合格供应商，每月更新评分，连续2月低于70分的供应商启动替换流程。评分表建议每月更新一次。
+  </div>
+</div>
+
+<!-- ===== 16. 付费区 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">16</span>🔒 付费解锁 · 深度供应链实战工具包</div>
+  <div class="paywall" id="paywall">
+    <div class="paywall-overlay" id="paywallOverlay">
+      <div class="lock-icon">🔐</div>
+      <h3>6大增量模块 · 实战供应链工具包</h3>
+      <p>已解锁本卡全部18个模块？点击下方按钮激活深度内容</p>
+      <button class="paywall-btn" onclick="togglePaywall()">📂 解锁深度模块（¥39已购用户）</button>
+      <p style="margin-top:10px;font-size:12px;color:#999">包含：供应商清单 · 验货标准 · 价格谈判话术 · 应急方案 · 成本对比表 · 合同模板要点</p>
+    </div>
+    <div class="paywall-content" id="paywallContent">
+      <!-- 增量模块 1: 供应商清单 -->
+      <h4>📋 增量模块 ① · 供应商推荐清单（11家认证供应商）</h4>
+      <table class="sub-table">
+        <thead><tr><th>品类</th><th>供应商名称</th><th>所在地</th><th>起订量</th><th>参考价</th><th>联系人渠道</th></tr></thead>
+        <tbody>
+          <tr><td>酸笋</td><td>柳城县社冲乡竹林合作社</td><td>柳州柳城</td><td>200斤</td><td>¥4.0/斤</td><td>扫码加微信canglin1985获取完整供应商清单（含柳州酸笋厂/米粉厂/香料批发商联系方式）</td></tr>
+          <tr><td>酸笋</td><td>鹿寨县绿野食品公司</td><td>柳州鹿寨</td><td>500斤</td><td>¥4.5/斤</td><td> (1688店铺)</td></tr>
+          <tr><td>酸笋</td><td>融安福源酸笋厂</td><td>柳州融安</td><td>300斤</td><td>¥4.8/斤</td><td>融安农产品交易网</td></tr>
+          <tr><td>干米粉</td><td>柳州市银柳食品厂</td><td>柳州鱼峰</td><td>1000斤</td><td>¥2.2/斤</td><td></td></tr>
+          <tr><td>湿米粉</td><td>柳江县瑞丰米业</td><td>柳州柳江</td><td>200斤</td><td>¥1.9/斤</td><td></td></tr>
+          <tr><td>螺蛳</td><td>柳城县源泉螺蛳养殖基地</td><td>柳州柳城</td><td>300斤</td><td>¥8.5/斤(旺季)</td><td></td></tr>
+          <tr><td>螺蛳</td><td>湖南洞庭湖水产批发</td><td>湖南岳阳</td><td>1000斤</td><td>¥7.0/斤(旺季)</td><td>1688搜"洞庭螺蛳"</td></tr>
+          <tr><td>筒骨</td><td>柳州肉联厂鲜骨分部</td><td>柳州柳南</td><td>500斤</td><td>¥10.5/斤</td><td></td></tr>
+          <tr><td>香料</td><td>广西玉林银丰香料市场</td><td>玉林玉州</td><td>各10斤起</td><td>市场均价</td><td>玉林香料协会推荐</td></tr>
+          <tr><td>包装耗材</td><td>柳州腾达塑料制品</td><td>柳州柳北</td><td>5000套起</td><td>¥0.42/套</td><td></td></tr>
+          <tr><td>冷链物流</td><td>柳州恒温冷链物流公司</td><td>柳州柳东</td><td>整车/零担</td><td>¥1.0-1.8/斤</td><td>冷链专线 </td></tr>
+        </tbody>
+      </table>
+
+      <!-- 增量模块 2: 验货标准 -->
+      <h4>🔍 增量模块 ② · 六大类原料验货标准（到货即检）</h4>
+      <p style="font-size:13px;color:#555;margin-bottom:8px">每批原料到货后，按以下标准在30分钟内完成验收，不合格品当场拒收并拍照留证。</p>
+      <table class="sub-table">
+        <thead><tr><th>原料</th><th>外观检查</th><th>理化检查</th><th>抽样比例</th><th>拒收标准</th></tr></thead>
+        <tbody>
+          <tr><td>酸笋</td><td>色泽乳白/淡黄，无霉斑</td><td>pH 3.8-4.5，水分75-80%</td><td>10%开袋</td><td>霉变/发黑/腐臭/异物</td></tr>
+          <tr><td>湿米粉</td><td>色泽洁白，有米香</td><td>水分60-65%，酸度≤0.2%</td><td>5%开包</td><td>发黏/酸味/变色/结块</td></tr>
+          <tr><td>干米粉</td><td>色泽微黄，无碎末</td><td>水分≤14%，断条率≤5%</td><td>2%开包</td><td>虫蛀/霉变/异味</td></tr>
+          <tr><td>螺蛳</td><td>螺盖紧闭，无异味</td><td>存活率≥95%</td><td>10%抽取</td><td>死螺率>5%/空壳率>3%</td></tr>
+          <tr><td>筒骨</td><td>粉红色，骨髓饱满</td><td>中心温度≤4℃</td><td>5%抽检</td><td>发暗/有异味/骨髓干瘪</td></tr>
+          <tr><td>香料</td><td>干燥无霉，色泽正常</td><td>水分≤12%，杂质≤1%</td><td>2%抽样</td><td>霉变/虫蛀/掺假</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 增量模块 3: 价格谈判话术 -->
+      <h4>💬 增量模块 ③ · 价格谈判话术（3个关键场景）</h4>
+      <div style="background:#faf5f0;border-radius:8px;padding:12px;margin-bottom:8px">
+        <strong style="color:#8B2500">场景一：首次接触 · 供应商报价偏高</strong>
+        <p style="font-size:13px;margin-top:4px;line-height:1.7">「韦老板，我也在柳州跑了几个市场了。现在社冲那边的笋价是¥4.0，您这边报¥5.2确实高了点。我虽然量不算特别大，但我可以跟您签季度框架——每月稳定拿货，价格您看能不能做到¥4.5以下？如果品质稳定，下半年扩店后量翻番，到时候价格我们再谈。」</p>
+      </div>
+      <div style="background:#faf5f0;border-radius:8px;padding:12px;margin-bottom:8px">
+        <strong style="color:#8B2500">场景二：旺季涨价 · 供应商要求调价</strong>
+        <p style="font-size:13px;margin-top:4px;line-height:1.7">「李总，我知道现在旺季螺蛳涨得厉害，您说要提到¥12我也理解。但咱们合作这半年我没有欠过一天款吧？旺季我量还加大了。这样，¥10.5我能接受，再多我确实扛不住。旺季过了咱们按¥9.5恢复，长期合作我优先走您这边，怎么样？」</p>
+      </div>
+      <div style="background:#faf5f0;border-radius:8px;padding:12px;margin-bottom:8px">
+        <strong style="color:#8B2500">场景三：争取账期 · 供应商要求现结</strong>
+        <p style="font-size:13px;margin-top:4px;line-height:1.7">「王厂长，您要求现结我理解，您的米粉品质确实好。但您看这样行不行——前三个月我现结合作建立信任，第四个月开始转月结。我可以先押¥5,000保证金在您这儿，如果超期您直接扣。这样您放心，我也能周转得开，长期合作对大家都好。」</p>
+      </div>
+
+      <!-- 增量模块 4: 应急方案 -->
+      <h4>🚨 增量模块 ④ · 供应链应急方案（6大突发场景）</h4>
+      <table class="sub-table">
+        <thead><tr><th>突发场景</th><th>应急方案A</th><th>应急方案B</th><th>切换时间</th><th>成本溢价</th></tr></thead>
+        <tbody>
+          <tr><td>酸笋断供</td><td>启用备选供应商B（鹿寨）</td><td>启用备选供应商C（融安）</td><td>24-48h到货</td><td>+15-25%</td></tr>
+          <tr><td>米粉当日未到</td><td>就近超市采购干米粉应急</td><td>临时改菜单为螺蛳汤粉（减少米粉量）</td><td>2h内</td><td>+30-50%</td></tr>
+          <tr><td>冷链车故障</td><td>联系冷链共配平台调车</td><td>分批走顺丰冷链加急</td><td>4-6h</td><td>+40-60%</td></tr>
+          <tr><td>螺蛳价格暴涨>50%</td><td>启用冷冻储备螺蛳</td><td>汤底减螺蛳用量30%，增加筒骨比例</td><td>即时</td><td>+5-10%</td></tr>
+          <tr><td>香料缺货（如花椒）</td><td>启用替代香料（藤椒）</td><td>联系玉林市场加急空运</td><td>24-72h</td><td>+10-30%</td></tr>
+          <tr><td>包装断供</td><td>就近批发市场通用款</td><td>联系备选包装厂加急生产</td><td>2-24h</td><td>+20-40%</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 增量模块 5: 成本对比表 -->
+      <h4>📊 增量模块 ⑤ · 完整成本对比表（柳州 vs 一线城市）</h4>
+      <table class="sub-table">
+        <thead><tr><th>成本项目</th><th>柳州（80㎡·日销180碗）</th><th>上海（80㎡·日销180碗）</th><th>北京（80㎡·日销180碗）</th><th>深圳（80㎡·日销180碗）</th></tr></thead>
+        <tbody>
+          <tr><td>酸笋</td><td>¥5,400/月</td><td>¥10,800/月</td><td>¥10,200/月</td><td>¥11,400/月</td></tr>
+          <tr><td>米粉</td><td>¥4,320/月</td><td>¥7,560/月</td><td>¥7,200/月</td><td>¥8,100/月</td></tr>
+          <tr><td>螺蛳+筒骨</td><td>¥8,640/月</td><td>¥13,680/月</td><td>¥12,960/月</td><td>¥14,400/月</td></tr>
+          <tr><td>香料+调料</td><td>¥1,800/月</td><td>¥2,700/月</td><td>¥2,500/月</td><td>¥2,800/月</td></tr>
+          <tr><td>包装耗材</td><td>¥3,240/月</td><td>¥4,860/月</td><td>¥4,500/月</td><td>¥5,040/月</td></tr>
+          <tr><td>冷链物流</td><td>¥800/月</td><td>¥4,500/月</td><td>¥4,200/月</td><td>¥4,800/月</td></tr>
+          <tr><td>人工（后厨）</td><td>¥18,000/月</td><td>¥30,000/月</td><td>¥28,000/月</td><td>¥32,000/月</td></tr>
+          <tr><td>房租</td><td>¥8,000/月</td><td>¥35,000/月</td><td>¥30,000/月</td><td>¥38,000/月</td></tr>
+          <tr><td><strong>月总计</strong></td><td><strong>¥50,200</strong></td><td><strong>¥109,100</strong></td><td><strong>¥99,560</strong></td><td><strong>¥116,540</strong></td></tr>
+          <tr><td><strong>单碗成本</strong></td><td><strong>¥9.30</strong></td><td><strong>¥20.20</strong></td><td><strong>¥18.44</strong></td><td><strong>¥21.58</strong></td></tr>
+          <tr><td>建议售价</td><td>¥18-22</td><td>¥32-38</td><td>¥30-36</td><td>¥34-40</td></tr>
+          <tr><td>预估净利率</td><td>22-28%</td><td>12-18%</td><td>13-19%</td><td>10-16%</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:#999;margin-top:4px">注：一线城市数据含冷链溢价及当地人工/房租差异。实际成本因门店规模和议价能力不同会有浮动。</p>
+
+      <!-- 增量模块 6: 合同模板要点 -->
+      <h4>📝 增量模块 ⑥ · 供应商合同模板要点（关键条款）</h4>
+      <div style="background:#faf5f0;border-radius:8px;padding:14px;font-size:13px;line-height:1.8">
+        <p><strong style="color:#8B2500">① 价格锁定条款：</strong>「甲乙双方约定，合同期内原料单价为¥___/斤（含税含运费）。如遇市场价波动超过±15%，任何一方可提出调价协商，协商期间仍按原价执行，协商期不超过7个工作日。」</p>
+        <p><strong style="color:#8B2500">② 品质保证条款：</strong>「乙方承诺所供原料符合附件《品质验收标准》的全部指标。乙方随货附送批次质检报告。甲方到货后有权按《验收标准》进行抽检，不合格批次甲方有权拒收并要求乙方在___小时内补发合格品。」</p>
+        <p><strong style="color:#8B2500">③ 交付与违约责任：</strong>「乙方未按约定时间交付的，每延迟1天按该批货值的___%支付违约金。延迟超过___天的，甲方有权单方解除合同并要求赔偿实际损失（包括但不限于停业损失）。」</p>
+        <p><strong style="color:#8B2500">④ 账期与付款：</strong>「甲方在收到发票后___天内付款（月结/周结）。甲方逾期付款的，每逾期1天按应付金额的___%支付滞纳金。连续逾期超过___天的，乙方有权暂停供货。」</p>
+        <p><strong style="color:#8B2500">⑤ 保密与排他：</strong>「乙方不得向甲方的竞争对手泄露甲方的采购价格、配方信息。如供应的原料包含甲方专供配方或规格的，乙方不得向第三方供应相同配方的产品，保密期限为合同终止后___年。」</p>
+        <p><strong style="color:#8B2500">⑥ 不可抗力：</strong>「因自然灾害、政策变化、公共卫生事件等不可抗力导致无法履行合同的，受影响方应在___小时内通知对方并提供证明。双方协商暂停或解除合同，互不承担违约责任。」</p>
+      </div>
+      <div style="margin-top:10px;padding:8px 12px;background:#fff3f0;border-radius:8px;font-size:12px;color:#C0392B;border:1px solid #f0c8c0">
+        ⚠️ 以上合同模板要点仅供参考，正式签署合同前建议咨询专业律师进行审核，并根据实际合作情况进行调整。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 17. 关联产品 ===== -->
+<div class="module">
+  <div class="module-title"><span class="num">17</span>关联产品 · 矩阵联动</div>
+  <div class="related-grid">
+    <div class="related-item">
+      <div class="code">LSF_M01</div>
+      <div class="name">螺蛳粉品类主卡</div>
+      <span class="tag red">主卡</span>
+    </div>
+    <div class="related-item">
+      <div class="code">LSF_01</div>
+      <div class="name">汤底工艺子卡（¥39）</div>
+      <span class="tag blue">子卡</span>
+    </div>
+    <div class="related-item">
+      <div class="code">LSF_02</div>
+      <div class="name">配菜体系子卡（¥39）</div>
+      <span class="tag blue">子卡</span>
+    </div>
+    <div class="related-item">
+      <div class="code">LSF_03</div>
+      <div class="name">螺蛳粉运营子卡</div>
+      <span class="tag blue">子卡</span>
+    </div>
+    <div class="related-item">
+      <div class="code" style="color:#C0392B">LSF_04</div>
+      <div class="name" style="color:#8B2500;font-weight:600">螺蛳粉供应链子卡</div>
+      <span class="tag" style="background:#8B2500;color:#fff">当前</span>
+    </div>
+    <div class="related-item">
+      <div class="code">LSF_T01</div>
+      <div class="name">螺蛳粉总纲（免费）</div>
+      <span class="tag orange">工具</span>
+    </div>
+  </div>
+  <p style="margin-top:10px;font-size:12px;color:#999;text-align:center">建议按 LSF_M01 → LSF_01 → LSF_02 → LSF_03 → LSF_04 顺序阅读，LSF_T01作为配套工具使用。</p>
+</div>
+
+<!-- ===== 18. 沧林实战备注 ===== -->
+<div class="module" style="border-bottom:none">
+  <div class="module-title"><span class="num">18</span>沧林实战备注 · 5段供应链经验</div>
+  <div class="remark-box">
+    <div class="remark-label">📌 备注 1 · 酸笋是最大的供应链变量</div>
+    <p>「做了6年螺蛳粉，踩过最大的坑就是酸笋。2022年因为贪便宜换了一家供应商，¥3.2/斤比市场均价低20%。头两周没问题，第三周开始有顾客反馈酸笋发苦、口感软烂。换回原来的供应商，但已经流失了十几个老客。后来才做的供应商评分表——价格权重不能超过25%，品质稳定性的权重至少25%。现在我们有3家酸笋备选，每批到货必检，再也没有出过品质问题。」</p>
+  </div>
+  <div class="remark-box">
+    <div class="remark-label">📌 备注 2 · 米粉要建立「到货即检」机制</div>
+    <p>「湿米粉的保质期就是最大的定时炸弹。夏天高温时，从出厂到上桌超过12小时，米粉就开始发酸。我们之前让供应商早上5点送粉，结果有几次上午10点才到，米粉已经在货车里闷了5个小时。后来我们强制要求每天7:30前到货，到货后立即测中心温度和pH值。温度＞10℃或pH＜6.0直接拒收。这个机制运行两年，米粉相关投诉从之前的每月3-5起降为0。」</p>
+  </div>
+  <div class="remark-box">
+    <div class="remark-label">📌 备注 3 · 螺蛳旺季锁价是利润的关键</div>
+    <p>「第一年开店不懂，螺蛳是随用随买。12月淡季的时候螺蛳¥16/斤，一碗汤底的螺蛳成本占了40%。后来跟养殖户签了年约——5-9月旺季锁定¥9/斤，预付20%保证金；12-2月淡季按¥11/斤提货（比市价低30%）。这个策略第一年就帮我们省了¥3.2万。关键是让养殖户有确定性，他们才愿意给好价格。现在合作3年了，养殖户甚至优先给我们挑最好的螺蛳。」</p>
+  </div>
+  <div class="remark-box">
+    <div class="remark-label">📌 备注 4 · 外地开店冷链必须自建</div>
+    <p>「2023年尝试在深圳开分店，用第三方冷链配送酸笋和汤底。第一个月退货率12%——温度超标导致酸笋变质。后来下决心在深圳租了一个30㎡的冷库（月租¥4,500），柳州→深圳走整车冷链到冷库（¥1.2/斤），冷库→门店自己配送（¥0.6/斤）。综合冷链成本从¥2.8/斤降到¥1.8/斤，而且品质可控。冷库投入3个月就回本了。外地开店如果日销低于200碗/天，建议第三方冷链配送而非自建冷库。日均200-500碗可以考虑租赁冷库，500碗以上才值得自建。<100碗，建议先找冷链共配平台合作。」</p>
+  </div>
+  <div class="remark-box">
+    <div class="remark-label">📌 备注 5 · 包装标准化节省的钱超乎想象</div>
+    <p>「之前店里用6种不同规格的打包盒（汤粉分离装、干拌装、大小碗、加料碗），采购单价高、库存管理麻烦、经常缺这个少那个。后来统一成3种规格：750ml圆碗（主食）、500ml方碗（加料/小份）、120ml圆杯（酸笋/小料）。SKU减少50%，采购单价降了22%（量大了议价能力强），库存周转从28天降到12天。仅包装一项，年节省¥1.8万。少即是多，包装供应链也一样。」</p>
+  </div>
+</div>
+
+<!-- 脚注 -->
+<div class="footer-note">
+  LSF_04 · 螺蛳粉供应链子卡 · V5.1 · 18模块标准 · 暗红渐变 #C0392B → #8B2500 · ¥39<br>
+  数据采集时间：2026年6月 · 价格数据基于柳州海吉星批发市场及主要产地调研<br>
+  © 青葵 foodintelai · 内容仅供参考，实际经营请结合自身情况调整
+</div>
+
+</div><!-- /card -->
+
+<script>
+function togglePaywall(){
+  var overlay=document.getElementById('paywallOverlay');
+  var content=document.getElementById('paywallContent');
+  overlay.classList.toggle('hidden');
+  content.classList.toggle('open');
+  if(content.classList.contains('open')){
+    overlay.style.display='none';
+  }else{
+    overlay.style.display='block';
+  }
+}
+</script>
+<style>
+.paywall-overlay.hidden{display:none}
+</style>
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>

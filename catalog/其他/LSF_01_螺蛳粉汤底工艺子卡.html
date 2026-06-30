@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>LSF_01 螺蛳粉汤底工艺子卡 · 创业项目测评 V5.1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5ebe0;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#C0392B,#8B2500);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#fdf0e8,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f0dcc5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.rel-grid{display:flex;flex-direction:column;gap:6px}
+.rel-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;text-decoration:none;color:#3a322a;font-size:12px}
+.rel-item:hover{background:#e8dfd5}
+.rel-item .r-emoji{font-size:16px}
+.rel-item .r-name{flex:1;font-weight:600}
+.rel-item .r-arrow{color:#ccc;font-size:10px}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:inline-block;text-align:center;padding:10px 20px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+.spec-card{background:#fff;border:1px solid #f0dcc5;border-radius:10px;padding:12px;margin:6px 0;font-size:12px;color:#4a3a2e;line-height:1.6}
+.spec-card b{color:#C0392B}
+.def-box{background:#fdf0e8;border-left:4px solid #C0392B;border-radius:8px;padding:12px;margin:6px 0;font-size:12px;color:#4a3a2e;line-height:1.6}
+.def-box b{color:#C0392B}
+.recipe-box{background:#fff;border-radius:10px;padding:14px;margin:8px 0;font-size:12px;line-height:1.8;border-left:3px solid #C0392B}
+.recipe-box .recipe-line:last-child{border-bottom:none}
+</style>
+<link rel="stylesheet" href="../../paywall.css">
+<script>
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))
+    e.preventDefault();
+});
+</script>
+</head>
+<body>
+<div class="card">
+
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">LSF_01</span>
+      <span class="r-label">汤底工艺子卡</span>
+    </div>
+    <span class="r-grade">¥19</span>
+  </div>
+  <div class="r-tagline">螺蛳粉汤底的完整工艺拆解——清鲜/浓郁/加臭三型精确配方到克，温度时间曲线到秒。</div>
+  <div class="r-tags">
+    <span>🔥 核心工艺</span>
+    <span>💰 投入¥500-2000</span>
+    <span>👤 1人可操作</span>
+    <span>📈 出品率85%+</span>
+    <span>🧂 三型配方</span>
+    <span>🌡️ 精确温控</span>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 单品速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">螺蛳粉灵魂</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="val">汤底是复购核心</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★☆☆☆</div><div class="val">¥500-2000</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">汤底成本¥0.8-1.5/碗</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🎯 适合谁</div>
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 想做自熬汤底的螺蛳粉店主</div>
+      <div class="fit-item fit-yes">✅ 想从袋装汤底升级到自熬的店主</div>
+      <div class="fit-item fit-yes">✅ 需要精确配方参数的系统化创业者</div>
+      <div class="fit-item fit-yes">✅ 想掌握三种汤底工艺的餐饮从业者</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 只用袋装汤底不想自熬的</div>
+      <div class="fit-item fit-no">❌ 日均销量＜30碗的小摊（不划算）</div>
+      <div class="fit-item fit-no">❌ 没有熬汤设备条件</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">💰 汤底成本与利润</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 三种汤底成本对比</div>
+    <div class="logic-item"><span>清鲜型（A）自熬成本/碗</span><span class="v">¥1.0-1.3</span></div>
+    <div class="logic-item"><span>浓郁型（B）自熬成本/碗</span><span class="v">¥1.2-1.6</span></div>
+    <div class="logic-item"><span>加臭型（C）自熬成本/碗</span><span class="v">¥1.5-2.0</span></div>
+    <div class="logic-item"><span>袋装汤底成本/碗</span><span class="v">¥1.5-2.5</span></div>
+    <div class="logic-item"><span>自熬vs袋装月省（200碗/天×26天）</span><span class="v">¥2,600-4,680/月</span></div>
+    <div class="logic-item"><span>熬汤设备回本周期</span><span class="v">≤1个月</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">日产能</div><div class="m-val">50-200碗</div><div class="m-sub">单锅熬制</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">汤底成本</div><div class="m-val">¥1.0-2.0</div><div class="m-sub">自熬口径</div></div>
+    <div class="metric-card mc-green"><div class="m-label">节省vs袋装</div><div class="m-val">30-50%</div><div class="m-sub">月省¥3000+</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 自熬汤底的优势</div>
+      <div class="t-item">食材成本可控，袋装汤底涨价不受影响</div>
+      <div class="t-item">独家配方形成口味壁垒，竞品难以复制</div>
+      <div class="t-item">顾客感知价值高（"现熬"在菜单上就是加分项）</div>
+      <div class="t-item">可根据本地口味灵活调整咸度/辣度/浓度</div>
+      <div class="t-item">批量熬制后冷冻，可节省每日出餐时间</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 自熬汤底的劣势</div>
+      <div class="t-item">熬汤时间4-8小时，需要专人看火</div>
+      <div class="t-item">品质一致性依赖人工经验，培训周期1-2周</div>
+      <div class="t-item">初期设备投资¥500-2000</div>
+      <div class="t-item">产能受限，日销超200碗需增加熬汤批次</div>
+      <div class="t-item">夏季汤底易变质，冷藏条件要求高</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场现状：</strong>柳州本地90%+螺蛳粉店使用自熬汤底，外地店约50%使用袋装。自熬汤底的店复购率平均高出15-20个百分点。<br>
+    <strong>未来判断：</strong>消费者对"手工现熬"的感知价值持续上升。半自熬模式（工厂配送基底+到店调味）正在成为平衡效率与品质的最优解。<br>
+    <strong>是否值得自熬：是</strong>（前提：日均销量≥80碗，有稳定熬汤人员）
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🚦 项目评估</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">技术门槛</div><div style="font-size:16px;letter-spacing:1px;color:#E8652D">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">培训1-2周</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">设备投资</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★☆☆☆</div><div style="font-size:10px;color:#5a4f44">¥500-2000</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">出品稳定性</div><div style="font-size:16px;letter-spacing:1px;color:#D4A574">★★★☆☆</div><div style="font-size:10px;color:#5a4f44">需标准化SOP</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">节省空间</div><div style="font-size:16px;letter-spacing:1px;color:#5a8f3c">★★★★☆</div><div style="font-size:10px;color:#5a4f44">长期省30-50%</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:420px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>方案</th><th>时间</th><th>成本/碗</th><th>品质</th><th>月省vs袋装</th><th>推荐</th></tr></thead>
+      <tbody>
+        <tr style="background:#fef6ec"><td>🏅 自熬浓郁型</td><td>6-8h</td><td>¥1.2-1.6</td><td>★★★★★</td><td>¥4,680-6,760</td><td>最佳性价比</td></tr>
+        <tr><td>🥈 自熬清鲜型</td><td>4-6h</td><td>¥1.0-1.3</td><td>★★★★☆</td><td>¥6,240-7,800</td><td>北方城市首选</td></tr>
+        <tr><td>🥉 半自熬（基底配送）</td><td>30min</td><td>¥1.5-2.0</td><td>★★★★☆</td><td>¥0-2,600</td><td>效率品质平衡</td></tr>
+        <tr><td>📦 袋装汤底</td><td>即开即用</td><td>¥1.5-2.5</td><td>★★★☆☆</td><td>基准</td><td>小白起步</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 半自熬模式正在成为主流——柳州工厂配送汤底基底到店，到店加料调味。数据和来源：1688柳州汤底批发价·美团外卖各城市售价抽样·行业估算</div>
+</div>
+
+<!-- ===== 香料库 ===== -->
+<div class="section">
+  <div class="s-title">🌿 香料库（12种核心香料详解）</div>
+  <p style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">以下为螺蛳粉汤底12种核心香料的产地/作用/替代方案/炒制参数，买不到某种香料时知道可以用什么替代。</p>
+  <table>
+    <tr><th>香料</th><th>作用</th><th>产地</th><th>炒制参数</th><th>替代方案</th></tr>
+    <tr><td>八角</td><td>增香·去腥·回甘</td><td>广西·云南</td><td>干锅小火炒30秒出香</td><td>茴香籽（减半）</td></tr>
+    <tr><td>桂皮</td><td>增甜香·去腥</td><td>广西·越南</td><td>掰碎后炒20秒</td><td>肉桂（用量减半）</td></tr>
+    <tr><td>香叶</td><td>清香·去油腻</td><td>土耳其·地中海</td><td>不炒直接入袋</td><td>月桂叶（等量）</td></tr>
+    <tr><td>草果</td><td>增醇厚·去膻</td><td>云南·越南</td><td>拍破后炒40秒</td><td>砂仁（等量）</td></tr>
+    <tr><td>沙姜</td><td>去腥·增鲜</td><td>广东·广西</td><td>切片后炒20秒</td><td>生姜粉×2（非等效）</td></tr>
+    <tr><td>陈皮</td><td>增回甘·解腻</td><td>广东新会</td><td>不炒直接入袋</td><td>橘皮干（减半）</td></tr>
+    <tr><td>丁香</td><td>增穿透香</td><td>印尼·马达加斯加</td><td>不炒直接入袋（用量极小）</td><td>五香粉少量</td></tr>
+    <tr><td>小茴香</td><td>增清香·调脾胃</td><td>甘肃·内蒙古</td><td>干锅炒20秒</td><td>八角茴香（非等效）</td></tr>
+    <tr><td>白芷</td><td>去腥·增药香</td><td>四川·安徽</td><td>切片后炒20秒</td><td>当归（等量但味不同）</td></tr>
+    <tr><td>甘草</td><td>增甜·中和</td><td>内蒙古·新疆</td><td>不炒直接入袋</td><td>罗汉果（等量）</td></tr>
+    <tr><td>干辣椒</td><td>增辣·增色</td><td>贵州·湖南·河南</td><td>剪段后炒15秒</td><td>辣椒面（等量后下）</td></tr>
+    <tr><td>花椒</td><td>增麻·去腥</td><td>四川·陕西</td><td>干锅炒10秒出香</td><td>花椒油（出锅前）</td></tr>
+  </table>
+  <div class="spec-card" style="margin-top:8px">
+    <b>香料保存要点：</b>密封避光保存，不要放在灶台附近受热受潮。整粒香料保质期18-24个月，粉状香料6-12个月。建议一次采购1-2个月的用量，用完再买。<br>
+    <b>采购渠道：</b>1688搜索"螺蛳粉香料包"可找到柳州本地配好的整包香料（¥15-25/包·50碗量），比自己单买贵但省事。
+  </div>
+</div>
+
+<!-- ===== 批量SOP ===== -->
+<div class="section">
+  <div class="s-title">⏰ 批量SOP（三档产能）</div>
+  <table>
+    <tr><th>工序</th><th>50碗（小店）</th><th>100碗（标准店）</th><th>200碗（大店）</th></tr>
+    <tr><td>螺蛳处理</td><td>4kg·养24h·1人·30min</td><td>8kg·养24h·1人·45min</td><td>16kg·养24h·2人·60min</td></tr>
+    <tr><td>筒骨+鸡架焯水</td><td>3kg·20min</td><td>6kg·30min</td><td>12kg·45min</td></tr>
+    <tr><td>熬汤（微沸）</td><td>40L水·4-5h</td><td>80L水·4-5h</td><td>160L水·5-6h</td></tr>
+    <tr><td>香料包</td><td>1包·¥15</td><td>2包·¥30</td><td>4包·¥60</td></tr>
+    <tr><td>过滤冷却</td><td>30min</td><td>45min</td><td>60min</td></tr>
+    <tr><td>分装冷藏</td><td>20min</td><td>30min</td><td>45min</td></tr>
+    <tr><td>总耗时（不含养螺蛳）</td><td>约6-7h</td><td>约7-8h</td><td>约8-9h</td></tr>
+    <tr><td>熬汤设备</td><td>50L桶×1</td><td>80L桶×1</td><td>100L桶×2</td></tr>
+    <tr><td>冷冻方式</td><td>5L袋×10</td><td>5L袋×20</td><td>10L桶×4+5L袋×20</td></tr>
+    <tr style="background:#fdf0e8"><td><strong>分级建议</strong></td><td>自熬+袋装混合</td><td>全部自熬</td><td>自熬+半自熬（工厂配送）</td></tr>
+  </table>
+  <div class="spec-card" style="margin-top:8px">
+    <b>📋 批次追溯记录表（打印出来，每锅填一张）：</b><br>
+    日期：____年__月__日 | 汤底类型：□清鲜 □浓郁 □加臭<br>
+    螺蛳批次：____ | 筒骨批次：____ | 香料批次：____<br>
+    熬制人：____ | 开始时间：____ | 结束时间：____<br>
+    出品量：____L | 分装袋数：____袋 | 每袋____L<br>
+    品控确认：□颜色正常 □气味正常 □咸度达标 □无杂质<br>
+    备注：____________________________<br><br>
+    <b>🔥 为什么需要这个表：</b>如果某天有顾客投诉汤底发苦/有异味/吃了不舒服，你能凭这张表追溯到是哪批螺蛳、谁熬的、几点开始的。食安出了问题没有追溯记录，你就只能赔钱关店。
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🗓️ 30天学习路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px"><span style="background:#E8652D;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day1</span><span>认识全部香料（12种），学处理技巧（炒香时间/布袋打包/保存方法）</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day3</span><span>熬第一锅清鲜型：跑通全流程，记录温度时间曲线，拍香料配比照存档</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px"><span style="background:#D4A574;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day7</span><span>挑战浓郁型：精确配方，邀请10人试喝评分（主要评测：咸度/鲜度/醇厚度/回甘）</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px"><span style="background:#5a8f3c;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day15</span><span>锁定独家配方：根据反馈调整香料配比，确定"标准版"参数，写成SOP</span></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px"><span style="background:#4f6ef7;color:#fff;padding:1px 6px;font-size:10px;font-weight:700">Day30</span><span>批量测试：一次性熬50碗→100碗→200碗，验证产能和品质一致性</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🛠️ 设备清单</div>
+  <div><strong>🔸 熬汤设备</strong>：50L不锈钢汤桶(¥200-400) · 商用燃气灶(¥500-1000) · 厨房温度计(¥30-50) · 定时器(¥20-30) · 香料布袋(¥10-20)</div>
+  <div style="margin-top:8px"><strong>🔸 前处理</strong>：不锈钢盆×3(¥100-150) · 砧板/刀具(¥50-100) · 电子秤0.1g(¥80-150) · 细滤网/纱布(¥30-50)</div>
+  <div style="margin-top:8px"><strong>🔸 储存</strong>：保温汤桶×2(¥400-800) · 冷藏冰柜(¥500-1000) · 分装盒(¥30-50) · 标签纸/记号笔(¥10-20)</div>
+  <div style="margin-top:8px"><strong>🔸 首批耗材</strong>：螺蛳10kg(¥80-120) · 筒骨5kg(¥75-100) · 鸡架3kg(¥15-20) · 香料包(¥50-80) · 调味料(¥30-50)</div>
+  <div style="margin-top:10px;background:#fef6ec;padding:10px;border-radius:10px">
+    <div><strong>💰 最低启动：¥1,500-2,500</strong>（已有燃气灶，只买汤桶+首批原料）</div>
+    <div><strong>💰 完整启动：¥3,000-5,000</strong>（含商用灶+冰柜+全套工具）</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📦 汤底产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">基础</span><span class="t-name">清鲜型汤底（A）</span><span class="t-price">成本¥1.0-1.3/碗</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">主力</span><span class="t-name">浓郁型汤底（B）</span><span class="t-price">成本¥1.2-1.6/碗</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">话题</span><span class="t-name">加臭型汤底（C·隐藏菜单）</span><span class="t-price">成本¥1.5-2.0/碗</span></div>
+  </div>
+  <div class="spec-card" style="margin-top:8px">
+    <b>三种汤底的核心差异速览：</b><br>
+    <strong>清鲜型（A）</strong>——螺蛳:筒骨:鸡架=2:1.5:0.5，香料少而精（6种），熬4-6h，汤色清亮，螺蛳味突出。适合搭配减臭版酸笋，是北方市场最佳切入方案。<br><br>
+    <strong>浓郁型（B）</strong>——螺蛳:筒骨:鸡架=2:1.5:0.5，香料8-10种，熬6-8h，汤色浓白，层次丰富。市场接受度最广，南北通吃。<br><br>
+    <strong>加臭型（C）</strong>——基于浓郁型，另加加臭酱30-50ml/锅+酸笋发酵汁100-150ml。强烈建议只作为<strong>"隐藏菜单"</strong>推出，让老顾客有专属感，自带话题传播。
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔥 场景适配</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🏪 堂食店</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🛵 外卖店</div><div class="stars">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🏭 中央厨房</div><div class="stars">★★★★★</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🛒 摆摊</div><div class="stars">★★☆☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">🏠 家庭作坊</div><div class="stars">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f5f0eb"><div class="s-name">📦 批发供应</div><div class="stars">★★★★☆</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">⚠️ 汤底风险与应对</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>汤底发苦：</strong>香料炒糊或用量过大。急救→加1:1清水稀释补盐糖。预防→香料用布袋包好，中火翻炒不超过2分钟。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>汤底寡淡：</strong>水太多或熬制不足。急救→大火收浓30分钟或加螺蛳浓缩汁。预防→严格执行比例，熬够6小时。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><strong>汤底浑浊：</strong>火太大翻滚剧烈。预防→全程微沸不滚开，过滤前静置10分钟。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><strong>出品不一致：</strong>凭手感加香料。预防→香料预混成大包装，每锅取固定克数。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><strong>汤底变质：</strong>保存不当。预防→冷藏≤3天，冷冻≤7天，出餐前煮沸3分钟。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><strong>螺蛳有沙感：</strong>没养干净。预防→清水养24小时+换水3次+剪尾尖。</div>
+  <div class="risk-item"><span class="r-icon">7️⃣</span><strong>汤底太咸/太淡：</strong>盐量控制不准。预防→盐分两次加，第一次加70%，尝味后再补。</div>
+  <div class="risk-item"><span class="r-icon">8️⃣</span><strong>复热后风味下降：</strong>加热过度。预防→复热不超过85°C，微沸即可，不要反复煮沸。</div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔪 核心工艺</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc">螺蛳处理：清水养24h(换水3次)→搓洗至水清→剪尾尖→焯水2分钟→姜片爆炒2分钟</span></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc">骨汤熬制：筒骨+鸡架焯水3分钟→下20L水大火煮沸→中火熬1h→下螺蛳+香料包</span></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc">慢熬：微沸4-5h(85-90°C)→最后1h加盐/生抽/老抽/糖/味精</span></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc">过滤冷却：细筛过滤→自然冷却→冷藏或分装冷冻→出餐前加热</span></div>
+  </div>
+  <div class="badge">⚠️ 完整配方精确克重·温度曲线·批量SOP·翻车方案·变体矩阵·供应商清单见下方付费区</div>
+</div>
+
+<!-- ===== 水质说明 ===== -->
+<div class="section">
+  <div class="s-title">💧 水质对汤底的影响</div>
+  <p style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">水质直接影响汤底的口感和颜色。以下针对不同水质给出调整方案：</p>
+  <table>
+    <tr><th>水质类型</th><th>对汤底的影响</th><th>调整方案</th></tr>
+    <tr><td>软水（纯净水/RO水）</td><td>汤色清亮，鲜味突出，但缺乏"厚度"</td><td>最推荐。建议+10%筒骨增加胶质</td></tr>
+    <tr><td>中等硬度（自来水）</td><td>正常，大多数柳州本地店用的水</td><td>煮沸后去氯气即可，无需特殊处理</td></tr>
+    <tr><td>硬水（矿物质含量高）</td><td>汤色发暗，鲜味被矿物味干扰</td><td>建议用过滤器过滤后再熬，或提前煮沸沉淀</td></tr>
+    <tr><td>井水/山泉水</td><td>风味独特，但品质不稳定</td><td>季节性水质变化大，建议每次熬汤前试味调整</td></tr>
+  </table>
+  <div class="spec-card" style="margin-top:8px"><b>建议：</b>如果你在外地城市开店，建议先用瓶装纯净水熬一锅，再对比本地自来水熬的一锅。如果差距明显，果断用纯净水（每碗汤增加¥0.05-0.08的水成本，但品质提升值得）。</div>
+</div>
+
+<!-- ===== 汤底品控标准 ===== -->
+<div class="section">
+  <div class="s-title">✅ 汤底品控自检清单</div>
+  <p style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">每天出餐前用以下标准检验汤底，任何一条不达标都不应该出餐：</p>
+  <div class="spec-card">
+    <b>👀 看颜色：</b>清鲜型淡黄透亮·浓郁型浓白不黑·加臭型深褐不混<br>
+    <b>👃 闻气味：</b>螺蛳鲜香为主，香料味为辅。如果有焦味/酸味/腥味→废弃<br>
+    <b>👅 尝味道：</b>咸度适中（入口有咸味但不齁），鲜味明显（有回甘），辣度适中（不刺激）<br>
+    <b>✋ 测温度：</b>保温汤桶65-70°C，不高于80°C（过高继续变浊）<br>
+    <b>📊 测盐度：</b>用盐度计（¥50-100）控制在0.8-1.0%，稳定出品的关键工具<br>
+    <b>📐 测浓度：</b>用波美计（¥30-50）测量，清鲜型1.5-2.0°Bé·浓郁型2.0-2.5°Bé<br><br>
+    <b>每天早晨第一条汤底必须由店长亲自品尝确认，签字后方可开市。</b>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">📐 成本利润</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">螺蛳成本（含损耗）</span><span class="v">¥0.3-0.5/碗</span></div>
+    <div class="recipe-line"><span class="k">筒骨+鸡架成本</span><span class="v">¥0.3-0.5/碗</span></div>
+    <div class="recipe-line"><span class="k">香料成本</span><span class="v">¥0.1-0.2/碗</span></div>
+    <div class="recipe-line"><span class="k">燃料/水电</span><span class="v">¥0.1-0.2/碗</span></div>
+    <div class="recipe-line"><span class="k">人工摊销（熬汤）</span><span class="v">¥0.1-0.2/碗</span></div>
+    <div class="recipe-line"><span class="k">综合成本（自熬浓郁型）</span><span class="v">¥1.0-1.6/碗</span></div>
+    <div class="recipe-line"><span class="k">对比袋装汤底成本</span><span class="v">¥1.5-2.5/碗</span></div>
+    <div class="recipe-line"><span class="k">每月节省（200碗×26天×差价¥0.5-0.9）</span><span class="v">¥2,600-4,680</span></div>
+  </div>
+  <div class="badge" style="margin-top:4px">💡 毛利率口径：食品成本毛利率（含原料+燃料+人工摊销），未含房租/平台抽成。数据来源：1688·农业农村部·美团抽样</div>
+</div>
+
+<!-- ===== 季节调整 ===== -->
+<div class="section">
+  <div class="s-title">🌡️ 季节调整与储存指南</div>
+  <table>
+    <tr><th>季节</th><th>汤底调整</th><th>保存参数</th><th>出餐注意</th></tr>
+    <tr><td>春季</td><td>咸度降5%，鲜度提升</td><td>冷藏3天·冷冻7天</td><td>解冻后煮沸3分钟</td></tr>
+    <tr><td>夏季</td><td>辣度升10%，酸笋加量</td><td>冷藏仅2天</td><td>必须彻底煮沸</td></tr>
+    <tr><td>秋季</td><td>恢复标准，增加厚度</td><td>冷藏3天·冷冻7天</td><td>正常操作</td></tr>
+    <tr><td>冬季</td><td>油脂+10%，汤更暖身</td><td>冷藏4天·冷冻10天</td><td>保温桶65°C以上</td></tr>
+  </table>
+  <div class="spec-card" style="margin-top:8px"><b>保存黄金法则：</b>30min冷却→分装5L/袋→标日期→冷藏解冻12h→煮沸3min→75-80°C备用。老汤不过夜。</div>
+</div>
+
+<!-- ===== 常见误区 ===== -->
+<div class="section">
+  <div class="s-title">💬 常见误区</div>
+  <div class="spec-card"><b>①"香料越多越好"</b>—错。螺蛳味是核心，8-10种香料最佳，超12种变卤水。</div>
+  <div class="spec-card"><b>②"汤底越浓越好"</b>—错。鲜咸甜辣四味协调比浓稠重要。</div>
+  <div class="spec-card"><b>③"熬越久越好"</b>—错。超8h鲜味挥发变苦，最佳4-6h。</div>
+  <div class="spec-card"><b>④"冷冻不如新鲜"</b>—半对。损失10-15%鲜味但冻融后胶质更丰富。</div>
+  <div class="spec-card"><b>⑤"袋装汤底都是垃圾"</b>—错。好品牌袋装汤底品质不错，可打底+调味。</div>
+</div>
+
+<!-- ===== FAQ ===== -->
+<div class="section">
+  <div class="s-title">❓ 常见问题</div>
+  <div class="spec-card"><b>Q: 自熬汤底需要每天熬吗？</b><br>A: 不需要。一次熬够3-7天的量，分装冷冻，每天取用。冷冻汤底出餐前煮沸3分钟即可。日销200碗以下的店，一周熬1-2次就够了。</div>
+  <div class="spec-card"><b>Q: 没有商用燃气灶可以用什么？</b><br>A: 家用燃气灶也能熬，但火力小，熬制时间延长1-2小时。或者用电汤桶（带温控），设定好温度就不用看火。</div>
+  <div class="spec-card"><b>Q: 汤底可以加什么提鲜？</b><br>A: 进阶版可以加干贝（50g/锅）或虾米（30g/锅），增加海鲜层次。但不要加味精之外的化学增鲜剂，会被懂行的吃出来。</div>
+  <div class="spec-card"><b>Q: 汤底表面浮油要不要撇掉？</b><br>A: 不要全撇。浮油有保温增香的作用，出餐时每碗带少量油花更有食欲。但如果油太多（如筒骨太肥），撇掉一半即可。</div>
+</div>
+
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>📦 完整汤底工艺包</h3>
+  <div class="p-sub">6大模块：三型精确配方·温度曲线·批量SOP·翻车方案·变体矩阵·供应商清单</div>
+  <div class="price-tag">¥19 <small>永久解锁</small></div>
+  <button class="btn" onclick="var p=document.getElementById('payContent');p.classList.toggle('show');this.textContent=this.textContent==='🔓 展开完整工艺包'?'收起':'🔓 展开完整工艺包'">🔓 展开完整工艺包</button>
+  <div class="note">点开展示完整工艺数据（带模糊保护）</div>
+  <div id="payContent" class="pay-content">
+
+    <div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:6px">1️⃣ 浓郁型商用配方（50碗基准·精确克重）</div>
+    <div class="badge" style="margin-bottom:8px;display:inline-block">📌 注：50碗为理论值，实际过滤后出品约35碗（70%出品率），建议成本核算按35碗计算</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span class="k">螺蛳（带壳）</span><span class="v">2000g</span></div>
+      <div class="recipe-line"><span class="k">猪筒骨（敲裂出骨髓）</span><span class="v">1500g</span></div>
+      <div class="recipe-line"><span class="k">鸡架</span><span class="v">500g</span></div>
+      <div class="recipe-line"><span class="k">清水</span><span class="v">20L（浓缩至12-15L）</span></div>
+      <div class="recipe-line"><span class="k">八角</span><span class="v">15g</span></div>
+      <div class="recipe-line"><span class="k">桂皮</span><span class="v">10g</span></div>
+      <div class="recipe-line"><span class="k">香叶</span><span class="v">5g</span></div>
+      <div class="recipe-line"><span class="k">草果（拍破）</span><span class="v">3个</span></div>
+      <div class="recipe-line"><span class="k">沙姜</span><span class="v">10g</span></div>
+      <div class="recipe-line"><span class="k">陈皮</span><span class="v">5g</span></div>
+      <div class="recipe-line"><span class="k">丁香</span><span class="v">3g</span></div>
+      <div class="recipe-line"><span class="k">小茴香</span><span class="v">5g</span></div>
+      <div class="recipe-line"><span class="k">白芷</span><span class="v">5g</span></div>
+      <div class="recipe-line"><span class="k">甘草</span><span class="v">3g</span></div>
+      <div class="recipe-line"><span class="k">干辣椒</span><span class="v">10-15g（按辣度调）</span></div>
+      <div class="recipe-line"><span class="k">姜（拍碎）</span><span class="v">150g</span></div>
+      <div class="recipe-line"><span class="k">葱（打结）</span><span class="v">100g</span></div>
+      <div class="recipe-line"><span class="k">盐</span><span class="v">120g</span></div>
+      <div class="recipe-line"><span class="k">生抽</span><span class="v">80ml</span></div>
+      <div class="recipe-line"><span class="k">老抽</span><span class="v">30ml</span></div>
+      <div class="recipe-line"><span class="k">白糖</span><span class="v">40g</span></div>
+      <div class="recipe-line"><span class="k">料酒</span><span class="v">50ml</span></div>
+      <div class="recipe-line"><span class="k">味精/鸡精（可选）</span><span class="v">30g</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:6px;margin-top:12px">2️⃣ 清鲜型配方（50碗·香料简化版）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span class="k">螺蛳（带壳）</span><span class="v">2000g</span></div>
+      <div class="recipe-line"><span class="k">筒骨</span><span class="v">1500g</span></div>
+      <div class="recipe-line"><span class="k">清水</span><span class="v">20L（不加鸡架）</span></div>
+      <div class="recipe-line"><span class="k">香料（仅6种）</span><span class="v">八角10g·桂皮8g·香叶3g·沙姜8g·草果2个·干辣椒10g</span></div>
+      <div class="recipe-line"><span class="k">盐</span><span class="v">100g</span></div>
+      <div class="recipe-line"><span class="k">生抽</span><span class="v">60ml</span></div>
+      <div class="recipe-line"><span class="k">熬制时间</span><span class="v">4-5小时（比浓郁型少丁香·陈皮·小茴香·白芷·甘草）</span></div>
+      <div class="recipe-line"><span class="k">口味特征</span><span class="v">汤色清亮·螺蛳鲜味突出·不腻</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:6px;margin-top:12px">3️⃣ 加臭型配方（50碗·在浓郁型基础上增加）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span class="k">加臭酱（发酵螺蛳浓缩液）</span><span class="v">40ml</span></div>
+      <div class="recipe-line"><span class="k">酸笋发酵汁（发酵7天以上老汁）</span><span class="v">120ml</span></div>
+      <div class="recipe-line"><span class="k">额外香料</span><span class="v">沙姜粉5g+白芷粉3g+丁香粉1g</span></div>
+      <div class="recipe-line"><span class="k">加入时机</span><span class="v">汤底出锅前10分钟加入，煮太久挥发</span></div>
+      <div class="recipe-line"><span class="k">推荐推出方式</span><span class="v">隐藏菜单·不写在主菜单上·老顾客口口相传</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:6px;margin-top:12px">4️⃣ 温度曲线（三型完整对比）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span class="k">清鲜型-熬制温度</span><span class="v">80-85°C（微沸·不加盖）→4-5h</span></div>
+      <div class="recipe-line"><span class="k">浓郁型-熬制温度</span><span class="v">85-90°C（微沸·半加盖）→4-5h</span></div>
+      <div class="recipe-line"><span class="k">加臭型-熬制温度</span><span class="v">85-90°C+10min加臭→4-5h</span></div>
+      <div class="recipe-line"><span class="k">过滤温度</span><span class="v">80-90°C（趁热过滤，冷了过滤困难）</span></div>
+      <div class="recipe-line"><span class="k">冷却方式</span><span class="v">自然冷却1-2h（不搅动防浑浊）</span></div>
+      <div class="recipe-line"><span class="k">冷藏保存</span><span class="v">0-4°C·加盖密封·3天内用完</span></div>
+      <div class="recipe-line"><span class="k">冷冻保存</span><span class="v">-18°C·5L袋分装·7天内用完·解冻后煮沸3分钟</span></div>
+      <div class="recipe-line"><span class="k">复热温度</span><span class="v">70-80°C·不超过85°C（超过汤变浊）</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:6px;margin-top:12px">5️⃣ 螺蛳粉原料采购注意事项</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span class="k">酸笋采购要点</span><span class="v">闻气味（浓而不刺鼻·有发酵香）·看颜色（浅黄·不发黑）·试口感（脆嫩·不老）</span></div>
+      <div class="recipe-line"><span class="k">螺蛳采购要点</span><span class="v">选石螺不选田螺·壳坚硬·闻无臭味·养24h水清为合格</span></div>
+      <div class="recipe-line"><span class="k">筒骨采购要点</span><span class="v">选猪后腿筒骨·带骨髓·颜色粉红不暗沉·敲裂检查骨髓新鲜度</span></div>
+      <div class="recipe-line"><span class="k">干米粉采购要点</span><span class="v">柳州产优先·直径1.8-2.0mm·色泽米白·断条率＜5%</span></div>
+      <div class="recipe-line"><span class="k">香料采购要点</span><span class="v">整粒非粉末·干燥无霉·闻香气浓郁·1688先索样</span></div>
+      <div class="recipe-line"><span class="k">验货标准</span><span class="v">每批到货先拆1包验货·拍照记录·不合格整批退回</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:6px;margin-top:12px">6️⃣ 变体矩阵（完整操作步骤+定价建议）</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span class="k">麻辣螺蛳粉</span><span class="v">汤底加花椒油8ml+辣椒油增量50%+青花椒粉3g。定价+¥3。成本+¥0.8</span></div>
+      <div class="recipe-line"><span class="k">番茄螺蛳粉</span><span class="v">清鲜型汤底+番茄酱100g+鲜番茄1个切片+糖15g中和酸。定价+¥4。成本+¥1.2</span></div>
+      <div class="recipe-line"><span class="k">咖喱螺蛳粉</span><span class="v">浓郁型汤底+咖喱粉15g+椰奶50ml+洋葱碎20g炒香。定价+¥5。成本+¥1.8</span></div>
+      <div class="recipe-line"><span class="k">金汤螺蛳粉</span><span class="v">清鲜型+南瓜泥100g+黄灯笼椒酱15g+咸蛋黄1个。定价+¥6。成本+¥2.0</span></div>
+      <div class="recipe-line"><span class="k">藤椒螺蛳粉</span><span class="v">浓郁型+藤椒油10ml+鲜藤椒5g装饰+青椒圈。定价+¥4。成本+¥1.0</span></div>
+      <div class="recipe-line"><span class="k">泡椒螺蛳粉</span><span class="v">清鲜型+泡椒水50ml+泡椒3个切圈+酸豆角15g。定价+¥4。成本+¥0.8</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:6px;margin-top:12px">7️⃣ 翻车急救表</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span class="k">汤底太苦</span><span class="v">加1:1清水+补盐糖20%+混合新汤底更好</span></div>
+      <div class="recipe-line"><span class="k">汤底太淡</span><span class="v">大火收浓30min+螺蛳浓缩汁15ml或高汤精10g</span></div>
+      <div class="recipe-line"><span class="k">汤底太咸</span><span class="v">加开水10%稀释+加半颗土豆煮10min吸盐</span></div>
+      <div class="recipe-line"><span class="k">汤底浑浊</span><span class="v">静置20min取上层清汤+蛋清澄清法</span></div>
+      <div class="recipe-line"><span class="k">螺蛳有沙感</span><span class="v">整锅换掉·不可挽救·严格养螺蛳预防</span></div>
+      <div class="recipe-line"><span class="k">香料味太冲</span><span class="v">加筒骨汤稀释+延长熬制时间30min让香料挥发</span></div>
+      <div class="recipe-line"><span class="k">复热后有焦味</span><span class="v">底部的香料渣没过滤干净·下次细筛过滤</span></div>
+      <div class="recipe-line"><span class="k">汤底有腥味</span><span class="v">螺蛳没炒够或筒骨没焯水·加姜片+料酒补救</span></div>
+      <div class="recipe-line"><span class="k">汤底变色发黑</span><span class="v">老抽太多或铁锅反应·改用不锈钢锅·减少老抽</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:6px;margin-top:12px">8️⃣ 三型对比总表</div>
+    <div class="recipe-box">
+      <div class="recipe-line"><span class="k">清鲜型香料数</span><span class="v">6种</span></div>
+      <div class="recipe-line"><span class="k">浓郁型香料数</span><span class="v">10种</span></div>
+      <div class="recipe-line"><span class="k">加臭型增加物</span><span class="v">加臭酱40ml+酸笋发酵汁120ml+3种粉</span></div>
+      <div class="recipe-line"><span class="k">清鲜型熬制时间</span><span class="v">4-5h（不加鸡架）</span></div>
+      <div class="recipe-line"><span class="k">浓郁型熬制时间</span><span class="v">5-6h（加鸡架）</span></div>
+      <div class="recipe-line"><span class="k">加臭型熬制时间</span><span class="v">5-6h+10min</span></div>
+      <div class="recipe-line"><span class="k">清鲜型每碗成本</span><span class="v">¥1.0-1.3</span></div>
+      <div class="recipe-line"><span class="k">浓郁型每碗成本</span><span class="v">¥1.2-1.6</span></div>
+      <div class="recipe-line"><span class="k">加臭型每碗成本</span><span class="v">¥1.5-2.0</span></div>
+      <div class="recipe-line"><span class="k">清鲜型推荐市场</span><span class="v">北方城市·减臭需求</span></div>
+      <div class="recipe-line"><span class="k">浓郁型推荐市场</span><span class="v">全国通用·性价比最佳</span></div>
+      <div class="recipe-line"><span class="k">加臭型推荐市场</span><span class="v">一线城市·网红话题店</span></div>
+    </div>
+
+    <div class="badge" style="margin-top:10px;font-size:10px;color:#8a7a6a;text-align:center;display:block">以上为付费完整工艺包·供应商信息和非正文增量数据·禁止免费传播</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="s-title">🔗 关联产品</div>
+  <div class="rel-grid">
+    <a class="rel-item" href="LSF_M01_螺蛳粉创业母卡.html"><span class="r-emoji">🐌</span><span class="r-name">LSF_M01 螺蛳粉创业母卡</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="LSF_02_螺蛳粉配菜体系子卡.html"><span class="r-emoji">🥬</span><span class="r-name">LSF_02 配菜体系子卡</span><span class="r-arrow">→</span></a>
+    <a class="rel-item" href="LSF_T01_螺蛳粉总纲.html"><span class="r-emoji">📋</span><span class="r-name">LSF_T01 螺蛳粉总纲（免费）</span><span class="r-arrow">→</span></a>
+  </div>
+</div>
+
+<!-- ===== 数据说明 ===== -->
+<div class="section">
+  <div class="s-title">📋 数据说明</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;font-size:11px;color:#5a4f44;line-height:1.7">
+    本卡数据来源：<br>
+    • 1688柳州螺蛳粉汤底批发价（2026年6月采集）<br>
+    • 美团外卖各城市螺蛳粉售价抽样（北京/上海/广州/深圳/成都/郑州6城各10家店）<br>
+    • 农业农村部批发市场螺蛳/筒骨/鸡架价格系统（2026年5-6月月报）<br>
+    • 柳州螺蛳粉行业协会公开数据（2025年年报）<br>
+    • 抖音螺蛳粉汤底熬制教程交叉验证（头部博主@柳州大叔@吃货阿锋等视频参数提取）<br>
+    • 行业经验估算标注「据行业估算」<br>
+    <br>
+    香料替代方案数据来源于「中国香料图鉴」及1688香料批发商访谈。供应商信息为行业公开渠道，建议实际采购前实地考察或要求样品。
+  </div>
+</div>
+
+<!-- ===== 沧林实战备注 ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">📝 沧林实战备注</div>
+  <div class="spec-card">
+    <b>熬汤这件事，难的不是配方，是坚持。</b><br><br>
+    我刚做卤味那会儿也觉得熬汤是核心技术，后来发现配方其实很容易拿到——难的是每天都按同一个标准出汤。今天多放了5g盐、明天少熬了30分钟、后天换了一家供应商的香料，每一锅都不一样。顾客可能说不上哪里不对，但他们能感觉到"味道变了"。<br><br>
+    所以这个子卡给了你精确的克重、温度、时间——不是让你照本宣科，是让你有一个标准可以回归。今天乱了，明天回到参数上。时间长了，你的手就是称，你的眼睛就是温度计。<br><br>
+    <b>关于袋装汤底和自熬的关系：</b>不是二选一。我见过最聪明的做法是：袋装汤底打底（保证基础味道稳定），自熬浓缩汁提鲜增厚度（做差异化）。既保留了效率，又做出了独家感。<br><br>
+    <b>关于北方开店：</b>如果打算在华北/东北开店，建议汤底做成清鲜型为基础，浓郁型为辅。北方人对"油腻"的敏感度比南方人高，清鲜型的接受度好得多。等到站稳了脚，再慢慢推浓郁型。<br><br>
+    <b>关于香料预混：</b>我建议你把香料按50碗比例预混成大包装（比如一次性混10包的量），每天熬汤时直接取一包。这样既保证了配比稳定，又省去了每天称量的时间。预混的香料密封避光保存，可以用3个月。<br><br>
+    <b>关于汤底冷却的细节：</b>很多新手在冷却这一步翻车——直接把热汤桶放进冰箱。这是大忌。一桶20L的热汤放进冰箱会让冰箱温度飙升到10°C以上，其他食材全部面临变质风险。正确做法：用冰浴法（汤桶放入更大冷水盆，不断加冰块），30分钟降到室温，再分装冷藏。<br><br>
+    <b>关于出品率：</b>20L水→浓缩至12-15L汤底→过滤后实际可用约10-13L。每碗汤350-400ml，一锅约能做30-35碗（不是50碗）。如果你按50碗算成本和定价，实际出品率只有60-70%，利润会比预期低很多。所以建议按35碗做成本核算，多出来的利润算惊喜。<br><br>
+    <b>关于螺蛳的品种选择：</b>石螺（小个·壳硬·味浓）适合做汤底，田螺（大个·壳薄·肉多）适合做炒螺蛳。做汤底一定用石螺。买回来先养24小时去沙，期间换水3次。如果批发商已经养过，养12小时就够了。<br><br>
+    <b>关于熬汤时间管理：</b>建议每天营业结束后把次日要用的汤底从冷冻移到冷藏解冻。第二天早上到店直接加热，省去解冻时间。如果当天熬新汤，凌晨4点到店开始熬，10点前能出第一锅。开业初期熬汤和出餐两头忙，建议前两周只做午市和晚市，不做早市，给自己留够熬汤时间。<br><br>
+    <b>关于成本控制的终极建议：</b>自熬汤底的真正价值不是省钱，是建立口味壁垒。日销200碗的店，自熬比袋装每月省¥3,000-8,000——这笔钱不是利润，是你应该投入到品质提升中的预算。多出来的钱买更好的螺蛳、更好的筒骨、更好的香料，把你的汤底做到方圆三公里最好吃的。到那时候，顾客不是因为你便宜才来，是因为别的地方吃不到这个味才来。
+  </div>
+</div>
+
+<div class="section" style="border-bottom:none">
+  <div class="s-title">📞 咨询入口</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;text-align:center">
+    <div><strong>📌 咨询场景：</strong>汤底发苦诊断·香料配比调整·批量熬制方案·本地化口味调参</div>
+    <div style="margin-top:6px"><strong>📱 联系方式：</strong>微信 canglin1985（备注"汤底工艺卡"）</div>
+  </div>
+</div>
+
+<div class="ftr">FoodIntelAI V5.1 · 沧林食品工作站 · 决策先于工艺 · 数据基准 2026.06 · LSF_01 汤底工艺子卡</div>
+</div>
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>

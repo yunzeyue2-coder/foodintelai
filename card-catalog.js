@@ -112,7 +112,7 @@ const STALL_DATA = [
     {f:"catalog/其他/烤红薯（母）XC_108.html",n:"烤红薯（母）XC_108"},
     {f:"catalog/其他/蒜蓉烤生蚝（母）XC_109.html",n:"蒜蓉烤生蚝（母）XC_109"},
     {f:"catalog/其他/酸辣粉（母）XC_110.html",n:"酸辣粉（母）XC_110"},
-    {f:"catalog/其他/螺蛳粉（母）XC_111.html",n:"螺蛳粉（母）XC_111"},
+    {f:"catalog/其他/螺蛳粉（母）XC_111.html",n:"🆕 螺蛳粉（母）XC_111 · 升级版"},{f:"catalog/其他/SX_T01_陕西面食总纲.html",n:"🆕 SX_T01 陕西面食总纲（免费）"},{f:"catalog/其他/SX_M01_陕西面食创业母卡.html",n:"SX_M01 陕西面食创业母卡（¥39）"},{f:"catalog/其他/SX_01_肉夹馍凉皮档口子卡.html",n:"SX_01 肉夹馍·凉皮档口（¥19）"},{f:"catalog/其他/SX_02_陕西面馆子卡.html",n:"SX_02 陕西面馆（¥19）"},{f:"catalog/其他/SX_03_泡馍小吃子卡.html",n:"SX_03 泡馍·小吃（¥19）"},{f:"catalog/其他/SX_04_油泼辣子腊汁肉VC卡.html",n:"SX_04 VC油泼辣子·腊汁肉（¥39）"},{f:"catalog/其他/LSF_T01_螺蛳粉总纲.html",n:"🆕 LSF_T01 螺蛳粉总纲（免费）"},{f:"catalog/其他/LSF_M01_螺蛳粉创业母卡.html",n:"LSF_M01 螺蛳粉创业母卡（¥39）"},{f:"catalog/其他/LSF_01_螺蛳粉汤底工艺子卡.html",n:"LSF_01 汤底工艺（¥39）"},{f:"catalog/其他/LSF_02_螺蛳粉配菜体系子卡.html",n:"LSF_02 配菜体系（¥39）"},{f:"catalog/其他/LSF_03_螺蛳粉外卖运营子卡.html",n:"🆕 LSF_03 外卖运营（¥39）"},{f:"catalog/其他/LSF_04_螺蛳粉供应链子卡.html",n:"🆕 LSF_04 供应链（¥39）"},{f:"catalog/其他/LSF_05_螺蛳粉北方开店子卡.html",n:"🆕 LSF_05 北方开店（¥39）"},
     {f:"catalog/其他/干炒牛河（母）XC_112.html",n:"干炒牛河（母）XC_112"},
     {f:"catalog/其他/关东煮（母）XC_113.html",n:"关东煮（母）XC_113"},
     {f:"catalog/其他/麻辣拌（母）XC_114.html",n:"麻辣拌（母）XC_114"},

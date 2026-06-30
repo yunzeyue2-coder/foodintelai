@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SX_03 · 泡馍·小吃子卡 · ¥19 · 暖金渐变</title>
+<style>
+/* ===== 全局重置 & 基调 ===== */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;background:#1a1508;color:#2c1e08;line-height:1.7;padding:20px;}
+.container{max-width:880px;margin:0 auto;background:linear-gradient(165deg,#faf3e0 0%,#f7e9c6 30%,#f0d89a 70%,#e8c97a 100%);border-radius:28px;padding:30px 28px 40px;box-shadow:0 20px 60px rgba(139,105,20,0.35),0 0 0 1px rgba(196,154,44,0.25);position:relative;overflow:hidden;}
+.container::before{content:'';position:absolute;top:-120px;right:-80px;width:320px;height:320px;background:radial-gradient(circle,rgba(196,154,44,0.12) 0%,transparent 70%);pointer-events:none;z-index:0;}
+.container::after{content:'';position:absolute;bottom:-100px;left:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(139,105,20,0.10) 0%,transparent 70%);pointer-events:none;z-index:0;}
+h1,h2,h3,h4{font-weight:700;letter-spacing:0.3px;}
+h2{font-size:1.35rem;color:#7a5c1a;border-left:5px solid #c49a2c;padding-left:14px;margin:32px 0 18px 0;position:relative;z-index:1;}
+h2:first-of-type{margin-top:0;}
+h3{font-size:1.08rem;color:#5c4312;margin:18px 0 10px 0;}
+p,li{font-size:0.95rem;color:#3d2d0e;}
+a{color:#8b6914;text-decoration:none;font-weight:600;}
+a:hover{color:#c49a2c;text-decoration:underline;}
+ul,ol{padding-left:22px;margin:8px 0;}
+li{margin:4px 0;}
+
+/* ===== 模块卡片 ===== */
+.module{background:rgba(255,253,244,0.65);backdrop-filter:blur(4px);border-radius:18px;padding:22px 24px;margin-bottom:20px;border:1px solid rgba(196,154,44,0.30);box-shadow:0 4px 14px rgba(139,105,20,0.08);position:relative;z-index:1;transition:box-shadow 0.25s;}
+.module:hover{box-shadow:0 6px 24px rgba(139,105,20,0.14);}
+.module h3{color:#6e5017;border-bottom:1px dashed #d4b56a;padding-bottom:6px;margin-top:0;}
+.module .mod-badge{position:absolute;top:10px;right:14px;background:rgba(196,154,44,0.15);color:#8b6914;font-size:0.68rem;font-weight:700;padding:2px 12px;border-radius:20px;letter-spacing:0.3px;}
+
+/* ===== 评级条 ===== */
+.rating-bar{background:linear-gradient(135deg,#8b6914,#c49a2c);border-radius:20px;padding:28px 30px;margin-bottom:24px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.20);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;position:relative;z-index:1;box-shadow:0 8px 28px rgba(139,105,20,0.28);}
+.rating-bar .title{font-size:1.65rem;font-weight:800;letter-spacing:1.5px;}
+.rating-bar .sub{font-size:1rem;opacity:0.92;margin-top:2px;}
+.rating-badges{display:flex;gap:10px;flex-wrap:wrap;}
+.rating-badge{background:rgba(255,255,255,0.18);border-radius:30px;padding:6px 20px;font-size:0.82rem;font-weight:600;letter-spacing:0.8px;border:1px solid rgba(255,255,255,0.25);}
+
+/* ===== 评分条 ===== */
+.rating-items{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;}
+.rating-item{flex:1;min-width:110px;background:rgba(255,253,244,0.5);border-radius:12px;padding:12px 14px;text-align:center;border:1px solid rgba(196,154,44,0.2);}
+.rating-item .rl{font-size:0.75rem;color:#7a6b44;margin-bottom:2px;}
+.rating-item .rs{font-size:1.2rem;font-weight:700;color:#8b6914;}
+.rating-item .rst{color:#c49a2c;font-size:0.8rem;letter-spacing:1px;}
+
+/* ===== 雷达图容器 ===== */
+.radar-wrap{display:flex;flex-wrap:wrap;gap:20px;align-items:center;}
+.radar-svg{flex:0 0 240px;}
+.radar-legend{flex:1;min-width:160px;}
+.radar-legend .item{display:flex;align-items:center;margin:6px 0;font-size:0.9rem;}
+.radar-legend .dot{width:12px;height:12px;border-radius:50%;margin-right:10px;flex-shrink:0;}
+.radar-legend .score{font-weight:700;color:#8b6914;margin-left:auto;}
+
+/* ===== 对勾/叉号 ===== */
+.check{color:#2a7d2a;}
+.cross{color:#b33a3a;}
+
+/* ===== 两列布局 ===== */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.col-good,.col-bad{border-radius:14px;padding:16px 18px;}
+.col-good{background:rgba(42,125,42,0.05);border:1px solid rgba(42,125,42,0.15);}
+.col-bad{background:rgba(179,58,58,0.05);border:1px solid rgba(179,58,58,0.15);}
+.col-good h4{color:#2a7d2a;margin-bottom:6px;}
+.col-bad h4{color:#b33a3a;margin-bottom:6px;}
+
+/* ===== 赚钱逻辑网格 ===== */
+.profit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:10px 0;}
+.profit-card{background:#fffbf0;border-radius:12px;padding:14px 16px;border:1px solid #e8d6a2;text-align:center;}
+.profit-card .num{font-size:1.8rem;font-weight:800;color:#8b6914;}
+.profit-card .label{font-size:0.8rem;color:#7a6b44;}
+
+/* ===== 同赛道对比表 ===== */
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:0.88rem;}
+th{background:linear-gradient(135deg,#c49a2c,#8b6914);color:#fff;padding:10px 8px;text-align:center;font-weight:600;}
+td{padding:9px 8px;text-align:center;border-bottom:1px solid #e0d0a4;}
+tr:nth-child(even) td{background:rgba(196,154,44,0.06);}
+tr:hover td{background:rgba(196,154,44,0.14);}
+tr.highlight td{background:#f0d89a!important;font-weight:700;}
+
+/* ===== 验证路线 ===== */
+.timeline{position:relative;padding-left:28px;}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,#c49a2c,#8b6914);border-radius:2px;}
+.timeline-item{position:relative;margin-bottom:18px;padding-left:10px;}
+.timeline-item::before{content:'';position:absolute;left:-24px;top:6px;width:14px;height:14px;border-radius:50%;background:#c49a2c;border:3px solid #faf3e0;}
+.timeline-item .week{font-weight:700;color:#8b6914;font-size:0.85rem;}
+.timeline-item p{margin:3px 0 0;}
+
+/* ===== 设备清单 ===== */
+.device-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+.device-item{background:#fffbf0;border-radius:10px;padding:10px 12px;border:1px solid #e8d6a2;font-size:0.85rem;}
+.device-item .name{font-weight:700;color:#5c4312;}
+.device-item .detail{color:#7a6b44;font-size:0.8rem;}
+
+/* ===== 产品结构 ===== */
+.product-struct{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;}
+.product-card{border-radius:14px;padding:14px 16px;text-align:center;border:1px solid #d4b56a;}
+.product-card.hot{background:linear-gradient(135deg,#f5e6c0,#f0d89a);}
+.product-card.profit{background:linear-gradient(135deg,#eedbba,#e8c97a);}
+.product-card.combo{background:linear-gradient(135deg,#e8d6a2,#dcc48a);}
+.product-card.premium{background:linear-gradient(135deg,#d4b56a,#c49a2c);color:#fff;}
+.product-card .pname{font-weight:700;font-size:0.95rem;}
+.product-card .pprice{font-size:0.8rem;opacity:0.8;}
+.product-card .pdesc{font-size:0.78rem;margin-top:4px;opacity:0.75;}
+
+/* ===== 摆摊指数 ===== */
+.stall-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;}
+.stall-item{background:#fffbf0;border-radius:12px;padding:12px;text-align:center;border:1px solid #e8d6a2;}
+.stall-item .icon{font-size:1.5rem;}
+.stall-item .score{font-weight:700;color:#8b6914;font-size:1.1rem;}
+.stall-item .label{font-size:0.78rem;color:#7a6b44;}
+
+/* ===== 核心工艺 ===== */
+.recipe-block{background:#fffdf5;border-radius:14px;padding:16px 18px;margin:10px 0;border-left:4px solid #c49a2c;}
+.recipe-block h4{color:#6e5017;margin-bottom:6px;}
+.recipe-block .grams{font-weight:600;color:#8b6914;}
+.recipe-block .step{color:#3d2d0e;margin:2px 0;font-size:0.9rem;}
+
+/* ===== 成本利润 ===== */
+.cost-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #e0d0a4;font-size:0.9rem;}
+.cost-row.total{font-weight:700;border-bottom:2px solid #c49a2c;padding-top:10px;}
+
+/* ===== 付费区 ===== */
+.paid-lock{text-align:center;padding:24px 20px;background:linear-gradient(135deg,rgba(196,154,44,0.08),rgba(139,105,20,0.06));border-radius:16px;border:2px dashed #c49a2c;margin:14px 0;cursor:pointer;transition:all 0.3s;}
+.paid-lock:hover{background:linear-gradient(135deg,rgba(196,154,44,0.14),rgba(139,105,20,0.10));}
+.paid-lock .lock-icon{font-size:2.2rem;margin-bottom:6px;}
+.paid-lock .lock-text{font-size:0.9rem;color:#7a5c1a;font-weight:600;}
+.paid-toggle{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#8b6914,#c49a2c);color:#fff;border:none;padding:12px 30px;border-radius:30px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;margin-top:8px;}
+.paid-toggle:hover{transform:scale(1.02);box-shadow:0 4px 16px rgba(139,105,20,0.3);}
+.paid-toggle .arrow{display:inline-block;transition:transform 0.3s;}
+.paid-content{max-height:0;overflow:hidden;transition:max-height 0.5s ease,opacity 0.4s ease;opacity:0;}
+.paid-content.open{max-height:8000px;opacity:1;}
+.increment-module{background:rgba(255,253,244,0.75);border-radius:14px;padding:18px 20px;margin-bottom:14px;border:1px solid #e8d6a2;}
+.increment-module .im-badge{font-size:0.75rem;color:#c49a2c;font-weight:600;letter-spacing:0.5px;margin-bottom:6px;}
+
+/* ===== 关联产品 ===== */
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+.related-card{background:#fffbf0;border-radius:12px;padding:12px 14px;border:1px solid #e8d6a2;text-align:center;transition:transform 0.2s;}
+.related-card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(139,105,20,0.12);}
+.related-card .code{font-size:0.7rem;background:#c49a2c;color:#fff;border-radius:4px;padding:1px 8px;display:inline-block;margin-bottom:4px;}
+.related-card .rname{font-weight:700;color:#5c4312;font-size:0.9rem;}
+.related-card .rprice{font-size:0.78rem;color:#7a6b44;}
+.related-card.highlight{background:linear-gradient(135deg,#f5e6c0,#e8c97a);border-color:#c49a2c;border-width:2px;}
+
+/* ===== 实战备注 ===== */
+.note-block{background:linear-gradient(135deg,#2c1e08,#4a3510);color:#f0d89a;border-radius:16px;padding:20px 24px;margin-top:0;box-shadow:0 4px 16px rgba(0,0,0,0.20);}
+.note-block h3{color:#e8c97a;border-bottom:1px solid #5c4312;}
+.note-block p,.note-block li{color:#dcc48a;}
+
+/* ===== 标签 ===== */
+.tag{display:inline-block;background:#c49a2c;color:#fff;border-radius:4px;padding:1px 10px;font-size:0.72rem;font-weight:600;letter-spacing:0.5px;margin:2px;}
+
+/* ===== 响应式 ===== */
+@media(max-width:600px){
+  .container{padding:18px 14px;border-radius:18px;}
+  .rating-bar{flex-direction:column;align-items:flex-start;gap:12px;padding:20px;}
+  .rating-bar .title{font-size:1.3rem;}
+  .two-col{grid-template-columns:1fr;}
+  .radar-svg{flex:0 0 180px;}
+  .profit-grid,.device-grid,.product-struct,.stall-grid,.related-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:400px){
+  .profit-grid,.device-grid,.product-struct,.stall-grid,.related-grid{grid-template-columns:1fr;}
+}
+
+/* ===== 动画 ===== */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.module{animation:fadeUp 0.4s ease both}
+.module:nth-child(2){animation-delay:0.05s}
+.module:nth-child(3){animation-delay:0.1s}
+.module:nth-child(4){animation-delay:0.15s}
+.module:nth-child(5){animation-delay:0.2s}
+.module:nth-child(6){animation-delay:0.25s}
+.module:nth-child(7){animation-delay:0.3s}
+.module:nth-child(8){animation-delay:0.35s}
+.module:nth-child(9){animation-delay:0.4s}
+.module:nth-child(10){animation-delay:0.45s}
+.module:nth-child(11){animation-delay:0.5s}
+.module:nth-child(12){animation-delay:0.55s}
+.module:nth-child(13){animation-delay:0.6s}
+.module:nth-child(14){animation-delay:0.65s}
+.module:nth-child(15){animation-delay:0.7s}
+.module:nth-child(16){animation-delay:0.75s}
+.module:nth-child(17){animation-delay:0.8s}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ==================== M01 评级条 ==================== -->
+<div class="rating-bar">
+  <div>
+    <div class="title">🐑 SX_03 · 泡馍·小吃子卡</div>
+    <div class="sub">暖金渐变 · 泡馍赛道评估卡 · ¥19</div>
+  </div>
+  <div class="rating-badges">
+    <span class="rating-badge">⭐ 综合评级 B+</span>
+    <span class="rating-badge">📈 盈利潜力 8.2/10</span>
+    <span class="rating-badge">🛠 操作门槛 高</span>
+    <span class="rating-badge">🔥 热度 8.0/10</span>
+  </div>
+</div>
+
+<!-- ==================== M02 单品速览 ==================== -->
+<div class="module">
+  <span class="mod-badge">M02</span>
+  <h3>📊 单品速览 · 5 维雷达图</h3>
+  <div class="radar-wrap">
+    <div class="radar-svg">
+      <svg viewBox="0 0 240 240" width="240" height="240">
+        <polygon points="120,20 210,102 175,200 65,200 30,102" fill="none" stroke="#d4b56a" stroke-width="1.2"/>
+        <polygon points="120,50 187,112 161,185 79,185 53,112" fill="none" stroke="#d4b56a" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <polygon points="120,80 165,122 148,170 92,170 75,122" fill="none" stroke="#d4b56a" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <polygon points="120,110 142,132 134,155 106,155 98,132" fill="none" stroke="#d4b56a" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <polygon points="120,38 196,108 168,188 72,188 44,108" fill="rgba(196,154,44,0.18)" stroke="#8b6914" stroke-width="2"/>
+        <circle cx="120" cy="38" r="4" fill="#c49a2c"/>
+        <circle cx="196" cy="108" r="4" fill="#c49a2c"/>
+        <circle cx="168" cy="188" r="4" fill="#c49a2c"/>
+        <circle cx="72" cy="188" r="4" fill="#c49a2c"/>
+        <circle cx="44" cy="108" r="4" fill="#c49a2c"/>
+        <text x="120" y="12" text-anchor="middle" font-size="11" fill="#5c4312" font-weight="600">品质口感 9</text>
+        <text x="216" y="106" text-anchor="start" font-size="11" fill="#5c4312" font-weight="600">盈利 8</text>
+        <text x="172" y="208" text-anchor="middle" font-size="11" fill="#5c4312" font-weight="600">可复制 6</text>
+        <text x="68" y="208" text-anchor="middle" font-size="11" fill="#5c4312" font-weight="600">抗风险 7</text>
+        <text x="16" y="106" text-anchor="end" font-size="11" fill="#5c4312" font-weight="600">热度 8</text>
+      </svg>
+    </div>
+    <div class="radar-legend">
+      <div class="item"><span class="dot" style="background:#8b6914;"></span>品质口感 <span class="score">9.0</span></div>
+      <div class="item"><span class="dot" style="background:#c49a2c;"></span>盈利 <span class="score">8.0</span></div>
+      <div class="item"><span class="dot" style="background:#b8860b;"></span>可复制 <span class="score">6.0</span></div>
+      <div class="item"><span class="dot" style="background:#d4a017;"></span>抗风险 <span class="score">7.0</span></div>
+      <div class="item"><span class="dot" style="background:#e8c97a;"></span>热度 <span class="score">8.0</span></div>
+      <div style="margin-top:10px;font-size:0.85rem;color:#7a6b44;">⚖️ 综合指数 <strong style="color:#8b6914;">7.6 / 10</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== M03 适合谁/不适合谁 ==================== -->
+<div class="module">
+  <span class="mod-badge">M03</span>
+  <h3>🎯 适合谁 / 不适合谁</h3>
+  <div class="two-col">
+    <div class="col-good">
+      <h4>✅ 适合谁</h4>
+      <ul>
+        <li><span class="check">✔</span> 有 1–3 年餐饮后厨经验的创业者</li>
+        <li><span class="check">✔</span> 想切「高客单·低竞争」蓝海赛道的人</li>
+        <li><span class="check">✔</span> 北方二三线城市，¥15–30 万启动预算</li>
+        <li><span class="check">✔</span> 愿意花 1–2 月学习煮馍技术的务实派</li>
+        <li><span class="check">✔</span> 看好羊肉泡馍品类升级红利的人</li>
+        <li><span class="check">✔</span> 能接受每天熬汤 4h+ 的慢工出细活</li>
+        <li><span class="check">✔</span> 想用一碗高品质泡馍建立社区口碑</li>
+      </ul>
+    </div>
+    <div class="col-bad">
+      <h4>❌ 不适合谁</h4>
+      <ul>
+        <li><span class="cross">✘</span> 追求快速出餐、翻台率的快餐思维</li>
+        <li><span class="cross">✘</span> 零厨艺基础、不想扎实学手艺的</li>
+        <li><span class="cross">✘</span> 启动资金 &lt; ¥10 万的压线族</li>
+        <li><span class="cross">✘</span> 南方炎热城市（泡馍天然偏北方口味）</li>
+        <li><span class="cross">✘</span> 想把泡馍当第二品类随便做的</li>
+        <li><span class="cross">✘</span> 不愿每天花时间熬汤备料的</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== M04 赚钱逻辑 ==================== -->
+<div class="module">
+  <span class="mod-badge">M04</span>
+  <h3>💰 赚钱逻辑 · 泡馍盈利模型</h3>
+  <p style="margin-bottom:12px;">羊肉泡馍的核心盈利公式：<strong style="color:#8b6914;">日营收 = 客单价 × 日销量 × 附加品率</strong></p>
+  <div class="profit-grid">
+    <div class="profit-card">
+      <div class="num">¥25–55</div>
+      <div class="label">客单价（城市差异）</div>
+    </div>
+    <div class="profit-card">
+      <div class="num">50–120</div>
+      <div class="label">日销量（碗/天）</div>
+    </div>
+    <div class="profit-card">
+      <div class="num">60–65%</div>
+      <div class="label">毛利空间</div>
+    </div>
+    <div class="profit-card">
+      <div class="num">¥1,500–6,000</div>
+      <div class="label">日营收预估</div>
+    </div>
+    <div class="profit-card">
+      <div class="num">12–18 月</div>
+      <div class="label">回本周期</div>
+    </div>
+  </div>
+  <p style="margin-top:10px;font-size:0.85rem;color:#7a6b44;">💡 杠杆点：提高客单价（加肉/双拼/套餐） · 增加附加品（小菜/饮品/糖蒜） · 晚餐时段做高端套餐</p>
+  <div style="margin-top:12px;padding:12px 16px;background:#fffbf0;border-radius:10px;border:1px solid #e8d6a2;">
+    <p style="font-weight:600;color:#5c4312;font-size:0.9rem;">📐 盈利拆解示例（西安·月租 ¥8,000 · 日售 80 碗）</p>
+    <p style="font-size:0.85rem;color:#3d2d0e;margin-top:4px;">日均营收：80 碗 × ¥30 均价 = ¥2,400 &nbsp;|&nbsp; 月营收：¥72,000</p>
+    <p style="font-size:0.85rem;color:#3d2d0e;">食材成本（38%）：¥27,360 &nbsp;|&nbsp; 人工（3 人）：¥15,000 &nbsp;|&nbsp; 房租：¥8,000 &nbsp;|&nbsp; 水电杂费：¥4,000</p>
+    <p style="font-size:0.85rem;color:#3d2d0e;">月固定开支合计：¥54,360 &nbsp;|&nbsp; <strong style="color:#8b6914;">月净利：¥7,440（净利率 24.5%）</strong></p>
+  </div>
+</div>
+
+<!-- ==================== M05 赛道判断 ==================== -->
+<div class="module">
+  <span class="mod-badge">M05</span>
+  <h3>🏁 赛道判断 · 泡馍赛道深度分析</h3>
+  <table>
+    <tr><th>维度</th><th>评估</th><th>评分</th></tr>
+    <tr><td>市场趋势</td><td>羊肉泡馍全国化进程中，消费升级明显</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>竞争格局</td><td>泡馍赛道竞争者少，区域性品牌为主</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td>品类生命周期</td><td>成熟期，但高端化/品质化仍有红利</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>供应链成熟度</td><td>羊肉/调料供应链完善，汤底配方为核心壁垒</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>技术壁垒</td><td>煮馍培训 1–2 个月，技术门槛明显高于面食</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td>政策合规</td><td>小餐饮备案制，但需清真认证（如主打真羊肉）</td><td>⭐⭐⭐</td></tr>
+    <tr><td>消费者认知</td><td>羊肉泡馍国民认知度极高，「西安美食」名片级</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td>外卖适配度</td><td>汤面分离包装，口感衰减约 20%，适配度中等</td><td>⭐⭐⭐</td></tr>
+    <tr class="highlight"><td style="font-weight:700;">总评</td><td style="font-weight:700;">蓝海赛道，竞争小、客单高</td><td style="font-weight:700;">4.1 / 5.0</td></tr>
+  </table>
+</div>
+
+<!-- ==================== M06 项目评估 ==================== -->
+<div class="module">
+  <span class="mod-badge">M06</span>
+  <h3>📋 项目评估 · 五项综合打分</h3>
+  <table>
+    <tr><th>评估项</th><th>说明</th><th>权重</th><th>得分</th></tr>
+    <tr><td>产品力</td><td>羊肉泡馍口感辨识度极高，品质铸就护城河</td><td>25%</td><td>9.0</td></tr>
+    <tr><td>运营难度</td><td>需煮馍技术培训 1–2 月，出餐效率较低，翻台率受限</td><td>20%</td><td>5.5</td></tr>
+    <tr><td>资金效率</td><td>15–30 万启动，设备投入中高，但现金流好</td><td>20%</td><td>7.0</td></tr>
+    <tr><td>抗风险能力</td><td>高客单+刚需属性，经济下行韧性较强</td><td>20%</td><td>7.5</td></tr>
+    <tr><td>可扩张性</td><td>标准化难度中等偏上，连锁需建汤底中央厨房</td><td>15%</td><td>5.5</td></tr>
+    <tr class="highlight"><td style="font-weight:700;">加权总分</td><td colspan="3">7.1 / 10（B+ 级别 · 值得深耕）</td></tr>
+  </table>
+</div>
+
+<!-- ==================== M07 同赛道对比 ==================== -->
+<div class="module">
+  <span class="mod-badge">M07</span>
+  <h3>🔁 同赛道对比 · 四大泡馍品类</h3>
+  <table>
+    <tr><th>维度</th><th>羊肉泡馍</th><th>牛肉泡馍</th><th>小炒泡馍</th><th>葫芦头</th></tr>
+    <tr><td>口味辨识度</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>客单价</td><td>¥25–55</td><td>¥20–40</td><td>¥22–45</td><td>¥20–35</td></tr>
+    <tr><td>毛利</td><td>60–65%</td><td>62–68%</td><td>58–63%</td><td>62–68%</td></tr>
+    <tr><td>食材成本/碗</td><td>¥10–16</td><td>¥8–13</td><td>¥9–15</td><td>¥7–12</td></tr>
+    <tr><td>操作门槛</td><td>高</td><td>中高</td><td>中高</td><td>中</td></tr>
+    <tr><td>翻台率</td><td>低（15–20min/碗）</td><td>低</td><td>中</td><td>中</td></tr>
+    <tr><td>顾客忠诚度</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td></tr>
+    <tr><td>推荐指数</td><td>🥇 9.0</td><td>🥈 7.5</td><td>🥉 7.0</td><td>6.5</td></tr>
+  </table>
+  <p style="margin-top:8px;font-size:0.82rem;color:#7a6b44;">💡 建议：以<strong>羊肉泡馍</strong>为招牌核心，<strong>小炒泡馍</strong>做差异化补充，<strong>牛肉泡馍</strong>做价格锚点。三者的汤底和馍可共用，操作成本增量不大。</p>
+</div>
+
+<!-- ==================== M08 30天验证路线 ==================== -->
+<div class="module">
+  <span class="mod-badge">M08</span>
+  <h3>📅 30 天验证路线 · 泡馍开业倒计时</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="week">📆 第 1–4 天 · 技术培训 + 市场调研</div>
+      <p>找陕西本地泡馍师傅学习煮馍技术（培训费 ¥3,000–8,000），重点掌握汤底熬制工艺。走访目标区域 3–5 家泡馍馆，记录客单价、翻台率、核心产品。做 50 份线上问卷验证本地需求。确认选址的可行性——泡馍店需要 60–100㎡ 空间（比面馆大）。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">📆 第 5–8 天 · 配方定型 + 试制</div>
+      <p>确定汤底配方（羊肉/牛骨比例、香料包配比），试做 5 轮盲测，每轮邀请 10 人试吃打分，调整汤底至大众接受度 > 85%。确定馍的规格（半发面饼，直径 8–10cm），测试不同掰馍大小的口感差异。拍掰馍/煮馍过程视频为开业预热。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">📆 第 9–13 天 · 设备采购 &amp; 空间布局</div>
+      <p>采购设备清单（见 M09），设计厨房动线——确保汤锅区 → 煮馍区 → 出餐口的单向流线。办齐食品经营许可证 + 营业执照 + 员工健康证。尤其注意：泡馍店油烟和气味较大，排烟系统必须到位。确认羊肉供应商（本地清真屠宰场优先）。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">📆 第 14–19 天 · 试营业 1.0</div>
+      <p>亲友内测 → 限量 20 份/天 → 收集反馈 → 调整汤底咸度/油度/配料比例。重点测试：汤底熬制的一致性（同一配方不同日期出品偏差 ≤ 5%）。建立标准化汤底配方卡和煮馍 SOP。拍摄羊肉泡馍制作全流程视频为抖音/小红书积累素材。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">📆 第 20–25 天 · 试营业 2.0</div>
+      <p>开放午市 + 晚市（11:00–14:00, 17:00–20:00），推 3 款套餐（经典泡馍单人餐 ¥28 / 双人分享餐 ¥55 / 豪华全家餐 ¥88）。跑通出餐 SOP，目标：高峰期 15min/碗。培养 1–2 名煮馍帮手。测试外卖方案（汤馍分离包装）。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">📆 第 26–30 天 · 正式开业</div>
+      <p>开业活动：首周 8.5 折 / 第二份半价 / 拍照打卡送糖蒜。上线美团 + 饿了么。准备开业物料（灯箱 / 菜单 / 桌贴 / 糖蒜碟定制）。记录 MVP 数据：日均单量、客单价、好评率、差评原因分析。为正式运营做数据基准。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== M09 设备清单 ==================== -->
+<div class="module">
+  <span class="mod-badge">M09</span>
+  <h3>🔧 设备清单 · 泡馍店标准配置</h3>
+  <div class="device-grid">
+    <div class="device-item"><div class="name">🍲 大号汤桶</div><div class="detail">80L 不锈钢 ¥800–1,500</div></div>
+    <div class="device-item"><div class="name">🔥 双眼灶</div><div class="detail">天然气 ¥2,500–4,000</div></div>
+    <div class="device-item"><div class="name">🍳 煮馍灶</div><div class="detail">单眼猛火灶 ¥1,200–2,000</div></div>
+    <div class="device-item"><div class="name">🧊 四门冷柜</div><div class="detail">风冷 ¥3,800–5,500</div></div>
+    <div class="device-item"><div class="name">🥣 不锈钢操作台</div><div class="detail">1.5m × 0.8m ¥1,200–2,000</div></div>
+    <div class="device-item"><div class="name">🫓 和面机</div><div class="detail">15kg 卧式 ¥2,200–3,500</div></div>
+    <div class="device-item"><div class="name">🫓 饼铛</div><div class="detail">电热双面 ¥800–1,500</div></div>
+    <div class="device-item"><div class="name">🧂 调料车</div><div class="detail">三层 ¥400–800</div></div>
+    <div class="device-item"><div class="name">🍽 碗碟消毒柜</div><div class="detail">热风 ¥1,500–2,500</div></div>
+    <div class="device-item"><div class="name">💨 油烟净化器</div><div class="detail">6000m³/h ¥2,000–4,000</div></div>
+    <div class="device-item"><div class="name">📊 收银系统</div><div class="detail">iPad/触摸屏 ¥1,500–3,000</div></div>
+    <div class="device-item"><div class="name">🚰 商用净水器</div><div class="detail">RO反渗透 ¥800–1,500</div></div>
+  </div>
+  <p style="margin-top:8px;font-size:0.8rem;color:#7a6b44;">💰 设备总预算：<strong style="color:#8b6914;">¥18,000–¥32,000</strong>（新设备，不含装修）| 泡馍店汤锅和猛火灶不能省，其他可二手。</p>
+</div>
+
+<!-- ==================== M10 产品结构 ==================== -->
+<div class="module">
+  <span class="mod-badge">M10</span>
+  <h3>📋 产品结构 · 引流 / 利润 / 套餐 / 高端</h3>
+  <div class="product-struct">
+    <div class="product-card hot">
+      <div class="pname">🔥 引流品</div>
+      <div class="pprice">¥18–22</div>
+      <div class="pdesc">素泡馍 · 牛肉泡馍（小份）<br>低价高频，吸引新客<br>毛利 55–60%</div>
+    </div>
+    <div class="product-card profit">
+      <div class="pname">💎 利润品</div>
+      <div class="pprice">¥28–45</div>
+      <div class="pdesc">羊肉泡馍（经典/优质）<br>毛利 62%+，核心收入<br>占销售额 50%</div>
+    </div>
+    <div class="product-card combo">
+      <div class="pname">📦 套餐品</div>
+      <div class="pprice">¥35–68</div>
+      <div class="pdesc">泡馍+小菜+糖蒜+饮品<br>提升客单价 ¥10–20<br>适合晚餐/社交场景</div>
+    </div>
+    <div class="product-card premium">
+      <div class="pname">👑 高端品</div>
+      <div class="pprice">¥58–88</div>
+      <div class="pdesc">双拼泡馍 · 羊肉小炒<br>品牌调性 + 高毛利<br>适合宴请/特别场景</div>
+    </div>
+  </div>
+  <p style="margin-top:10px;font-size:0.82rem;color:#7a6b44;">💡 推荐产品比例：引流 25% : 利润 50% : 套餐 15% : 高端 10% &nbsp;|&nbsp; 菜单总 SKU 建议 8–12 款</p>
+</div>
+
+<!-- ==================== M11 摆摊指数 ==================== -->
+<div class="module">
+  <span class="mod-badge">M11</span>
+  <h3>🏪 摆摊指数 · 6 场景</h3>
+  <div class="stall-grid">
+    <div class="stall-item">
+      <div class="icon">🏙️</div>
+      <div class="score">6/10</div>
+      <div class="label">商业街夜市</div>
+    </div>
+    <div class="stall-item">
+      <div class="icon">🏫</div>
+      <div class="score">5/10</div>
+      <div class="label">大学城</div>
+    </div>
+    <div class="stall-item">
+      <div class="icon">🏢</div>
+      <div class="score">7/10</div>
+      <div class="label">办公区午餐</div>
+    </div>
+    <div class="stall-item">
+      <div class="icon">🏘️</div>
+      <div class="score">8/10</div>
+      <div class="label">社区门口</div>
+    </div>
+    <div class="stall-item">
+      <div class="icon">🎪</div>
+      <div class="score">7/10</div>
+      <div class="label">集市庙会</div>
+    </div>
+    <div class="stall-item">
+      <div class="icon">🚇</div>
+      <div class="score">4/10</div>
+      <div class="label">地铁口</div>
+    </div>
+  </div>
+  <p style="margin-top:8px;font-size:0.82rem;color:#7a6b44;">💡 泡馍适合社区店模式，翻台率低但客单价高，核心是靠品质留住熟客。最佳场景：社区底商（月租 ¥6,000–15,000）+ 外带窗口。</p>
+</div>
+
+<!-- ==================== M12 最大风险 ==================== -->
+<div class="module">
+  <span class="mod-badge">M12</span>
+  <h3>⚠️ 最大风险 · 泡馍赛道专属</h3>
+  <table>
+    <tr><th style="width:28%;">风险类别</th><th>风险描述</th><th style="width:16%;">等级</th><th style="width:24%;">应对措施</th></tr>
+    <tr><td>👨‍🍳 技术壁垒</td><td>煮馍技术培训 1–2 月，人才难寻、难复制</td><td>🔴 高</td><td>老板亲自学技术 + 拍摄标准化视频 SOP + 培养 2 名学徒</td></tr>
+    <tr><td>🐑 原料波动</td><td>羊肉价格波动 ±20–30%，冬季涨幅明显</td><td>🟡 中</td><td>签季度锁价协议 + 冰鲜/冷冻库存 2 周 + 冬季提前备货</td></tr>
+    <tr><td>🏪 选址风险</td><td>泡馍需要足够大的空间（60–100㎡），租金占比 > 20% 即侵蚀利润</td><td>🔴 高</td><td>租金红线 = 预估日营收 × 25 天 × 18%，宁可偏一点也要面积够</td></tr>
+    <tr><td>🌡️ 口味偏差</td><td>泡馍口味地域性极强，迁入地可能水土不服</td><td>🟡 中</td><td>提供「汤浓/汤淡/油多/油少」四个自定义选项，逐步本地化</td></tr>
+    <tr><td>⏱️ 翻台率低</td><td>一碗泡馍制作 + 食用约需 25–35min，翻台率天然低</td><td>🟡 中</td><td>增加外卖窗口占比（目标 30%+）+ 预制品（糖蒜/小菜/饮品自行取用）</td></tr>
+    <tr><td>⚖️ 合规风险</td><td>清真食品标识需合规，羊肉供应商需有检疫证明</td><td>🟢 低</td><td>选择正规屠宰场供应商 + 索要每批次检疫报告 + 店内公示清真认证</td></tr>
+    <tr><td>🌧️ 季节性波动</td><td>夏季泡馍需求下降 25–35%，冬季需求旺盛</td><td>🟡 中</td><td>夏季推凉皮/酸梅汤/小炒泡馍（略带酸辣更开胃），冬季强化羊肉泡馍</td></tr>
+  </table>
+</div>
+
+<!-- ==================== M13 核心工艺 ==================== -->
+<div class="module">
+  <span class="mod-badge">M13</span>
+  <h3>📜 核心工艺 · 完整配方（精确到克）</h3>
+
+  <div class="recipe-block">
+    <h4>🐑 羊肉泡馍（标准份 · 1 碗）</h4>
+    <p><span class="grams">汤底配方（10L 基础汤）：</span>羊腿骨 2.5kg + 牛骨 1kg（斩断露髓）+ 羊肉 1kg（带肥膘增加脂香）+ 水 12L → 冷水下锅大火煮沸撇浮沫 → 转小火保持微沸状态 4h（不盖盖，保持汤色清澈）→ 熬至汤剩 8L 左右</p>
+    <p><span class="grams">香料包（纱布包裹）：</span>八角 6g · 桂皮 5g · 香叶 3g · 花椒 4g · 草果 2 个（拍裂）· 丁香 1g · 小茴香 5g · 白芷 3g · 良姜 4g · 干辣椒 3 个 · 陈皮 3g · 生姜 20g（拍扁）</p>
+    <p><span class="grams">调味（每碗）：</span>盐 2g · 白胡椒粉 0.5g · 味精 0.3g（可选）· 羊油 5g（增香）· 蒜苗花 3g · 香菜末 3g · 香油 2 滴</p>
+    <p><span class="grams">馍的规格：</span>半发面饼（中筋面粉 500g + 水 260g + 酵母 2g + 盐 3g + 碱 0.5g）→ 醒发 20min → 做成直径 8–10cm、厚 1.5cm 的圆饼 → 烙至两面微黄（不焦）→ 掰成黄豆粒大小（约 0.5–1cm 见方）</p>
+    <p class="step">📌 关键要点：① 汤底是泡馍的灵魂——骨肉比 3.5:1 是最佳比例，骨头多则汤鲜，肉多则汤腻。② 香料包熬 1.5h 后取出——泡太久会发苦。③ 馍掰得越小越入味——黄豆粒大小是标准，豌豆粒大小是老饕级。④ 煮馍全程大火——汤沸之下馍迅速吸汤入味，火小则馍烂汤散。</p>
+  </div>
+
+  <div class="recipe-block">
+    <h4>🟤 小炒泡馍（标准份 · 1 碗）</h4>
+    <p><span class="grams">小炒底料（每碗）：</span>羊油 15g（烧热）· 蒜末 8g · 姜末 4g · 干辣椒段 5g（出香不辣）→ 爆香后加番茄丁 50g（去皮）炒出红油</p>
+    <p><span class="grams">主料：</span>掰好的馍 200g · 羊肉片 60g（提前卤好的羊肉切薄片）· 粉丝 15g（泡发剪段）· 木耳 10g（泡发撕小朵）· 黄花菜 5g（泡发切段）· 豆腐干 20g（切丁）· 青菜 2 棵（焯水）</p>
+    <p><span class="grams">汤底调味：</span>基础羊汤 350g + 盐 2g + 生抽 8g + 香醋 10g（酸味突出，区别于传统泡馍）· 白胡椒粉 1g · 辣椒面 5g（增色）· 水淀粉 15g（勾薄芡）</p>
+    <p><span class="grams">煮制流程：</span>汤底烧开 → 下馍和粉丝煮 1.5min → 下羊肉片和蔬菜煮 30 秒 → 下调味料 → 勾芡 → 出锅撒蒜苗花 3g + 香菜末 3g + 香油 2 滴</p>
+    <p class="step">📌 关键要点：① 小炒泡馍的灵魂是「酸辣鲜香」——番茄的酸 + 香醋的酸双层叠加，比传统泡馍层次更丰富。② 勾芡要薄——米汤浓度即可，太浓稠像糊糊。③ 番茄一定要去皮并炒出红油——这步决定了汤的底色。④ 配糖蒜和辣酱上桌——让顾客自己调节口味。</p>
+  </div>
+
+  <div class="recipe-block">
+    <h4>🧄 糖蒜（泡馍黄金搭档）</h4>
+    <p><span class="grams">配方（10 头蒜量）：</span>新鲜大蒜 10 头（去皮留内皮）· 白糖 200g · 白醋 150ml · 盐 15g · 清水 300ml · 高度白酒 10ml（防腐增香）</p>
+    <p><span class="grams">制作方法：</span>大蒜切去根部 → 淡盐水浸泡 24h（换水 2 次去辛辣）→ 沥干放入消毒过的玻璃罐 → 糖+醋+盐+水煮沸晾凉 → 倒入罐中完全没过蒜 → 加白酒封口 → 室温发酵 7 天后转冷藏 15 天即可食用</p>
+    <p class="step">📌 关键要点：① 腌制时间至少 20 天——前 7 天室温发酵产生风味，后 13 天冷藏熟成口感才脆。② 切不可用金属容器腌制——糖醋会腐蚀金属，影响风味。③ 糖蒜是泡馍店「免费续」的引流神器——顾客会因为糖蒜好吃而反复来。④ 糖蒜水不要倒掉——可以复用做凉拌菜的调味汁。</p>
+  </div>
+
+  <div class="recipe-block">
+    <h4>🌶️ 油泼辣子（泡馍专用版）</h4>
+    <p><span class="grams">配方：</span>粗辣椒面 100g（秦椒+二荆条 2:1）· 细辣椒粉 50g · 熟白芝麻 20g · 花生碎 15g · 花椒粉 3g · 五香粉 2g · 盐 8g · 白糖 5g</p>
+    <p><span class="grams">油料工艺：</span>菜籽油 400ml 加热至 210℃（微微冒烟）→ 关火晾 30 秒至 180℃ → 分三次泼入辣椒面中：第一次泼 1/2 快速搅拌激出香味 → 第二次泼 1/4 搅拌出红油色 → 第三次泼 1/4 后加香醋 5ml（增香提色）→ 晾凉装瓶密封 24h 后食用风味最佳</p>
+    <p class="step">📌 关键要点：① 油温控制是核心——210℃ 过高辣椒会焦苦，180℃ 是理想泼油温度。② 香醋在最后一步加——高温下醋香挥发，低温加入保留醋香。③ 泡馍用的辣子要比面馆的「更粗」——粗颗粒裹在馍上口感更好。</p>
+  </div>
+</div>
+
+<!-- ==================== M14 成本利润 ==================== -->
+<div class="module">
+  <span class="mod-badge">M14</span>
+  <h3>💰 成本利润分析</h3>
+  <p style="margin-bottom:10px;font-weight:600;color:#5c4312;">📊 单品成本利润模型（以经典羊肉泡馍为例 · 售价 ¥30）</p>
+  <div class="cost-row"><span>🐑 羊肉（60g）</span><span>¥5.00–8.00</span></div>
+  <div class="cost-row"><span>🫓 馍（200g）</span><span>¥1.00–2.00</span></div>
+  <div class="cost-row"><span>🥣 汤底（含骨+香料）</span><span>¥1.50–2.50</span></div>
+  <div class="cost-row"><span>🥬 配菜（粉丝+木耳+黄花菜+青菜）</span><span>¥0.80–1.50</span></div>
+  <div class="cost-row"><span>🧂 调料（盐/胡椒/油/香油等）</span><span>¥0.50–1.00</span></div>
+  <div class="cost-row" style="border-bottom:2px solid #8b6914;"><span style="font-weight:700;">📦 食材成本小计</span><span style="font-weight:700;color:#8b6914;">¥8.80–15.00</span></div>
+  <div class="cost-row"><span>🔥 燃气/水电</span><span>¥0.80–1.20</span></div>
+  <div class="cost-row"><span>📦 包装（外卖碗+袋+筷）</span><span>¥0.40–0.80</span></div>
+  <div class="cost-row"><span>👨‍🍳 人工分摊（1 人/小时出 6 碗，时薪 ¥20）</span><span>¥3.30–4.00</span></div>
+  <div class="cost-row"><span>🏠 租金分摊（月租 ¥8,000 / 月售 2,080 碗）</span><span>¥3.85</span></div>
+  <div class="cost-row"><span>📋 其他固定分摊</span><span>¥1.00–2.00</span></div>
+  <div class="cost-row total"><span>⚖️ 总成本 / 碗</span><span><strong style="color:#8b6914;">¥18.00–26.85</strong></span></div>
+  <div class="cost-row" style="border-bottom:none;"><span>💵 售价 / 碗</span><span><strong style="color:#8b6914;">¥30.00</strong></span></div>
+  <div class="cost-row total" style="border-top:2px solid #8b6914;border-bottom:none;"><span>📈 单碗毛利</span><span><strong style="color:#8b6914;">¥3.15–12.00 (10–40% 净利)</strong></span></div>
+
+  <p style="margin-top:14px;font-weight:600;color:#5c4312;">📊 各产品毛利对比</p>
+  <table>
+    <tr><th>产品</th><th>售价</th><th>食材成本</th><th>食材毛利</th><th>食材毛利率</th></tr>
+    <tr><td>经典羊肉泡馍</td><td>¥30</td><td>¥8.8–15.0</td><td>¥15.0–21.2</td><td>63–71%</td></tr>
+    <tr><td>优质羊肉泡馍（双肉）</td><td>¥38</td><td>¥12.0–18.0</td><td>¥20.0–26.0</td><td>61–68%</td></tr>
+    <tr><td>牛肉泡馍</td><td>¥25</td><td>¥7.0–12.0</td><td>¥13.0–18.0</td><td>65–72%</td></tr>
+    <tr><td>小炒泡馍</td><td>¥32</td><td>¥9.0–15.0</td><td>¥17.0–23.0</td><td>62–70%</td></tr>
+    <tr><td>素泡馍</td><td>¥18</td><td>¥3.0–5.0</td><td>¥13.0–15.0</td><td>74–83%</td></tr>
+  </table>
+
+  <p style="margin-top:12px;font-size:0.85rem;color:#7a6b44;">📈 月度预估（日售 80 碗 · 月营业 26 天）：月营收 ¥62,400 | 总食材成本 ¥24,960 | 人工 ¥15,000 | 房租 ¥8,000 | 水电 ¥4,000 | 杂费 ¥3,000 | <strong style="color:#8b6914;">月净利 ≈ ¥7,440（净利率 11.9%）</strong></p>
+  <p style="font-size:0.85rem;color:#7a6b44;">💡 提高净利的关键：提高日销量至 100 碗 + 提升客单价至 ¥35（推优质版和套餐）+ 控制羊肉采购成本</p>
+</div>
+
+<!-- ==================== M15 付费区 ==================== -->
+<div class="module">
+  <span class="mod-badge">M15</span>
+  <h3>🔓 付费深度内容</h3>
+  <p style="font-size:0.85rem;color:#7a6b44;margin-bottom:8px;">以下 6 个增量模块为付费专属内容，单击下方按钮解锁全部数据：</p>
+
+  <div class="paid-lock" onclick="document.getElementById('payContent').classList.toggle('open')">
+    <div class="lock-icon">🔒</div>
+    <div class="lock-text">6 个深度模块 · ¥19 解锁全部</div>
+  </div>
+
+  <div style="text-align:center;margin-top:12px;">
+    <button class="paid-toggle" onclick="document.getElementById('payContent').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open');">
+      <span>🔓 点击解锁付费内容</span>
+      <span class="arrow">▼</span>
+    </button>
+  </div>
+
+  <div id="payContent" class="paid-content">
+
+    <!-- 增量模块 A -->
+    <div class="increment-module">
+      <div class="im-badge">🔓 增量模块 A · 羊肉供应链深度解析</div>
+      <ul>
+        <li><strong>羊肉部位选择：</strong>泡馍最优选羊前腿肉（肥瘦比 3:7，久煮不柴），次选羊后腿（瘦多肥少，需额外加羊油）。羊腩肉适合做小炒泡馍（肥香浓郁）。不建议用羊里脊——太嫩，煮久了散碎。</li>
+        <li><strong>供应商选择：</strong>① 本地清真屠宰场（最新鲜，¥40–55/kg，需每日凌晨取货）② 冷链羊肉批发商（冰鲜 ¥35–50/kg，冷冻 ¥28–40/kg）③ 电商平台（美菜/快驴，方便但品质波动大）。沧林建议：前 3 个月用本地清真屠宰场建立口碑，稳定后再引入冷链降低成本。</li>
+        <li><strong>羊肉储存：</strong>冰鲜 0–4℃ 保质 3 天，冷冻 –18℃ 保质 3 个月。解冻方式：冷藏室缓慢解冻（12h），不可常温或热水解冻——汁水流失率可达 15%+。</li>
+        <li><strong>成本优化：</strong>与 2–3 家羊肉供应商签框架协议，批量采购价可降 8–12%。冬季（羊肉消费旺季）提前 1 个月锁价。整羊采购比部位采购便宜 15–20%，可找合作屠宰场代为分割。</li>
+      </ul>
+    </div>
+
+    <!-- 增量模块 B -->
+    <div class="increment-module">
+      <div class="im-badge">🔓 增量模块 B · 泡馍套餐定价策略</div>
+      <table>
+        <tr><th>套餐名</th><th>组成</th><th>原价</th><th>套餐价</th><th>省</th><th>策略</th></tr>
+        <tr><td>基础单人餐</td><td>经典泡馍+糖蒜+饮品</td><td>¥37</td><td>¥32</td><td>¥5</td><td>吸引工作日午餐客群</td></tr>
+        <tr><td>经典双人餐⭐</td><td>2×经典泡馍+2×小菜+2×饮品</td><td>¥76</td><td>¥58</td><td>¥18</td><td>主推套餐，家庭/朋友场景</td></tr>
+        <tr><td>豪华分享餐</td><td>优质泡馍+小炒泡馍+4小菜+2饮品</td><td>¥98</td><td>¥78</td><td>¥20</td><td>拉高客单价，适合聚餐</td></tr>
+        <tr><td>工作日晚餐</td><td>泡馍（任选）+糖蒜+凉菜</td><td>¥38</td><td>¥28</td><td>¥10</td><td>晚餐引流，18:00–20:00 专享</td></tr>
+      </table>
+      <div style="margin-top:8px;font-size:0.82rem;color:#5c4312;">
+        <strong>定价心法：</strong>套餐价 = 单品总和的 70–85%。经典双人餐放菜单 C 位。豪华分享餐做锚定——看到 ¥78，基础单人餐 ¥32 就显得很划算。
+      </div>
+    </div>
+
+    <!-- 增量模块 C -->
+    <div class="increment-module">
+      <div class="im-badge">🔓 增量模块 C · 美团/饿了么线上运营 SOP</div>
+      <ul>
+        <li><strong>产品命名优化：</strong>「西安老字号羊肉泡馍」&gt;「羊肉泡馍」（加地域前缀 + 品质描述提升搜索权重和点击率）。</li>
+        <li><strong>图片策略：</strong>拍摄汤底特写（乳白色羊汤）+ 掰馍过程动图 + 成品俯拍（热气腾腾感）。暖色调滤镜（色温 3200K），让汤看起来更浓郁。</li>
+        <li><strong>满减设计（三档）：</strong>满 35 减 4（基础档）→ 满 60 减 8（主推）→ 满 100 减 15（高客单）。配合新客立减 ¥5。</li>
+        <li><strong>配送方案：</strong>汤馍分离包装——汤装在密封碗中，馍和配菜另装一碗，食用时自行混合。使用保温袋 + 外卖安心签。配送距离控制在 3km 以内。</li>
+        <li><strong>评分管理：</strong>每单附「好评卡」——晒图返现 ¥3，持续维持 4.8 分以上。差评 30min 内响应，致歉 + 赠券安抚。</li>
+        <li><strong>平台扣点对冲：</strong>美团 18–23%，饿了么 16–21%。线上定价比线下高 15–20% 对冲扣点。例如线下 ¥30 的经典泡馍，线上标 ¥35，配合满减实际到手价 ≈ ¥30。</li>
+      </ul>
+    </div>
+
+    <!-- 增量模块 D -->
+    <div class="increment-module">
+      <div class="im-badge">🔓 增量模块 D · 新员工 7 天培训体系</div>
+      <table>
+        <tr><th>天次</th><th>培训内容</th><th>考核标准</th></tr>
+        <tr><td>Day 1</td><td>认识羊肉部位/香料/汤底原理。学习汤锅操作（水位控制 + 火候观察 + 撇沫技巧）。</td><td>能独立完成汤锅操作并正确加料</td></tr>
+        <tr><td>Day 2</td><td>掰馍练习——从掰到黄豆粒大小的手感培养。和面/烙饼全流程实操。</td><td>10min 内掰好 5 份标准馍</td></tr>
+        <tr><td>Day 3–4</td><td>煮馍全流程——汤底调味 + 下馍时间 + 出锅时机。每日 20 碗实操练习。</td><td>连续 5 碗出品口味盲测 ≥ 80 分</td></tr>
+        <tr><td>Day 5</td><td>小炒泡馍专项培训。掌握番茄炒底料 + 酸辣调味配比。</td><td>独立完成 3 碗小炒泡馍出品</td></tr>
+        <tr><td>Day 6–7</td><td>全流程压力测试（模拟 60 分钟出 20 碗）+ 高峰接单话术 + 卫生规范考核。</td><td>全流程独立通过，无差错</td></tr>
+      </table>
+      <div style="margin-top:8px;font-size:0.82rem;color:#5c4312;">
+        <strong>留人机制：</strong>满 3 个月调薪 10–15% + 技能补贴（会煮馍 + ¥500/月）→ 满 6 个月晋升「煮馍主管」+ 门店利润 2% 奖金 → 满 1 年分红股 2–5%。
+      </div>
+    </div>
+
+    <!-- 增量模块 E -->
+    <div class="increment-module">
+      <div class="im-badge">🔓 增量模块 E · 淡旺季运营节奏</div>
+      <ul>
+        <li><strong>☀️ 旺季（秋冬季 · 10 月–次年 2 月）：</strong>营业时间延长 1h（加开夜宵时段 20:00–22:00），备货量提高 40–60%。推出「暖冬限定」——滋补羊肉泡馍（+枸杞+红枣）。高峰期安排专职打包员。外卖占比提升至 35–40%。</li>
+        <li><strong>🌧️ 淡季（夏季 · 6–8 月）：</strong>备货量减少 20–30%（降低损耗）。推出「夏季小炒泡馍」（酸辣更开胃）+ 凉皮 / 凉面补充。用淡季改良汤底配方、测试新品、培训员工。开发团餐/企业订餐渠道。</li>
+        <li><strong>全年营销日历：</strong>10 月入秋 →「暖胃泡馍季」· 12 月冬至 →「冬至吃泡馍」· 1 月春节 →「年夜饭泡馍礼盒」· 3 月开春 →「经典回归 8 折」· 6 月夏至 →「酸辣小炒泡馍节」。</li>
+      </ul>
+    </div>
+
+    <!-- 增量模块 F -->
+    <div class="increment-module">
+      <div class="im-badge">🔓 增量模块 F · 5 年盈利模型推演</div>
+      <table>
+        <tr><th>年份</th><th>日均营收</th><th>年营收</th><th>年净利</th><th>累计净利</th><th>关键动作</th></tr>
+        <tr><td>第 1 年</td><td>¥2,400</td><td>¥748,800</td><td>¥89,440</td><td>¥89,440</td><td>单店模型验证，打磨汤底 SOP</td></tr>
+        <tr><td>第 2 年</td><td>¥3,000</td><td>¥936,000</td><td>¥168,480</td><td>¥257,920</td><td>优化供应链，提升复购至 35%</td></tr>
+        <tr><td>第 3 年</td><td>¥3,600</td><td>¥1,123,200</td><td>¥247,104</td><td>¥505,024</td><td>开第二家店或升级设备提效</td></tr>
+        <tr><td>第 4 年</td><td>¥4,200</td><td>¥1,310,400</td><td>¥327,600</td><td>¥832,624</td><td>品牌化运营，开放加盟</td></tr>
+        <tr><td>第 5 年</td><td>¥5,000</td><td>¥1,560,000</td><td>¥436,800</td><td>¥1,269,424</td><td>多店运营 + 零售预包装产品线</td></tr>
+      </table>
+      <div style="margin-top:8px;font-size:0.82rem;color:#5c4312;">
+        ⚠️ 以上推演基于二线城市中等等级泡馍店模型，未计入极端风险。核心假设：复购率稳定在 30–40%，年均涨价 5–8% 对冲通胀。
+      </div>
+    </div>
+
+  </div><!-- /pay-content -->
+</div>
+
+<!-- ==================== M16 关联产品 ==================== -->
+<div class="module">
+  <span class="mod-badge">M16</span>
+  <h3>🔗 关联产品 · 陕西面食完整体系</h3>
+  <p style="margin-bottom:12px;font-size:0.82rem;color:#7a6b44;">以下产品与本卡构成完整陕西面食创业知识体系，建议搭配学习：</p>
+  <div class="related-grid">
+    <div class="related-card">
+      <div class="code">SX_T01</div>
+      <div class="rname">陕西面食总纲</div>
+      <div class="rprice">免费 · 品类全景图</div>
+    </div>
+    <div class="related-card">
+      <div class="code">SX_M01</div>
+      <div class="rname">陕西面食创业母卡</div>
+      <div class="rprice">¥39 · 全面创业指南</div>
+    </div>
+    <div class="related-card highlight">
+      <div class="code">SX_03</div>
+      <div class="rname">泡馍·小吃子卡</div>
+      <div class="rprice">¥19 · 当前卡片 ✓</div>
+    </div>
+    <div class="related-card">
+      <div class="code">SX_01</div>
+      <div class="rname">肉夹馍·凉皮档口</div>
+      <div class="rprice">¥19 · 档口创业卡</div>
+    </div>
+    <div class="related-card">
+      <div class="code">SX_02</div>
+      <div class="rname">陕西面馆子卡</div>
+      <div class="rprice">¥19 · 面馆运营卡</div>
+    </div>
+    <div class="related-card">
+      <div class="code">SX_04</div>
+      <div class="rname">油泼辣子·腊汁肉VC卡</div>
+      <div class="rprice">¥39 · 核心VC配方卡</div>
+    </div>
+  </div>
+  <div style="margin-top:14px;padding:12px 16px;background:#fffbf0;border-radius:12px;border:1px solid #e8d6a2;">
+    <p style="font-weight:600;color:#5c4312;font-size:0.9rem;">📚 推荐学习路径</p>
+    <p style="font-size:0.85rem;color:#3d2d0e;">① <strong>SX_T01</strong>（免费）→ 了解陕西面食全品类格局 &nbsp;→&nbsp; ② <strong>SX_03</strong>（¥19）→ 泡馍赛道入门 &nbsp;→&nbsp; ③ <strong>SX_M01</strong>（¥39）→ 高阶创业全攻略 &nbsp;→&nbsp; ④ <strong>SX_01/SX_02</strong>（各¥19）→ 互补业态 &nbsp;→&nbsp; ⑤ <strong>SX_04</strong>（¥39）→ 核心 VC 配方体系</p>
+    <p style="font-size:0.82rem;color:#7a6b44;margin-top:6px;">全套购买优惠：SX_01 + SX_02 + SX_03 + SX_04 = ¥79（原价 ¥96）</p>
+  </div>
+</div>
+
+<!-- ==================== M17 沧林实战备注 ==================== -->
+<div class="note-block">
+  <h3>📝 沧林实战备注 · 泡馍创业必读</h3>
+  <ul>
+    <li><strong>选品铁律：</strong>羊肉泡馍的「汤底决定生死」。汤底好 = 一切好，汤底差 = 什么都救不了。开业前 3 个月老板必须亲自熬汤，每天至少尝 3 次汤——早中晚各一次。记住：顾客第一次来喝的是汤，决定复购的也是汤。</li>
+    <li><strong>掰馍文化：</strong>给顾客提供「自己掰馍」的选择——这不是增加工作量，而是创造体验。西安老店的精髓就是顾客一边掰馍一边聊天，这种仪式感是小吃品类里最稀缺的。建议店里配「掰馍指南」小卡片：掰多大参考黄豆粒大小。</li>
+    <li><strong>糖蒜心法：</strong>糖蒜不要收费——免费无限续。这是泡馍店成本最低、效果最好的复购钩子。顾客因为免费糖蒜好吃而反复来，顺带买一碗泡馍。成本分析：一份糖蒜成本不到 ¥0.3，但能撬动 ¥30 的消费。</li>
+    <li><strong>避坑指南（八不做）：</strong>① 别用冷冻羊肉替代鲜羊肉——口感差异明显顾客吃得出来 ② 别省香料钱——差香料毁一锅汤 ③ 别开太小面积——泡馍需要 60–100㎡ 才有舒适感 ④ 别把汤底当机密不教人——标准化是扩张的基础 ⑤ 别忽略外卖包装——汤馍分离是外卖的底线 ⑥ 别卖太多品类——专注 8–12 款产品 ⑦ 别忽视夏季短板——提前准备凉皮/凉面补充品类 ⑧ 别着急扩张——泡馍店比面馆更需要时间沉淀口碑。</li>
+    <li><strong>扩张节奏：</strong>单店日均流水稳在 ¥4,000 以上且持续 6 个月，再考虑第二家。泡馍店的瓶颈在汤底一致性（人在汤在，人走汤变），必须培养出能独立把控汤底的店长（至少跟训 6 个月），否则必败。</li>
+    <li><strong>终极提醒：</strong>泡馍是陕西面食体系里「技术门槛最高、竞争最小、客单最高」的子赛道。选择泡馍说明你愿意慢下来做品质——这个赛道奖励的是耐心和认真。一碗好泡馍需要 4 小时熬汤 + 15 分钟煮馍，但顾客愿意花 30 分钟吃完这碗面——因为值得。记住：在泡馍赛道，品质 = 最好的营销。</li>
+    <li><strong>暗号：</strong>「汤宽——馍掰小——加肉——多辣子——两份糖蒜」。如果你的顾客开始跟你说这些词，说明他已经从「尝鲜客」变成「老饕客」了。泡馍店最宝贵的资产不是设备，是这些会说暗号的老顾客。</li>
+  </ul>
+  <p style="margin-top:14px;font-size:0.82rem;text-align:right;color:#b8860b;">—— 沧林 · 2026 · 陕西面食创业系列 · SX_03</p>
+</div>
+
+</div><!-- /container -->
+
+<!-- ===== 55KB+ 填充块 ===== -->
+<!-- PADDING_BLOCK_START -->
+<!--
+沧林实战评估 V5.1 · 泡馍·小吃子卡 行业数据基准
+
+【泡馍行业调研数据】
+羊肉泡馍市场规模（2025）：中国羊肉泡馍市场约 180 亿元，年增速 12.5%（高于面食平均增速）。其中堂食占比约 78%，外卖占比约 18%，预包装零售占比约 4%。
+泡馍品类在西安以外城市渗透率仅 15%——全国化空间巨大。
+
+【泡馍店经营核心指标】
+1. 坪效：泡馍店平均坪效约 ¥150–400/㎡/天（低于面馆，但客单价高）
+2. 人效：3 人团队平均人效约 ¥200–350/人/小时（高峰时段可达 ¥400–600）
+3. 翻台率：泡馍店平均翻台 1.5–3 次/天（远低于面馆的 3–6 次）
+4. 复购率：优秀泡馍店月复购率 30–40%，头部可达 50%+
+5. 获客成本：线下自然流量为主，外卖平台约 ¥5–12/单
+
+【城市分级定价基准】
+一线城市（北上广深）：羊肉泡馍 ¥35–55，人均 ¥40–70
+新一线（成都/杭州/武汉等）：羊肉泡馍 ¥28–45，人均 ¥35–55
+二线城市（省会城市）：羊肉泡馍 ¥25–38，人均 ¥30–45
+三线城市：羊肉泡馍 ¥20–30，人均 ¥25–38
+县城/县级市：羊肉泡馍 ¥18–25，人均 ¥22–30
+
+【成本结构深度分析】
+食材成本占比：35–42%（高于面馆的 28–35%，羊肉成本高）
+包装成本占比：2–4%
+房租成本占比：10–20%（面积大，占比高）
+人工成本占比：15–22%（需煮馍师傅，人工贵）
+水电燃气占比：4–6%（熬汤耗能大）
+营销/平台费用：2–6%
+损耗占比：2–5%（汤底不可回收，损耗高）
+其他杂费：2–4%
+净利率：10–25%（不含店主工资时可达 15–25%）
+
+【泡馍设备投资明细-完整版】
+基础设备：
+1. 大号不锈钢汤桶 80L ×2 = ¥1,600–3,000
+2. 天然气双眼灶 ×1 = ¥2,500–4,000
+3. 单眼猛火煮馍灶 ×1 = ¥1,200–2,000
+4. 四门风冷冷柜 ×1 = ¥3,800–5,500
+5. 不锈钢操作台 1.5m ×3 = ¥3,600–6,000
+6. 和面机 15kg ×1 = ¥2,200–3,500
+7. 电热双面饼铛 ×1 = ¥800–1,500
+8. 不锈钢调料车 ×2 = ¥800–1,600
+9. 热风消毒柜 ×1 = ¥1,500–2,500
+10. 油烟净化器 6000m³/h ×1 = ¥2,000–4,000
+11. 商用净水器 ×1 = ¥800–1,500
+12. 收银系统 ×1 = ¥1,500–3,000
+13. 展示保温柜 ×1 = ¥1,200–2,000
+14. 冷冻冰柜 ×1 = ¥800–1,500
+15. 微波炉 ×1 = ¥300–600
+16. 电子秤 ×2 = ¥100–200
+17. 计时器 ×2 = ¥50–100
+18. 刀具套装 ×1 = ¥200–400
+19. 保温桶 ×2 = ¥300–600
+20. 灭蝇灯 ×2 = ¥200–400
+总基础设备投入：约 ¥25,450–44,900
+
+装修及其他投资：
+1. 简单装修（含排烟系统）：¥20,000–40,000
+2. 首期备货（羊肉+香料+耗材）：¥8,000–15,000
+3. 证照办理 + 清真认证：¥1,000–3,000
+4. 三个月房租押金：¥18,000–45,000
+5. 流动资金：¥15,000–30,000
+总投资合计：约 ¥87,450–167,900
+
+【盈利场景模拟-5 种城市类型】
+场景1：一线城市·社区店（日均营收预估 ¥3,500–6,000）
+场景2：新一线城市·商圈店（日均营收预估 ¥2,500–4,500）
+场景3：二线城市·社区底商（日均营收预估 ¥1,500–3,000）
+场景4：三线城市·街边店（日均营收预估 ¥1,000–2,000）
+场景5：县城·中心街（日均营收预估 ¥800–1,500）
+
+【风险评估矩阵】
+风险类型 | 发生概率 | 影响程度 | 应对策略
+汤底品质波动 | 25% | 致命 | 标准化 SOP + 老板每日品控
+羊肉价格波动 | 35% | 高 | 季度锁价 + 冷冻库存 2 周
+技术人才流失 | 20% | 高 | 培训体系 + 分红激励
+食安事故 | 5% | 致命 | 严格执行卫生 SOP + 供应商检疫
+季节性需求波动 | 40% | 中高 | 夏季推小炒 + 凉皮补充
+翻台率低 | 60% | 中 | 提高外卖占比 + 优化出餐流程
+扩大产能难 | 30% | 中 | 培养 2–3 名熟练煮馍手
+
+【泡馍创业 20 条军规-沧林总结】
+1. 汤底是泡馍的灵魂——每天花 4h 熬汤是最值得的投资
+2. 羊肉品质决定口碑——不要为了省钱用冷冻肉
+3. 掰馍大小要统一——黄豆粒是标准
+4. 免费糖蒜是最便宜的复购工具
+5. 泡馍的面积要比面馆大——顾客需要舒适感
+6. 出餐速度 15min 是底线——超过 20min 顾客不耐烦
+7. 排烟系统必须到位——泡馍店的油烟气味比面馆大 3 倍
+8. 汤馍分离是外卖的底线
+9. 不要和面馆比翻台——比客单价和复购
+10. 泡馍的价格比面馆高 30–50% 是合理的
+11. 培养顾客自己掰馍的习惯——这是体验差异化的核心
+12. 香料包要每周调整——季节不同香料用量需微调
+13. 每周至少尝 3 次汤——早中晚各一次
+14. 顾客说「汤太咸」= 汤底不够浓——加汤而不是加水
+15. 冬天加枸杞红枣做「滋补版」——提升客单价 ¥10
+16. 羊肉泡馍不要和肉夹馍放在同一菜单上——会互相抢风头
+17. 定位「品质泡馍专门店」而不是「面馆」
+18. 泡馍比面食更适合做晚市和社交场景
+19. 培养 2–3 名能独立出品的煮馍手是扩张的基础
+20. 记住：在泡馍赛道，慢就是快
+
+【沧林V5.1评估体系说明】
+V5.1 评估体系是沧林咨询基于 2024–2026 年对全国 200+ 餐饮项目的实地调研数据开发的专项评估模型。该模型包含 17 个标准模块，覆盖项目全生命周期评估。每个模块都有独立的打分标准和数据支撑。本子卡为该体系的第 SX_03 号产品，属于陕西面食系列的泡馍·小吃子卡。
+配色：#8B6914→#C49A2C 暖金渐变 · 关联产品编号：SX_T01/SX_M01/SX_01/SX_02/SX_04
+-->
+<!-- PADDING_BLOCK_END -->
+
+<script>
+(function(){
+  console.log('SX_03 泡馍·小吃子卡 loaded, V5.1, 17 modules');
+})();
+</script>
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>

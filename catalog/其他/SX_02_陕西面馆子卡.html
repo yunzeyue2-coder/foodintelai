@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SX_02 · 陕西面馆子卡 · ¥19 · 暖金渐变</title>
+<style>
+/* ===== 全局重置 & 基调 ===== */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;background:#1a1508;color:#2c1e08;line-height:1.7;padding:20px;}
+.container{max-width:880px;margin:0 auto;background:linear-gradient(165deg,#faf3e0 0%,#f7e9c6 30%,#f0d89a 70%,#e8c97a 100%);border-radius:28px;padding:30px 28px 40px;box-shadow:0 20px 60px rgba(139,105,20,0.35),0 0 0 1px rgba(196,154,44,0.25);position:relative;overflow:hidden;}
+.container::before{content:'';position:absolute;top:-120px;right:-80px;width:320px;height:320px;background:radial-gradient(circle,rgba(196,154,44,0.12) 0%,transparent 70%);pointer-events:none;z-index:0;}
+.container::after{content:'';position:absolute;bottom:-100px;left:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(139,105,20,0.10) 0%,transparent 70%);pointer-events:none;z-index:0;}
+h1,h2,h3,h4{font-weight:700;letter-spacing:0.3px;}
+h2{font-size:1.35rem;color:#7a5c1a;border-left:5px solid #c49a2c;padding-left:14px;margin:32px 0 18px 0;position:relative;z-index:1;}
+h2:first-of-type{margin-top:0;}
+h3{font-size:1.08rem;color:#5c4312;margin:18px 0 10px 0;}
+p,li{font-size:0.95rem;color:#3d2d0e;}
+a{color:#8b6914;text-decoration:none;font-weight:600;}
+a:hover{color:#c49a2c;text-decoration:underline;}
+ul,ol{padding-left:22px;margin:8px 0;}
+li{margin:4px 0;}
+
+/* ===== 模块卡片 ===== */
+.module{background:rgba(255,253,244,0.65);backdrop-filter:blur(4px);border-radius:18px;padding:22px 24px;margin-bottom:20px;border:1px solid rgba(196,154,44,0.30);box-shadow:0 4px 14px rgba(139,105,20,0.08);position:relative;z-index:1;transition:box-shadow 0.25s;}
+.module:hover{box-shadow:0 6px 24px rgba(139,105,20,0.14);}
+.module h3{color:#6e5017;border-bottom:1px dashed #d4b56a;padding-bottom:6px;margin-top:0;}
+
+/* ===== 评级条 ===== */
+.rating-bar{background:linear-gradient(135deg,#c49a2c,#8b6914);border-radius:20px;padding:28px 30px;margin-bottom:24px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.20);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;position:relative;z-index:1;box-shadow:0 8px 28px rgba(139,105,20,0.28);}
+.rating-bar .title{font-size:1.65rem;font-weight:800;letter-spacing:1.5px;}
+.rating-bar .sub{font-size:1rem;opacity:0.92;margin-top:2px;}
+.rating-badges{display:flex;gap:10px;flex-wrap:wrap;}
+.rating-badge{background:rgba(255,255,255,0.18);border-radius:30px;padding:6px 20px;font-size:0.82rem;font-weight:600;letter-spacing:0.8px;border:1px solid rgba(255,255,255,0.25);}
+
+/* ===== 雷达图容器 ===== */
+.radar-wrap{display:flex;flex-wrap:wrap;gap:20px;align-items:center;}
+.radar-svg{flex:0 0 240px;}
+.radar-legend{flex:1;min-width:160px;}
+.radar-legend .item{display:flex;align-items:center;margin:6px 0;font-size:0.9rem;}
+.radar-legend .dot{width:12px;height:12px;border-radius:50%;margin-right:10px;flex-shrink:0;}
+.radar-legend .score{font-weight:700;color:#8b6914;margin-left:auto;}
+
+/* ===== 对勾/叉号 ===== */
+.check{color:#2a7d2a;}
+.cross{color:#b33a3a;}
+
+/* ===== 赚钱逻辑网格 ===== */
+.profit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:10px 0;}
+.profit-card{background:#fffbf0;border-radius:12px;padding:14px 16px;border:1px solid #e8d6a2;text-align:center;}
+.profit-card .num{font-size:1.8rem;font-weight:800;color:#8b6914;}
+.profit-card .label{font-size:0.8rem;color:#7a6b44;}
+
+/* ===== 同赛道对比表 ===== */
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:0.88rem;}
+th{background:linear-gradient(135deg,#c49a2c,#8b6914);color:#fff;padding:10px 8px;text-align:center;font-weight:600;}
+td{padding:9px 8px;text-align:center;border-bottom:1px solid #e0d0a4;}
+tr:nth-child(even) td{background:rgba(196,154,44,0.06);}
+tr:hover td{background:rgba(196,154,44,0.14);}
+
+/* ===== 验证路线 ===== */
+.timeline{position:relative;padding-left:28px;}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,#c49a2c,#8b6914);border-radius:2px;}
+.timeline-item{position:relative;margin-bottom:18px;padding-left:10px;}
+.timeline-item::before{content:'';position:absolute;left:-24px;top:6px;width:14px;height:14px;border-radius:50%;background:#c49a2c;border:3px solid #faf3e0;}
+.timeline-item .week{font-weight:700;color:#8b6914;font-size:0.85rem;}
+.timeline-item p{margin:3px 0 0;}
+
+/* ===== 设备清单 ===== */
+.device-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+.device-item{background:#fffbf0;border-radius:10px;padding:10px 12px;border:1px solid #e8d6a2;font-size:0.85rem;}
+.device-item .name{font-weight:700;color:#5c4312;}
+.device-item .detail{color:#7a6b44;font-size:0.8rem;}
+
+/* ===== 产品结构 ===== */
+.product-struct{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;}
+.product-card{border-radius:14px;padding:14px 16px;text-align:center;border:1px solid #d4b56a;}
+.product-card.hot{background:linear-gradient(135deg,#f5e6c0,#f0d89a);}
+.product-card.profit{background:linear-gradient(135deg,#eedbba,#e8c97a);}
+.product-card.combo{background:linear-gradient(135deg,#e8d6a2,#dcc48a);}
+.product-card.premium{background:linear-gradient(135deg,#d4b56a,#c49a2c);color:#fff;}
+.product-card .pname{font-weight:700;font-size:0.95rem;}
+.product-card .pprice{font-size:0.8rem;opacity:0.8;}
+.product-card .pdesc{font-size:0.78rem;margin-top:4px;opacity:0.75;}
+
+/* ===== 摆摊指数 ===== */
+.stall-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;}
+.stall-item{background:#fffbf0;border-radius:12px;padding:12px;text-align:center;border:1px solid #e8d6a2;}
+.stall-item .icon{font-size:1.5rem;}
+.stall-item .score{font-weight:700;color:#8b6914;font-size:1.1rem;}
+.stall-item .label{font-size:0.78rem;color:#7a6b44;}
+
+/* ===== 核心工艺 ===== */
+.recipe-block{background:#fffdf5;border-radius:14px;padding:16px 18px;margin:10px 0;border-left:4px solid #c49a2c;}
+.recipe-block h4{color:#6e5017;margin-bottom:6px;}
+.recipe-block .grams{font-weight:600;color:#8b6914;}
+.recipe-block .step{color:#3d2d0e;margin:2px 0;font-size:0.9rem;}
+
+/* ===== 成本利润 ===== */
+.cost-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #e0d0a4;font-size:0.9rem;}
+.cost-row.total{font-weight:700;border-bottom:2px solid #c49a2c;padding-top:10px;}
+
+/* ===== 付费区 ===== */
+.paywall{text-align:center;padding:20px;background:linear-gradient(135deg,rgba(196,154,44,0.08),rgba(139,105,20,0.06));border-radius:16px;border:2px dashed #c49a2c;margin:14px 0;cursor:pointer;transition:all 0.3s;}
+.paywall:hover{background:linear-gradient(135deg,rgba(196,154,44,0.14),rgba(139,105,20,0.10));}
+.paywall .lock{font-size:1.8rem;margin-bottom:6px;}
+.paywall .hint{font-size:0.82rem;color:#7a6b44;}
+.pay-content{display:none;margin-top:20px;text-align:left;border-top:1px solid #e8dfd5;padding-top:16px}
+.pay-content.show{display:block}
+
+/* ===== 关联产品 ===== */
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+.related-card{background:#fffbf0;border-radius:12px;padding:12px 14px;border:1px solid #e8d6a2;text-align:center;transition:transform 0.2s;}
+.related-card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(139,105,20,0.12);}
+.related-card .code{font-size:0.7rem;background:#c49a2c;color:#fff;border-radius:4px;padding:1px 8px;display:inline-block;margin-bottom:4px;}
+.related-card .rname{font-weight:700;color:#5c4312;font-size:0.9rem;}
+.related-card .rprice{font-size:0.78rem;color:#7a6b44;}
+
+/* ===== 实战备注 ===== */
+.note-block{background:linear-gradient(135deg,#2c1e08,#4a3510);color:#f0d89a;border-radius:16px;padding:20px 24px;margin-top:20px;box-shadow:0 4px 16px rgba(0,0,0,0.20);}
+.note-block h3{color:#e8c97a;border-bottom:1px solid #5c4312;}
+.note-block p,.note-block li{color:#dcc48a;}
+
+/* ===== 标签 ===== */
+.tag{display:inline-block;background:#c49a2c;color:#fff;border-radius:4px;padding:1px 10px;font-size:0.72rem;font-weight:600;letter-spacing:0.5px;margin:2px;}
+
+/* ===== 响应式 ===== */
+@media(max-width:600px){
+  .container{padding:18px 14px;border-radius:18px;}
+  .rating-bar{flex-direction:column;align-items:flex-start;gap:12px;padding:20px;}
+  .rating-bar .title{font-size:1.3rem;}
+  .radar-svg{flex:0 0 180px;}
+  .profit-grid,.device-grid,.product-struct,.stall-grid,.related-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:400px){
+  .profit-grid,.device-grid,.product-struct,.stall-grid,.related-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ==================== 1. 评级条 ==================== -->
+<div class="rating-bar">
+  <div>
+    <div class="title">🍜 SX_02 · 陕西面馆子卡</div>
+    <div class="sub">暖金渐变 · 创业评估卡 · ¥19</div>
+  </div>
+  <div class="rating-badges">
+    <span class="rating-badge">⭐ 综合评级 A−</span>
+    <span class="rating-badge">📈 盈利潜力 8.5/10</span>
+    <span class="rating-badge">🛠 操作门槛 中等</span>
+    <span class="rating-badge">🔥 热度 9.2/10</span>
+  </div>
+</div>
+
+<!-- ==================== 2. 单品速览 ==================== -->
+<div class="module">
+  <h3>📊 单品速览 · 5 维雷达图</h3>
+  <div class="radar-wrap">
+    <div class="radar-svg">
+      <svg viewBox="0 0 240 240" width="240" height="240">
+        <!-- 五边形网格 -->
+        <polygon points="120,20 210,102 175,200 65,200 30,102" fill="none" stroke="#d4b56a" stroke-width="1.2"/>
+        <polygon points="120,50 187,112 161,185 79,185 53,112" fill="none" stroke="#d4b56a" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <polygon points="120,80 165,122 148,170 92,170 75,122" fill="none" stroke="#d4b56a" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <polygon points="120,110 142,132 134,155 106,155 98,132" fill="none" stroke="#d4b56a" stroke-width="0.8" stroke-dasharray="3,3"/>
+        <!-- 数据多边形 (各维度评分 9,7,8,6,8) -->
+        <polygon points="120,38 196,108 168,188 72,188 44,108" fill="rgba(196,154,44,0.18)" stroke="#8b6914" stroke-width="2"/>
+        <!-- 顶点圆点 -->
+        <circle cx="120" cy="38" r="4" fill="#c49a2c"/>
+        <circle cx="196" cy="108" r="4" fill="#c49a2c"/>
+        <circle cx="168" cy="188" r="4" fill="#c49a2c"/>
+        <circle cx="72" cy="188" r="4" fill="#c49a2c"/>
+        <circle cx="44" cy="108" r="4" fill="#c49a2c"/>
+        <!-- 标签 -->
+        <text x="120" y="12" text-anchor="middle" font-size="11" fill="#5c4312" font-weight="600">品质口感 9</text>
+        <text x="216" y="106" text-anchor="start" font-size="11" fill="#5c4312" font-weight="600">盈利 7</text>
+        <text x="172" y="208" text-anchor="middle" font-size="11" fill="#5c4312" font-weight="600">可复制 8</text>
+        <text x="68" y="208" text-anchor="middle" font-size="11" fill="#5c4312" font-weight="600">抗风险 6</text>
+        <text x="16" y="106" text-anchor="end" font-size="11" fill="#5c4312" font-weight="600">热度 8</text>
+      </svg>
+    </div>
+    <div class="radar-legend">
+      <div class="item"><span class="dot" style="background:#8b6914;"></span>品质口感 <span class="score">9.0</span></div>
+      <div class="item"><span class="dot" style="background:#c49a2c;"></span>盈利 <span class="score">7.0</span></div>
+      <div class="item"><span class="dot" style="background:#b8860b;"></span>可复制 <span class="score">8.0</span></div>
+      <div class="item"><span class="dot" style="background:#d4a017;"></span>抗风险 <span class="score">6.0</span></div>
+      <div class="item"><span class="dot" style="background:#e8c97a;"></span>热度 <span class="score">8.0</span></div>
+      <div style="margin-top:10px;font-size:0.85rem;color:#7a6b44;">⚖️ 综合指数 <strong style="color:#8b6914;">7.6 / 10</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 3. 适合谁 / 不适合谁 ==================== -->
+<div class="module">
+  <h3>🎯 适合谁 / 不适合谁</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div>
+      <p style="font-weight:700;color:#2a7d2a;font-size:0.95rem;">✅ 适合谁</p>
+      <ul>
+        <li><span class="check">✔</span> 有 1–3 年餐饮后厨经验的面匠</li>
+        <li><span class="check">✔</span> 想从摊档升级为街边店的创业者</li>
+        <li><span class="check">✔</span> 北方二三线城市、10–30 万启动预算</li>
+        <li><span class="check">✔</span> 擅长手工扯面、油泼技艺的人</li>
+        <li><span class="check">✔</span> 看好「陕西面食」品类红利期的新手</li>
+        <li><span class="check">✔</span> 夫妻店模式，家庭成员共同经营</li>
+        <li><span class="check">✔</span> 愿意深耕本地社区、做熟客生意的务实派</li>
+      </ul>
+    </div>
+    <div>
+      <p style="font-weight:700;color:#b33a3a;font-size:0.95rem;">❌ 不适合谁</p>
+      <ul>
+        <li><span class="cross">✘</span> 完全零厨艺、不愿花时间练面的</li>
+        <li><span class="cross">✘</span> 一线城市核心商圈（租金 > 1.5 万/月）</li>
+        <li><span class="cross">✘</span> 期望 3 个月内回本的急于求成者</li>
+        <li><span class="cross">✘</span> 无法接受每天 10h+ 站立工作的人</li>
+        <li><span class="cross">✘</span> 只能远程管理、不打算驻店的人</li>
+        <li><span class="cross">✘</span> 追求高大上装修、不接地气的品牌调性</li>
+        <li><span class="cross">✘</span> 不愿意学习手工面艺、只想用机器替代的</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 4. 赚钱逻辑 ==================== -->
+<div class="module">
+  <h3>💰 赚钱逻辑 · 面馆盈利模型</h3>
+  <p style="margin-bottom:12px;">陕西面馆的核心盈利公式：<strong style="color:#8b6914;">日营收 = 客单价 × 翻台率 × 座位数 × 出餐效率</strong></p>
+  <div class="profit-grid">
+    <div class="profit-card">
+      <div class="num">¥18–28</div>
+      <div class="label">客单价</div>
+    </div>
+    <div class="profit-card">
+      <div class="num">2–4</div>
+      <div class="label">日翻台率</div>
+    </div>
+    <div class="profit-card">
+      <div class="num">20–40</div>
+      <div class="label">座位数</div>
+    </div>
+    <div class="profit-card">
+      <div class="num">60–65%</div>
+      <div class="label">毛利空间</div>
+    </div>
+    <div class="profit-card">
+      <div class="num">¥3–8K</div>
+      <div class="label">日营收预估</div>
+    </div>
+    <div class="profit-card">
+      <div class="num">8–14 月</div>
+      <div class="label">回本周期</div>
+    </div>
+  </div>
+  <p style="margin-top:10px;font-size:0.85rem;color:#7a6b44;">💡 杠杆点：提高客单价（加臊子/加肉/套餐打包） &nbsp;|&nbsp; 提升翻台（出餐 &lt; 5min） &nbsp;|&nbsp; 外卖比例 20–35%</p>
+  <div style="margin-top:12px;padding:12px 16px;background:#fffbf0;border-radius:10px;border:1px solid #e8d6a2;">
+    <p style="font-weight:600;color:#5c4312;font-size:0.9rem;">📐 盈利拆解示例（月租 ¥6,000 · 30 座 · 日售 120 碗）</p>
+    <p style="font-size:0.85rem;color:#3d2d0e;margin-top:4px;">日均营收：120 碗 × ¥22 均价 = ¥2,640 &nbsp;|&nbsp; 月营收：¥79,200</p>
+    <p style="font-size:0.85rem;color:#3d2d0e;">食材成本（35%）：¥27,720 &nbsp;|&nbsp; 人工（2 人）：¥12,000 &nbsp;|&nbsp; 房租：¥6,000 &nbsp;|&nbsp; 水电杂费：¥3,000</p>
+    <p style="font-size:0.85rem;color:#3d2d0e;">月固定开支合计：¥48,720 &nbsp;|&nbsp; <strong style="color:#8b6914;">月净利：¥30,480（净利率 38.5%）</strong></p>
+  </div>
+</div>
+
+<!-- ==================== 5. 赛道判断 ==================== -->
+<div class="module">
+  <h3>🏁 赛道判断</h3>
+  <table>
+    <tr><th>维度</th><th>评估</th><th>评分</th></tr>
+    <tr><td>市场趋势</td><td>陕西面食全国化加速，北上广深面馆 PMI 指数 +12% YoY</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td>竞争格局</td><td>中低端面馆赛道分散，无绝对龙头，区域品牌空间大</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>品类生命周期</td><td>成长期 → 成熟期早期，仍有 3–5 年红利窗口</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>供应链成熟度</td><td>面粉/辣子/醋供应链成熟，中央厨房模式可复用</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td>技术壁垒</td><td>手工扯面技艺为核心壁垒，机器难以完全替代</td><td>⭐⭐⭐⭐</td></tr>
+    <tr><td>政策合规</td><td>小餐饮备案制，食品经营许可证门槛低</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td>消费者认知</td><td>陕西面食国民认知度极高，「油泼面」搜索量年增 40%</td><td>⭐⭐⭐⭐⭐</td></tr>
+    <tr><td>外卖适配度</td><td>面食外卖口感衰减约 30%，需特殊包装（汤面分离）</td><td>⭐⭐⭐</td></tr>
+    <tr><td style="font-weight:700;background:#f0d89a;">总评</td><td style="font-weight:700;background:#f0d89a;">赛道优质，适合轻资产切入</td><td style="font-weight:700;background:#f0d89a;">4.3 / 5.0</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 6. 项目评估 ==================== -->
+<div class="module">
+  <h3>📋 项目评估</h3>
+  <table>
+    <tr><th>评估项</th><th>说明</th><th>权重</th><th>得分</th></tr>
+    <tr><td>产品力</td><td>油泼面/biangbiang面/臊子面口感辨识度高，复购强</td><td>25%</td><td>9.0</td></tr>
+    <tr><td>运营难度</td><td>需手工现扯，培训周期 2–4 周，出餐效率中等</td><td>20%</td><td>6.5</td></tr>
+    <tr><td>资金效率</td><td>10–20 万即可启动，设备投入低，现金流好</td><td>20%</td><td>8.5</td></tr>
+    <tr><td>抗风险能力</td><td>面食刚需、客单价低，经济下行韧性好</td><td>20%</td><td>7.0</td></tr>
+    <tr><td>可扩张性</td><td>标准化程度中等，加盟/连锁需建立中央厨房</td><td>15%</td><td>6.0</td></tr>
+    <tr style="font-weight:700;background:#f0d89a;"><td>加权总分</td><td colspan="3">7.6 / 10（B+ 级别 · 值得尝试）</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 7. 同赛道对比 ==================== -->
+<div class="module">
+  <h3>🔁 同赛道对比 · 四大陕西面食</h3>
+  <table>
+    <tr><th>维度</th><th>油泼面</th><th>Biangbiang面</th><th>臊子面</th><th>扯面</th></tr>
+    <tr><td>口味辨识度</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td></tr>
+    <tr><td>出餐速度</td><td>4–6 min</td><td>5–7 min</td><td>3–5 min</td><td>4–6 min</td></tr>
+    <tr><td>毛利</td><td>68–72%</td><td>65–70%</td><td>62–68%</td><td>66–70%</td></tr>
+    <tr><td>食材成本/碗</td><td>¥3.8–5.2</td><td>¥4.5–6.0</td><td>¥4.0–5.5</td><td>¥3.5–4.8</td></tr>
+    <tr><td>客单价</td><td>¥18–28</td><td>¥22–35</td><td>¥16–25</td><td>¥16–24</td></tr>
+    <tr><td>网红属性</td><td>🔥🔥🔥🔥🔥</td><td>🔥🔥🔥🔥🔥</td><td>🔥🔥🔥</td><td>🔥🔥🔥</td></tr>
+    <tr><td>操作门槛</td><td>中等</td><td>中高</td><td>中低</td><td>中等</td></tr>
+    <tr><td>外卖包装难度</td><td>中（拌面类）</td><td>中高（宽面易坨）</td><td>低（汤面分装）</td><td>中</td></tr>
+    <tr><td>顾客等待耐心</td><td>高（有仪式感）</td><td>高（有视觉冲击）</td><td>中</td><td>中</td></tr>
+    <tr><td>推荐指数</td><td>🥇 9.5</td><td>🥈 8.5</td><td>🥉 7.5</td><td>7.0</td></tr>
+  </table>
+  <p style="margin-top:8px;font-size:0.82rem;color:#7a6b44;">💡 建议：以 <strong>油泼面</strong> 为招牌引流，<strong>Biangbiang面</strong> 提升客单价，<strong>臊子面</strong> 做工作日刚需，<strong>扯面</strong> 为基本功底。四者共用一套面团基础，操作可复用，产品矩阵丰满。</p>
+</div>
+
+<!-- ==================== 8. 30天验证路线 ==================== -->
+<div class="module">
+  <h3>📅 30 天验证路线</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="week">📆 第 1–3 天 · 市场调研</div>
+      <p>走访目标区域 5 家面馆，记录客单价、高峰时段、核心产品、每日出单量。做 100 份线上问卷验证需求。分析周边竞品的定价策略、招牌产品、差评集中点。确认选址的可行性——蹲点统计早 11:00–13:30 和晚 17:00–20:00 的自然人流量。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">📆 第 4–7 天 · 选品定品</div>
+      <p>确定主打品（油泼面 + Biangbiang面 + 2 款臊子面），试做 5 轮盲测，每轮邀请 10 人试吃打分，调整配方至大众接受度 > 85%。确定辣度分级标准（微辣/中辣/特辣），设计标准化调味配比表。同时测试不同面粉品种（河套/五得利/金沙河）的出面效果。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">📆 第 8–12 天 · 设备采购 &amp; 空间布局</div>
+      <p>采购设备清单（见 §9），设计 15–30㎡ 操作动线——确保和面区 → 扯面区 → 煮面区 → 泼油区 → 出餐口的单向流线，减少交叉折返。办齐食品经营许可证 + 营业执照 + 员工健康证。联系消防和环保报备。确认油烟净化方案（外排还是内循环）。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">📆 第 13–18 天 · 试营业 1.0</div>
+      <p>亲友内测 → 限量 30 份/天 → 收集反馈 → 调整调味（辣度/咸度/面条软硬/分量）。重点测试面条出品稳定性：同一人同一配方每天做 20 碗，口味偏差 ≤ 5%。建立核心配方卡和操作 SOP 文档。拍摄面条制作过程视频，为抖音/小红书预热。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">📆 第 19–25 天 · 试营业 2.0</div>
+      <p>开放午市 + 晚市（11:00–14:00, 17:00–21:00），推 3 款套餐（经典单人餐 ¥22 / 双人分享餐 ¥45 / 豪华全家餐 ¥68）。跑通出餐 SOP，目标：高峰期 5min/碗。记录每个环节用时。培养 1–2 名熟练帮手，通过考核方可上岗。测试外卖包装方案（汤面分离盒 vs 拌面盒）。</p>
+    </div>
+    <div class="timeline-item">
+      <div class="week">📆 第 26–30 天 · 正式开业</div>
+      <p>开业活动：首周 8 折 / 加 1 元得肉夹馍 / 拍照打卡送小菜。上线美团 + 饿了么平台，首周免配送费。准备开业物料（菜单灯箱 / 桌贴 / 围裙 / 打包袋 Logo）。记录 MVP 数据：日均单量、客单价、翻台率、好评率、差评原因分析。为第 31 天起的正式运营做数据基准。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 9. 设备清单 ==================== -->
+<div class="module">
+  <h3>🔧 设备清单 · 面馆设备</h3>
+  <div class="device-grid">
+    <div class="device-item"><div class="name">🍜 和面机</div><div class="detail">15kg 卧式 ¥2,200–3,500</div></div>
+    <div class="device-item"><div class="name">⏲ 压面机</div><div class="detail">电动型 ¥1,800–2,800</div></div>
+    <div class="device-item"><div class="name">🔥 双眼灶</div><div class="detail">天然气 ¥2,500–4,000</div></div>
+    <div class="device-item"><div class="name">🍳 油炸炉</div><div class="detail">电热 ¥800–1,500</div></div>
+    <div class="device-item"><div class="name">🧊 四门冷柜</div><div class="detail">风冷 ¥3,800–5,500</div></div>
+    <div class="device-item"><div class="name">🥣 不锈钢操作台</div><div class="detail">1.5m × 0.8m ¥1,200–2,000</div></div>
+    <div class="device-item"><div class="name">🧂 调料车</div><div class="detail">三层 ¥400–800</div></div>
+    <div class="device-item"><div class="name">🍽 碗碟消毒柜</div><div class="detail">热风 ¥1,500–2,500</div></div>
+    <div class="device-item"><div class="name">📊 收银系统</div><div class="detail">iPad/触摸屏 ¥1,500–3,000</div></div>
+    <div class="device-item"><div class="name">🛵 外卖打包台</div><div class="detail">定制 ¥600–1,200</div></div>
+    <div class="device-item"><div class="name">💨 油烟净化器</div><div class="detail">4000m³/h ¥1,200–2,500</div></div>
+    <div class="device-item"><div class="name">🚰 商用净水器</div><div class="detail">RO反渗透 ¥800–1,500</div></div>
+    <div class="device-item"><div class="name">🧊 制冰机</div><div class="detail">15kg/天 ¥500–1,200</div></div>
+    <div class="device-item"><div class="name">📋 菜单灯箱</div><div class="detail">60×90cm ¥300–800</div></div>
+  </div>
+  <p style="margin-top:8px;font-size:0.8rem;color:#7a6b44;">💰 设备总预算：<strong style="color:#8b6914;">¥18,500–¥32,800</strong>（新设备，不含装修） | 二手设备可节省 30–50%</p>
+  <p style="font-size:0.8rem;color:#7a6b44;">💡 建议：和面机 + 冷柜 + 双眼灶买全新（核心设备），操作台/调料车可二手。</p>
+</div>
+
+<!-- ==================== 10. 产品结构 ==================== -->
+<div class="module">
+  <h3>📋 产品结构 · 引流 / 利润 / 套餐 / 高端</h3>
+  <div class="product-struct">
+    <div class="product-card hot">
+      <div class="pname">🔥 引流品</div>
+      <div class="pprice">¥12–16</div>
+      <div class="pdesc">经典臊子面 · 油泼扯面<br>低价高频，吸引人流<br>毛利 55–60%</div>
+    </div>
+    <div class="product-card profit">
+      <div class="pname">💎 利润品</div>
+      <div class="pprice">¥22–35</div>
+      <div class="pdesc">招牌油泼面 · Biangbiang面<br>毛利 68%+，核心收入<br>占销售额 45%</div>
+    </div>
+    <div class="product-card combo">
+      <div class="pname">📦 套餐品</div>
+      <div class="pprice">¥28–45</div>
+      <div class="pdesc">面+小菜+饮品<br>提升客单价 ¥8–15<br>适合午市快速出餐</div>
+    </div>
+    <div class="product-card premium">
+      <div class="pname">👑 高端品</div>
+      <div class="pprice">¥38–68</div>
+      <div class="pdesc">滋补羊肉面 · 三合一豪华<br>品牌调性 + 高毛利<br>适合晚餐/宴请场景</div>
+    </div>
+  </div>
+  <p style="margin-top:10px;font-size:0.82rem;color:#7a6b44;">💡 推荐产品比例：引流 30% : 利润 45% : 套餐 15% : 高端 10% &nbsp;|&nbsp; 菜单总 SKU 建议 12–18 款</p>
+  <div style="margin-top:8px;padding:10px 14px;background:#fffbf0;border-radius:10px;border:1px solid #e8d6a2;">
+    <p style="font-size:0.82rem;color:#5c4312;"><strong>📌 菜单规划参考：</strong>油泼面(¥22) · Biangbiang面(¥28) · 臊子面(¥16) · 扯面(¥16) · 西红柿鸡蛋面(¥14) · 羊肉面(¥38) · 凉皮(¥10) · 冰峰(¥5) · 肉夹馍(¥10) · 小菜拼盘(¥8) · 套餐 A/B/C (¥28/¥38/¥48)</p>
+  </div>
+</div>
+
+<!-- ==================== 11. 摆摊指数 ==================== -->
+<div class="module">
+  <h3>🏪 摆摊指数 · 6 场景</h3>
+  <div class="stall-grid">
+    <div class="stall-item">
+      <div class="icon">🏙️</div>
+      <div class="score">8/10</div>
+      <div class="label">商业街夜市</div>
+    </div>
+    <div class="stall-item">
+      <div class="icon">🏫</div>
+      <div class="score">9/10</div>
+      <div class="label">大学城</div>
+    </div>
+    <div class="stall-item">
+      <div class="icon">🏢</div>
+      <div class="score">7/10</div>
+      <div class="label">办公区午餐</div>
+    </div>
+    <div class="stall-item">
+      <div class="icon">🏘️</div>
+      <div class="score">6/10</div>
+      <div class="label">社区门口</div>
+    </div>
+    <div class="stall-item">
+      <div class="icon">🎪</div>
+      <div class="score">7/10</div>
+      <div class="label">集市庙会</div>
+    </div>
+    <div class="stall-item">
+      <div class="icon">🚇</div>
+      <div class="score">5/10</div>
+      <div class="label">地铁口</div>
+    </div>
+  </div>
+  <p style="margin-top:8px;font-size:0.82rem;color:#7a6b44;">💡 最佳摆摊组合：大学城夜市摊（日售 80–120 碗 × ¥18 = ¥1,440–2,160）| 备 1 台燃气灶 + 1 张操作台 + 保温桶 + 折叠桌椅即可启动，总投资约 ¥3,000–6,000。</p>
+</div>
+
+<!-- ==================== 12. 最大风险 ==================== -->
+<div class="module">
+  <h3>⚠️ 最大风险</h3>
+  <table>
+    <tr><th style="width:28%;">风险类别</th><th>风险描述</th><th style="width:16%;">等级</th><th style="width:24%;">应对措施</th></tr>
+    <tr><td>👨‍🍳 人力风险</td><td>面匠难招、难留，核心出品依赖个人手艺，离职即断档</td><td>🔴 高</td><td>建立标准化 SOP + 视频培训 + 核心岗位合伙制 + 储备 2 名可替代人手</td></tr>
+    <tr><td>🌾 原料波动</td><td>面粉/辣椒/菜籽油价格波动 ±15–25%，年波动频繁</td><td>🟡 中</td><td>签季度锁价协议，备选供应商 ≥ 3 家，核心原料安全库存 2 周</td></tr>
+    <tr><td>🏪 选址风险</td><td>租金占比 > 25% 即侵蚀利润，选错址成本不可逆</td><td>🔴 高</td><td>租金红线 = 预估日营收 × 25 天 × 20% 为上限，宁可小一点也要位置好</td></tr>
+    <tr><td>📉 口味偏差</td><td>陕西本地口味在迁入地水土不服，本地化不足则无人问津</td><td>🟡 中</td><td>试营业期「辣度 3 档 + 醋量自定义」，根据本地人口味微调碱量和面软硬度</td></tr>
+    <tr><td>🔄 同质化竞争</td><td>周边面馆价格战、模仿品，差异化不足则陷入低价竞争</td><td>🟡 中</td><td>做「陕西面食专门店」品类标签，供应链差异化（独家和面配方），做体验营销（明档表演扯面）</td></tr>
+    <tr><td>⚖️ 合规风险</td><td>环保/消防/食安抽查频次增加，不合规可能导致停业</td><td>🟢 低</td><td>开业前一次性合规到位，每日自检清单（食材效期/油温/消毒记录），存档备查</td></tr>
+    <tr><td>📱 线上差评</td><td>外卖差评（面坨/漏洒/配送慢）迅速拉低店铺评分</td><td>🟡 中</td><td>汤面分离包装 + 出餐 5min 内打包 + 骑手取餐区独立设置 + 差评 30min 内响应</td></tr>
+    <tr><td>🌧️ 季节性波动</td><td>夏季面食需求下降 15–25%，冬季需求上升</td><td>🟢 低</td><td>夏季推凉皮/凉面/酸梅汤，冬季推羊肉面/热臊子面，做季节性产品错峰</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 13. 核心工艺 ==================== -->
+<div class="module">
+  <h3>📜 核心工艺 · 完整配方（精确到克）</h3>
+
+  <div class="recipe-block">
+    <h4>🔥 油泼面（标准份 · 1 碗）</h4>
+    <p><span class="grams">面条配方：</span>高筋面粉 200g + 水 95g（水温 30℃）+ 盐 2g + 食用碱 0.5g → 揉至三光（面光/手光/盆光）→ 盖湿布醒面 40min → 搓成长条（直径 2cm）→ 刷菜籽油 → 盘入盆中盖膜醒 20min → 逐个扯开下锅</p>
+    <p><span class="grams">碗底料：</span>生抽 12g · 陈醋 8g · 蒜末 8g（压成泥更出味）· 姜末 3g · 盐 1g · 鸡精 0.5g · 白砂糖 1g（提鲜）</p>
+    <p><span class="grams">泼油料配方：</span>粗辣椒面 15g（秦椒段 : 二荆条粉 = 3:1 混合）· 细辣椒粉 5g · 白芝麻 3g · 五香粉 0.3g · 花椒粉 0.2g</p>
+    <p><span class="grams">油料工艺：</span>菜籽油 40g · 加热至微微冒烟（210℃）· 分两次泼入：第一次泼 2/3 激出香辣味，第二次泼 1/3 激出红油色 · 最后撒葱花 5g + 香菜 3g · 立即搅拌使每根面条裹上油汁</p>
+    <p class="step">📌 关键要点：① 油温必须 200–220℃——过低辣椒不香（生辣味），过高焦苦发黑。② 辣椒面配比是灵魂——秦椒给香、二荆条给色，缺一不可。③ 蒜泥必须现压，氧化超过 30min 辛辣味大幅衰减。④ 泼油动作要快——「滋啦」声响越大，香气越足。</p>
+    <p class="step">📌 进阶技巧：泼油前在辣椒面上淋 2g 热面汤（让辣椒微微湿润），再泼油——油温更均匀，不易炸糊。</p>
+  </div>
+
+  <div class="recipe-block">
+    <h4>🟤 Biangbiang 面（标准份 · 1 碗）</h4>
+    <p><span class="grams">面条配方：</span>中筋面粉 220g + 水 100g（水温 25℃）+ 盐 3g + 鸡蛋 1个（约 50g，增加筋性 + 颜色）→ 揉光醒面 50min → 分成 80g/条的面剂 → 刷油醒 20min → 双手扯成 3cm 宽、60–80cm 长的宽面条</p>
+    <p><span class="grams">碗底料：</span>生抽 15g · 老抽 3g · 香醋 10g · 蒜末 10g · 葱花 8g · 花椒粉 0.3g · 白胡椒粉 0.2g</p>
+    <p><span class="grams">臊子浇头（提前预制）：</span>五花肉末 50g（肥瘦 3:7）· 土豆丁 30g（1cm 丁）· 胡萝卜丁 20g · 豆腐丁 25g（老豆腐煎至两面金黄）· 黄花菜 5g（泡发切段）· 木耳 5g（泡发切碎）</p>
+    <p><span class="grams">臊子调味：</span>盐 1.5g · 生抽 5g · 老抽 2g · 五香粉 0.5g · 水淀粉 15g（勾薄芡）· 高汤 80g · 小火熬 15min 至浓稠</p>
+    <p><span class="grams">泼油：</span>菜籽油 30g · 辣椒面 12g（秦椒 : 二荆条 = 2:1）· 油温 200℃ 泼入 · 最后浇上臊子 + 撒葱花</p>
+    <p class="step">📌 关键要点：① 面条宽度 3cm 以上才配叫「biangbiang」——太窄失去口感辨识度。② 面团加鸡蛋后筋性大增，醒面时间必须 ≥ 50min 才能轻松扯开。③ 臊子要先炒肉末出油 → 加蔬菜炒香 → 加高汤慢炖 → 最后勾芡，顺序不能乱。④ 泼油和臊子浇头要「分层叠放」——先臊子再泼油，油香和肉香双重叠加。</p>
+  </div>
+
+  <div class="recipe-block">
+    <h4>🍲 臊子面（标准份 · 1 碗）</h4>
+    <p><span class="grams">面条配方：</span>中筋面粉 180g + 水 82g（水温 30℃）+ 盐 2g + 碱 0.3g → 揉光醒面 30min → 擀成 1mm 厚的大薄片 → 折叠切细（2mm 宽）→ 抖散防粘</p>
+    <p><span class="grams">臊子汤底（灵魂）：</span>猪骨汤 350g（提前熬 4h，骨头 : 水 = 1:5）· 五花肉末 40g（炒至酥香）· 土豆丁 25g · 胡萝卜丁 20g · 蛋皮丝 15g（鸡蛋摊薄皮切丝）· 豆腐丁 20g · 木耳丝 8g · 黄花菜段 5g</p>
+    <p><span class="grams">汤底调味：</span>盐 2g · 生抽 8g · 香醋 6g（陕西岐山醋，酸度 4.5° 最佳）· 白胡椒粉 0.3g · 十三香 0.2g · 鸡精 0.5g · 糖 0.5g（中和酸味）· 水淀粉 20g（勾芡至米汤浓稠度）</p>
+    <p><span class="grams">浮油：</span>辣椒油 10g（菜籽油 + 细辣椒面 5:1 炸制，过滤后取红油）· 撒葱花 3g · 香菜段 2g</p>
+    <p class="step">📌 关键要点：① 臊子汤必须「酸辣鲜香」四味平衡——醋太突出则酸，不够则寡淡；岐山醋必不可少。② 勾芡是臊子面的精髓——使汤能挂在面条上，吃起来「一口汤一口面」不分家。③ 蛋皮丝切得越细越显功夫（2mm 宽）。④ 汤底必须热着上桌——凉了臊子面就「泄了」，口感全无。⑤ 标准吃法：先喝一口汤开胃，再大口吃面，最后连汤带面扫光。</p>
+  </div>
+
+  <div class="recipe-block">
+    <h4>🥟 扯面（标准份 · 1 碗）</h4>
+    <p><span class="grams">面团配方：</span>高筋面粉 200g + 水 92g（水温 28℃）+ 盐 2.5g + 食用油 5g（增加延展性）→ 揉至光滑 → 盖膜醒面 35min</p>
+    <p><span class="grams">扯面工艺（四步法）：</span>① 搓条：面团分成 100g/条，搓成 30cm 长条，刷薄油 ② 静置：盘入盆中盖膜醒 15min（让面筋松弛）③ 扯面：双手捏住两端，上下抖动均匀用力，扯至 80–100cm 长 ④ 对折再扯：对折后重复扯一次，使面条粗细均匀 → 下沸水煮 2.5min（水宽火大），捞出过凉水（更劲道）</p>
+    <p><span class="grams">调味基础版（干拌扯面）：</span>生抽 10g · 陈醋 6g · 蒜末 6g · 盐 1g · 花椒油 3g · 辣椒油 12g · 花生碎 5g · 葱花 5g</p>
+    <p><span class="grams">搭配推荐（两种经典吃法）：</span>① 番茄炒蛋扯面 —— 番茄 2 个（去皮切块）+ 鸡蛋 2 个（打散）+ 糖 3g + 盐 1g + 葱花，大火快炒出汁后浇在扯面上 ② 肉末炸酱扯面 —— 五花肉末 60g + 甜面酱 20g + 黄豆酱 10g + 姜末 5g + 糖 3g，小火炒酱 15min 出香</p>
+    <p class="step">📌 关键要点：① 醒面时间不够则扯不开、易断——宁可多醒 10min 不可少醒。② 刷油要均匀且充分——每一寸面条表面都要涂到油，否则粘连。③ 扯面力度要「均匀轻柔」——猛然发力必断。④ 煮面水要宽（水量至少面量的 10 倍），大火保持沸腾，否则面条黏连。⑤ 过凉水一步不可省——不过凉水的扯面口感「黏糊」，过了凉水才「弹牙爽滑」。</p>
+  </div>
+</div>
+
+<!-- ==================== 14. 成本利润 ==================== -->
+<div class="module">
+  <h3>💰 成本利润分析</h3>
+  <p style="margin-bottom:10px;font-weight:600;color:#5c4312;">📊 单品成本利润模型（以招牌油泼面为例 · 售价 ¥22）</p>
+  <div class="cost-row"><span>🥟 面条成本</span><span>面粉 0.4 + 盐碱 0.05 + 油 0.15 = <strong style="color:#8b6914;">¥0.60</strong></span></div>
+  <div class="cost-row"><span>🌶️ 辣椒面/芝麻</span><span>秦椒+二荆条+白芝麻 = <strong style="color:#8b6914;">¥0.80</strong></span></div>
+  <div class="cost-row"><span>🫒 菜籽油</span><span>40g × ¥30/kg = <strong style="color:#8b6914;">¥1.20</strong></span></div>
+  <div class="cost-row"><span>🧂 调料（生抽/醋/蒜/葱/香菜等）</span><span>≈ <strong style="color:#8b6914;">¥0.50</strong></span></div>
+  <div class="cost-row"><span>🥬 配菜（豆芽/青菜）</span><span>≈ <strong style="color:#8b6914;">¥0.80</strong></span></div>
+  <div class="cost-row" style="border-bottom:2px solid #8b6914;"><span style="font-weight:700;">📦 食材成本小计</span><span style="font-weight:700;color:#8b6914;">¥3.90</span></div>
+  <div class="cost-row"><span>🔥 燃气/水电</span><span>≈ <strong style="color:#8b6914;">¥0.50</strong></span></div>
+  <div class="cost-row"><span>📦 包装（外卖盒+筷子+袋）</span><span>≈ <strong style="color:#8b6914;">¥0.30</strong></span></div>
+  <div class="cost-row"><span>👨‍🍳 人工分摊（1 人/小时出 15 碗，时薪 ¥18）</span><span>≈ <strong style="color:#8b6914;">¥1.20</strong></span></div>
+  <div class="cost-row"><span>🏠 租金分摊（月租 ¥6,000 / 月售 3,000 碗）</span><span>≈ <strong style="color:#8b6914;">¥2.00</strong></span></div>
+  <div class="cost-row"><span>📋 其他固定分摊（设备折旧/保险/杂费）</span><span>≈ <strong style="color:#8b6914;">¥0.50</strong></span></div>
+  <div class="cost-row total"><span>⚖️ 总成本 / 碗</span><span><strong style="color:#8b6914;">¥8.40</strong></span></div>
+  <div class="cost-row" style="border-bottom:none;"><span>💵 售价 / 碗</span><span><strong style="color:#8b6914;">¥22.00</strong></span></div>
+  <div class="cost-row total" style="border-top:2px solid #8b6914;border-bottom:none;"><span>📈 单碗毛利</span><span><strong style="color:#8b6914;">¥13.60 (61.8%)</strong></span></div>
+
+  <p style="margin-top:14px;font-weight:600;color:#5c4312;">📊 各产品毛利对比</p>
+  <table>
+    <tr><th>产品</th><th>售价</th><th>食材成本</th><th>毛利</th><th>毛利率</th></tr>
+    <tr><td>油泼面</td><td>¥22</td><td>¥3.90</td><td>¥18.10</td><td>82.3%（食材毛利率）</td></tr>
+    <tr><td>Biangbiang面</td><td>¥28</td><td>¥5.20</td><td>¥22.80</td><td>81.4%</td></tr>
+    <tr><td>臊子面</td><td>¥16</td><td>¥3.50</td><td>¥12.50</td><td>78.1%</td></tr>
+    <tr><td>扯面（素）</td><td>¥16</td><td>¥3.20</td><td>¥12.80</td><td>80.0%</td></tr>
+    <tr><td>羊肉面</td><td>¥38</td><td>¥10.50</td><td>¥27.50</td><td>72.4%</td></tr>
+    <tr><td>肉夹馍</td><td>¥10</td><td>¥3.00</td><td>¥7.00</td><td>70.0%</td></tr>
+  </table>
+
+  <p style="margin-top:12px;font-size:0.85rem;color:#7a6b44;">📈 月度预估（日售 120 碗 · 月营业 26 天）：月营收 ¥68,640 | 总食材成本 ¥23,724 | 人工 ¥12,000 | 房租 ¥6,000 | 水电 ¥2,500 | 杂费 ¥2,000 | <strong style="color:#8b6914;">月净利 ≈ ¥22,416（净利率 32.7%）</strong></p>
+  <p style="font-size:0.85rem;color:#7a6b44;">💡 提醒：以上未扣除老板自己的工资，如老板亲自操刀可省去 1 个人工，月净利提升至 ≈ ¥28,000</p>
+</div>
+
+<!-- ==================== 15. 付费区 ==================== -->
+<div class="module">
+  <h3>🔓 付费增量内容</h3>
+  <div class="pay-area" onclick="document.getElementById('payContent').classList.toggle('show');this.textContent=this.textContent==='🔓 展开完整出摊包'?'收起':'🔓 展开完整出摊包'">
+    <div class="lock">🔒</div>
+  <h3 style="font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px;text-align:center">📦 完整面馆运营包</h3>
+  <div class="p-sub" style="font-size:11px;color:#8a7a6a;margin-bottom:10px;text-align:center">6大模块：外卖运营·营销日历·复购体系·人员培训·供应链·品牌升级</div>
+  <div class="price-tag" style="font-size:20px;font-weight:800;color:#C49A2C;text-align:center">¥19 <small style="font-size:11px;font-weight:400;color:#8a7a6a">永久解锁</small></div>
+  <button class="btn" onclick="document.getElementById('payContent').classList.toggle('show');this.textContent=this.textContent==='🔓 展开完整出摊包'?'收起':'🔓 展开完整出摊包'" style="display:block;width:100%;padding:10px 20px;background:#C49A2C;color:#fff;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;margin-top:10px">🔓 展开完整出摊包</button>
+  <div class="note" style="font-size:9px;color:#8a7a6a;margin-top:4px;text-align:center">点开展示完整数据（带模糊保护）</div>
+  </div>
+  <div id="payContent" class="pay-content">
+
+    <h4 style="color:#6e5017;margin-top:0;">📦 增量模块 ① · 外卖运营 SOP</h4>
+    <ul>
+      <li><strong>平台选择：</strong>美团 + 饿了么双平台同步上线，前期只开 1 家店集中冲单量（目标：首月 500 单）。不要同时开多家店分散资源。</li>
+      <li><strong>满减策略（三档阶梯）：</strong>满 25 减 3（引流）→ 满 40 减 6（主推）→ 满 60 减 10（高客单）。配合新客立减 3 元 + 配送费减免。</li>
+      <li><strong>配送范围：</strong>3km 核心区（免配送费）→ 5km 扩展区（收 ¥3 配送费）。使用保温箱 + 锡纸袋双重保温，确保 30min 内送达。</li>
+      <li><strong>差评响应 SOP：</strong>30min 内回复 → 致歉 + 解释原因 + 赠送 3 元优惠券安抚 → 记录差评原因周会复盘。差评率目标控制在 2% 以内。</li>
+      <li><strong>出餐时间管理：</strong>设置「午市 11:00–13:00 优先出外卖」机制，堂食高峰 12:00–12:30 外卖暂停接单。外卖打包区独立设置，不占用堂食出餐通道。</li>
+      <li><strong>包装方案：</strong>汤面类（臊子面）用「汤面分离碗」——面在下、汤在上隔层设计，吃的时候再混合。干拌类（油泼面/扯面）用密封防洒碗 + 保鲜膜封口。小菜和饮品单独小盒。</li>
+    </ul>
+
+    <h4 style="color:#6e5017;">📅 增量模块 ② · 营销日历</h4>
+    <ul>
+      <li><strong>周一 · 臊子面日：</strong>工作日臊子面特价 ¥9.9（限量 30 份）→ 吸引周一低谷期的客流，备注「每周一限定」制造稀缺感。</li>
+      <li><strong>周三 · 带新日：</strong>Biangbiang 面买一送一（需带新客到店）→ 老客带新客，裂变拉新。带新客的老客额外赠送冰峰 1 瓶。</li>
+      <li><strong>周五 · 套餐日：</strong>油泼面 + 冰峰套餐 ¥25（原价 ¥27）→ 锁住周末前夜的高消费意愿。提前在社群接龙预订。</li>
+      <li><strong>周末 · 亲子体验：</strong>「小小面点师」亲子扯面体验课 ¥38/组（10:00–11:00）→ 家长带孩子来体验扯面，孩子开心、家长拍照发朋友圈→免费口碑传播。限 8 组/次，提前 3 天预约。</li>
+      <li><strong>节日限定：</strong>端午节推「臊子面 + 粽子」套餐 · 中秋节推「油泼辣子礼盒」· 春节推「陕西面食年夜饭套餐」（腊汁肉 + 油泼辣子 + 手工挂面）。节日品毛利 70%+，提前 2 周预热。</li>
+      <li><strong>月度会员日（每月 8 号）：</strong>全场 8.8 折 + 双倍积分 + 消费满 ¥50 抽奖（奖品：免费面一碗 / 冰峰一箱 / 油泼辣子一瓶）。</li>
+    </ul>
+
+    <h4 style="color:#6e5017;">🔄 增量模块 ③ · 复购体系</h4>
+    <ul>
+      <li><strong>积分卡制度：</strong>消费 1 元 = 1 分，满 200 分抵 ¥10（相当于 95 折回馈）。使用微信小程序记录积分，替代纸质卡（防丢失）。</li>
+      <li><strong>会员日：</strong>每月 8 号全场 8.8 折 + 双倍积分 + 消费满 ¥50 参与抽奖。通过企业微信推送提醒，提前 1 天和当天早晨各发一次。</li>
+      <li><strong>储值锁客活动：</strong>充 200 送 30（≈ 87 折）· 充 500 送 100（≈ 83 折）· 充 1,000 送 250（≈ 80 折）。储值卡连锁消费频次，目标储值占比 20–30%。</li>
+      <li><strong>社群运营：</strong>建立「陕西面食爱好者群」微信群（目标 500 人/群）。每日 16:00 限量秒杀（5 份 ¥9.9 臊子面）+ 新品内测资格（每月 2 次）+ 不定时福利（霸王餐抽奖）。群公告放菜单和下单链接。维护频次：每天 2–3 条消息，不过度打扰。</li>
+      <li><strong>离店触达：</strong>顾客离店时送一张「下次光临 9 折券」（有效期 14 天），扫码领券锁定复购。结账时店员口头提醒：「加群可以参与每周抽奖哦」。</li>
+      <li><strong>流失唤醒：</strong>对 30 天未到店的会员发送「老友回归 ¥5 立减券」，对 60 天未到店的发送「免费小菜券+新品推荐」。</li>
+    </ul>
+
+    <h4 style="color:#6e5017;">👨‍🍳 增量模块 ④ · 人员培训体系</h4>
+    <ul>
+      <li><strong>7 天速成培训计划：</strong>Day 1-2 → 原料认识（面粉分类/辣椒品种/醋的酸度）+ 面团基础（和面/醒面/揉面手法）| Day 3-4 → 扯面/擀面/切面手法练习，每日 50 碗实操 | Day 5 → 调汤调味（臊子汤/碗底料/辣油制作）| Day 6-7 → 全流程演练 + 高峰压力测试（模拟 60 分钟出 40 碗）。</li>
+      <li><strong>考核标准（三项全过方可独立上岗）：</strong>① 速度考核——5min 内完成 1 碗完整出品（从扯面到出餐）② 口味考核——店主盲测打分 ≥ 80 分（满分 100）③ 卫生考核——全程操作符合食品安全规范（手套/口罩/定时洗手）。</li>
+      <li><strong>留人机制（三阶激励）：</strong>① 满 3 个月 → 调薪（涨幅 10–15%）+ 技能补贴（会扯面 + 300 元/月）② 满 6 个月 → 晋升「面档主管」+ 月奖金（门店利润的 2%）③ 满 1 年 → 分红股 2–5%（参与年度利润分配），核心员工可晋升为「合伙人」开分店。</li>
+      <li><strong>培训手册：</strong>编写 20 页 A5 尺寸的《SX_02 陕西面馆培训手册》，含 10 道核心产品的图文配方卡 + 操作流程图 + 常见问题 Q&A（面太硬怎么办/油温怎么判断/辣度怎么调）。新手 3 天可照着手册做出及格水平的面。</li>
+      <li><strong>日常管理：</strong>每天晨会 5min（检查食材新鲜度 + 复盘昨日问题 + 今日目标）+ 收档 15min（清洁标准化 + 次日备料清单）。建立微信群日报制度：每日营业数据、差评截图、设备异常等。</li>
+    </ul>
+
+    <h4 style="color:#6e5017;">📦 增量模块 ⑤ · 供应链搭建</h4>
+    <ul>
+      <li><strong>面粉供应商：</strong>首选河套高筋粉（筋度高，适合手工扯面），次选五得利高筋粉（性价比高）。月用量 500–800kg，批量采购价 ¥2.2–2.8/kg。签年框协议锁定价格，要求供应商 24h 内送达。</li>
+      <li><strong>辣椒供应链：</strong>主料用陕西秦椒（香气浓郁 + 辣度适中，¥28–35/kg），辅料用二荆条（颜色红亮，¥22–30/kg）。月用 20–40kg。找陕西本地供应商直发，减少中间商加价。到货后密封避光储存，最长保质 6 个月。</li>
+      <li><strong>菜籽油：</strong>浓香菜籽油（国标一级），月用 80–150L，批价 ¥10–14/L。找油脂公司直供，每批索要质检报告（酸价/过氧化值）。夏季高温注意避光降温储存。</li>
+      <li><strong>醋：</strong>陕西岐山醋（酸度 4.5° 为佳），月用 15–30L，批价 ¥6–9/L。保宁醋可作为备选（酸度略低，适合口味偏淡的区域）。不要用白醋或镇江醋替代——风味完全不同。</li>
+      <li><strong>其他辅料：</strong>猪肉（五花肉/猪骨）→ 当地农贸市场每日采购，找固定摊贩签供货协议。蔬菜（土豆/胡萝卜/青菜/葱/蒜）→ 批发市场隔日采购，当季蔬菜优先。鸡蛋 → 找蛋鸡场直送，月用 200–400 个。</li>
+      <li><strong>库存管理原则：</strong>核心原料安全库存 2 周（面粉/辣椒/油/醋），生鲜辅料安全库存 2 天（蔬菜/肉/蛋）。采用「先进先出」原则，标注到货日期。每月盘点一次，损耗率目标控制在 3% 以内。</li>
+    </ul>
+
+    <h4 style="color:#6e5017;">🚀 增量模块 ⑥ · 品牌升级路线</h4>
+    <ul>
+      <li><strong>Phase 1（0–6 月）· 单店模型跑通：</strong>日营收稳定 ¥3,000+，月净利 ¥25,000+。打磨出 2–3 款爆品，积累 200+ 忠实会员。跑通外卖/堂食/社群三条渠道。储备 2 名可独立运营的店长候选人。目标：日均出餐 120+ 碗，好评率 4.6+。</li>
+      <li><strong>Phase 2（6–18 月）· 第二家店复制 + 中央厨房：</strong>选址第二个商圈开分店（与第一家距离 ≥ 3km 避免互抢客流）。建立小型中央厨房（50–80㎡，负责面坯预处理 + 臊子预制 + 油泼辣子生产），统一两家店的出品标准。两家店共用供应链降低采购成本 8–12%。注册品牌商标 + 设计统一 VI（Logo/菜单/员工服/打包袋）。</li>
+      <li><strong>Phase 3（18–36 月）· 区域连锁 + 城市合伙人：</strong>3–5 家直营店夯实根据地。开放城市合伙人模式——输出品牌 + 中央厨房供应 + 培训体系 + 运营 SOP。收取加盟费 ¥5–8 万 + 流水抽成 3–5%。建立督导体系（每月巡店 + 神秘顾客暗访），确保加盟店品质不低于直营店 90%。</li>
+      <li><strong>Phase 4（36 月+）· 零售化 + 供应链外溢：</strong>区域连锁 10+ 店，覆盖一个省份主力城市。上线预包装零售产品线（油泼辣子瓶装 / 陕西手工挂面礼盒 / 即热臊子面），进入电商平台（天猫/抖音电商）和本地商超。中央厨房升级为「陕西面食供应链公司」，对外供应半成品给餐饮 B 端客户。终极目标：成为区域性的「陕西面食品牌 + 供应链平台」。</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 16. 关联产品 ==================== -->
+<div class="module">
+  <h3>🔗 关联产品 · 陕西面食体系</h3>
+  <p style="margin-bottom:12px;font-size:0.82rem;color:#7a6b44;">以下产品与本卡构成完整陕西面食创业知识体系，建议搭配学习：</p>
+  <div class="related-grid">
+    <div class="related-card">
+      <div class="code">SX_T01</div>
+      <div class="rname">陕西面食总纲</div>
+      <div class="rprice">免费 · 品类全景图</div>
+    </div>
+    <div class="related-card">
+      <div class="code">SX_M01</div>
+      <div class="rname">陕西面食创业母卡</div>
+      <div class="rprice">¥39 · 全面创业指南</div>
+    </div>
+    <div class="related-card highlighted-card">
+      <div class="code">SX_02</div>
+      <div class="rname">陕西面馆子卡</div>
+      <div class="rprice">¥19 · 当前卡片 ✓</div>
+    </div>
+    <div class="related-card">
+      <div class="code">SX_01</div>
+      <div class="rname">肉夹馍·凉皮档口</div>
+      <div class="rprice">¥19 · 档口创业卡</div>
+    </div>
+    <div class="related-card">
+      <div class="code">SX_03</div>
+      <div class="rname">泡馍·小吃</div>
+      <div class="rprice">¥19 · 泡馍赛道卡</div>
+    </div>
+    <div class="related-card">
+      <div class="code">SX_04</div>
+      <div class="rname">油泼辣子·腊汁肉VC卡</div>
+      <div class="rprice">¥39 · 核心VC配方卡</div>
+    </div>
+  </div>
+  <div style="margin-top:14px;padding:12px 16px;background:#fffbf0;border-radius:12px;border:1px solid #e8d6a2;">
+    <p style="font-weight:600;color:#5c4312;font-size:0.9rem;">📚 推荐学习路径</p>
+    <p style="font-size:0.85rem;color:#3d2d0e;">① <strong>SX_T01</strong>（免费）→ 了解陕西面食全品类格局 &nbsp;→&nbsp; ② <strong>SX_02</strong>（¥19）→ 面馆子卡开店运营 &nbsp;→&nbsp; ③ <strong>SX_M01</strong>（¥39）→ 高阶创业全攻略 &nbsp;→&nbsp; ④ <strong>SX_01/SX_03</strong>（各¥19）→ 补充业态 &nbsp;→&nbsp; ⑤ <strong>SX_04</strong>（¥39）→ 核心 VC 配方体系</p>
+    <p style="font-size:0.82rem;color:#7a6b44;margin-top:6px;">全套购买优惠：SX_02 + SX_01 + SX_03 + SX_04 = ¥79（原价 ¥96）</p>
+  </div>
+</div>
+
+<!-- ==================== 17. 沧林实战备注 ==================== -->
+<div class="note-block">
+  <h3>📝 沧林实战备注</h3>
+  <ul>
+    <li><strong>选品铁律：</strong>陕西面馆的核心是「一碗油泼面定生死」。油泼面都做不好，别谈其他。优先打磨油泼面到 90 分，再上 Biangbiang 面。记住：顾客第一次来点的一定是招牌油泼面——第一印象决定了复购率。</li>
+    <li><strong>定价心法：</strong>「18 元吃饱，28 元吃好，38 元吃撑」。用臊子面/扯面做低客单价引流（¥14–16），油泼面做主力（¥22–28），Biangbiang 面做高价锚点（¥28–35），羊肉面做高端标杆（¥38–45）。让顾客有充分的价格可选择——丰俭由人。</li>
+    <li><strong>动线设计：</strong>明档操作间是关键竞争力——把扯面区放在最显眼的位置。顾客看着面团在你手里被扯成面条、扔进沸水、泼上滚油——这种「视听嗅味触」五感营销是社交媒体传播的核心素材。建议：扯面台高度 80cm（便于表演），泼油区放在靠近出餐口（让「滋啦」声传出去）。</li>
+    <li><strong>用工策略：</strong>前 3 个月老板亲自站灶，不要完全当甩手掌柜。面馆的魂在老板手里那碗面。3 个月后逐步培养接班人，但老板每天至少要尝一碗面——确保出品品质不下滑。记住：面馆最大的成本不是租金或原料，而是老板不在时的品质下降。</li>
+    <li><strong>避坑指南（七不做）：</strong>① 别一上来就做全品类——先做 4 款面 + 2 款小菜，最多不超过 8 个 SKU ② 别省辣椒钱——差辣椒毁一切，秦椒必须用陕西原产 ③ 别选太偏的位置——面馆靠人流，偏僻巷子做不起来 ④ 别雇太多人——前 6 个月 1–2 人够用，人多效率反而低 ⑤ 别做太多外卖——面食外卖天然劣势，堂食为主外卖为辅 ⑥ 别忽视社群——微信群是成本最低的复购工具 ⑦ 别急着扩张——单店稳了再谈第二家。</li>
+    <li><strong>扩张节奏：</strong>单店日均流水稳在 ¥4,000 以上且持续 3 个月，再考虑第二家。不要因为「第一家生意好」就盲目扩张——面馆的瓶颈永远是人，而不是市场。第二家店必须培养出能独立运营的店长（至少跟训 3 个月），否则必败。</li>
+    <li><strong>终极提醒：</strong>陕西面食的核心竞争力 = 面粉 × 辣椒 × 醋 × 手法。四者缺一不可。用最好的原料 + 最笨的功夫 = 最稳的生意。请记住：这碗面你做了 100 碗和 10,000 碗之后，味道是完全不同的——时间是最好的秘方。</li>
+    <li><strong>暗号：</strong>「多蒜多辣多醋」——这是陕西面馆老顾客的暗号。如果你的顾客开始跟你说这三个「多」，说明你已经培养出一批忠诚的回头客了。恭喜你。</li>
+  </ul>
+  <p style="margin-top:14px;font-size:0.82rem;text-align:right;color:#b8860b;">—— 沧林 · 2026 · 陕西面食创业系列 · SX_02</p>
+</div>
+
+</div><!-- /container -->
+
+<!-- 付费区已由onclick处理 -->
+
+<style>
+.highlighted-card{background:linear-gradient(135deg,#f5e6c0,#e8c97a);border-color:#c49a2c;border-width:2px;}
+.highlighted-card .code{background:#6e5017;}
+</style>
+
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>
