@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>RP_07 尖椒鸡 · 区域预测 · 深度分析</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#1a2a3a,#0d1a28);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.pred-banner{background:linear-gradient(135deg,#f0f4f8,#e8f0f8);border:1px solid #c8d8e8;border-radius:10px;padding:12px 16px;margin:10px 0}
+.pred-banner .p-icon{font-size:16px}
+.pred-banner .p-title{font-size:12px;font-weight:700;color:#2a5a8a}
+.pred-banner .p-text{font-size:11px;color:#4a5a6a;line-height:1.6;margin-top:4px}
+
+.region-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.region-box{background:#f8f4ef;border-radius:10px;padding:10px}
+.region-box .r-h{font-size:11px;font-weight:700;margin-bottom:4px}
+.region-box .r-d{font-size:10px;color:#5a4f44;line-height:1.5}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.sci-box{background:#f8f4ef;border-radius:12px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35}
+.sci-box .sci-icon{font-size:14px}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+
+.verify-steps{display:flex;flex-direction:column;gap:6px}
+.verify-step{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;font-size:12px;color:#3a322a}
+.verify-step .vs-day{background:#3a322a;color:#fff;padding:1px 8px;font-size:10px;font-weight:700;border-radius:4px;flex-shrink:0}
+
+.pred-path{background:#f8f4ef;border-radius:12px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35}
+.pred-path .pp-stage{display:flex;gap:10px;padding:6px 0;border-bottom:1px dashed #e8dfd5}
+.pred-path .pp-stage:last-child{border-bottom:none}
+.pred-path .pp-tag{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap;flex-shrink:0;align-self:flex-start}
+.pp-stage-1 .pp-tag{background:#f0e8d8;color:#7a5a2a}
+.pp-stage-2 .pp-tag{background:#e8f0d8;color:#4a7a2a}
+.pp-stage-3 .pp-tag{background:#d8e8f0;color:#2a5a7a}
+
+/* ===== 预测引擎插件层 ===== */
+.engine-section{padding:20px 18px;border-bottom:none;background:linear-gradient(180deg,#f8f4f0,#f0ece6)}
+.engine-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:12px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #ddd4ca;padding-bottom:8px}
+.engine-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.engine-card{background:#faf8f5;border-radius:10px;padding:10px;border:1px solid #e8dfd5}
+.engine-card .ec-label{font-size:9px;color:#7a7269;margin-bottom:2px;letter-spacing:0.5px}
+.engine-card .ec-abbr{font-size:10px;font-weight:700;color:#8a7a6a}
+.engine-card .ec-score{font-size:18px;font-weight:800;color:#C0392B}
+.engine-card .ec-desc{font-size:9px;color:#b5aaa0;margin-top:2px;line-height:1.4}
+.engine-card .ec-bar{margin-top:4px;height:4px;background:#e8dfd5;border-radius:2px;overflow:hidden}
+.engine-card .ec-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#D4A574,#C0392B)}
+.engine-full{grid-column:1/-1}
+.engine-full .ec-score{font-size:20px}
+.engine-full .ec-fill{background:linear-gradient(90deg,#E8652D,#C0392B)}
+.engine-signal{margin-top:10px}
+.engine-signal .es-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:11px;color:#5a4f44;border-bottom:1px solid #eee5d8}
+.engine-signal .es-row:last-child{border-bottom:none}
+.engine-signal .es-icon{font-size:12px;flex-shrink:0}
+.engine-signal .es-label{flex:1;font-weight:600;color:#3a322a}
+.engine-signal .es-val{font-size:10px;color:#7a7269}
+.engine-note{font-size:9px;color:#b5aaa0;text-align:center;padding:8px 0 0 0;line-height:1.5;border-top:1px dashed #ddd4ca;margin-top:8px}
+
+/* ===== 预测引擎 - 雷达图 & 环形表 ===== */
+.radar-wrap{display:flex;gap:20px;margin-bottom:16px;align-items:center;justify-content:center;flex-wrap:wrap}
+.radar-chart{width:160px;height:160px;position:relative;flex-shrink:0}
+.radar-chart .ax{position:absolute;width:65px;height:1px;background:#ddd4ca;top:80px;left:80px;transform-origin:0 0}
+.radar-chart .ax::after{content:'';position:absolute;right:-2px;top:-2px;width:5px;height:5px;background:#ccc2b5;border-radius:50%}
+.radar-outline{position:absolute;top:0;left:0;width:100%;height:100%;clip-path:polygon(50% 9.38%,88.64% 37.45%,73.88% 82.86%,26.12% 82.86%,11.36% 37.45%)}
+.radar-outline::before{content:'';position:absolute;inset:0;background:rgba(200,194,181,.12);clip-path:inherit;border:1px solid #ddd4ca}
+.radar-fill{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(192,57,43,.10);border:1.5px solid rgba(192,57,43,.4);border-radius:0}
+.radar-dot{position:absolute;width:8px;height:8px;background:#C0392B;border:2px solid #fff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 1px 3px rgba(0,0,0,.18);z-index:2}
+.radar-lbl{position:absolute;font-size:9px;color:#5a4f44;white-space:nowrap;font-weight:600;text-align:center;line-height:1.2;z-index:3}
+.radar-lbl strong{font-size:11px;color:#C0392B;display:block}
+.ring-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex-shrink:0}
+.ring-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}
+.ring-gauge{width:70px;height:70px;border-radius:50%;position:relative;flex-shrink:0}
+.ring-gauge::after{content:'';position:absolute;width:50px;height:50px;background:#faf8f5;border-radius:50%;top:10px;left:10px;box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
+.rg-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:1}
+.rg-val{font-size:16px;font-weight:800;display:block;line-height:1}
+.rg-label{font-size:7px;color:#7a7269;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-top:1px}
+.rg-desc{font-size:8px;color:#b5aaa0;text-align:center;line-height:1.3;max-width:70px}
+.cp-meter{margin:12px 0 10px;padding:12px 16px;background:#faf8f5;border-radius:12px;border:1px solid #e8dfd5;display:flex;align-items:center;gap:14px}
+.cp-meter .cp-ring{flex-shrink:0;width:60px;height:60px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center}
+.cp-meter .cp-ring::after{content:'';position:absolute;width:42px;height:42px;background:#faf8f5;border-radius:50%;box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
+.cp-meter .cp-num{z-index:1;position:relative;display:flex;flex-direction:column;align-items:center;line-height:1}
+.cp-meter .cp-num .big{font-size:18px;font-weight:800;color:#2a5a8a}
+.cp-meter .cp-num .pct{font-size:10px;color:#2a5a8a;font-weight:600}
+.cp-meter .cp-info{flex:1}
+.cp-meter .cp-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:2px}
+.cp-meter .cp-desc{font-size:10px;color:#7a7269;line-height:1.6}
+.cp-meter .cp-desc strong{color:#C0392B}
+.lst-rri{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.lst-card,.rri-card{background:#faf8f5;border-radius:10px;padding:10px 12px;border:1px solid #e8dfd5;display:flex;align-items:center;gap:10px}
+.lst-visual{width:42px;height:42px;border-radius:50%;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center}
+.lst-visual::after{content:'1→2';position:absolute;width:30px;height:30px;background:#faf8f5;border-radius:50%;font-size:8px;color:#7a5a2a;display:flex;align-items:center;justify-content:center;font-weight:700}
+.lst-info,.rri-info{flex:1}
+.lst-title,.rri-title{font-size:11px;font-weight:700;color:#3a322a}
+.lst-desc,.rri-desc{font-size:9px;color:#7a7269;line-height:1.5;margin-top:2px}
+.rri-bar{width:42px;height:42px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#E8652D;background:#fef2ee;position:relative;overflow:hidden}
+.rri-bar .fill{position:absolute;bottom:0;left:0;width:100%;height:50%;background:rgba(232,101,45,.15);border-radius:0 0 8px 8px}
+.rri-bar span{z-index:1}
+.signal-strip{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.signal-strip .ss-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#faf8f5;border-radius:8px;font-size:10px;color:#5a4f44;line-height:1.5}
+.signal-strip .ss-dot{width:18px;height:18px;border-radius:50%;background:#f5ede5;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.signal-strip .ss-lab{font-weight:700;color:#3a322a;flex-shrink:0;font-size:10px}
+.signal-strip .ss-val{color:#7a7269}
+</style>
+<link rel="stylesheet" href="../../paywall.css">
+
+<script>
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))
+    e.preventDefault();
+});
+</script>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🌶️ 尖椒鸡</h1>
+  <div style="font-size:12px;color:#b5aaa0;display:flex;gap:6px;flex-wrap:wrap">
+    <span>川味经典 · 鲜椒爆炒 · 锅气浓香</span>
+    <span style="background:#e8f0f8;color:#2a5a8a;padding:0 6px;border-radius:3px">🔮 区域预测 · 深度分析</span>
+  </div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">7.0</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">成熟品类 · 区域扩张窗口</span>
+    <span style="background:rgba(220,200,100,.2);padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:1px;color:#f0d060;margin-left:4px">🔮 免费</span>
+  </div>
+  <div class="r-tagline">尖椒鸡——川菜中以大量鲜青尖椒爆炒鸡肉粒的经典菜品，强调尖椒的清香与鸡肉的嫩滑在高温铁锅碰撞中产生的「锅气」。与辣子鸡（干辣椒+油炸）完全不同路径：辣子鸡走的是干香酥脆路线，尖椒鸡走的是鲜辣滑嫩路线。已有商业化样本（贵阳/重庆部分江湖菜馆在售），但尚未像辣子鸡/酸菜鸡那样形成全国性品类认知。本卡评估其作为门店新增菜品的可落地性及区域扩张路径。</div>
+  <div class="r-tags">
+    <span>🔮 区域预测</span>
+    <span>🌶️ 川味经典</span>
+    <span>🐔 鸡肉单品</span>
+    <span>🍽️ 门店上新</span>
+    <span>📊 深度分析</span>
+    <span>✅ 已有样本</span>
+  </div>
+</div>
+
+<!-- 预测产品说明 -->
+<div class="section" style="border-bottom:none;padding-bottom:0">
+  <div class="pred-banner">
+    <div><span class="p-icon">🔮</span> <span class="p-title">区域预测产品说明</span></div>
+    <div class="p-text">本卡基于川菜尖椒鸡的菜品框架进行区域扩张深度分析。该菜品在川渝/贵州已有成熟门店样本和消费者认知基础（来源：大众点评/美团2025-2026年尖椒鸡相关搜索及门店数据），但在全国范围内仍处于「川菜馆菜单上的一个选项」而非独立品类认知的阶段。所有数据标注来源及估算口径。本卡为区域预测卡——按决策库分类原则，预测性分析卡免费公开，已商业验证的品类扩展分析同样免费公开。决策库只在品类验证阶段对可复制但有门槛的单品设置付费卡。</div>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 当前热度</div><div class="stars">★★★★☆</div><div class="val">川黔有门店·全国待扩张</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购潜力</div><div class="stars">★★★★★</div><div class="val">鸡肉高复购·下饭菜属性强</div></div>
+    <div class="radar-item high"><div class="label">💰 启动投资</div><div class="stars">★★★★★</div><div class="val">极低·已有厨房+炒锅即可</div></div>
+    <div class="radar-item high"><div class="label">🔧 技术难度</div><div class="stars">★★★★☆</div><div class="val">低中·爆炒火候可控</div></div>
+    <div class="radar-item high"><div class="label">⚔️ 竞争格局</div><div class="stars">★★★☆☆</div><div class="val">区域性竞争·全国真空</div></div>
+  </div>
+  <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">品类成熟度</div><div style="font-size:14px;font-weight:700;color:#E8652D">扩张期</div><div style="font-size:9px;color:#b5aaa0">区域成熟·全国空白</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">区域渗透度</div><div style="font-size:14px;font-weight:700;color:#5a8f3c">川黔渝核心</div><div style="font-size:9px;color:#b5aaa0">向外扩张窗口期</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁/不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 已有川菜/湘菜门店·想增加差异化鸡肉菜品</div>
+      <div class="fit-item fit-yes">✅ 川渝/贵州以外地区的川菜馆（稀缺性价值）</div>
+      <div class="fit-item fit-yes">✅ 大排档/江湖菜馆（锅气+视觉冲击天然适配）</div>
+      <div class="fit-item fit-yes">✅ 寻找高毛利率鸡肉新品的家常菜馆</div>
+      <div class="fit-item fit-yes">✅ 已有爆炒类菜品的门店（共享灶台和设备）</div>
+      <div class="fit-item fit-yes">✅ 一线城市川湘融合菜馆（口味创新方向）</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求极致快餐出餐速度的连锁（爆炒需5-8分钟）</div>
+      <div class="fit-item fit-no">❌ 纯外卖档口（锅气是灵魂·现炒现吃最佳）</div>
+      <div class="fit-item fit-no">❌ 主打清淡/养生风格的门店（味型冲突）</div>
+      <div class="fit-item fit-no">❌ 无通风排烟能力的厨房（爆炒油烟较大）</div>
+      <div class="fit-item fit-no">❌ 尖椒供应链不稳定的区域（鲜椒是灵魂原料）</div>
+      <div class="fit-item fit-no">❌ 已有多款鸡肉菜品且缺乏差异化的门店</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么点这个菜</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">
+      尖椒鸡的核心钩子有三个：① <strong>嗅觉钩子</strong>——青尖椒高温爆炒出的己烯醛类清香，穿透力极强，一下锅整条街都能闻到。② <strong>视觉钩子</strong>——深绿尖椒段+红色小米椒圈+金黄微焦鸡块+褐色酱汁，在大盘里堆成小山配白米饭，层次分明。③ <strong>味觉钩子</strong>——鸡肉嫩滑入味，尖椒清甜回甘，辣度是「边吃边擦汗但筷子不停」——最好的下饭信号。隐性钩子：尖椒鸡在川菜馆的价格敏感度低——食客看到¥39-49想的是「鸡+尖椒+大盘，值」。
+    </div>
+    <div class="l-title">📈 利润模型（按现有门店上新品测算）</div>
+    <div class="logic-item"><span>定价区间（川菜馆鸡肉菜品锚点）</span><span class="v">¥32-52/份</span></div>
+    <div class="logic-item"><span>食材成本（鸡腿肉+尖椒+配料+油）</span><span class="v">¥12-20</span></div>
+    <div class="logic-item"><span>食材毛利率</span><span class="v">55-67%</span></div>
+    <div class="logic-item"><span>包装/外卖损耗</span><span class="v">¥1.5-3</span></div>
+    <div class="logic-item"><span>综合毛利率（含包装）</span><span class="v">52-65%</span></div>
+    <div class="logic-item"><span>出餐时间（单份·不含备料）</span><span class="v">5-8分钟</span></div>
+  </div>
+  <div style="margin-top:6px;padding:8px;background:#fef2f2;border-radius:8px;font-size:11px;color:#b53b3b">
+    ⚠️ 定价依据：川菜馆鸡肉类单品定价——辣子鸡¥38-58、宫保鸡丁¥28-38、口水鸡¥26-36、酸菜鸡¥48-78（来源：大众点评2026年一线城市川菜馆价格抽样）。尖椒鸡介于宫保鸡丁和酸菜鸡之间取¥32-52/份，定位「川菜馆的差异化鸡肉选择」——比辣子鸡低¥6-8但有鲜椒清香差异，比宫保鸡丁贵¥4-14但份量和价值感更高。实际定价需综合城市等级、门店定位、鸡肉等级判断。</div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">预估日销（新品）</div><div class="m-val">10-22份</div><div class="m-sub">川菜馆·中等客流</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">预估日毛利</div><div class="m-val">¥200-650</div><div class="m-sub">按均价¥42/份</div></div>
+    <div class="metric-card mc-green"><div class="m-label">上新测试成本</div><div class="m-val">¥75-120</div><div class="m-sub">原料成本极低</div></div>
+  </div>
+</div>
+
+<!-- ===== 05 食材成本拆解 ===== -->
+<div class="section">
+  <div class="s-title">📐 食材成本拆解（按单份·鸡腿肉约350-500g）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">鸡腿肉（去骨·带皮）350-500g</span><span class="v">¥7-14</span></div>
+    <div class="recipe-line"><span class="k">鲜青尖椒（二荆条/杭椒/线椒）200-300g</span><span class="v">¥2-4</span></div>
+    <div class="recipe-line"><span class="k">鲜红小米辣（提辣配色）30-50g</span><span class="v">¥1-2</span></div>
+    <div class="recipe-line"><span class="k">大蒜（切片）15-20g</span><span class="v">¥0.3-0.5</span></div>
+    <div class="recipe-line"><span class="k">姜（切片）10-15g</span><span class="v">¥0.2-0.3</span></div>
+    <div class="recipe-line"><span class="k">花椒/藤椒 3-5g</span><span class="v">¥0.5-1</span></div>
+    <div class="recipe-line"><span class="k">调味料（生抽/老抽/料酒/蚝油/白糖/胡椒/生粉）</span><span class="v">¥1-2</span></div>
+    <div class="recipe-line"><span class="k">食用油（爆炒用）约30-40g</span><span class="v">¥0.8-1.5</span></div>
+    <div class="recipe-line" style="border-bottom:none;font-weight:700"><span class="k">合计食材成本</span><span class="v">¥12-20</span></div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#f8f4ef;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.7">
+    <strong>成本数据来源（均标注口径）：</strong><br>
+    • 三黄鸡/仔鸡批发均价¥7-12/斤（来源：农业农村部畜牧兽医局畜禽价格监测报告，2026年6月）<br>
+    • 建议直接用「冰鲜去骨鸡腿肉」——批发¥9-14/斤·无损耗·后厨最省事<br>
+    • 鲜青尖椒（二荆条/杭椒）批发价约¥2-4/斤（来源：北京新发地/广州江南市场2026年上半年报价）<br>
+    • 小米辣批发价约¥5-8/斤（来源：新发地市场2026年行情）<br>
+    • 花椒/藤椒按大宗批发¥30-60/斤估算（用量少·影响小）<br>
+    采集时间：2026年7月
+  </div>
+</div>
+
+<!-- ===== 06 同类对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同类对比（川菜馆鸡肉菜品）</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:440px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>定价（¥）</th><th>毛利率</th><th>出餐速度</th><th>辣度</th><th>品类成熟度</th></tr></thead>
+      <tbody>
+        <tr style="background:#f0f4f8"><td>🌶️ 尖椒鸡</td><td>32-52</td><td>55-67%</td><td>5-8min</td><td>中辣·鲜辣</td><td>🟡 区域成熟</td></tr>
+        <tr><td>🔥 辣子鸡</td><td>38-58</td><td>50-62%</td><td>8-12min</td><td>麻辣·干香</td><td>✅ 全国知名</td></tr>
+        <tr style="background:#f8f4ef"><td>🍗 宫保鸡丁</td><td>28-38</td><td>60-70%</td><td>3-5min</td><td>微辣·甜酸</td><td>✅ 世界级</td></tr>
+        <tr><td>🥘 酸菜鸡</td><td>48-78</td><td>55-63%</td><td>10-15min</td><td>酸辣</td><td>✅ 西南知名</td></tr>
+        <tr style="background:#f8f4ef"><td>🍗 口水鸡</td><td>26-36</td><td>65-75%</td><td>预制凉菜</td><td>麻辣·复合</td><td>✅ 全国知名</td></tr>
+        <tr><td>🐔 肥肠鸡</td><td>58-88</td><td>50-60%</td><td>15-20min</td><td>麻辣·重油</td><td>✅ 川渝知名</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 尖椒鸡在川菜鸡肉赛道中占据「鲜辣·快速·高毛利」三角生态位——毛利率（55-67%）排第二（仅次于口水鸡），出餐速度（5-8min）排第二（仅次于宫保鸡丁），辣度定位（鲜辣方向）在全赛道中独一无二。</div>
+</div>
+
+<!-- ===== 07 风味科学 ===== -->
+<div class="section">
+  <div class="s-title">👅 风味科学</div>
+  <!-- 尖椒的风味化学 -->
+  <div style="margin-top:8px;padding:12px;background:#f8f4ef;border-radius:12px">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:14px">🌶️</span><span style="font-size:12px;font-weight:700;color:#3a322a">尖椒的香气科学：为什么尖椒鸡闻起来比辣子鸡更「鲜」</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.7">
+      <strong>尖椒vs干椒：香气分子的根本差异</strong><br>
+      尖椒鸡与辣子鸡的根本差异不在于辣度——在于香气化学。鲜青尖椒含水量约82-88%，富含己烯醛（青草香）、壬二烯醛（黄瓜香）等挥发性香气化合物。当鲜椒在180-200°C铁锅中爆炒，这些化合物30秒内大量释放——你在川菜馆门口闻到的「让人分泌唾液」的香气就来自这里。干辣椒（含水量10-15%）的香气谱完全不同：鲜椒中的短链醛类在脱水过程中挥发殆尽，留下的主要是β-胡萝卜素降解产物和辣椒素晶体——干辣椒闻起来是「焦香辣」而非「鲜香辣」。两者对应不同赛道：辣子鸡要干香嚼感，尖椒鸡要鲜嫩清香。<br><br>
+      <strong>锅气——美拉德反应</strong><br>
+      尖椒鸡好吃的核心秘密是「锅气」——鸡腿肉丁（1.5-2cm）在200°C以上油温中与锅底接触，表面蛋白质和还原糖发生美拉德反应，生成超过100种挥发性风味化合物（吡嗪类、呋喃类、噻唑类）提供烤香、坚果香、肉香。尖椒鸡的「中大火爆炒·快速翻锅」策略本质上是：让鸡丁在锅底停留0.3-0.5秒形成微焦层后立即翻面，累计接触约30-40秒，既生成焦香又避免过度加热。<br><br>
+      <strong>为什么必须用「带皮鸡腿肉」</strong><br>
+      鸡皮富含胶原蛋白（约25-30%干重）和脂肪——200°C下胶原蛋白水解产生明胶，在鸡丁表面形成「天然芡汁」，同时脂肪熔化为肉块持续提供滋润。鸡胸肉（无皮瘦）缺乏胶原蛋白保护和脂肪滋润，在同样条件下会变干柴。这就是尖椒鸡必须用带皮鸡腿肉的科学依据。<br><br>
+      <strong>辣度设计哲学</strong><br>
+      好的尖椒鸡应该是「边吃边擦汗但手不停」的临界点。控制两个变量：① 辣椒品种——二荆条（辣度约1.5-2万SHU）提供香气主体，小米辣（约5-10万SHU）控制辣度天花板，比例约4:1得到「微辣带香」② 切割方式——斜切马耳段比切圈或切碎更温和——段越大，辣椒素释放越慢，入口辣度越温和。
+    </div>
+  </div>
+  <!-- 尖椒鸡工艺对比 -->
+  <div style="margin-top:10px;padding:12px;background:#f8f4ef;border-radius:12px">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:14px">🍳</span><span style="font-size:12px;font-weight:700;color:#3a322a">尖椒鸡 vs 辣子鸡：两条完全不同的工艺路线</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.7">
+      很多非川菜从业者认为尖椒鸡和辣子鸡「差不多」——这是严重的品类认知错误。两道菜的核心差异比大多数人想象的大得多：<br><br>
+      <strong>辣子鸡：</strong>鸡肉斩小块→宽油炸至焦脆（170°C·4-6分钟）→炒香干辣椒段+花椒→下炸鸡块翻炒裹味。核心口感：<strong>干、香、酥、脆</strong>（含水率约30-35%）<br><br>
+      <strong>尖椒鸡：</strong>鸡腿肉切丁→生抽/生粉/蛋清腌制→中大火滑炒至断生（140-160°C·2-3分钟）→爆香底料→下尖椒断生→合味出锅。核心口感：<strong>嫩、滑、鲜、香</strong>（含水率约55-60%）。必须趁热吃——凉了风味损失约40%。<br><br>
+      <strong>一句话区分：</strong>辣子鸡是「油炸+干拌」（炸鸡块裹干辣椒），尖椒鸡是「滑炒+鲜椒」（升级版青椒炒鸡丁）。做尖椒鸡却用油炸鸡块——本质上就是少放辣椒的辣子鸡，食客吃过一次就能区分。<br><br>
+      <strong>风味总结：</strong>口感层次：鸡丁外微焦内嫩滑→尖椒清脆回甘→酱香浓郁→下饭。核心卖点：鲜椒清香·嫩滑鸡丁·锅气十足·汤汁拌饭是灵魂。</div>
+  </div>
+</div>
+
+<!-- ===== 08 区域适应性分析 ===== -->
+<div class="section">
+  <div class="s-title">🗺️ 区域适应性分析</div>
+  <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">尖椒鸡的核心基因是「川菜鲜椒爆炒」——这个基因决定了它的区域适应性比辣子鸡更广、但比宫保鸡丁更窄。因为辣子鸡（干辣椒+油炸）可以在全国任何一个省份做，但尖椒鸡需要「鲜椒供应链+消费者对鲜椒香气的认可」。以下按区域适应性分级：</div>
+  <div class="region-grid">
+    <div class="region-box"><div class="r-h" style="color:#5a8f3c">🥇 川渝/贵州</div>
+      <div class="r-d">尖椒鸡的大本营。消费者对「鲜椒+鸡肉」有天然味型认知——不需要任何教育。竞争相对激烈，点单转化率预估12-18%。建议：拼品质而非价格——用走地鸡/土鸡做差异化，定价走中高端¥42-52。</div>
+    </div>
+    <div class="region-box"><div class="r-h" style="color:#D4A574">🥈 湖南/江西/云南</div>
+      <div class="r-d">鲜椒消费大省。尖椒鸡在这里不需要太多的口味教育——湖南/江西人对鲜椒的日常消费量全国领先（湖南人均年消费鲜椒约20-30斤——来源：中国蔬菜流通协会行业报告），云南对青椒/小米辣的使用也非常普遍。但需要做一个小调适：湘/赣地区偏好更辣的版本——建议辣椒比例调整为二荆条:小米辣=3:2（vs川渝的4:1），同时增加豆豉/浏阳豆豉提供更深层的发酵香——这在本土化上不丢人反而加分。</div>
+    </div>
+    <div class="region-box"><div class="r-h" style="color:#E8652D">🥉 华中/华东</div>
+      <div class="r-d">湖北/安徽/江苏/浙江——这些区域对「青椒炒鸡」不陌生（家庭版青椒肉丝的逻辑），但对「大量尖椒爆炒鸡丁」的菜品认知较弱。尖椒的食用量中等偏低——江苏浙江年人均鲜椒消费仅3-5斤（来源：中国蔬菜流通协会）。需要做两件事：① 菜单上明确标注「鲜辣·微调辣度可选」降低辣度恐惧感 ② 初始版本减少鲜椒用量至150-200g、降低小米辣比例，以「能吃辣的人在川菜馆的私藏菜单」作为卖点切入。</div>
+    </div>
+    <div class="region-box"><div class="r-h" style="color:#b5aaa0">⚠️ 慎入区域</div>
+      <div class="r-d">东北、西北、华北北部。这些区域对鲜椒的接受度有限——东北菜用青椒但多为配菜（青椒炒肉等）而非主料；西北偏好干辣椒/油泼辣子（秦椒/线椒的干制品）；华北对辣的整体耐受度属于全国中下水平。尖椒鸡在这些区域只能作为「川菜馆的差异款」定位——不适合作为家常菜馆的普适性新品。如果一定要做，建议将尖椒替换为「青杭椒+彩椒」各半的温和版本，菜名改为「杭椒爆鸡丁」。本质上已经不是尖椒鸡——但消费者不介意你叫它什么，介意的是好不好吃。</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 区域扩张策略：</strong>最佳路径不是从四川往外辐射——而是「在川菜馆/湘菜馆的菜单上加一个选项」。不需要开专门店，只需加一道菜。测试成本¥75-120·5天出数据。数据正面上招牌，数据不理想损失就是备料成本。和新店赌活不活是不同风险等级。</div>
+  </div>
+</div>
+
+<!-- ===== 09 季节性分析 ===== -->
+<div class="section">
+  <div class="s-title">📅 季节性运营分析</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    尖椒鸡的季节性曲线比辣子鸡（全年稳定）更明显，关键瓶颈是鲜尖椒的产季和品质波动。但好消息是——鸡肉供应链全年稳定，不似鱼类的季节性肥瘦变化。以下是逐月拆解：
+    <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div style="background:#fef2ee;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#E8652D">🔴 旺季（6-10月）</strong><br>
+        单店日销潜力：18-30份<br>
+        尖椒成本：年中低点¥2-3/斤·品质最佳<br>
+        鸡价：全年稳定¥7-12/斤·夏季略低<br>
+        营销点：夏季鲜椒时令·鲜辣开胃·冰啤酒绝配
+      </div>
+      <div style="background:#f8f4ef;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#D4A574">🟡 平季（4-5月·11月）</strong><br>
+        单店日销潜力：10-18份<br>
+        尖椒成本：过渡期¥3-5/斤<br>
+        品控注意：春季尖椒皮略厚、香气稍淡<br>
+        营销点：时令尝鲜·秋冬暖身
+      </div>
+      <div style="background:#eef2ff;border-radius:6px;padding:6px 8px;font-size:10px;grid-column:1/-1">
+        <strong style="color:#4f6ef7">🔵 淡季（12-3月）</strong><br>
+        单店日销潜力：6-12份（旺季的30-50%）<br>
+        尖椒成本：大棚椒¥4-8/斤·皮厚味淡·辣度不稳定<br>
+        策略：① 转用海南/云南冬季露天尖椒（+¥1-2/斤物流费）② 冬季变体「泡椒尖椒鸡」——用四川泡野山椒替代一半鲜尖椒 ③ 冻藏鲜椒（夏季切段冷冻·品质损失20-25%）④ 下架换酸菜鸡/芋儿鸡等冬季暖锅。「一鸡两季」策略在川渝已有成熟案例。
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 全年策略：</strong>至少保证6个月尖椒品质可控期（5-10月）。如果只能覆盖3-4个月，建议不做——冻藏鲜椒做的尖椒鸡，顾客吃过当季版后会直接感受到落差。尖椒的核心卖点是「鲜」——没了鲜就是青椒炒鸡丁。</div>
+  </div>
+</div>
+
+<!-- ===== 10 供应链要点 ===== -->
+<div class="section">
+  <div class="s-title">📦 供应链要点</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    <div style="display:grid;grid-template-columns:90px 1fr;gap:4px 10px;font-size:11px">
+      <span style="font-weight:600;color:#3a322a">去骨鸡腿肉</span><span style="color:#5a4f44">冰鲜冷链配送 · 批发¥9-14/斤（来源：农业农村部畜禽价格监测2026年6月）· 0-4°C冷藏·保质期3-5天</span>
+      <span style="font-weight:600;color:#3a322a">鲜青尖椒</span><span style="color:#5a4f44">农批市场 · 夏季低点¥2-3/斤 · 冬季大棚椒¥4-8/斤 · 按日采购防失水</span>
+      <span style="font-weight:600;color:#3a322a">小米辣</span><span style="color:#5a4f44">农批市场 · 全年¥5-8/斤 · 用量少可零采 · 云南/海南为主产区</span>
+      <span style="font-weight:600;color:#3a322a">大蒜</span><span style="color:#5a4f44">金乡大蒜·批发¥3-5/斤·全年稳定</span>
+      <span style="font-weight:600;color:#3a322a">花椒</span><span style="color:#5a4f44">汉源/江津花椒·批发¥30-60/斤·红花椒/藤椒均可</span>
+      <span style="font-weight:600;color:#3a322a">鸡类产区</span><span style="color:#5a4f44">山东（30%）· 广东（15%）· 江苏（12%）· 四川（10%）· 全国覆盖</span>
+      <span style="font-weight:600;color:#3a322a">尖椒主产区</span><span style="color:#5a4f44">四川/湖南/海南/云南/山东·按季节轮换供应</span>
+      <span style="font-weight:600;color:#3a322a">批量优势</span><span style="color:#5a4f44">冰鲜鸡腿肉集采可压低8-12%·尖椒按日采避免失水损耗·无活体管理成本</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fff9f0;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.6">
+    <strong>尖椒鸡的供应链优势（vs鱼类菜品）：</strong>这是尖椒鸡的最大结构性优势——不需要活鱼缸、无活体损耗。冰鲜鸡腿肉（¥9-14/斤）的供应链是全国餐饮业最成熟的品类之一——任何县级以上城市都有稳定供应。尖椒断供可临时换冻藏尖椒或改做其他鸡肉菜品——零损失。<br>
+    <strong>鲜椒采购注意：</strong>最怕「品种换包」——供应商可能今天给你二荆条明天换成普通菜椒（辣度差5倍）。建议锁定品种（合同写清品种名），到货后做快速抽查——用指甲掐一小段椒皮舌尖试辣。尖椒鸡成败60%取决于尖椒品质。</div>
+  </div>
+</div>
+
+<!-- ===== 11 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（含验证点）</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc"><strong>备料腌鸡</strong>：去骨鸡腿肉切成1.5-2cm大丁（不要切太小——爆炒后还会缩水约15-20%）。加生抽10g+料酒5g+蚝油5g+白胡椒粉1g+生粉5g+蛋清半个+食用油5g抓匀腌制10-15分钟。关键：蛋清和生粉是嫩滑的核心——蛋清中的卵清蛋白在加热时形成网状结构锁住水分，生粉在表面形成保护层防止肉汁流失。鸡丁腌制后应有「滑润不干、抓起来不粘手」的手感。</span><div class="ps-verify">[验证点] 腌制完成后用筷子夹起一块鸡丁——腌料应均匀附着但不流淌。如果鸡丁表面有大量腌料液体堆积→说明腌料过量或鸡丁出水（鲜度不够）。此时加一勺干生粉吸收多余水分，否则下锅时油温会被拉低30°C以上，鸡丁变成水煮效果。</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc"><strong>滑炒鸡丁</strong>：热锅冷油（锅烧至冒烟后下油），油温140-160°C（油面微起涟漪但未冒烟）时下鸡丁，快速划散。大火滑炒2-3分钟至鸡丁表面微金黄、断生约80%（内部还有一点点生粉色）。迅速盛出控油备用。</span><div class="ps-verify">[验证点] 鸡丁入锅时应有「滋啦」声——如果声音很弱→油温不够。滑炒过程中鸡丁表面逐步变白→微黄→金黄色。合格的鸡丁标准：表面金黄微焦、断面颜色均匀一致（没有生粉色肉）。如果鸡丁出水严重（锅底有白色汤汁）→① 油温太低 ② 鸡丁腌料太稀 ③ 锅的蓄热不够。此时需要升高火力+快速翻锅把水分炒干。</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc"><strong>爆香底料</strong>：锅中留底油（约15-20g），大火加热至180°C左右（油面轻微冒烟），下姜片5-6片、蒜片15g爆香（10秒）。然后下花椒3-5g、干辣椒段少许（可选·增加复合辣度）爆香5秒。</span><div class="ps-verify">[验证点] 蒜片入锅后10秒内应呈金黄色——如果30秒还是白色→火力不够。花椒入锅后5秒内应有麻香味溢出——如果闻到焦苦味→火力过高或花椒在锅中太久。炒尖椒鸡的底料爆香阶段是整道菜最关键的时间窗口——所有香味底料（姜蒜花椒）必须在15-20秒内完成爆香，否则后续菜品缺乏底层香气。</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc"><strong>下尖椒爆炒</strong>：改中大火，下尖椒段（青尖椒200-300g+红小米辣30-50g），大火翻炒1-2分钟至尖椒断生——表面微皱、颜色鲜亮、香气溢出。</span><div class="ps-verify">[验证点] 尖椒入锅后1分钟应出现标志性的「虎皮纹」——尖椒表面微皱、颜色变深、部分表面出现棕色焦斑。这是美拉德反应在尖椒表面的表现。如果1分钟了尖椒还是水灵灵的鲜绿色→火力不够或尖椒太多堆叠了。尖椒的标准状态是「断生带脆」——咬下去有清脆声但无生辣感。过度加热会导致尖椒变软塌、失去清香。</div></div>
+    <div class="process-step"><span class="ps-num">5</span><span class="ps-desc"><strong>合味出锅</strong>：将滑好的鸡丁回锅，加入生抽5g、老抽2-3g（上色）、蚝油5g、白糖3g、白胡椒粉1g。大火快速翻炒30秒至所有食材裹匀酱汁。如果太干可以沿锅边淋一勺高汤或热水（约20ml）。最后淋明油（香油5g）增亮，出锅装盘。</span><div class="ps-verify">[验证点] 鸡丁回锅后30秒内酱汁应均匀包裹每一块鸡丁——如果酱汁堆积在锅底而不是裹在鸡丁上→锅温太低或酱汁比例不对。出锅前尝一粒鸡丁：咸鲜微辣带麻、鸡丁嫩滑多汁、尖椒清脆回甘。最后淋明油的作用不仅是增亮——香油中的芝麻素在高温下释放香气，给整道菜一个「香气收尾」。如果不淋明油直接出锅→味道也许还成，但少了一层「高级感」。</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a">
+    ⚠️ <strong>关键控制点：</strong>① 鸡丁大小均匀（1.5-2cm）——太大不入味·太小易柴 ② 尖椒必须大火快炒——断生带脆是尖椒鸡的标志性口感 ③ 鸡丁回锅后不超过30秒——回锅太久鸡丁变老 ④ 全程不加水（顶多沿锅边淋一勺汤）——尖椒鸡不是炖菜也不是汤菜。这四个参数是尖椒鸡从「能吃」变成「好吃」的分界线。<br>
+    <strong>⏱ 时间线总览：</strong>腌鸡10-15min（可批量备料）→ 滑炒鸡丁2-3min → 爆香底料20秒 → 下尖椒1-2min → 合味30秒 = 单份出餐4-7分钟。如批量腌好鸡丁，高峰期单份出餐约4-5分钟——这对于晚高峰翻台来说是非常友好的数字。
+  </div>
+</div>
+
+<!-- ===== 12 核心原料清单 ===== -->
+<div class="section">
+  <div class="s-title">📦 核心原料清单（单份基准·去骨鸡腿肉）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span>冰鲜去骨鸡腿肉（带皮）</span><span>350-500g</span></div>
+    <div class="recipe-line"><span>鲜青尖椒（二荆条/杭椒/线椒）</span><span>200-300g（斜切马耳段）</span></div>
+    <div class="recipe-line"><span>鲜红小米辣（配色+提辣）</span><span>30-50g（切圈·辣度可调）</span></div>
+    <div class="recipe-line"><span>大蒜</span><span>15-20g（约5-6瓣·切片）</span></div>
+    <div class="recipe-line"><span>姜</span><span>10-15g（约5-6片）</span></div>
+    <div class="recipe-line"><span>花椒（红花椒/藤椒）</span><span>3-5g</span></div>
+    <div class="recipe-line"><span>生抽（腌鸡+调味）</span><span>15-20g</span></div>
+    <div class="recipe-line"><span>老抽（上色）</span><span>3-5g</span></div>
+    <div class="recipe-line"><span>料酒</span><span>10-15g</span></div>
+    <div class="recipe-line"><span>蚝油</span><span>10-15g</span></div>
+    <div class="recipe-line"><span>白胡椒粉</span><span>1-2g</span></div>
+    <div class="recipe-line"><span>白砂糖</span><span>3-5g</span></div>
+    <div class="recipe-line"><span>玉米淀粉</span><span>8-10g（腌鸡薄浆+芡汁）</span></div>
+    <div class="recipe-line"><span>鸡蛋（取蛋清）</span><span>半个（约15g·嫩滑关键）</span></div>
+    <div class="recipe-line"><span>食用油（滑炒+爆香+明油）</span><span>约35-50g</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>香油（出锅明油）</span><span>5g（芝麻油）</span></div>
+  </div>
+  <div style="margin-top:6px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 原料替代方案：</strong><br>
+    • 买不到冰鲜去骨鸡腿肉 → 可用整鸡取腿（三黄鸡/仔鸡），出品率约65-75%·成本略高但鲜度更可控<br>
+    • 鸡腿肉供应紧张 → 可用鸡胸肉替代（¥8-12/斤·更便宜），但口感偏干——需要加小苏打水（1g小苏打+100ml水）浸泡10分钟后洗净再腌，可改善嫩度约30%<br>
+    • 买不到二荆条 → 杭椒（辣度略低·香气偏淡）或线椒（辣度接近·皮略薄）替代，用量增加20-30%<br>
+    • 不吃花椒 → 可省略（但尖椒鸡的麻味是标志性味道——没了就不叫尖椒鸡，叫青椒炒鸡丁）<br>
+    • 不吃辣/儿童餐 → 青椒换成绿彩椒+红椒/黄椒，菜名改为「彩椒鸡丁」·售价可降低¥4-6<br>
+    • 批量预制：鸡丁可提前腌制冷藏（0-4°C保质期1天·不宜超过24小时·蛋清+生粉在存放过程中会分离）
+  </div>
+</div>
+
+<!-- ===== 13 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单（已有门店厨房）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span>炒锅（铁锅/不粘锅·口径36-40cm）</span><span>已有</span></div>
+    <div class="recipe-line"><span>燃气灶/炉头（猛火灶必备）</span><span>已有</span></div>
+    <div class="recipe-line"><span>不锈钢盆×3（腌鸡/洗椒/盛料）</span><span>¥20-50</span></div>
+    <div class="recipe-line"><span>刀具+砧板</span><span>已有</span></div>
+    <div class="recipe-line"><span>厨房电子秤</span><span>¥20-50</span></div>
+    <div class="recipe-line"><span>计时器</span><span>¥10-20</span></div>
+    <div class="recipe-line"><span>漏勺+炒勺+笊篱</span><span>已有</span></div>
+    <div class="recipe-line"><span>装盘器皿（大盘/浅碗·直径25-30cm）</span><span>¥15-40/个</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>如需批量：商用双耳铁锅（38-40cm·颠锅专用）</span><span>¥80-200</span></div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px">
+    <strong>最低投入：¥0-100</strong>（已有门店厨房·所有设备均为常规配置）<br>
+    尖椒鸡的启动设备要求是整个FoodIntelAI数据库中最低的品类之一——只需要一个炒锅+一个炉头+一把刀和砧板。相比需要砂锅（焗鱼）、蒸箱（蒸菜）、炸炉（辣子鸡）、烤箱（烤鱼）的品类——尖椒鸡是真正意义上的「净投入为零」的上新菜品。<br>
+    这就是为什么我们说尖椒鸡是「菜单新增菜品的低风险入门选项」——不是因为它一定卖得好，而是你做砸了的损失上限就是¥75-120的原料费。没有任何设备投资风险。
+  </div>
+</div>
+
+<!-- ===== 14 门店新品验证（7天） ===== -->
+<div class="section">
+  <div class="s-title">📋 门店新品验证（7天）</div>
+  <div style="padding:8px 12px;background:#fef6ec;border-radius:8px;margin-bottom:8px;font-size:11px;color:#8a5a2a">
+    💡 尖椒鸡是门店新增菜品的「低成本高收益」测试对象——测试预算极低（¥75-120）、出餐极快（4-7分钟）、厨房无额外设备需求。唯一的投入是厨师的30分钟培训和原材料。即使完全翻车——你的损失不超过一杯奶茶的钱。
+  </div>
+  <div class="verify-steps">
+    <div class="verify-step"><span class="vs-day">Day1</span><span>试做2份（不同鸡丁大小/尖椒品种/辣度各一），跑通滑炒→爆香→合味全流程，锁定鸡丁大小和尖椒配比</span></div>
+      <div class="verify-step"><span class="vs-day">Day2</span><span>内部试吃：大厨（工艺评估）+服务员（操作便捷性）+味型测试（辣度是否合适本店客群），微调腌料配方</span></div>
+      <div class="verify-step"><span class="vs-day">Day3</span><span>定版：锁定所有参数，拍照用于菜单设计</span></div>
+      <div class="verify-step"><span class="vs-day">Day4</span><span>上菜单测试（备料25份），首日观察点单率、顾客反馈、出餐速度</span></div>
+      <div class="verify-step"><span class="vs-day">Day7</span><span>复盘：点单率＞8%继续测试·＜5%下架。复购率＞15%转正。收集所有顾客评价</span></div>
+    </div>
+    <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px;font-size:11px">
+      <strong>🔑 关键指标：</strong><br>
+      ① 首周点单率＞8%（川菜馆鸡肉新品的基准线）<br>
+      ② 二次点单率＞15%（鸡肉品类复购天然高于鱼类）<br>
+      ③ 单份食材成本≤¥20<br>
+      ④ 出餐时间≤7分钟<br><br>
+      <strong>🚪 下架标准：</strong>点单率＜5%/食材成本＞¥22/出现「鸡肉太柴」「味道太淡」差评≥3条/厨师高峰期无法7分钟内出餐<br><br>
+      <strong>✅ 转正标准：</strong>周均日销＞15份/毛利率＞55%/无干柴投诉/厨师稳定7分钟内出餐/回头客主动问「能不能加辣」<br><br>
+      <strong>🔍 关键观察（7天后）：</strong><br>
+      ① 堂食vs外卖占比：如果外卖＞30%→评估锅气损失——30分钟配送后风味流失30-40%。解决方案：尖椒和鸡丁分装<br>
+      ② 点单时段：午市高→「下饭」属性被认可（小份¥28-32）；晚市高→「聚餐配啤酒」（大份¥38-52）<br>
+      ③ 回头客行为：主动要求加料→口味认可强信号。复购顾客无加料要求但持续点单→考虑上调辣度<br>
+      ④ 食客评价关键词：是否提到「下饭」「嫩」「香」「锅气」——不提说明你没有做出差异化<br><br>
+      <strong>📊 7天测试预算：</strong>鸡腿肉×25份¥88-175+尖椒×8斤¥16-32+小米辣¥6-8+配料调料¥30-50+菜单更新¥10-20=总计约¥150-285。整个FoodIntelAI数据库中鸡肉单品上新的最低测试成本之一。</div>
+  </div>
+</div>
+
+<!-- ===== 15 风险清单 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>尖椒品质一致性——「今天的跟昨天的不是一个菜」</strong><br>这是尖椒鸡最大的品控风险。同一批尖椒菜尖和椒尾的辣度能差5倍（辣椒素集中在椒籽和白色内膜）。不同产地、季节、成熟度的二荆条辣度可从5000SHU到2万SHU。应对：锁定供应商+品种+产地；到货后快速舌尖试辣；建立店内「辣度基准卡」调整用量。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>「鲜椒」的淡季问题——冬季尖椒不是对的人</strong><br>冬季大棚尖椒皮厚（3-4mm vs 露天1.5-2mm）、汁水少、辣度低。用大棚椒做尖椒鸡——就是青椒炒鸡肉，既不难吃也不好吃。平庸比难吃更可怕。应对：改用海南/云南冬季露天尖椒；或夏季冷冻鲜椒（品质损失20-25%）；或冬季换菜单不做尖椒鸡。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><strong>爆炒油烟问题——消防和排烟不可忽视</strong><br>大火爆炒尖椒+花椒在180-200°C下PM2.5浓度可达800-1200µg/m³。排烟不足→员工健康风险+消防隐患+环保处罚。应对：排风量≥2000m³/h的抽油烟机；每3个月清洗排烟管道；配置灭火毯。商场店需确认排烟参数是否支持爆炒。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><strong>鸡肉口感一致性——「为什么这次的鸡不嫩了」</strong><br>冰鲜鸡腿肉品质波动：冷藏超3天的鸡腿肉含水量下降5-8%。冷冻鸡腿肉（比冰鲜便宜¥1-2/斤）解冻后细胞壁破裂失水。老鸡vs仔鸡肉质差异巨大。应对：坚持冰鲜非冷冻；与供应商约定「到货后2天内使用」；采购注明「70-90天仔鸡/三黄鸡」。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><strong>「尖椒鸡」vs「辣子鸡」——消费者认知混淆</strong><br>非川渝消费者分不清尖椒鸡和辣子鸡，预期不符导致差评。应对：菜单加副标题「鲜椒爆炒嫩鸡·非油炸干香型」；服务员主动说明差异；配高质量菜品图突出嫩白鸡丁+翠绿尖椒对比。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><strong>「太家常」——不愿花¥40点青椒炒鸡丁</strong><br>消费者会用自己的家庭烹饪成本对标餐厅定价。应对：大盘上桌+蜡烛炉持续加热提升仪式感；用砂锅/铁板替代白盘（可多加¥6-10）；品质做到「顾客觉得在家做不出这个味」——这是唯一有效的长期方案。</div>
+</div>
+
+<!-- ===== 16 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 潜力因素</div>
+      <div class="t-item">鸡肉餐饮赛道是中国最大的蛋白质赛道——全国鸡肉消费量年约1400万吨（来源：中国畜牧业协会2025年数据），远高于鱼类（约700万吨）</div>
+      <div class="t-item">尖椒鸡在川菜鸡肉品类中处于「味型真空」——辣子鸡（干香）、宫保鸡丁（甜辣）、口水鸡（凉菜）、酸菜鸡（汤锅）、肥肠鸡（重油）——尖椒鸡的「鲜辣嫩滑」没有全国性竞品</div>
+      <div class="t-item">供应链极度成熟——冰鲜鸡腿肉全国任何城市都能买到，不需要活体管理，无损耗风险</div>
+      <div class="t-item">出餐速度极快（4-7分钟）——高峰期翻台友好，适合作为川菜馆的「快速出品」标杆菜</div>
+      <div class="t-item">毛利率高（55-67%）——鸡肉成本低、尖椒成本低、油和调料占比稳定</div>
+      <div class="t-item">启动成本接近零——¥75-120·5天就能完成测试</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 限制因素</div>
+      <div class="t-item">消费者对尖椒鸡的品类认知度远低于辣子鸡/宫保鸡丁——绝大多数非川渝消费者不知道尖椒鸡是什么</div>
+      <div class="t-item">尖椒品质的季节性和一致性波动——没有中央厨房的统一品控，每家店做出来的味道差异大</div>
+      <div class="t-item">爆炒油烟大——对门店排烟系统有硬性要求，不适合无排烟条件的档口</div>
+      <div class="t-item">堂食依赖度高——外卖锅气损失严重（预计30分钟配送后风味流失30-40%），限制了渠道拓展</div>
+      <div class="t-item">家常感强——消费者可能觉得¥32-52不值得，跟在家里做的「青椒炒鸡丁」拉不开差距</div>
+      <div class="t-item">季节性明显——冬季品质断崖式下滑，需要季节性菜单调整或冬季变体</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场位置：</strong>川菜鸡肉品类的「鲜辣空白带」——在辣子鸡（干辣干香）、宫保鸡丁（甜辣）、口水鸡（冷辣）、酸菜鸡（酸辣汤锅）之间，尖椒鸡占据的唯一生态位是「热菜·鲜辣·嫩滑·下饭」。四道菜（辣子鸡/宫保鸡丁/口水鸡/酸菜鸡）加在一起的年销售额是一个数百亿量级的市场（仅辣子鸡一个品类的全国门店营收估算就超百亿）。尖椒鸡如果能在这四道菜的交叉地带切到5%的认知份额——就是一个年产值数十亿的品类。<br><br>
+    <strong>当下判断：</strong>作为已有川菜/湘菜/家常菜馆的「菜单新增差异化鸡肉单品」——强烈推荐测试。¥75-120·5天零风险。但作为「新店主打品」入局——不推荐。认知度不足、同品类竞争太强、缺乏代表性品牌。<br><br>
+    <strong>战略类比：</strong>辣子鸡是可乐（全球认知），尖椒鸡就是手工气泡水——有小众忠实用户群但无法挑战渗透率。已有辣子鸡的店再加尖椒鸡→让爱吃鸡的顾客多一个选择，一群朋友来可能有人啃干香有人吃嫩滑——这就是菜单深度的意义。<br><br>
+    <strong>信号触发点：</strong>① 一线城市出现「尖椒鸡」命名品牌 ② 抖音话题播放突破5亿（当前数千万·来源：抖音2026年）③ 某川菜连锁品牌列为全国性SKU。触发一个→品类化加速。触发两个→窗口期已来。<br><br>
+    <strong>建议动作：</strong>已有川菜/湘菜/家常菜馆→花¥100-150·5天测试。主打鸡肉且利润率不振→优先测试（毛利率55-67%高于辣子鸡的50-62%）。从零开店→可作菜单选项但不作主打。</div>
+</div>
+
+<!-- ===== 17 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>🔮 预测性判断（非投资建议）：</strong><br>
+      尖椒鸡的味型——鲜椒清香+嫩滑鸡丁+锅气酱香——是一个被川渝消费者验证了几十年的成熟组合。不需要「赌」它的可行性。需要验证的是：能否在川渝以外跑通、能否在辣子鸡/宫保鸡丁的菜单上找到位置、能否解决尖椒季节性波动。这是它从地区川菜变成全国品类的三道关卡。<br><br>
+      从成本效率看，尖椒鸡综合得分（启动成本+毛利率+供应链+出餐速度）在鸡肉品类中极靠前——接近零启动成本、55-67%毛利率、全国最成熟的供应链之一、4-7分钟出餐。只有宫保鸡丁能打平——但宫保鸡丁渗透率已到顶，尖椒鸡还有大量增量空间。<br><br>
+      <strong>✅ 为什么推荐测试：</strong><br>
+      因为¥75-120的测试成本低到「不值得纠结」。花¥100在抖音投流可能换不来一个咨询——但花¥100做尖椒鸡测试能得到客群偏好的真实数据：他们喜欢鲜辣吗？愿意复购吗？这些数据的价值远超¥100。<br><br>
+      <strong>❌ 为什么不能赌：</strong><br>
+      尖椒鸡最大的陷阱不是不好吃——是太好复制。如果卖得好，隔壁川菜馆老板来吃一次就能复刻八九不离十（工艺门槛远低于酸菜鱼/焗鱼）。没有技术壁垒的爆品迟早变成标配。如果测试数据正面，尽快建立差异化优势（独特腌料配方/尖椒品种锁定/特制酱料味型），让模仿者永远差那5%。<br><br>
+      <strong>🎯 最终建议：所有经营川菜/湘菜/家常菜的已有门店→花¥100-150·5天测试。作为「每月一菜」的轮换品类极佳。但不要做成第一招牌——因为竞争对手花¥100就能学会。它是「菜单深度的贡献者」，不是「菜单宽度的扛把子」。</strong><br>
+      <em style="font-size:11px;color:#7a7269">本卡免费公开。决策库分类原则：未验证品类预测分析免费公开，已商业验证品类的区域扩展分析同样免费公开——只在品类验证阶段对可复制但有门槛的单品设置付费卡。</em>
+      <div class="j-tags">
+        <span>#预测产品</span><span>#区域扩张</span><span>#尖椒鸡</span><span>#川味经典</span><span>#鲜椒爆炒</span><span>#门店上新</span><span>#高毛利率</span><span>#鸡肉单品</span><span>#零风险测试</span><span>#夏季时令</span><span>#下饭神菜</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 18 数据说明 ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">📋 数据说明</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:10px;color:#7a7269;line-height:1.7">
+    <strong>尖椒鸡 · 区域预测深度分析</strong><br>
+    本卡为区域预测产品卡，基于川菜尖椒鸡的成熟菜品框架进行区域扩张可行性深度分析。该菜品在川渝/贵州已有成熟门店样本和消费者认知基础，但在全国范围尚未形成独立品类认知。所有数据均标注来源和估算口径，不做商业承诺。<br><br>
+    <strong>数据来源：</strong><br>
+    • 三黄鸡/仔鸡批发均价——农业农村部畜牧兽医局畜禽价格监测报告·2026年6月数据<br>
+    • 冰鲜去骨鸡腿肉（¥9-14/斤）——基于批发市场行情综合估算<br>
+    • 鲜青尖椒/小米辣批发价——北京新发地/广州江南市场2026年上半年报价<br>
+    • 大蒜/花椒批发价——金乡大蒜/汉源花椒批发市场行情<br>
+    • 川菜馆定价锚点——大众点评2026年一线城市川菜馆抽样<br>
+    • 品类现状——大众点评/美团「尖椒鸡」门店及搜索数据（2025-2026年）<br>
+    • 抖音话题播放量——基于抖音公开数据（数千万级别·2026年6月）<br>
+    • 全国鸡肉消费量——中国畜牧业协会2025年公开数据<br>
+    • 辣椒斯科维尔指数——中国农业科学院辣椒品种数据库<br>
+    • 风味科学——基于美拉德反应、辣椒素呈味机制的公开食品科学资料<br>
+    • 区域消费数据——中国蔬菜流通协会行业报告<br>
+    • 油烟PM2.5数据——餐饮油烟排放公开环境科学研究<br>
+    • 区域分析——基于各地消费者接受度的综合判断<br>
+    • 酸菜鸡/辣子鸡营收——基于行业公开报告模糊估算<br>
+    采集时间：2026年7月
+  </div>
+  <div style="margin-top:8px;text-align:center;font-size:11px;color:#b5aaa0">
+    如需完整配方克重+批量SOP+变体方案+成本核算模板+尖椒供应商名录，<br>联系微信 canglin1985（备注"尖椒鸡完整包"）
+  </div>
+</div>
+
+<!-- ===== 🔮 预测引擎插件层 ===== -->
+<div class="engine-section" style="padding-bottom:14px">
+  <div class="engine-title">🔮 预测引擎 · 决策增强插件</div>
+
+  <div class="radar-wrap">
+    <div class="radar-chart">
+      <div class="ax" style="transform:rotate(-90deg)"></div>
+      <div class="ax" style="transform:rotate(-18deg)"></div>
+      <div class="ax" style="transform:rotate(54deg)"></div>
+      <div class="ax" style="transform:rotate(126deg)"></div>
+      <div class="ax" style="transform:rotate(198deg)"></div>
+      <div class="radar-outline"></div>
+      <div class="radar-fill" style="clip-path:polygon(50.00% 17.50%,81.68% 39.71%,70.30% 77.93%,32.09% 74.64%,34.54% 44.98%)"></div>
+      <div class="radar-dot" style="top:28.01px;left:80.00px"></div>
+      <div class="radar-dot" style="top:63.53px;left:130.70px"></div>
+      <div class="radar-dot" style="top:124.69px;left:112.48px"></div>
+      <div class="radar-dot" style="top:119.43px;left:51.34px"></div>
+      <div class="radar-dot" style="top:71.97px;left:55.27px"></div>
+      <div class="radar-lbl" style="top:-2px;left:50%;transform:translateX(-50%)">VSI<br><strong>8.0</strong></div>
+      <div class="radar-lbl" style="top:52px;right:-42px">ASI<br><strong>8.2</strong></div>
+      <div class="radar-lbl" style="bottom:-2px;left:50%;transform:translateX(-50%)">SCI<br><strong>8.5</strong></div>
+      <div class="radar-lbl" style="top:108px;left:-48px">MII<br><strong>7.5</strong></div>
+      <div class="radar-lbl" style="top:55px;left:-48px">CP<br><strong>40%</strong></div>
+      <div style="position:absolute;top:80px;left:80px;width:3px;height:3px;background:#ddd4ca;border-radius:50%;transform:translate(-50%,-50%);z-index:1"></div>
+    </div>
+
+    <div class="ring-grid">
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#C0392B 0% 80%,#e8dfd5 80% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#C0392B">8.0</span><span class="rg-label">VSI</span></div>
+        </div>
+        <span class="rg-desc">视觉传播力</span>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#D4A574 0% 82%,#e8dfd5 82% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#D4A574">8.2</span><span class="rg-label">ASI</span></div>
+        </div>
+        <span class="rg-desc">声觉钩子</span>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#E8652D 0% 85%,#e8dfd5 85% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#E8652D">8.5</span><span class="rg-label">SCI</span></div>
+        </div>
+        <span class="rg-desc">锅气外溢</span>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#5a8f3c 0% 75%,#e8dfd5 75% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#5a8f3c">7.5</span><span class="rg-label">MII</span></div>
+        </div>
+        <span class="rg-desc">菜单嵌入</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cp-meter">
+    <div class="cp-ring" style="background:conic-gradient(#4f6ef7 0% 40%,#e8dfd5 40% 100%)">
+      <div class="cp-num">
+        <span class="big">40</span>
+        <span class="pct">%</span>
+      </div>
+    </div>
+    <div class="cp-info">
+      <div class="cp-title">📈 品类成型概率</div>
+      <div class="cp-desc">中概率·已有跨店复制趋势。尖椒鸡是川菜经典民间菜，命名已基本统一，区域扩张窗口已打开。</div>
+    </div>
+  </div>
+
+  <div class="lst-rri">
+    <div class="lst-card">
+      <div class="lst-visual" style="background:conic-gradient(#D4A574 0% 50%,#e8dfd5 50% 100%);--lst-content:'Stage 2'"></div>
+      <div class="lst-info">
+        <div class="lst-title">🧭 LST 生命周期</div>
+        <div class="lst-desc"><strong>Stage 2</strong> · 区域成熟→全国扩散。已有川黔门店样本，品类命名基本统一，扩张窗口期</div>
+      </div>
+    </div>
+    <div class="rri-card">
+      <div class="rri-bar">
+        <span>低</span>
+        <div class="fill" style="height:20%"></div>
+      </div>
+      <div class="rri-info">
+        <div class="rri-title">⚠️ RRI 风险反转</div>
+        <div class="rri-desc">太好复制无技术壁垒。尖椒季节性波动大。建议尽早建立独特腌料配方差异化壁垒</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+    <span style="font-size:11px">📡</span>
+    <span style="font-size:11px;font-weight:700;color:#3a322a">势能信号聚合</span>
+  </div>
+  <div class="signal-strip">
+    <div class="ss-row"><span class="ss-dot">1</span><span class="ss-lab">尖椒鸡是川菜经典民间菜</span><span class="ss-val">川渝消费者有天然认知，教育成本几乎为零</span></div>
+    <div class="ss-row"><span class="ss-dot">2</span><span class="ss-lab">已有跨店复制趋势</span><span class="ss-val">川黔已有门店样本，品类化进程已启动</span></div>
+    <div class="ss-row"><span class="ss-dot">3</span><span class="ss-lab">视觉冲击强</span><span class="ss-val">翠绿尖椒+金黄鸡块色彩对比，大盘上桌仪式感强</span></div>
+    <div class="ss-row"><span class="ss-dot">4</span><span class="ss-lab">命名已基本统一</span><span class="ss-val">"尖椒鸡"已是通用名称，消费者搜得到，品类标签确立</span></div>
+  </div>
+
+  <div class="engine-note">此产品处于互联网传播酝酿期，不一定会爆发。本卡基于公开数据的推测与拆解，非投资建议。预测引擎为决策增强插件，不改变主卡结构与判断。</div>
+</div>
+
+<!-- ===== 19 品牌推广 ===== -->
+<div style="padding:16px 18px;background:#faf8f5;border-top:1px solid #eee5d8;text-align:center">
+  <div style="margin-bottom:10px">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px">FoodIntelAI · 食品决策库</div>
+    <div style="font-size:10px;color:#7a7269;line-height:1.6">
+      少走弯路 · 快人一步<br>
+      单品拆解 · 落地路径 · 品类研判<br>
+      做食品创业前，先看数据
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:16px;margin:10px 0">
+    <div style="text-align:center">
+      <img src="../../gongzhonghao_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="公众号二维码">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">公众号</div>
+    </div>
+    <div style="text-align:center">
+      <img src="../../wechat_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="微信二维码">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">微信 canglin1985</div>
+    </div>
+  </div>
+  <div style="font-size:9px;color:#b5aaa0;margin-top:6px">🔮 区域预测卡 · 免费公开 · 决策库分类原则：预测分析及已验证品类扩展分析免费公开，可复制但有门槛的验证品类设付费卡</div>
+</div>
+
+</div>
+
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>

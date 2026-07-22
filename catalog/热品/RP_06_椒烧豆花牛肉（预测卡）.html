@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>RP_06 椒烧豆花牛肉 · 区域预测 · 深度分析</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#2a1a3a,#1a0d2d);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.pred-banner{background:linear-gradient(135deg,#f4f0f8,#efe8f8);border:1px solid #d0c8e0;border-radius:10px;padding:12px 16px;margin:10px 0}
+.pred-banner .p-icon{font-size:16px}
+.pred-banner .p-title{font-size:12px;font-weight:700;color:#4a2a7a}
+.pred-banner .p-text{font-size:11px;color:#5a4a6a;line-height:1.6;margin-top:4px}
+
+.region-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.region-box{background:#f8f4ef;border-radius:10px;padding:10px}
+.region-box .r-h{font-size:11px;font-weight:700;margin-bottom:4px}
+.region-box .r-d{font-size:10px;color:#5a4f44;line-height:1.5}
+
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#5a1a6b;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+
+.verify-steps{display:flex;flex-direction:column;gap:6px}
+.verify-step{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;font-size:12px;color:#3a322a}
+.verify-step .vs-day{background:#3a322a;color:#fff;padding:1px 8px;font-size:10px;font-weight:700;border-radius:4px;flex-shrink:0}
+
+.verify-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.verify-card{padding:10px;border-radius:10px;text-align:center;font-size:11px}
+.verify-card .vc-label{font-size:9px;color:#7a7269;margin-bottom:4px}
+.verify-card .vc-val{font-size:14px;font-weight:700}
+.verify-card.vc-go{background:#f0f6ec}
+.verify-card.vc-go .vc-val{color:#5a8f3c}
+.verify-card.vc-nogo{background:#fef2f2}
+.verify-card.vc-nogo .vc-val{color:#b53b3b}
+.verify-card.vc-warn{background:#fef6ec}
+.verify-card.vc-warn .vc-val{color:#D4A574}
+
+.sci-section{padding:12px;background:#f8f4ef;border-radius:12px;margin-top:8px}
+.sci-section .sci-icon{font-size:16px;margin-right:6px}
+.sci-section .sci-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.sci-section .sci-body{font-size:11px;color:#4a3f35;line-height:1.7}
+
+.data-note{padding:8px 12px;background:#f5f0f8;border-radius:8px;font-size:10px;color:#6a5a7a;line-height:1.6;margin-top:8px}
+
+.compare-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.compare-card{min-width:140px;background:#f8f4ef;border-radius:10px;padding:10px;flex-shrink:0}
+.compare-card .cc-name{font-size:11px;font-weight:700;margin-bottom:4px}
+.compare-card .cc-data{font-size:10px;color:#5a4f44;line-height:1.6}
+.compare-card.cc-best{background:#fef6ec;border:1px solid #e8d5c0}
+
+/* ===== 预测引擎插件层 ===== */
+.engine-section{padding:20px 18px;border-bottom:none;background:linear-gradient(180deg,#f8f4f0,#f0ece6)}
+.engine-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:12px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #ddd4ca;padding-bottom:8px}
+.engine-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.engine-card{background:#faf8f5;border-radius:10px;padding:10px;border:1px solid #e8dfd5}
+.engine-card .ec-label{font-size:9px;color:#7a7269;margin-bottom:2px;letter-spacing:0.5px}
+.engine-card .ec-abbr{font-size:10px;font-weight:700;color:#8a7a6a}
+.engine-card .ec-score{font-size:18px;font-weight:800;color:#C0392B}
+.engine-card .ec-desc{font-size:9px;color:#b5aaa0;margin-top:2px;line-height:1.4}
+.engine-card .ec-bar{margin-top:4px;height:4px;background:#e8dfd5;border-radius:2px;overflow:hidden}
+.engine-card .ec-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#D4A574,#C0392B)}
+.engine-full{grid-column:1/-1}
+.engine-full .ec-score{font-size:20px}
+.engine-full .ec-fill{background:linear-gradient(90deg,#E8652D,#C0392B)}
+.engine-signal{margin-top:10px}
+.engine-signal .es-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:11px;color:#5a4f44;border-bottom:1px solid #eee5d8}
+.engine-signal .es-row:last-child{border-bottom:none}
+.engine-signal .es-icon{font-size:12px;flex-shrink:0}
+.engine-signal .es-label{flex:1;font-weight:600;color:#3a322a}
+.engine-signal .es-val{font-size:10px;color:#7a7269}
+.engine-note{font-size:9px;color:#b5aaa0;text-align:center;padding:8px 0 0 0;line-height:1.5;border-top:1px dashed #ddd4ca;margin-top:8px}
+
+/* ===== 预测引擎 - 雷达图 & 环形表 ===== */
+.radar-wrap{display:flex;gap:20px;margin-bottom:16px;align-items:center;justify-content:center;flex-wrap:wrap}
+.radar-chart{width:160px;height:160px;position:relative;flex-shrink:0}
+.radar-chart .ax{position:absolute;width:65px;height:1px;background:#ddd4ca;top:80px;left:80px;transform-origin:0 0}
+.radar-chart .ax::after{content:'';position:absolute;right:-2px;top:-2px;width:5px;height:5px;background:#ccc2b5;border-radius:50%}
+.radar-outline{position:absolute;top:0;left:0;width:100%;height:100%;clip-path:polygon(50% 9.38%,88.64% 37.45%,73.88% 82.86%,26.12% 82.86%,11.36% 37.45%)}
+.radar-outline::before{content:'';position:absolute;inset:0;background:rgba(200,194,181,.12);clip-path:inherit;border:1px solid #ddd4ca}
+.radar-fill{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(192,57,43,.10);border:1.5px solid rgba(192,57,43,.4);border-radius:0}
+.radar-dot{position:absolute;width:8px;height:8px;background:#C0392B;border:2px solid #fff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 1px 3px rgba(0,0,0,.18);z-index:2}
+.radar-lbl{position:absolute;font-size:9px;color:#5a4f44;white-space:nowrap;font-weight:600;text-align:center;line-height:1.2;z-index:3}
+.radar-lbl strong{font-size:11px;color:#C0392B;display:block}
+.ring-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex-shrink:0}
+.ring-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}
+.ring-gauge{width:70px;height:70px;border-radius:50%;position:relative;flex-shrink:0}
+.ring-gauge::after{content:'';position:absolute;width:50px;height:50px;background:#faf8f5;border-radius:50%;top:10px;left:10px;box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
+.rg-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:1}
+.rg-val{font-size:16px;font-weight:800;display:block;line-height:1}
+.rg-label{font-size:7px;color:#7a7269;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-top:1px}
+.rg-desc{font-size:8px;color:#b5aaa0;text-align:center;line-height:1.3;max-width:70px}
+.cp-meter{margin:12px 0 10px;padding:12px 16px;background:#faf8f5;border-radius:12px;border:1px solid #e8dfd5;display:flex;align-items:center;gap:14px}
+.cp-meter .cp-ring{flex-shrink:0;width:60px;height:60px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center}
+.cp-meter .cp-ring::after{content:'';position:absolute;width:42px;height:42px;background:#faf8f5;border-radius:50%;box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
+.cp-meter .cp-num{z-index:1;position:relative;display:flex;flex-direction:column;align-items:center;line-height:1}
+.cp-meter .cp-num .big{font-size:18px;font-weight:800;color:#2a5a8a}
+.cp-meter .cp-num .pct{font-size:10px;color:#2a5a8a;font-weight:600}
+.cp-meter .cp-info{flex:1}
+.cp-meter .cp-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:2px}
+.cp-meter .cp-desc{font-size:10px;color:#7a7269;line-height:1.6}
+.cp-meter .cp-desc strong{color:#C0392B}
+.lst-rri{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.lst-card,.rri-card{background:#faf8f5;border-radius:10px;padding:10px 12px;border:1px solid #e8dfd5;display:flex;align-items:center;gap:10px}
+.lst-visual{width:42px;height:42px;border-radius:50%;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center}
+.lst-visual::after{content:'1→2';position:absolute;width:30px;height:30px;background:#faf8f5;border-radius:50%;font-size:8px;color:#7a5a2a;display:flex;align-items:center;justify-content:center;font-weight:700}
+.lst-info,.rri-info{flex:1}
+.lst-title,.rri-title{font-size:11px;font-weight:700;color:#3a322a}
+.lst-desc,.rri-desc{font-size:9px;color:#7a7269;line-height:1.5;margin-top:2px}
+.rri-bar{width:42px;height:42px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#E8652D;background:#fef2ee;position:relative;overflow:hidden}
+.rri-bar .fill{position:absolute;bottom:0;left:0;width:100%;height:50%;background:rgba(232,101,45,.15);border-radius:0 0 8px 8px}
+.rri-bar span{z-index:1}
+.signal-strip{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.signal-strip .ss-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#faf8f5;border-radius:8px;font-size:10px;color:#5a4f44;line-height:1.5}
+.signal-strip .ss-dot{width:18px;height:18px;border-radius:50%;background:#f5ede5;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.signal-strip .ss-lab{font-weight:700;color:#3a322a;flex-shrink:0;font-size:10px}
+.signal-strip .ss-val{color:#7a7269}
+</style>
+<link rel="stylesheet" href="../../paywall.css">
+
+<script>
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))
+    e.preventDefault();
+});
+</script>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🔥🌶️ 椒烧豆花牛肉</h1>
+  <div style="font-size:12px;color:#b5aaa0;display:flex;gap:6px;flex-wrap:wrap">
+    <span>川湘融合菜 · 热椒牛肉+冷豆花 · 温度反差</span>
+    <span style="background:#efe8f8;color:#4a2a7a;padding:0 6px;border-radius:3px">🔮 区域预测 · 深度分析</span>
+  </div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">6.5</span>
+      <span class="r-label">FoodIntelAI评分</span>
+    </div>
+    <span class="r-grade">观察期 · 潜力融合菜</span>
+    <span style="background:rgba(220,200,100,.2);padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:1px;color:#f0d060;margin-left:4px">🔮 免费</span>
+  </div>
+  <div class="r-tagline">以热油炝烧牛肉搭配冷嫩豆花为架构的川湘融合菜。核心体验来自「温度的物理反差」——刚出锅的椒香热牛肉（约75-85°C）盖在冰凉滑嫩的豆花（约8-15°C）上，一热一冷在口腔中交替刺激。牛肉经美拉德反应产生焦香，裹着干辣椒和花椒的复合香气；豆花以纯净的豆香和冰凉的滑嫩质地承接牛肉的浓郁，形成「浓→淡→热→冷」交替的味觉节奏。目前以川菜馆/湘菜馆/融合菜馆的创意菜形态出现，尚未形成独立品类。</div>
+  <div class="r-tags">
+    <span>🔮 区域预测</span>
+    <span>🌶️ 川湘融合</span>
+    <span>🔥 温度反差菜</span>
+    <span>🥩 牛肉品类</span>
+    <span>🍽️ 门店上新</span>
+    <span>🧪 观察期</span>
+  </div>
+</div>
+
+<!-- 预测产品说明 -->
+<div class="section" style="border-bottom:none;padding-bottom:0">
+  <div class="pred-banner">
+    <div><span class="p-icon">🔮</span> <span class="p-title">区域预测产品说明</span></div>
+    <div class="p-text">本卡基于川湘椒烧工艺+豆花组合进行前瞻性深度分析，属于「菜单储备库」品类。该产品目前以川菜馆/湘菜馆/融合菜馆创意菜形态出现（来源：小红书/抖音「椒烧豆花牛肉」「椒烧牛肉」「豆花牛肉」相关内容），有区域性消费基础但尚未形成标准化品类。所有数据标注来源及估算口径。本卡不设付费墙——按决策库分类原则，未验证品类预测分析免费公开，已商业验证品类的区域扩展分析同样免费公开，只在品类验证阶段对可复制但有门槛的单品设置付费卡。</div>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 当前热度</div><div class="stars">★★★☆☆</div><div class="val">创意菜级·区域试水</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购潜力</div><div class="stars">★★★★☆</div><div class="val">温度反差·记忆点强</div></div>
+    <div class="radar-item high"><div class="label">💰 启动投资</div><div class="stars">★★★★☆</div><div class="val">低·已有厨房+炒锅即可</div></div>
+    <div class="radar-item"><div class="label">🔧 技术难度</div><div class="stars">★★★☆☆</div><div class="val">中·双段工艺+温度控制</div></div>
+    <div class="radar-item"><div class="label">⚔️ 竞争格局</div><div class="stars">★★★☆☆</div><div class="val">无标准化竞品·组合新颖</div></div>
+  </div>
+  <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">品类成熟度</div><div style="font-size:14px;font-weight:700;color:#b5aaa0">萌芽期</div><div style="font-size:9px;color:#b5aaa0">创意菜·未品牌化</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">区域渗透度</div><div style="font-size:14px;font-weight:700;color:#D4A574">川湘渝核心区</div><div style="font-size:9px;color:#b5aaa0">川渝/湖南/贵州常见</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁/不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 已有门店·想上牛肉融合菜测试的（川/湘菜馆尤其适合）</div>
+      <div class="fit-item fit-yes">✅ 川菜馆/湘菜馆/江湖菜馆（干辣椒+花椒底子好·豆花供应稳定）</div>
+      <div class="fit-item fit-yes">✅ 已有牛肉菜品的门店（牛肉供应链已有·边际成本低）</div>
+      <div class="fit-item fit-yes">✅ 寻找温度反差体验型菜品的网红/流量型餐厅</div>
+      <div class="fit-item fit-yes">✅ 品类研究者·关注「冷热交替」味型组合的从业者</div>
+      <div class="fit-item fit-yes">✅ 以川渝/湖南/贵州为核心市场的二三线城市餐厅</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 从零开店要找稳定盈利主打菜品的</div>
+      <div class="fit-item fit-no">❌ 追求极简出餐的轻食/沙拉/日料类餐厅</div>
+      <div class="fit-item fit-no">❌ 纯外卖档口（冷热反差的体验依赖堂食·外卖配送后热牛肉变温·冷豆花变室温·双失）</div>
+      <div class="fit-item fit-no">❌ 不辣区域的纯粤菜馆/淮扬菜馆（味型根本冲突·牛肉美拉德焦香被当地接受度低）</div>
+      <div class="fit-item fit-no">❌ 牛肉供应链不稳定的内陆偏远地区（牛肉价高+品质不稳）</div>
+      <div class="fit-item fit-no">❌ 追求「一招鲜」的加盟模式创业者（品类未验证）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么点这个菜</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">
+      椒烧豆花牛肉的独特卖点是「温度反差」——这不只是味觉创新，更是食物物理学在人嘴里的现场演出。热油浇在干辣椒和花椒上的「滋啦」声响（听觉钩子）+ 焦辣麻香升腾（嗅觉钩子）+ 红亮牛肉盖白嫩豆花的视觉冲击（视觉钩子）+ 第一口：热牛肉裹着焦辣麻香在舌尖爆炸+第二口：冰凉的豆花滑过口腔带来15°C以上的温度骤降（触觉/温度钩子）。这个「热→冷」交替的节奏在餐饮单品中是极为罕见的——绝大多数牛肉菜品的体验是「热→热」或「温→温」，而椒烧豆花牛肉天然自带温度节奏。这个节奏就是它的全部营销价值和记忆锚点。
+    </div>
+    <div class="l-title">📈 利润模型（按现有门店上新品测算）</div>
+    <div class="logic-item"><span>定价区间（牛肉菜品锚点）</span><span class="v">¥38-58/份</span></div>
+    <div class="logic-item"><span>食材成本（牛肉+豆花+干辣椒+花椒+油+配料）</span><span class="v">¥14-22</span></div>
+    <div class="logic-item"><span>食材毛利率</span><span class="v">50-65%</span></div>
+    <div class="logic-item"><span>包装/堂食损耗</span><span class="v">¥1-2</span></div>
+    <div class="logic-item"><span>综合毛利率（含损耗）</span><span class="v">48-63%</span></div>
+    <div class="logic-item"><span>出餐时间（单份·含备料）</span><span class="v">10-15分钟</span></div>
+  </div>
+  <div style="margin-top:6px;padding:8px;background:#fef2f2;border-radius:8px;font-size:11px;color:#b53b3b">
+    ⚠️ 定价依据：牛肉类餐厅单品定价区间跨度较大——水煮牛肉¥48-68/份、小炒牛肉¥38-58/份、椒烧牛肉（纯牛肉版）¥36-52/份（来源：大众点评2026年一线城市餐饮消费数据）。椒烧豆花牛肉添加了豆花（成本极低¥1-2），但食材成本主要由牛肉构成（占总成本60-70%），定价区间参考小炒牛肉并略高——因为温度反差体验有溢价空间。实际定价需根据所在城市、牛肉等级（普通牛腿肉vs牛里脊）综合判断。<br>
+    ⚠️ 毛利率交叉验证：以¥48定价、¥18食材成本计算，毛利率=(48-18)÷48=62.5%，处于50-65%区间偏上。作为参照——水煮牛肉毛利率约55-62%（牛肉成本高·油量大·但出品价更高），小炒牛肉毛利率约58-65%（快速出品·牛肉切片薄·食材用量少）。椒烧豆花牛肉的毛利率潜力理论上优于水煮牛肉（豆花替代了部分油脂成本），但低于小炒牛肉（牛肉块用量更大·约200g vs小炒牛肉片约120-150g）。
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">预估日销（新品）</div><div class="m-val">8-16份</div><div class="m-sub">非主打·菜单测试期</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">预估日毛利</div><div class="m-val">¥200-580</div><div class="m-sub">按均价¥48/份</div></div>
+    <div class="metric-card mc-green"><div class="m-label">上新测试成本</div><div class="m-val">¥200-400</div><div class="m-sub">牛肉+干辣椒+花椒+豆花</div></div>
+  </div>
+</div>
+
+<!-- ===== 05 食材成本拆解 ===== -->
+<div class="section">
+  <div class="s-title">📐 食材成本拆解（按单份·牛腿肉约200g+豆花）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">牛腿肉/牛里脊 约200g</span><span class="v">¥10-14</span></div>
+    <div class="recipe-line"><span class="k">内酯豆花/嫩豆腐 约250-300g（垫底）</span><span class="v">¥1-2</span></div>
+    <div class="recipe-line"><span class="k">干辣椒（子弹头/二荆条干椒）20-28g</span><span class="v">¥1.8-3.5</span></div>
+    <div class="recipe-line"><span class="k">花椒/麻椒 8-11g</span><span class="v">¥1.5-3</span></div>
+    <div class="recipe-line"><span class="k">姜蒜末+葱花+香菜</span><span class="v">¥1-2</span></div>
+    <div class="recipe-line"><span class="k">调味料（生抽/老抽/料酒/糖/盐/淀粉）</span><span class="v">¥2-3</span></div>
+    <div class="recipe-line"><span class="k">食用油（煎炒牛肉+炝油·共约50-70g）</span><span class="v">¥2-3.5</span></div>
+    <div class="recipe-line" style="border-bottom:none;font-weight:700"><span class="k">合计食材成本（含二次炝油用量）</span><span class="v">¥15-23</span></div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#f8f4ef;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.7">
+    <strong>成本数据来源（均标注口径）：</strong><br>
+    • 牛腿肉批发均价约¥25-35/斤，牛里脊批发均价约¥35-50/斤（来源：农业农村部全国农产品批发市场价格信息系统，2026年6月数据）。本卡按牛腿肉计算——200g用量×¥25-35/斤→(200÷500)×(25-35)=¥10-14<br>
+    • 内酯豆花/盒装嫩豆腐批发价约¥1.5-3/盒（400g装），单份用250-300g→成本约¥1-2（来源：北京新发地/成都海吉星批发市场2026年6月报价）<br>
+    • 牛肉成本控制关键：选用牛腿肉（性价比最高·适合炝烧口感）而非牛里脊（贵50-80%·口感虽嫩但炝烧工艺会损失部分嫩度优势）。如果批量采购（5斤以上），牛腿肉批发价可压至¥22-28/斤（来源：成都海吉星批发市场牛肉批发商报价）<br>
+    • 干辣椒（子弹头）批发价约¥15-25/斤，花椒批发价约¥30-60/斤（品质价差大·来源：成都海吉星/重庆观音桥批发市场2026年6月报价）<br>
+    • 食用油按三级大豆油¥5-6/斤（来源：商务部食用农产品市场数据）<br>
+    • 其余调味料按批发市场常见规格估算<br>
+    采集时间：2026年7月
+  </div>
+</div>
+
+<!-- ===== 06 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比（牛肉类餐厅单品）</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:440px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>定价（¥）</th><th>难度</th><th>竞品密度</th><th>出餐速度</th><th>记忆点</th></tr></thead>
+      <tbody>
+        <tr style="background:#f4f0f8"><td>🔥🌶️ 椒烧豆花牛肉</td><td>38-58</td><td>中</td><td>极低</td><td>10-15min</td><td>温度反差·冷热交替</td></tr>
+        <tr><td>🥘 水煮牛肉</td><td>48-68</td><td>高</td><td>极高</td><td>15-20min</td><td>油浸嫩滑·重辣</td></tr>
+        <tr style="background:#f8f4ef"><td>🍳 小炒牛肉</td><td>38-58</td><td>低</td><td>极高</td><td>5-8min</td><td>快炒锅气·嫩滑</td></tr>
+        <tr><td>🌶️ 椒烧牛肉（纯肉）</td><td>36-52</td><td>低</td><td>低</td><td>8-12min</td><td>干椒焦香·麻香</td></tr>
+        <tr style="background:#f8f4ef"><td>🥩 铁板牛肉</td><td>42-62</td><td>中</td><td>高</td><td>8-12min</td><td>铁板滋啦声·仪式感</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:11px;line-height:1.7">
+    <strong>💡 赛道差异分析：</strong><br>
+    <strong>水煮牛肉</strong>——红海竞争，技术门槛高，油量大被健康趋势淘汰。<br>
+    <strong>小炒牛肉</strong>——红海竞争，湘菜馆家家有，溢价空间低。<br>
+    <strong>椒烧牛肉（纯肉）</strong>——蓝海但缺少「记忆锚点」，吃完记不住。<br>
+    <strong>铁板牛肉</strong>——中等竞争，仪式感好但牛肉易老。<br>
+    <strong>椒烧豆花牛肉</strong>——竞品几乎空白。温度反差是天生的记忆锚点和社交传播素材。进入「无人区生态位」——竞争对手要复制的不是一道菜，而是一个冷热交替的体验结构。</div>
+  </div>
+</div>
+
+<!-- ===== 07 风味科学 ===== -->
+<div class="section">
+  <div class="s-title">👅 风味科学</div>
+
+  <div class="sci-section">
+    <div><span class="sci-icon">🌡️</span><span class="sci-title">温度反差物理学：为什么冷+热比单纯的热更好吃</span></div>
+    <div class="sci-body">
+      <strong>「冷热交替」的神经学机制：</strong>人类舌头的温度感受器（TRPM8和TRPV1/TRPV2）对温度变化极为敏感——热刺激激活TRPV1（与辣椒素共用同一受体），冷刺激激活TRPM8。当热牛肉（约75-85°C）和冷豆花（约8-15°C）先后入口，两个受体被交替激活，信号叠加到味觉信号上——大脑接收到的不是「好吃」，而是「好吃+惊奇+兴奋」的多感官叠加体验。<br><br>
+      <strong>椒烧豆花牛肉的「三阶温度体验」：</strong>第一口夹起热牛肉——舌尖首先感受到约75°C的热刺激，辣椒素激活TRPV1产生灼烧感（辣），花椒麻素激活触觉受体产生振动感（麻）——「热+辣+麻」三感叠加；随后用勺子舀一口冰凉豆花——温度骤降约60°C，TRPM8被激活产生清凉感（冷），同时豆花的纯净豆香和滑嫩质地「冲刷」口腔——「冷+滑+净」三感叠加。一热一冷、一烈一净、一刚一柔的交替节奏，在每种单一食材的菜品中都不可能体验到。<br><br>
+      <strong>温度落差的最佳参数：</strong>豆花温度应控制在8-15°C（冷藏30分钟后使用·不建议冰镇低于4°C——太冷会麻痹味蕾·损失牛肉风味）。牛肉出锅温度应在75-85°C（刚炝好油立即浇上）。两者的温度差≥60°C才能产生明显的「交替感」。如果豆花是室温（约25°C），温度差缩小到50°C以内——体验大打折扣。最佳方案：豆花预先盛入冷藏过的砂锅/碗中，牛肉出锅后直接盖上去，出餐到顾客面前的耗时不超过2分钟。<br><br>
+      <strong>技术壁垒：</strong>温度反差的实现不需要特殊设备，但需要严格的出餐节奏——豆花冷藏预处理+牛肉炝油后立即出餐+服务员提醒「先吃牛肉后吃豆花」。这个节奏看似简单，在实际门店运营中容易被打乱（高峰期多个牛肉订单同时涌入、豆花忘记冷藏、牛肉在出菜口等了3分钟）。温度反差的稳定性是椒烧豆花牛肉从「偶尔好吃」上升到「每份都好吃」的关键。
+    </div>
+  </div>
+
+  <div class="sci-section" style="margin-top:8px">
+    <div><span class="sci-icon">🧊</span><span class="sci-title">豆花嫩滑机理：为什么豆花在这个组合中不可替代</span></div>
+    <div class="sci-body">
+      <strong>豆花vs内酯豆腐vs嫩豆腐vs老豆腐：</strong>豆花含水量约92-95%（内酯豆腐约88-90%，嫩豆腐约85-88%，老豆腐约75-80%）。高含水量赋予了豆花「入口即化」的质地——不需要咀嚼、用舌头轻轻一顶就化开。在这个菜品中，豆花的角色是「味觉清道夫」：用凉爽纯净的质地来「重启」味蕾，让每一口热牛肉都像是第一次尝到——你不会产生味觉疲劳。<br><br>
+      <strong>豆花为什么比嫩豆腐更适合：</strong>豆花是完全的「无结构」质地——无法用筷子夹起、只能靠勺子舀。这种质地让热牛肉的汤汁浸润豆花时，豆花像一个「酱汁海绵」，把焦辣麻香汤汁吸收进去。如果换成内酯豆腐（稍有弹性），汤汁只能附着在表面。<br><br>
+      <strong>豆花的制备工艺差异：</strong>自制豆花（用现磨豆浆+内酯/石膏点制）vs 成品盒装豆花。自制豆花口感更好（更新鲜·含水量可控·可控制在93-95%），但增加了备料时间（约15-20分钟）。盒装豆花（超市/批发市场采购）口感略逊（含水量偏低·质地稍实），但零备料时间——打开即用。推荐方案：有明档厨房的餐厅用自制豆花（可现场展现豆花制作过程·增加表演性）；高翻台率的大众餐厅用盒装豆花（稳定·高效·成本一致）。<br><br>
+      <strong>豆花的温度管理：</strong>豆花保鲜需冷藏（2-8°C），出餐前盛入碗中（室温回温约5-8分钟可使豆花升至8-15°C）。不建议直接从冰箱拿出就上盘——太冷（低于4°C）会使牛肉汤汁遇冷凝固油脂，影响口感。也不建议豆花在室温放置超过15分钟——温度升到20°C以上时，冷热反差消失。
+    </div>
+  </div>
+
+  <div class="sci-section" style="margin-top:8px">
+    <div><span class="sci-icon">🔥</span><span class="sci-title">牛肉美拉德反应：焦香层的科学构建</span></div>
+    <div class="sci-body">
+      <strong>美拉德反应 vs 焦糖化反应：</strong>牛肉表面的「焦香」来自两个化学路径。美拉德反应（Maillard reaction）——约140-165°C时，牛肉中的还原糖和氨基酸发生缩合反应，生成数百种风味化合物。焦糖化反应——约160-200°C时，糖类直接脱水降解。两者在牛肉煎制时同时发生。<br><br>
+      <strong>为什么椒烧豆花牛肉需要「煎牛肉」而不是「滑牛肉」：</strong>小炒牛肉和水煮牛肉的共同工艺是「滑油」——牛肉片裹淀粉后在100-120°C油中滑熟，保持嫩度但几乎没有美拉德反应。椒烧豆花牛肉选择「煎/煸炒」工艺——牛肉块在170-190°C油中煎至焦脆，产生浓烈的美拉德焦香。即使后续烧汁浸泡2-3分钟，焦香仍然保持。「外焦里嫩」的层次感是滑油工艺做不到的。<br><br>
+      <strong>牛肉部位选择：</strong>牛腿肉（¥25-35/斤）脂肪约5-8%，美拉德充分但需控制火候。牛里脊（¥35-50/斤）更嫩但太嫩易出水中断美拉德反应。牛腩（¥20-30/斤）脂肪多美拉德最充分但口感偏韧。推荐：牛腿肉为性价比最优解——200g/份成本可控在¥10-14。<br><br>
+      <strong>美拉德反应的时间窗口：</strong>牛腿肉切2-2.5cm见方的块，在170-180°C油温下煎制——每面约2-2.5分钟可形成理想的焦褐色外壳。总煎制时间约4-5分钟（四面上色）。超过6分钟→焦香变焦苦，美拉德反应产物转化为丙烯酰胺（苦味物质·疑似致癌物）。少于3分钟→表面没有达到140°C的起始温度，美拉德反应未充分启动→牛肉表面为灰白色→没有焦香。
+    </div>
+  </div>
+
+  <div class="sci-section" style="margin-top:8px">
+    <div><span class="sci-icon">🌶️</span><span class="sci-title">干辣椒+花椒+豆花：三元素的风味交互</span></div>
+    <div class="sci-body">
+      <strong>三元素交互模型：</strong>辣椒提供「辣度」（辣椒素激活TRPV1）、花椒提供「麻度」（羟基-α-山椒素激活触觉受体·产生50Hz振动感）、豆花提供「凉度」（低温激活TRPM8）。三者形成「辣→麻→凉」循环体验。豆花自然地放慢了进食速度（需要勺子舀），让每一口热牛肉都有充裕的时间品味。<br><br>
+      <strong>为什么豆花是辣椒和花椒的最佳搭档：</strong>辣椒素和羟基-α-山椒素是脂溶性物质。豆花的高含水量（约92-95%）起到「乳化清洁」作用——豆花中的水分与口腔中残留油脂混合，形成临时水包油乳液被吞咽，清除了油腻感。<br><br>
+      <strong>豆花的蛋白质缓冲作用：</strong>豆花中的大豆蛋白（约3-5%）与辣椒素结合，减少游离辣椒素对口腔受体的刺激量。研究显示，摄入大豆蛋白后辣椒素灼烧感降低约20-30%（来源：Journal of Food Science, 2019）。一碗豆花能让椒烧牛肉的辣度从「受不了」降到「正好」——豆花不仅是温度缓冲，也是辣度缓冲。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 08 区域适应性分析 ===== -->
+<div class="section">
+  <div class="s-title">🗺️ 区域适应性分析</div>
+  <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">椒烧豆花牛肉的核心基因是「川湘椒烧工艺」+「牛肉+豆花冷热组合」。这道菜在川渝/湖南/贵州/云南等辣椒核心消费区有天然接受基础，在非辣区域适合做川湘风味馆的差异化单品。</div>
+  <div class="region-grid">
+    <div class="region-box"><div class="r-h" style="color:#5a8f3c">🥇 四川/重庆</div>
+      <div class="r-d">椒烧豆花牛肉的文化根据地。川渝人爱辣+爱麻+爱豆花（川渝早餐豆花/豆腐脑是经典小吃）。川菜体系中有「牛肉豆花」的民间菜——把豆花作为牛肉的底垫，但传统的牛肉豆花是用清汤/红烧牛肉做的，与椒烧豆花牛肉的干椒焦香方向不同。川渝市场不需要任何口味教育——豆花+牛肉+干辣椒+花椒是四重安全牌。建议辣度定位「中辣以上」，麻度突出汉源花椒品质。<br><br><strong>推荐首发城市：</strong>成都（对融合菜接受度最高·豆花文化浓厚·牛肉消费量大）→重庆（麻辣需求更强·豆花文化同样深厚）→绵阳/宜宾（快速验证+低租金测试）。</div>
+    </div>
+    <div class="region-box"><div class="r-h" style="color:#D4A574">🥈 湖南/贵州</div>
+      <div class="r-d">湖南以鲜椒为主干椒为辅，但湘菜体系中有「豆花牛肉」的传统民菜（邵阳/湘西一带）。湖南版的差异化方向：加入紫苏叶碎和豆豉，增加湘式风味厚度。贵州是干辣椒消费第一大省——贵州人年均干辣椒消费量全国第一（来源：中国辣椒产业协会）。豆花在贵州同样普及（贵州豆花烤鱼/豆花饭是经典）。贵州版的差异化方向：采用贵州糟辣椒+糊辣椒混合炝油，形成「糟香+焦香」双香结构。</div>
+    </div>
+    <div class="region-box"><div class="r-h" style="color:#E8652D">🥉 川湘风味馆</div>
+      <div class="r-d">在全国范围内的川菜馆/湘菜馆/江湖菜馆——这些门店已经有稳定的辣味客群，椒烧豆花牛肉作为新增牛肉差异化单品，不需要改变任何客群结构。在非辣区域（江浙沪/广东/福建），建议仅在川湘风味馆体系内铺设——不上当地家常菜馆的菜单。如果要在当地菜馆做，需要大幅调整辣度（干辣椒减半·花椒去掉·增加彩椒）但这样做出来的已经不是真正的椒烧豆花牛肉了。</div>
+    </div>
+    <div class="region-box"><div class="r-h" style="color:#b5aaa0">⚠️ 慎入区域</div>
+      <div class="r-d">纯粤菜馆/淮扬菜馆/日料店——这些菜系的消费者对「焦辣麻香」的接受度低，且豆花在粤菜中多以甜豆花（糖水）形式存在，咸辣豆花没有消费基础。此外，东北菜馆也要谨慎——东北消费者能接受辣但豆花在东北以咸甜两吃为主，与椒烧牛肉的融合需要本地化测试。</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 区域调适建议：</strong>原点市场定在川渝（牛肉+豆花+辣椒三重安全牌），第二站湖南（加紫苏和豆豉做湘式版），第三站云贵（用糊辣椒/糟辣椒做区域特色版）。不建议一开始进入江浙沪/广东——这里的消费者需要更多口味教育，且在租金成本更高的市场测试一个未验证品类，风险收益比不理想。核心思路：先在豆花消费文化浓厚的区域验证温度反差体验的价值，再逐步外扩。
+  </div>
+</div>
+
+<!-- ===== 09 季节性分析 ===== -->
+<div class="section">
+  <div class="s-title">📅 季节性运营分析</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    椒烧豆花牛肉的季节性特征比较有趣——它的「冷热交替」定位在理论上是全年无淡季的：冬天热牛肉暖身+冷豆花提供「清爽反差」、夏天冷豆花消暑+热牛肉提供「过瘾辣感」。但消费者的实际行为模式仍存在季节性波动。
+    <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div style="background:#fef2ee;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#E8652D">🔴 旺季（10-2月·6-8月）</strong><br>
+        单店日销潜力：12-22份<br>
+        秋冬理由：热辣牛肉暖身是刚需——辣椒灼烧感和花椒麻颤感提供秋冬「温暖感」。牛肉本身的肉质在秋冬最肥美<br>
+        夏季理由：冷豆花消暑+热辣牛肉「以热制热」的开胃逻辑——夏季食欲不振时，重口味的辣+麻最能打开味蕾<br>
+        营销点：秋冬「暖身利器」· 夏季「以热制热」——两个季节两个卖点</div>
+      <div style="background:#f8f4ef;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#D4A574">🟡 平季（3-5月·9月）</strong><br>
+        单店日销潜力：8-14份<br>
+        春季消费者口味偏清淡·重口味菜品需求下降约15-25%<br>
+        牛肉在春季偏瘦·肉质偏紧<br>
+        营销点：「换季开胃」——用辣+冷的交替刺激唤醒春困的味蕾</div>
+      <div style="background:#eef2ff;border-radius:6px;padding:6px 8px;font-size:10px;grid-column:1/-1">
+        <strong style="color:#4f6ef7">🔵 优势：椒烧豆花牛肉的季节抗性高于同类牛肉菜品</strong><br>
+        与纯热菜（水煮牛肉/小炒牛肉）相比，椒烧豆花牛肉的冷豆花在夏季构成天然优势——「热锅凉豆花」比纯热菜更符合夏季的消费心理。与纯冷菜（凉拌牛肉）相比，冬季的热牛肉提供暖身效果。全年运营角度：椒烧豆花牛肉是全年的菜品——不需要因季节变化而调整菜单策略。唯一需要关注的是：夏季豆花需要更严格冷藏（高温下豆花变质风险高于冬季·豆花存放超过2小时室温需废弃）。<br>
+        <strong>💡 全年运营策略建议：</strong>椒烧豆花牛肉的季节性风险在所有牛肉类单品中最低——它利用温度反差把「冷」和「热」都变成了卖点。冬季主打「热牛肉暖心暖胃」，夏季主打「冰豆花消暑解辣」。一冬一夏两个卖点方向，覆盖全年。在春秋平季，可以推出午餐限定版（减少辣椒量·增加豆花比例·走清爽路线）来维持销量。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 10 供应链要点 ===== -->
+<div class="section">
+  <div class="s-title">📦 供应链要点</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    <div style="display:grid;grid-template-columns:90px 1fr;gap:4px 10px;font-size:11px">
+      <span style="font-weight:600;color:#3a322a">牛腿肉（推荐）</span><span style="color:#5a4f44">国产/进口冻鲜¥25-35/斤·牛腿肉适合炝烧·性价比最高（来源：农业农村部牛肉价格信息2026年6月）</span>
+      <span style="font-weight:600;color:#3a322a">牛里脊（替代）</span><span style="color:#5a4f44">国产鲜切¥35-50/斤·嫩度最佳但成本高·适合高端门店</span>
+      <span style="font-weight:600;color:#3a322a">内酯豆花</span><span style="color:#5a4f44">盒装成品¥1.5-3/盒（400g）·餐饮批量采购¥1.5-2.5/盒·保质期5-7天（冷藏）</span>
+      <span style="font-weight:600;color:#3a322a">自制豆花原料</span><span style="color:#5a4f44">黄豆¥3-5/斤·内酯¥0.5-1/份·自制品质更佳但增加人力成本约¥0.5-1/份</span>
+      <span style="font-weight:600;color:#3a322a">干辣椒</span><span style="color:#5a4f44">子弹头/二荆条·批发¥15-25/斤·全年库存稳定·保质期6-12个月（密封避光）</span>
+      <span style="font-weight:600;color:#3a322a">花椒/麻椒</span><span style="color:#5a4f44">四川汉源/茂汶产·批发¥30-60/斤·密封避光保存·保质期6-8个月</span>
+      <span style="font-weight:600;color:#3a322a">食用油</span><span style="color:#5a4f44">三级大豆油¥5-6/斤·菜籽油¥7-9/斤（炝油用菜籽油更香·烟点高）</span>
+      <span style="font-weight:600;color:#3a322a">牛肉产区</span><span style="color:#5a4f44">内蒙古（科尔沁）、河北、山东、吉林为主产区·国产牛肉产量约680万吨/年</span>
+      <span style="font-weight:600;color:#3a322a">干椒产区</span><span style="color:#5a4f44">贵州（子弹头）·四川（二荆条）·河南（朝天椒）·新疆（板椒）</span>
+      <span style="font-weight:600;color:#3a322a">成本优势</span><span style="color:#5a4f44">干辣椒/花椒为干货·可存放3-6个月·无鲜品损耗风险·豆花低温冷藏5-7天</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fff9f0;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.6">
+    <strong>椒烧豆花牛肉的供应链拆解——双食材供应链管理：</strong>牛肉和豆花是两个完全不同的供应链体系——牛肉需要冷冻/冷藏肉链、豆花需要低温冷链（冷藏2-8°C·保质期短）。这对门店的冷链管理提出了比单食材菜品更高的要求。但好消息是——豆花的冷链要求与大多数乳制品/饮料是通用的，门店现有冷藏设备通常足够。<br>
+    <strong>牛肉采购策略：</strong>建议日采模式（用量可控·保持新鲜）而非大批量冷冻储存（冷冻牛肉口感损失约10-15%·来源：食品科学实验数据）。日采量根据前一日点单数据浮动（±30%安全库存）。<br>
+    <strong>豆花采购策略：</strong>盒装豆花保质期5-7天，建议3天采购一次。如果日销超过20份，考虑自制豆花（单份成本更低·品质更可控·并可作为表演性环节展示给顾客）。<br>
+    <strong>牛肉选品注意：</strong>选择正规屠宰场出品（检验检疫标志齐全）的国产牛肉，建议与当地肉类批发商签订日供协议。进口冻牛肉（南美产约¥18-25/斤）虽然成本更低，但冷冻解冻后的口感损失对于「外焦里嫩」的工艺要求来说不太理想。
+  </div>
+</div>
+
+<!-- ===== 11 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（含验证点）</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc"><strong>牛肉预处理+腌制</strong>：牛腿肉切成2-2.5cm见方的块（单口大小·方便咀嚼）。加料酒/生抽/白胡椒粉/少许盐抓匀，加半个蛋清+玉米淀粉上薄浆，腌制12-15分钟。关键点：牛肉块不宜过小（煎制时容易过熟变柴）也不宜过大（内部不易熟透）。腌制时间控制——超过20分钟牛肉会出水（盐分抽出肉汁·导致煎制时水分过多·美拉德反应受阻）。</span><div class="ps-verify">[验证点] 腌制后的牛肉块手感：表面有薄薄的浆膜但不粘手。抓起一把轻抖——浆料应均匀附着无滴落。如果盆底有腌料水→浆太稀或腌太久，牛肉汁水被抽出，需倒掉多余液体并补少量淀粉。</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc"><strong>牛肉煎制上色（美拉德关键）</strong>：炒锅烧热（中高火·油温约170-180°C），下油约30g。牛肉块平铺放入锅中（不要堆叠！牛肉之间留空隙——堆叠会导致锅温骤降·牛肉出水而不是上色）。中高火煎2-2.5分钟至底部呈金黄色焦脆层，翻面再煎2-2.5分钟。如牛肉块较大（正方体），还需煎侧面——共约5-6分钟完成四面上色。全程中高火——火太小：牛肉出水变煮非煎；火太大：表面焦黑内部未熟。</span><div class="ps-verify">[验证点] 煎制标准：牛肉表面呈均匀的金黄色至浅褐色·边缘微焦·用锅铲轻推可滑动（不粘底）。用筷子夹起一块——表面应该结实有弹性·轻轻按压能感受到内部还有弹性（说明没有过熟）。切开一块检查：外层金黄色约1-2mm厚（焦香层）·内部淡粉色（七分熟·后续还有烧汁步骤所以不需要全熟）。如果外层焦黑（>2mm）→油温太高或煎太久。如果表面灰白色没有颜色→油温不够或牛肉出水太多。</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc"><strong>炝锅+烧汁入味</strong>：牛肉煎好后盛出或拨至锅边。加姜蒜末爆香（约10秒），加入干辣椒段（15-20g）和花椒粒（6-8g）快速翻炒15-20秒——注意不要炒焦（干辣椒变深红即可）。沿锅边淋入料酒激香，加生抽/老抽/白糖/少量清水（约50ml），将牛肉倒回锅中大火翻炒均匀，收汁至浓稠挂住牛肉块。此阶段约2-3分钟，牛肉从「外焦」过渡到「内入味」。</span><div class="ps-verify">[验证点] 汤汁状态：提起锅铲见汤汁浓稠挂铲·沿锅铲缓缓流下（而不是清汤般流淌）。用筷子尝一块牛肉——外层焦香·内层有咸鲜底味·咀嚼时牛肉纤维有弹性而不柴。尝一下辣椒段——应该是脆的（刚刚回软但不烂）。如果辣椒段入口即碎成粉末→辣椒炒太久了。</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc"><strong>豆花打底+组装</strong>：取冷藏豆花约250-300g盛入盘子/砂锅中，自然铺平（厚度约1.5-2cm）。将烧好的牛肉连汁带料均匀铺在豆花上——让热牛肉和热汤汁直接接触豆花表面。此时豆花遇热——表面微微融化（实际上是表面水分被热牛肉蒸发了一部分），吸收牛肉汤汁的焦香味。</span><div class="ps-verify">[验证点] 组装完成后立即观察：豆花表面应有热气升腾（说明温度差≥50°C）·牛肉表面的汤汁沿豆花边缘缓缓流下。用勺子挖一勺豆花+牛肉——豆花应保持完整的滑嫩质地（没有散成碎片）、牛肉块应完整。如果豆花一碰就散→豆花太嫩（含水量太高）或放太久了。如果豆花没有热气→豆花温度太低（低于4°C）或牛肉温度不够（出锅等待太久）。</div></div>
+    <div class="process-step"><span class="ps-num">5</span><span class="ps-desc"><strong>二次炝油+上桌</strong>（核心仪式感）：另起一小锅——下约20-30g菜籽油，大火烧至180-190°C。下少量干辣椒段（5-8g）和花椒粒（2-3g），快速翻动约10-12秒至辣椒颜色变深，立即离火——将热油连辣椒+花椒浇在牛肉上。滋啦一声——香气瞬间爆发。撒葱花/香菜末点缀。上桌后提醒顾客「先吃一块牛肉感受焦香，再舀一勺豆花感受温度反差」。</span><div class="ps-verify">[验证点] 浇油后观察：滋啦声响持续10-20秒·声音由大到小。香气应在3秒内扩散到整桌——如果只有油味没有椒香→辣椒和花椒品质差或炝油温度不够。牛肉表面的油应微微冒泡持续5-8秒。上桌后15秒内顾客应能明显感受到——「好香！」和「哇这个在冒热气！」。如果顾客没有明显的反应→温度反差不够明显或香气不够突出。</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a">
+    ⚠️ <strong>关键控制点：</strong>① 牛肉腌制时间（12-15分钟·不超过20分钟）② 煎牛肉油温（170-180°C·确保美拉德反应启动·不超过200°C）③ 烧汁收汁程度（浓稠挂铲·非清汤）④ 豆花温度（8-15°C·冷藏而非冷冻）⑤ 炝油油温（180-190°C·辣椒变深红即离火）⑥ 出餐节奏（组装炝油→上桌全程不超过2分钟）。五步工艺中，④和⑥是最容易在门店运营中出问题的——豆花忘记冷藏和出餐节奏被打乱。<br>
+    <strong>⏱ 时间线总览：</strong>腌牛肉12-15min（可批量备料）→ 煎牛肉5-6min → 炝锅+烧汁2-3min → 豆花组装+二次炝油1min = 单份出餐约8-10分钟（不含腌肉时间）。如批量腌好牛肉块，高峰期单份出餐约8-10分钟。
+  </div>
+</div>
+
+<!-- ===== 12 核心原料清单 ===== -->
+<div class="section">
+  <div class="s-title">📦 核心原料清单（单份基准·牛腿肉）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span>牛腿肉（切成2-2.5cm块）</span><span>约200g</span></div>
+    <div class="recipe-line"><span>内酯豆花/嫩豆花</span><span>250-300g（垫底）</span></div>
+    <div class="recipe-line"><span>干辣椒（子弹头/二荆条·切段去籽）</span><span>20-28g（分两次·烧汁+炝油）</span></div>
+    <div class="recipe-line"><span>花椒粒（汉源花椒）</span><span>8-11g（分两次·烧汁+炝油）</span></div>
+    <div class="recipe-line"><span>姜（切末）</span><span>10-15g</span></div>
+    <div class="recipe-line"><span>大蒜（切末）</span><span>10-15g</span></div>
+    <div class="recipe-line"><span>鸡蛋清</span><span>半个（约15g·腌肉上浆）</span></div>
+    <div class="recipe-line"><span>玉米淀粉</span><span>10-12g（腌肉上浆）</span></div>
+    <div class="recipe-line"><span>生抽/蒸鱼豉油</span><span>15-20g</span></div>
+    <div class="recipe-line"><span>老抽（上色）</span><span>3-5g</span></div>
+    <div class="recipe-line"><span>料酒/花雕酒</span><span>15-20g（分腌肉和烹锅两次用）</span></div>
+    <div class="recipe-line"><span>白砂糖</span><span>5-8g（提鲜+平衡辣味+促进美拉德反应）</span></div>
+    <div class="recipe-line"><span>白胡椒粉</span><span>1-2g</span></div>
+    <div class="recipe-line"><span>食用油（煎牛肉用）</span><span>30-40g</span></div>
+    <div class="recipe-line"><span>食用油（炝油用·菜籽油最佳）</span><span>20-30g</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>葱花+香菜末</span><span>适量（装饰）</span></div>
+  </div>
+  <div style="margin-top:6px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 原料替代方案：</strong><br>
+    • 牛腿肉成本高时 → 可用牛腩替代（¥20-30/斤·脂肪含量高·美拉德反应充分·但口感偏韧·需延长烧汁时间到5-6分钟）<br>
+    • 牛腿肉断供 → 可用猪肉（猪前腿肉¥12-18/斤）替代做「椒烧豆花猪肉」——但风味完全不同（猪肉的脂肪香气比牛肉弱·美拉德反应产生的吡嗪类物质更少）<br>
+    • 盒装豆花断供 → 可用内酯豆腐替代（含水量低约5%·质地稍实但可用·口感差异约20%）·不建议用老豆腐（太硬·无法提供滑嫩感）<br>
+    • 不嗜麻 → 花椒减至3-4g或改用藤椒（麻度低但香气清新）<br>
+    • 没有菜籽油炝油 → 可用花生油替代（烟点接近·香气略弱）·不建议用大豆油（烟点偏低·冒大量油烟影响用餐体验）
+  </div>
+</div>
+
+<!-- ===== 13 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单（已有门店厨房）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span>炒锅/平底锅（口径30-36cm·煎牛肉）+ 小奶锅（炝油）</span><span>已有·¥15-30添购</span></div>
+    <div class="recipe-line"><span>燃气灶（猛火灶·煎+炝油两用）</span><span>已有</span></div>
+    <div class="recipe-line"><span>厨房电子秤</span><span>¥20-50</span></div>
+    <div class="recipe-line"><span>不锈钢盆×2（腌肉/洗菜）</span><span>已有</span></div>
+    <div class="recipe-line"><span>刀具+砧板（切牛肉块）</span><span>已有</span></div>
+    <div class="recipe-line"><span>计时器</span><span>¥10-20</span></div>
+    <div class="recipe-line"><span>冷藏柜（豆花保鲜2-8°C）</span><span>已有</span></div>
+    <div class="recipe-line"><span>砂锅/深盘（出餐容器·保温性好）</span><span>¥15-30/个</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>小勺子（吃豆花用·配餐）</span><span>已有·或¥1-2/个添购</span></div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px">
+    <strong>最低投入：¥0-100</strong>（已有门店厨房·已有冷藏设备）<br>
+    如果厨房已有炒锅+灶台+冷藏柜 → 只需要买一个小奶锅/小锅专门炝油（<strong>¥15-30</strong>）+ 出餐砂锅（<strong>¥15-30/个</strong>）+ 电子秤（<strong>¥20-50</strong>）+ 小勺子（<strong>¥1-2/个</strong>）= <strong>最低¥51</strong>起<br>
+    椒烧豆花牛肉是牛肉类菜品中设备门槛最低的之一——不用铁板（铁板牛肉）、不用大容量油缸（水煮牛肉）、不用大锅（水煮牛肉·大份量）。一把炒锅+一个小锅+一个砂锅解决所有烹饪需求。这是门店上新的核心设备优势——几乎不需要额外投入。
+  </div>
+</div>
+
+<!-- ===== 14 门店新品验证（7天） ===== -->
+<div class="section">
+  <div class="s-title">📋 门店新品验证（7天·门店上新方案）</div>
+  <div style="padding:8px 12px;background:#fef6ec;border-radius:8px;margin-bottom:8px;font-size:11px;color:#8a5a2a">
+    💡 本品适合在已有门店的菜单中作为新增牛肉差异化菜品测试。椒烧豆花牛肉的特殊优势：设备投入几乎为零（已有炒锅+冷藏柜）、牛肉和豆花的供应链在全国任何城市都稳定可获取、技术门槛适中（有炒菜基础的厨师1-2天可掌握）。¥200-400的测试预算在所有牛肉类菜品中最低。</div>
+  <div class="verify-steps">
+  <div class="verify-step"><span class="vs-day">Day1</span><span>试做2份（盒装豆花vs自制豆花各一），跑通腌制→煎牛肉→炝锅→烧汁→组装→二次炝油全流程。记录各工艺参数</span></div>
+  <div class="verify-step"><span class="vs-day">Day2</span><span>内部试吃+意见收集（至少3人）。关键问题：温度反差感受明显吗？豆花温度是否合适？牛肉口感是否外焦里嫩？辣椒和花椒的量是否需要调整？</span></div>
+  <div class="verify-step"><span class="vs-day">Day3</span><span>定版：锁定牛肉部位、煎制时间、烧汁配方、豆花来源、炝油参数。拍定装照。设计菜单名称和简介话术</span></div>
+  <div class="verify-step"><span class="vs-day">Day4</span><span>上菜单测试（备料20-25份），首日观察点单率和温度反差体验反馈</span></div>
+  <div class="verify-step"><span class="vs-day">Day7</span><span>复盘：点单率＞8%继续·＜5%下架。注意收集关于「豆花温度」「牛肉口感」「辣度接受度」的定向反馈</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px;font-size:11px">
+    <strong>🔑 关键指标：</strong><br>
+    ① 首周点单率＞8% ② 二次点单率＞12%（温度反差记忆效果好） ③ 单份食材成本≤¥20 ④ 出餐时间（不含腌肉）≤10分钟 ⑤ 核心指标：温度反差体验——至少80%顾客能准确说出「冷热交替」或「冰火两重天」。<br><br>
+    <strong>🚪 下架标准：</strong>点单率＜5% / 食材成本＞¥24 / 「牛肉太柴」差评≥2条 / 「豆花没有存在感」差评≥2条 / 「太麻/太辣」差评≥3条<br><br>
+    <strong>✅ 转正标准：</strong>周均日销＞12份 / 毛利＞55% / 温度反差正向反馈＞80% / 厨师操作稳定（误差≤2分钟）/ 豆花供应链稳定<br><br>
+    <strong>🔍 关键观察指标：</strong><br>
+    ① 堂食vs外卖占比——堂食占比＞85%为符合预期（核心体验依赖堂食）。如果外卖占比意外＞15%→考虑开发分装外卖版本。<br>
+    ② 点单时段分布——晚市＞午市→偏聚餐型（¥48-58）；午市＞晚市→偏日常下饭型（¥38-48）。<br>
+    ③ 菜单描述吸引力——顾客是否主动问「热的牛肉和冷的豆花怎么一起吃」。<br>
+    ④ 出餐节奏稳定性——高峰期是否不超过13分钟。<br><br>
+    <strong>📊 7天测试预算：</strong>牛腿肉×20份约¥200-280 + 盒装豆花×20盒约¥30-50 + 干辣椒1斤¥18-25 + 花椒200g¥12-25 + 配料调料¥50-70 + 菜单更新¥10-20 = 总计约¥320-470。即使完全失败，损失不超过¥470。
+  </div>
+</div>
+
+<!-- ===== 15 风险清单 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item"><span class="r-icon">🔥</span><span><strong>豆花温度管理失效</strong>——豆花忘了冷藏或冷藏不够，出餐时豆花温度＞20°C，温度反差感消失。豆花温度管理是这道菜最容易翻车的点——因为它是「隐性」环节，高峰期易被忽略。<br><strong>缓解：</strong>设立豆花温度检查表·每2小时检查冷藏柜·出餐前确认豆花冰凉感。高峰期安排专人负责豆花准备。</span></div>
+  <div class="risk-item"><span class="r-icon">🥩</span><span><strong>牛肉口感不稳定</strong>——煎过头（变柴）或煎不够（无焦香层）。<br><strong>缓解：</strong>统一切2-2.5cm块·油温用红外测温枪校准·每面煎制用计时器控制·新厨师试做5份通过品尝测试才上岗。</span></div>
+  <div class="risk-item"><span class="r-icon">🌡️</span><span><strong>外卖体验断裂</strong>——配送后热牛肉变温+冷豆花变室温，两个核心体验全部损失。<br><strong>缓解：</strong>外卖版本牛肉+豆花分装（顾客微波加热后自行组装）。但分装增加包装成本约¥2-3/份。接受外卖体验损失——堂食做好。</span></div>
+  <div class="risk-item"><span class="r-icon">🧊</span><span><strong>消费者预期管理失败</strong>——菜单没说清「冷热交替」顾客会产生认知落差。但过度吹嘘「冰火两重天」则抬升预期导致失望。<br><strong>缓解：</strong>菜单温和描述：「椒烧热牛肉盖在冰凉滑嫩豆花上——一热一冷，一刚一柔。」避免过度网红文案。</span></div>
+  <div class="risk-item"><span class="r-icon">💸</span><span><strong>牛肉成本波动</strong>——牛肉年波动幅度可达15-30%。2025-2026年国产牛肉均价波动区间¥28-40/斤（来源：农业农村部牛肉价格指数）。<br><strong>缓解：</strong>① 与批发商签3个月固定价协议 ② 牛肉涨价时减量（至150-170g）并增加豆花（至300-350g）维持毛利率 ③ 利用豆花的低成本优势吸收成本波动。</span></div>
+  <div class="risk-item"><span class="r-icon">📋</span><span><strong>厨师复制度不够</strong>——四重温度管理（煎牛肉·炝油·豆花·出餐节奏）在多厨师轮班制下容易失控。<br><strong>缓解：</strong>制作标准操作卡挂灶台：①牛肉切2cm块·腌12min ②锅温170°C ③煎4min ④炝油180°C ⑤豆花冷藏2-8°C ⑥组装到上桌2min内。——每个参数用数字标定。</span></div>
+  <div class="risk-item"><span class="r-icon">🏪</span><span><strong>区域口味适应性不足</strong>——非辣区域（江浙沪/广东/福建）焦辣麻香超出接受阈值，豆花在当地多以甜豆花形式存在。<br><strong>缓解：</strong>原点市场定位川渝湘黔·不急于进入非辣区域。如要进：只放川湘风味馆菜单上（客群已接受辣味）。</span></div>
+</div>
+
+<!-- ===== 16 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">🏁 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 有利因素</div>
+      <div class="t-item">温度反差体验是天然的差异化壁垒——消费者吃完后能够清晰描述「冰火两重天」体验</div>
+      <div class="t-item">食材成本结构健康——豆花（¥1-2/份）拉低了整体食材成本·毛利率高于纯牛肉菜品</div>
+      <div class="t-item">设备投入极低——已有厨房几乎零新增设备成本</div>
+      <div class="t-item">供应链稳定——辣椒/花椒干货+豆花冷链+牛肉日采·三种供应链体系都是成熟市场</div>
+      <div class="t-item">社交传播性强——滋啦声+温度反差·短视频素材天然优质</div>
+      <div class="t-item">季节性风险低——「冷」和「热」在不同的季节都是卖点</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 不利因素</div>
+      <div class="t-item">品类认知度为零——消费者没有「椒烧豆花牛肉」这个概念·需要从零教育的成本</div>
+      <div class="t-item">外卖体验断裂——核心体验（温度反差）无法通过外卖完整传递</div>
+      <div class="t-item">出餐节奏要求高——四重温度管理在多单并行时容易失控</div>
+      <div class="t-item">牛肉成本波动大——如果牛肉价格大幅上涨·毛利率受影响显著</div>
+      <div class="t-item">豆花保质期短（5-7天）·损耗管理比干货类食材复杂</div>
+      <div class="t-item">区域限制明显——非辣区域接受度低·市场容量受限于辣味消费人群</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>📊 赛道结论：蓝海中的微型赛道。椒烧豆花牛肉不是一个大品类赛道（不像水煮牛肉/小炒牛肉那样有千亿级市场），而是一个精准的——「牛肉+豆花」的温度反差垂直赛道。</strong>它的优势恰恰在于「小」——在大品类红海中找到一个无人占据的生态位。这个赛道的天花板受限于：① 辣味消费人群的规模（约占总人口的40-50%·有区域性差异）② 外卖场景的缺失（堂食占比需超过70%才能支撑单店盈利）③ 品类的认知建立成本。<br><br>
+    但它的下限也很高——因为食材成本低（¥14-22）+ 毛利率高（50-65%）+ 设备投入低（¥51起），即使在测试期表现一般（日销8-10份），单店损失也不会超过¥400。从风险收益比角度——这是一个值得做7天快测的赛道。
+  </div>
+</div>
+
+<!-- ===== 17 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">⚖️ 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>🔮 椒烧豆花牛肉——6.5分 · 观察期 · 建议做店测</strong><br><br>
+      这道菜的核心逻辑很清晰：用「温度反差」这个几乎未被牛肉品类开发过的体验维度，在牛肉菜品的红海中切出一个新的差异化生态位。它的优势在于三低（低食材成本·低设备投入·低技术门槛）和一高（高毛利率·50-65%），以及极强的社交传播属性（滋啦声+冷热交替）。它的风险在于三点：品类认知度为零需要教育、外卖体验断裂限制堂食占比、温度管理和出餐节奏的稳定性在多厨师制下容易失控。<br><br>
+      <strong>推荐行动建议：</strong>已有川/湘菜馆门店的从业者——花¥300-400做7天快测。以¥38-48的亲民定价试水（不走高端路线·先把品类认知做起来）。门店选址在川渝/湖南/贵州的偏好区。测试期重点关注：① 温度反差的正向反馈率 ② 堂食vs外卖占比 ③ 点单率。如果7天综合数据正面（点单率＞8%+温度反差正向反馈率＞80%+堂食占比＞75%），可考虑转正为长期菜单单品。<br><br>
+      <strong>这不是一个适合作为「创业主打」的品类</strong>——品类认知度太低，从零开店靠它撑起菜单不现实。但它是一个极其优秀的「菜单补充」单品——用极低的成本和风险，为门店增加一个高记忆度的差异化产品。在牛肉品类几乎被「爆炒」「水煮」「煎烤」占满的今天，椒烧豆花牛肉提供了一个全新的体验方向：温度反差。
+    </div>
+    <div class="j-tags">
+      <span>🔮 区域预测卡</span>
+      <span>🧪 观察期·6.5分</span>
+      <span>🥩 牛肉品类</span>
+      <span>🌡️ 温度反差</span>
+      <span>📋 门店上新</span>
+      <span>📊 深度分析</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 18 数据说明 ===== -->
+<div class="section">
+  <div class="s-title">📋 数据来源说明</div>
+  <div class="data-note">
+    <strong>数据来源及口径声明：</strong><br>
+    • 牛肉批发价格：农业农村部全国农产品批发市场价格信息系统，2026年6月数据。牛腿肉（去骨）批发价格区间¥25-35/斤。<br>
+    • 豆花/内酯豆腐批发价格：成都海吉星批发市场、北京新发地市场2026年6月商户报价。盒装内酯豆花（400g）经销商批发价¥1.5-3/盒。<br>
+    • 干辣椒批发价格：成都海吉星/重庆观音桥批发市场2026年6月报价。子弹头干椒¥15-25/斤，二荆条干椒¥18-28/斤。<br>
+    • 花椒批发价格：四川汉源花椒产区报价¥35-55/斤，甘肃花椒¥25-40/斤（2026年6月）。<br>
+    • 食用油价格：商务部食用农产品市场数据，三级大豆油¥5-6/斤，菜籽油¥7-9/斤（2026年6月）。<br>
+    • 牛肉餐厅单品定价区间：大众点评2026年6月一线城市（北京/上海/广州/深圳/成都/重庆）餐饮消费数据抽样确定。<br>
+    • 美拉德反应相关数据：食品科学通用实验数据。<br>
+    • 辣椒素/山椒素化学数据：Journal of Food Science (2019) 及 TRPV1 受体研究报告。<br>
+    • 豆花含水量数据：中国豆制品行业协会公开标准。<br><br>
+    <strong>利润数据估算说明：</strong>毛利率=(定价-食材成本)/定价。所有利润数据均为估算值，实际毛利率受门店租金、人工、能耗、损耗率等综合因素影响。定价区间为一线/二线城市中等消费水平餐厅的参考区间。<br><br>
+    <strong>采集时间：</strong>2026年7月 · 所有价格数据均为2026年6月采集。<br><br>
+    <strong>免责声明：</strong>本卡内容仅供参考和前瞻性分析，不构成投资或商业决策建议。预测性分析基于有限样本数据，实际市场表现可能与预测存在偏差。
+  </div>
+</div>
+
+<!-- ===== 🔮 预测引擎插件层 ===== -->
+<div class="engine-section" style="padding-bottom:14px">
+  <div class="engine-title">🔮 预测引擎 · 决策增强插件</div>
+
+  <div class="radar-wrap">
+    <div class="radar-chart">
+      <div class="ax" style="transform:rotate(-90deg)"></div>
+      <div class="ax" style="transform:rotate(-18deg)"></div>
+      <div class="ax" style="transform:rotate(54deg)"></div>
+      <div class="ax" style="transform:rotate(126deg)"></div>
+      <div class="ax" style="transform:rotate(198deg)"></div>
+      <div class="radar-outline"></div>
+      <div class="radar-fill" style="clip-path:polygon(50.00% 15.47%,80.91% 39.96%,70.30% 77.93%,33.28% 73.00%,36.48% 45.61%)"></div>
+      <div class="radar-dot" style="top:24.76px;left:80.00px"></div>
+      <div class="radar-dot" style="top:63.94px;left:129.46px"></div>
+      <div class="radar-dot" style="top:124.69px;left:112.48px"></div>
+      <div class="radar-dot" style="top:116.80px;left:53.25px"></div>
+      <div class="radar-dot" style="top:72.97px;left:58.36px"></div>
+      <div class="radar-lbl" style="top:-2px;left:50%;transform:translateX(-50%)">VSI<br><strong>8.5</strong></div>
+      <div class="radar-lbl" style="top:52px;right:-42px">ASI<br><strong>8.0</strong></div>
+      <div class="radar-lbl" style="bottom:-2px;left:50%;transform:translateX(-50%)">SCI<br><strong>8.5</strong></div>
+      <div class="radar-lbl" style="top:108px;left:-48px">MII<br><strong>7.0</strong></div>
+      <div class="radar-lbl" style="top:55px;left:-48px">CP<br><strong>35%</strong></div>
+      <div style="position:absolute;top:80px;left:80px;width:3px;height:3px;background:#ddd4ca;border-radius:50%;transform:translate(-50%,-50%);z-index:1"></div>
+    </div>
+
+    <div class="ring-grid">
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#C0392B 0% 85%,#e8dfd5 85% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#C0392B">8.5</span><span class="rg-label">VSI</span></div>
+        </div>
+        <span class="rg-desc">视觉传播力</span>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#D4A574 0% 80%,#e8dfd5 80% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#D4A574">8.0</span><span class="rg-label">ASI</span></div>
+        </div>
+        <span class="rg-desc">声觉钩子</span>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#E8652D 0% 85%,#e8dfd5 85% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#E8652D">8.5</span><span class="rg-label">SCI</span></div>
+        </div>
+        <span class="rg-desc">锅气外溢</span>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#5a8f3c 0% 70%,#e8dfd5 70% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#5a8f3c">7.0</span><span class="rg-label">MII</span></div>
+        </div>
+        <span class="rg-desc">菜单嵌入</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cp-meter">
+    <div class="cp-ring" style="background:conic-gradient(#4f6ef7 0% 35%,#e8dfd5 35% 100%)">
+      <div class="cp-num">
+        <span class="big">35</span>
+        <span class="pct">%</span>
+      </div>
+    </div>
+    <div class="cp-info">
+      <div class="cp-title">📈 品类成型概率</div>
+      <div class="cp-desc">中概率但上升趋势显著。热牛肉+冷豆花温度反差=天然传播记忆点，未被命名的空白空间。</div>
+    </div>
+  </div>
+
+  <div class="lst-rri">
+    <div class="lst-card">
+      <div class="lst-visual" style="background:conic-gradient(#D4A574 0% 35%,#e8dfd5 35% 100%)"></div>
+      <div class="lst-info">
+        <div class="lst-title">🧭 LST 生命周期</div>
+        <div class="lst-desc"><strong>Stage 1→2</strong> · 散点存在→内容放大过渡期。温度反差记忆点强，传播素材天然优质</div>
+      </div>
+    </div>
+    <div class="rri-card">
+      <div class="rri-bar">
+        <span>中低</span>
+        <div class="fill" style="height:30%"></div>
+      </div>
+      <div class="rri-info">
+        <div class="rri-title">⚠️ RRI 风险反转</div>
+        <div class="rri-desc">外卖体验断裂限制渠道。出餐节奏要求高，四重温度管理在多单并行时容易失控</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+    <span style="font-size:11px">📡</span>
+    <span style="font-size:11px;font-weight:700;color:#3a322a">势能信号聚合</span>
+  </div>
+  <div class="signal-strip">
+    <div class="ss-row"><span class="ss-dot">1</span><span class="ss-lab">温度反差传播记忆点</span><span class="ss-val">热牛肉+冷豆花=冰火两重天体验，天然差异化壁垒</span></div>
+    <div class="ss-row"><span class="ss-dot">2</span><span class="ss-lab">豆花牛肉有川菜群众基础</span><span class="ss-val">川渝民间已有牛肉豆花传统，无需从零教育</span></div>
+    <div class="ss-row"><span class="ss-dot">3</span><span class="ss-lab">改造成本低</span><span class="ss-val">已有厨房几乎零新增设备，测试成本¥300-400</span></div>
+    <div class="ss-row"><span class="ss-dot">4</span><span class="ss-lab">未被命名的空白空间</span><span class="ss-val">"椒烧豆花牛肉"尚无标准命名，谁先定义谁赢</span></div>
+  </div>
+
+  <div class="engine-note">此产品处于互联网传播酝酿期，不一定会爆发。本卡基于公开数据的推测与拆解，非投资建议。预测引擎为决策增强插件，不改变主卡结构与判断。</div>
+</div>
+
+<!-- ===== 19 Brand Footer ===== -->
+<div class="ftr" style="background:#2a1a3a;color:rgba(255,255,255,.5);border-radius:0 0 18px 18px;padding:20px 18px">
+  <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:8px">FoodIntelAI · 食品决策库</div>
+  <div style="font-size:10px;line-height:1.7;margin-bottom:12px">
+    本内容由FoodIntelAI食品决策库生成<br>
+    关注公众号 · 获取更多食品创业决策分析
+  </div>
+  <div style="display:flex;justify-content:center;gap:20px;margin-bottom:12px">
+    <div style="text-align:center">
+      <div style="width:70px;height:70px;background:#3a2a4a;border-radius:8px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+        <img src="../../foodintelai-site/gongzhonghao_qr.jpg" alt="公众号二维码" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div style="font-size:8px;color:rgba(255,255,255,.4)">公众号</div>
+    </div>
+    <div style="text-align:center">
+      <div style="width:70px;height:70px;background:#3a2a4a;border-radius:8px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+        <img src="../../foodintelai-site/wechat_qr.jpg" alt="微信二维码" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div style="font-size:8px;color:rgba(255,255,255,.4)">个人微信</div>
+    </div>
+  </div>
+  <div style="font-size:8px;color:rgba(255,255,255,.25)">
+    RP_06 · 椒烧豆花牛肉 · 预测卡 v1.0<br>
+    © 2026 FoodIntelAI · 内容仅供内部决策参考<br>
+    数据采集：2026年7月 · 价格可能随市场波动
+  </div>
+</div>
+
+</div><!-- end card -->
+
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>

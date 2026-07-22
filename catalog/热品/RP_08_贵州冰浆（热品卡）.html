@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>RP_08 贵州冰浆 · 热品卡 · 深度分析</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#e6f0f0;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#f8faff;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#1a3a5c,#0f2840);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #dce6f0}
+.s-title{font-size:13px;font-weight:700;color:#1a3a5c;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f0f5fc;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#6a7a8a;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#1a3a5c;margin-top:2px}
+.radar-item.high{background:#e8f4fd}
+.radar-item.high .stars{color:#2b7fc4}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#e8f4e8;color:#2a6b3a}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#f0f7fe;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#1a3a5c;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#4a5a6a;border-bottom:1px solid #e0e8f0}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#2b7fc4}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#6a7a8a}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#8a9aaa}
+.mc-blue{background:#e8f4fd}
+.mc-blue .m-val{color:#2b7fc4}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#e8f4e8}
+.mc-green .m-val{color:#3a8a4a}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f0f5fc;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#4a5a6a;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#8a9aaa}
+.track-good .t-h{color:#3a8a4a}
+.track-bad .t-h{color:#c0392b}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#4a5a6a}
+.track-verdict strong{color:#2b7fc4}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#6a7a8a;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#d0d8e0;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #e8eef5;font-size:12px;color:#4a5a6a;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#f0f7fe,#f8fcff);border-radius:12px;padding:16px;border:1px solid #dce6f0}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#2a3a4a}
+.judge-box .j-text strong{color:#2b7fc4}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#dce6f0;border-radius:4px;color:#4a5a6a}
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f0f5fc;border-radius:10px;font-size:12px;color:#1a3a5c;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#2b7fc4;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#6a7a8a;border-left:2px solid #8ab4d8;padding-left:8px;background:#f0f8ff;border-radius:4px}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #d0d8e0}
+.recipe-line .k{color:#4a5a6a}
+.recipe-line .v{font-weight:600;color:#1a3a5c}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#f0f7fe,#dce6f0);border-top:2px dashed #b0c0d0;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#6a7a8a;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#2a3a4a;line-height:1.5}
+.pay-area .p-item .p-icon{color:#3a8a4a;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#2b7fc4;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#8a9aaa}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#2b7fc4;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.pay-area .note{font-size:9px;color:#8a9aaa;margin-top:4px}
+.pay-content{display:none}
+.pay-content.show{display:block}
+.btn{display:block;text-align:center;padding:11px;background:#2b7fc4;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#1a3a5c}
+.prod-tier .t-price{color:#8a9aaa;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#D4A574;color:#fff}
+.tier-profit{background:#e8f4e8}
+.tier-profit .t-badge{background:#3a8a4a;color:#fff}
+.tier-set{background:#e8f4fd}
+.tier-set .t-badge{background:#2b7fc4;color:#fff}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#8a9aaa}
+.verify-step{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f5fc;border-radius:8px;font-size:12px;color:#1a3a5c}
+.verify-step .vs-day{background:#1a3a5c;color:#fff;padding:1px 8px;font-size:10px;font-weight:700;border-radius:4px;flex-shrink:0}
+.sci-box{background:#f0f5fc;border-radius:12px;padding:14px;font-size:12px;line-height:1.7;color:#2a3a4a}
+.sci-box .sci-icon{font-size:14px}
+</style>
+<link rel="stylesheet" href="../../paywall.css">
+<script>
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))e.preventDefault();
+});
+document.addEventListener('copy',function(e){e.preventDefault();return false});
+document.addEventListener('selectstart',function(e){e.preventDefault()});
+</script>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🧊 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#f8faff">
+  <h1 style="font-size:22px;font-weight:800;color:#1a3a5c;margin-bottom:2px">🧊 贵州冰浆</h1>
+  <div style="font-size:12px;color:#8a9aaa;display:flex;gap:6px;flex-wrap:wrap">
+    <span>贵州特色消夏甜品 · 冰沙+糯米+水果 · 浓稠挂杯</span>
+    <span style="background:#e8f4e8;color:#2a6b3a;padding:0 6px;border-radius:3px">✅ 已验证 · 热品卡</span>
+  </div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score"><span class="r-num">7.5</span><span class="r-label">综合评分</span></div>
+    <span class="r-grade">B+级项目</span>
+  </div>
+  <div class="r-tagline">贵州冰浆不是普通冰沙——糯米带来独特的「浆感」质地，水果+红糖构建天然卖点。¥1,000起步的夏季限定好项目。</div>
+  <div class="r-tags">
+    <span>🔥 夏季爆品</span><span>💰 投资¥1,000起</span><span>👤 1人可做</span><span>🍧 毛利70-85%</span><span>🌙 夜市场景强</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★☆</div><div class="val">高·区域性爆品</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div><div class="val">中等·季节性强</div></div>
+    <div class="radar-item high"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">极低·¥1,000起</div></div>
+    <div class="radar-item high"><div class="label">🔧 难度</div><div class="stars">★★★★☆</div><div class="val">低·上手简单</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★★</div><div class="val">极高·毛利70-85%</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#2a6b3a">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 夏季摆摊创业者·夜市/景区首选</div>
+      <div class="fit-item fit-yes">✅ 甜品爱好者·对贵州小吃有认知基础</div>
+      <div class="fit-item fit-yes">✅ 1人经营·无须请人</div>
+      <div class="fit-item fit-yes">✅ 副业尝试·周末出摊验证</div>
+      <div class="fit-item fit-yes">✅ 已有饮品/甜品摊的夏季品类扩展</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求全年稳定收入（季节性明显·冬季需求断崖）</div>
+      <div class="fit-item fit-no">❌ 不愿做原料预处理（糯米需泡+蒸·水果需切）</div>
+      <div class="fit-item fit-no">❌ 不做夜市/高温人流场景（冰浆需要高温才有销量）</div>
+      <div class="fit-item fit-no">❌ 追求¥20,000+/月的高回报项目</div>
+      <div class="fit-item fit-no">❌ 北方冬季严寒地区（一年仅3-4个月可做）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔬 风味科学 ===== -->
+<div class="section">
+  <div class="s-title">🔬 风味科学</div>
+  <div class="sci-box">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🧊</span><span style="font-size:12px;font-weight:700;color:#1a3a5c">冰浆的「浆感」：为什么不是冰沙</span></div>
+    <div style="font-size:11px;color:#4a5a6a;line-height:1.8;margin-bottom:12px">
+      贵州冰浆与普通冰沙的核心区别在于「浆感」——介于冰沙与奶昔之间的浓稠挂杯质地，来自糯米的作用。<br><br>
+      <strong>支链淀粉效应：</strong>糯米中支链淀粉含量95-100%（普通粳米约80%），蒸煮后充分糊化。与冰一起搅拌时，糊化的支链淀粉分散在冰晶之间形成三维网络结构——冰晶被淀粉分子包裹悬浮，无法快速重结晶。这使冰浆在-5°C到0°C区间保持浓稠膏状，不会像普通冰沙那样迅速融化成水（来源：淀粉科学手册）。<br><br>
+      <strong>冰晶粒径控制：</strong>理想冰晶粒径50-150µm——太大则有冰渣感，太小则接近冰淇淋失去清爽刺激。家用搅拌机（10,000-15,000rpm）打出200-400µm的粗晶，商用冰沙机（20,000-30,000rpm）可打出100µm以下细腻冰晶（来源：冷冻饮品加工工艺学）。<br><br>
+      <strong>温度窗口：</strong>最佳食用温度-2°C到2°C。低于-5°C冰浆过硬无法吸动，高于5°C则淀粉网络解离、浆体变稀。冰浆必须现做现卖——预制保温会破坏质地。
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🍚</span><span style="font-size:12px;font-weight:700;color:#1a3a5c">糯米预处理：口感的关键密码</span></div>
+    <div style="font-size:11px;color:#4a5a6a;line-height:1.8;margin-bottom:12px">
+      <strong>浸泡时间：</strong>糯米需浸泡4-6小时（夏季4h·冬季6h），吸水率达40-45%。浸泡不足则蒸后夹生，过度（>12h）则米粒破裂。判断标准：指尖能轻松碾碎，无白色硬心（来源：谷物加工工艺学）。<br><br>
+      <strong>蒸制工艺：</strong>水开后上笼蒸20-25分钟，至米粒粒粒分明、软糯不烂。不推荐电饭煲煮——煮的糯米水分过高，打浆后冰浆偏稀且冷藏后发硬。蒸好后摊凉至常温再冷藏（4°C），保质期约24小时。摆摊实操：每天清晨蒸一批冷藏，出摊时随用随取。<br><br>
+      <strong>糯米与冰的比例：</strong>基础配比熟糯米:冰=1:4（体积比）。糯米偏多则浆体过稠像粥；偏少则稀薄像普通冰沙。新手最容易犯的错误是「用太少糯米」——成品没有浆感，跟¥5刨冰没区别。记住：浆感靠糯米撑出来的。
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🍓</span><span style="font-size:12px;font-weight:700;color:#1a3a5c">水果选择与酸甜平衡</span></div>
+    <div style="font-size:11px;color:#4a5a6a;line-height:1.8">
+      <strong>水果含水量：</strong>每杯含冰200g+水果50-80g+糯米50g+红糖水30ml。西瓜（含水92%）使浆体偏稀，需减冰或增糯米；芒果（含水80%·纤维丰富）对稠度影响较小。建议：高含水水果（西瓜/蜜瓜/菠萝）≤50g/杯；低含水水果（香蕉/芒果/火龙果）可用到80g/杯。<br><br>
+      <strong>酸度校正：</strong>高甜水果（芒果/香蕉·12-15°Brix）加红糖水20-25ml即可；高酸水果（草莓/猕猴桃·pH3-3.5）需加到30-35ml。贵州冰浆摊的做法是在红糖水中加少量红糖结晶——既增甜又带来焦糖香气。<br><br>
+      <strong>当季策略：</strong>6-8月主推芒果/西瓜/火龙果（供应足·批发价低），9-10月转葡萄/猕猴桃/百香果。当季水果成本比反季节低30-50%，风味更浓。首期推3种口味（芒果·西瓜·火龙果），每种按销售数据动态调整备货量。
+    </div>
+  </div>
+  <div style="margin-top:6px;font-size:10px;color:#8a9aaa;line-height:1.5">🔬 风味科学分析综合自淀粉科学手册、冷冻饮品加工工艺学、谷物加工工艺学等文献。配比建议为FoodIntelAI团队实测校准。</div>
+</div>
+
+<!-- ===== 🗺️ 区域适应性分析 ===== -->
+<div class="section">
+  <div class="s-title">🗺️ 区域适应性分析</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f0f5fc;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#3a8a4a;margin-bottom:4px">🌆 一线城市</div>
+      <div style="font-size:10px;color:#4a5a6a;line-height:1.6">贵州冰浆在一线城市有「地域稀缺性」溢价——消费者对贵州小吃好奇心强。定价¥15-20/杯。需用视觉呈现（彩色分层+配料堆叠）支撑定价。月净利预估¥8,000-15,000。</div>
+    </div>
+    <div style="background:#f0f5fc;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#D4A574;margin-bottom:4px">🏙️ 二线城市</div>
+      <div style="font-size:10px;color:#4a5a6a;line-height:1.6">大学城+夜市核心。定价¥10-15/杯。成都/长沙等餐饮热点城市接受度高——可推「冰浆+贵州小料」组合（脆哨/花生碎/糍粑）。月净利预估¥6,000-10,000。</div>
+    </div>
+    <div style="background:#f0f5fc;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#2b7fc4;margin-bottom:4px">🏘️ 三四线城市</div>
+      <div style="font-size:10px;color:#4a5a6a;line-height:1.6">县城夜市/学校周边。定价¥8-12/杯。品类渗透率极低但有红利——需用「贵州特色消夏冰饮」做卖点标签。月净利预估¥4,000-7,000。</div>
+    </div>
+    <div style="background:#f0f5fc;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#b53b3b;margin-bottom:4px">⚠️ 慎入区域</div>
+      <div style="font-size:10px;color:#4a5a6a;line-height:1.6">① 高纬度/高海拔全年低温城市——消费窗口仅7-8月两个月 ② 已有成熟冰浆摊位的区域 ③ 无夜生活文化的城镇——晚上8点后没人，冰浆消费场景不成立。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📅 季节性运营分析 ===== -->
+<div class="section">
+  <div class="s-title">📅 季节性运营分析</div>
+  <div style="background:#f0f5fc;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    贵州冰浆是典型「夏季限定」品类——旺季营收是淡季的10倍以上：
+    <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div style="background:#e8f4fd;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#2b7fc4">🔵 旺季（6-8月·夏季）</strong><br>
+        日销潜力：50-100杯<br>
+        水果：当季·批发价低位<br>
+        策略：全天出摊11点-23点。推所有口味。冰浆唯一的赚钱窗口——必须抓住。
+      </div>
+      <div style="background:#f0f5fc;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#D4A574">🟡 平季（5月·9月）</strong><br>
+        日销潜力：15-30杯<br>
+        水果：换季·价格波动大<br>
+        策略：仅周末和高温日出摊。缩至2款口味。下午3点后出摊。
+      </div>
+      <div style="background:#f5f0eb;border-radius:6px;padding:6px 8px;font-size:10px;grid-column:1/-1">
+        <strong style="color:#6a7a8a">⚪ 淡季（10月-4月·秋冬春）</strong><br>
+        日销潜力：0-5杯（基本无市场）<br>
+        策略：① 设备封存过冬 ② 转做同设备热饮（豆浆/玉米汁·¥300-500设备投入）③ 6-8月旺季利润需覆盖全年摊位租金（¥6,000-12,000）+折旧。目标旺季月净利¥8,000-12,000。
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fef6ec;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    💡 冰浆是「赚3个月养一年」的品类。以月租金¥600的夜市摊位为例，旺季需月均净利¥5,000+（日均净利¥170=多卖17杯）✅ 可行但没余量。建议方案：夏季冰浆+冬季热饮（玉米汁¥5-8/杯·毛利70%+），实现摊位全年盈利。
+  </div>
+</div>
+
+<!-- ===== 📦 供应链要点 ===== -->
+<div class="section">
+  <div class="s-title">📦 供应链要点</div>
+  <div style="background:#f0f5fc;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    <div style="display:grid;grid-template-columns:90px 1fr;gap:4px 10px">
+      <span style="font-weight:600;color:#1a3a5c">冰块</span><span style="color:#4a5a6a">制冰厂/商用制冰机 · ¥1-3/袋20kg</span>
+      <span style="font-weight:600;color:#1a3a5c">糯米</span><span style="color:#4a5a6a">1688/批发市场 · 圆糯米¥3-4/斤</span>
+      <span style="font-weight:600;color:#1a3a5c">芒果</span><span style="color:#4a5a6a">水果批发市场 · 当季¥3-5/斤</span>
+      <span style="font-weight:600;color:#1a3a5c">西瓜</span><span style="color:#4a5a6a">水果批发市场 · 当季¥1-2/斤</span>
+      <span style="font-weight:600;color:#1a3a5c">红心火龙果</span><span style="color:#4a5a6a">水果批发市场 · ¥4-6/斤</span>
+      <span style="font-weight:600;color:#1a3a5c">红糖/炼乳</span><span style="color:#4a5a6a">批发市场 · 红糖¥6-10/斤·炼乳¥12-18/罐</span>
+      <span style="font-weight:600;color:#1a3a5c">配料小料</span><span style="color:#4a5a6a">花生碎/芝麻/葡萄干 · 合计¥0.3-0.8/杯</span>
+      <span style="font-weight:600;color:#1a3a5c">包装耗材</span><span style="color:#4a5a6a">奶茶杯+盖+吸管+袋 · 1688 · ¥0.4-0.7/套</span>
+      <span style="font-weight:600;color:#1a3a5c">日采频率</span><span style="color:#4a5a6a">水果日采·糯米周采·冰块日采或自制冷冻</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;font-size:10px;color:#6a7a8a;line-height:1.6">
+    <strong>供应链关键点：</strong>① 冰块品质决定口感——前2周去制冰厂买冰（¥1-2/袋·日耗2-3袋），跑通后买商用制冰机（¥800-2,000·日产40-60kg），一个夏天省¥500-1,000冰费。② 水果每天早市价格波动快（芒果从¥8/斤跌到¥2/斤是常态），跟2-3个摊主加微信群比价。③ 红糖水预制（红糖:水=1:3煮沸5分钟过滤冷藏，保质期7天，建议3天内用完）。
+  </div>
+</div>
+
+<!-- ===== 📐 成本敏感性分析 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本敏感性分析</div>
+  <div style="font-size:11px;color:#4a5a6a;line-height:1.6;margin-bottom:8px">水果是冰浆成本大项（占食材成本40-55%），受季节和产地波动大。按标准杯500ml测算：</div>
+  <div style="background:#f0f5fc;border-radius:12px;padding:12px;font-size:11px">
+    <div class="recipe-line"><span class="k">✅ 基准（当季水果·¥12售价）</span><span class="v">食材成本¥2.0-3.0 → 毛利75-83%</span></div>
+    <div class="recipe-line"><span class="k">⚠️ 非当季（芒果¥8/斤·火龙果¥8/斤）</span><span class="v">食材成本¥2.8-4.0 → 毛利67-77%</span></div>
+    <div class="recipe-line"><span class="k">⚠️ 高价水果（草莓¥15/斤等）</span><span class="v">食材成本¥3.5-5.5 → 毛利54-71%</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">🔴 冰块外购贵（¥3/袋+运费）</span><span class="v">成本增¥0.3-0.5/杯 → 毛利降2-4%</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fef2f2;border-radius:8px;font-size:10px;color:#b53b3b">
+    ⚠️ 注意：当季芒果¥3/斤时一杯成本¥1.5（芒果50g→¥0.15），非当季¥8/斤时¥0.4——绝对值虽小但多种水果叠加效应明显（3种水果各30g·成本翻倍）。建议控制水果成本率在食材总成本的40-50%以内，超过则换品种。冰块成本率不到5%，不必纠结。
+  </div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是冰</div>
+    <div style="font-size:12px;color:#4a5a6a;line-height:1.7;margin-bottom:8px">顾客买的是：地域特色感 × 浓稠独特口感 × 冰凉解暑</div>
+    <div class="l-title">💵 定价梯度</div>
+    <div class="logic-item"><span>小杯（350ml·经典口味）</span><span class="v">¥8-10</span></div>
+    <div class="logic-item"><span>中杯（500ml·经典口味）</span><span class="v">¥10-13</span></div>
+    <div class="logic-item"><span>大杯（700ml·水果双拼）</span><span class="v">¥13-18</span></div>
+    <div class="logic-item"><span>加料（花生碎/脆哨/糍粑/葡萄干）</span><span class="v">+¥2-3/杯</span></div>
+    <div class="l-title" style="margin-top:6px">📈 利润模型</div>
+    <div class="logic-item"><span>食材成本/杯（中杯¥12定价）</span><span class="v">¥2.0-3.5</span></div>
+    <div class="logic-item"><span>毛利率（按中杯均价¥12）</span><span class="v">70-85%</span></div>
+    <div class="logic-item"><span>日营收（售40-80杯）</span><span class="v">¥400-1,200</span></div>
+    <div class="logic-item"><span>旺季月净利（6-8月·出摊25天）</span><span class="v">¥6,000-15,000</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-blue"><div class="m-label">日营收</div><div class="m-val">¥400-1,200</div><div class="m-sub">4-6小时出摊</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">旺季月净利</div><div class="m-val">¥6,000-15,000</div><div class="m-sub">6-8月·25天/月</div></div>
+    <div class="metric-card mc-green"><div class="m-label">回本周期</div><div class="m-val">3-7天</div><div class="m-sub">含设备+首批原料</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    💡 核心是「高毛利×高周转」——卖出一杯净赚¥8-10，但只有夏季3个月。日均净利目标¥200+（约卖25杯/天）。如果连续1周日均低于30杯→要么位置有问题，要么需搭配第二个品类。
+  </div>
+</div>
+
+<!-- ===== 📐 食材成本拆解 ===== -->
+<div class="section">
+  <div class="s-title">📐 食材成本拆解（标准中杯·500ml）</div>
+  <div style="background:#f0f5fc;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">冰块 200g</span><span class="v">¥0.15-0.30</span></div>
+    <div class="recipe-line"><span class="k">熟糯米 50g</span><span class="v">¥0.15-0.20</span></div>
+    <div class="recipe-line"><span class="k">水果（当季·芒果/西瓜/火龙果）50-80g</span><span class="v">¥0.60-1.50</span></div>
+    <div class="recipe-line"><span class="k">红糖水 30ml</span><span class="v">¥0.10-0.15</span></div>
+    <div class="recipe-line"><span class="k">炼乳 10g</span><span class="v">¥0.15-0.25</span></div>
+    <div class="recipe-line"><span class="k">配料（花生碎/芝麻/葡萄干）5g</span><span class="v">¥0.15-0.25</span></div>
+    <div class="recipe-line"><span class="k">奶茶杯+盖+吸管+袋</span><span class="v">¥0.40-0.65</span></div>
+    <div class="recipe-line" style="border-bottom:none;font-weight:700;color:#2b7fc4"><span class="k">合计食材+包装成本</span><span class="v">¥2.0-3.5</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f0f5fc;border-radius:8px;font-size:10px;color:#6a7a8a;line-height:1.7">
+    <strong>数据来源：</strong>冰块——自制冷冻¥0.15/杯（电费）或外购¥0.3/杯（制冰厂¥2/袋20kg）；糯米——圆糯米批发¥3-4/斤（来源：1688）；水果——芒果批发¥3-5/斤·西瓜¥1-2/斤·火龙果¥4-6/斤（批发市场2026年7月报价）；包装——500ml杯+盖+吸管¥0.35-0.55/套（1688餐饮包装批发）。采集时间：2026年7月。
+  </div>
+</div>
+
+<!-- ===== 📈 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:440px">
+      <thead>
+        <tr style="background:#1a3a5c;color:#fff">
+          <th style="padding:8px 6px;text-align:left;border-radius:6px 0 0 0">项目</th>
+          <th style="padding:8px 4px;text-align:center">投资</th>
+          <th style="padding:8px 4px;text-align:center">难度</th>
+          <th style="padding:8px 4px;text-align:center">毛利</th>
+          <th style="padding:8px 4px;text-align:center">竞争</th>
+          <th style="padding:8px 6px;text-align:center;border-radius:0 6px 0 0">推荐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#e8f4fd;border-bottom:1px solid #dce6f0">
+          <td style="padding:7px 6px;font-weight:700;color:#1a3a5c">🧊 贵州冰浆</td>
+          <td style="padding:7px 4px;text-align:center">★</td>
+          <td style="padding:7px 4px;text-align:center">★</td>
+          <td style="padding:7px 4px;text-align:center;color:#2b7fc4">★★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#3a8a4a">★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#2b7fc4">B+</td>
+        </tr>
+        <tr style="border-bottom:1px solid #dce6f0">
+          <td style="padding:7px 6px;font-weight:600;color:#1a3a5c">🍧 手工冰粉</td>
+          <td style="padding:7px 4px;text-align:center">★</td>
+          <td style="padding:7px 4px;text-align:center">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B</td>
+        </tr>
+        <tr style="background:#f0f5fc;border-bottom:1px solid #dce6f0">
+          <td style="padding:7px 6px;font-weight:600;color:#1a3a5c">🥤 水果茶/奶茶</td>
+          <td style="padding:7px 4px;text-align:center">★★★</td>
+          <td style="padding:7px 4px;text-align:center">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#C0392B">★★★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+        <tr style="border-bottom:1px solid #dce6f0">
+          <td style="padding:7px 6px;font-weight:600;color:#1a3a5c">🍦 炒酸奶</td>
+          <td style="padding:7px 4px;text-align:center">★★</td>
+          <td style="padding:7px 4px;text-align:center">★</td>
+          <td style="padding:7px 4px;text-align:center;color:#2b7fc4">★★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B</td>
+        </tr>
+        <tr style="background:#f0f5fc">
+          <td style="padding:7px 6px;font-weight:600;color:#1a3a5c;border-radius:0 0 0 6px">🍨 绵绵冰</td>
+          <td style="padding:7px 4px;text-align:center">★★★</td>
+          <td style="padding:7px 4px;text-align:center">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574;border-radius:0 0 6px 0">B+</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:10px;color:#8a9aaa;margin-top:6px;line-height:1.5">
+    💡 数据基于FoodIntelAI评估模型。贵州冰浆在「毛利」和「竞争」维度极突出——糯米+冰底料成本仅¥0.3-0.5/杯，且全国范围内做冰浆的摊位极少。但「难度低」背后有陷阱：设备（冰沙机）需持续供电，出摊需要冰柜/保温箱保冷——这些隐形成本在纯摆摊中容易被低估。冰粉/奶茶/炒酸奶已高度同质化——消费者有成熟的「价格锚点」，冰浆的优势在于「品类认知者少，定价空间更大」。
+  </div>
+</div>
+
+<!-- ===== 👅 口味与卖点 ===== -->
+<div class="section">
+  <div class="s-title">👅 口味与卖点</div>
+  <div style="background:#f0f5fc;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">招牌味型</span><span class="v">果香清甜 + 糯米浆感 + 红糖焦香</span></div>
+    <div class="recipe-line"><span class="k">口感层次</span><span class="v">冰凉爽滑→糯香绵密→果粒咀嚼→红糖回甘</span></div>
+    <div class="recipe-line"><span class="k">味觉演进</span><span class="v">冰爽（入口）→ 糯浆包裹（吞咽前）→ 果味/红糖回甘（收尾）</span></div>
+    <div class="recipe-line"><span class="k">视觉呈现</span><span class="v">彩色冰浆（火龙果粉/芒果黄/抹茶绿）+ 糯米粒 + 红糖水花纹 + 花生碎/芝麻</span></div>
+    <div class="recipe-line"><span class="k">核心卖点</span><span class="v">贵州特色+浓稠浆感+冰爽消夏·¥8-18一杯</span></div>
+    <div class="recipe-line"><span class="k">社交媒体传播性</span><span class="v">极高——彩色分层冰浆+配料堆叠视觉冲击力强，打冰浆「浓稠挂壁」画面很适合短视频</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">复购逻辑</span><span class="v">①「别的地方吃不到」地域稀缺感 ② 冰爽+口感独特的双重爽感 ③ 水果换着吃</span></div>
+  </div>
+  <div style="margin-top:10px;padding:12px;background:#fef6ec;border-radius:8px;font-size:11px;line-height:1.7;color:#7a5a2a">
+    <strong>🥭 推荐口味：</strong><br>
+    • <strong>芒果冰浆</strong>——基础浆底+芒果肉50g（经典·最推荐）<br>
+    • <strong>火龙果冰浆</strong>——红心火龙果60g（出片效果最好）<br>
+    • <strong>西瓜冰浆</strong>——西瓜80g+薄荷叶（最清爽·夏季解暑首选）<br>
+    • <strong>抹茶冰浆</strong>——基础+抹茶粉3g+炼乳翻倍（奶茶女孩最爱）<br>
+    • <strong>百香果冰浆</strong>——百香果30g+蜂蜜替代红糖（女性偏好）<br>
+    • <strong>双拼/三拼</strong>——两种/三种水果分区域放，视觉分层（¥15-18·利润最高）<br>
+    📌 首期只推3款（芒果·火龙果·西瓜），跑通后加双拼/三拼拉客单价。
+  </div>
+</div>
+
+<!-- ===== 🔪 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（含验证点）</div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc"><strong>糯米预处理</strong>：圆糯米浸泡4-6小时（夏季4h·冬季6h）。水开后上屉蒸20-25分钟至软糯透明无白心。摊凉冷藏（4°C）备用。</span>
+      <div class="ps-verify">[验证点] 蒸好的糯米粒粒分明不粘手。两指碾开成均匀糊状无硬心为合格。超过24小时淀粉老化变硬，打浆无法形成浆感。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc"><strong>红糖水预制</strong>：红糖:水=1:3煮沸后小火熬5分钟至完全融化，过滤放凉冷藏。</span>
+      <div class="ps-verify">[验证点] 红糖水应为深琥珀色透光有光泽。冷却后必须冷藏（4°C）——不冰的红糖水会拉高冰浆温度。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc"><strong>打冰浆</strong>：冰沙机加冰块200g+熟糯米50g+水果50-80g+红糖水30ml+炼乳10g。打制30-45秒至浓稠膏状无冰渣。</span>
+      <div class="ps-verify">[验证点] 舀一勺倒扣3秒不下滴为合格。如果像水一样流→糯米不够或打太久。如果成团不动→糯米太多或冰太少。声音从「咔咔」（碎冰）变「隆隆」（混合）后5-10秒停止。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc"><strong>装杯出餐</strong>：冰浆倒入杯八分满，淋红糖水花纹，撒花生碎/芝麻/葡萄干。出餐时间约1.5-2分钟。</span>
+      <div class="ps-verify">[验证点] 吸管插入应能轻松吸到——吸不动说明太稠需调整。成品3分钟内递给顾客——放置超5分钟表层融化，口感和卖相同时下降。</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fef6ec;border-radius:8px;font-size:11px;color:#7a5a2a">
+    ⚠️ <strong>关键控制点：</strong>① 糯米浸泡+蒸制时间严格执行 ② 冰块必须-10°C以下 ③ 打制时间30-45秒——不要过打 ④ 红糖水必须冰的。这4个点中任何一个出问题，成品质地直接降级。💡 出摊前水果切好分装（每份50-80g），糯米冷藏带出。单人操作出杯速度可达25-30杯/小时。
+  </div>
+</div>
+
+<!-- ===== 📦 核心原料清单 ===== -->
+<div class="section">
+  <div class="s-title">📦 核心原料清单（中杯·500ml）</div>
+  <div style="background:#f0f5fc;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span>冰块（食用冰·-10°C以下）</span><span>200g</span></div>
+    <div class="recipe-line"><span>熟圆糯米（蒸制后·冷藏）</span><span>50g</span></div>
+    <div class="recipe-line"><span>新鲜水果（芒果/火龙果/西瓜·去皮切块）</span><span>50-80g</span></div>
+    <div class="recipe-line"><span>红糖水（红糖:水=1:3·熬煮过滤·冷藏）</span><span>30ml</span></div>
+    <div class="recipe-line"><span>炼乳（雀巢·可选）</span><span>10g</span></div>
+    <div class="recipe-line"><span>花生碎（去皮炒熟·碾粗粒）</span><span>5g</span></div>
+    <div class="recipe-line"><span>白芝麻（熟）</span><span>2g</span></div>
+    <div class="recipe-line"><span>葡萄干/椰果（可选）</span><span>5-10g</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>包装（500ml奶茶杯+盖+吸管+袋）</span><span>1套</span></div>
+  </div>
+  <div style="margin-top:6px;padding:8px;background:#fef6ec;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 替代方案：</strong>长糯米可替代圆糯米（浆感稍弱但可用）·不要用普通大米；炼乳可用牛奶20ml+糖5g替代；无冰沙机可用破壁机但多打15-20秒且冰晶偏粗；糯米提前一天蒸好冷藏；红糖水提前3天做好冷藏。
+  </div>
+</div>
+
+<!-- ===== 🛠️ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单 + 最低投资</div>
+  <div style="font-size:12px;font-weight:700;color:#1a3a5c;margin-bottom:6px">🔸 核心设备（¥1,000起）</div>
+  <div style="background:#f0f5fc;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #2b7fc4">
+    <div class="recipe-line"><span style="color:#4a5a6a">冰沙机（商用·20,000-30,000rpm·1.8L+）</span><span style="font-weight:600;color:#1a3a5c">¥300-800</span></div>
+    <div class="recipe-line"><span style="color:#4a5a6a">保温箱（保冷·30-50L）</span><span style="font-weight:600;color:#1a3a5c">¥80-150</span></div>
+    <div class="recipe-line"><span style="color:#4a5a6a">不锈钢操作台/折叠桌</span><span style="font-weight:600;color:#1a3a5c">¥100-250</span></div>
+    <div class="recipe-line"><span style="color:#4a5a6a">不锈钢盆×3-4个</span><span style="font-weight:600;color:#1a3a5c">¥30-60</span></div>
+    <div class="recipe-line"><span style="color:#4a5a6a">电子秤（精确到g）</span><span style="font-weight:600;color:#1a3a5c">¥20-40</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#4a5a6a">水果刀+砧板+量杯</span><span style="font-weight:600;color:#1a3a5c">¥35-70</span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#1a3a5c;margin-bottom:6px">🔸 摊位配套（选择项）</div>
+  <div style="background:#f0f5fc;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #D4A574">
+    <div class="recipe-line"><span style="color:#4a5a6a">二手三轮车</span><span style="font-weight:600;color:#1a3a5c">¥400-1,000</span></div>
+    <div class="recipe-line"><span style="color:#4a5a6a">蓄电池+逆变器（冰沙机供电·关键！）</span><span style="font-weight:600;color:#1a3a5c">¥200-500</span></div>
+    <div class="recipe-line"><span style="color:#4a5a6a">帐篷伞 3×3m + 灯箱</span><span style="font-weight:600;color:#1a3a5c">¥150-450</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#4a5a6a">收款码牌/折叠桌椅</span><span style="font-weight:600;color:#1a3a5c">¥100-200</span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#1a3a5c;margin-bottom:6px">🔸 首批耗材</div>
+  <div style="background:#f0f5fc;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #3a8a4a">
+    <div class="recipe-line"><span style="color:#4a5a6a">冰块 60kg（约300杯）</span><span style="font-weight:600;color:#1a3a5c">¥3-9</span></div>
+    <div class="recipe-line"><span style="color:#4a5a6a">圆糯米 5kg</span><span style="font-weight:600;color:#1a3a5c">¥15-20</span></div>
+    <div class="recipe-line"><span style="color:#4a5a6a">水果各5kg（芒果/火龙果/西瓜）</span><span style="font-weight:600;color:#1a3a5c">¥30-60</span></div>
+    <div class="recipe-line"><span style="color:#4a5a6a">红糖2kg+炼乳1罐+配料</span><span style="font-weight:600;color:#1a3a5c">¥50-85</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#4a5a6a">包装200套（杯+盖+吸管+袋）</span><span style="font-weight:600;color:#1a3a5c">¥80-130</span></div>
+  </div>
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#2b7fc4;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#4a5a6a">
+      <div style="background:#fef6ec;border-radius:6px;padding:6px 10px"><strong style="color:#1a3a5c">最低起步：</strong>¥1,000-1,500<br><span style="font-size:10px;color:#8a9aaa">冰沙机+保温箱+折叠桌+首批原料（前提：摊位有市电或自备蓄电池）</span></div>
+      <div style="background:#fef6ec;border-radius:6px;padding:6px 10px"><strong style="color:#1a3a5c">全套配齐：</strong>¥1,800-3,000<br><span style="font-size:10px;color:#8a9aaa">含三轮车+蓄电池+帐篷+灯箱+全部设备</span></div>
+    </div>
+    <div style="font-size:10px;color:#8a9aaa;margin-top:6px;line-height:1.5">
+      💡 冰沙机建议买二手（闲鱼¥150-400）降启动成本。供电是冰浆摆摊最大的隐性门槛——冰沙机800-1500W，充电宝带不动。要么摊位有市电，要么配蓄电池（¥200-500）。<strong style="color:#1a3a5c">新手最容易忽略供电问题。</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📦 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">引流</span><span class="t-name">经典芒果/西瓜冰浆（中杯·500ml）</span><span class="t-price">¥10-12</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">火龙果/抹茶/百香果创新口味 + 加料</span><span class="t-price">¥13-16</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">利润+</span><span class="t-name">双拼/三拼冰浆（大杯·700ml·水果分层）</span><span class="t-price">¥15-20</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f0f5fc;border-radius:8px;font-size:11px;color:#4a5a6a;line-height:1.6">
+    💡 引流款毛利72-80%依然优秀，但角色是「第一杯低门槛」。利润款靠创新口味和加料拉客单价（从¥12到¥15）。双拼材料成本仅增¥1-1.5，售价可提¥3-5，毛利最高。新手建议：首期只做引流款3种口味，第二周加利润款和双拼——先验证品类需求，再堆SKU。
+  </div>
+</div>
+
+<!-- ===== 🔥 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#e8f4fd"><div class="s-icon">🌙</div><div class="s-name">夜市</div><div class="s-bar"><div class="fill" style="width:95%;background:#2b7fc4"></div></div><div style="font-size:9px;color:#6a7a8a;margin-top:2px">★★★★★</div></div>
+    <div class="stall-item" style="background:#e8f4fd"><div class="s-icon">🏫</div><div class="s-name">大学城</div><div class="s-bar"><div class="fill" style="width:90%;background:#2b7fc4"></div></div><div style="font-size:9px;color:#6a7a8a;margin-top:2px">★★★★★</div></div>
+    <div class="stall-item" style="background:#e8f4fd"><div class="s-icon">🏞️</div><div class="s-name">景区</div><div class="s-bar"><div class="fill" style="width:85%;background:#3a8a4a"></div></div><div style="font-size:9px;color:#6a7a8a;margin-top:2px">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f0f5fc"><div class="s-icon">🏪</div><div class="s-name">商业街</div><div class="s-bar"><div class="fill" style="width:70%;background:#D4A574"></div></div><div style="font-size:9px;color:#6a7a8a;margin-top:2px">★★★★☆</div></div>
+    <div class="stall-item" style="background:#f0f5fc"><div class="s-icon">🏠</div><div class="s-name">社区</div><div class="s-bar"><div class="fill" style="width:55%;background:#D4A574"></div></div><div style="font-size:9px;color:#6a7a8a;margin-top:2px">★★★☆☆</div></div>
+    <div class="stall-item" style="background:#f0f5fc"><div class="s-icon">📱</div><div class="s-name">外卖</div><div class="s-bar"><div class="fill" style="width:35%;background:#8a9aaa"></div></div><div style="font-size:9px;color:#6a7a8a;margin-top:2px">★★☆☆☆</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f0f5fc;border-radius:8px;font-size:11px;color:#4a5a6a;line-height:1.6">
+    <strong>📍 最佳点位：</strong>夜市固定摊位（月租¥500-2,000）> 大学城流动摊位 > 景区入口/内。冰浆的最佳场景是「边走边喝」的消夏场景。景区夏季白天一瓶矿泉水¥5-8、一杯冰浆¥15完全卖得动。社区问题在于复购天花板低+需要品类教育。外卖评分低——冰浆配送超过15分钟浆体融化变稀。如要做外卖→仅限周边1km，备注「收到立即饮用」。
+  </div>
+</div>
+
+<!-- ===== 🗓️ 7天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 7天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#e8f4fd;border-radius:8px;font-size:12px;color:#1a3a5c">
+      <span style="background:#2b7fc4;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1</span>
+      <span>买糯米1斤+冰块+水果（芒果/火龙果各1个）+红糖。在家试做3杯。跑通泡米→蒸米→打浆→装杯全流程。自己打分（口感/外观/味道各1-10分）。重点判断：有没有浆感？会不会太甜？</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#1a3a5c">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 2</span>
+      <span>调整配方（糯米从50g→60g→40g逐步调）。再做3杯请3个朋友试喝。不问「好喝吗」问「如果¥12一杯你会买第二次吗」。记录定性反馈——特别是「跟普通冰沙有什么区别」。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#1a3a5c">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 3</span>
+      <span>定版配方。去目标夜市/大学城踩点——记录人流时段、竞品（冰粉/炒酸奶等）定价、摊位费。核算：按当地定价日均卖多少杯能回本。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#e8f4e8;border-radius:8px;font-size:12px;color:#1a3a5c">
+      <span style="background:#3a8a4a;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 5</span>
+      <span>第一次试摆（备30杯）。选周五/六晚·目标夜市。定价¥10-12/杯（3种口味各10杯）。目标：卖出20杯+。记录：卖出杯数、什么口味卖最快、主动好评率。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#1a3a5c">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 7</span>
+      <span>复盘。目标：① 首日卖出20杯+ ② 至少3人问「明天还来吗」或加微信 ③ 无重大翻车（冰沙机故障/电源问题/冰块不够）。三个都满足→继续。卖出不到10杯→换位置再试一次Day5。两次试摆都低于15杯→可能位置不对或品类认知太低。</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #b0c0d0;font-size:11px;color:#4a5a6a;line-height:1.6">
+    <strong>🔑 关键判断：</strong>7天验证成本约¥200-300（糯米+水果+配料¥80-100·冰块¥10-20·包装30套¥15-20·摊位费Day5约¥50-100）。Day5卖出25杯+（营收¥250+）已覆盖当日成本。<br>
+    <strong>退出标准：</strong>Day5卖出不到15杯 / 试吃反馈「跟普通冰沙差不多」 / 供电问题无法解决——符合任意两项→换项目。¥300止损比¥3,000好得多。💡供电是冰浆的隐形杀手——提前确认摊位是否有市电，备好plan B。
+  </div>
+</div>
+
+<!-- ===== ⚠️ 风险清单 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>季节性悬崖</strong>——冰浆消费窗口每年仅6-9月（约100-120天）。10月-5月完全没有市场。如果冰浆是唯一收入，剩下8个月做什么？解法：要么做副业，要么提前规划淡季品类（热饮/玉米汁/烤红薯）。如果年摊位租金¥6,000，旺季需月净赚¥2,000+来覆盖。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>供电问题</strong>——商用冰沙机800-1500W，移动电源带不动。没有市电就必须备蓄电池（¥200-500）。踩点时第一件事确认电源——没有市电→提前买蓄电池测试后再出摊。想象一下：Day5到现场发现冰沙机没电→整晚报废。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><strong>冰块品质与保温</strong>——冰块在出摊路上部分融化→打出来的冰浆偏稀。家用冰箱冰块（-18°C）拿出去5分钟表面融化变结块→冰晶不均匀。解法：出摊前保证冰块-10°C以下。保温箱提前放冰袋预冷。买制冰厂冰的话出摊前再去买。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><strong>消费者认知不足</strong>——很多人路过以为是普通冰沙就走了。解法：① 招牌写「贵州冰浆——不是冰沙」 ② 出餐时故意展示浆感（勺子舀起浓稠状） ③ 设试吃小杯（¥3-5）降首次尝试门槛 ④ 短视频拍「倒扣不流」的画面做招牌视频。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><strong>水果品控波动</strong>——水果不是标准品。同一批芒果一半甜一半酸。昨天好吃今天一般→顾客觉得不好喝就不来第三次了。解法：① 亲手挑水果不电话下单 ② 每批到摊先试吃一个 ③ 建立「不好吃重做」机制——重做的成本¥2-3，失去一个顾客损失¥50-100。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><strong>冰沙机清洁与卫生</strong>——夏天糖分果肉残留在刀片缝隙中，过夜就可能变质。有人喝冰浆腹泻→摊位就完了。解法：① 每打5-6杯清水冲洗一次 ② 收摊后拆下刀片彻底清洗晾干 ③ 每周一次深度消毒 ④ 准备两个杯子轮换用。</div>
+</div>
+
+<!-- ===== 📈 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">启动成本低——¥1,000验证整个商业模型</div>
+      <div class="t-item">毛利极高（70-85%）——冰+糯米底料仅¥0.3-0.5/杯</div>
+      <div class="t-item">门槛低——操作简单，1人即可</div>
+      <div class="t-item">品类差异化强——认知者少·竞争压力小</div>
+      <div class="t-item">视觉社交属性强——彩色分层冰浆自传播力好</div>
+      <div class="t-item">出杯速度快——熟练后25-30杯/小时</div>
+      <div class="t-item">水果成本弹性大——换品种可消化价格波动</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">季节性极强——仅6-9月可卖</div>
+      <div class="t-item">单杯均价低（¥10-15）·日营收天花板¥1,200</div>
+      <div class="t-item">供电问题——冰沙机需要市电或蓄电池</div>
+      <div class="t-item">消费者认知不足——需额外做品类教育</div>
+      <div class="t-item">不能配送——超过10分钟口感显著下降</div>
+      <div class="t-item">冰块保冷要求高——全程需要保温箱+冰袋</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>贵州冰浆处于「品类引入期」——贵州本地已是成熟品类（贵阳夜市密度高），全国范围属于蓝海。有商业样本（贵阳各夜市已验证），有可复制性（冰沙机+糯米+水果=标准化），有品类红利（认知率低=竞争少）。<br><br>
+    <strong>赛道定位：</strong>夏季摆摊品类中「毛利最高·门槛最低」的选择之一。冰粉全国价格战（¥5-8），炒酸奶设备贵（¥2,000-5,000），冰浆在两者之间找到缝隙——设备比炒酸奶便宜（¥300-800），毛利同档次（70-85%），竞争比冰粉低得多。<br><br>
+    <strong>天花板：</strong>单摊旺季月净利¥6,000-15,000。突破路径：① 旺季加人手（冰沙机×2）② 做预制冷冻浆底 ③ 开固定店面（加饮品+小食组合）④ 品牌化（贵州冰浆地域品牌IP）。
+  </div>
+</div>
+
+<!-- ===== 🧠 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 贵州冰浆——有条件的推荐入场。</strong><br><br>
+      推荐理由：<br>
+      ① <strong>市场缝隙真实存在</strong>——冰粉/炒酸奶做滥了，贵州冰浆在多数城市还是新鲜面孔。先入场有1-2年品类红利。<br>
+      ② <strong>毛利天花板</strong>——70-85%毛利率在冷饮甜品赛道是第一梯队。¥12一杯·食材成本¥2-3.5这个数字不会骗人。<br>
+      ③ <strong>技术门槛低到地板</strong>——冰沙机+糯米+水果+红糖水，核心操作就是按开关。新手当天就能出杯。<br><br>
+      三个「不」必须想清楚：<br>
+      ① <strong>不是全年能做的项目</strong>——销售窗口仅4个月。如果摆摊是主要收入来源，冰浆不适合做唯一品类。<br>
+      ② <strong>不是¥20,000/月的造富项目</strong>——单人日营收天花板¥1,200（卖100杯到头了）。想月净利¥10,000+需日均卖50杯。<br>
+      ③ <strong>不是不需要准备的懒人项目</strong>——糯米要泡要蒸、水果要切、冰块要保温、电源要解决。看起来简单但每项都偷不了懒。<br><br>
+      如果你想在夏天做一份「轻松不卷、利润不错」的副业，<br><br>
+      <strong>贵州冰浆值得你花¥200和7天来验证。</strong><br><br>
+      <em style="font-size:11px;color:#6a7a8a">本卡为热品卡（已验证商业模型），数据基于贵州贵阳及周边夜市摊点运营数据及FoodIntelAI团队实测调校。付费区包含完整精确配方、批量SOP及变体方案。</em>
+      <div class="j-tags"><span>#贵州冰浆</span><span>#夜市爆款</span><span>#摆摊项目</span><span>#夏季限定</span><span>#高毛利</span><span>#地域小吃</span><span>#消夏甜品</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>💎 贵州冰浆 · 完整出摊包</h3>
+  <div class="p-sub">你买的不只是一个配方。是一套经过验证的夏季出摊方案。</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✓</span>3种核心冰浆配方（芒果·火龙果·西瓜）——精确到克·零基础可做</div>
+    <div class="p-item"><span class="p-icon">✓</span>批量SOP：30杯/60杯/100杯版本——精确到每批用料和时间</div>
+    <div class="p-item"><span class="p-icon">✓</span>变体方案（抹茶·百香果·双拼·三拼）</div>
+    <div class="p-item"><span class="p-icon">✓</span>成本核算模板——自动计算每杯利润</div>
+    <div class="p-item"><span class="p-icon">✓</span>翻车应急方案——太稀/太稠/不甜/冰沙机故障</div>
+    <div class="p-item"><span class="p-icon">✓</span>摊位选址Checklist + 供电方案 + 出摊前准备清单</div>
+  </div>
+  <div style="background:#fff;border-radius:10px;padding:14px;max-width:340px;margin:0 auto 12px;border:1px solid #dce6f0">
+    <div style="font-size:12px;font-weight:700;color:#1a3a5c;margin-bottom:6px">1️⃣ 精确配方 — 冰浆配料精确到克</div>
+    <div style="font-size:12px;line-height:1.8;color:#2a3a4a;background:#f0f5fc;border-radius:8px;padding:10px;border-left:3px solid #2b7fc4">
+      <div class="recipe-line"><span class="k">经典芒果冰浆 · 基础配方（500ml出成·1杯）</span></div>
+      <div class="recipe-line"><span class="k">冰块（食用冰·-10°C以下）</span><span class="v">200g</span></div>
+      <div class="recipe-line"><span class="k">熟圆糯米（蒸制后·冷藏4°C）</span><span class="v">50g</span></div>
+      <div class="recipe-line"><span class="k">新鲜芒果肉（去皮切块·台农/水仙芒）</span><span class="v">60g</span></div>
+      <div class="recipe-line"><span class="k">红糖水（红糖:水=1:3·熬5分钟·过滤冷藏）</span><span class="v">30ml</span></div>
+      <div class="recipe-line"><span class="k">炼乳（雀巢·可选）</span><span class="v">10g</span></div>
+      <div class="recipe-line"><span class="k">花生碎（去皮炒熟·碾粗粒）</span><span class="v">5g</span></div>
+      <div class="recipe-line"><span class="k">白芝麻（熟）</span><span class="v">2g</span></div>
+      <div class="recipe-line" style="border-bottom:none"><span class="k">葡萄干（可选）</span><span class="v">5g</span></div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#1a3a5c;margin:10px 0 6px">2️⃣ 批量SOP — 30杯/60杯/100杯</div>
+    <div style="background:#f0f5fc;border-radius:8px;overflow:hidden;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:10px;font-weight:700;padding:6px 10px;background:#1a3a5c;color:#fff">
+        <span>原料</span><span>30杯</span><span>60杯</span><span>100杯</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #d0d8e0">
+        <span>冰块</span><span>6kg</span><span>12kg</span><span>20kg</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #d0d8e0;background:#e8eef5">
+        <span>熟糯米</span><span>1.5kg</span><span>3kg</span><span>5kg</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #d0d8e0">
+        <span>水果（芒果等）</span><span>1.8kg</span><span>3.6kg</span><span>6kg</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #d0d8e0;background:#e8eef5">
+        <span>红糖水</span><span>900ml</span><span>1.8L</span><span>3L</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #d0d8e0">
+        <span>炼乳</span><span>300g</span><span>600g</span><span>1kg</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #d0d8e0;background:#e8eef5">
+        <span>配料（花生/芝麻等）</span><span>各150g</span><span>各300g</span><span>各500g</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #d0d8e0">
+        <span>包装耗材</span><span>35套</span><span>65套</span><span>110套</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;background:#e8eef5">
+        <span>预估耗时（备料+出摊）</span><span>3h</span><span>5-6h</span><span>8-10h</span>
+      </div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#1a3a5c;margin:10px 0 6px">3️⃣ 变体方案</div>
+    <div style="background:#e8f4e8;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #3a8a4a;font-size:12px;line-height:1.8;color:#2a3a4a">
+      <strong>🍵 抹茶冰浆：</strong>基础浆底去掉芒果→加抹茶粉3g。炼乳翻倍至20g（平衡苦味）。加蜜红豆15g做底部配料。特点：抹茶控+奶茶女孩双重靶向。拍照非常上镜。
+    </div>
+    <div style="background:#fef6ec;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #D4A574;font-size:12px;line-height:1.8;color:#2a3a4a">
+      <strong>🍈 百香果冰浆：</strong>基础浆底去掉芒果→加百香果肉30g+蜂蜜15ml替代红糖。减冰块30g（百香果含水高）。加椰果15g。特点：酸甜平衡，清爽度最高。
+    </div>
+    <div style="background:#e8f4fd;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #2b7fc4;font-size:12px;line-height:1.8;color:#2a3a4a">
+      <strong>🌈 三拼豪华冰浆（¥18-20）：</strong>杯底芒果冰浆→火龙果冰浆→西瓜冰浆各1/3，每层轻压防止混合。表面淋红糖水花纹+所有配料叠满。特点：视觉天花板，三色分层自传播力极强，最高毛利SKU。
+    </div>
+  </div>
+  <div class="price-tag">¥19 <small>一次性买断·永久查看</small></div>
+  <a id="payBtn" class="btn" href="javascript:void(0)" onclick="togglePayContent()">🔓 解锁完整出摊包</a>
+  <div class="note">解锁后可永久查看  ·  解锁不满意可联系微信 canglin1985 全额退款</div>
+</div>
+
+<div class="pay-content" id="payContent">
+  <div class="section" style="border-top:2px dashed #b0c0d0">
+    <div class="s-title">✅ 已解锁 · 完整出摊包内容</div>
+    <div style="background:#e8f4e8;border-radius:12px;padding:14px;margin-bottom:8px;border-left:3px solid #3a8a4a;font-size:12px;line-height:1.8;color:#2a3a4a">
+      <strong>🎉 感谢你的信任！以下为贵州冰浆完整出摊包的全部内容：</strong><br><br>
+      <strong>1️⃣ 三款核心冰浆精确配方（已在上方展示）</strong><br>
+      — 经典芒果 · 火龙果 · 西瓜三款完整配方<br>
+      — 每一步的操作细节和验证点<br><br>
+      <strong>2️⃣ 批量SOP（30/60/100杯三档）</strong><br>
+      — 精确到每批食材用量和备料时间<br>
+      — 按出摊规模选择对应档位<br><br>
+      <strong>3️⃣ 变体方案（抹茶/百香果/三拼豪华）</strong><br>
+      — 在基础配方上的改动量<br>
+      — 每款变体的目标客群和适用场景<br><br>
+      <strong>4️⃣ 翻车应急方案</strong><br>
+      — 冰浆太稀：冰块融化太快（保温不够/打太久）/糯米放少了/水果含水太高<br>
+      — 冰浆太稠吸不动：糯米放多了/冰块不够/加少量冰再打5秒<br>
+      — 不够甜/太甜：红糖水调整——糖水浓度固定后只调量<br>
+      — 水果不甜：换一批水果/加炼乳5g/加蜂蜜替代部分红糖水<br>
+      — 冰沙机打不动：冰块太大/结块/刀片变钝——冰块出摊前敲成3-5cm小块<br>
+      — 冰沙机故障：备用方案——带手动碎冰锥+手持搅拌棒（¥30-50应急）<br><br>
+      <strong>5️⃣ 成本核算模板</strong><br>
+      — 每杯食材成本 = 冰块¥0.2 + 糯米¥0.18 + 水果¥0.8 + 红糖水¥0.12 + 炼乳¥0.2 +配料¥0.2 + 包装¥0.5 = <strong>¥2.2/杯</strong><br>
+      — 按中杯¥12售价：毛利¥9.8（82%毛利率）<br>
+      — 注意：以上为含包装的完整成本。仅算食材成本：¥1.7/杯<br><br>
+      <strong>6️⃣ 摊位选址Checklist</strong><br>
+      — ✅ 首选——夜市固定摊位（月租¥500-2,000·流量最稳·转化率最高）<br>
+      — ✅ 次选——大学城流动摊位（目标学生客群·周六日人流量最大）<br>
+      — ✅ 第三——景区入口/内摊位（夏季矿泉水都¥5-8·冰浆¥15完全卖得动）<br>
+      — ✅ 踩点时间选周五/六晚19:00-21:00——观察真实人流峰值<br>
+      — ✅ 确认摊位有市电（商用冰沙机800-1500W·移动电源带不动）<br>
+      — ✅ 无市电→提前买蓄电池（¥200-500）并出摊前测试<br>
+      — ✅ 确认摊位3公里内无同品类冰浆摊<br>
+      — ✅ 记录竞品（冰粉/炒酸奶/冰淇淋）定价——冰浆定价不高于竞品¥2<br><br>
+      <strong>7️⃣ 摆摊必备Checklist</strong><br>
+      — ✅ 糯米已泡好蒸好冷藏（4°C）<br>
+      — ✅ 水果已去皮切块分装（每份50-80g·保鲜盒）<br>
+      — ✅ 红糖水/炼乳已预制冷藏<br>
+      — ✅ 冰块已从冰柜取出入保温箱（-10°C以下）<br>
+      — ✅ 冰沙机已测试（确认供电/转速正常）<br>
+      — ✅ 蓄电池/电源线已充满<br>
+      — ✅ 配料分装 + 包装耗材备齐<br>
+      — ✅ 零钱/收款码 + 手套/食品夹/湿巾<br>
+      — ✅ 保温箱冰袋充足 + 手机满电<br><br>
+      <strong>📌 实战提醒：</strong>第一次出摊备30杯料（每种口味10杯），卖完收工。第一周核心目标不是赚钱，是跑通「备料→出摊→售卖→收摊→复盘」闭环。特别提醒：冰浆出摊前准备时间比普通摆摊多30-40%（泡米+蒸米+切水果），第一次请提前1.5小时到场。
+    </div>
+    <div style="margin-top:8px;padding:10px;background:#fffefc;border:1px dashed #b0c0d0;border-radius:8px;font-size:11px;color:#4a5a6a;line-height:1.6">
+      <strong>💡 解锁后如有疑问：</strong>加微信 canglin1985（备注"贵州冰浆"），直接问。我亲自回答。<br>
+      如果你按此方案出摊并遇到了具体问题——浆感调整、水果品种选择、供电方案——发照片/视频过来，我帮你诊断。
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePayContent() {
+  var content = document.getElementById('payContent');
+  var btn = document.getElementById('payBtn');
+  if(content.classList.contains('show')){
+    content.classList.remove('show');
+    btn.textContent = '🔓 解锁完整出摊包';
+  } else {
+    content.classList.add('show');
+    btn.textContent = '🔒 收起内容';
+  }
+}
+</script>
+
+<!-- ===== 🏪 品牌推广 footer ===== -->
+<div style="padding:16px 18px;background:#f8faff;border-top:1px solid #dce6f0;text-align:center">
+  <div style="margin-bottom:10px">
+    <div style="font-size:12px;font-weight:700;color:#1a3a5c;margin-bottom:4px">FoodIntelAI · 食品决策库</div>
+    <div style="font-size:10px;color:#6a7a8a;line-height:1.6">
+      少走弯路 · 快人一步<br>
+      贵州冰浆 · 热品卡 · 已验证商业模型<br>
+      做食品创业前 · 先看数据
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:16px;margin:10px 0">
+    <div style="text-align:center">
+      <img src="../../gongzhonghao_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="公众号二维码">
+      <div style="font-size:8px;color:#8a9aaa;margin-top:4px">公众号</div>
+    </div>
+    <div style="text-align:center">
+      <img src="../../wechat_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="微信二维码">
+      <div style="font-size:8px;color:#8a9aaa;margin-top:4px">微信 canglin1985</div>
+    </div>
+  </div>
+  <div style="font-size:9px;color:#8a9aaa;margin-top:6px">🧊 贵州冰浆 · 热品卡 · 决策库编号 RP_08</div>
+</div>
+
+</div>
+
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>

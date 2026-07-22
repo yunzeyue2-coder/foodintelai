@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>RP_11 狼牙土豆 · 热品卡 · 深度分析</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+
+.pay-content{display:none}
+.pay-content.show{display:block}
+
+.btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+
+.sci-box{background:#f8f4ef;border-radius:12px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35}
+.sci-box .sci-icon{font-size:14px}
+
+@media (max-width:400px){
+  .radar-grid{grid-template-columns:1fr 1fr}
+  .fit-wrap{grid-template-columns:1fr}
+  .stall-grid{grid-template-columns:1fr 1fr}
+  .metric-row{flex-direction:column;gap:4px}
+}
+</style>
+<link rel="stylesheet" href="../../paywall.css">
+
+<script>
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))
+    e.preventDefault();
+});
+document.addEventListener('copy',function(e){e.preventDefault();return false});
+document.addEventListener('selectstart',function(e){e.preventDefault()});
+</script>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🥔 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🥔 狼牙土豆</h1>
+  <div style="font-size:12px;color:#b5aaa0;display:flex;gap:6px;flex-wrap:wrap">
+    <span>四川街頭爆款 · 狼牙刀切 · 拌料为王</span>
+    <span style="background:#f0f6ec;color:#3a6b2e;padding:0 6px;border-radius:3px">✅ 已验证 · 热品卡</span>
+  </div>
+  <div style="font-size:10px;color:#d5ccc0;margin-top:4px">⚠️ 本卡为狼牙土豆（狼牙刀切+拌料），非锅巴土豆（切块+浇汁）。两个产品不同。</div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.0</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">A-级项目</span>
+  </div>
+  <div class="r-tagline">土豆是载体，拌料才是灵魂。¥600起步验证的品类，满街都在卖但赚钱的人从来不缺。</div>
+  <div class="r-tags">
+    <span>🔥 国民小吃</span>
+    <span>💰 投资¥600起</span>
+    <span>👤 1人可做</span>
+    <span>🔄 复购率中高</span>
+    <span>🥔 毛利78-85%</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高·国民级认知</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高·拌料差异化</div></div>
+    <div class="radar-item high"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">极低·¥600起</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★☆☆☆</div><div class="val">低·5步出餐</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★★</div><div class="val">高·毛利78-85%</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 这张卡帮你解决 ===== -->
+<div class="section">
+  <div class="s-title">🎯 这张卡帮你解决</div>
+  <div class="spec-card">
+    <b>❓ 怕投了钱卖不出去？</b><br>
+    物料成本¥1.5-2/份，进5斤土豆才¥3——一天卖不出全扔了也不心疼。<br><br>
+    <b>❓ 怕做出来不好吃？</b><br>
+    工艺就5步：削→切→洗→炸→拌。不需要任何厨艺基础，有手就会。<br><br>
+    <b>❓ 怕一天赚不到钱？</b><br>
+    一个夜市摊位日销50-80份很常见，毛利78-85%——日均¥400-800纯利。
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 摆摊新手·¥600即可起步验证</div>
+      <div class="fit-item fit-yes">✅ 夜市/大学城创业者（客群天然匹配）</div>
+      <div class="fit-item fit-yes">✅ 1人经营·无需请人</div>
+      <div class="fit-item fit-yes">✅ 副业尝试·白天上班晚上出摊</div>
+      <div class="fit-item fit-yes">✅ 已有摊位加新品类（炸串摊加狼牙土豆线）</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求¥15,000+/月高回报的单人项目</div>
+      <div class="fit-item fit-no">❌ 想靠外卖赚钱的创业者（土豆炸后口感衰退快）</div>
+      <div class="fit-item fit-no">❌ 不愿意调整拌料配方的人</div>
+      <div class="fit-item fit-no">❌ 追求快速连锁加盟的资本型创业者</div>
+      <div class="fit-item fit-no">❌ 无法接受油炸气味的环境（小区楼下等）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔬 风味科学 ===== -->
+<div class="section">
+  <div class="s-title">🔬 风味科学</div>
+  <div class="sci-box">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🌡️</span><span style="font-size:12px;font-weight:700;color:#3a322a">土豆品种与淀粉含量的科学</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:12px">
+      狼牙土豆的核心竞争力不在刀工——炸土豆谁都会，但同样一锅油炸出来的土豆，口感可以天差地别。根源在土豆品种。<br><br>
+      <strong>黄心土豆 vs 白心土豆：</strong>黄心土豆（荷兰15号/夏波蒂）淀粉含量约14-18%，炸后外脆内糯，是狼牙土豆的首选品种。白心土豆（克新系列）淀粉含量仅12-14%，含水量高，炸出来外皮不够脆、内里偏水，口感明显差一档。在1688和惠农网上，荷兰15号产地批发价¥0.40-0.56/斤（山东莒县·河北张北·辽宁绥中），比普通土豆贵约10-15%，但口感的提升远超这个价差（来源：惠农网商家报价·农业农村部2025品种统计）。<br><br>
+      <strong>新土豆 vs 陈土豆：</strong>新土豆（秋季采收后1-2个月内）含水量偏高，炸出来脆壳薄。陈土豆（储存3个月以上）部分淀粉转化为糖，炸制时美拉德反应更充分——颜色更金黄、风味更丰富。但储存超过6个月的土豆发芽率高、糖分过高导致炸制时易焦黑。最佳使用窗口：采收后2-5个月。<br><br>
+      <strong>为什么需要泡水：</strong>土豆切条后表面的游离淀粉在高温油炸时会产生粘连——土豆条粘在一起变成一团。切好的土豆条用清水浸泡10-15分钟，洗去表面淀粉，同时防止氧化变黑。这一步不能省略——不泡水的土豆条炸出来颜色发灰、口感粘糊。泡水后沥干再下锅，炸出来的土豆条根根分明、色泽金黄。
+    </div>
+
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🧪</span><span style="font-size:12px;font-weight:700;color:#3a322a">油炸温度与美拉德反应的临界点</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:12px">
+      狼牙土豆的「外脆里糯」口感来自两个不同的热力学过程：表面淀粉在160°C以上发生糊化→脱水→焦化（脆壳形成），内部淀粉在80-100°C发生糊化但不脱水（糯感来源）。<br><br>
+      <strong>最佳油温：</strong>一炸（定型）160-170°C，炸2-3分钟至土豆条浮起、表面微黄。二炸（起脆）180-190°C，复炸30-45秒至表面金黄酥脆。两阶段炸法让土豆外皮焦脆而内芯软糯——单段炸法做不到这种分层口感（来源：美拉德反应温度区间研究·食品科学2023）。<br><br>
+      <strong>油温过低（<150°C）：</strong>土豆条长时间浸泡在热油中「煮」而非「炸」——表面无法形成脆壳，内部水分大量流失，成品口感软烂如薯泥。油温过低还会导致吸油率从正常的8-12%飙升到18-25%，每份土豆多吸油10-15ml，成本上升+口感下降。<br><br>
+      <strong>油温过高（>195°C）：</strong>表面瞬间焦化发黑，内部还没熟透。看起来颜色到位了，咬开里面还是生土豆味。冷却后表面焦苦味和内部生涩味混合在一起，是新手最常见的翻车。
+    </div>
+
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🧫</span><span style="font-size:12px;font-weight:700;color:#3a322a">拌料的味觉协同：油溶vs水溶的平衡</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8">
+      狼牙土豆的拌料体系（即「料」）由油溶性和水溶性两部分组成，两者需要精确平衡才能达到「挂料均匀、入口有层次」的效果。<br><br>
+      <strong>油溶性香料：</strong>辣椒粉、花椒粉、五香粉、孜然粉——这些香料的风味物质（辣椒素、花椒麻素、孜然精油）需要通过油脂才能充分释放和附着。油溶性香料比例过高会导致拌料浮在表面，吃完一口满嘴粉感、口腔发苦。比例过低则香气不足、土豆吃起来没味道。<br><br>
+      <strong>水溶性调味：</strong>生抽、香醋、蚝油、蒜水——这些液体调料提供咸味、鲜味和酸味。它们以水分形式渗入土豆条表面的孔隙（炸制时形成的微裂缝），从内部提供味道。水溶性比例过高会让炸好的土豆迅速回软——水分软化脆壳，5分钟内从「外脆里糯」变成「软塌塌的薯条」。<br><br>
+      <strong>黄金比例：</strong>油溶性干料:水溶性液体 ≈ 3:1（重量比）。每份土豆（约250g炸后重量）：干料约15-18g + 液体约5-8ml。液体太多→脆壳软化；干料太多→满嘴粉面感。这个比例让每根土豆条表面均匀裹上一层薄薄的香料，吃到最后一根还是脆的。<br><br>
+      <strong>酸味的角色：</strong>香醋或柠檬汁中的乙酸不仅能提供酸味开胃，更重要的是可以让辣椒素的灼热感提前释放——同样的辣椒量，加了醋吃起来会更辣。这就是为什么狼牙土豆的「特辣版」需要加醋而不是多加辣椒（物理原理：乙酸增加辣椒素在唾液中的溶解度·来源：食品化学国际期刊2022）。
+    </div>
+  </div>
+  <div style="margin-top:6px;font-size:10px;color:#b5aaa0;line-height:1.5">🔬 风味科学分析综合自食品科学研究、淀粉糊化特性研究及FoodIntelAI实测校准。</div>
+</div>
+
+<!-- ===== 🗺️ 区域适应性分析 ===== -->
+<div class="section">
+  <div class="s-title">🗺️ 区域适应性分析</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#5a8f3c;margin-bottom:4px">🌆 一线城市（北上广深）</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        夜市/大学城/城中村均可。定价可上浮至¥10-15/份。消费者对拌料丰富度预期高——需3-4种口味选择。竞争品种多（烤冷面/铁板鱿鱼/臭豆腐），需靠拌料差异化突围。月净利预估¥6,000-10,000。
+      </div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#D4A574;margin-bottom:4px">🏙️ 二线城市（成都/武汉/长沙等）</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        大学城周边是最佳点位。定价¥8-12/份。川渝地区建议加辣加麻（双倍花椒粉），江浙地区减辣加糖。消费力虽低于一线，但租金和人工成本也更低。月净利预估¥5,000-8,000。
+      </div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#E8652D;margin-bottom:4px">🏘️ 三四线城市/县城</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        学校周边/商业街/公园夜市是核心点位。定价¥6-10/份。消费力有限但竞争也小——狼牙土豆在低线城市的渗透率很高，但「好吃和不好吃的差距」非常大。月净利预估¥3,000-6,000。
+      </div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#b5aaa0;margin-bottom:4px">⚠️ 慎入区域</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        不喜油炸饮食习惯的地区（如部分注重清淡饮食的城市）。需先观察本地人对油炸小吃的接受度。土豆含水率高的南方地区需调整炸制参数（一炸温度提高5-10°C）。建议试水价¥6-8/份，观察两周后调价。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📅 季节性运营分析 ===== -->
+<div class="section">
+  <div class="s-title">📅 季节性运营分析</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    狼牙土豆的季节性波动相对较小——油炸食品在冬天有稳定的暖身需求。但不同季节土豆品质和运营策略差异显著：
+    <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div style="background:#fef2ee;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#E8652D">🔴 旺季（10月-3月·秋冬）</strong><br>
+        日销潜力：50-80份<br>
+        土豆批发价：低位¥0.40-0.60/斤<br>
+        策略：推「麻辣暖身」和「糖醋辣」等季节感口味。配热饮（豆浆/姜茶）提升客单价。天冷时消费者更愿意吃炸物暖身。
+      </div>
+      <div style="background:#f8f4ef;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#D4A574">🟡 平季（4-5月·9月·换季）</strong><br>
+        日销潜力：30-50份<br>
+        土豆批发价：平稳¥0.50-0.70/斤<br>
+        策略：主推「经典麻辣」「糖醋麻辣」平衡版，稳客流。
+      </div>
+      <div style="background:#eef2ff;border-radius:6px;padding:6px 8px;font-size:10px;grid-column:1/-1">
+        <strong style="color:#4f6ef7">🔵 淡季（6-8月·夏季）</strong><br>
+        日销潜力：25-40份（约为旺季的50-60%）<br>
+        土豆批发价：高位¥0.60-0.80/斤（夏季新上市，品质好但价格高）<br>
+        策略：① 推出「清爽拌」版（减油减辣·加醋/柠檬汁提鲜）② 降低单份克重（土豆量从300g→250g·价格不变·维持毛利）③ 加推凉拌黄瓜/凉皮等夏季热销品做搭售 ④ 出摊时间后移（避开白天高温·专注晚间夜市）
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    💡 全年运营策略：狼牙土豆全年可卖，但夏季需做好两个调整——① 土豆切好后泡水冷藏（防止氧化变黑·保质期延长至4-6小时）；② 拌料中适当减少油脂比例（夏季食欲受油腻抑制），增加醋和辣椒的占比（开胃）。做好这两个调整，夏季营收可保持在旺季的60-70%。
+  </div>
+</div>
+
+<!-- ===== 📦 供应链要点 ===== -->
+<div class="section">
+  <div class="s-title">📦 供应链要点</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    <div style="display:grid;grid-template-columns:90px 1fr;gap:4px 10px">
+      <span style="font-weight:600;color:#3a322a">土豆（荷兰15号）</span><span style="color:#5a4f44">批发市场/惠农网 · ¥0.40-0.80/斤（来源：惠农网商家报价·山东莒县·河北张北·辽宁绥中）</span>
+      <span style="font-weight:600;color:#3a322a">食用油</span><span style="color:#5a4f44">1688/批发市场 · 大豆油¥24-30/5L（来源：1688）</span>
+      <span style="font-weight:600;color:#3a322a">辣椒粉</span><span style="color:#5a4f44">信基调味品城/1688 · ¥15-25/斤</span>
+      <span style="font-weight:600;color:#3a322a">花椒粉</span><span style="color:#5a4f44">信基调味品城/1688 · ¥25-40/斤（汉源花椒贵·其他产区便宜）</span>
+      <span style="font-weight:600;color:#3a322a">五香粉/孜然粉</span><span style="color:#5a4f44">批发市场 · ¥10-20/斤</span>
+      <span style="font-weight:600;color:#3a322a">调味料（生抽/醋/蚝油/糖）</span><span style="color:#5a4f44">批发市场/1688 · ¥30-50/批</span>
+      <span style="font-weight:600;color:#3a322a">狼牙刀</span><span style="color:#5a4f44">1688/义乌购 · ¥15-35/把（波浪刀·304不锈钢）</span>
+      <span style="font-weight:600;color:#3a322a">包装耗材</span><span style="color:#5a4f44">1688/批发市场 · 纸碗+盖+竹签+袋 · ¥0.3-0.5/套</span>
+      <span style="font-weight:600;color:#3a322a">日采频率</span><span style="color:#5a4f44">土豆周采（耐储存·阴凉通风15天）· 油按周采·调料半月采</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.6">
+    <strong>供应链关键点：</strong>土豆是耐储存食材（阴凉通风处可放2周），不需要每日采购。但土豆品种对成品口感影响极大——黄心土豆（荷兰15号/夏波蒂）炸出来是「外脆里糯」，白心土豆（克新系列）炸出来是「软塌塌」。建议第一次就选黄心土豆，不要贪便宜买白心土豆——省那¥0.10/斤的代价是口感降级、复购率下降。<br>
+    <strong>狼牙刀选择：</strong>狼牙土豆的标志性波纹来自狼牙刀（波浪刀）。1688上¥15-35/把的304不锈钢狼牙刀即可，品牌不重要。关键看刀刃间距——间距8-10mm的刀切出来土豆条波纹最明显、卖相最好。间距过小（<6mm）的刀切出来像锯齿土豆条，不显狼牙效果。注意：狼牙刀切土豆时阻力比普通菜刀大，建议第一批买两把备用（切到一半刀钝了影响效率）。
+  </div>
+</div>
+
+<!-- ===== 📐 成本敏感性分析 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本敏感性分析</div>
+  <div style="font-size:11px;color:#5a4f44;line-height:1.6;margin-bottom:8px">狼牙土豆的成本结构中，土豆和食用油两个大项受市场波动影响。以下按不同情景测算食材成本变化（按标准份250g炸后约300g生土豆计算）：</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px">
+    <div class="recipe-line"><span class="k">✅ 基准情景（土豆¥0.50/斤·油¥24/5L）</span><span class="v">食材成本¥1.5-2.0 → 毛利78-85%</span></div>
+    <div class="recipe-line"><span class="k">⚠️ 土豆涨价（土豆¥0.80/斤·油¥24/5L·夏季）</span><span class="v">食材成本¥1.7-2.2 → 毛利78-84%</span></div>
+    <div class="recipe-line"><span class="k">⚠️ 油价上涨（土豆¥0.50/斤·油¥40/5L）</span><span class="v">食材成本¥1.9-2.4 → 毛利76-82%</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">🔴 双涨情景（土豆¥0.80/斤·油¥40/5L）</span><span class="v">食材成本¥2.1-2.6 → 毛利74-79%</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fef2f2;border-radius:8px;font-size:10px;color:#b53b3b">
+    ⚠️ 敏感性分析：即使在最不利的双涨情景下，食材毛利率（按均价¥10计算）仍高于74%——远高于大多数餐饮品类。这是因为土豆本身极其便宜（¥0.40-0.80/斤），即使价格翻倍，每份也仅增加¥0.09成本。狼牙土豆对原料涨价的抗风险能力是所有摆摊品类中最强的之一。真正的成本风险不在原料端，而在「油品消耗」和「出摊率」——如果连续下雨导致3天不能出摊，前期备好的土豆（虽然勉强能放）和开封的调味料会有损耗。建议：油品成本率控制在8-12%以内，如果超过15%说明炸制效率有问题（油温过低导致吸油过多/一次性炸量过大）。
+  </div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是土豆</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">顾客买的是：拌料的复合味 × 外脆里糯的口感 × 价格便宜吃得饱</div>
+    <div class="l-title">💵 定价梯度</div>
+    <div class="logic-item"><span>小份（约200g生土豆）</span><span class="v">¥6-8</span></div>
+    <div class="logic-item"><span>中份（约300g生土豆）</span><span class="v">¥8-12</span></div>
+    <div class="logic-item"><span>大份（约400g生土豆）</span><span class="v">¥12-15</span></div>
+    <div class="logic-item"><span>加料（火腿肠/鱼丸/豆皮）</span><span class="v">+¥2-4/份</span></div>
+    <div class="l-title" style="margin-top:6px">📈 利润模型</div>
+    <div class="logic-item"><span>食材成本/份（标准中份¥10定价）</span><span class="v">¥1.5-2.0</span></div>
+    <div class="logic-item"><span>毛利率（食品成本口径·未含摊位费/人工）</span><span class="v">78-85%</span></div>
+    <div class="logic-item"><span>日营收（售50-80份）</span><span class="v">¥400-960</span></div>
+    <div class="logic-item"><span>月净利（出摊20-25天·扣除租金¥80/天）</span><span class="v">¥5,000-12,000</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">日营收</div>
+      <div class="m-val">¥400-960</div>
+      <div class="m-sub">4-6小时出摊</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">月净利</div>
+      <div class="m-val">¥5,000-12,000</div>
+      <div class="m-sub">出摊20-25天</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">3-5天</div>
+      <div class="m-sub">含设备+首批原料</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    💡 单日营收¥400是保本线（按日租金¥80+燃气¥10，每份毛利约¥8，需售约12份保本）。¥600是及格线（日净利约¥230）。¥800+是优秀线（日净利约¥410）。如果连续2周日均低于¥400，说明位置/口味/定价至少有一个出问题。不要靠「再坚持」撑——换位置或调整拌料配方可能立即见效。
+  </div>
+</div>
+
+<!-- ===== 📐 食材成本拆解 ===== -->
+<div class="section">
+  <div class="s-title">📐 食材成本拆解（按标准中份·300g生土豆炸后约250g）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">土豆（黄心·300g）</span><span class="v">¥0.30-0.48</span></div>
+    <div class="recipe-line"><span class="k">食用油（炸用·每份约30ml）</span><span class="v">¥0.40-0.60</span></div>
+    <div class="recipe-line"><span class="k">辣椒粉 5g</span><span class="v">¥0.15-0.25</span></div>
+    <div class="recipe-line"><span class="k">花椒粉 2g</span><span class="v">¥0.10-0.16</span></div>
+    <div class="recipe-line"><span class="k">五香粉/孜然粉 3g</span><span class="v">¥0.08-0.12</span></div>
+    <div class="recipe-line"><span class="k">生抽 5ml + 香醋 3ml</span><span class="v">¥0.10-0.15</span></div>
+    <div class="recipe-line"><span class="k">蚝油 3g + 糖 3g</span><span class="v">¥0.05-0.08</span></div>
+    <div class="recipe-line"><span class="k">蒜水/葱花/香菜/白芝麻</span><span class="v">¥0.10-0.15</span></div>
+    <div class="recipe-line"><span class="k">纸碗+盖+竹签+袋</span><span class="v">¥0.30-0.50</span></div>
+    <div class="recipe-line" style="border-bottom:none;font-weight:700;color:#C0392B"><span class="k">合计食材+包装成本</span><span class="v">¥1.5-2.0</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.7">
+    <strong>成本数据来源：</strong><br>
+    • 土豆批发价¥0.40-0.80/斤·黄心土豆荷兰15号（来源：惠农网·山东莒县¥0.40/斤·河北张北¥0.56/斤·辽宁绥中¥0.38/斤·取中值¥0.50/斤）<br>
+    • 食用油大豆油批发¥24-30/5L（来源：1688食品油专区）<br>
+    • 辣椒粉/花椒粉——信基调味品城/1688批发报价<br>
+    • 调味料——按品牌瓶装批发价折算<br>
+    • 包装耗材——纸碗+盖约¥0.25-0.35/套·竹签¥0.05-0.08/根（来源：1688一次性餐具批发）<br>
+    采集时间：2026年7月
+  </div>
+</div>
+
+<!-- ===== 📈 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:440px">
+      <thead>
+        <tr style="background:#3a322a;color:#fff">
+          <th style="padding:8px 6px;text-align:left;border-radius:6px 0 0 0">项目</th>
+          <th style="padding:8px 4px;text-align:center">投资</th>
+          <th style="padding:8px 4px;text-align:center">难度</th>
+          <th style="padding:8px 4px;text-align:center">毛利</th>
+          <th style="padding:8px 4px;text-align:center">竞争</th>
+          <th style="padding:8px 6px;text-align:center;border-radius:0 6px 0 0">推荐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#fef6ec;border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:700;color:#3a322a">🥔 狼牙土豆</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#E8652D">A-</td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🥘 锅巴土豆</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+        <tr style="background:#f8f4ef;border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🧈 浇汁豆腐</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a8f3c">★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#E8652D">A</td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🍢 炸串</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#C0392B">★★★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#E8652D">A-</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a;border-radius:0 0 0 6px">🫓 烤苕皮</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574;border-radius:0 0 6px 0">B+</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 数据基于FoodIntelAI项目评估模型。狼牙土豆在「毛利」和「投资」两维优于大多数竞争者，但「竞争激烈度」高——满大街都在卖。不是建议你绕道，而是提醒你：做狼牙土豆不是在跟市场抢份额，是在跟同行抢客户。你的拌料差异化就是突围的武器。<br>
+    🔍 关键差异：狼牙土豆 vs 锅巴土豆——前者是切波纹条+拌干料（外脆里糯·干香），后者是切块+浇湿汁（外酥里嫩·酱香）。两个产品看似都是土豆，但工艺路径、成本结构和消费场景完全不同。狼牙土豆的毛利更高（78-85% vs 65-78%），因为不需要做酱汁（少一道工序+省酱料成本）。
+  </div>
+</div>
+
+<!-- ===== 👅 口味与卖点 ===== -->
+<div class="section">
+  <div class="s-title">👅 口味与卖点</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">招牌味型</span><span class="v">麻辣鲜香·外脆里糯</span></div>
+    <div class="recipe-line"><span class="k">口感层次</span><span class="v">外脆里糯·波纹挂料均匀</span></div>
+    <div class="recipe-line"><span class="k">味觉演进</span><span class="v">麻辣（入口）→ 土豆焦香（咀嚼）→ 回麻微甜（收尾）</span></div>
+    <div class="recipe-line"><span class="k">视觉呈现</span><span class="v">金黄波纹土豆条 + 红辣椒粉翠绿葱花 + 白芝麻</span></div>
+    <div class="recipe-line"><span class="k">核心卖点</span><span class="v">¥6-15吃到饱 · 有手就能做 · 拌料可定制辣度</span></div>
+    <div class="recipe-line"><span class="k">解决了什么痛点</span><span class="v">「想吃点香辣的小吃但不想吃太油腻/太贵/太多」的中间空白</span></div>
+    <div class="recipe-line"><span class="k">社交媒体传播性</span><span class="v">极高——狼牙刀切土豆的波纹造型有辨识度，拌料过程「拌拌拌」的画面有治愈感</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">复购逻辑</span><span class="v">拌料记忆点 > 土豆本身——拌料好吃顾客下次还来。价格便宜（¥8-12）让复购门槛极低</span></div>
+  </div>
+  <div style="margin-top:10px;padding:12px;background:#fff9f0;border-radius:8px;font-size:11px;line-height:1.7;color:#7a5a2a">
+    <strong>🌶️ 推荐拓展口味（已验证可跑通）：</strong><br>
+    • <strong>糖醋麻辣版</strong>——基础辣料+白糖8g+香醋5ml/份（川渝经典·学生群体最爱）<br>
+    • <strong>蒜香孜然版</strong>——基础辣料+蒜水10ml+孜然粉翻倍（不辣人群/儿童定向）<br>
+    • <strong>藤椒清爽版</strong>——基础辣料减辣椒+藤椒油8ml+青椒碎（近两年增长最快的味型之一）<br>
+    • <strong>甘梅地瓜味</strong>——不加辣料+甘梅粉8g+糖粉5g（用红薯替代土豆·差异化显著）<br>
+    📌 建议首期只推2-3个口味（经典麻辣+糖醋麻辣+蒜香孜然），跑通后每周新增一个变体测试，根据销售数据淘汰。
+  </div>
+</div>
+
+<!-- ===== 🔪 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（含验证点）</div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc"><strong>土豆预处理</strong>：黄心土豆洗净去皮。用狼牙刀切成8-10mm厚片的波纹片，再切成8-10mm宽的波纹条。切好的土豆条立即放入清水浸泡10-15分钟，洗去表面淀粉。</span>
+      <div class="ps-verify">[验证点] 土豆条切完后每一根都有清晰的波纹纹路，没有直边。泡水后的水呈乳白色（表面淀粉已溶出）。土豆条不变色——如果发红/发黑说明泡水前暴露在空气中太久（氧化）。一个简单的判断：泡水后水变白是正常，土豆条本身应该保持淡黄色。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc"><strong>一炸定型</strong>：泡水后的土豆条彻底沥干水分（可以用厨房纸或沥水篮多甩几下）。油温升至160-170°C，土豆条分批次下锅（不要一次放太多，否则油温暴跌）。炸2-3分钟至土豆条浮起、表面微黄、边缘开始起脆。</span>
+      <div class="ps-verify">[验证点] 土豆条下锅后能在5秒内浮起说明油温足够。如果下沉超过10秒不浮起→油温太低。一炸后的土豆条应该是略带韧性但咬开中间已熟透的状态（用筷子夹断一根看看断面——中间应该是均匀的淡黄色、无白芯）。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc"><strong>二炸起脆</strong>（可选但强烈推荐）：捞出控油，油温升至180-190°C。土豆条回锅复炸30-45秒至表面金黄酥脆、波纹边缘微焦。</span>
+      <div class="ps-verify">[验证点] 复炸后的土豆条用筷子夹起来能听到清脆的「咔嚓」声。表面呈均匀的金黄色，波纹凹陷处颜色略深于凸起处——这种色差说明复炸到位。取一根在碗边轻敲——如果能听到清脆的响声而不是闷声，脆壳就到位了。复炸后的土豆条重量应比一炸后减少约5-8%（继续失水）。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc"><strong>拌料</strong>：炸好的土豆条趁热倒入大盆中。依次加入辣椒粉、花椒粉、五香粉/孜然粉、生抽、香醋、蚝油（可选）、糖、蒜水。用两个大勺颠拌均匀——注意是「颠」不是「搅」——让每根土豆条均匀裹上料。</span>
+      <div class="ps-verify">[验证点] 拌好的土豆条每根表面都应该均匀附着调料——没有「白条」（没沾到料的土豆条）也没有「料团」（调料聚集成团）。颠拌后盆底不应有大量未附着调料堆积。撒上葱花/香菜/白芝麻后立即出餐——拌好到出餐的时间最好控制在2分钟以内，超过5分钟脆壳开始变软。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc"><strong>出餐</strong>：装碗（或纸碗·狼牙土豆必须用宽口碗而不是深杯——宽口才能展示波纹造型和拌料颜色）。撒上葱花/香菜/白芝麻作为装饰。配竹签或小叉——顾客用竹签插着吃才是狼牙土豆的正确打开方式。</span>
+      <div class="ps-verify">[验证点] 出餐后每份应有明显的层次感：顶部是金黄色波纹土豆条+红色辣椒粉+绿色葱花+白色芝麻的丰富色彩组合。顾客拿到手后第一个反应应该是「看着就想吃」而不是「怎么颜色这么暗」。出餐到顾客吃完的时间窗口约15-20分钟——超过20分钟脆壳开始明显软化。</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a">
+    ⚠️ <strong>关键控制点：</strong>① 泡水10-15分钟（去淀粉防粘连）② 一炸160-170°C·二炸180-190°C（两段炸法）③ 沥干水分再下锅（否则油花四溅+脆壳不形成）④ 拌料时土豆必须「趁热」——凉了再拌料不沾 ⑤ 出餐到吃完的黄金窗口15-20分钟。这5个点中任何一个出问题，成品口感都会明显降级。
+  </div>
+</div>
+
+<!-- ===== 📦 核心原料清单 ===== -->
+<div class="section">
+  <div class="s-title">📦 核心原料清单（单份中份基准）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span>黄心土豆（荷兰15号·约300g生重）</span><span>300g</span></div>
+    <div class="recipe-line"><span>大豆油/菜籽油（炸用）</span><span>约30ml</span></div>
+    <div class="recipe-line"><span>辣椒粉（粗粒+细粉混合）</span><span>5g</span></div>
+    <div class="recipe-line"><span>花椒粉（红花椒·汉源最佳）</span><span>2g</span></div>
+    <div class="recipe-line"><span>五香粉</span><span>2g</span></div>
+    <div class="recipe-line"><span>孜然粉（可选）</span><span>2g</span></div>
+    <div class="recipe-line"><span>生抽（海天·李锦记）</span><span>5ml</span></div>
+    <div class="recipe-line"><span>香醋（保宁醋/镇江香醋）</span><span>3ml</span></div>
+    <div class="recipe-line"><span>蚝油（可选·提鲜用）</span><span>3g</span></div>
+    <div class="recipe-line"><span>白砂糖</span><span>3g</span></div>
+    <div class="recipe-line"><span>蒜水（大蒜10g捣碎+20ml水浸泡）</span><span>10ml</span></div>
+    <div class="recipe-line"><span>葱花/香菜</span><span>适量（装饰用）</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>白芝麻（熟）</span><span>2g（装饰用）</span></div>
+  </div>
+  <div style="margin-top:6px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 原料替代方案：</strong><br>
+    • 黄心土豆买不到 → 用普通白心土豆替代（口感从「外脆里糯」降为「脆而不糯」，但销量不受太大影响——很多消费者吃不出来）<br>
+    • 汉源花椒买不到 → 用普通红花椒（麻味约降30%，但成本降50%·适合定价较低的摊位）<br>
+    • 不吃辣 → 辣椒粉减半或不放，增加五香粉/孜然粉比例，做「蒜香孜然」版<br>
+    • 批量生产时 → 土豆可提前削皮切条泡水冷藏（4-6小时内用完），出摊前沥干即可，节省备料时间
+  </div>
+</div>
+
+<!-- ===== 🛠️ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单 + 最低投资</div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 核心设备（¥600起）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #E8652D">
+    <div class="recipe-line"><span style="color:#5a4f44">炸锅（单缸·8-12L）</span><span style="font-weight:600;color:#3a322a">¥100-200</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">卡式炉+气罐（炸用/保温）</span><span style="font-weight:600;color:#3a322a">¥80-150</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">狼牙刀（波浪刀·8-10mm间距·304不锈钢）</span><span style="font-weight:600;color:#3a322a">¥15-35</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">不锈钢操作台/折叠桌</span><span style="font-weight:600;color:#3a322a">¥80-200</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">不锈钢盆×3-4个（泡水/沥水/拌料/装料）</span><span style="font-weight:600;color:#3a322a">¥20-50</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">沥水篮/沥水盆</span><span style="font-weight:600;color:#3a322a">¥10-20</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">漏勺/炸篮</span><span style="font-weight:600;color:#3a322a">¥15-30</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">探针式油温温度计</span><span style="font-weight:600;color:#3a322a">¥15-30</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#5a4f44">电子秤（精确到g）</span><span style="font-weight:600;color:#3a322a">¥15-30</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 摊位配套（选择项）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #D4A574">
+    <div class="recipe-line"><span style="color:#5a4f44">二手三轮车（含简易改装）</span><span style="font-weight:600;color:#3a322a">¥300-800</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">帐篷伞 3×3m</span><span style="font-weight:600;color:#3a322a">¥80-200</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">折叠桌椅×1-2套</span><span style="font-weight:600;color:#3a322a">¥60-120</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">照明灯/招牌灯箱/LED菜单板</span><span style="font-weight:600;color:#3a322a">¥50-200</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#5a4f44">收款码牌/价格牌/调料展示瓶</span><span style="font-weight:600;color:#3a322a">¥30-50</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 首批耗材</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span style="color:#5a4f44">土豆 15kg（首批·约50份中份）</span><span style="font-weight:600;color:#3a322a">¥7-12</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">食用油 5L（大豆油）</span><span style="font-weight:600;color:#3a322a">¥24-30</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">调料套装（辣椒粉/花椒粉/五香粉等）</span><span style="font-weight:600;color:#3a322a">¥50-80</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">调味料（生抽/醋/蚝油/糖/蒜）</span><span style="font-weight:600;color:#3a322a">¥30-50</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#5a4f44">包装（纸碗+盖+竹签+袋）200套</span><span style="font-weight:600;color:#3a322a">¥60-100</span></div>
+  </div>
+
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#E8652D;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥600-1,000<br><span style="font-size:10px;color:#b5aaa0">二手锅+卡式炉+折叠桌+狼牙刀+首批原料</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥1,500-2,500<br><span style="font-size:10px;color:#b5aaa0">含三轮车+帐篷+灯箱+全部设备</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+      💡 狼牙土豆是启动成本最低的摆摊项目之一。¥600就能试水。建议起步<strong style="color:#3a322a">先摆摊验证</strong>不要直接租店面——¥600验证完了再决定是否升级。很多新手死在第一周就因为投了店面+装修+设备¥10,000+，结果发现位置不行或者口味没人买。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📦 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead">
+      <span class="t-badge">引流</span>
+      <span class="t-name">经典麻辣狼牙土豆（中份）</span>
+      <span class="t-price">¥8-10</span>
+    </div>
+    <div class="prod-tier tier-profit">
+      <span class="t-badge">利润</span>
+      <span class="t-name">糖醋麻辣/蒜香孜然升级版 + 加料（火腿肠/鱼丸/豆皮）</span>
+      <span class="t-price">¥12-15</span>
+    </div>
+    <div class="prod-tier tier-set">
+      <span class="t-badge">利润+</span>
+      <span class="t-name">套餐（狼牙土豆大份+饮品+小食搭售）</span>
+      <span class="t-price">¥15-22</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>💡 产品结构策略：</strong>引流款（经典麻辣）毛利78-85%依然很高——它的角色是「让顾客第一次买的时候没有心理负担」。利润款靠口味升级和加料拉高客单价——大多数人从经典麻辣转向糖醋麻辣后，客单价从¥10提升到¥14，涨幅40%。套餐款的利润空间最大，但需要出摊位置有足够的人流量支撑。新手建议：先只做引流+利润两款（经典麻辣+糖醋麻辣），跑通2周后再加套餐和加料选项。
+  </div>
+</div>
+
+<!-- ===== 🔥 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市</div>
+      <div class="s-bar"><div class="fill" style="width:95%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">大学城</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">商业街</div>
+      <div class="s-bar"><div class="fill" style="width:75%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区</div>
+      <div class="s-bar"><div class="fill" style="width:60%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏔️</div>
+      <div class="s-name">景区/庙会</div>
+      <div class="s-bar"><div class="fill" style="width:70%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖</div>
+      <div class="s-bar"><div class="fill" style="width:40%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★☆☆☆</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>📍 最佳点位建议：</strong>夜市固定摊位（月租¥400-1500）> 大学城流动摊位 > 商业街游击位。狼牙土豆的最佳消费场景是「边走边吃」——所以夜市和大学城是最适配的。社区点位的问题在于复购强度不够——社区居民一周吃一次就不错了，但夜市游客可以天天吃。外卖评分低（★★☆☆☆）的原因是炸土豆条的外卖配送时间超过15分钟后脆壳就被水汽泡软了。如果要做外卖，建议：土豆条和拌料分开装——送到后消费者自己拌——但这样包装成本会上升（需要两个容器）。
+  </div>
+</div>
+
+<!-- ===== 🗓️ 7天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 7天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#E8652D;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1</span>
+      <span style="flex:1">买土豆3斤+狼牙刀+调料，在家试做3份。跑通削皮→切条→泡水→一炸→二炸→拌料全流程。拍照记录每份的样子。自己打分（口感/外观/味道各1-10）。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 2</span>
+      <span style="flex:1">调整配方。根据Day1反馈调整拌料配比（辣/麻/咸/甜的平衡）。再做3份邀请3个朋友试吃并收集真实反馈——问「如果¥10一份你会买第二次吗」而不是「好吃吗」。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 3</span>
+      <span style="flex:1">定版拌料配方。确认炸制参数（油温/时间/泡水时间）。采购首批耗材（土豆10kg+油5L+调料+包装200套）。去目标点位踩点——记录人流时段/竞品数量/摊位费。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 5</span>
+      <span style="flex:1">第一次试摆（备40份）。选周末晚上·目标点位。定价按¥8/小份·¥10/中份。目标：卖完。记录三个核心数据：① 卖了多少份 ② 多少人主动说「好吃」（主动好评率）③ 多少人是吃完折返买的（复购信号）。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 7</span>
+      <span style="flex:1">复盘。目标：① 首日出摊全部卖完（40份）② 有2-3个人回购 ③ 无重大翻车（烫伤/油锅起火/被赶/食物变质）。三个都满足→可以继续。只卖不到15份→先换点位再试一次，不要直接放弃项目。</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>🔑 关键判断：</strong>7天验证成本约¥150-250（食材+包装+气罐=¥100-150·摊位费Day5约¥50-100）。如果Day5试摆卖出30份以上（营收¥300+），已覆盖当日成本。如果7天后反馈正面——日均营收¥400+的潜力存在。<br>
+    <strong>退出标准：</strong>Day5试摆卖出不到15份 / 没有人说「好吃」 / 拌料配方试了3次仍然不满意。符合任意两项→建议换项目。¥200止损比¥2,000止损好得多。狼牙土豆的竞争实在太激烈了——如果找不到差异化切入点（独特的拌料口味/更好的位置/更低的成本），不建议硬撑。
+  </div>
+</div>
+
+<!-- ===== ⚠️ 风险清单 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>竞争极度激烈——狼牙土豆是「红海中的红海」</strong><br>狼牙土豆的进入门槛实在太低了（狼牙刀+炸锅就能做），导致几乎每个夜市都有3-5家狼牙土豆摊位。如果你只是做「不难吃的狼牙土豆」，顾客没有理由选择你的摊位而不是隔壁老王的。解法：做好拌料差异化——做隔壁摊没有的口味（如藤椒/甘梅/黑鸭风味等）。不要正面硬刚经典麻辣——那是王者赛道，新手进去就是送人头。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>土豆品种波动——供应商给你的不一定是黄心</strong><br>你说「要黄心土豆」供应商点头答应，结果送来的是白心土豆——这种情况在批发市场太常见了。白心土豆炸出来就是不好吃。解法：第一次采购时当面切开确认——黄心土豆断面呈淡黄色，白心土豆断面呈白色。固定供应商后每次收货时抽检3个切开看。<br></div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><strong>油炸气味+油烟——摊位的隐形杀手</strong><br>狼牙土豆是油炸项目，油烟比烤串小但比铁板豆腐大。选址在小区门口/居民楼下几天后可能被投诉。解法：首选夜市集中区和学校周边油烟容许区。配便携式油烟净化器（¥300-500）可降低80%油烟问题。出摊时站在上风口操作，不要让油烟对着顾客吹——这会影响购买欲。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><strong>脆壳窗口太短——出餐后15分钟品质断崖</strong><br>狼牙土豆的最佳食用时间是出餐后15分钟内。超过20分钟脆壳开始被水汽和调料软化——面条变软塌。食客买了边走边吃没事，但如果他们打包回家吃（20分钟以上路程），体验会大打折扣。解法：出餐时提醒顾客「趁热吃口感最好」。外卖用户建议料包分离（但增加成本）。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><strong>夏天土豆发芽快——损耗率上升</strong><br>土豆在20°C以上储存环境下2周左右开始发芽。发芽的土豆产生龙葵素（有毒·绿皮+发芽部位含量最高）。不要以为「切掉发芽部分就能吃」——龙葵素会扩散到周围组织，食品安全风险极大。解法：夏季每次采购不超过1周用量（约35kg/周·50份/天）。储存于阴凉通风处，不要密封袋装（透气才是保护）。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><strong>油品管理——成本黑洞</strong><br>反复用油（超过4-5次）不仅会产生哈喇味影响口味，酸价超标还可能引发食品安全问题（GB 2716标准：酸价≤3mg/g）。一次换油成本¥24-30/5L。一个月耗油约25-35L，成本¥120-210。正确做法：每炸15-20kg土豆换一次油（约3-4天换一次），油色变深棕/起泡密集/有异味时立即更换。</div>
+</div>
+
+<!-- ===== 📈 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">启动成本极低——¥600就能验证</div>
+      <div class="t-item">土豆供应链全国成熟透明，不受地域限制</div>
+      <div class="t-item">原材料极其便宜，抗成本波动能力极强（每份¥1.5-2）</div>
+      <div class="t-item">毛利率78-85%——所有摆摊品类中最高级别</div>
+      <div class="t-item">1人即可运营，人力成本最低</div>
+      <div class="t-item">工艺极简——5步出餐，无需厨艺基础</div>
+      <div class="t-item">国民级认知度——不需要教育消费者「这是什么」</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">竞争极度激烈——几乎每个夜市都饱和</div>
+      <div class="t-item">单份均价低（¥8-12），日营收天花板¥800-1000</div>
+      <div class="t-item">脆壳窗口太短——外卖/打包后口感断崖下跌</div>
+      <div class="t-item">差异化难——隔壁老王花¥15也能买到狼牙刀</div>
+      <div class="t-item">过度依赖夜市/大客流——没客流=没销售</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>狼牙土豆处于「成熟饱和期」——几乎每个城市夜市都有，远未到衰退期，但也过了快速增长期。它是一个稳定的品类，但不是高增长的品类。<br><br>
+    <strong>赛道定位：</strong>狼牙土豆属于「现金牛」赛道——¥600起步、1人可做、78-85%毛利、3-5天回本。这些数字决定了它是一个低风险、中回报的稳健型项目。不是用来暴富的，是用来练手的。<br><br>
+    <strong>与锅巴土豆的差异：</strong>狼牙土豆（波纹切+干拌料，毛利78-85%）和锅巴土豆（切块+浇汁，毛利65-78%）虽然都是土豆小吃，但工艺和成本结构完全不同。狼牙土豆的毛利更高（不用做酱汁），但竞争也更激烈（门槛更低）。锅巴土豆的酱汁构建了更高的口味壁垒，但工序更复杂。做哪个？看你擅长什么——擅长调味选锅巴土豆，擅长效率选狼牙土豆。<br><br>
+    <strong>天花板在哪：</strong>单摊日营收¥800-1000封顶（1人·4-6小时·约60-80份）。要突破天花板有三条路：① 雇人分摊位（一摊变两摊·营收叠加）② 增加品类做「炸物集合店」（狼牙土豆+炸串+炸鸡排→全品类拉高客单价）③ 做预调拌料批发（把独家的拌料配方做成袋装·供应其他摊位）。
+  </div>
+</div>
+
+<!-- ===== 🧠 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 狼牙土豆——本决策库有條件推薦入場的项目。</strong><br><br>
+      不是因为它好做（其实竞争非常激烈），不是因为它赚钱多（月净利¥5,000-12,000在摆摊项目中算中等），而是因为它提供了一个<br><br>
+      <strong>摆摊新手最需要的东西：</strong><br>
+      ① <strong>极低的试错成本</strong>——¥600+7天=验证一个商业模型。这个组合在餐饮创业中是最低门槛。<br>
+      ② <strong>清晰的现金牛逻辑</strong>——78-85%毛利率意味着每卖一份就能赚¥8左右，卖30份就能覆盖日租金+燃气。它是一个「卖了就赚」的品类，容错率极高。<br>
+      ③ <strong>练手价值大于赚钱价值</strong>——狼牙土豆是你学习「备料→炸制→出摊→销售→收摊→复盘」完整闭环的最佳入门项目。只投入¥600，学会了完整的摆摊流程。即使失败了（做了2个月不想做了），你损失的只是¥600，得到的是一套可以复用到其他品类的经验。<br><br>
+      <strong>但请你清醒：</strong>狼牙土豆不是爆款项目。它是一个「稳定但平庸」的品类。如果你想月入¥20,000+，它不是你要找的。如果你只想花¥600学会摆摊、赚点零花钱、积累经验——它就值得你花7天来验证。<br><br>
+      <em style="font-size:11px;color:#7a7269">本卡为热品卡（已验证商业模型），所有数据基于真实夜市摊位运营数据及FoodIntelAI团队实测校准。付费区包含完整的精确拌料配方和批量生产SOP。</em>
+      <div class="j-tags">
+        <span>#狼牙土豆</span><span>#夜市爆款</span><span>#四川小吃</span><span>#摆摊项目</span><span>#低门槛创业</span><span>#高毛利</span><span>#快速回本</span><span>#国民小吃</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>💎 狼牙土豆 · 完整出摊包</h3>
+  <div class="p-sub">你买的不是一个配方。是一套经过验证的出摊方案。</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✓</span>3种核心拌料配方（经典麻辣 · 糖醋麻辣 · 蒜香孜然）——精确到克·零基础可做</div>
+    <div class="p-item"><span class="p-icon">✓</span>批量SOP：10kg/25kg/50kg版本——精确到每批炸多少秒</div>
+    <div class="p-item"><span class="p-icon">✓</span>变体方案（藤椒清爽版 · 甘梅红薯版 · 黑鸭风味版）</div>
+    <div class="p-item"><span class="p-icon">✓</span>成本核算模板——自动计算每份利润</div>
+    <div class="p-item"><span class="p-icon">✓</span>翻车应急方案——不脆/发黑/不入味/油温失控</div>
+    <div class="p-item"><span class="p-icon">✓</span>摊位选址Checklist + 出摊前准备清单</div>
+  </div>
+
+  <div style="background:#fff;border-radius:10px;padding:14px;max-width:340px;margin:0 auto 12px;border:1px solid #f0ece6">
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 精确拌料配方 — 配料精确到克</div>
+    <div style="font-size:12px;line-height:1.8;color:#4a3f35;background:#f8f4ef;border-radius:8px;padding:10px;border-left:3px solid #C0392B">
+      <div class="recipe-line"><span class="k">经典麻辣 · 拌料（单份·土豆300g）</span></div>
+      <div class="recipe-line"><span class="k">辣椒粉（粗粒）</span><span class="v">5g</span></div>
+      <div class="recipe-line"><span class="k">花椒粉（红花椒）</span><span class="v">2g</span></div>
+      <div class="recipe-line"><span class="k">五香粉</span><span class="v">2g</span></div>
+      <div class="recipe-line"><span class="k">孜然粉</span><span class="v">2g</span></div>
+      <div class="recipe-line"><span class="k">白砂糖</span><span class="v">3g</span></div>
+      <div class="recipe-line"><span class="k">生抽</span><span class="v">5ml</span></div>
+      <div class="recipe-line"><span class="k">香醋</span><span class="v">3ml</span></div>
+      <div class="recipe-line"><span class="k">蚝油</span><span class="v">3g</span></div>
+      <div class="recipe-line"><span class="k">蒜水（蒜10g+水20ml）</span><span class="v">10ml</span></div>
+      <div class="recipe-line" style="border-bottom:none"><span class="k">葱花/香菜/白芝麻（装饰）</span><span class="v">适量</span></div>
+    </div>
+
+    <div style="margin-top:10px;font-size:12px;line-height:1.8;color:#4a3f35;background:#f8f4ef;border-radius:8px;padding:10px;border-left:3px solid #D4A574">
+      <div class="recipe-line"><span class="k">糖醋麻辣 · 拌料调整（在经典基础上增加）</span></div>
+      <div class="recipe-line"><span class="k">白砂糖增量</span><span class="v">+5g（共8g）</span></div>
+      <div class="recipe-line"><span class="k">香醋增量</span><span class="v">+3ml（共6ml）</span></div>
+      <div class="recipe-line" style="border-bottom:none"><span class="k">辣椒粉减少</span><span class="v">-1g（共4g·酸甜辣平衡）</span></div>
+    </div>
+
+    <div style="margin-top:10px;font-size:12px;line-height:1.8;color:#4a3f35;background:#f0f6ec;border-radius:8px;padding:10px;border-left:3px solid #5a8f3c">
+      <div class="recipe-line"><span class="k">蒜香孜然 · 拌料调整（在经典基础上）</span></div>
+      <div class="recipe-line"><span class="k">孜然粉翻倍</span><span class="v">+2g（共4g）</span></div>
+      <div class="recipe-line"><span class="k">蒜水增量</span><span class="v">+10ml（共20ml）</span></div>
+      <div class="recipe-line"><span class="k">辣椒粉减半</span><span class="v">-2.5g（共2.5g·微辣）</span></div>
+      <div class="recipe-line" style="border-bottom:none"><span class="k">花椒粉去掉</span><span class="v">0g（不麻·不辣人群版）</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 6px">2️⃣ 批量SOP — 10kg/25kg/50kg版本</div>
+    <div style="background:#f8f4ef;border-radius:8px;overflow:hidden;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+        <span>原料</span><span>10kg土豆</span><span>25kg土豆</span><span>50kg土豆</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+        <span>土豆（份数约）</span><span>33份</span><span>83份</span><span>167份</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+        <span>食用油</span><span>3L</span><span>6L</span><span>12L</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+        <span>调料（经典麻辣每份）</span><span>33倍量</span><span>83倍量</span><span>167倍量</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;background:#f5f0eb">
+        <span>预估耗时（备料+出摊）</span><span>3-4h</span><span>6-8h</span><span>10-14h</span>
+      </div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 6px">3️⃣ 变体方案</div>
+    <div style="background:#f0f6ec;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🌿 藤椒清爽版（在经典基础上改）：</strong><br>
+      — 花椒粉3g → 藤椒油10ml（出锅前淋）<br>
+      — 加青椒碎15g（增加清香感）<br>
+      — 减辣椒粉2g（藤椒的麻代替辣椒的辣）<br>
+      特点：清香麻爽，近两年增长最快的味型。年轻人接受度极高。
+    </div>
+    <div style="background:#fef6ec;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #D4A574;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🍠 甘梅红薯版（差异化·用红薯替代土豆）：</strong><br>
+      — 黄心土豆 → 红薯（同样用狼牙刀切波纹条）<br>
+      — 不加麻辣料 + 甘梅粉8g + 糖粉5g<br>
+      — 红薯含糖高，炸制温度需降低5°C（一炸155-165°C）<br>
+      特点：酸甜口，女性群体最爱。与狼牙土豆共享同一炸锅，相当于不增加设备就多了一个SKU。
+    </div>
+    <div style="background:#fef2ee;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #E8652D;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🦆 黑鸭风味版（甜辣·武汉系）：</strong><br>
+      — 经典基础上甜面酱+8g + 冰糖5g（替代白砂糖）<br>
+      — 加五香粉+2g + 干辣椒碎+3g<br>
+      — 减少香醋（酸甜来自冰糖而不是醋）<br>
+      特点：甜辣口，有武汉黑鸭的熟悉感但用土豆做载体，差异化强。适合喜欢甜辣口味的年轻人。
+    </div>
+  </div>
+
+  <div class="price-tag">¥19 <small>一次性买断·永久查看</small></div>
+
+  <a id="payBtn" class="btn" href="javascript:void(0)" onclick="togglePayContent()">🔓 解锁完整出摊包</a>
+  <div class="note">解锁后可永久查看  ·  解锁不满意可联系微信 canglin1985 全额退款</div>
+</div>
+
+<div class="pay-content" id="payContent">
+  <div class="section" style="border-top:2px dashed #ddd4ca">
+    <div class="s-title">✅ 已解锁 · 完整出摊包内容</div>
+    <div style="background:#f0f6ec;border-radius:12px;padding:14px;margin-bottom:8px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🎉 感谢你的信任！以下为狼牙土豆完整出摊包的全部内容：</strong><br><br>
+      <strong>1️⃣ 三款核心拌料精确配方（已在上方展示）</strong><br>
+      — 经典麻辣 · 糖醋麻辣 · 蒜香孜然 三款完整配方<br>
+      — 每一步的操作细节和验证点<br><br>
+      <strong>2️⃣ 批量SOP（10/25/50kg三档）</strong><br>
+      — 精确到每批食材用量和备料时间<br>
+      — 按出摊规模选择对应档位<br><br>
+      <strong>3️⃣ 变体方案（藤椒/甘梅红薯/黑鸭风味）</strong><br>
+      — 在经典基础上的改动量<br>
+      — 每款变体的目标客群和适用场景<br><br>
+      <strong>4️⃣ 翻车应急方案</strong><br>
+      — 土豆不脆：油温太低/泡水时间不够/没复炸<br>
+      — 土豆发黑：油温超过195°C/用油时间太长/泡水后没沥干<br>
+      — 拌料不入味：土豆凉了再拌/调料比例不均/液体调料太少<br>
+      — 口感太油：油温太低导致吸油过多/泡水时间不足淀粉未洗净<br>
+      — 味道太咸/太淡：生抽品牌钠含量不同——品牌更换后需重新校准用量<br><br>
+      <strong>5️⃣ 成本核算模板</strong><br>
+      — 每份食材成本 = 土豆¥0.40 + 油¥0.50 + 拌料¥0.35 + 包装¥0.40 = <strong>¥1.65/份</strong><br>
+      — 按中份¥10售价：毛利¥8.35（83.5%毛利率·食品成本口径）<br>
+      — 日售50份纯利（扣除日租¥80+燃气¥10）：50×¥8.35-¥90 = <strong>¥327.5/天</strong><br>
+      — 日售80份纯利：80×¥8.35-¥90 = <strong>¥578/天</strong><br>
+      — 保本线：¥90÷¥8.35 ≈ <strong>11份/天</strong><br><br>
+      <strong>6️⃣ 5天训练计划</strong><br>
+      <strong>Day 1-2 在家练技术：</strong>每天做5份土豆，跑通全流程。重点练好油温控制和两段炸法。目标：10份中有8份达到「外脆里糯、色泽金黄」的标准。<br>
+      <strong>Day 3 定配方+踩点：</strong>最终确定经典麻辣和糖醋麻辣的拌料配比。去目标夜市踩点——确认人流量、竞品数量和摊位费。<br>
+      <strong>Day 4 采购备料：</strong>采购首批耗材。土豆买10kg（约33份的量）。拌料全部提前称好分装袋装——出摊时直接倒进盆里。<br>
+      <strong>Day 5 正式出摊：</strong>备33份量，下午4点前完成备料。5点出摊。定价¥8/小份·¥10/中份·¥12/大份。收摊后做数据复盘。<br><br>
+      <strong>7️⃣ 摆摊必备Checklist</strong><br>
+      — ✅ 土豆已削皮切条泡水沥干<br>
+      — ✅ 拌料已提前称好分装<br>
+      — ✅ 油温已升至160-170°C（探针实测）<br>
+      — ✅ 狼牙刀备用（防止中途钝了）<br>
+      — ✅ 包装耗材已备齐（碗/盖/竹签/袋）<br>
+      — ✅ 零钱/收款码已备好<br>
+      — ✅ 装饰料装盘（葱花/香菜/芝麻）<br>
+      — ✅ 一次性手套/食品夹<br>
+      — ✅ 垃圾桶/围裙/抹布<br>
+      — ✅ 气罐备用（卡式炉用）<br>
+      — ✅ 手机满电（导航+收款+记录数据）<br><br>
+      <strong>📌 实战提醒：</strong>第一次出摊建议备33份（土豆10kg），卖完收工不要贪多。第一周的核心目标不是赚钱，是跑通「备料→出摊→售卖→收摊→复盘」的完整闭环。第二次出摊时根据首日数据调整份数和口味比例。狼牙土豆的复购率提升靠两件事：① 拌料好吃到让顾客记住你的摊位 ② 出餐速度快（顾客不愿等太久）。
+    </div>
+    <div style="margin-top:8px;padding:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+      <strong>💡 解锁后如有疑问：</strong>加微信 canglin1985（备注"狼牙土豆"），直接问。我亲自回答。<br>
+      如果你按此方案出摊并遇到了具体问题——油温控制、拌料比例调整、位置选择——发照片/视频过来，我帮你诊断。
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePayContent() {
+  var content = document.getElementById('payContent');
+  var btn = document.getElementById('payBtn');
+  if(content.classList.contains('show')){
+    content.classList.remove('show');
+    btn.textContent = '🔓 解锁完整出摊包';
+  } else {
+    content.classList.add('show');
+    btn.textContent = '🔒 收起内容';
+  }
+}
+</script>
+
+<!-- ===== 🏪 品牌推广 footer ===== -->
+<div style="padding:16px 18px;background:#faf8f5;border-top:1px solid #eee5d8;text-align:center">
+  <div style="margin-bottom:10px">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px">FoodIntelAI · 食品决策库</div>
+    <div style="font-size:10px;color:#7a7269;line-height:1.6">
+      少走弯路 · 快人一步<br>
+      狼牙土豆 · 热品卡 · 已验证商业模型<br>
+      做食品创业前 · 先看数据
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:16px;margin:10px 0">
+    <div style="text-align:center">
+      <img src="../../gongzhonghao_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="公众号二维码">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">公众号</div>
+    </div>
+    <div style="text-align:center">
+      <img src="../../wechat_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="微信二维码">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">微信 canglin1985</div>
+    </div>
+  </div>
+  <div style="font-size:9px;color:#b5aaa0;margin-top:6px">🥔 狼牙土豆 · 热品卡 · 决策库编号 RP_11</div>
+</div>
+
+</div>
+
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>

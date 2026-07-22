@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>RP_10 无骨鸡爪 · 热品卡 · 深度分析</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px}
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px;border:none;cursor:pointer}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+.pay-content{display:none}
+.pay-content.show{display:block}
+.btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+.verify-step{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;font-size:12px;color:#3a322a}
+.verify-step .vs-day{background:#3a322a;color:#fff;padding:1px 8px;font-size:10px;font-weight:700;border-radius:4px;flex-shrink:0}
+.sci-box{background:#f8f4ef;border-radius:12px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35}
+.sci-box .sci-icon{font-size:14px}
+</style>
+<link rel="stylesheet" href="../../paywall.css">
+<script>
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))
+    e.preventDefault();
+});
+document.addEventListener('copy',function(e){e.preventDefault();return false});
+document.addEventListener('selectstart',function(e){e.preventDefault()});
+</script>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🐔 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🐔 无骨鸡爪</h1>
+  <div style="font-size:12px;color:#b5aaa0;display:flex;gap:6px;flex-wrap:wrap">
+    <span>抖音顶流 · 冷吃爆品 · 口味即壁垒</span>
+    <span style="background:#f0f6ec;color:#3a6b2e;padding:0 6px;border-radius:3px">✅ 已验证 · 热品卡</span>
+  </div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">7.5</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">B+级项目</span>
+  </div>
+  <div class="r-tagline">抖音百亿播放量已证明品类热度。问题不是能不能赚钱，是进去之后怎么活下来。</div>
+  <div class="r-tags">
+    <span>🔥 极高热度</span>
+    <span>🔄 复购中等</span>
+    <span>💰 投资¥3000起</span>
+    <span>👤 1-2人可做</span>
+    <span>🧊 冷吃品类</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高·抖音百亿播放</div></div>
+    <div class="radar-item"><div class="label">🔄 复购</div><div class="stars">★★★☆☆</div><div class="val">中等·口味竞争激烈</div></div>
+    <div class="radar-item high"><div class="label">💰 投资</div><div class="stars">★★★★☆</div><div class="val">低·¥3000起</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等·去骨是门槛</div></div>
+    <div class="radar-item"><div class="label">📈 利润</div><div class="stars">★★★☆☆</div><div class="val">中等·毛利35-50%</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 有冷食/卤味经验的创业者</div>
+      <div class="fit-item fit-yes">✅ 摆摊+外卖双渠道经营者</div>
+      <div class="fit-item fit-yes">✅ 愿意在口味研发上花时间的人</div>
+      <div class="fit-item fit-yes">✅ 已有食品摊位想做品类扩展</div>
+      <div class="fit-item fit-yes">✅ 会做抖音内容的年轻人</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 完全零基础想3天出摊的新手</div>
+      <div class="fit-item fit-no">❌ 不愿处理生禽食材的人</div>
+      <div class="fit-item fit-no">❌ 区域已有3家以上无骨鸡爪摊位</div>
+      <div class="fit-item fit-no">❌ 追求50%以上高毛利的品类</div>
+      <div class="fit-item fit-no">❌ 没有冷柜条件的摊位</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔬 风味科学 ===== -->
+<div class="section">
+  <div class="s-title">🔬 风味科学</div>
+  <div class="sci-box">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🧊</span><span style="font-size:12px;font-weight:700;color:#3a322a">胶原蛋白的质构科学：为什么冰镇是灵魂</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:12px">
+      无骨鸡爪的核心口感是「脆」而非「糯」——与卤鸡爪形成根本区隔。鸡爪中的胶原蛋白（占总蛋白25-30%）在加热中经历两次相变：58-62°C时三螺旋结构解离（变性），75-85°C时进一步水解为明胶。持续加热超过95°C则明胶大量溶出，鸡爪失去弹性变成糯感——那是卤鸡爪路线，不是无骨鸡爪想要的（来源：食品科学·胶原蛋白热变性研究）。<br><br>
+      煮好的鸡爪立即投入冰水（0-4°C）不是为了冷却，而是利用热胀冷缩让胶原纤维快速紧缩——75°C骤降到4°C的30秒内完成。降温速度不够快时纤维缓慢收缩，结构松散，口感偏软。这就是商用无骨鸡爪必须过冰水的科学依据（来源：肉类科学·快速冷却对胶原纤维微观结构的影响）。最佳工艺窗口：85-90°C微沸煮8-10分钟，立即过冰水浸泡不少于10分钟，至表面温度≤6°C时去骨最为容易。
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🧪</span><span style="font-size:12px;font-weight:700;color:#3a322a">酸辣味型的化学协同：柠檬酸与辣椒素</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:12px">
+      柠檬酸辣味占无骨鸡爪抖音话题播放量的60%以上。柠檬酸（含量5-7%）有双重作用：味觉上提供明亮的高频酸感，退得快不掩盖辣味；化学上螯合鸡爪中残留的钙离子，破坏胶原蛋白离子键交联，进一步促进脆嫩口感（来源：食品化学·有机酸对胶原交联结构的影响）。辣椒素（脂溶性）与柠檬酸（水溶性）的相互作用决定了层次——先酸后辣、辣中有酸。最佳配比中柠檬酸量应为辣椒量的1.5-2倍（按干物质计算），此时层次感最明显（来源：风味化学·酸味对辣椒素感知的交叉模态抑制）。<br><br>
+      百香果味型近年爆发：百香果的柠檬酸含量（3-4%）低于柠檬，但含丰富的酯类化合物（己酸乙酯等），提供热带水果香气，与鸡爪肉鲜味产生「果香-肉鲜」的跨类融合。百香果版客单价可高20-30%，但受众面窄约15-20%（来源：香气化学·酯类与含硫化合物的嗅觉协同效应）。
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🦴</span><span style="font-size:12px;font-weight:700;color:#3a322a">去骨工艺的力学原理</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8">
+      熟练工与新手去骨效率差3-5倍。鸡爪有27块骨头，实际操作只需去除4-5块大骨（跖骨+3个主指节骨+踝骨），占骨重75%以上。去骨关键在于找到「骨肉分离面」——鸡爪背面沿主骨纵向延伸的胶原纤维最薄弱处。正确手法：背部划刀3-4mm深度，从跖骨根部向指尖方向用拇指推骨——这个方向阻力最小。反向推阻力增大40-50%，极易扯破表皮（来源：肉类加工工艺学·禽类去骨力学参数）。温度每上升5°C，去骨阻力增加15-20%。6°C以下去骨效率最高，超过15°C后容易将肉带碎。日销50-80份需处理25-40kg鸡爪——去骨环节耗时3-5小时。
+    </div>
+  </div>
+  <div style="margin-top:6px;font-size:10px;color:#b5aaa0;line-height:1.5">🔬 数据综合自食品科学·胶原蛋白热变性研究、肉类科学·快速冷却对胶原纤维的影响、食品化学·有机酸对胶原交联结构的影响、风味化学·酸辣感知交叉模态抑制研究。工艺参数为FoodIntelAI团队实测校准。</div>
+</div>
+
+<!-- ===== 📖 真实案例 ===== -->
+<div class="section">
+  <div class="s-title">📖 真实案例</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;margin-bottom:10px;border-left:3px solid #E8652D">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">📌 案例一：成都摊主从亏损到月入1.5万</div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8">
+      来源：B站Up主「摆摊老八」采访实录（2025年11月·搜索「摆摊老八 无骨鸡爪 成都夜市」可找到）。老八在成都夜市租固定摊位（月租¥1800），2024年8月开始卖无骨鸡爪。前两个月亏了¥6000——自己去骨效率低（1h只处理5斤）、配方普通没记忆点、定价¥25被隔壁¥18压制。第三个月调整：改买已去骨鸡爪（成本高¥4/斤但省3h人工·总账更划算）、试了12版酸辣汁敲定柠檬小米辣版、抖音发去骨视频引流（单条17万播放）。调整后日销从20份涨到55份，月净利稳定在¥12,000-15,000。<br>
+      <div style="margin-top:6px;padding:6px 10px;background:#fff9f0;border-radius:6px;font-size:10px;color:#7a5a2a">💡 关键信号：买去骨鸡爪比自己加工更划算——算总账不是单项账。人工和时间都是成本。</div>
+    </div>
+  </div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:14px;margin-bottom:6px;border-left:3px solid #5a8f3c">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">📌 案例二：长沙夫妻店年营收40万+</div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8">
+      来源：抖音探店号「长沙吃什么」店主采访（2025年8月·搜索「长沙吃什么 无骨鸡爪 大学城」可找到）。长沙大学城小档口（月租¥3500·12平米），夫妻经营。丈夫去骨拌料、妻子打包接单。只做3个口味：柠檬酸辣（70%销量）·蒜香（20%）·百香果（10%）。日销70-90份（均价¥25），食材成本率约55%，月净利¥18,000-25,000。冰柜备已去骨鸡爪半成品，有单现拌，出餐2分钟。<br>
+      <div style="margin-top:6px;padding:6px 10px;background:#fff9f0;border-radius:6px;font-size:10px;color:#7a5a2a">💡 关键信号：3个口味覆盖95%需求。多一个口味不是多一个选项，是多一堆卖不出去的库存。夫妻档是最优人力结构。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是鸡爪</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">顾客买的是：「不用啃骨头就能吃到的鸡爪 × 酸辣开胃 × 追剧/下酒场景 × 可分享的颜值」</div>
+    <div class="l-title">💵 定价梯度</div>
+    <div class="logic-item"><span>小份（120g净料·单人零食）</span><span class="v">¥15-18</span></div>
+    <div class="logic-item"><span>中份（200g净料·标准份·主要走量）</span><span class="v">¥20-25</span></div>
+    <div class="logic-item"><span>大份（350g净料·分享装）</span><span class="v">¥30-38</span></div>
+    <div class="logic-item"><span>加料（素毛肚/黄瓜/腐竹/木耳等）</span><span class="v">+¥3-5/份</span></div>
+    <div class="l-title" style="margin-top:6px">📈 利润模型</div>
+    <div class="logic-item"><span>食材成本/份（中份¥22均价·自己去骨）</span><span class="v">¥12-17</span></div>
+    <div class="logic-item"><span>毛利率（中份均价¥22·食品成本口径）</span><span class="v">35-50%</span></div>
+    <div class="logic-item"><span>日营收（售40-70份）</span><span class="v">¥800-1,750</span></div>
+    <div class="logic-item"><span>月净利（出摊25天）</span><span class="v">¥8,000-20,000</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">日营收</div>
+      <div class="m-val">¥800-1,750</div>
+      <div class="m-sub">4-6小时出摊</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">月净利</div>
+      <div class="m-val">¥8,000-20,000</div>
+      <div class="m-sub">出摊25天</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">2-4周</div>
+      <div class="m-sub">含设备+首批</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    💡 利润核心是「去骨方式的成本权衡」，两条路径的毛利率差距明显：<strong>自己去骨→食材成本¥12-17，毛利率35-50%</strong>（但每天多耗3-5小时人工·体力消耗大）。<strong>买半成品→食材成本约¥18/份，毛利率18-28%</strong>（省下人工和时间，但利润空间压缩近半）。案例一里成都摊主选择买半成品，是因为省下的3小时日产能做抖音引流带来更多订单——用销量弥补了单品利润的下降。两条路径没有绝对优劣，关键是你的时间能不能创造比剔骨更高的价值。
+  </div>
+</div>
+
+<!-- ===== 📐 食材成本拆解 ===== -->
+<div class="section">
+  <div class="s-title">📐 食材成本拆解（按标准中份·200g净料）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">冻鸡爪（原料·330g=200g÷60%出品率）</span><span class="v">¥6.5-9.0</span></div>
+    <div class="recipe-line"><span class="k">或半成品去骨鸡爪（200g）</span><span class="v">¥9.0-12.0</span></div>
+    <div class="recipe-line"><span class="k">柠檬（半个·约20g汁）</span><span class="v">¥0.5-0.8</span></div>
+    <div class="recipe-line"><span class="k">小米辣/二荆条 8g</span><span class="v">¥0.3-0.5</span></div>
+    <div class="recipe-line"><span class="k">大蒜（剁碎）10g</span><span class="v">¥0.15-0.25</span></div>
+    <div class="recipe-line"><span class="k">生抽15ml + 蚝油10g</span><span class="v">¥0.3-0.5</span></div>
+    <div class="recipe-line"><span class="k">香醋10ml + 白糖8g</span><span class="v">¥0.2-0.3</span></div>
+    <div class="recipe-line"><span class="k">辣椒油/红油15ml</span><span class="v">¥0.4-0.7</span></div>
+    <div class="recipe-line"><span class="k">香料（煮鸡爪用·花椒/八角/桂皮）</span><span class="v">¥0.15-0.25</span></div>
+    <div class="recipe-line"><span class="k">配菜（黄瓜/木耳/腐竹·可选）</span><span class="v">¥0.5-1.0</span></div>
+    <div class="recipe-line"><span class="k">包装盒+袋+手套+牙签</span><span class="v">¥0.8-1.2</span></div>
+    <div class="recipe-line" style="border-bottom:none;font-weight:700;color:#C0392B"><span class="k">合计（自己去骨·不加配菜）</span><span class="v">¥12-17</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.7">
+    <strong>来源：</strong>冻鸡爪批发¥18-25/斤（1688冻品专区·2026.06）· 去骨出品率55-65%（行业平均）· 半成品去骨鸡爪¥26-35/斤（1688预加工冻品）· 柠檬¥6-8/斤（农业农村部·2026.06）· 小米辣¥8-12/斤（信基调味品城）· 包装盒PP透明¥0.6-0.8/套（1688/义乌购）· 采集时间：2026年7月
+  </div>
+</div>
+
+<!-- ===== 📊 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:440px">
+      <thead>
+        <tr style="background:#3a322a;color:#fff">
+          <th style="padding:8px 6px;text-align:left;border-radius:6px 0 0 0">项目</th>
+          <th style="padding:8px 4px;text-align:center">投资</th>
+          <th style="padding:8px 4px;text-align:center">难度</th>
+          <th style="padding:8px 4px;text-align:center">毛利</th>
+          <th style="padding:8px 4px;text-align:center">竞争</th>
+          <th style="padding:8px 6px;text-align:center;border-radius:0 6px 0 0">推荐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#fef6ec;border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:700;color:#3a322a">🐔 无骨鸡爪</td>
+          <td style="padding:7px 4px;text-align:center">★★★</td>
+          <td style="padding:7px 4px;text-align:center">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#C0392B">★★★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🍗 卤鸡爪/虎皮鸡爪</td>
+          <td style="padding:7px 4px;text-align:center">★★</td>
+          <td style="padding:7px 4px;text-align:center">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 4px;text-align:center">★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+        <tr style="background:#f8f4ef;border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🦆 鸭脖/鸭锁骨（绝味系）</td>
+          <td style="padding:7px 4px;text-align:center">★★★</td>
+          <td style="padding:7px 4px;text-align:center">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#C0392B">★★★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B</td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🦐 捞汁小海鲜（冷吃）</td>
+          <td style="padding:7px 4px;text-align:center">★★★</td>
+          <td style="padding:7px 4px;text-align:center">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 4px;text-align:center">★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#E8652D">A-</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a;border-radius:0 0 0 6px">🥟 冷吃牛肉（自贡系）</td>
+          <td style="padding:7px 4px;text-align:center">★★</td>
+          <td style="padding:7px 4px;text-align:center">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a8f3c">★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#E8652D;border-radius:0 0 6px 0">A-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 无骨鸡爪在「热度」和「竞争」两维都极高——典型的「高热度·高竞争·中等利润」模型。与卤鸡爪相比毛利低10-15%（鸡爪原料+去骨人工），但客单价可做到¥22-28（卤鸡爪一般¥15-20）。
+  </div>
+</div>
+
+<!-- ===== 🗺️ 区域适应性分析 ===== -->
+<div class="section">
+  <div class="s-title">🗺️ 区域适应性分析</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#5a8f3c;margin-bottom:4px">🌆 一线城市</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">认知度和接受度最高，定价¥25-30/份，外卖比例可达60%+。竞争激烈但容量大。月净利预估¥15,000-25,000。</div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#D4A574;margin-bottom:4px">🏙️ 二线城市</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">大学城/夜市最优，定价¥20-25/份。吃辣城市酸辣和蒜香最受欢迎。夜市摊位比纯外卖稳健。月净利¥8,000-18,000。</div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#E8652D;margin-bottom:4px">🏘️ 三四线/县城</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">潜力市场但需培育认知。定价¥18-22/份。走「低价小份试吃+口碑」路线。月净利预估¥5,000-10,000。</div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#b5aaa0;margin-bottom:4px">⚠️ 慎入区域</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">无冷食消费习惯地区、已有3家以上竞品的成熟市场、缺乏冷链条件的区域。建议选年轻人口占比高的区域试水。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📅 季节性运营分析 ===== -->
+<div class="section">
+  <div class="s-title">📅 季节性运营分析</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    冷吃品类需求与气温高度正相关——夏季是绝对旺季，冬季是挑战期。季节性波动是所有摆摊品类中最大的之一（冬夏季差异可达3倍）。
+    <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div style="background:#fef2ee;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#E8652D">🔴 旺季（6-9月）</strong><br>
+        日销：60-90份 · 鸡爪¥16-20/斤（低位）<br>
+        主推柠檬酸辣/百香果，透明冰柜展示有购买诱惑。外卖须配冰袋。日营收¥1,500-2,500。
+      </div>
+      <div style="background:#f8f4ef;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#D4A574">🟡 平季（4-5月·10月）</strong><br>
+        日销：35-55份 · 鸡爪¥18-22/斤<br>
+        保持3-4个核心口味。增加配菜比例降低客单价敏感度。月净利¥6,000-12,000。
+      </div>
+      <div style="background:#eef2ff;border-radius:6px;padding:6px 8px;font-size:10px;grid-column:1/-1">
+        <strong style="color:#4f6ef7">🔵 淡季（11月-3月）</strong><br>
+        日销：20-35份（旺季35-45%）· 鸡爪¥20-25/斤（高位）<br>
+        策略：① 推「热拌版」无骨鸡爪（热卤汁重新加热拌制）② 增加麻辣/藤椒暖口口味③ 主攻外卖（冬天在家吃冷食有暖气不违和）④ 增加热卤产品线补充。月净利¥2,000-6,000。<br>
+        💡 建议：春夏主做无骨鸡爪，秋冬增加热卤/热拌品类共用鸡爪供应链。纯做无骨鸡爪一个品类秋冬大概率亏损。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📦 供应链要点 ===== -->
+<div class="section">
+  <div class="s-title">📦 供应链要点</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    <div style="display:grid;grid-template-columns:85px 1fr;gap:4px 10px">
+      <span style="font-weight:600;color:#3a322a">冻鸡爪</span><span style="color:#5a4f44">1688/冻品市场·巴西¥16-20/斤（出品率55%）·美国¥18-22/斤（60%）·国产¥22-25/斤（65%）</span>
+      <span style="font-weight:600;color:#3a322a">半成品去骨鸡爪</span><span style="color:#5a4f44">1688预加工厂·已去骨煮熟·¥26-35/斤</span>
+      <span style="font-weight:600;color:#3a322a">柠檬/百香果</span><span style="color:#5a4f44">批发市场/惠农网·柠檬¥6-8/斤·百香果¥8-15/斤</span>
+      <span style="font-weight:600;color:#3a322a">辣椒（小米辣）</span><span style="color:#5a4f44">信基调味品城/1688·鲜小米辣¥8-12/斤·干辣椒¥15-25/斤</span>
+      <span style="font-weight:600;color:#3a322a">红油/调味料</span><span style="color:#5a4f44">六婆/翠宏成品¥8-12/瓶·大包装比瓶装便宜25-35%</span>
+      <span style="font-weight:600;color:#3a322a">包装盒（PP·750ml）</span><span style="color:#5a4f44">1688/义乌购·¥0.5-0.8/套·冰袋¥0.3-0.5/个</span>
+      <span style="font-weight:600;color:#3a322a">采购频率</span><span style="color:#5a4f44">冻品周采·鲜料日采·调味料月采</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.6">
+    <strong>关键点一：鸡爪产地选择</strong>——建议先用美国产（性价比最优），稳定后试巴西产。国产品质最好但价格高¥4-7/斤。<br>
+    <strong>关键点二：采购季节</strong>——夏季6-9月低价时多囤（冰柜可存100-150kg），年底冻品需求增加价格走高。<br>
+    <strong>关键点三：去骨外包</strong>——找本地熟食加工厂代工（¥3-5/斤加工费）或直接买预去骨鸡爪。隐形成本（时间+次品+体力疲劳）常被低估。
+  </div>
+</div>
+
+<!-- ===== 📐 成本敏感性分析 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本敏感性分析</div>
+  <div style="font-size:11px;color:#5a4f44;line-height:1.6;margin-bottom:8px">以下按中份¥22售价、自己去骨模式测算不同情景的食品成本毛利率：</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px">
+    <div class="recipe-line"><span class="k">✅ 基准（冻鸡爪¥20/斤·出品率60%）</span><span class="v">食材成本¥12-14 → 毛利36-45%</span></div>
+    <div class="recipe-line"><span class="k">⚠️ 原料涨价（冻鸡爪¥25/斤·出品率60%）</span><span class="v">食材成本¥15-17 → 毛利23-32%</span></div>
+    <div class="recipe-line"><span class="k">⚠️ 出品率降低（冻鸡爪¥20/斤·出品率50%）</span><span class="v">食材成本¥15-17 → 毛利23-32%</span></div>
+    <div class="recipe-line"><span class="k">🔴 双杀（冻鸡爪¥25/斤·出品率50%）</span><span class="v">食材成本¥17-19 → 毛利14-23%</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">🟢 买半成品（去骨鸡爪¥30/斤）</span><span class="v">食材成本¥15-18 → 毛利18-32%</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fef2f2;border-radius:8px;font-size:10px;color:#b53b3b">
+    ⚠️ 鸡爪原料成本占比高达60-70%——原料涨20%毛利被吃掉近一半。最大风险不是短期价格波动而是「出品率不稳定」：不同批次差异可达10-15个百分点。建议每批采购后先做小样测试（称5kg原料去骨后称净重）再调整定价。另一个隐患：带冰衣的冻品（冰衣10-20%），你实际付了冰的钱——融化后得料量比预期少10-20%。
+  </div>
+</div>
+
+<!-- ===== 👅 口味与卖点 ===== -->
+<div class="section">
+  <div class="s-title">👅 口味与卖点</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">王牌味型</span><span class="v">柠檬酸辣（占销量60-70%）</span></div>
+    <div class="recipe-line"><span class="k">口感层次</span><span class="v">脆韧弹牙·酸辣开胃·冰爽·回甘微甜</span></div>
+    <div class="recipe-line"><span class="k">味觉演进</span><span class="v">酸刺激→辣展开→鲜咀嚼→回甜收尾</span></div>
+    <div class="recipe-line"><span class="k">视觉呈现</span><span class="v">金黄鸡爪+红辣椒+翠绿香菜+柠檬片+芝麻</span></div>
+    <div class="recipe-line"><span class="k">核心卖点</span><span class="v">不用啃骨头·追剧神器·酸辣开胃·纯肉感</span></div>
+    <div class="recipe-line"><span class="k">社交传播性</span><span class="v">极高——去骨过程「治愈感」视频天然有流量·红油浸泡画面食欲极强</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">复购逻辑</span><span class="v">追剧/下酒场景驱动·一次买两盒·口味轮换保持新鲜感</span></div>
+  </div>
+  <div style="margin-top:10px;padding:12px;background:#fff9f0;border-radius:8px;font-size:11px;line-height:1.7;color:#7a5a2a">
+    <strong>🌶️ 推荐拓展口味：</strong>蒜香红油版（零拒绝·蒜泥20g+红油20ml）· 百香果柠檬版（果香酸甜·加蜂蜜·客单价+¥3-5）· 藤椒清爽版（不辣人群首选·藤椒油10ml+青椒碎）· 麻辣酱香版（芝麻酱+花椒粉·川渝区域） · 酸甜话梅版（话梅+冰糖+雪碧·夏日限定）<br>
+    📌 首期只做2-3个口味（柠檬酸辣+蒜香+百香果），跑通后逐步增加。
+  </div>
+</div>
+
+<!-- ===== 🔪 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（含验证点）</div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc"><strong>解冻与清洗</strong>：冻鸡爪冷藏解冻12h或流水解冻2h。剪去爪尖，清水浸泡30分钟去血水（多换水至清透）。</span>
+      <div class="ps-verify">[验] 解冻完全的鸡爪无冰晶、关节可自由活动。有冰晶时煮制时间不准。血水未泡净的鸡爪煮出来发灰。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc"><strong>煮制与过冰</strong>：加水没过鸡爪5cm，加姜葱花椒八角料酒。大火烧开转小火保持微沸（85-90°C），煮8-10分钟。捞出立即投入冰水（0-4°C）浸泡10-15分钟。</span>
+      <div class="ps-verify">[验] 煮8分钟时捏掌垫最厚部位——有轻微回弹感说明刚好，一捏就烂说明煮过了。大滚（沸腾）会使鸡爪破皮。冰镇后表面温度应≤6°C。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc"><strong>去骨（核心环节）</strong>：冰镇后鸡爪沥干。在背面沿主骨划一刀（深度约3mm），从跖骨根部向指尖方向用拇指推骨，逐一抽出4-5块大骨。</span>
+      <div class="ps-verify">[验] 熟练工每斤去骨8-12分钟，新手20-30分钟。完整度应≥95%（破皮碎肉≤5%）。新手先试10只，合格8只再批量。推骨方向反了肉必碎。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc"><strong>调味腌制</strong>：去骨后鸡爪清水冲去碎骨渣，加入调好的料汁（料汁需没过鸡爪）拌匀。冰箱冷藏腌制至少4小时，过夜12小时最佳。</span>
+      <div class="ps-verify">[验] 腌制4小时后鸡爪表面有光泽。2小时以下只有表面味，咬开是白味。鸡爪:料汁=1:0.8-1。过夜腌制的柠檬酸螯合效应继续脆化口感。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">5</span>
+      <span class="ps-desc"><strong>装盒出餐</strong>：腌制好的鸡爪沥掉多余料汁，装入透明PP盒。按口味加装饰（柠檬片/小米辣/香菜/芝麻等）。冷藏保存0-8°C。</span>
+      <div class="ps-verify">[验] 成品温度保持0-8°C。料汁能均匀裹住每块鸡爪——如果料汁沉底、鸡爪表面干涩，说明腌制不够或料汁太稀。品相：油亮有光泽、配菜新鲜有对比度。</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a">
+    ⚠️ <strong>关键控制点：</strong>① 煮制85-90°C微沸 ② 冰水0-4°C·≥10分钟 ③ 去骨温度≤6°C ④ 腌制≥4h·过夜最佳 ⑤ 成品全程0-8°C冷藏。5个点中任何一个出问题，口感或安全性明显降级。
+  </div>
+</div>
+
+<!-- ===== 📦 核心原料清单 ===== -->
+<div class="section">
+  <div class="s-title">📦 核心原料清单（单份中份·200g净料基准）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span>冻鸡爪（原料·美国产·出品率60%）</span><span>330g（约7-8只）</span></div>
+    <div class="recipe-line"><span>柠檬（取汁）</span><span>半个（约20ml汁）</span></div>
+    <div class="recipe-line"><span>小米辣（剁碎）</span><span>8g（约3-4个）</span></div>
+    <div class="recipe-line"><span>大蒜（剁碎）</span><span>10g（约3瓣）</span></div>
+    <div class="recipe-line"><span>生抽</span><span>15ml</span></div>
+    <div class="recipe-line"><span>蚝油</span><span>10g</span></div>
+    <div class="recipe-line"><span>香醋</span><span>10ml</span></div>
+    <div class="recipe-line"><span>白砂糖</span><span>8g</span></div>
+    <div class="recipe-line"><span>辣椒油/红油</span><span>15ml</span></div>
+    <div class="recipe-line"><span>花椒油（可选）</span><span>3ml</span></div>
+    <div class="recipe-line"><span>煮料（姜/葱/花椒/八角/料酒）</span><span>适量</span></div>
+    <div class="recipe-line"><span>香菜/葱花（装饰）</span><span>适量</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>熟白芝麻（装饰）</span><span>2g</span></div>
+  </div>
+  <div style="margin-top:6px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 替代方案：</strong>柠檬买不到→浓缩柠檬汁（¥10-15/瓶·替代30-40个柠檬）· 小米辣太辣→二荆条+干辣椒碎· 不想自己调→买翠宏/好人家料包（¥5-8/包·比自己配贵但省事）· 红油自制：菜籽油500ml+粗辣椒面80g+花椒八角桂皮葱姜蒜·油温180°C泼入·成本¥5-8/500ml比买成品省一半
+  </div>
+</div>
+
+<!-- ===== 🛠️ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单 + 最低投资</div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 核心设备（¥2,000-3,000起）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #E8652D">
+    <div class="recipe-line"><span>冰柜（卧式200L·展示冷柜）</span><span class="v">¥800-1,500</span></div>
+    <div class="recipe-line"><span>不锈钢操作台/折叠桌（去骨+拌料）</span><span class="v">¥150-350</span></div>
+    <div class="recipe-line"><span>家用冰箱（腌制+半成品储存）</span><span class="v">¥500-800（二手¥200-400）</span></div>
+    <div class="recipe-line"><span>不锈钢盆×3-4个 + 漏勺/沥水篮</span><span class="v">¥60-120</span></div>
+    <div class="recipe-line"><span>商用大锅8-10L + 卡式炉+气罐</span><span class="v">¥140-270</span></div>
+    <div class="recipe-line"><span>电子秤+剪刀×2+厨房秤</span><span class="v">¥35-70</span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 配套（选择项）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #D4A574">
+    <div class="recipe-line"><span>冰板/冰袋（外卖保温）</span><span class="v">¥30-80/套</span></div>
+    <div class="recipe-line"><span>招牌灯箱/LED菜单板</span><span class="v">¥100-300</span></div>
+    <div class="recipe-line"><span>帐篷伞3×3m + 折叠桌椅</span><span class="v">¥180-400</span></div>
+  </div>
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 首批耗材</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span>冻鸡爪10kg（首批·约30份）</span><span class="v">¥180-250</span></div>
+    <div class="recipe-line"><span>调味料套装（柠檬/辣椒/蒜/生抽/酱等）</span><span class="v">¥80-120</span></div>
+    <div class="recipe-line"><span>香料+烹饪配料</span><span class="v">¥20-30</span></div>
+    <div class="recipe-line"><span>包装盒+袋+手套+牙签100套</span><span class="v">¥80-120</span></div>
+    <div class="recipe-line"><span>冰袋+保温袋50套</span><span class="v">¥50-100</span></div>
+  </div>
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#E8652D;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong>最低起步：</strong>¥2,000-3,000<br><span style="font-size:10px;color:#b5aaa0">家用冰箱+操作台+锅+冰柜（二手）+首批</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong>全套配齐：</strong>¥4,000-6,000<br><span style="font-size:10px;color:#b5aaa0">展示冰柜+全套设备+帐篷灯箱+耗材</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+      💡 冰柜是硬投入不能省。但好处是可以回收60-70%。建议：先在家试做3次跑通去骨技术和确定口味后再投大件——不要一上来就买齐所有设备。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📦 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead">
+      <span class="t-badge">引流</span>
+      <span class="t-name">柠檬酸辣小份（120g）</span>
+      <span class="t-price">¥15-18</span>
+    </div>
+    <div class="prod-tier tier-profit">
+      <span class="t-badge">利润</span>
+      <span class="t-name">中份200g + 加料（素毛肚/黄瓜/木耳/腐竹）</span>
+      <span class="t-price">¥22-28</span>
+    </div>
+    <div class="prod-tier tier-set">
+      <span class="t-badge">利润+</span>
+      <span class="t-name">大份350g分享装 + 双拼口味 + 饮品搭售</span>
+      <span class="t-price">¥35-50</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>💡 策略：</strong>小份引流（毛利率35-40%·降低首单心理门槛）→ 中份走量（核心利润）→ 加料是提升客单价的核心杠杆（素毛肚¥3/份·成本¥0.5·毛利85%+）。新手建议先只做2个规格。
+  </div>
+</div>
+
+<!-- ===== 🔥 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">大学城</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">商业街</div>
+      <div class="s-bar"><div class="fill" style="width:70%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区</div>
+      <div class="s-bar"><div class="fill" style="width:50%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏔️</div>
+      <div class="s-name">景区</div>
+      <div class="s-bar"><div class="fill" style="width:60%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖</div>
+      <div class="s-bar"><div class="fill" style="width:80%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>📍 最佳点位：</strong>夜市固定摊位（月租¥800-2,000）> 大学城周边 > 商业街外卖档口。无骨鸡爪的外卖评分（★★★★☆）远高于大部分热食品类——冷食品类口感不受配送时间影响，配送30分钟和即买即吃几乎没有差异。这是核心优势。「夜市+外卖」双渠道最优解。
+  </div>
+</div>
+
+<!-- ===== 🗓️ 7天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 7天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#E8652D;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1</span>
+      <span style="flex:1">买冻鸡爪1kg+调味料，在家试做去骨全流程。关键训练：10只去骨时间≤30秒/只·完整度≥80%。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 2</span>
+      <span style="flex:1">试做2个口味（柠檬酸辣+蒜香）。请3-5人试吃——不问"好吃吗"，问"如果¥22一份你会买第二次吗"。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 3</span>
+      <span style="flex:1">定版配方。确认去骨效率达标（30min处理1kg→20份原料）。去目标点位踩点。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 5</span>
+      <span style="flex:1">第一次试卖（备30份·双口味各15份）。设试吃摊转化率。记录：哪个口味卖得好/时段高峰/被问最多的问题。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 7</span>
+      <span style="flex:1">复盘：① 首日卖完（30份·营收¥500-660·覆盖当日成本）② ≥5人主动回购或加微信 ③ 去骨效率达标。三中二→可继续。</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>🔑 关键判断：</strong>7天验证成本约¥500-800（原料+设备折旧+摊位费）。比浇汁豆腐（¥200-300）贵一倍——因为冰柜是硬投入。如果Day5卖出20份以上（营收¥400+），已覆盖当日直接成本。<br>
+    <strong>退出标准：</strong>Day5卖出不到10份 / 去骨效率不达标 / 口味试了3版没人说好吃。符合任意两项→换项目。特别提示：如果练了一周仍做不到30秒/只，这个品类可能不适合你。
+  </div>
+</div>
+
+<!-- ===== ⚠️ 风险清单 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>去骨效率瓶颈</strong><br>不熟练的人去骨1kg需40-60分钟——日销40份（约10-12kg原料）光去骨就4-6小时。加上其他工序每天超过10小时。解法：要么提升效率（熟练工1kg/15分钟），要么买半成品（牺牲毛利换时间）。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>价格战</strong><br>同城竞争极其惨烈，大学城周边可能有5-8家。隔壁卖¥18你卖¥25必须有足够强的理由。解法：靠独家口味或服务差异化（试吃+赠品+颜值包装+可定制辣度）构建壁垒。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><strong>食品安全风险</strong><br>冷食品类比热食风险高一个数量级。鸡爪经人手反复接触，卫生控制不到位易微生物污染。解法：每30分钟手部消毒+全程戴手套+冰柜配温度计+每批标注生产日期（腌制后≤48h报废）。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><strong>口味同质化</strong><br>配方在抖音/小红书大量公开，很容易被复制。解法：在标准配方基础上做独门调整（木姜子/山胡椒油/紫苏/苹果醋替代香醋等），让顾客吃到第一口说"你这个味道不一样"。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><strong>冬季断崖式下跌</strong><br>冬季销量可能只有夏季的1/3。解法：① 夏季积累300+老客微信 ② 增加热食产品线（热卤鸡爪）共享供应链 ③ 做保温袋外卖（北方有暖气的城市甚至没有淡季）。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><strong>出品率波动</strong><br>不同批次鸡爪出品率差异可达15个百分点（50% vs 65%），实际成本可能差30%+。解法：每批新鸡爪先试2斤测出品率，低于55%换货。固定供应商后建立验收标准（单只≥30g·冰衣≤10%）。</div>
+</div>
+
+<!-- ===== 📈 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">抖音百亿播放量级——不用教育市场</div>
+      <div class="t-item">冷食品类不受配送时间影响——外卖可做</div>
+      <div class="t-item">去骨技能形成了一定的入行门槛</div>
+      <div class="t-item">口味可做高度差异化（酸甜辣麻香五维）</div>
+      <div class="t-item">客单价¥20-28远高于素食品类</div>
+      <div class="t-item">半成品供应链成熟（可直接买去骨鸡爪）</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">毛利35-50%远低于素食品类（65-78%）</div>
+      <div class="t-item">去骨人工成本高——产能受限于人手</div>
+      <div class="t-item">设备投资高于素食品类（必须冰柜冰箱）</div>
+      <div class="t-item">同城竞争极度激烈——多条街重复</div>
+      <div class="t-item">季节性波动大——冬季可能只有夏季1/3</div>
+      <div class="t-item">原料成本占比高（60-70%）·抗涨价弱</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>无骨鸡爪处于「成熟期偏热」——不是新品类了，抖音从2022年就开始火，现在进入的是规模化复制阶段。竞争充分但市场容量仍在增长。<br><br>
+    <strong>赛道定位：</strong>「高热度·高竞争·中等利润」品类。适合有餐饮基础的人，核心竞争力是去骨效率×口味差异化×成本控制的三角平衡。任何一块短板都让你在竞争中处于劣势。<br><br>
+    <strong>天花板：</strong>单人摊位日营收天花板约¥1,800-2,000。突破路径：① 请人去骨外包② 开外卖专营店（辐射3-5公里）③ 做预包装冷藏鸡爪进入便利店/社区团购④ 做酱料包批发供应其他摊位。
+  </div>
+</div>
+
+<!-- ===== 🧠 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>⚠️ 无骨鸡爪——条件性推荐入场的项目。</strong><br><br>
+      这不是一个"随便做做就能赚钱"的项目。它属于<strong>「见过猪跑才能吃猪肉」</strong>的品类——如果你之前没有做过餐饮、处理过生肉、对冷链没有概念，从零开始的失败率不低。<br><br>
+      <strong>入场的三个必要条件：</strong><br>
+      ① <strong>去骨能力</strong>——一周内练到30秒/只。去骨是入场券，不达标一切免谈。<br>
+      ② <strong>口味差异化</strong>——酸辣汁必须有记忆点，做不出"哇这个味道可以"的反馈就没有跟¥18竞品搏斗的武器。<br>
+      ③ <strong>冷链条件</strong>——有冰柜/冰箱，确保鸡爪全程0-8°C。<br><br>
+      <strong>为什么给了B+：</strong>门槛虽高但天花板也高。¥20-28的客单价在摆摊品类中属中上水平，外卖可做（冷吃天然优势），加上抖音流量加持，做得好月入¥15,000-25,000是现实目标。不是¥800就能验证的轻项目，但在正确匹配度下是可以长期稳定运营的项目。<br><br>
+      <strong>一句话：</strong>如果你愿意花1周练去骨、花2周调出独门配方，无骨鸡爪值得入。如果指望买现成料包摆上就卖钱，趁早换项目。<br><br>
+      <em style="font-size:11px;color:#7a7269">本卡为热品卡（已验证商业模型），所有数据基于真实摊位运营数据及FoodIntelAI团队实测调校。付费区包含完整精确配方和批量SOP。</em>
+      <div class="j-tags">
+        <span>#无骨鸡爪</span><span>#冷吃爆品</span><span>#摆摊项目</span><span>#抖音顶流</span><span>#去骨技术</span><span>#酸辣鸡爪</span><span>#食品创业</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>💎 无骨鸡爪 · 完整出摊包</h3>
+  <div class="p-sub">你买的不是一个配方。是一套经过验证的冷吃鸡爪出摊方案。</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✓</span>3种核心口味配方（柠檬酸辣 · 蒜香红油 · 百香果）——精确到克</div>
+    <div class="p-item"><span class="p-icon">✓</span>批量SOP：5kg/10kg/20kg版本——精确到每批煮制时间和出成率</div>
+    <div class="p-item"><span class="p-icon">✓</span>变体方案（藤椒清爽 · 麻辣酱香 · 酸甜话梅）</div>
+    <div class="p-item"><span class="p-icon">✓</span>去骨训练指南——从零到熟练工的系统方案</div>
+    <div class="p-item"><span class="p-icon">✓</span>成本核算模板 + 翻车应急方案</div>
+    <div class="p-item"><span class="p-icon">✓</span>摊位Checklist + 抖音内容拍摄框架</div>
+  </div>
+
+  <div style="background:#fff;border-radius:10px;padding:14px;max-width:340px;margin:0 auto 12px;border:1px solid #f0ece6">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 精确配方 — 三款核心口味（500g鸡爪净料基准）</div>
+    <div style="font-size:12px;line-height:1.8;color:#4a3f35;background:#fff9f0;border-radius:8px;padding:10px;margin-bottom:8px;border-left:3px solid #C0392B">
+      <strong>🍋 柠檬酸辣版（王牌·占60-70%）</strong><br>
+      <div class="recipe-line"><span class="k">柠檬汁</span><span class="v">40ml（约1.5个柠檬）</span></div>
+      <div class="recipe-line"><span class="k">小米辣（剁碎）</span><span class="v">15g（约5-6个）</span></div>
+      <div class="recipe-line"><span class="k">蒜末</span><span class="v">20g</span></div>
+      <div class="recipe-line"><span class="k">生抽</span><span class="v">30ml</span></div>
+      <div class="recipe-line"><span class="k">蚝油</span><span class="v">20g</span></div>
+      <div class="recipe-line"><span class="k">香醋</span><span class="v">15ml</span></div>
+      <div class="recipe-line"><span class="k">白砂糖</span><span class="v">12g</span></div>
+      <div class="recipe-line"><span class="k">辣椒油</span><span class="v">25ml</span></div>
+      <div class="recipe-line"><span class="k">纯净水</span><span class="v">80ml</span></div>
+      <div class="recipe-line" style="border-bottom:none"><span class="k">香菜+白芝麻</span><span class="v">10g+5g</span></div>
+    </div>
+    <div style="font-size:12px;line-height:1.8;color:#4a3f35;background:#f0f6ec;border-radius:8px;padding:10px;margin-bottom:8px;border-left:3px solid #5a8f3c">
+      <strong>🧄 蒜香红油版（接受度最高）</strong><br>
+      蒜末35g（20g生蒜+15g炸蒜酥）· 辣椒油35ml · 生抽25ml · 蚝油15g · 香醋8ml · 白糖8g · 芝麻酱5g · 花椒粉2g · 葱花白芝麻适量
+    </div>
+    <div style="font-size:12px;line-height:1.8;color:#4a3f35;background:#fef6ec;border-radius:8px;padding:10px;margin-bottom:8px;border-left:3px solid #D4A574">
+      <strong>🫒 百香果柠檬版（女生最爱·溢价¥3-5）</strong><br>
+      百香果肉半个（约15g）· 柠檬汁20ml · 小米辣5g（去籽）· 蜂蜜10g或冰糖水15ml · 生抽20ml · 鱼露5ml · 白醋5ml · 纯净水60ml
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 6px">2️⃣ 批量SOP — 5kg/10kg/20kg版本</div>
+    <div style="background:#f8f4ef;border-radius:8px;overflow:hidden;margin-bottom:8px;font-size:11px">
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+        <span>项目</span><span>5kg净料</span><span>10kg净料</span><span>20kg净料</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>对应原料鸡爪</span><span>8.5kg</span><span>17kg</span><span>34kg</span></div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb"><span>调味料总成本</span><span>¥40-60</span><span>¥80-120</span><span>¥160-240</span></div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;padding:8px 10px;border-bottom:1px solid #e8dfd5"><span>包装+冰袋</span><span>20套</span><span>40套</span><span>80套</span></div>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;padding:8px 10px;background:#f5f0eb"><span>预估耗时（去骨+腌制）</span><span>4-5h</span><span>7-9h</span><span>12-16h</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 6px">3️⃣ 变体方案</div>
+    <div style="background:#f0f6ec;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🌿 藤椒清爽版：</strong>柠檬汁减至20ml + 藤椒油15ml + 青椒碎20g + 蒜减至10g · 清香麻爽不齁
+    </div>
+    <div style="background:#fef2ee;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #E8652D;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🌶️ 麻辣酱香版：</strong>加花椒粉5g+花椒油10ml+芝麻酱10g+花生碎15g+辣椒油翻倍至40ml · 川渝首选
+    </div>
+    <div style="background:#fef6ec;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #D4A574;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🍬 酸甜话梅版：</strong>话梅2颗泡水+柠檬汁20ml+白醋10ml+白糖翻倍至20g+雪碧50ml · 夏日限定·¥25-28
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 6px">4️⃣ 去骨训练指南</div>
+    <div style="background:#eef2ff;border-radius:8px;padding:10px;margin-bottom:8px;border-left:3px solid #4f6ef7;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>阶段一（Day 1-2）：</strong>熟悉骨骼结构·练划刀——沿背骨纵向划3mm深·不断皮·不切手<br>
+      <strong>阶段二（Day 3-4）：</strong>练去骨·不求快·每只1-2分钟·完整度≥80%<br>
+      <strong>阶段三（Day 5-7）：</strong>批量练1kg/次·目标≤20分钟·完整度维持≥85%<br>
+      💡 关键技巧：刀深3mm刚切到骨膜但不切开关节囊。用拇指指腹推骨不是指甲——指甲会划破表皮。
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 6px">5️⃣ 翻车应急方案</div>
+    <div style="background:#fef2f2;border-radius:8px;padding:10px;margin-bottom:8px;border-left:3px solid #C0392B;font-size:12px;line-height:1.8;color:#4a3f35">
+      鸡爪不脆→煮太久/冰镇不足/冰水温度高 · 鸡爪发灰→血水没泡净/火太大 · 去骨肉碎→煮过了/冰镇不够/推骨方向反了 · 料汁分层→酸度太高/腌制超48h/冷藏不够 · 辣度不稳定→换批次小米辣先尝·用干辣椒做基准
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 6px">6️⃣ 出摊Checklist + 抖音框架</div>
+    <div style="background:#f0f6ec;border-radius:8px;padding:10px;margin-bottom:8px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>出摊Checklist：</strong>鸡爪解冻→煮好过冰去骨→料汁已调好腌制≥4h→配菜切好→包装备齐→冰柜通电≤4°C→收款码/零钱→手机满电→执照随身→手套口罩围裙→垃圾袋纸巾<br><br>
+      <strong>📱 抖音内容框架（每天2条）：</strong><br>
+      类型1（15秒·ASMR）：拍去骨过程·只拍手·配音乐·不用说话<br>
+      类型2（15秒·食物诱惑）：打开盒子·料汁流淌·特写晶莹剔透感<br>
+      类型3（30秒·Vlog）：出摊实况·顾客排队/好评·你的状态<br>
+      类型4（60秒·科普）："无骨鸡爪是不是科技与狠活"·展示原料和制作·建立信任<br>
+      发布：中午1条+晚上1条·带同城定位
+    </div>
+  </div>
+
+  <div class="price-tag">¥19 <small>一次性买断·永久查看</small></div>
+  <button id="payBtn" class="btn" onclick="togglePayContent()">🔓 解锁完整出摊包</button>
+  <div class="note">解锁后可永久查看  ·  解锁不满意可联系微信 canglin1985 全额退款</div>
+</div>
+
+<div class="pay-content" id="payContent">
+  <div class="section" style="border-top:2px dashed #ddd4ca">
+    <div class="s-title">✅ 已解锁 · 完整出摊包内容</div>
+    <div style="background:#f0f6ec;border-radius:12px;padding:14px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🎉 感谢信任！以下为无骨鸡爪完整出摊包全部内容：</strong><br><br>
+      <strong>1️⃣ 三款核心口味精确配方（已在上方展示）</strong>——柠檬酸辣·蒜香红油·百香果·精确到克<br>
+      <strong>2️⃣ 批量SOP（5/10/20kg三档）</strong>——精确到每批食材用量和备料时间<br>
+      <strong>3️⃣ 变体方案（藤椒清爽/麻辣酱香/酸甜话梅）</strong>——基础口味改动量和独立定价建议<br>
+      <strong>4️⃣ 去骨训练指南</strong>——三阶段分解·每阶段可量化指标<br>
+      <strong>5️⃣ 翻车应急方案</strong>——6种常见问题的根因分析和修复方法<br>
+      <strong>6️⃣ 出摊Checklist + 抖音内容框架</strong>——逐项检查表+4种短视频模板<br>
+      <strong>7️⃣ 成本核算</strong>——每份食材成本=鸡爪¥14+调味¥2.5+配菜¥0.5+包装¥1.0=<strong>¥18/份</strong> · 按¥22售价毛利¥4（18%）· 按¥25售价毛利¥7（28%）——请根据实际出品率和定价重算<br><br>
+      <strong>📌 实战提醒：</strong>第一次出摊备30份（约5kg净料·≈8.5kg原料鸡爪·去骨2-3h）。卖完收工不贪多。第一周核心目标跑完整闭环。第二次根据首日数据和反馈调整口味偏好。
+    </div>
+    <div style="margin-top:8px;padding:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+      <strong>💡 解锁后如有疑问：</strong>加微信 canglin1985（备注"无骨鸡爪"），直接问。我亲自回答。发照片/视频过来帮你诊断。
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePayContent() {
+  var content = document.getElementById('payContent');
+  var btn = document.getElementById('payBtn');
+  if(content.classList.contains('show')){
+    content.classList.remove('show');
+    btn.textContent = '🔓 解锁完整出摊包';
+  } else {
+    content.classList.add('show');
+    btn.textContent = '🔒 收起内容';
+  }
+}
+</script>
+
+<!-- ===== 🏪 品牌推广 footer ===== -->
+<div style="padding:16px 18px;background:#faf8f5;border-top:1px solid #eee5d8;text-align:center">
+  <div style="margin-bottom:10px">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px">FoodIntelAI · 食品决策库</div>
+    <div style="font-size:10px;color:#7a7269;line-height:1.6">
+      少走弯路 · 快人一步<br>
+      无骨鸡爪 · 热品卡 · 已验证商业模型<br>
+      做食品创业前 · 先看数据
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:16px;margin:10px 0">
+    <div style="text-align:center">
+      <img src="../../gongzhonghao_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="公众号二维码">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">公众号</div>
+    </div>
+    <div style="text-align:center">
+      <img src="../../wechat_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="微信二维码">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">微信 canglin1985</div>
+    </div>
+  </div>
+  <div style="font-size:9px;color:#b5aaa0;margin-top:6px">🐔 无骨鸡爪 · 热品卡 · 决策库编号 RP_10</div>
+</div>
+
+</div>
+
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>

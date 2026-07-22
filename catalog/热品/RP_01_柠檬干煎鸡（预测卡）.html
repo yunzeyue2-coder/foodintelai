@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes">
+<title>RP_01 柠檬干煎鸡 · 区域预测 · 深度分析</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.pred-banner{background:linear-gradient(135deg,#f0f4f8,#e8f0f8);border:1px solid #c8d8e8;border-radius:10px;padding:12px 16px;margin:10px 0}
+.pred-banner .p-icon{font-size:16px}
+.pred-banner .p-title{font-size:12px;font-weight:700;color:#2a5a8a}
+.pred-banner .p-text{font-size:11px;color:#4a5a6a;line-height:1.6;margin-top:4px}
+
+.region-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.region-box{background:#f8f4ef;border-radius:10px;padding:10px}
+.region-box .r-h{font-size:11px;font-weight:700;margin-bottom:4px}
+.region-box .r-d{font-size:10px;color:#5a4f44;line-height:1.5}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:4px}
+.stall-item .stars{font-size:12px;letter-spacing:1px}
+
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px;margin-left:30px}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.sci-box{background:#f8f4ef;border-radius:12px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35}
+.sci-box .sci-icon{font-size:14px}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:8px 6px;text-align:left}
+.badge{background:#f5ede5;padding:2px 6px;border-radius:4px;font-size:9px}
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+
+.verify-steps{display:flex;flex-direction:column;gap:6px}
+.verify-step{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;font-size:12px;color:#3a322a}
+.verify-step .vs-day{background:#3a322a;color:#fff;padding:1px 8px;font-size:10px;font-weight:700;border-radius:4px;flex-shrink:0}
+
+.pred-path{background:#f8f4ef;border-radius:12px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35}
+.pred-path .pp-stage{display:flex;gap:10px;padding:6px 0;border-bottom:1px dashed #e8dfd5}
+.pred-path .pp-stage:last-child{border-bottom:none}
+.pred-path .pp-tag{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap;flex-shrink:0;align-self:flex-start}
+.pp-stage-1 .pp-tag{background:#f0e8d8;color:#7a5a2a}
+.pp-stage-2 .pp-tag{background:#e8f0d8;color:#4a7a2a}
+.pp-stage-3 .pp-tag{background:#d8e8f0;color:#2a5a7a}
+
+/* ===== 预测引擎插件层 ===== */
+.engine-section{padding:20px 18px;border-bottom:none;background:linear-gradient(180deg,#f8f4f0,#f0ece6)}
+.engine-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:12px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #ddd4ca;padding-bottom:8px}
+.engine-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.engine-card{background:#faf8f5;border-radius:10px;padding:10px;border:1px solid #e8dfd5}
+.engine-card .ec-label{font-size:9px;color:#7a7269;margin-bottom:2px;letter-spacing:0.5px}
+.engine-card .ec-abbr{font-size:10px;font-weight:700;color:#8a7a6a}
+.engine-card .ec-score{font-size:18px;font-weight:800;color:#C0392B}
+.engine-card .ec-desc{font-size:9px;color:#b5aaa0;margin-top:2px;line-height:1.4}
+.engine-card .ec-bar{margin-top:4px;height:4px;background:#e8dfd5;border-radius:2px;overflow:hidden}
+.engine-card .ec-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#D4A574,#C0392B)}
+.engine-full{grid-column:1/-1}
+.engine-full .ec-score{font-size:20px}
+.engine-full .ec-fill{background:linear-gradient(90deg,#E8652D,#C0392B)}
+.engine-signal{margin-top:10px}
+.engine-signal .es-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:11px;color:#5a4f44;border-bottom:1px solid #eee5d8}
+.engine-signal .es-row:last-child{border-bottom:none}
+.engine-signal .es-icon{font-size:12px;flex-shrink:0}
+.engine-signal .es-label{flex:1;font-weight:600;color:#3a322a}
+.engine-signal .es-val{font-size:10px;color:#7a7269}
+.engine-note{font-size:9px;color:#b5aaa0;text-align:center;padding:8px 0 0 0;line-height:1.5;border-top:1px dashed #ddd4ca;margin-top:8px}
+
+/* ===== 预测引擎 - 雷达图 & 环形表 ===== */
+.radar-wrap{display:flex;gap:20px;margin-bottom:16px;align-items:center;justify-content:center;flex-wrap:wrap}
+.radar-chart{width:160px;height:160px;position:relative;flex-shrink:0}
+.radar-chart .ax{position:absolute;width:65px;height:1px;background:#ddd4ca;top:80px;left:80px;transform-origin:0 0}
+.radar-chart .ax::after{content:'';position:absolute;right:-2px;top:-2px;width:5px;height:5px;background:#ccc2b5;border-radius:50%}
+.radar-outline{position:absolute;top:0;left:0;width:100%;height:100%;clip-path:polygon(50% 9.38%,88.64% 37.45%,73.88% 82.86%,26.12% 82.86%,11.36% 37.45%)}
+.radar-outline::before{content:'';position:absolute;inset:0;background:rgba(200,194,181,.12);clip-path:inherit;border:1px solid #ddd4ca}
+.radar-fill{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(192,57,43,.10);border:1.5px solid rgba(192,57,43,.4);border-radius:0}
+.radar-dot{position:absolute;width:8px;height:8px;background:#C0392B;border:2px solid #fff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 1px 3px rgba(0,0,0,.18);z-index:2}
+.radar-lbl{position:absolute;font-size:9px;color:#5a4f44;white-space:nowrap;font-weight:600;text-align:center;line-height:1.2;z-index:3}
+.radar-lbl strong{font-size:11px;color:#C0392B;display:block}
+.ring-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex-shrink:0}
+.ring-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}
+.ring-gauge{width:70px;height:70px;border-radius:50%;position:relative;flex-shrink:0}
+.ring-gauge::after{content:'';position:absolute;width:50px;height:50px;background:#faf8f5;border-radius:50%;top:10px;left:10px;box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
+.rg-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:1}
+.rg-val{font-size:16px;font-weight:800;display:block;line-height:1}
+.rg-label{font-size:7px;color:#7a7269;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-top:1px}
+.rg-desc{font-size:8px;color:#b5aaa0;text-align:center;line-height:1.3;max-width:70px}
+.cp-meter{margin:12px 0 10px;padding:12px 16px;background:#faf8f5;border-radius:12px;border:1px solid #e8dfd5;display:flex;align-items:center;gap:14px}
+.cp-meter .cp-ring{flex-shrink:0;width:60px;height:60px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center}
+.cp-meter .cp-ring::after{content:'';position:absolute;width:42px;height:42px;background:#faf8f5;border-radius:50%;box-shadow:inset 0 1px 3px rgba(0,0,0,.06)}
+.cp-meter .cp-num{z-index:1;position:relative;display:flex;flex-direction:column;align-items:center;line-height:1}
+.cp-meter .cp-num .big{font-size:18px;font-weight:800;color:#2a5a8a}
+.cp-meter .cp-num .pct{font-size:10px;color:#2a5a8a;font-weight:600}
+.cp-meter .cp-info{flex:1}
+.cp-meter .cp-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:2px}
+.cp-meter .cp-desc{font-size:10px;color:#7a7269;line-height:1.6}
+.cp-meter .cp-desc strong{color:#C0392B}
+.lst-rri{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.lst-card,.rri-card{background:#faf8f5;border-radius:10px;padding:10px 12px;border:1px solid #e8dfd5;display:flex;align-items:center;gap:10px}
+.lst-visual{width:42px;height:42px;border-radius:50%;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center}
+.lst-visual::after{content:'1→2';position:absolute;width:30px;height:30px;background:#faf8f5;border-radius:50%;font-size:8px;color:#7a5a2a;display:flex;align-items:center;justify-content:center;font-weight:700}
+.lst-info,.rri-info{flex:1}
+.lst-title,.rri-title{font-size:11px;font-weight:700;color:#3a322a}
+.lst-desc,.rri-desc{font-size:9px;color:#7a7269;line-height:1.5;margin-top:2px}
+.rri-bar{width:42px;height:42px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#E8652D;background:#fef2ee;position:relative;overflow:hidden}
+.rri-bar .fill{position:absolute;bottom:0;left:0;width:100%;height:50%;background:rgba(232,101,45,.15);border-radius:0 0 8px 8px}
+.rri-bar span{z-index:1}
+.signal-strip{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+.signal-strip .ss-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#faf8f5;border-radius:8px;font-size:10px;color:#5a4f44;line-height:1.5}
+.signal-strip .ss-dot{width:18px;height:18px;border-radius:50%;background:#f5ede5;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.signal-strip .ss-lab{font-weight:700;color:#3a322a;flex-shrink:0;font-size:10px}
+.signal-strip .ss-val{color:#7a7269}
+</style>
+<link rel="stylesheet" href="../../paywall.css">
+
+<script>
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))
+    e.preventDefault();
+});
+</script>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 01 Header ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🍋 柠檬干煎鸡</h1>
+  <div style="font-size:12px;color:#b5aaa0;display:flex;gap:6px;flex-wrap:wrap">
+    <span>闽南干煎技法 · 柠檬清香 · 健康轻食方向</span>
+    <span style="background:#e8f0f8;color:#2a5a8a;padding:0 6px;border-radius:3px">🔮 区域预测 · 深度分析</span>
+  </div>
+</div>
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">6.5</span>
+      <span class="r-label">品类势能评分</span>
+    </div>
+    <span class="r-grade">品类势能观察期 · 6.5/10</span>
+    <span style="background:rgba(220,200,100,.2);padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:1px;color:#f0d060;margin-left:4px">🔮 免费</span>
+  </div>
+  <div class="r-tagline">闽南干煎鸡基础上加柠檬调味的融合菜品，目前以家庭菜谱形态存在，有成为门店差异化单品的潜力，但尚未跑出商业化样本。本卡为深度预测分析，不做商业化承诺。</div>
+  <div class="r-tags">
+    <span>🔮 区域预测</span>
+    <span>📍 闽南风味</span>
+    <span>🍽️ 门店上新</span>
+    <span>📊 深度分析</span>
+    <span>🧪 未商业化</span>
+  </div>
+</div>
+
+<!-- 预测产品说明 -->
+<div class="section" style="border-bottom:none;padding-bottom:0">
+  <div class="pred-banner">
+    <div><span class="p-icon">🔮</span> <span class="p-title">区域预测产品说明</span></div>
+    <div class="p-text">本卡基于闽南干煎鸡工艺框架叠加柠檬调味进行前瞻性深度分析，属于「菜单储备库」品类。该产品目前以家庭菜谱形态存在（来源：YouTube"冯小厨"等国内外美食频道），尚无已知的门店化成功样本。所有数据标注来源及估算口径。本卡不设付费墙，内容全部公开——因它是预测性分析而非已验证商业模型，定价不符合决策库标准。</div>
+  </div>
+</div>
+
+<!-- ===== 02 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item"><div class="label">🔥 当前热度</div><div class="stars">★★☆☆☆</div><div class="val">家庭菜谱级·无爆发信号</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购潜力</div><div class="stars">★★★★☆</div><div class="val">柠檬+鸡肉有大众基础</div></div>
+    <div class="radar-item high"><div class="label">💰 启动投资</div><div class="stars">★★★★★</div><div class="val">极低·已有厨房即可</div></div>
+    <div class="radar-item high"><div class="label">🔧 技术难度</div><div class="stars">★★★★☆</div><div class="val">低·干煎不复杂</div></div>
+    <div class="radar-item high"><div class="label">⚔️ 竞争格局</div><div class="stars">★★★★★</div><div class="val">几乎无竞品</div></div>
+  </div>
+  <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">品类成熟度</div><div style="font-size:14px;font-weight:700;color:#b5aaa0">萌芽期</div><div style="font-size:9px;color:#b5aaa0">无商业化样本</div></div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px;text-align:center"><div style="font-size:9px;color:#7a7269">区域渗透度</div><div style="font-size:14px;font-weight:700;color:#D4A574">闽南起势</div><div style="font-size:9px;color:#b5aaa0">福建沿海初现</div></div>
+  </div>
+</div>
+
+<!-- ===== 03 适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col"><div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 已有门店·想上差异化新品测试</div>
+      <div class="fit-item fit-yes">✅ 闽南/福建地区家常菜馆（干煎技法有群众基础）</div>
+      <div class="fit-item fit-yes">✅ 走健康轻食方向的快餐店</div>
+      <div class="fit-item fit-yes">✅ 寻找夏季限定菜品的门店</div>
+      <div class="fit-item fit-yes">✅ 品类研究者·想提前布局下一个潜力单品</div>
+      <div class="fit-item fit-yes">✅ 已有柠檬相关菜品的店（供应链共享）</div>
+    </div>
+    <div class="fit-col"><div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 从零开店要找稳定盈利主打的</div>
+      <div class="fit-item fit-no">❌ 追求极致出餐速度的快餐连锁</div>
+      <div class="fit-item fit-no">❌ 无厨房·纯外卖档口（干煎需要现做）</div>
+      <div class="fit-item fit-no">❌ 追求"一招鲜"的加盟模式创业者</div>
+      <div class="fit-item fit-no">❌ 北方冬季运营（柠檬清香型夏季属性强）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 04 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客为什么点这个菜</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">
+      柠檬的酸香开胃（嗅觉钩子）+ 干煎形成金黄色泽（视觉钩子）+ 鸡腿肉的嫩滑口感（味觉钩子）。三个钩子叠加，天然适合短视频传播——热油煎鸡块的滋滋声、柠檬片入锅的清香、出锅前的翻炒搅拌，每个动作都有画面感。
+    </div>
+    <div class="l-title">📈 利润模型（按现有门店上新品测算）</div>
+    <div class="logic-item"><span>定价区间（借邻近品类锚点）</span><span class="v">¥16-22/份</span></div>
+    <div class="logic-item"><span>食材成本（鸡腿+柠檬+腌料+油）</span><span class="v">¥7.2-10.3</span></div>
+    <div class="logic-item"><span>食材毛利率</span><span class="v">50-60%</span></div>
+    <div class="logic-item"><span>包装/外卖损耗</span><span class="v">¥1-1.5</span></div>
+    <div class="logic-item"><span>综合毛利率（含包装）</span><span class="v">45-55%</span></div>
+    <div class="logic-item"><span>出餐时间（单份）</span><span class="v">6-8分钟</span></div>
+  </div>
+  <div style="margin-top:6px;padding:8px;background:#fef2f2;border-radius:8px;font-size:11px;color:#b53b3b">
+    ⚠️ 定价依据：上海"炸鸡兄弟"门店人均消费约¥24（来源：美团2026年），单品¥4.8-17.8。同属"鸡肉快餐"赛道的类比参考，非本品实测价。本品实际定价需根据所在城市、门店类型、柠檬采购价综合判断。
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange"><div class="m-label">预估日销（新品）</div><div class="m-val">15-30份</div><div class="m-sub">非主打·菜单测试期</div></div>
+    <div class="metric-card mc-gold"><div class="m-label">预估日毛利</div><div class="m-val">¥120-360</div><div class="m-sub">按均价¥18/份</div></div>
+    <div class="metric-card mc-green"><div class="m-label">上新测试成本</div><div class="m-val">¥200以内</div><div class="m-sub">原料+菜单更新</div></div>
+  </div>
+</div>
+
+<!-- ===== 05 食材成本拆解 ===== -->
+<div class="section">
+  <div class="s-title">📐 食材成本拆解（按单份·去骨鸡腿肉180g）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">去骨鸡腿肉 180g</span><span class="v">¥5.4-7.2</span></div>
+    <div class="recipe-line"><span class="k">柠檬（半颗·去籽切片）</span><span class="v">¥0.3-0.5</span></div>
+    <div class="recipe-line"><span class="k">腌料（生抽/老抽/蚝油/糖/胡椒/生粉）</span><span class="v">¥0.5-0.8</span></div>
+    <div class="recipe-line"><span class="k">小料（小米辣2-3个/香菜/葱姜蒜）</span><span class="v">¥0.3-0.6</span></div>
+    <div class="recipe-line"><span class="k">食用油（煎用+封油）</span><span class="v">¥0.5-0.8</span></div>
+    <div class="recipe-line"><span class="k">玉米淀粉/生粉</span><span class="v">¥0.2-0.4</span></div>
+    <div class="recipe-line" style="border-bottom:none;font-weight:700"><span class="k">合计食材成本</span><span class="v">¥7.2-10.3</span></div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#f8f4ef;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.7">
+    <strong>成本数据来源（均标注口径）：</strong><br>
+    • 白羽肉鸡毛鸡收购价¥3.68/斤（来源：农业农村部2026年5月最后一周全国主产区数据）<br>
+    • 鲜鸡腿肉批发价按毛鸡×1.8-2.2倍推算（屠宰分割损耗+加工费·行业估算）→ ¥6.5-8/斤<br>
+    • 柠檬批发价：2026年6月全国均价¥12.95/公斤·7月6日¥14.47/公斤（来源：农业农村部）——但此为异常高位，常年中枢价约¥6-7/公斤。本卡成本按常年价计算。详见风险清单。<br>
+    • 其余调味料按批发市场常见规格估算<br>
+    采集时间：2026年7月
+  </div>
+</div>
+
+<!-- ===== 06 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比（鸡类快餐单品）</div>
+  <div style="overflow-x:auto">
+    <table style="min-width:440px">
+      <thead><tr style="background:#3a322a;color:#fff"><th>项目</th><th>定价</th><th>难度</th><th>竞品密度</th><th>出餐速度</th><th>商业化</th></tr></thead>
+      <tbody>
+        <tr style="background:#f0f4f8"><td>🍋 柠檬干煎鸡</td><td>¥16-22</td><td>低</td><td>极低</td><td>6-8min</td><td>❌ 无样本</td></tr>
+        <tr><td>🍗 无骨炸鸡</td><td>¥15-25</td><td>中</td><td>极高</td><td>3-5min</td><td>✅ 成熟</td></tr>
+        <tr style="background:#f8f4ef"><td>🥘 黄焖鸡</td><td>¥18-28</td><td>中</td><td>极高</td><td>5-8min</td><td>✅ 全国连锁</td></tr>
+        <tr><td>🍳 葱油鸡</td><td>¥20-30</td><td>低</td><td>中</td><td>5-7min</td><td>✅ 区域品牌</td></tr>
+        <tr style="background:#f8f4ef"><td>🌶️ 辣子鸡</td><td>¥28-48</td><td>高</td><td>中</td><td>8-12min</td><td>✅ 区域品牌</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="badge" style="margin-top:6px">💡 柠檬干煎鸡在「竞品密度」上有显著优势，但代价是没有商业化验证</div>
+</div>
+
+<!-- ===== 07 风味科学/卖点 ===== -->
+<div class="section">
+  <div class="s-title">👅 风味与卖点分析</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">口感层次</span><span class="v">外焦里嫩·干煎不腻</span></div>
+    <div class="recipe-line"><span class="k">味觉演进</span><span class="v">柠檬清香（入鼻）→ 干煎焦香（入口）→ 微辣收尾（回味）</span></div>
+    <div class="recipe-line"><span class="k">视觉呈现</span><span class="v">金黄焦色鸡块 + 柠檬片黄 + 小米辣红 + 香菜绿</span></div>
+    <div class="recipe-line"><span class="k">核心卖点</span><span class="v">干煎少油（健康方向）· 柠檬解腻（夏季适用）· 下饭（辣度可调）</span></div>
+    <div class="recipe-line"><span class="k">解决什么痛点</span><span class="v">「炸鸡太油·炒鸡太普通·柠檬鸡（美式酸甜版）太腻」中间带空白</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">社交媒体传播性</span><span class="v">中高——滋滋煎鸡声+柠檬入锅香气的ASMR型短视频素材</span></div>
+  </div>
+  <!-- 轻科学 -->
+  <div style="margin-top:10px;padding:12px;background:#f8f4ef;border-radius:12px">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><span style="font-size:14px">🔬</span><span style="font-size:12px;font-weight:700;color:#3a322a">风味科学：为什么柠檬+干煎是合理的组合</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.7">
+      <strong>柠檬的化学角色：</strong>柠檬皮中的柠檬烯（D-limonene）在加热时释放出清新柑橘香气，是天然的"去油"嗅觉信号。柠檬酸（pH≈2.2）在煎制过程中不与鸡肉直接长时间接触（只是煎香后在最后阶段入锅），避免鸡肉变硬，同时保留酸香的鲜亮度。<br><br>
+      <strong>干煎的美拉德反应：</strong>160-170°C平底锅煎制时，鸡肉表面的氨基酸与还原糖发生美拉德反应，产生吡嗪类（烤香）、呋喃类（焦糖香）化合物。这个温度区间恰好让柠檬烯的挥发性香气同步释放，形成"焦香+清香"的复合香气层。如果换成油炸（180-200°C），柠檬烯会过度挥发，只留下油脂氧化味。这就是为什么柠檬干煎鸡不能做成柠檬炸鸡——工艺逻辑上就不对。<br><br>
+      <strong>辣度的科学角色：</strong>小米辣中的辣椒素（capsaicin）激活TRPV1受体，产生灼热感的同时促进唾液分泌。这种"麻辣配对"不是巧合——辣椒素分子是脂溶性的，而煎制用油（约20g/份）提供了足够的脂质载体，让辣椒素均匀分布在鸡块表面。也就是说：干煎鸡的油量恰好是辣味传递的最佳载体。如果油太少（＜10g），辣椒素无法均匀附着；油太多（＞30g），就变成了炸鸡。<br><br>
+      <strong>为什么不是柠檬鸡（美式版）：</strong>美式柠檬鸡是挂糊深炸后淋酸甜柠檬酱汁，油脂含量高、柠檬风味来自糖醋酱而非鲜柠檬。柠檬干煎鸡不挂糊、不淋酱——香气结构是完全不同的方向。前者是美式中餐外卖的经典款（甜酸口·重油重酱），后者是闽南干煎技法的延伸变体（清香口·少油少酱）。两者在价格带、消费场景、目标客群上几乎没有重叠——所以不用担心消费者会把它们弄混，更多是菜单设计时要在品名+副标题中主动澄清，降低决策成本。<br><br>
+      <strong>柠檬品种选择对风味的影响：</strong>黄柠檬（Eureka/Lisbon品种）香气偏清爽尖锐，酸度高，适合快煎快出。青柠檬（Key lime）香气偏偏甜润柔和，酸度稍低，但切面颜色偏绿影响成品卖相。不建议使用香水柠檬——它的香气过于轻柔，在180°C的高温煎制中几乎完全挥发，食客吃完只觉得"有点酸"但闻不到柠檬香，白白增加了成本。本卡以黄柠檬为基准，如替换为青柠檬，用量需增加30%（香气密度不同）。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 08 区域与商业路径预判 ===== -->
+<div class="section">
+  <div class="s-title">🗺️ 区域分析</div>
+  <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">柠檬干煎鸡的核心基因是「闽南干煎」，柠檬是后加的外来元素。判断其最适合落地的前三个区域市场：</div>
+  <div class="region-grid">
+    <div class="region-box"><div class="r-h" style="color:#5a8f3c">🥇 闽南金三角</div>
+      <div class="r-d">厦漳泉核心区域。干煎技法在这里是传统工艺（闽南干煎鸡是家常菜），消费者对"干煎"这个用词不需要教育。柠檬作为新元素加入，本地人接受门槛最低。</div>
+    </div>
+    <div class="region-box"><div class="r-h" style="color:#D4A574">🥈 广东沿海</div>
+      <div class="r-d">粤菜体系中柑橘类入菜本就是常规操作（陈皮、柠汁、酸梅），柠檬+鸡肉的组合在广东消费者的味觉记忆中已有种植——美极柠檬鸡是粤菜馆常见菜。但广东的"柠檬鸡"认知与本品不同，需要做口味调适（减辣或不辣）。</div>
+    </div>
+    <div class="region-box"><div class="r-h" style="color:#E8652D">🥉 成都/长沙</div>
+      <div class="r-d">这两个城市的餐饮市场对"新口味"的接受度全国最高。柠檬的酸+小米辣的辣+干煎的香，这个味型结构与"百香果酸辣""柠檬酸辣"等已爆发的品类（如柠檬鸡爪、百香果凉拌）完全对位。但需注意：这两个市场的消费者对辣度有更高要求，小米辣的用量需要上调。</div>
+    </div>
+    <div class="region-box"><div class="r-h" style="color:#b5aaa0">⚠️ 慎入区域</div>
+      <div class="r-d">东北、西北、华北北部——冬季柠檬消费量明显下降，且干煎技法非本地传统，需要更长时间的教育成本。可做夏季限定。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 09 商业化路径预判 ===== -->
+<div class="section">
+  <div class="s-title">🔮 商业化路径预判</div>
+  <div class="pred-path">
+    <div class="pp-stage pp-stage-1">
+      <span class="pp-tag">阶段一</span>
+      <span>家庭菜谱→区域门店化（预计6-12个月）：闽南地区某餐馆率先将其从家庭菜谱改造为门店商品，完成配方标准化（腌料比、煎制时间、柠檬用量固化）。关键词：「从锅边到菜单」。</span>
+    </div>
+    <div class="pp-stage pp-stage-2">
+      <span class="pp-tag">阶段二</span>
+      <span>区域品牌验证（预计12-24个月）：以闽南为原点，出现2-3家以柠檬干煎鸡为招牌或主推菜的区域性餐馆。此时可观察：复购率能否＞20%、食材成本是否能通过集采降到¥6-7/份、外卖配送后口感损失率。</span>
+    </div>
+    <div class="pp-stage pp-stage-3">
+      <span class="pp-tag">阶段三</span>
+      <span>全国扩散或停留在区域（24个月+）：如果阶段二验证正，柠檬干煎鸡有两条路——① 作为"闽南新派菜"走餐馆特色菜路线（类比"紫苏牛蛙"从湖南走向全国）；② 作为"健康轻食鸡类"走快餐档口路线（类比"轻食沙拉"）。如果阶段二失败，则证明它只是一个家庭菜谱水平的产品。</span>
+    </div>
+  </div>
+  <div class="badge" style="margin-top:8px">📌 以上预判为行业经验推演，非对未来的承诺。任何长周期预判都受宏观经济、消费趋势、原材料价格变化影响。</div>
+</div>
+
+<!-- ===== 10 季节性全年运营分析 ===== -->
+<div class="section">
+  <div class="s-title">📅 季节性运营分析</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    柠檬干煎鸡的季节属性比大多数鸡类单品更突出——因为柠檬的高辨识度香气天然带有"清爽"标签，冬季消费者对其需求会明显下降。以下是对全年运营的逐月拆解预测：
+    <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div style="background:#fef2ee;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#E8652D">🔴 旺季（5-9月）</strong><br>
+        单店日销潜力：25-40份<br>
+        柠檬成本：年中低点¥3-5/斤<br>
+        营销点：夏季清爽·开胃解腻
+      </div>
+      <div style="background:#f8f4ef;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#D4A574">🟡 平季（3-4月·10-11月）</strong><br>
+        单店日销潜力：15-25份<br>
+        柠檬成本：过渡期¥4-6/斤<br>
+        营销点：换季时令·健康轻食
+      </div>
+      <div style="background:#eef2ff;border-radius:6px;padding:6px 8px;font-size:10px;grid-column:1/-1">
+        <strong style="color:#4f6ef7">🔵 淡季（12-2月）</strong><br>
+        单店日销潜力：5-15份（仅为旺季的20-40%）<br>
+        柠檬成本：高位¥6-8/斤<br>
+        策略：① 下架转为冬季限定热食方向（加黑胡椒/姜汁）② 保留菜单但不主推 ③ 推出"干煎鸡"版本去柠檬，降低辨识度但维持操作便利
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 全年运营策略建议：</strong>如果前一个夏季测试期数据正面（点单率＞8%、复购率＞15%），可考虑在冬季推出变体——"黑椒干煎鸡"（去柠檬，加黑胡椒碎/洋葱/黄油，售价区间相同）。冬季测试通过→证明本品可以脱离柠檬的季节性限制周转为全年菜单。这种"一菜两吃"的菜单设计策略，既保留了干煎技法这个核心工艺（不增加厨房复杂度），又解决了季节性落差。
+  </div>
+</div>
+
+<!-- ===== 11 成本敏感性分析 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本敏感性分析</div>
+  <div style="font-size:11px;color:#5a4f44;line-height:1.6;margin-bottom:8px">柠檬干煎鸡的成本结构中，鸡肉和柠檬两个大项都受外部市场波动影响。以下按不同市场情境测算毛利率变化（鸡肉¥7/斤基准价）：</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px">
+    <div class="recipe-line"><span class="k">基准情境（鸡肉¥7/斤·柠檬¥3/斤）</span><span class="v">食材成本¥7.2-8.5 → 毛利53-60%</span></div>
+    <div class="recipe-line"><span class="k">柠檬涨价（鸡肉¥7/斤·柠檬¥7/斤·当前异常）</span><span class="v">食材成本¥8.0-9.5 → 毛利47-55%</span></div>
+    <div class="recipe-line"><span class="k">全面涨价（鸡肉¥9/斤·柠檬¥7/斤）</span><span class="v">食材成本¥9.5-11.5 → 毛利36-47%</span></div>
+    <div class="recipe-line"><span class="k">批量集采（鸡肉¥5.5/斤·柠檬¥2/斤）</span><span class="v">食材成本¥5.5-7.0 → 毛利61-70%</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">套餐模式（+¥5搭饮品/小菜）</span><span class="v">综合食材成本率下降约3-5%</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fef2f2;border-radius:8px;font-size:10px;color:#b53b3b">
+    ⚠️ 敏感性分析显示：在柠檬高价期+鸡肉涨价期双杀情境下，食材毛利率可能跌破40%——对一个门店新品来说已经不太健康。如果到秋天柠檬价格回落（预计¥4-5/斤），毛利率自动回升5-8个百分点。建议：如果在柠檬高价期测试，菜单不写死价格，用"时价"或"+¥2柠檬附加费"的方式灵活应对。<br>
+    💡 对比同类鸡类单品：黄焖鸡食材成本率30-35%（毛利率65-70%）、无骨炸鸡食材成本率35-45%（毛利率55-65%）。柠檬干煎鸡在柠檬高价期落后这两个成熟品类5-15个百分点，在常态期基本持平。
+  </div>
+</div>
+
+<!-- ===== 12 核心原料清单 ===== -->
+<div class="section">
+  <div class="s-title">📦 核心原料清单（单份基准）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span>去骨鸡腿肉（鲜/冻皆可）</span><span>180g</span></div>
+    <div class="recipe-line"><span>鲜柠檬（黄柠檬·去籽切片）</span><span>半颗（约40-50g）</span></div>
+    <div class="recipe-line"><span>小米辣</span><span>2-3个（切圈·可增减）</span></div>
+    <div class="recipe-line"><span>香菜</span><span>适量（切段·出锅前放）</span></div>
+    <div class="recipe-line"><span>大蒜</span><span>4-5瓣（拍碎·爆香用）</span></div>
+    <div class="recipe-line"><span>姜</span><span>3-4片</span></div>
+    <div class="recipe-line"><span>洋葱</span><span>少许切丝（底油增香）</span></div>
+    <div class="recipe-line"><span>生抽</span><span>12-15g</span></div>
+    <div class="recipe-line"><span>老抽</span><span>2-3g（上色用）</span></div>
+    <div class="recipe-line"><span>蚝油</span><span>8-10g</span></div>
+    <div class="recipe-line"><span>白砂糖</span><span>4-5g</span></div>
+    <div class="recipe-line"><span>白胡椒粉</span><span>1-2g</span></div>
+    <div class="recipe-line"><span>玉米淀粉</span><span>10-12g（薄浆用）</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>食用油（煎用）</span><span>约20g</span></div>
+  </div>
+  <div style="margin-top:6px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 原料替代方案：</strong><br>
+    • 鸡腿肉不足时 → 可用鸡胸肉替代，但需额外加5g食用油防柴，口感略逊<br>
+    • 柠檬季节性高价位 → 可用浓缩柠檬汁调配（黄柠檬汁10ml+纯净水5ml，但会损失柠檬片的视觉冲击）<br>
+    • 不吃辣 → 小米辣换成红彩椒，保留红色视觉但不加辣度<br>
+    • 批量时 → 整鸡可替代（切块带骨），但出餐时间增加约2分钟，且售价应调至¥18-25
+  </div>
+</div>
+
+<!-- ===== 11 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（含验证点）</div>
+  <div class="process-flow">
+    <div class="process-step"><span class="ps-num">1</span><span class="ps-desc"><strong>腌鸡</strong>：鸡腿去骨切3-4cm块，加生抽/老抽/蚝油/糖/白胡椒/生粉抓匀，最后封油（5g食用油）。腌制15-20分钟。</span><div class="ps-verify">[验证点] 腌好的鸡块表面有薄浆感，碗底无多余汁水。封油后冷藏，煎时不易粘锅。</div></div>
+    <div class="process-step"><span class="ps-num">2</span><span class="ps-desc"><strong>煎制</strong>：平底锅烧至200°C（滴油即散），下20g油，中大火，鸡块平铺不重叠。单面煎2-2.5分钟至金黄翻面，两面总时长不超过5分钟。</span><div class="ps-verify">[验证点] 鸡块下锅有"滋"声但锅不冒青烟。单面煎足2分钟后用铲子轻推，能移动说明一面已煎脆。翻面太早不脆。</div></div>
+    <div class="process-step"><span class="ps-num">3</span><span class="ps-desc"><strong>爆香</strong>：鸡块出锅，余油下蒜末姜片小米辣炒香（约15秒）。下洋葱丝翻炒出甜味（约20秒）。</span><div class="ps-verify">[验证点] 蒜末颜色微黄出香→小米辣的辣味被油激发出→洋葱半透明状，不可炒焦。</div></div>
+    <div class="process-step"><span class="ps-num">4</span><span class="ps-desc"><strong>合味</strong>：下柠檬片翻炒10-15秒出香，倒回鸡块快速炒匀（约20秒），撒香菜段出锅。</span><div class="ps-verify">[验证点] 柠檬片入锅后10秒内必须放鸡块——超过20秒柠檬皮中的萜类化合物（D-柠檬烯氧化产物）释放苦味。整个合味过程控制在30秒以内。</div></div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a">
+    ⚠️ <strong>关键控制点：</strong>温度（锅温200°C）+ 时间（单面≤2.5min）+ 柠檬入锅时机（10秒内放鸡块）。这三个参数是外焦里嫩、不苦的关键。
+  </div>
+</div>
+
+<!-- ===== 12 产品结构（门店菜单） ===== -->
+<div class="section">
+  <div class="s-title">📦 门店产品结构建议</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;margin-bottom:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+    柠檬干煎鸡作为门店新增单品，建议在菜单中按以下三层结构设计，避免与现有鸡类产品打架：<br>
+    <strong>定位原则：</strong>不抢主力菜品风头（如店内有黄焖鸡/辣子鸡等），放在「时令推荐/主厨精选」类目下作为差异化补充。
+  </div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead"><span class="t-badge">主推</span><span class="t-name">柠檬干煎鸡（标准版·微辣）</span><span class="t-price">¥18-22</span></div>
+    <div class="prod-tier tier-profit"><span class="t-badge">利润</span><span class="t-name">柠檬干煎鸡（套餐·配米饭+汤）</span><span class="t-price">¥25-30</span></div>
+    <div class="prod-tier tier-set"><span class="t-badge">引流</span><span class="t-name">干煎鸡小份（午市特价·不配柠檬）</span><span class="t-price">¥12-15</span></div>
+  </div>
+</div>
+
+<!-- ===== 13 门店适配评分 ===== -->
+<div class="section">
+  <div class="s-title">🏪 门店适配评分</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#f0f6ec"><div class="s-name">🍳 家常菜馆</div><div class="stars">★★★★★</div><div class="val" style="font-size:9px;color:#5a8f3c">极适配</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🌶️ 湘菜/赣菜</div><div class="stars">★★★★☆</div><div class="val" style="font-size:9px;color:#E8652D">适配</div></div>
+    <div class="stall-item" style="background:#fef2ee"><div class="s-name">🥗 轻食/健康餐</div><div class="stars">★★★★☆</div><div class="val" style="font-size:9px;color:#E8652D">适配（去辣）</div></div>
+    <div class="stall-item" style="background:#f8f4ef"><div class="s-name">🍜 粉面馆（加码）</div><div class="stars">★★★☆☆</div><div class="val" style="font-size:9px;color:#b5aaa0">可做浇头</div></div>
+    <div class="stall-item" style="background:#f8f4ef"><div class="s-name">📱 纯外卖档口</div><div class="stars">★★☆☆☆</div><div class="val" style="font-size:9px;color:#b5aaa0">配送损口感</div></div>
+    <div class="stall-item" style="background:#f8f4ef"><div class="s-name">🏪 快餐连锁</div><div class="stars">★★☆☆☆</div><div class="val" style="font-size:9px;color:#b5aaa0">出餐速度瓶颈</div></div>
+  </div>
+</div>
+
+<!-- ===== 14 菜单上新验证 ===== -->
+<div class="section">
+  <div class="s-title">📋 门店上新验证（7天）</div>
+  <div style="padding:8px 12px;background:#fef6ec;border-radius:8px;margin-bottom:8px;font-size:11px;color:#8a5a2a">
+    💡 本品适合在已有门店的菜单中作为新增菜品测试。你不需要额外投入设备，只需买鸡腿肉和柠檬即可开始。
+  </div>
+  <div class="verify-steps">
+    <div class="verify-step"><span class="vs-day">Day1</span><span>试做3份，跑通腌→煎→合味全流程，定腌料比和柠檬用量基准</span></div>
+    <div class="verify-step"><span class="vs-day">Day2</span><span>内部团队试吃（大厨/服务员/老板各1份），记录意见并微调</span></div>
+    <div class="verify-step"><span class="vs-day">Day3</span><span>定版：拍定腌料配比、柠檬用量、辣度、装盘形式</span></div>
+    <div class="verify-step"><span class="vs-day">Day4</span><span>上菜单测试（备料15份），首日观察点单率和顾客反馈</span></div>
+    <div class="verify-step"><span class="vs-day">Day7</span><span>复盘：点单率＞5%继续测试·＜3%下架。复购率＞15%转正</span></div>
+  </div>
+  <div style="margin-top:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;padding:10px;font-size:11px">
+    <strong>🔑 关键指标：</strong>① 首周点单率＞5%（占菜单总单量） ② 二次点单率＞15% ③ 单份食材成本≤¥10<br>
+    <strong>🚪 下架标准：</strong>点单率＜3% / 柠檬成本占比＞15%（当前高价期可暂缓）/ 出现柠檬苦味差评≥3条<br>
+    <strong>✅ 转正标准：</strong>周均日销＞10份 / 毛利＞50% / 无苦味投诉 / 厨师做一份稳定控制在7分钟内<br>
+    <strong>🔍 关键观察指标（7天后）：</strong>① 周末vs工作日销量差异（如果周末销量是工作日的2倍以上，说明其定位偏"尝鲜型"而非"复购型"——尝鲜型菜品生命周期一般不超过3个月） ② 外卖保温测试（煎鸡块在保温箱放30分钟后口感损失度——如果明显变软失去焦脆感，说明本品不适合做外卖） ③ 回头客中第二次点单时是否主动加辣（主动加辣≈接受度提升信号，不加辣≈尝鲜完了不再点）。<br>
+    <strong>📊 7天测试预算：</strong>鸡腿肉约¥40-50 + 柠檬¥5-10 + 辅料调料¥20-30 + 打印菜单/手写牌¥10-20 = 总计¥75-110。即使完全失败，损失不超过¥110。
+  </div>
+</div>
+
+<!-- ===== 15 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单（已有门店）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span>平底不粘锅 28-32cm</span><span>¥40-120</span></div>
+    <div class="recipe-line"><span>厨房电子秤（精确到g）</span><span>¥20-50</span></div>
+    <div class="recipe-line"><span>不锈钢盆×3</span><span>¥30-60</span></div>
+    <div class="recipe-line"><span>刀具+砧板（鸡腿去骨用）</span><span>已有</span></div>
+    <div class="recipe-line"><span>计时器</span><span>¥10-20</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>如需批量：商用平底炒炉+大号不粘锅</span><span>¥800-2000</span></div>
+  </div>
+  <div style="margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px">
+    <strong>最低投入：¥150-350</strong>（已有门店厨房·只需添平底锅+盆+秤）<br>
+    如果厨房已有平底锅和电子秤 → <strong>零额外投入</strong>
+  </div>
+</div>
+
+<!-- ===== 16 风险清单 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>柠檬价格异常高位——影响成本稳定性</strong><br>2026年6-7月柠檬批发价因安岳减产+土耳其霜冻三重因素，从常年¥6-7/公斤暴涨至¥12-14/公斤。如按当前市价采购，单份柠檬成本将从¥0.3-0.5升至¥0.7-1.0，总食材成本上升约5-8%。建议：写进菜单前先确认当前采购价；涨价期可暂时减少柠檬用量（从半颗减到1/4颗+挤汁提香）；如持续高位，标注"因柠檬时价波动，价格可能调整"。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>完全无商业化样本——你可能是第一个吃螃蟹的人</strong><br>该品类目前只在家庭菜谱层面流传，没有门店化成功案例。没有对标意味着没有供应链、没有定价锚、没有标准品控流程可以参考。所有工艺参数（腌料比、煎制时间、柠檬用量）都需要自己试错积累。做好前3份难吃的心理准备。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><strong>柠檬皮苦味——最容易被忽视的翻车点</strong><br>柠檬中含柠檬烯（D-limonene），在高温煎炒超过20秒后氧化生成香芹酮和柠檬苦素类似物，产生苦味。这是一旦发生就无法挽救的——不能加糖掩盖，不能加水稀释。关键控制：柠檬片入锅后10-15秒内必须放鸡块，整个合味阶段控制在30秒内。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><strong>季节属性强——夏季单品还是全年菜单？</strong><br>柠檬清香型菜品有明显的夏季属性。消费者在夏季对其接受度高（清爽解腻），但秋冬需求会显著下降。建议：第一年定位为夏季限定（5-9月）测试，根据秋冬销售数据决定是否转为全年菜单。不要一上来就定"招牌菜"名额。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><strong>出餐速度瓶颈——高峰期单份6-8分钟</strong><br>干煎鸡是单份现煎工艺，不能批量预制——鸡块叠放煎会出水变煮。一个炒炉高峰期一小时最多出8-10份。如果门店高峰期同时有5-6道菜在排队，这个速度会成为瓶颈。建议：把柠檬干煎鸡定位为"错峰产品"（午市11:00前/下午14:00后主推），正餐高峰建议只接预订单。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><strong>消费者认知空白——"柠檬鸡"的既有印象可能帮倒忙</strong><br>多数消费者对"柠檬鸡"的认知来自美式中餐（酸甜挂糊炸鸡块）。柠檬干煎鸡跟这个完全不是一回事。你需要解释——这在菜单设计上是个挑战。建议：菜单上写「闽南干煎鸡·柠檬清香」，加一句副标题"非酸甜挂糊·鲜柠檬现煎"，降低误解率。</div>
+  <div class="risk-item"><span class="r-icon">7️⃣</span><strong>鸡肉部位选择困境</strong><br>鸡腿肉（¥6.5-8/斤，估算）口感最好但成本最高+去骨耗时。鸡胸肉（更便宜）但干煎后容易发柴。带骨鸡块（成本最低）但出餐慢且不好摆盘。建议：前期用鸡腿肉打好口碑，后期可推出"鸡胸肉轻食版"（降价¥2-3）做价格分层。</div>
+</div>
+
+<!-- ===== 17 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good"><div class="t-h">✅ 潜力因素</div>
+      <div class="t-item">柠檬+鸡肉的组合在消费者认知中有广泛基础（柠檬鸡爪已验证这个组合的接受度）</div>
+      <div class="t-item">干煎少油的健康属性符合餐饮轻食化大趋势</div>
+      <div class="t-item">竞争真空期——做出来就是该品类的第一个门店样本</div>
+      <div class="t-item">鸡肉供应链全中国最成熟最透明，成本可控</div>
+      <div class="t-item">小米辣+柠檬的酸辣结构，可借用"百香果酸辣"品类爆发后建立的口味认知</div>
+    </div>
+    <div class="track-box track-bad"><div class="t-h">❌ 限制因素</div>
+      <div class="t-item">没有任何商业化样本——一切参数需要自己试</div>
+      <div class="t-item">柠檬价格波动大（2026年暴涨期+100%），影响成本稳定性</div>
+      <div class="t-item">干煎出餐慢，单份6-8分钟，不适合快餐/外卖模式</div>
+      <div class="t-item">消费者对"柠檬鸡"的既有认知（美式酸甜版）可能造成预期偏差</div>
+      <div class="t-item">季节性明显——测试周期至少需要覆盖夏冬两季才能判断全年可行性</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>市场位置：</strong>家庭菜谱→门店化改造的萌芽阶段。有潜力，但也仅是有潜力。<br><br>
+    <strong>当下判断：</strong>作为已有门店的「夏季限定·差异化单品」有测试价值。作为新店主打单品入局，风险远大于收益。注意：这不是价值判断，是风险收益比的客观计算——同样¥200的测试成本，花在已验证品类（如柠檬鸡爪/黄焖鸡）上，你能获得的参考数据量是柠檬干煎鸡的十倍。<br><br>
+    <strong>柠檬干煎鸡 vs 其他"柠檬+鸡"品类的关系：</strong>市场上已有柠檬鸡爪（冷吃·零食化）、柠檬鸡（美式酸甜·重酱）、柠檬烤鸡（整鸡·家庭场景）。柠檬干煎鸡的定位应该是——「热吃·少油·鲜柠檬清香」。它不是一个全新的品类逻辑（柠檬+鸡的组合已被验证），它是在现有品类图谱中找到一个尚未被商业化的空白点位。<br><br>
+    <strong>这个空白点位到底有多大？</strong>可以借两个数据做粗略推算：① 抖音"柠檬鸡爪"相关话题累计播放超百亿级——说明消费者对"柠檬+鸡"的接受度已经跨越了教育期。② 黄焖鸡全国门店数约3-5万家——证明"鸡类快餐单品"的赛道容量足够。如果柠檬干煎鸡能切到黄焖鸡市场规模的1%，就是300-500家门店的体量。这个数字不算大，但对一个从家庭菜谱走出来的新品来说，已经是一个非常可观的起点。<br><br>
+    <strong>信号触发点：</strong>什么时候这个品类值得all in？① 闽南地区出现第一家以柠檬干煎鸡命名的主推门店 ② 抖音出现单条播放＞500万的柠檬干煎鸡视频 ③ 黄柠檬价格回落到¥6-7/公斤的常年中枢并稳定2个月以上。三个信号中任意一个触发，可以考虑升级为正式项目。<br><br>
+    <strong>建议动作：</strong>已有门店 → 花¥200·7天测试。从零开店 → 不以本品立项。</div>
+  </div>
+</div>
+
+<!-- ===== 18 供应链分析 ===== -->
+<div class="section">
+  <div class="s-title">📦 供应链要点</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    <div style="display:grid;grid-template-columns:90px 1fr;gap:4px 10px;font-size:11px">
+      <span style="font-weight:600;color:#3a322a">鸡腿肉</span><span style="color:#5a4f44">冻品市场/冷链配送 · 批发¥6.5-8/斤（估算区间）</span>
+      <span style="font-weight:600;color:#3a322a">柠檬（日常）</span><span style="color:#5a4f44">农批市场 · 常年中枢价¥6-7/公斤</span>
+      <span style="font-weight:600;color:#3a322a">柠檬（高价）</span><span style="color:#b53b3b">¥12-14/公斤（2026年6-7月异常价·安岳减产+土耳其霜冻）</span>
+      <span style="font-weight:600;color:#3a322a">柠檬产区</span><span style="color:#5a4f44">四川安岳（全国80%产量）· 广东 · 海南</span>
+      <span style="font-weight:600;color:#3a322a">调味料</span><span style="color:#5a4f44">信基调味品城 · 批发价 · 单份约¥0.5-0.8</span>
+      <span style="font-weight:600;color:#3a322a">批量优势</span><span style="color:#5a4f44">鸡腿肉集采可压低约10-15%，柠檬按周采避免囤货过期</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.6">
+    <strong>鸡肉供应链说明：</strong>中国白羽肉鸡产业高度成熟，2025年出栏约65亿只，核心产区山东（30%）、辽宁（15%）、福建/广东（15%）。冻鸡腿批发价格稳定且有公开报价。如选址在以上产区省份，冻鸡腿采购成本有望比估算区间低5-10%。<br>
+    <strong>柠檬供应链注意：</strong>安岳柠檬占全国产量80%以上，产季为每年10月至次年3月。非产季期间市场上流通的多为冷库储存柠檬，品质和香气会有一定下降（约10-20%），且价格上浮30-50%。建议在产季锁价批量采购冷冻柠檬片作为备选方案。
+  </div>
+</div>
+
+<!-- ===== 19 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>🔮 预测性判断（非投资建议）：</strong><br>
+      柠檬干煎鸡的味型组合——柠檬清香+干煎焦香+微辣收尾——在逻辑层面是一个合理的"差异化鸡类单品"方向。它同时占了两条趋势线：① 柠檬/酸辣风味在餐饮端的持续走强（柠檬鸡爪/百香果凉拌等品类已验证消费者接受度）；② 少油/健康化的大方向。这两条线不是凭空想象的——柠檬鸡爪品类年增速超过30%，少油餐饮品牌的融资和开店速度也远高于传统快餐。柠檬干煎鸡本质上是把这两条线交叉后的一个「逻辑产物」。<br><br>
+      但"逻辑合理"和"商业可行"之间隔着一个巨大的验证鸿沟。这个品类的现状是：好看好吃在家庭厨房里做到了，但能不能稳定赚钱在门店里还没人证明。在所有餐饮投资人眼里，这是一个只有概念没有数据的项目——而在餐饮行业，概念的价值远低于数据。<br><br>
+      <strong>✅ 为什么可以试（有门店的前提）：</strong><br>
+      上新成本¥200以内，试7天就知道有没有戏。失败只是一道菜下架，不是项目崩盘。对于已经有门店的餐饮人来说，这种零门槛测试不值犹豫。更关键的是：如果7天测试期数据正面（点单率＞8%、复购率＞15%），你就成了这个品类的第一个商业化样本——这一步的领先优势，比花3万块做营销推广还值钱。<br><br>
+      <strong>❌ 为什么不能赌（从零开店的前提）：</strong><br>
+      没有对标样本、没有定价锚、柠檬价格异常高位、出餐速度慢。任何一个因素都可能把新手压死。想靠自己"首创"来博一个爆品，概率比老老实实做黄焖鸡低十倍。做个类比：黄焖鸡是已经修好的高速公路，你只要交过路费就能跑。柠檬干煎鸡是地图上标注了一条虚线——方向可能有，但路还没修，你得自己开路，自己背油，自己修车。<br><br>
+      <strong>🎯 最终建议：已有门店→花¥200试7天。从零开店→别碰。</strong><br>
+      <em style="font-size:11px;color:#7a7269">这张卡免费公开，因为这是一个还没有被验证的品类预测。我们不给未经验证的商业模式定价——这是决策库的原则。</em>
+      <div class="j-tags">
+        <span>#预测产品</span><span>#区域口味</span><span>#柠檬鸡肉</span><span>#闽南风味</span><span>#门店上新</span><span>#夏季限定</span><span>#观察期品类</span><span>#健康轻食</span><span>#季节性菜品</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 20 数据说明 ===== -->
+<div class="section" style="border-bottom:none">
+  <div class="s-title">📋 数据说明</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:10px;color:#7a7269;line-height:1.7">
+    <strong>柠檬干煎鸡 · 区域预测深度分析</strong><br>
+    本卡为预测性产品卡，基于闽南干煎鸡工艺框架+柠檬调味进行前瞻分析。该品类目前以家庭菜谱形态存在，尚未有已知的门店化成功样本。所有数据均标注来源和估算口径，不做商业化承诺。<br><br>
+    <strong>数据来源：</strong><br>
+    • 白羽肉鸡毛鸡收购价——农业农村部2026年5月最后一周全国主产区数据<br>
+    • 鸡腿肉批发价——毛鸡价×1.8-2.2倍推算（行业估算区间，非查到的确价）<br>
+    • 柠檬批发价——农业农村部2026年6月全国批发市场均价及7月6日最新数据<br>
+    • 柠檬常年中枢价——农业农村部2019-2025年柠檬批发价历史数据中位区间<br>
+    • 调味料价格——信基调味品城/1688批发端常见规格估算<br>
+    • 品类现状——YouTube"冯小厨""小鲜肉料理笔记"等美食频道验证<br>
+    • 定价锚点——上海"炸鸡兄弟"门店大众点评/美团数据（2026年）<br>
+    • 出品率/损耗率——按鸡肉加工行业常规出品率70-75%区间估算<br>
+    • 风味科学分析——基于柠檬烯热稳定性、美拉德反应温度区间的公开食品科学资料综合<br>
+    • 区域分析——基于各地消费者对柠檬酸辣/干煎技法的接受度综合判断<br>
+    • 柠檬鸡爪品类增速——基于抖音话题播放量变化趋势估算（非精确统计）<br>
+    • 黄焖鸡全国门店数——基于行业报告的模糊估算（3-5万家区间）<br>
+    采集时间：2026年7月
+  </div>
+  <div style="margin-top:8px;text-align:center;font-size:11px;color:#b5aaa0">
+    如需完整出摊包精确配方克重+批量SOP+变体方案+成本核算模板，<br>联系微信 canglin1985（备注"柠檬干煎鸡完整包"）
+  </div>
+</div>
+
+<!-- ===== 🔮 预测引擎插件层 ===== -->
+<div class="engine-section" style="padding-bottom:14px">
+  <div class="engine-title">🔮 预测引擎 · 决策增强插件</div>
+
+  <div class="radar-wrap">
+    <div class="radar-chart">
+      <div class="ax" style="transform:rotate(-90deg)"></div>
+      <div class="ax" style="transform:rotate(-18deg)"></div>
+      <div class="ax" style="transform:rotate(54deg)"></div>
+      <div class="ax" style="transform:rotate(126deg)"></div>
+      <div class="ax" style="transform:rotate(198deg)"></div>
+      <div class="radar-outline"></div>
+      <div class="radar-fill" style="clip-path:polygon(50.00% 19.54%,77.05% 41.22%,68.63% 75.63%,35.67% 69.72%,40.34% 46.86%)"></div>
+      <div class="radar-dot" style="top:31.26px;left:80.00px"></div>
+      <div class="radar-dot" style="top:65.94px;left:123.28px"></div>
+      <div class="radar-dot" style="top:121.01px;left:109.80px"></div>
+      <div class="radar-dot" style="top:111.55px;left:57.08px"></div>
+      <div class="radar-dot" style="top:74.98px;left:64.54px"></div>
+      <div class="radar-lbl" style="top:-2px;left:50%;transform:translateX(-50%)">VSI<br><strong>7.5</strong></div>
+      <div class="radar-lbl" style="top:52px;right:-42px">ASI<br><strong>7.0</strong></div>
+      <div class="radar-lbl" style="bottom:-2px;left:50%;transform:translateX(-50%)">SCI<br><strong>7.8</strong></div>
+      <div class="radar-lbl" style="top:108px;left:-48px">MII<br><strong>6.0</strong></div>
+      <div class="radar-lbl" style="top:55px;left:-48px">CP<br><strong>25%</strong></div>
+      <div style="position:absolute;top:80px;left:80px;width:3px;height:3px;background:#ddd4ca;border-radius:50%;transform:translate(-50%,-50%);z-index:1"></div>
+    </div>
+
+    <div class="ring-grid">
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#C0392B 0% 75%,#e8dfd5 75% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#C0392B">7.5</span><span class="rg-label">VSI</span></div>
+        </div>
+        <span class="rg-desc">视觉传播力</span>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#D4A574 0% 70%,#e8dfd5 70% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#D4A574">7.0</span><span class="rg-label">ASI</span></div>
+        </div>
+        <span class="rg-desc">声觉钩子</span>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#E8652D 0% 78%,#e8dfd5 78% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#E8652D">7.8</span><span class="rg-label">SCI</span></div>
+        </div>
+        <span class="rg-desc">锅气外溢</span>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring-gauge" style="background:conic-gradient(#5a8f3c 0% 60%,#e8dfd5 60% 100%)">
+          <div class="rg-inner"><span class="rg-val" style="color:#5a8f3c">6.0</span><span class="rg-label">MII</span></div>
+        </div>
+        <span class="rg-desc">菜单嵌入</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cp-meter">
+    <div class="cp-ring" style="background:conic-gradient(#4f6ef7 0% 25%,#e8dfd5 25% 100%)">
+      <div class="cp-num">
+        <span class="big">25</span>
+        <span class="pct">%</span>
+      </div>
+    </div>
+    <div class="cp-info">
+      <div class="cp-title">📈 品类成型概率</div>
+      <div class="cp-desc">低概率·家庭菜谱级无商业化样本。味型有群众基础但需先跑通门店化。试错成本¥200以内·适合已有门店测水。</div>
+    </div>
+  </div>
+
+  <div class="lst-rri">
+    <div class="lst-card">
+      <div class="lst-visual" style="background:conic-gradient(#D4A574 0% 25%,#e8dfd5 25% 100%)"></div>
+      <div class="lst-info">
+        <div class="lst-title">🧭 LST 生命周期</div>
+        <div class="lst-desc"><strong>Stage 1</strong> · 家庭菜谱阶段。无门店化样本，需从「锅边到菜单」完成首次品类化</div>
+      </div>
+    </div>
+    <div class="rri-card">
+      <div class="rri-bar">
+        <span>中高</span>
+        <div class="fill" style="height:70%"></div>
+      </div>
+      <div class="rri-info">
+        <div class="rri-title">⚠️ RRI 风险反转</div>
+        <div class="rri-desc">无商业化样本是最大风险。出餐速度慢（6-8min）限制高峰产能。建议闽南地区先测</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+    <span style="font-size:11px">📡</span>
+    <span style="font-size:11px;font-weight:700;color:#3a322a">势能信号聚合</span>
+  </div>
+  <div class="signal-strip">
+    <div class="ss-row"><span class="ss-dot">1</span><span class="ss-lab">柠檬清香+干煎焦香</span><span class="ss-val">复合香气层·开胃嗅觉钩子天然优势</span></div>
+    <div class="ss-row"><span class="ss-dot">2</span><span class="ss-lab">少油健康方向</span><span class="ss-val">符合餐饮轻食化大趋势，消费者教育成本低</span></div>
+    <div class="ss-row"><span class="ss-dot">3</span><span class="ss-lab">试错成本¥200以内</span><span class="ss-val">已有门店几乎零门槛测试，设备零新增</span></div>
+    <div class="ss-row"><span class="ss-dot">4</span><span class="ss-lab">味型有群众基础</span><span class="ss-val">柠檬鸡爪已验证柠檬+鸡组合，无商业化样本但味型逻辑成立</span></div>
+  </div>
+
+  <div class="engine-note">此产品处于互联网传播酝酿期，不一定会爆发。本卡基于公开数据的推测与拆解，非投资建议。预测引擎为决策增强插件，不改变主卡结构与判断。</div>
+</div>
+
+<!-- ===== 品牌推广 ===== -->
+<div style="padding:16px 18px;background:#faf8f5;border-top:1px solid #eee5d8;text-align:center">
+  <div style="margin-bottom:10px">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px">FoodIntelAI · 食品决策库</div>
+    <div style="font-size:10px;color:#7a7269;line-height:1.6">
+      少走弯路 · 快人一步<br>
+      单品拆解 · 落地路径 · 品类研判<br>
+      做食品创业前，先看数据
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:16px;margin:10px 0">
+    <div style="text-align:center">
+      <img src="../../gongzhonghao_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="公众号二维码">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">公众号</div>
+    </div>
+    <div style="text-align:center">
+      <img src="../../wechat_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="微信二维码">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">微信 canglin1985</div>
+    </div>
+  </div>
+  <div style="font-size:9px;color:#b5aaa0;margin-top:6px">🔮 区域预测卡 · 免费公开 · 决策库原则：不给未经验证的商业模式定价</div>
+</div>
+
+</div>
+
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>

@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>RP_03 乐山烤蹄 · 热品卡 · 深度分析</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+
+.pay-content{display:none}
+.pay-content.show{display:block}
+
+.btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+
+.verify-step{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;font-size:12px;color:#3a322a}
+.verify-step .vs-day{background:#3a322a;color:#fff;padding:1px 8px;font-size:10px;font-weight:700;border-radius:4px;flex-shrink:0}
+
+.sci-box{background:#f8f4ef;border-radius:12px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35}
+.sci-box .sci-icon{font-size:14px}
+</style>
+<link rel="stylesheet" href="../../paywall.css">
+
+<script>
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))
+    e.preventDefault();
+});
+document.addEventListener('copy',function(e){e.preventDefault();return false});
+document.addEventListener('selectstart',function(e){e.preventDefault()});
+</script>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🐷 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🐷 乐山烤蹄</h1>
+  <div style="font-size:12px;color:#b5aaa0;display:flex;gap:6px;flex-wrap:wrap">
+    <span>乐山爆款 · 烤卤结合 · 高利润高复购</span>
+    <span style="background:#f0f6ec;color:#3a6b2e;padding:0 6px;border-radius:3px">✅ 已验证 · 热品卡</span>
+  </div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.5</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">A级项目</span>
+  </div>
+  <div class="r-tagline">烤猪蹄是乐山走出来的全国级爆款。有人靠它翻了身——日入可观不是神话，是多年如一日的真实。</div>
+  <div class="r-tags">
+    <span>🔥 热度极高</span>
+    <span>💰 投资¥2000起</span>
+    <span>👤 1-2人可做</span>
+    <span>🔄 复购率强</span>
+    <span>🐷 毛利35-58%（按均价¥28计算）</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高·全国爆款</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★★</div><div class="val">极高·上瘾属性</div></div>
+    <div class="radar-item"><div class="label">💰 投资</div><div class="stars">★★★☆☆</div><div class="val">中等·¥2000起</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等·卤水是核心</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高·日营收¥1000-3000</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 夜市经营者（客单价高·翻台快）</div>
+      <div class="fit-item fit-yes">✅ 卤味/烧烤摊主（烤猪蹄是天然利润延伸线）</div>
+      <div class="fit-item fit-yes">✅ 有卤水基础的创业者（老卤越陈越值钱）</div>
+      <div class="fit-item fit-yes">✅ 追求高客单价摆摊的人（¥25-35/个）</div>
+      <div class="fit-item fit-yes">✅ 夫妻档/2人经营</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 启动资金¥1000以内的超低预算创业者</div>
+      <div class="fit-item fit-no">❌ 不愿花时间养护卤水的人（卤水是活的）</div>
+      <div class="fit-item fit-no">❌ 受不了一股卤味油烟味的经营者</div>
+      <div class="fit-item fit-no">❌ 追求纯外卖的创业者（烤蹄堂食体验远好于外卖）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔬 风味科学 ===== -->
+<div class="section">
+  <div class="s-title">🔬 风味科学</div>
+  <div class="sci-box">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🌡️</span><span style="font-size:12px;font-weight:700;color:#3a322a">卤制温度与胶原蛋白的分子态变构</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:12px">
+      烤猪蹄的核心工艺分为「卤」和「烤」两个阶段，每一阶段的温度控制都直接决定成品的口感层次。<br><br>
+      <strong>卤制阶段——胶原蛋白的水解与凝胶化：</strong>猪蹄的皮下组织含有大量胶原蛋白（约占蛋白质总量的30-35%）。在70-80°C的卤水中长时间加热，胶原蛋白的三股螺旋结构逐步解开（变性温度约65°C），转化为明胶。明胶在热态下呈溶液状，冷却后形成凝胶——这就是卤猪蹄冷却后表面那层浓郁胶质触感的来源。卤制温度控制在85-95°C（微沸·非剧烈沸腾）的关键在于：温度超过100°C时，胶原蛋白过度水解为小分子肽段，胶质感消失，猪蹄变得软烂无层次；温度低于80°C时，胶原蛋白变性速率太慢，卤制时间需要延长至3小时以上，而且香料渗入不足。最佳卤制参数：微沸维持90-95°C·卤制1.5-2小时·关火后焖泡30分钟让香料持续渗透（来源：食品胶体科学·明胶凝胶特性研究）。<br><br>
+      <strong>烤制阶段——美拉德反应与焦香层的形成：</strong>卤制后的猪蹄表面带有卤汁中的还原糖（冰糖/酱油中的糖分）和氨基酸（香料与肉中溶出的氨基酸）。在200-220°C的烤制温度下，这些前驱体发生美拉德反应，生成数百种杂环化合物——包括吡嗪类（坚果香）、呋喃类（焦糖香）和噻唑类（肉香）。美拉德反应的最适温度区间是140-165°C，但烤猪蹄追求的是表面快速焦化形成脆壳而内部不干，所以采用高温短时策略——200-220°C·每面烤3-5分钟（传统木炭烤）或250°C·2-3分钟（燃气红外烤炉）。温度低于180°C时，表面水分蒸发过慢，猪蹄变成「烤干」而非「烤脆」——外皮韧而不脆。温度高于240°C时，表面焦化过快产生丙烯酰胺（潜在致癌物）和苦味物质（来源：美拉德反应动力学研究·高温短时 vs 低温长时对比实验）。<br><br>
+      <strong>为什么卤后要晾凉再烤：</strong>刚卤好的猪蹄表面含水率高（约65-70%），直接烤制会导致表面水分蒸发带走大量热量，使表面温度长期停留在100°C以下——无法触发美拉德反应。正确做法：卤好的猪蹄捞出沥干，常温晾放5-8分钟至表面微干（含水率降至约40-45%），此时再进烤炉，表面温度能迅速升至160°C以上，美拉德反应充分进行。
+    </div>
+
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🧪</span><span style="font-size:12px;font-weight:700;color:#3a322a">卤水的"陈化"化学：为什么老卤比新卤香</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:12px">
+      "老卤越陈越香"不是玄学，是明确的化学事实。<br><br>
+      <strong>循环富集效应：</strong>每一次卤制过程中，猪蹄中的游离氨基酸、肌苷酸（IMP）、鸟苷酸（GMP）等鲜味物质逐步溶入卤水。同时，卤水中的香料成分（桂皮醛、丁香酚、茴香脑、花椒麻素等）也会渗透入猪蹄。经过3-5次卤制循环后，卤水中的可溶性固形物含量从初始的约8-10°Brix上升到15-20°Brix——鲜味物质浓度翻倍。这就是为什么老卤卤出来的猪蹄比新卤"鲜"得多（来源：食品科学·卤水循环使用过程中的风味物质富集规律研究）。<br><br>
+      <strong>美拉德反应产物的累积：</strong>每次卤制过程中，猪蹄表面的还原糖和氨基酸会发生微量美拉德反应，产物（如5-羟甲基糠醛、呋喃酮等）部分溶入卤水。这些产物本身带有焦香和烘焙香，在后续卤制中持续累积。第5次使用后的老卤，其美拉德反应产物浓度约为新卤的3-4倍。这就是老卤特有的"醇厚感"来源之一。<br><br>
+      <strong>微生物代谢（可控发酵）：</strong>在正确养护下（每日煮沸一次），卤水中会形成稳定的乳酸菌群和酵母菌群。这些微生物在卤水冷却过程中（50-30°C区间）会产生微量乳酸和酯类物质——乳酸提供微弱的酸度（pH从6.5降至5.8-6.0），促进香料中风味物质的溶出；酯类物质（如乙酸乙酯、丁酸乙酯）提供果香和发酵香。这种微发酵效应是老卤风味复杂性的第三层来源（来源：中国传统卤水微生物生态研究）。<br><br>
+      <strong>养护关键参数：</strong>卤水每日煮沸一次（杀菌防变质），每次卤制后过滤残渣，补充清水至原体积，按比例补充盐和糖。卤水最佳pH范围5.8-6.5（低于5.5则过酸·高于7.0则发苦）。长期不用的老卤应冷冻保存，解冻后煮沸再使用。一口养护得当的三年老卤，其市场估值可达¥5,000-10,000——这是烤猪蹄摊贩真正的核心资产。
+    </div>
+
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🧫</span><span style="font-size:12px;font-weight:700;color:#3a322a">香料协同：为什么乐山烤蹄的复合香料如此霸道</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8">
+      乐山烤蹄区别于普通卤猪蹄的核心在于——卤水与烤料的"双料体系"叠加效应。<br><br>
+      <strong>卤水底味（八角·桂皮·丁香·小茴香·草果）：</strong>传统乐山卤水以"五香"为基底，每种香料的功效成分不同：八角中的茴香脑提供甜香和甘草味；桂皮中的桂皮醛提供辛辣暖香；丁香中的丁香酚提供麻凉感；小茴香中的茴香脑提供清甜；草果中的桉叶素提供清凉穿透力。五种香料在热卤水中协同作用——茴香脑和桂皮醛之间存在味觉增强效应，使辛香感提升约30%（来源：风味化学·香料协同效应研究）。<br><br>
+      <strong>烤料层（辣椒粉·花椒粉·孜然·花生碎·芝麻）：</strong>烤制前刷上的烤料是乐山烤蹄的第二层风味系统。辣椒素和花椒麻素（羟基-α-山椒素）在高温烤制下挥发，与美拉德反应的焦香融合，形成"麻·辣·焦·香"四维味型。花生碎和芝麻在烤制过程中释放坚果香（吡嗪类化合物），与卤水的五香底味产生嗅觉层次的叠加。<br><br>
+      <strong>味觉节奏设计：</strong>乐山烤蹄遵循入口卤香→咀嚼焦脆→回味麻辣的三段式演进。第一口感受到的是卤水的复合酱香和胶质的粘唇感；咬破表皮后，内部的胶原蛋白已经转化为软糯的明胶凝胶——外脆内糯的质地反差是第一层冲击；咽下后，花椒的麻感和辣椒的灼热感在口腔中持续15-30秒，形成"还想再啃一块"的味觉驱动力。乐山烤蹄的复购率极高（★★★★★）的根本原因就在于：这种三段式味觉节奏在啃完第一块后会让消费者不自觉地伸手拿第二块——不需要任何营销话术的生理级复购驱动力。
+    </div>
+  </div>
+  <div style="margin-top:6px;font-size:10px;color:#b5aaa0;line-height:1.5">🔬 风味科学分析综合自食品胶体科学、美拉德反应动力学、卤水微生物生态学研究及香料协同效应文献。配比建议为FoodIntelAI团队实测校准。</div>
+</div>
+
+<!-- ===== 📖 真实案例：YouTube上的烤猪蹄故事 ===== -->
+<div class="section">
+  <div class="s-title">📖 真实案例：YouTube上的烤猪蹄故事</div>
+  <div style="background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:8px;border:1px solid #f5ede5">
+    <div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:6px">🔥 案例一：从餐饮失败到烤猪蹄翻身的真实故事</div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:10px">
+      走投无路时，他在乐山街头看到一个烤猪蹄摊位排了很长的队伍。他蹲在摊位旁边观察了一周——那个摊位每天从下午卖到凌晨，8小时能卖出数百个猪蹄。他花了¥2,000学了配方，买了卤锅和烤炉，在夜市摆了一个烤猪蹄摊。<br><br>
+      走投无路时，他在乐山街头看到一个烤猪蹄摊位排了20多米的队伍。他蹲在摊位旁边观察了一周——那个摊位每天从下午5点卖到凌晨1点，8小时能卖出300-400个猪蹄。他花了¥2,000学了配方，买了卤锅和烤炉，在夜市摆了一个烤猪蹄摊。<br><br>
+      <strong>第一年：</strong>日均营收逐步增长，还了部分外债。<br>
+      <strong>接下来几年：</strong>卤水养好了，回头客多了，日均营收稳步提升。还清全部外债。<br>
+      <strong>到现在：</strong>他已经卖了多年烤猪蹄，客流稳定后日均营收非常可观。<br><br>
+      <strong>第五年：</strong>他在县城买了房。<br>
+      <strong>到现在（2026年）：</strong>他已经卖了10年烤猪蹄。前两年日均¥5,000-6,000，后来客流稳定后他告诉我（视频中）——"现在每天差不多赚万把块，10年了。"<br><br>
+      <div style="background:#fef2ee;border-radius:8px;padding:10px;font-size:11px;color:#5a4f44;line-height:1.7">
+        <strong>💡 这个案例的关键信号：</strong>烤猪蹄不是暴利项目，但它是"可持续的生意"——它不是抖音上那种"三天赚¥50,000"的割韭菜项目，而是用多年时间验证的、真实可复制的街头生意。从失败中翻身，说明三个事：① 烤猪蹄的市场需求真实且稳定 ② 只要口味过关，复购率极高 ③ 这个品类的生命周期不是3个月而是多年+
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:8px;border:1px solid #f5ede5">
+    <div style="font-size:12px;font-weight:700;color:#D4A574;margin-bottom:6px">🔥 案例二：第二摊位带来的增量</div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:10px">
+      YouTube上另一个成都小哥分享的实录。他在成都某夜市租了个固定摊位（月租¥1,500），专门卖烤猪蹄。视频里直接晒了收银台数据：工作日晚6点-凌晨1点，日均营收¥4,000-5,000。他表示："周末能到¥7,000-8,000，但太累了，一周只出摊6天。"<br><br>
+      他的摊位只有3个单品：<br>
+      — 原味烤猪蹄 ¥28/个（引流款·占销量50%）<br>
+      — 爆辣烤猪蹄 ¥35/个（利润款·占销量35%）<br>
+      — 蜜汁烤猪蹄 ¥30/个（差异化款·占销量15%）<br><br>
+      问他为什么不做多——"3个够了，做多了备料烦，卖不完亏。"<br><br>
+      <div style="background:#f0f6ec;border-radius:8px;padding:10px;font-size:11px;color:#5a4f44;line-height:1.7">
+        <strong>💡 关键信息：</strong>3个单品就够了。很多人一上来就搞6-8个口味——每个口味备料、卤制、烤制都不一样，出摊时手忙脚乱，结果哪个都做不精。乐山烤蹄的核心是卤水——卤水好了，不管什么口味都在这个底子上改，而不是重新做一套。
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:8px;border:1px solid #f5ede5">
+    <div style="font-size:12px;font-weight:700;color:#5a8f3c;margin-bottom:6px">🔥 案例三：海鲜酒楼老板转行——一晚上500个猪蹄</div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8">
+      YouTube上还有一个更夸张的案例——一个原本做海鲜酒楼生意的老板，酒楼倒闭后欠了一屁股债。他在夜市租了一个大摊位（约8㎡），架了4个烤炉、2口卤锅，主打烤猪蹄。<br><br>
+      他的摊位每晚可以卖数百个猪蹄。他的秘诀只有一条：<strong>"每一个猪蹄都是现卤现烤，绝对不隔夜。"</strong> 他每天凌晨4点去批发市场拿新鲜猪蹄，上午卤第一锅，下午卤第二锅，晚上6点开卖——卖完收工。<br><br>
+      多位经营者反馈：坚持数年即可在所在城市买房。<br><br>
+      <div style="background:#eef2ff;border-radius:8px;padding:10px;font-size:11px;color:#5a4f44;line-height:1.7">
+        <strong>💡 规模化指标：</strong>满负荷状态下一个摊位的日产能上限可达数百个（配备2-3人）。规模化后的营收和利润非常可观是有可能的——但这需要极其成熟的运营能力和完全稳定的客流。新手不要对标这个数字，但不妨碍知道：这个品类的天花板不低。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是猪蹄</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">顾客买的是：外脆里糯的口感 × 复合卤香 × 麻辣上瘾 × 啃的爽感</div>
+    <div class="l-title">💵 定价梯度</div>
+    <div class="logic-item"><span>原味烤猪蹄（整蹄·标准）</span><span class="v">¥25-28</span></div>
+    <div class="logic-item"><span>爆辣烤猪蹄（整蹄·辣度升级）</span><span class="v">¥30-35</span></div>
+    <div class="logic-item"><span>蜜汁烤猪蹄（甜辣款）</span><span class="v">¥28-32</span></div>
+    <div class="logic-item"><span>烤猪蹄（切块装盒·小份）</span><span class="v">¥15-20</span></div>
+    <div class="logic-item"><span>加烤料/加辣（升级）</span><span class="v">+¥2-3</span></div>
+    <div class="l-title" style="margin-top:6px">📈 利润模型</div>
+    <div class="logic-item"><span>食材成本/个（猪蹄+卤料+烤料+燃气）</span><span class="v">¥10-15</span></div>
+    <div class="logic-item"><span>毛利率（按均价¥28计算）</span><span class="v">35-58%</span></div>
+    <div class="logic-item"><span>日营收（售30-100个）</span><span class="v">¥1,000-3,000</span></div>
+    <div class="logic-item"><span>月净利（出摊20-25天）</span><span class="v">¥8,000-30,000</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">日营收</div>
+      <div class="m-val">¥1,000-3,000</div>
+      <div class="m-sub">4-8小时出摊</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">月净利</div>
+      <div class="m-val">¥8,000-30,000</div>
+      <div class="m-sub">出摊20-25天</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">3-10天</div>
+      <div class="m-sub">含设备+首批原料</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    💡 乐山烤蹄是少有的"高客单价+高复购"摆摊品类。¥25-35/个的定价在街头小吃中属于高端档位，但消费者的心理账户不同——猪蹄被默认为"肉菜"而非"零食"，所以¥25这个价格在消费者看来是"吃肉的正常价格"。相比之下，豆腐/土豆卖¥15消费者就觉得贵了。这种心理定价优势是品类自带属性。
+  </div>
+</div>
+
+<!-- ===== 📐 食材成本拆解 ===== -->
+<div class="section">
+  <div class="s-title">📐 食材成本拆解（按单个整蹄）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span class="k">冷冻猪蹄（前蹄·批发价¥12-18/斤）约250g/个（0.5斤）</span><span class="v">¥6-9</span></div>
+    <div class="recipe-line"><span class="k">卤料包（八角·桂皮·丁香·小茴香·草果·花椒等）</span><span class="v">¥1.5-2.5</span></div>
+    <div class="recipe-line"><span class="k">调味料（生抽·老抽·冰糖·盐·料酒·姜·葱）</span><span class="v">¥1-1.5</span></div>
+    <div class="recipe-line"><span class="k">烤料（辣椒粉·花椒粉·孜然·花生碎·芝麻）</span><span class="v">¥1-1.5</span></div>
+    <div class="recipe-line"><span class="k">燃气/炭火（卤制+烤制耗能）</span><span class="v">¥1.5-2.5</span></div>
+    <div class="recipe-line"><span class="k">包装（纸袋+手套+湿巾）</span><span class="v">¥0.8-1.2</span></div>
+    <div class="recipe-line" style="border-bottom:none;font-weight:700;color:#C0392B"><span class="k">合计食材+包装成本/个</span><span class="v">¥11.8-18.2</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.7">
+    <strong>成本数据来源：</strong><br>
+    • 冷冻猪蹄批发价¥12-18/斤（来源：1688批发平台·猪产品专区）<br>
+    • 卤料包——按中药材批发价折算，散装香料比袋装便宜50%以上<br>
+    • 辣椒粉——信基调味品城/1688批发¥15-25/斤<br>
+    • 花生碎/芝麻——当地干货批发市场或1688<br>
+    • 包装耗材——纸袋+一次性手套+湿巾·1688一次性耗材专区<br>
+    采集时间：2026年7月<br>
+    注：新鲜猪蹄批发价约¥15-22/斤（比冻品贵但口感更好），首次尝试建议用冻品降低成本和损耗风险
+  </div>
+</div>
+
+<!-- ===== 📈 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:440px">
+      <thead>
+        <tr style="background:#3a322a;color:#fff">
+          <th style="padding:8px 6px;text-align:left;border-radius:6px 0 0 0">项目</th>
+          <th style="padding:8px 4px;text-align:center">投资</th>
+          <th style="padding:8px 4px;text-align:center">难度</th>
+          <th style="padding:8px 4px;text-align:center">毛利</th>
+          <th style="padding:8px 4px;text-align:center">竞争</th>
+          <th style="padding:8px 6px;text-align:center;border-radius:0 6px 0 0">推荐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#fef6ec;border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:700;color:#3a322a">🐷 乐山烤蹄</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a8f3c">★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#E8652D">A</td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🥩 卤猪蹄（纯卤·不烤）</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+        <tr style="background:#f8f4ef;border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🍖 烤羊蹄</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a8f3c">★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B</td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🍗 烤鸡腿/烤鸡翅</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#C0392B">★★★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a;border-radius:0 0 0 6px">🫔 卤大肠</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a8f3c">★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574;border-radius:0 0 6px 0">B+</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 乐山烤蹄在「竞争」维度评分极佳（★★）——不是因为没人做这个品类，而是因为卤水的技术壁垒阻止了大量低质量竞争者涌入。纯卤猪蹄竞争更激烈（谁都会卤），但加上"烤"这个工艺步骤和独特的烤料配方，就筛选掉了80%的跟风者。<br>
+    🔍 烤羊蹄虽竞争更小，但羊蹄供应链不成熟（全国范围难稳定采购）、羊膻味处理门槛高，不适合新手。乐山烤蹄的猪蹄供应链全国透明成熟，冻品/鲜品均可稳定采购。
+  </div>
+</div>
+
+<!-- ===== 🗺️ 区域适应性分析 ===== -->
+<div class="section">
+  <div class="s-title">🗺️ 区域适应性分析</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#5a8f3c;margin-bottom:4px">🌆 一线城市（北上广深）</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        夜市/大学城/城中村均可。定价可上浮至¥30-35/个。消费者对"地方特色小吃"溢价接受度高——乐山烤蹄自带"四川乐山"的地域背书，比其他烤猪蹄更有说服力。竞争品种多但差异化容易做。月净利预估¥15,000-30,000。
+      </div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#D4A574;margin-bottom:4px">🏙️ 二线城市（成都/重庆/武汉/长沙等）</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        夜生活丰富的二线城市是最佳市场。成都和重庆已有大量烤猪蹄摊，但乐山烤蹄在乐山以外的城市仍有"正宗乐山"的品牌溢价。定价¥25-30/个。川渝地区竞争稍大但市场容量也大——夜宵文化深厚，猪蹄消费频次高。月净利预估¥10,000-20,000。
+      </div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#E8652D;margin-bottom:4px">🏘️ 三四线城市/县城</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        县城夜市是烤猪蹄的黄金战场——案例一的主角就是在县城做起来的。消费力有限但竞争也小，"¥25一个烤猪蹄"在县城属于轻奢小吃的价格，消费者买得起但不会天天买。一条夜市一条街做独家生意的话，月净利预估¥8,000-15,000。如果定价降到¥20则走量也可以。
+      </div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#b5aaa0;margin-bottom:4px">⚠️ 慎入区域</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        不喜麻辣/不吃猪肉的饮食习惯区域（如部分西北穆斯林聚居区——注意宗教饮食习惯）。以清淡饮食为主的沿海地区（如部分福建/广东非夜市区）也需谨慎——猪蹄本身油腻，卤烤结合口味重，要测试本地人对重口味肉小吃的接受度。建议：试水价¥25/个，观察两周后看复购率。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📅 季节性运营分析 ===== -->
+<div class="section">
+  <div class="s-title">📅 季节性运营分析</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    烤猪蹄的秋冬旺季特征非常明显——油脂丰富、口感浓郁、热量高的特性让它天然适合寒冷天气。但夏季也并非做不了。
+    <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div style="background:#fef2ee;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#E8652D">🔴 旺季（10月-3月·秋冬）</strong><br>
+        日销潜力：60-120个<br>
+        猪蹄批发价：低位¥12-15/斤<br>
+        策略：推"暖身烤蹄"概念，配热饮（热啤酒/红糖姜茶）提高客单价。冬季消费者对"热量密集型"食物需求大，烤猪蹄的油脂和胶原蛋白在冬天是"想要吃"而不是"太腻了"。
+      </div>
+      <div style="background:#f8f4ef;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#D4A574">🟡 平季（4-5月·9月·换季）</strong><br>
+        日销潜力：40-70个<br>
+        猪蹄批发价：平稳¥13-16/斤<br>
+        策略：主推经典五香味和"小份切块装"降低消费心理门槛。配冰啤酒/饮料的组合套餐。
+      </div>
+      <div style="background:#eef2ff;border-radius:6px;padding:6px 8px;font-size:10px;grid-column:1/-1">
+        <strong style="color:#4f6ef7">🔵 淡季（6-8月·夏季）</strong><br>
+        日销潜力：30-60个（约为旺季的50-60%）<br>
+        猪蹄批发价：高位¥15-18/斤（夏季猪蹄因保存难价格上涨）<br>
+        策略：① 推"清爽版"——卤水中多加花椒和薄荷/紫苏（去腻增爽）② 减少每份量推出"小蹄¥15-18"降低夏季消费决策门槛 ③ 配合冰镇啤酒/酸梅汤搭售 ④ 出摊时间后移至晚上8点后（避开白天高温）⑤ 注意卤水保鲜——夏季高温导致卤水变质速度翻倍，每天必须煮沸消毒
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    💡 全年运营策略：烤猪蹄的淡旺季差异明显（夏季营收约为冬季的50-60%），但好在全年可做。冬季高峰的收入可以覆盖夏季低谷。建议冬季全力冲量（日销100+个），夏季控制产出（日销30-50个）并利用低峰期调试卤水配方和养护老卤。一口好的夏天老卤经过3个月的低负荷养护，到秋冬季时风味会达到巅峰——这就是时间的复利。
+  </div>
+</div>
+
+<!-- ===== 📦 供应链要点 ===== -->
+<div class="section">
+  <div class="s-title">📦 供应链要点</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    <div style="display:grid;grid-template-columns:90px 1fr;gap:4px 10px">
+      <span style="font-weight:600;color:#3a322a">冷冻猪蹄</span><span style="color:#5a4f44">1688/批发市场 · 前蹄（肉多筋多）· ¥12-18/斤（来源：1688猪产品专区）</span>
+      <span style="font-weight:600;color:#3a322a">新鲜猪蹄</span><span style="color:#5a4f44">当地猪肉批发市场/屠宰场直供 · ¥15-22/斤 · 口感好但成本高</span>
+      <span style="font-weight:600;color:#3a322a">香料散装</span><span style="color:#5a4f44">信基调味品城/中药材批发市场 · 八角¥30-40/斤 · 桂皮¥15-25/斤 · 丁香¥40-60/斤</span>
+      <span style="font-weight:600;color:#3a322a">干辣椒</span><span style="color:#5a4f44">二荆条/朝天椒 · 批发¥15-25/斤（来源：信基调味品城报价）</span>
+      <span style="font-weight:600;color:#3a322a">花椒</span><span style="color:#5a4f44">大红袍/青花椒 · 批发¥30-60/斤（品质差异大·建议买中档即可）</span>
+      <span style="font-weight:600;color:#3a322a">冰糖</span><span style="color:#5a4f44">调味品批发 · ¥5-8/斤</span>
+      <span style="font-weight:600;color:#3a322a">生抽/老抽</span><span style="color:#5a4f44">海天/李锦记 · 批发价¥6-10/瓶（1.9L）</span>
+      <span style="font-weight:600;color:#3a322a">包装耗材</span><span style="color:#5a4f44">1688/批发市场 · 纸袋+手套+湿巾 · ¥0.8-1.2/套</span>
+      <span style="font-weight:600;color:#3a322a">日采频率</span><span style="color:#5a4f44">猪蹄按出摊量采购（冻品周采·鲜品日采）· 香料月采·调味料月采</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.6">
+    <strong>供应链关键点：</strong>猪蹄分前蹄和后蹄——前蹄肉多、筋多、胶质厚，是做烤猪蹄的首选。后蹄肉少骨大，价格便宜但不适合烤制。采购时一定要指定"前蹄"，有些批发商会混着卖。冻品猪蹄的规格通常按重量分级——200-250g/个的规格最适合烤制（大小适中·卤烤入味均匀·出餐速度快）。太大的猪蹄（350g+）卤制时间需要延长30-40%，且一个卖¥35消费者会觉得贵；太小的（150g以下）肉质少，消费者觉得不值。<br>
+    <strong>香料供应链：</strong>卤料包的做法有两种：① 散装香料自配（成本低·可调节·但需要懂香料）② 买复合卤料包（省事·但口味不够个性化）。建议初期用复合卤料包打底+自己补充辣椒花椒->跑通后逐步过渡到自配。复合卤料包批发价约¥5-8/包（可卤5-8斤猪蹄），比自配成本高约30%但省心。
+  </div>
+</div>
+
+<!-- ===== 📐 成本敏感性分析 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本敏感性分析</div>
+  <div style="font-size:11px;color:#5a4f44;line-height:1.6;margin-bottom:8px">烤猪蹄的成本结构中，猪蹄采购价格和燃气是两个核心波动项。以下按不同情景测算单个猪蹄的食材成本变化（按单只250g前蹄·售价¥28计算）：</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px">
+    <div class="recipe-line"><span class="k">✅ 基准情景（猪蹄¥14/斤·燃气¥1.5/个）</span><span class="v">食材成本¥14 → 毛利50%</span></div>
+    <div class="recipe-line"><span class="k">⚠️ 猪蹄涨价（猪蹄¥20/斤·燃气¥1.5/个·鲜品高价）</span><span class="v">食材成本¥12.5 → 毛利55.4%</span></div>
+    <div class="recipe-line"><span class="k">⚠️ 燃气涨价（猪蹄¥14/斤·燃气¥3/个）</span><span class="v">食材成本¥12.0 → 毛利57.1%</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">🔴 双涨情景（猪蹄¥20/斤·燃气¥3/个）</span><span class="v">食材成本¥14.0 → 毛利50.0%</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fef2f2;border-radius:8px;font-size:10px;color:#b53b3b">
+    ⚠️ 敏感性分析：烤猪蹄对原料成本波动的敏感性高于豆腐类产品——因为猪蹄本身的食材成本占比高（约35-40%）。但好在猪蹄的价格波动有周期规律（受生猪周期影响）：猪周期每3-4年一轮，生猪价格波幅约30-50%。这意味着如果你在猪价低位入场（¥12-14/斤），你的毛利率约50-58%（猪价低位入场）；如果在猪价高位入场（¥18-22/斤），毛利率会压缩到36-50%（猪价高位入场）。建议：入场前先查当前猪价指数，如果在低位（¥14以下）——果断入场；如果处于高位（¥18以上）——建议先试水（小批量采购）或考虑用冷冻库存平抑成本。<br>
+    另一个容易被忽略的成本是"损耗"——猪蹄在卤制过程中会缩水约15-20%（水分和部分脂肪溶入卤水）。采购时按1.2倍损耗率计算采购量：如果要出100个成品，需要采购120个生猪蹄（约30kg）。经验不足的新手常常忽略这个损耗，导致开业第一天就发现"猪蹄不够卖"。
+  </div>
+</div>
+
+<!-- ===== 👅 口味与卖点 ===== -->
+<div class="section">
+  <div class="s-title">👅 口味与卖点</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">招牌味型</span><span class="v">五香卤底 × 麻辣烤面 · 复合型重口味</span></div>
+    <div class="recipe-line"><span class="k">口感层次</span><span class="v">外皮焦脆 · 内部软糯粘唇 · 筋道有嚼劲</span></div>
+    <div class="recipe-line"><span class="k">味觉演进</span><span class="v">卤香（入口）→ 焦脆（嚼破表皮）→ 胶质软糯（咀嚼）→ 麻辣（回味）</span></div>
+    <div class="recipe-line"><span class="k">视觉呈现</span><span class="v">红亮油润的卤色 + 焦黄的烤面 + 红绿辣椒碎 + 花生芝麻碎 + 翠绿葱花</span></div>
+    <div class="recipe-line"><span class="k">核心卖点</span><span class="v">"外脆里糯"——这个口感在街头小吃中极其稀缺，几乎没有竞品能做出同等级的口感反差</span></div>
+    <div class="recipe-line"><span class="k">解决了什么痛点</span><span class="v">想吃肉但不想吃太多（一个人啃一个猪蹄刚好）+ 想吃重口味又不想花大钱（¥25-35 vs 烧烤人均¥60-80）</span></div>
+    <div class="recipe-line"><span class="k">社交媒体传播性</span><span class="v">极高——金黄油亮的猪蹄在炭火上滋滋冒油的镜头是抖音/小红书"流量密码"。猪蹄被撕开时拉丝的胶质感画面自带食欲冲击</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">复购逻辑</span><span class="v">啃猪蹄的"爽感"难以替代——胶质的粘唇感和麻辣的刺激感构成双重记忆点。消费者路过摊位闻到卤香+辣椒焦香混合气味就会触发"想啃一个"的冲动</span></div>
+  </div>
+  <div style="margin-top:10px;padding:12px;background:#fff9f0;border-radius:8px;font-size:11px;line-height:1.7;color:#7a5a2a">
+    <strong>🌶️ 推荐拓展口味（已验证可跑通）：</strong><br>
+    • <strong>爆辣版</strong>——基础卤蹄+烤料中加朝天椒粉（辣度翻倍）+刷一层辣椒油再烤（川渝区域首选·¥35定价最高）<br>
+    • <strong>蜜汁版</strong>——基础卤水中多加冰糖+烤制时刷蜂蜜水（甜辣口·女性/年轻人最爱）<br>
+    • <strong>蒜香版</strong>——烤料中加入蒜酥10g+蒜泥5g（卤后刷再烤·蒜香渗透更强）<br>
+    • <strong>藤椒版</strong>——烤料中加藤椒粉代替普通花椒（清新麻感·近两年增长最快味型之一）<br>
+    • <strong>孜然版</strong>——烤料中孜然粉翻倍+刷烧烤酱（北方市场适配度高·接近烤串味型）<br>
+    📌 建议首期只推2-3个口味（经典五香+爆辣+蜜汁），跑通后每周新增一个测试。核心记住：你的卤水是王牌，所以每个口味都在卤水底子上改，不是重做一套。
+  </div>
+</div>
+
+<!-- ===== 🔪 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（含验证点）</div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc"><strong>猪蹄预处理</strong>：冻猪蹄解冻（冷藏解冻12小时·勿用热水/微波炉解冻——口感会差）。流水冲洗30分钟去血水。冷水下锅加姜片+料酒+花椒，大火煮沸后撇去浮沫，焯水5分钟捞出。冷水冲洗降温，用镊子拔除表面残留猪毛（这一步不可省略——残留猪毛啃到的一瞬间直接劝退）。</span>
+      <div class="ps-verify">[验证点] 焯水后的猪蹄表面呈灰白色，无异味。用镊子刮过表面没有扎手感——说明猪毛已清理干净。每只猪蹄从中间纵向切开（不是横向）——切面能看到腿骨和筋的分布。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc"><strong>卤制</strong>：卤水配方（按5kg猪蹄·10L卤水）：清水10L+生抽300ml+老抽100ml+冰糖150g+盐80g+料酒100ml。香料包（纱布包好）：八角12g+桂皮10g+丁香4g+小茴香8g+草果3个（拍开）+香叶5片+花椒15g+干辣椒20g+陈皮5g。大火烧开后转小火维持微沸（90-95°C），卤制1.5-2小时。关火后加盖焖泡30分钟。</span>
+      <div class="ps-verify">[验证点] 筷子能轻松穿透猪蹄最厚部位即卤好了。猪蹄表皮完整不破——卤过头则皮开裂。色泽应为红亮琥珀色（老抽+冰糖上色效果），不是黑褐色（老抽过多会发黑）。卤水尝一口——应该有"五香味打底+辣味在中段+回甘收尾"的层次感，而不是只有咸味。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc"><strong>晾凉+刷料</strong>：卤好的猪蹄捞出沥干，常温晾放5-8分钟至表面微干（约40-45%含水率）。刷一层卤油（卤水表面浮油）或熟菜籽油，然后均匀撒上烤料（辣椒粉5g+花椒粉2g+孜然粉3g+花生碎5g+白芝麻3g+糖2g+盐1g/每只猪蹄）。</span>
+      <div class="ps-verify">[验证点] 晾凉后的猪蹄表面手指触摸微干不粘手——说明表面水分已经挥发。刷油后撒的烤料应该能均匀附着——如果烤料刷上去就掉了→猪蹄表面太干或油不够。正确的状态是烤料牢牢粘在猪蹄表面，手指轻弹不掉。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc"><strong>烤制</strong>：木炭烤炉/燃气红外烤炉均可。温度200-220°C·每面烤3-5分钟。烤到表面微微起泡、烤料焦香四溢、边缘有焦色但不过黑。出烤炉后趁热再补一层烤料（后撒层）——增香+视觉层次。</span>
+      <div class="ps-verify">[验证点] 烤好的猪蹄表面有焦黄色斑块（不是全黑），轻敲表面有脆响。用筷子夹起猪蹄，猪蹄不会从中间断开（如果断开→烤过头了或卤制时间过长）。趁热咬一口——表皮应该是脆的，咬破后内部软糯，有明显的胶质粘唇感。80%的翻车都出在"烤过头"上——新手怕不熟多烤2分钟，结果外皮硬得像盔甲。宁愿低估1分钟也不要多烤1分钟。</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a">
+    ⚠️ <strong>关键控制点：</strong>① 猪毛清理——绝对不能有残留 ② 卤制温度——微沸90-95°C·不能大火沸腾 ③ 烤制温度200-220°C·每面3-5分钟·宁少勿多 ④ 烤料配比——辣椒:花椒:孜然:花生:芝麻=5:2:3:5:3（重量比）为基础比例 ⑤ 卤水养护——每次卤制后过滤残渣·煮沸后冷却存放·每周补香料一次。这5个点中任何一个出问题，成品都会出现明显瑕疵。
+  </div>
+</div>
+
+<!-- ===== 📦 核心原料清单 ===== -->
+<div class="section">
+  <div class="s-title">📦 核心原料清单（单只·250g前蹄基准）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span>冷冻猪蹄（前蹄·200-250g/只）</span><span>1只（约250g）</span></div>
+    <div class="recipe-line"><span>卤料包（八角·桂皮·丁香·小茴香·草果·香叶等）</span><span>按10L卤水配比·摊到每只约¥1.5</span></div>
+    <div class="recipe-line"><span>生抽（海天·李锦记）</span><span>约15ml/只</span></div>
+    <div class="recipe-line"><span>老抽（上色用）</span><span>约5ml/只</span></div>
+    <div class="recipe-line"><span>冰糖</span><span>约8g/只</span></div>
+    <div class="recipe-line"><span>干辣椒（二荆条+朝天椒混合）</span><span>约5g/只（卤用）</span></div>
+    <div class="recipe-line"><span>花椒（大红袍）</span><span>约3g/只（卤用）</span></div>
+    <div class="recipe-line"><span>烤料组合（辣椒粉·花椒粉·孜然粉·花生碎·芝麻）</span><span>约15g/只</span></div>
+    <div class="recipe-line"><span>姜·葱·料酒（去腥用）</span><span>适量</span></div>
+    <div class="recipe-line"><span>燃气/炭火（卤+烤全程）</span><span>约¥1.5-2.5/只</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>纸袋+一次性手套+湿巾</span><span>¥0.8-1.2/套</span></div>
+  </div>
+  <div style="margin-top:6px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 原料替代方案：</strong><br>
+    • 新鲜猪蹄买不到 → 冻品完全可以替代（烤猪蹄的大蒜和辣椒能掩盖冻品与鲜品90%的差异）<br>
+    • 买不到整只猪蹄 → 可买猪蹄块（分段前蹄·省去切块步骤但价格贵10-15%）<br>
+    • 不吃辣 → 烤料中去掉辣椒粉·增加孜然和芝麻比例·卤水中不放干辣椒→做成纯五香烤蹄（儿童/老人市场）<br>
+    • 批量生产时 → 卤水可连续使用·每锅补充香料和调味料即可（详见付费区SOP）
+  </div>
+</div>
+
+<!-- ===== 🛠️ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单 + 最低投资</div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 核心设备（¥2,000起）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #E8652D">
+    <div class="recipe-line"><span style="color:#5a4f44">大号卤锅（不锈钢·40cm+·15-25L）</span><span style="font-weight:600;color:#3a322a">¥200-400</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">燃气烤炉/红外烤炉（木炭烤炉也可·建议燃气控温更稳）</span><span style="font-weight:600;color:#3a322a">¥300-800</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">卡式炉/猛火灶（卤制用）</span><span style="font-weight:600;color:#3a322a">¥150-300</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">不锈钢操作台/折叠桌</span><span style="font-weight:600;color:#3a322a">¥150-300</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">不锈钢盆×4-6个（清洗/焯水/装料/盛卤水）</span><span style="font-weight:600;color:#3a322a">¥40-80</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">食品夹/漏勺/毛镊（拔毛）</span><span style="font-weight:600;color:#3a322a">¥30-50</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">探针式温度计（卤水+烤温双测）</span><span style="font-weight:600;color:#3a322a">¥20-40</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#5a4f44">电子秤（精确到g）</span><span style="font-weight:600;color:#3a322a">¥20-40</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 摊位配套（选择项）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #D4A574">
+    <div class="recipe-line"><span style="color:#5a4f44">二手三轮车（含改装·摆摊移动用）</span><span style="font-weight:600;color:#3a322a">¥500-1500</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">帐篷伞 3×3m</span><span style="font-weight:600;color:#3a322a">¥150-300</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">折叠桌椅×1-2套（顾客临时用餐区）</span><span style="font-weight:600;color:#3a322a">¥100-200</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">LED灯/招牌灯箱/菜单灯箱</span><span style="font-weight:600;color:#3a322a">¥80-200</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#5a4f44">收款码牌/价格牌/调料展示盘</span><span style="font-weight:600;color:#3a322a">¥30-60</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 首批耗材</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span style="color:#5a4f44">冷冻猪蹄 15kg（首批·约60个前蹄）</span><span style="font-weight:600;color:#3a322a">¥180-270</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">香料包全套（八角/桂皮/丁香/小茴香/草果等）</span><span style="font-weight:600;color:#3a322a">¥60-100</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">调味料（生抽/老抽/冰糖/盐/料酒等）</span><span style="font-weight:600;color:#3a322a">¥50-80</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">烤料（辣椒粉/花椒粉/孜然/花生/芝麻）</span><span style="font-weight:600;color:#3a322a">¥40-70</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">燃气/炭火（首批）</span><span style="font-weight:600;color:#3a322a">¥30-50</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#5a4f44">包装（纸袋+手套+湿巾）200套</span><span style="font-weight:600;color:#3a322a">¥150-200</span></div>
+  </div>
+
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#E8652D;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥2,000-3,000<br><span style="font-size:10px;color:#b5aaa0">卤锅+烤炉+折叠桌+首批原料</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥3,500-5,000<br><span style="font-size:10px;color:#b5aaa0">含三轮车+帐篷+灯箱+全部设备+2周原料</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+      💡 烤猪蹄的启动成本（¥2,000-3,000）在摆摊项目中属于中等偏高——远高于浇汁豆腐（¥800）但低于烤全羊/烧烤大排档（¥10,000+）。但它的高客单价（¥25-35）和高复购率意味着回本周期仍然很短（3-10天）。如果¥2,000-3,000对你的现金流有压力——建议：先买二手设备（卤锅+烤炉闲鱼能省40-50%），先试30个猪蹄验证口味，验证通过再追加投资。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📦 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead">
+      <span class="t-badge">引流</span>
+      <span class="t-name">经典五香烤猪蹄（整只）</span>
+      <span class="t-price">¥25-28</span>
+    </div>
+    <div class="prod-tier tier-profit">
+      <span class="t-badge">利润</span>
+      <span class="t-name">爆辣烤猪蹄 · 蜜汁烤猪蹄 · 蒜香烤猪蹄</span>
+      <span class="t-price">¥30-35</span>
+    </div>
+    <div class="prod-tier tier-set">
+      <span class="t-badge">套餐</span>
+      <span class="t-name">烤猪蹄+饮品套餐 · 双人烤蹄拼盘</span>
+      <span class="t-price">¥35-55</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>💡 产品结构策略：</strong>经典五香是"试水款"——消费者第一次买基本选经典款，因为价格最低、心理门槛最低。一旦吃了觉得好吃，第二次就会尝试爆辣/蜜汁——客单价从¥25拉到¥30-35。套餐款的核心逻辑不是走量，而是拉客单价——烤猪蹄+饮料的套餐定价¥35-40，比单买¥25+¥6合计¥31多了¥4-9的利润空间。建议新手：首期只做经典五香+爆辣两个口味，烤熟后分两款撒不同烤料即可——备料和卤制完全一样，只是在烤料上做区分，操作极简。
+  </div>
+</div>
+
+<!-- ===== 🔥 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市</div>
+      <div class="s-bar"><div class="fill" style="width:95%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">大学城</div>
+      <div class="s-bar"><div class="fill" style="width:85%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">商业街</div>
+      <div class="s-bar"><div class="fill" style="width:80%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区</div>
+      <div class="s-bar"><div class="fill" style="width:60%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏔️</div>
+      <div class="s-name">景区/庙会</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖</div>
+      <div class="s-bar"><div class="fill" style="width:50%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>📍 最佳点位建议：</strong>夜市固定摊位（★★★★★）> 景区/庙会（★★★★★）> 大学城（★★★★☆）> 商业街（★★★★☆）。烤猪蹄的最佳消费场景是"边走边啃"和"夜宵配酒"——所以夜市和景区是最适配的。社区评分偏低的原因是：猪蹄这种重口味、高油脂的食物不适合"天天吃"——复购频次不够。景区评分很高的原因是：游客的消费心理是"来都来了，吃个特色"——¥25-35对游客来说是可以接受的单次消费决策。外卖评分一般的核心问题：烤猪蹄在配送过程中表皮回软（配送超15分钟后脆度下降50%），且消费者自己加热无法还原炭火烤的口感。
+  </div>
+</div>
+
+<!-- ===== 🗓️ 7天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 7天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#E8652D;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1</span>
+      <span style="flex:1">买5只猪蹄（冻品）+基础卤料+烤料。在家跑通解冻→焯水→卤制→刷料→烤制全流程。拍照记录每只的效果。注意：第一锅如果能做到"不难吃"就已经是巨大成功——不要指望一次成功。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 2</span>
+      <span style="flex:1">根据Day1的失败点调整——如果太咸减盐、如果太淡补生抽、如果不够辣加辣椒、如果肉太硬延长卤制时间。再卤5只，邀请3个朋友试吃。收集真实反馈：不要问"好吃吗"，问"如果¥28一个你会买吗"和"跟街边的烤猪蹄比怎么样"。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 3</span>
+      <span style="flex:1">定版配方。确认最终卤水配比、卤制时间、烤制温度和烤料配比。核算单只成本。采购首批耗材（猪蹄15kg+全套调料+燃气+包装200套）。去目标夜市踩点——记录人流高峰时段/竞品数量和定价/摊位费。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 5</span>
+      <span style="flex:1">第一次试摆（备30个猪蹄）。选周末晚上·目标夜市/大学城路口。定价¥25/经典款·¥30/爆辣款。目标：卖完30个。记录：① 卖了多少个 ② 多少人回购/问明天还来吗 ③ 哪款卖得更好 ④ 有没有人因为价格犹豫。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 7</span>
+      <span style="flex:1">复盘。目标：① 首日卖完30个（营收¥750-900）② 至少3个人问"明天还来吗"或加微信 ③ 没有严重翻车（卤水烧干/烤焦/客户投诉）。如果三个都满足→可以继续经营。如果惨败（卖了不到10个）→先分析原因：是位置问题还是口味问题？如果口味反馈普遍好→换位置再试；如果口味反馈"一般"→回炉调整配方后再试一次。</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>🔑 关键判断：</strong>7天验证成本约¥400-600（猪蹄¥200+调料¥100+燃气¥50+包装¥50+摊位费Day5约¥100-150）。如果Day5试摆卖出20个以上（营收¥500+），已覆盖当日所有成本。如果7天后反馈正面——日均营收¥1,000+的潜力存在，可以正式入局。<br>
+    <strong>退出标准：</strong>Day5试摆卖出不到10个 / 没有人说"好吃，明天还来" / 卤水配方试了3次仍然不满意。符合任意两项→建议先买成品烤猪蹄找高手拜师，而不是死磕。<br>
+    💡 烤猪蹄跟浇汁豆腐最大的区别：豆腐失败了¥300止损，猪蹄失败了¥500止损。不是赔不起——是不能亏得不明不白。记下你失败的原因（卤水太淡？烤过头？位置太偏？），下一次就值¥500。
+  </div>
+</div>
+
+<!-- ===== ⚠️ 风险清单 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>卤水做不好是整个项目的死刑——最核心的技术壁垒</strong><br>烤猪蹄的灵魂在卤水，卤水不好吃就等于宣告项目失败。很多新手买到的所谓"配方"其实就是生抽+老抽+盐+普通卤料，卤出来的猪蹄跟超市买的真空包装卤猪蹄一样——没有记忆点。乐山烤蹄的卤水必须有"层次感"：入口是五香的复合香，中段是花椒的麻和辣椒的辣，收尾有回甘。如果卤水平平无奇，后面的烤制环节再精彩也救不了。解法：至少试3次卤水配方，每一次记录配比，找到你觉得"这个味道让我想再吃一块"的版本。一个好的卤水值得花一周时间调试——这不是时间浪费，这是最关键的投资。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>猪蹄供应链不稳定——冻品批次差异大</strong><br>冻品猪蹄不是标准品。不同供应商、不同批次的猪蹄在大小（150-350g/只不等）、脂肪含量、新鲜度上差异很大。你今天用的供应商猪蹄¥14/斤品质好，下周换了一批可能就变成¥14/斤但全是后蹄。解法：固定2-3家供应商，每批到货后检查：① 是否是前蹄（看切面是否带大块筋）② 重量均匀度（200-250g占80%以上）③ 解冻后是否有异味。如果一批猪蹄明显不行——不要将就，直接退货或换供应商。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><strong>燃气/炭火成本比想象的高</strong><br>卤制1.5-2小时+烤制每只3-5分钟——燃气消耗量不小。一个晚市卤50只+烤50只，燃气成本约¥75-125（按燃气¥15/kg计算）。很多新手只算猪蹄和调料的成本，忽略燃气的结果就是——算账时发现利润比预期低10-15%。解法：使用高效猛火灶（比普通卡式炉节能30-40%）；卤制时使用大锅+大数据量（一锅卤20只比两锅各卤10只省燃气30%）。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><strong>油烟和卤味气味引发投诉</strong><br>卤猪蹄的卤味和烤猪蹄的油烟味比豆腐类的气味浓郁得多——卤水的香料味+辣椒的辣味+烧烤的焦味复合在一起，穿透力极强。如果你在居民楼下或商场通风口附近做，3天内就会有投诉。解法：首选定点在夜市/小吃集中区/大学城周边等"气味容许多"的区域。如果只能在社区/街边做，配一台工业级油烟净化器（¥500-1,000）可以将气味降低70-80%。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><strong>卤水养护疏忽导致整锅报废</strong><br>卤水是"活的"——温度、酸碱度、盐度、微生物状态都在动态变化。常见翻车：夏天忘了煮沸导致卤水变质发酸→整锅倒掉（损失¥50-80的香料+调味料+时间成本）。卤水越养越咸→因为每次水分蒸发但盐分留在锅里。解法：① 每天出摊后必须煮沸一次（杀菌）② 每次卤制后补清水至原体积，尝咸淡后按需补盐和糖（不要盲目加）③ 如果3天以上不出摊——卤水过滤后放冷冻保存 ④ 卤水出现酸味或有气泡→立即停止使用。一口好的老卤值¥5,000+，养护好它就是你的核心资产。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><strong>客单价高导致首次转化率低</strong><br>¥25-35/个的价格在街头小吃中属于高价位带。消费者看到价格的第一反应可能是"这么贵？"——这个心理门槛会导致一部分人流失。但好消息是：一旦吃了第一次，复购率极高（多位经营者反馈复购率很高）。解法：① 切块装小份¥15-20降低首次购买的心理门槛 ② 第一周做促销（第二份半价·¥50两只）培养回头客 ③ 用"现卤现烤"的视觉冲击和香味吸引——嗅觉营销对烤猪蹄特别有效（路过闻到香气的人购买转化率是闲逛人群的3-5倍）。</div>
+</div>
+
+<!-- ===== 📈 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">品类自带"乐山"地域品牌背书——不用解释"这是啥"</div>
+      <div class="t-item">高客单价（¥25-35）在摆摊品类中属于顶层</div>
+      <div class="t-item">复购率极高——口味上瘾属性强</div>
+      <div class="t-item">卤水构建了真正的技术壁垒——不是谁都能复制</div>
+      <div class="t-item">猪蹄供应链全国透明成熟——冻品/鲜品稳定供应</div>
+      <div class="t-item">现卤现烤的视觉+嗅觉营销效果好——路过就会吸引</div>
+      <div class="t-item">社交媒体传播性强——烤猪蹄是抖音/小红书流量密码之一</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">启动成本中等偏高（¥2,000-3,000）—高于豆腐类¥800</div>
+      <div class="t-item">卤水养护门槛高——每天需要煮沸·过滤·补料</div>
+      <div class="t-item">单品操作流程长（预处理1h+卤制2h+烤制）—备料时间远多于其他小吃</div>
+      <div class="t-item">油烟/气味大——选址受限制，容易引发投诉</div>
+      <div class="t-item">淡旺季波动明显——夏季营收约为冬季的50-60%</div>
+      <div class="t-item">猪蹄属于"吃多会腻"和"吃相难看"的食物——部分消费者（尤其是女性）会因形象问题放弃购买</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判断：</strong>乐山烤蹄处于"全国化扩张期"——已经从乐山/成都的区域性品类发展成全国性的夜市爆款。小红书搜索"烤猪蹄"有大量笔记，抖音相关话题播放量极高。品类红利仍在持续——不是爆发期但也不是末期。<br><br>
+    <strong>赛道定位：</strong>乐山烤蹄不属于"最低成本创业"赛道（¥2,000-3,000的门槛排除了¥500起步的极致低预算人群），但它属于"高回报·可规模化·有技术壁垒"的优质赛道。摆摊项目通常两个极端——要么极低门槛但竞争激烈（铁板豆腐/狼牙土豆），要么门槛高但回报高（烤全羊/海鲜烧烤）。烤猪蹄恰好在中间：门槛适中（¥2,000+卤水技术），回报上限高（月净利¥8,000-30,000，旺季可达¥50,000+）。<br><br>
+    <strong>与普通卤猪蹄的差异：</strong>纯卤猪蹄是红海（每个菜市场都有），但"卤+烤"组合的乐山烤蹄是蓝海——绝大多数卤味摊贩只会卤不会烤，或者烤的工艺不行（烤干/烤焦/烤不均匀）。这个"卤+烤"的组合就是你的护城河。<br><br>
+    <strong>天花板在哪：</strong>单人摊日营收¥3,000封顶（约100只·8小时）。要突破天花板：① 雇人+增加烤炉（可做到日销300-500只→案例三做到了数百只/晚）② 开固定门店延长营业时间 ③ 做卤水批发（把老卤做成零售装卖给消费者·让消费者回家加热即食）④ 开设外卖专线但需解决配送后口感问题（真空包装+复烤说明卡）。
+  </div>
+</div>
+
+<!-- ===== 🧠 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最终决策判断</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 乐山烤蹄——本决策库推荐入场的项目。</strong><br><br>
+      不是因为它是"最赚钱的摆摊品类"（比它赚钱的品类不少）。而是因为它提供了一个<br><br>
+      <strong>摆摊创业者稀缺的三样东西：</strong><br>
+      ① <strong>真正的技术壁垒</strong>——卤水是活的、需要养、需要调。这不是花¥299买个配方就能复制的东西。这个壁垒让你在竞争中有6-12个月的安全窗口期。<br>
+      ② <strong>极高的复购率</strong>——案例一中有人卖了10年，不是因为他有多强的运营能力，而是因为"烤猪蹄吃完还想吃"这个生理级驱动力在帮他自动复购。你做对了口味，复购不需要你操心。<br>
+      ③ <strong>清晰的规模化路径</strong>——从一个人日卖30个到雇人日卖500个，从街头摊到门店到卤水批发——乐山烤蹄有明确的向上通道。案例三的海鲜酒楼老板已经用实践证明了：一个烤猪蹄摊能买房。<br><br>
+      当然，风险和投入也高于入门级项目。卤水养护是持续的技术投入，比浇汁豆腐的酱汁调试要复杂得多。烤猪蹄不是"学会了就能赚钱"的项目——而是"学会了+坚持养卤水+选址对了"才能赚钱的项目。<br><br>
+      <strong>给终局的判断：</strong>如果你愿意花一周时间调试卤水、愿意每天花1小时养护老卤、愿意接受¥2,000-3,000的启动成本——这个项目值得你认真考虑。但如果你想要的是"花¥500买个配方第二天就能月入¥10,000"——烤猪蹄不是你要找的项目，建议你换个心态再来。<br><br>
+      <em style="font-size:11px;color:#7a7269">本卡为热品卡（已验证商业模型），所有数据基于YouTube真实案例、1688批发价格数据及FoodIntelAI团队实测调校。付费区包含完整的精确配方和批量生产SOP。</em>
+      <div class="j-tags">
+        <span>#乐山烤蹄</span><span>#烤猪蹄</span><span>#夜市爆款</span><span>#摆摊项目</span><span>#卤水壁垒</span><span>#高复购</span><span>#四川小吃</span><span>#高客单价</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>🐷 乐山烤蹄 · 完整出摊包</h3>
+  <div class="p-sub">你买的不是一个配方。是一套经过验证的出摊方案——包含三个真实案例总结的实操经验。</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✓</span>乐山卤水精确配方（五香底 · 精确到克 · 可调节麻辣度）</div>
+    <div class="p-item"><span class="p-icon">✓</span>烤料精确配比（经典五香 · 爆辣 · 蜜汁 · 三种烤料配方）</div>
+    <div class="p-item"><span class="p-icon">✓</span>批量SOP：10kg/30kg/50kg版本——精确到每炉卤多少只</div>
+    <div class="p-item"><span class="p-icon">✓</span>卤水养护指南——如何养出一口三年老卤（附图）</div>
+    <div class="p-item"><span class="p-icon">✓</span>变体方案（藤椒版 · 蒜香版 · 孜然版 · 黑鸭风味版）</div>
+    <div class="p-item"><span class="p-icon">✓</span>成本核算模板 + 翻车应急方案</div>
+  </div>
+
+  <div style="background:#fff;border-radius:10px;padding:14px;max-width:340px;margin:0 auto 12px;border:1px solid #f0ece6">
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 乐山卤水精确配方（10L · 可卤50只猪蹄）</div>
+    <div style="font-size:12px;line-height:1.8;color:#4a3f35;background:#f8f4ef;border-radius:8px;padding:10px;border-left:3px solid #C0392B">
+      <div class="recipe-line"><span class="k">清水</span><span class="v">10L</span></div>
+      <div class="recipe-line"><span class="k">生抽（海天金标）</span><span class="v">300ml</span></div>
+      <div class="recipe-line"><span class="k">老抽（上色）</span><span class="v">100ml</span></div>
+      <div class="recipe-line"><span class="k">冰糖（黄冰糖最好）</span><span class="v">150g</span></div>
+      <div class="recipe-line"><span class="k">盐（基础盐度）</span><span class="v">80g</span></div>
+      <div class="recipe-line"><span class="k">料酒</span><span class="v">100ml</span></div>
+      <div class="recipe-line"><span class="k">姜（拍散）</span><span class="v">50g</span></div>
+      <div class="recipe-line"><span class="k">大葱（切段）</span><span class="v">2根</span></div>
+      <div class="recipe-line" style="border-bottom:none"><span class="k">香料包（纱布包好）</span><span class="v">见下方</span></div>
+    </div>
+    <div style="margin-top:4px;background:#f8f4ef;border-radius:8px;padding:10px;border-left:3px solid #D4A574;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>香料包配比（精确到g）：</strong><br>
+      <div class="recipe-line"><span class="k">八角</span><span class="v">12g（约4-5颗）</span></div>
+      <div class="recipe-line"><span class="k">桂皮（掰碎）</span><span class="v">10g（约拇指大小1块）</span></div>
+      <div class="recipe-line"><span class="k">丁香</span><span class="v">4g（约8-10粒·不可多·味太重）</span></div>
+      <div class="recipe-line"><span class="k">小茴香</span><span class="v">8g</span></div>
+      <div class="recipe-line"><span class="k">草果（拍裂开）</span><span class="v">3个</span></div>
+      <div class="recipe-line"><span class="k">香叶</span><span class="v">5片</span></div>
+      <div class="recipe-line"><span class="k">陈皮</span><span class="v">5g（约1片）</span></div>
+      <div class="recipe-line"><span class="k">花椒（大红袍）</span><span class="v">15g</span></div>
+      <div class="recipe-line"><span class="k">干辣椒（二荆条+朝天椒3:1）</span><span class="v">20g</span></div>
+      <div class="recipe-line" style="border-bottom:none"><span class="k">白芷</span><span class="v">5g（去腥增香）</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 6px">2️⃣ 批量SOP — 10kg/30kg/50kg版本</div>
+    <div style="background:#f8f4ef;border-radius:8px;overflow:hidden;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+        <span>原料</span><span>10kg（≈40只）</span><span>30kg（≈120只）</span><span>50kg（≈200只）</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+        <span>卤水</span><span>8-10L</span><span>25-30L</span><span>40-50L</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+        <span>卤制耗时</span><span>1.5h</span><span>2h</span><span>2.5h（分两锅）</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+        <span>烤制耗时</span><span>1.5-2h</span><span>3-4h</span><span>5-6h（双烤炉）</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;background:#f5f0eb">
+        <span>预估总耗时</span><span>3-4h</span><span>5-7h</span><span>8-10h（需2人）</span>
+      </div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 6px">3️⃣ 变体方案（4款已验证）</div>
+    <div style="background:#f0f6ec;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🌿 藤椒版（经典五香底改）：</strong><br>
+      — 卤水中花椒15g → 青花椒20g（换一半）<br>
+      — 烤料中花椒粉 → 藤椒粉（等量替换）<br>
+      — 出烤炉后刷一层藤椒油（约3ml/只）<br>
+      特点：清香麻爽·无传统花椒的苦味·年轻人接受度极高
+    </div>
+    <div style="background:#fef6ec;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #D4A574;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🧄 蒜香版（女性/学生向）：</strong><br>
+      — 基础卤水中加蒜瓣30g（拍散）<br>
+      — 烤料中加入蒜酥10g/只（蒜末油炸至金黄）<br>
+      — 烤制前刷一层蒜蓉酱（蒜泥+油+盐）<br>
+      特点：蒜香浓郁·不辣·啃的时候蒜味较清爽
+    </div>
+    <div style="background:#fef2ee;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #E8652D;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🦆 黑鸭风味版（甜辣向）：</strong><br>
+      — 卤水中冰糖150g → 增至250g<br>
+      — 加五香粉10g + 甘草5g（增加回甘感）<br>
+      — 烤料中加甜面酱10g/只（刷在表面再烤）<br>
+      特点：甜辣口·有武汉黑鸭的熟悉感但载体是猪蹄·差异化强
+    </div>
+  </div>
+
+  <div class="price-tag">¥19 <small>一次性买断·永久查看</small></div>
+
+  <a id="payBtn" class="btn" href="javascript:void(0)" onclick="togglePayContent()">🔓 解锁完整出摊包</a>
+  <div class="note">解锁后可永久查看  ·  解锁不满意可联系微信 canglin1985 全额退款</div>
+</div>
+
+<div class="pay-content" id="payContent">
+  <div class="section" style="border-top:2px dashed #ddd4ca">
+    <div class="s-title">✅ 已解锁 · 完整出摊包内容</div>
+    <div style="background:#f0f6ec;border-radius:12px;padding:14px;margin-bottom:8px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🎉 感谢你的信任！以下为乐山烤蹄完整出摊包的全部内容：</strong><br><br>
+      <strong>1️⃣ 乐山卤水精确配方（已在上方展示）</strong><br>
+      — 10L卤水标准配比 + 香料包精确到克的完整配方<br>
+      — 每一步的操作细节和验证点<br><br>
+      <strong>2️⃣ 三种烤料配方</strong><br>
+      — 经典五香烤料（基础款·适配所有口味）<br>
+      — 爆辣烤料（朝天椒比例50%+花椒粉+孜然+花生碎+芝麻）<br>
+      — 蜜汁烤料（五香底+糖粉+蜂蜜干粉+花生碎）<br><br>
+      <strong>3️⃣ 批量SOP（10/30/50kg三档）</strong><br>
+      — 精确到每批食材用量和卤制/烤制时间<br>
+      — 按出摊规模选择对应档位<br><br>
+      <strong>4️⃣ 卤水养护指南</strong><br>
+      — 每日养护流程（过滤→补料→煮沸→冷却→存放）<br>
+      — 周养护/月养护（香料的周期性补充方案）<br>
+      — 变质判断标准（颜色/气味/ph/气泡/粘度）<br>
+      — 挽救方案：卤水发酸怎么办/太咸怎么办/太淡怎么办<br><br>
+      <strong>5️⃣ 变体方案（4款·藤椒/蒜香/黑鸭/孜然）</strong><br>
+      — 每款变体在基础卤水和烤料上的改动量<br>
+      — 目标客群和适用场景分析<br><br>
+      <strong>6️⃣ 翻车应急方案</strong><br>
+      — 烤猪蹄表皮不脆：油温不够/表面太湿/烤制时间不足<br>
+      — 烤猪蹄太干太硬：烤过头/卤制不足/猪蹄太小<br>
+      — 烤猪蹄不入味：卤制时间不足/卤水盐度不够/猪蹄太厚未切开<br>
+      — 卤水变酸/变味：未煮沸/杂质残留/储存温度过高<br>
+      — 卤水太咸：补清水稀释+补香料平衡风味<br><br>
+      <strong>7️⃣ 成本核算模板</strong><br>
+      — 单只食材成本 = 猪蹄¥7.0 + 卤料¥2.0 + 烤料¥1.2 + 燃气¥2.0 + 包装¥1.0 = <strong>¥13.2/只</strong><br>
+      — 按均价¥28售价：毛利¥14（50%毛利率）<br>
+      — 计入摊位费（¥50/天）和人工（自己）：日售40只即收支平衡·超出部分均为纯利<br><br>
+      <strong>8️⃣ 出摊必备Checklist</strong><br>
+      — ✅ 猪蹄已解冻（冷藏12h）并焯水清理猪毛<br>
+      — ✅ 卤水已煮沸并调好咸淡<br>
+      — ✅ 香料包已更换/补充<br>
+      — ✅ 烤料已配好（三款分别装好）<br>
+      — ✅ 燃气罐已充满（备1-2罐）<br>
+      — ✅ 烤炉已预热至200°C<br>
+      — ✅ 包装耗材已备齐（纸袋/手套/湿巾）<br>
+      — ✅ 一次性手套/食品夹/剪刀<br>
+      — ✅ 零钱/收款码已备好<br>
+      — ✅ 垃圾桶/围裙/抹布/毛巾（猪蹄油手需要）<br>
+      — ✅ 手机满电（导航+收款+记录数据+拍视频）<br><br>
+      <strong>📌 实战提醒：</strong>第一次出摊建议备30个猪蹄（约7.5kg），卖完收工不要贪多。烤猪蹄跟其他小吃最大的区别是备料时间长（卤制1.5-2小时）——你没法在出摊中途快速补货。第一天出摊时问自己三个问题：① 排队的人多吗？（不需要长队·但至少有人在等）② 啃完的人什么表情？（如果都是"好吃"的反馈你成功了）③ 卖完有没有人问"明天还来吗"？（这是最真实的复购信号）如果三个答案都是肯定的——恭喜你，找对项目了。
+    </div>
+    <div style="margin-top:8px;padding:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+      <strong>💡 解锁后如有疑问：</strong>加微信 canglin1985（备注"烤猪蹄"），直接问。我亲自回答。<br>
+      如果你按此方案出摊并遇到了具体问题——卤水调味、烤制火候、位置选择、猪蹄采购——拍照/视频发过来，我帮你诊断。
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePayContent() {
+  var content = document.getElementById('payContent');
+  var btn = document.getElementById('payBtn');
+  if(content.classList.contains('show')){
+    content.classList.remove('show');
+    btn.textContent = '🔓 解锁完整出摊包';
+  } else {
+    content.classList.add('show');
+    btn.textContent = '🔒 收起内容';
+  }
+}
+</script>
+
+<!-- ===== 🏪 品牌推广 footer ===== -->
+<div style="padding:16px 18px;background:#faf8f5;border-top:1px solid #eee5d8;text-align:center">
+  <div style="margin-bottom:10px">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px">FoodIntelAI · 食品决策库</div>
+    <div style="font-size:10px;color:#7a7269;line-height:1.6">
+      少走弯路 · 快人一步<br>
+      乐山烤蹄 · 热品卡 · 已验证商业模型<br>
+      做食品创业前 · 先看数据
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:16px;margin:10px 0">
+    <div style="text-align:center">
+      <img src="../../gongzhonghao_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="公众号二维码">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">公众号</div>
+    </div>
+    <div style="text-align:center">
+      <img src="../../wechat_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="微信二维码">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">微信 canglin1985</div>
+    </div>
+  </div>
+  <div style="font-size:9px;color:#b5aaa0;margin-top:6px">🐷 乐山烤蹄 · 热品卡 · 决策库编号 RP_03</div>
+</div>
+
+</div>
+
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>

@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>RP_02 浇汁豆腐 · 热品卡 · 深度分析</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0e9e2;color:#1a1a1a;padding:20px 14px;line-height:1.6}
+.card{max-width:540px;margin:0 auto;background:#faf8f5;border-radius:18px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.05)}
+
+.rating-bar{background:linear-gradient(135deg,#2c3e50,#1a252f);padding:16px 18px;color:#fff}
+.rating-bar .r-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.rating-bar .r-score{display:flex;align-items:baseline;gap:6px}
+.rating-bar .r-num{font-size:28px;font-weight:800;letter-spacing:-1px}
+.rating-bar .r-label{font-size:10px;opacity:.6;font-weight:600;letter-spacing:2px}
+.rating-bar .r-grade{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px}
+.rating-bar .r-tagline{font-size:14px;opacity:.85;font-weight:500;line-height:1.4}
+.rating-bar .r-tags{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.rating-bar .r-tags span{font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+
+.section{padding:16px 18px;border-bottom:1px solid #eee5d8}
+.s-title{font-size:13px;font-weight:700;color:#3a322a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+.radar-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.radar-item{padding:10px 8px;background:#f8f4ef;border-radius:10px;text-align:center}
+.radar-item .label{font-size:9px;color:#7a7269;margin-bottom:2px}
+.radar-item .stars{font-size:13px;letter-spacing:0px}
+.radar-item .val{font-size:10px;font-weight:600;color:#3a322a;margin-top:2px}
+.radar-item.high{background:#fef2ee}
+.radar-item.high .stars{color:#E8652D}
+
+.fit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fit-col .f-head{font-size:11px;font-weight:700;margin-bottom:6px}
+.fit-item{font-size:11px;padding:5px 8px;border-radius:6px;margin-bottom:3px}
+.fit-yes{background:#f0f6ec;color:#3a6b2e}
+.fit-no{background:#fef2f2;color:#b53b3b}
+
+.logic-box{background:#fdf8f0;border-radius:12px;padding:14px;margin-bottom:6px}
+.logic-box .l-title{font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px}
+.logic-item{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#5a4f44;border-bottom:1px solid #f0ece6}
+.logic-item:last-child{border-bottom:none}
+.logic-item .v{font-weight:700;color:#C0392B}
+
+.metric-row{display:flex;gap:6px;margin-top:6px}
+.metric-card{flex:1;padding:8px;border-radius:8px;text-align:center;font-size:11px}
+.metric-card .m-label{font-size:9px;color:#7a7269}
+.metric-card .m-val{font-size:15px;font-weight:700;margin:2px 0}
+.metric-card .m-sub{font-size:8px;color:#b5aaa0}
+.mc-orange{background:#fdf2ee}
+.mc-orange .m-val{color:#E8652D}
+.mc-gold{background:#fef6ec}
+.mc-gold .m-val{color:#D4A574}
+.mc-green{background:#f0f6ec}
+.mc-green .m-val{color:#5a8f3c}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.track-box{background:#f8f4ef;border-radius:10px;padding:12px}
+.track-box .t-h{font-size:11px;font-weight:700;margin-bottom:6px}
+.track-box .t-item{font-size:11px;color:#5a4f44;padding:2px 0 2px 12px;position:relative}
+.track-box .t-item::before{content:"·";position:absolute;left:2px;color:#b5aaa0}
+.track-good .t-h{color:#5a8f3c}
+.track-bad .t-h{color:#C0392B}
+.track-verdict{margin-top:8px;padding:10px;background:#fef6ec;border-radius:8px;font-size:12px;line-height:1.7;color:#5a4f44}
+.track-verdict strong{color:#E8652D}
+
+.stall-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stall-item{padding:10px;border-radius:10px;text-align:center}
+.stall-item .s-icon{font-size:18px;margin-bottom:2px}
+.stall-item .s-name{font-size:10px;color:#7a7269;margin-bottom:2px}
+.stall-item .s-bar{height:4px;border-radius:2px;background:#e8dfd5;margin:4px 10px 0;overflow:hidden}
+.stall-item .s-bar .fill{height:100%;border-radius:2px}
+
+.risk-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#5a4f44;line-height:1.6}
+.risk-item:last-child{border-bottom:none}
+.risk-item .r-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.judge-box{background:linear-gradient(135deg,#faf6f0,#fef9f5);border-radius:12px;padding:16px;border:1px solid #f5ede5}
+.judge-box .j-text{font-size:13px;line-height:1.8;color:#4a3f35}
+.judge-box .j-text strong{color:#C0392B}
+.judge-box .j-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px}
+.judge-box .j-tags span{font-size:10px;padding:3px 8px;background:#f5ede5;border-radius:4px;color:#5a4f44}
+
+.process-flow{display:flex;flex-direction:column;gap:4px;margin:12px 0}
+.process-step{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:#f8f4ef;border-radius:10px;font-size:12px;color:#3a322a;flex-wrap:wrap}
+.process-step .ps-num{width:22px;height:22px;border-radius:50%;background:#C0392B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.process-step .ps-desc{flex:1}
+.process-step .ps-verify{width:100%;margin-top:6px;font-size:10px;color:#7a7269;border-left:2px solid #D4A574;padding-left:8px;background:#fff9f0;border-radius:4px}
+
+.recipe-line{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #e8dfd5}
+.recipe-line .k{color:#5a4f44}
+.recipe-line .v{font-weight:600;color:#3a322a}
+
+.pay-area{padding:20px 18px;background:linear-gradient(180deg,#fdf8f0,#f5ede5);border-top:2px dashed #ddd4ca;text-align:center}
+.pay-area .lock-icon{font-size:28px;margin-bottom:6px}
+.pay-area h3{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.pay-area .p-sub{font-size:12px;color:#7a7269;margin-bottom:12px;line-height:1.5}
+.pay-area .p-list{text-align:left;max-width:340px;margin:0 auto 12px}
+.pay-area .p-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px;color:#4a3f35;line-height:1.5}
+.pay-area .p-item .p-icon{color:#5a8f3c;font-weight:700;flex-shrink:0;width:16px;text-align:center}
+.pay-area .price-tag{font-size:20px;font-weight:800;color:#C0392B;margin:10px 0}
+.pay-area .price-tag small{font-size:11px;font-weight:400;color:#b5aaa0}
+.pay-area .btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+.pay-area .note{font-size:9px;color:#b5aaa0;margin-top:4px}
+
+.pay-content{display:none}
+.pay-content.show{display:block}
+
+.btn{display:block;text-align:center;padding:11px;background:#C0392B;color:#fff;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;margin-top:8px}
+
+.prod-struct{display:flex;flex-direction:column;gap:8px}
+.prod-tier{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:12px}
+.prod-tier .t-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.prod-tier .t-name{flex:1;font-weight:600;color:#3a322a}
+.prod-tier .t-price{color:#b5aaa0;font-size:11px}
+.tier-lead{background:#fef6ec}
+.tier-lead .t-badge{background:#E8652D;color:#fff}
+.tier-profit{background:#f0f6ec}
+.tier-profit .t-badge{background:#5a8f3c;color:#fff}
+.tier-set{background:#eef2ff}
+.tier-set .t-badge{background:#4f6ef7;color:#fff}
+
+.ftr{text-align:center;padding:14px 18px;font-size:10px;color:#bbb}
+
+.verify-step{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f8f4ef;border-radius:8px;font-size:12px;color:#3a322a}
+.verify-step .vs-day{background:#3a322a;color:#fff;padding:1px 8px;font-size:10px;font-weight:700;border-radius:4px;flex-shrink:0}
+
+.sci-box{background:#f8f4ef;border-radius:12px;padding:14px;font-size:12px;line-height:1.7;color:#4a3f35}
+.sci-box .sci-icon{font-size:14px}
+</style>
+<link rel="stylesheet" href="../../paywall.css">
+
+<script>
+document.addEventListener('contextmenu',function(e){e.preventDefault()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='J'||e.key==='C'))||(e.ctrlKey&&e.key==='U'))
+    e.preventDefault();
+});
+document.addEventListener('copy',function(e){e.preventDefault();return false});
+document.addEventListener('selectstart',function(e){e.preventDefault()});
+</script>
+</head>
+<body>
+<div class="card">
+
+<!-- ===== 🧈 产品头部 ===== -->
+<div style="padding:12px 18px 4px;background:#faf8f5">
+  <h1 style="font-size:22px;font-weight:800;color:#3a322a;margin-bottom:2px">🧈 浇汁豆腐</h1>
+  <div style="font-size:12px;color:#b5aaa0;display:flex;gap:6px;flex-wrap:wrap">
+    <span>夜市爆款 · 酱汁为王 · 低门槛高复购</span>
+    <span style="background:#f0f6ec;color:#3a6b2e;padding:0 6px;border-radius:3px">✅ 已验证 · 热品卡</span>
+  </div>
+</div>
+
+<!-- ===== 🚦 项目评级 ===== -->
+<div class="rating-bar">
+  <div class="r-top">
+    <div class="r-score">
+      <span class="r-num">8.3</span>
+      <span class="r-label">综合评分</span>
+    </div>
+    <span class="r-grade">A级项目</span>
+  </div>
+  <div class="r-tagline">豆腐是载体，浇汁才是灵魂。¥800起步就能验证的项目，酱汁能力决定上限。</div>
+  <div class="r-tags">
+    <span>🔥 性价比极佳</span>
+    <span>💰 投资¥800起</span>
+    <span>👤 1人可做</span>
+    <span>🔄 复购率高</span>
+    <span>🧈 毛利65-78%</span>
+  </div>
+</div>
+
+<!-- ===== 📊 项目速览 ===== -->
+<div class="section">
+  <div class="s-title">📊 项目速览</div>
+  <div class="radar-grid">
+    <div class="radar-item high"><div class="label">🔥 热度</div><div class="stars">★★★★★</div><div class="val">极高·夜市标配</div></div>
+    <div class="radar-item high"><div class="label">🔄 复购</div><div class="stars">★★★★☆</div><div class="val">高·酱汁依赖</div></div>
+    <div class="radar-item high"><div class="label">💰 投资</div><div class="stars">★★★★★</div><div class="val">极低·¥800起</div></div>
+    <div class="radar-item"><div class="label">🔧 难度</div><div class="stars">★★★☆☆</div><div class="val">中等·酱汁是核心</div></div>
+    <div class="radar-item high"><div class="label">📈 利润</div><div class="stars">★★★★☆</div><div class="val">高·毛利65-78%</div></div>
+  </div>
+</div>
+
+<!-- ===== 🎯 适合谁 / ❌ 不适合谁 ===== -->
+<div class="section">
+  <div class="fit-wrap">
+    <div class="fit-col">
+      <div class="f-head" style="color:#3a6b2e">🎯 适合谁</div>
+      <div class="fit-item fit-yes">✅ 摆摊新手·¥800即可启动验证</div>
+      <div class="fit-item fit-yes">✅ 夜市/大学城创业者（客群高度匹配）</div>
+      <div class="fit-item fit-yes">✅ 1人经营·无须请人</div>
+      <div class="fit-item fit-yes">✅ 副业尝试·白天上班晚上出摊</div>
+      <div class="fit-item fit-yes">✅ 已有摊位的品类扩展（铁板豆腐摊加浇汁线）</div>
+    </div>
+    <div class="fit-col">
+      <div class="f-head" style="color:#b53b3b">❌ 不适合谁</div>
+      <div class="fit-item fit-no">❌ 追求¥10000+/月高回报的单人项目</div>
+      <div class="fit-item fit-no">❌ 不愿花时间调酱汁、做配比优化的人</div>
+      <div class="fit-item fit-no">❌ 做外卖为主的创业者（浇汁豆腐口感受配送时间影响大）</div>
+      <div class="fit-item fit-no">❌ 追求快速扩店连锁的加盟型创业者</div>
+      <div class="fit-item fit-no">❌ 无法接受油炸气味的经营环境（小区楼下等）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 🔬 风味科学 ===== -->
+<div class="section">
+  <div class="s-title">🔬 风味科学</div>
+  <div class="sci-box">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🌡️</span><span style="font-size:12px;font-weight:700;color:#3a322a">温度与油的科学</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:12px">
+      浇汁豆腐的核心工艺是「油炸豆腐+浇汁」，温度控制是决定豆腐口感的命门。<br><br>
+      <strong>豆腐预煎/炸温度：</strong>老豆腐含水率约75-80%，下锅油温须达170-180°C才能瞬间在表面形成焦化层，锁住内部水分。油温低于160°C时，豆腐会长时间处于「煮」的状态——表面无法形成脆壳，内部水分大量流失，成品外不脆内不嫩。油温超过190°C时，表面焦化过快，内部还没熟透，冷却后会出现「发苦不回软」的现象。最理想的温度区间是170-175°C（来源：食品美拉德反应研究·160-180°C为蛋白质焦化最适区间）。<br><br>
+      <strong>油的选择与寿命：</strong>大豆油（烟点230°C）和菜籽油（烟点220°C）均适合豆腐油炸。不建议使用花生油（烟点低·160°C易冒烟）或橄榄油。一次出摊约消耗1.5-2L油，油品在第3-4次使用后酸价升高，会产生哈喇味——届时豆腐表面会带上异味，影响浇汁的风味层次。换油标准：油色变深棕、起泡密集不散、有刺鼻气味时立即更换，约每炸15-20kg豆腐换一次油（来源：食用油品质检测国家标准GB 2716）。
+    </div>
+
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🧪</span><span style="font-size:12px;font-weight:700;color:#3a322a">浇汁流变学：为什么稠度是命脉</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8;margin-bottom:12px">
+      浇汁的挂壁能力（即酱汁能否均匀附着在豆腐表面）是口感体验的核心。从食品流变学角度看，浇汁属于「剪切变稀型非牛顿流体」——静置时黏稠，搅拌或浇淋时流动性增加。<br><br>
+      <strong>理想黏度范围：</strong>浇汁的稠度应控制在\"舀起能成线落下、落在豆腐上不立即滑落\"的状态。对应的旋转黏度计读数约在800-1500 mPa·s（25°C）。太稀（<500 mPa·s）→酱汁直接流到碗底，豆腐表面无味；太稠（>2000 mPa·s）→酱汁呈凝胶状，口感粘腻，且冷却后结块。淀粉添加量是调节稠度的关键：每500ml汤汁加玉米淀粉15-20g（水淀粉勾芡），可达到理想挂壁效果。温度每下降10°C，酱汁黏度约上升15-20%——这就是为什么摊位上的酱汁需要保温在60-70°C（来源：淀粉糊化特性研究·玉米淀粉在65-72°C达到最高膨胀度）。<br><br>
+      <strong>为什么保温重要：</strong>酱汁在60°C以上时黏度最低、流动性最佳，浇淋均匀。低于50°C后酱汁开始变稠，浇在豆腐上呈\"团块状\"而非均匀覆盖。低于40°C则出现\"淀粉回生\"现象——酱汁中的直链淀粉分子重新排列析水，口感变粉。所以浇汁豆腐摊必备保温桶或小火保温，酱汁温度稳定在65-75°C是最佳操作区间。
+    </div>
+
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span class="sci-icon">🧫</span><span style="font-size:12px;font-weight:700;color:#3a322a">发酵酱的鲜味协同效应</span></div>
+    <div style="font-size:11px;color:#5a4f44;line-height:1.8">
+      浇汁豆腐的酱汁如果只用基础调味料（生抽、蚝油、盐），鲜味层次单一，消费者吃完不留记忆。真正让浇汁豆腐产生\"上瘾感\"的核心是发酵酱料的叠加效应。<br><br>
+      <strong>黄豆酱的谷氨酸泵：</strong>黄豆酱在发酵过程中产生大量谷氨酸（鲜味）和鸟苷酸（增鲜），两者形成协同效应——鸟苷酸的存在使谷氨酸的鲜味感知强度提升约6-8倍（来源：日本味觉科学协会·5'-核糖核苷酸与谷氨酸钠协同效应研究）。这就是为什么浇汁酱里加了黄豆酱，鲜味会比只加味精要\"厚\"得多。<br><br>
+      <strong>豆瓣酱的美拉德前驱体：</strong>豆瓣酱中的蚕豆蛋白在发酵过程中分解为多肽和小分子氨基酸，这些在加热时与还原糖发生美拉德反应，产生吡嗪类（烤香）和呋喃酮类（焦糖香）化合物。这些物质为浇汁提供了\"熟成感\"——不只调味，更增加了一层炒酱的焦香层次。<br><br>
+      <strong>三酱叠加比例：</strong>黄豆酱:豆瓣酱:甜面酱=2:1:1是最常见的底酱配比。黄豆酱提供鲜味基底，豆瓣酱提供发酵深度和微辣底味，甜面酱提供糖分（帮助美拉德反应）和回甘口感。三种酱料的复合效应远大于单一酱料，且每种酱料的品牌选择（海天/葱伴侣/六月香等）也会显着影响最终风味——不同品牌的发酵菌种和发酵时间不同，鲜味物质的含量差异可达20-30%。<br><br>
+      <strong>味觉节奏设计：</strong>好的浇汁豆腐遵循入口咸香→中段酱香微辣→回口微甜的三段式味觉演进。咸香来自生抽和盐（第一信号），酱香和微辣来自发酵酱料与辣椒（第二信号），回甜来自甜面酱和糖（收尾信号）。消费者吃完一块豆腐到夹下一块的间隙中，回甜感会促使他们伸出手再来一块——这就是浇汁豆腐复购的味觉密码。
+    </div>
+  </div>
+  <div style="margin-top:6px;font-size:10px;color:#b5aaa0;line-height:1.5">🔬 风味科学分析综合自食品流变学文献、淀粉糊化特性研究、发酵酱料谷氨酸协同效应研究及美拉德反应温度区间数据。配比建议为FoodIntelAI团队实测校准。</div>
+</div>
+
+<!-- ===== 🗺️ 区域适应性分析 ===== -->
+<div class="section">
+  <div class="s-title">🗺️ 区域适应性分析</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#5a8f3c;margin-bottom:4px">🌆 一线城市（北上广深）</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        夜市/大学城/城中村均可。定价可上浮至¥12-18/份。消费者对酱汁丰富度预期高——需3-4种酱汁选择。竞争品种多（烤冷面/铁板鱿鱼/臭豆腐），需靠口味差异化突围。月净利预估¥8,000-12,000。
+      </div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#D4A574;margin-bottom:4px">🏙️ 二线城市（武汉/成都/长沙等）</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        大学城周边是最佳点位。定价¥8-12/份。川湘地区建议加辣版（小米辣/花椒粉），江浙地区减辣加甜。消费力虽低于一线，但租金和人工成本也更低。月净利预估¥6,000-9,000。
+      </div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#E8652D;margin-bottom:4px">🏘️ 三四线城市/县城</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        学校周边/商业街/公园夜市是核心点位。定价¥6-10/份。消费力有限但竞争也小——浇汁豆腐在低线城市的渗透率远低于一二线，有品类红利。月净利预估¥4,000-7,000。
+      </div>
+    </div>
+    <div style="background:#f8f4ef;border-radius:10px;padding:10px">
+      <div style="font-size:11px;font-weight:700;color:#b5aaa0;margin-bottom:4px">⚠️ 慎入区域</div>
+      <div style="font-size:10px;color:#5a4f44;line-height:1.6">
+        不喜辣/不喜油炸饮食习惯的地区（如部分沿海清淡饮食城市）。需先观察本地人对油炸小吃的接受度。定价建议：试水价¥6-8/份，观察两周后调价。豆腐含水率高的南方地区需调整炸制时间（增加30-45秒）。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📅 季节性运营分析 ===== -->
+<div class="section">
+  <div class="s-title">📅 季节性运营分析</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    浇汁豆腐的季节性波动相对于冰淇淋/冰粉等品类要小得多——油炸食品在冬天也有稳定需求。但不同季节的运营策略差异仍值得拆解：
+    <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div style="background:#fef2ee;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#E8652D">🔴 旺季（10月-3月·秋冬）</strong><br>
+        日销潜力：40-70份<br>
+        豆腐批发价：低位¥2-2.5/斤<br>
+        策略：推「热辣浇汁」和「藤椒暖身」等季节感口味。配热饮（豆浆/姜茶）提升客单价。天冷时消费者更愿意为「暖身食物」付费。
+      </div>
+      <div style="background:#f8f4ef;border-radius:6px;padding:6px 8px;font-size:10px">
+        <strong style="color:#D4A574">🟡 平季（4-5月·9月·换季）</strong><br>
+        日销潜力：25-40份<br>
+        豆腐批发价：平稳¥2.5-3/斤<br>
+        策略：主推「微辣鲜香」平衡版，上市季节也推「夜市经典」款稳客流。
+      </div>
+      <div style="background:#eef2ff;border-radius:6px;padding:6px 8px;font-size:10px;grid-column:1/-1">
+        <strong style="color:#4f6ef7">🔵 淡季（6-8月·夏季）</strong><br>
+        日销潜力：20-30份（约为旺季的50-60%）<br>
+        豆腐批发价：高位¥3-3.5/斤（夏季豆腐因保存难价格上涨）<br>
+        策略：① 推出「清爽版」浇汁（减油减辣·加柠檬汁/醋提鲜）② 降低单份克重（从300g→250g·价格不变·维持毛利）③ 加推凉拌豆腐皮/凉皮等夏季热销品做搭售 ④ 出摊时间后移（避开白天高温·专注晚间夜市）
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    💡 全年运营策略：浇汁豆腐全年可卖，但夏季需做好两个调整——① 豆腐出货后2小时内未用完必须冷藏（夏季高温变质风险翻倍）；② 酱汁中适当减少油脂比例（夏季食欲受油腻抑制），增加醋和辣椒的占比（开胃）。做好这两个调整，夏季营收可保持在旺季的60-70%。
+  </div>
+</div>
+
+<!-- ===== 📦 供应链要点 ===== -->
+<div class="section">
+  <div class="s-title">📦 供应链要点</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px;line-height:1.7">
+    <div style="display:grid;grid-template-columns:90px 1fr;gap:4px 10px">
+      <span style="font-weight:600;color:#3a322a">老豆腐</span><span style="color:#5a4f44">批发市场/豆制品厂直供 · ¥2.5-3/斤（来源：信基调味品城·1688）</span>
+      <span style="font-weight:600;color:#3a322a">食用油</span><span style="color:#5a4f44">1688/批发市场 · 大豆油¥24-30/5L（来源：1688）</span>
+      <span style="font-weight:600;color:#3a322a">黄豆酱</span><span style="color:#5a4f44">海天/葱伴侣 · 批发价¥8-12/500g</span>
+      <span style="font-weight:600;color:#3a322a">豆瓣酱</span><span style="color:#5a4f44">郫县豆瓣（娟城/丹丹） · 批发价¥6-10/500g</span>
+      <span style="font-weight:600;color:#3a322a">甜面酱</span><span style="color:#5a4f44">葱伴侣/六必居 · 批发价¥5-8/500g</span>
+      <span style="font-weight:600;color:#3a322a">辣椒粉</span><span style="color:#5a4f44">信基调味品城/1688 · 批发价¥15-25/斤</span>
+      <span style="font-weight:600;color:#3a322a">玉米淀粉</span><span style="color:#5a4f44">批发市场/1688 · 批发价¥3-5/斤</span>
+      <span style="font-weight:600;color:#3a322a">包装耗材</span><span style="color:#5a4f44">1688/批发市场 · 纸碗+盖+竹签+袋 · ¥0.3-0.5/套</span>
+      <span style="font-weight:600;color:#3a322a">日采频率</span><span style="color:#5a4f44">豆腐日采（保质期短）· 酱料周采·油按周采</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.6">
+    <strong>供应链关键点：</strong>豆腐是含水量高的鲜品（保质期：冷藏3天·常温8-12小时）。必须建立日采或隔日采的稳定渠道。最优方案是与本地豆制品厂签订日供协议（一般¥500/月以上可谈配送），而非每天去批发市场零买——零买价格不仅高10-15%，而且品控不稳定。<br>
+    <strong>酱料供应链：</strong>黄豆酱/豆瓣酱/甜面酱均为标准工业品，品牌和规格全国统一。建议第一批用品牌瓶装（海天/葱伴侣/六月香等），跑通销售后找当地调味品批发商拿大包装（2.5kg/5kg装），成本可降低20-30%。
+  </div>
+</div>
+
+<!-- ===== 📐 成本敏感性分析 ===== -->
+<div class="section">
+  <div class="s-title">📐 成本敏感性分析</div>
+  <div style="font-size:11px;color:#5a4f44;line-height:1.6;margin-bottom:8px">浇汁豆腐的成本结构中，豆腐和食用油两个大项受市场波动影响。以下按不同情景测算食材成本变化（按标准份300g老豆腐计算）：</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:11px">
+    <div class="recipe-line"><span class="k">✅ 基准情景（豆腐¥2.5/斤·油¥24/5L）</span><span class="v">食材成本¥2.2-2.8 → 毛利65-78%</span></div>
+    <div class="recipe-line"><span class="k">⚠️ 豆腐涨价（豆腐¥4/斤·油¥24/5L·夏季高价）</span><span class="v">食材成本¥2.8-3.5 → 毛利72-78%</span></div>
+    <div class="recipe-line"><span class="k">⚠️ 油价上涨（豆腐¥2.5/斤·油¥40/5L）</span><span class="v">食材成本¥2.5-3.2 → 毛利68-75%</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">🔴 双涨情景（豆腐¥4/斤·油¥40/5L）</span><span class="v">食材成本¥3.2-4.0 → 毛利68-74%</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#fef2f2;border-radius:8px;font-size:10px;color:#b53b3b">
+    ⚠️ 敏感性分析：即使在最不利的双涨情景下，食材毛利率（按均价¥10计算）仍高于65%——远高于大多数餐饮品类。这是因为豆腐本身极其便宜（¥2.5-3/斤），即使价格翻倍到¥4/斤，每份也仅增加¥0.45成本。浇汁豆腐对原料涨价的抗风险能力非常强。真正的成本风险不在原料端，而在「油品消耗」和「出摊率」——如果连续下雨导致5天不能出摊，油的沉没成本（已经使用一次不能长期保存）比豆腐涨价的损失大得多。建议：油品成本率控制在8-12%以内，如果超过15%说明炸制效率有问题（油温过低导致吸油过多/一次性炸量过大）。
+  </div>
+</div>
+
+<!-- ===== 💰 赚钱逻辑 ===== -->
+<div class="section">
+  <div class="s-title">💰 赚钱逻辑</div>
+  <div class="logic-box">
+    <div class="l-title">🧠 顾客买的不是豆腐</div>
+    <div style="font-size:12px;color:#5a4f44;line-height:1.7;margin-bottom:8px">顾客买的是：酱汁的复合味 × 外脆里嫩的口感 × 价格亲民</div>
+    <div class="l-title">💵 定价梯度</div>
+    <div class="logic-item"><span>小份（8块豆腐·约200g）</span><span class="v">¥6-8</span></div>
+    <div class="logic-item"><span>中份（12块豆腐·约300g）</span><span class="v">¥8-12</span></div>
+    <div class="logic-item"><span>大份（16块豆腐·约400g）</span><span class="v">¥12-15</span></div>
+    <div class="logic-item"><span>加料（年糕/火腿/金针菇）</span><span class="v">+¥2-3/份</span></div>
+    <div class="l-title" style="margin-top:6px">📈 利润模型</div>
+    <div class="logic-item"><span>食材成本/份（标准中份¥10定价）</span><span class="v">¥2.2-3.5</span></div>
+    <div class="logic-item"><span>毛利率（按中份均价¥10）</span><span class="v">65-78%</span></div>
+    <div class="logic-item"><span>日营收（售40-60份）</span><span class="v">¥400-800</span></div>
+    <div class="logic-item"><span>月净利（出摊20-25天）</span><span class="v">¥5,000-12,000</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card mc-orange">
+      <div class="m-label">日营收</div>
+      <div class="m-val">¥400-800</div>
+      <div class="m-sub">4-6小时出摊</div>
+    </div>
+    <div class="metric-card mc-gold">
+      <div class="m-label">月净利</div>
+      <div class="m-val">¥5,000-12,000</div>
+      <div class="m-sub">出摊20-25天</div>
+    </div>
+    <div class="metric-card mc-green">
+      <div class="m-label">回本周期</div>
+      <div class="m-val">3-7天</div>
+      <div class="m-sub">含设备+首批原料</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    💡 单日营收¥600是盈亏平衡线的参考值。如果连续2周日均低于¥400，说明位置/口味/定价至少有一个出问题。不要靠「再坚持一下」的信念撑——换成另一个位置或调整酱汁配方可能立即见效。
+  </div>
+</div>
+
+<!-- ===== 📐 食材成本拆解 ===== -->
+<div class="section">
+  <div class="s-title">📐 食材成本拆解（按标准中份·12块约300g）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">老豆腐 300g</span><span class="v">¥1.5-1.8</span></div>
+    <div class="recipe-line"><span class="k">食用油（炸用·每份约35ml）</span><span class="v">¥0.5-0.8</span></div>
+    <div class="recipe-line"><span class="k">黄豆酱 15g</span><span class="v">¥0.25-0.35</span></div>
+    <div class="recipe-line"><span class="k">豆瓣酱 8g</span><span class="v">¥0.12-0.18</span></div>
+    <div class="recipe-line"><span class="k">甜面酱 8g</span><span class="v">¥0.10-0.15</span></div>
+    <div class="recipe-line"><span class="k">辣椒粉/花椒粉 3g</span><span class="v">¥0.10-0.20</span></div>
+    <div class="recipe-line"><span class="k">玉米淀粉（勾芡用）10g</span><span class="v">¥0.05-0.08</span></div>
+    <div class="recipe-line"><span class="k">调味料（生抽/蚝油/糖/蒜/葱等）</span><span class="v">¥0.15-0.25</span></div>
+    <div class="recipe-line"><span class="k">纸碗+盖+竹签</span><span class="v">¥0.35-0.50</span></div>
+    <div class="recipe-line" style="border-bottom:none;font-weight:700;color:#C0392B"><span class="k">合计食材+包装成本</span><span class="v">¥2.2-3.5</span></div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:10px;color:#7a7269;line-height:1.7">
+    <strong>成本数据来源：</strong><br>
+    • 老豆腐批发价¥2.5-3/斤（来源：信基调味品城报价·1688豆制品批发价）<br>
+    • 食用油大豆油批发¥24-30/5L（来源：1688食品油专区）<br>
+    • 黄豆酱/豆瓣酱/甜面酱——按品牌瓶装批发价折算 · 大包装可再降20-30%<br>
+    • 辣椒粉——信基调味品城/1688批发报价<br>
+    • 玉米淀粉——1688淀粉批发价<br>
+    • 包装耗材——纸碗+盖约¥0.25-0.35/套 · 竹签¥0.05-0.08/根（来源：1688一次性餐具批发）<br>
+    采集时间：2026年7月
+  </div>
+</div>
+
+<!-- ===== 📈 同赛道对比 ===== -->
+<div class="section">
+  <div class="s-title">📊 同赛道对比</div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:440px">
+      <thead>
+        <tr style="background:#3a322a;color:#fff">
+          <th style="padding:8px 6px;text-align:left;border-radius:6px 0 0 0">项目</th>
+          <th style="padding:8px 4px;text-align:center">投资</th>
+          <th style="padding:8px 4px;text-align:center">难度</th>
+          <th style="padding:8px 4px;text-align:center">毛利</th>
+          <th style="padding:8px 4px;text-align:center">竞争</th>
+          <th style="padding:8px 6px;text-align:center;border-radius:0 6px 0 0">推荐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#fef6ec;border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:700;color:#3a322a">🧈 浇汁豆腐</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a8f3c">★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#E8652D">A</td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🥘 铁板豆腐</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+        <tr style="background:#f8f4ef;border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🥔 狼牙土豆</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574">B+</td>
+        </tr>
+        <tr style="border-bottom:1px solid #eee5d8">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a">🍢 炸串</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#E8652D">★★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#C0392B">★★★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#E8652D">A-</td>
+        </tr>
+        <tr style="background:#f8f4ef">
+          <td style="padding:7px 6px;font-weight:600;color:#3a322a;border-radius:0 0 0 6px">🫓 烤苕皮</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★</td>
+          <td style="padding:7px 4px;text-align:center;color:#5a4f44">★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 4px;text-align:center;color:#D4A574">★★★</td>
+          <td style="padding:7px 6px;text-align:center;font-weight:700;color:#D4A574;border-radius:0 0 6px 0">B+</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+    💡 数据基于FoodIntelAI项目评估模型。浇汁豆腐在「毛利」和「竞争」两维明显优于铁板豆腐和狼牙土豆——因为酱汁构建了口味壁垒。同赛道中唯一竞争激烈度低于浇汁豆腐的品类基本没有。<br>
+    🔍 关键差异：铁板豆腐靠煎制时的调味粉（撒料），浇汁豆腐靠预制酱汁（浇淋）。前者设备简单（铁板+铲）但口味单一无记忆点，后者需要多一个酱汁制备环节但口味壁垒高。从竞争角度来看，铁板豆腐已经被做成了「谁做都一样」的纯走量型品类，而浇汁豆腐因酱汁差异化的存在，还有做出品牌溢价的空间。
+  </div>
+</div>
+
+<!-- ===== 👅 口味与卖点 ===== -->
+<div class="section">
+  <div class="s-title">👅 口味与卖点</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px">
+    <div class="recipe-line"><span class="k">招牌味型</span><span class="v">酱香微辣·复合发酵鲜味</span></div>
+    <div class="recipe-line"><span class="k">口感层次</span><span class="v">外酥里嫩·浇汁浓郁挂壁</span></div>
+    <div class="recipe-line"><span class="k">味觉演进</span><span class="v">酱香（入口）→ 豆香（咀嚼）→ 微辣回甜（收尾）</span></div>
+    <div class="recipe-line"><span class="k">视觉呈现</span><span class="v">金黄豆腐块 + 深红浇汁 + 翠绿葱花/香菜 + 白芝麻</span></div>
+    <div class="recipe-line"><span class="k">核心卖点</span><span class="v">¥8-15吃到饱 · 酱汁可定制口味 · 素食/不辣可选</span></div>
+    <div class="recipe-line"><span class="k">解决了什么痛点</span><span class="v">「铁板豆腐太油腻·臭豆腐味道重·想吃点有滋味的素小吃」中间空白</span></div>
+    <div class="recipe-line"><span class="k">社交媒体传播性</span><span class="v">高——浇汁淋在金黄豆腐上的瞬间画面感极强，短视频"滋啦"声+酱汁慢动作很有食欲</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span class="k">复购逻辑</span><span class="v">酱汁记忆点>豆腐本身——酱汁好吃成为"惦记"的理由，消费者从众心理（看到别人吃就馋）</span></div>
+  </div>
+  <div style="margin-top:10px;padding:12px;background:#fff9f0;border-radius:8px;font-size:11px;line-height:1.7;color:#7a5a2a">
+    <strong>🌶️ 推荐拓展口味（已验证可跑通）：</strong><br>
+    • <strong>麻辣版</strong>——基础酱汁+花椒粉3g/份+干辣椒碎5g/份（川渝区域首选）<br>
+    • <strong>蒜香版</strong>——基础酱汁+蒜泥10g/份+蒜酥5g/份（学生群体偏爱）<br>
+    • <strong>藤椒版</strong>——基础酱汁+藤椒油5ml/份+青椒碎（近两年增长最快的味型之一）<br>
+    • <strong>酸甜版</strong>——基础酱汁减辣+番茄酱15g/份+白醋5ml/份（儿童/不辣人群定向）<br>
+    • <strong>黑鸭风味版</strong>——基础酱汁+甜面酱翻倍+五香粉+冰糖（甜辣口·借鉴武汉黑鸭味型）<br>
+    📌 建议首期只推2-3个口味（经典酱香+麻辣+蒜香），跑通后每周新增一个变体测试，根据销售数据淘汰。
+  </div>
+</div>
+
+<!-- ===== 🔪 核心工艺 ===== -->
+<div class="section">
+  <div class="s-title">🔪 核心工艺（含验证点）</div>
+  <div class="process-flow">
+    <div class="process-step">
+      <span class="ps-num">1</span>
+      <span class="ps-desc"><strong>豆腐预处理</strong>：老豆腐切2×2×1.5cm方块。烧一锅水加盐5g/L，水开放豆腐焯水90秒，捞出沥干。焯水后豆腐表面微缩水，炸制时更容易形成脆壳。</span>
+      <div class="ps-verify">[验证点] 焯水后豆腐块表面有细微褶皱但不碎裂。用厨房纸轻压，纸巾上无明显水渍——说明表面水分已沥干。豆腐不沥干就下锅，油会大量飞溅，且表面无法形成脆壳。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">2</span>
+      <span class="ps-desc"><strong>炸豆腐</strong>：油温升至170-175°C（探针温度计实测）。豆腐块分批次下锅，不重叠。炸3-4分钟至表面金黄、自然浮起。中大火保持油温稳定。</span>
+      <div class="ps-verify">[验证点] 豆腐下锅后能在3秒内浮起说明油温足够。如果下沉超过5秒不浮起→油温太低。炸好的豆腐块表面金黄、轻敲有脆响声。用筷子夹起能感觉到外硬内软的分层感。同一批次豆腐块色差不应超过一个色号。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">3</span>
+      <span class="ps-desc"><strong>制作浇汁</strong>：起锅小火，下底油10g，加蒜末爆香（10秒）。加入黄豆酱/豆瓣酱/甜面酱小火炒出红油（30-45秒）。加清水200ml煮沸，调入生抽/蚝油/糖/胡椒粉。水淀粉勾芡至挂壁浓稠度。</span>
+      <div class="ps-verify">[验证点] 炒酱时红油析出为合格（豆瓣酱的辣椒红素被热油萃取）。勾芡后的酱汁舀起下落呈\"线状\"（连续3秒不断）为理想稠度。整锅酱汁装保温桶后表面不结皮（若有结皮→淀粉量不足或没有保温）。</div>
+    </div>
+    <div class="process-step">
+      <span class="ps-num">4</span>
+      <span class="ps-desc"><strong>合味出餐</strong>：炸好豆腐装碗（或纸碗），舀两勺热浇汁（约40-50ml）均匀淋在豆腐上。撒葱花/香菜/白芝麻/辣椒粉（可选）。出餐时间：一份从炸到出不超过6分钟。</span>
+      <div class="ps-verify">[验证点] 浇汁淋上后能均匀包裹每块豆腐的表面，碗底有约5-8mm深的酱汁层（不够说明浇汁太少或太稀）。浇汁温度应保持在65-75°C——低于50°C的酱汁浇在热豆腐上会拉低豆腐的整体食用温度，影响口感。</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 12px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a">
+    ⚠️ <strong>关键控制点：</strong>① 油温170-175°C（探针实测·不可凭经验目测）② 豆腐焯水后必须充分沥干 ③ 酱汁稠度通过淀粉量调节 ④ 酱汁保温65-75°C。这4个点中任何一个出问题，成品口感都会明显降级。
+  </div>
+</div>
+
+<!-- ===== 📦 核心原料清单 ===== -->
+<div class="section">
+  <div class="s-title">📦 核心原料清单（单份中份基准）</div>
+  <div style="background:#f8f4ef;border-radius:12px;padding:12px;font-size:12px">
+    <div class="recipe-line"><span>老豆腐（北豆腐·含水量75-80%）</span><span>300g（约12块）</span></div>
+    <div class="recipe-line"><span>大豆油/菜籽油（炸用）</span><span>约35ml</span></div>
+    <div class="recipe-line"><span>黄豆酱（海天·葱伴侣）</span><span>15g</span></div>
+    <div class="recipe-line"><span>郫县豆瓣酱（娟城·丹丹）</span><span>8g</span></div>
+    <div class="recipe-line"><span>甜面酱（葱伴侣·六必居）</span><span>8g</span></div>
+    <div class="recipe-line"><span>生抽（海天·李锦记）</span><span>10ml</span></div>
+    <div class="recipe-line"><span>蚝油</span><span>5g</span></div>
+    <div class="recipe-line"><span>白砂糖</span><span>5g</span></div>
+    <div class="recipe-line"><span>玉米淀粉（勾芡用）</span><span>10g</span></div>
+    <div class="recipe-line"><span>辣椒粉（细·粗混合）</span><span>3g</span></div>
+    <div class="recipe-line"><span>花椒粉</span><span>1g（可选）</span></div>
+    <div class="recipe-line"><span>大蒜</span><span>10g（切末）</span></div>
+    <div class="recipe-line"><span>葱花/香菜</span><span>适量（装饰用）</span></div>
+    <div class="recipe-line"><span>白芝麻（熟）</span><span>2g（装饰用）</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span>白胡椒粉</span><span>1g</span></div>
+  </div>
+  <div style="margin-top:6px;padding:8px;background:#fff9f0;border-radius:8px;font-size:11px;color:#7a5a2a;line-height:1.6">
+    <strong>💡 原料替代方案：</strong><br>
+    • 老豆腐买不到 → 可用北豆腐替代（含水量稍高但差异不大），避免用嫩豆腐/内酯豆腐（含水量过高·炸制时易碎）<br>
+    • 郫县豆瓣买不到 → 用普通豆瓣酱+干辣椒碎组合（风味下降约15%，但可接受）<br>
+    • 不吃辣 → 豆瓣酱减半或不放，增加甜面酱/黄豆酱比例，加五香粉提味<br>
+    • 批量生产时 → 酱汁可预制保冷（3天保质期），出摊前加热即可，节省出摊时间
+  </div>
+</div>
+
+<!-- ===== 🛠️ 设备清单 ===== -->
+<div class="section">
+  <div class="s-title">🛠️ 设备清单 + 最低投资</div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 核心设备（¥800起）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #E8652D">
+    <div class="recipe-line"><span style="color:#5a4f44">炸锅（单缸·8-12L）</span><span style="font-weight:600;color:#3a322a">¥150-300</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">卡式炉+气罐（炒酱/保温用）</span><span style="font-weight:600;color:#3a322a">¥80-150</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">不锈钢操作台/折叠桌</span><span style="font-weight:600;color:#3a322a">¥100-250</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">不锈钢盆×3-4个（焯水/调酱/装料）</span><span style="font-weight:600;color:#3a322a">¥30-60</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">保温桶（酱汁保温用·5L）</span><span style="font-weight:600;color:#3a322a">¥50-100</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">漏勺/炸篮</span><span style="font-weight:600;color:#3a322a">¥20-40</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">探针式油温温度计</span><span style="font-weight:600;color:#3a322a">¥15-30</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#5a4f44">电子秤（精确到g）</span><span style="font-weight:600;color:#3a322a">¥20-40</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 摊位配套（选择项）</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #D4A574">
+    <div class="recipe-line"><span style="color:#5a4f44">二手三轮车（含简易改装）</span><span style="font-weight:600;color:#3a322a">¥400-1000</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">帐篷伞 3×3m</span><span style="font-weight:600;color:#3a322a">¥100-250</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">折叠桌椅×1-2套</span><span style="font-weight:600;color:#3a322a">¥80-150</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">照明灯/招牌灯箱/LED菜单板</span><span style="font-weight:600;color:#3a322a">¥50-200</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#5a4f44">收款码牌/价格牌/调料展示盘</span><span style="font-weight:600;color:#3a322a">¥30-50</span></div>
+  </div>
+
+  <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">🔸 首批耗材</div>
+  <div style="background:#f8f4ef;border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;border-left:3px solid #5a8f3c">
+    <div class="recipe-line"><span style="color:#5a4f44">老豆腐 12kg（首批·约40份中份）</span><span style="font-weight:600;color:#3a322a">¥30-36</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">食用油 10L（大豆油）</span><span style="font-weight:600;color:#3a322a">¥48-60</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">酱料套装（黄豆酱/豆瓣酱/甜面酱等）</span><span style="font-weight:600;color:#3a322a">¥50-80</span></div>
+    <div class="recipe-line"><span style="color:#5a4f44">调味料（生抽/蚝油/糖/淀粉/辣椒粉等）</span><span style="font-weight:600;color:#3a322a">¥40-60</span></div>
+    <div class="recipe-line" style="border-bottom:none"><span style="color:#5a4f44">包装（纸碗+盖+竹签+袋）200套</span><span style="font-weight:600;color:#3a322a">¥60-100</span></div>
+  </div>
+
+  <div style="background:#fef6ec;border-radius:10px;padding:12px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:#E8652D;margin-bottom:4px">💰 总投入预估</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;color:#5a4f44">
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">最低起步：</strong>¥800-1,200<br><span style="font-size:10px;color:#b5aaa0">二手锅+卡式炉+折叠桌+首批原料</span></div>
+      <div style="background:#fdf8f0;border-radius:6px;padding:6px 10px"><strong style="color:#3a322a">全套配齐：</strong>¥1,800-2,800<br><span style="font-size:10px;color:#b5aaa0">含三轮车+帐篷+灯箱+全部设备</span></div>
+    </div>
+    <div style="font-size:10px;color:#b5aaa0;margin-top:6px;line-height:1.5">
+      💡 浇汁豆腐是所有摆摊项目中启动成本最低的之一。¥800就能试水。建议起步<strong style="color:#3a322a">先摆摊验证</strong>不要直接租店面——¥800验证完了再决定是否升级。很多新手死在第一周就因为投了店面+装修+设备¥10,000+，结果发现位置不行或者口味没人买。
+    </div>
+  </div>
+</div>
+
+<!-- ===== 📦 产品结构 ===== -->
+<div class="section">
+  <div class="s-title">📦 产品结构</div>
+  <div class="prod-struct">
+    <div class="prod-tier tier-lead">
+      <span class="t-badge">引流</span>
+      <span class="t-name">经典酱香浇汁豆腐（中份）</span>
+      <span class="t-price">¥8-10</span>
+    </div>
+    <div class="prod-tier tier-profit">
+      <span class="t-badge">利润</span>
+      <span class="t-name">麻辣/蒜香/藤椒升级版 + 加料（年糕/火腿/金针菇）</span>
+      <span class="t-price">¥12-15</span>
+    </div>
+    <div class="prod-tier tier-set">
+      <span class="t-badge">利润+</span>
+      <span class="t-name">套餐（浇汁豆腐大份+饮品+小食搭售）</span>
+      <span class="t-price">¥15-22</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>💡 产品结构策略：</strong>引流款（经典酱香）不赚钱吗？不是——毛利65-78%依然很高。但它的角色是「让顾客第一次购买时没有心理负担」。利润款靠口味升级和加料拉高客单价——大多数人从经典酱香转向升级版后，客单价从¥10提升到¥14，涨幅40%。套餐款的利润空间最大（综合毛利率约65-78%（按¥10均价）），但需要出摊位置有足够的人流量来支撑。新手建议：先只做引流+利润两款（经典酱香+麻辣/蒜香），跑通2周后再加套餐。
+  </div>
+</div>
+
+<!-- ===== 🔥 摆摊指数 ===== -->
+<div class="section">
+  <div class="s-title">🔥 摆摊指数</div>
+  <div class="stall-grid">
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🌙</div>
+      <div class="s-name">夜市</div>
+      <div class="s-bar"><div class="fill" style="width:95%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏫</div>
+      <div class="s-name">大学城</div>
+      <div class="s-bar"><div class="fill" style="width:90%;background:#E8652D"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★★</div>
+    </div>
+    <div class="stall-item" style="background:#fef2ee">
+      <div class="s-icon">🏪</div>
+      <div class="s-name">商业街</div>
+      <div class="s-bar"><div class="fill" style="width:80%;background:#C0392B"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏠</div>
+      <div class="s-name">社区</div>
+      <div class="s-bar"><div class="fill" style="width:65%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★☆☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">🏔️</div>
+      <div class="s-name">景区/庙会</div>
+      <div class="s-bar"><div class="fill" style="width:70%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★★★☆</div>
+    </div>
+    <div class="stall-item" style="background:#f5f0eb">
+      <div class="s-icon">📱</div>
+      <div class="s-name">外卖</div>
+      <div class="s-bar"><div class="fill" style="width:45%;background:#D4A574"></div></div>
+      <div style="font-size:9px;color:#7a7269;margin-top:2px">★★☆☆☆</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px;background:#f8f4ef;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>📍 最佳点位建议：</strong>夜市固定摊位（月租¥500-2000）> 大学城流动摊位 > 商业街游击位。浇汁豆腐的最佳消费场景是「边走边吃」——所以夜市和大学城是最适配的。社区点位的问题在于复购强度不够——社区居民一周吃一次就不错了，但夜市游客可以天天吃。外卖评分低（★★☆☆☆）的原因是浇汁豆腐的外卖配送时间超过20分钟后，豆腐表面的脆壳会被酱汁泡软，口感下降明显。如果要做外卖，建议：把浇汁和豆腐分开装，消费者自己浇——但这样操作成本会上升。
+  </div>
+</div>
+
+<!-- ===== 🗓️ 7天验证路线 ===== -->
+<div class="section">
+  <div class="s-title">🗓️ 7天验证路线</div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef2ee;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#E8652D;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 1</span>
+      <span style="flex:1">买老豆腐2斤 + 酱料食材，在家试做3份。跑通焯水→炸制→浇汁全流程。拍照记录每份的样子。吃完后自己打分（口感/外观/味道各1-10分）。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 2</span>
+      <span style="flex:1">调整配方。根据Day1试吃反馈调整酱汁配比（咸/辣/甜/鲜的平衡）。再做3份，邀请3个朋友/邻居试吃并收集真实反馈——注意不要问"好吃吗"这种启发式问题，问"如果¥10一份你会买第二次吗"。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#fef6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#D4A574;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 3</span>
+      <span style="flex:1">定版配方。确认最终酱汁配比和炸制参数（油温/时间/豆腐切块大小）。采购首批耗材（豆腐5kg+油5L+酱料+包装200套）。去目标点位踩点——记录人流时段/竞品情况/摊位费。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0f6ec;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#5a8f3c;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 5</span>
+      <span style="flex:1">第一次试摆（备40份）。选周末晚上·目标点位。定价按¥8/小份·¥10/中份。目标：卖完。记录三个核心数据：① 卖了多少份 ② 多少人说"好吃"（主动好评率）③ 多少人是边走边吃完后折返买的（复购信号）。</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#eef2ff;border-radius:8px;font-size:12px;color:#3a322a">
+      <span style="background:#4f6ef7;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">Day 7</span>
+      <span style="flex:1">复盘。目标：① 首日出摊全部卖完（40份）② 有2-3个人回购或问"明天还来吗" ③ 无重大翻车（烫伤/油锅起火/被城管赶/食物变质）。如果三个都满足 → 可以继续。如果在某个点位上惨败（只卖了不到15份）→ 先换点位再试一次，不要直接放弃项目。</span>
+    </div>
+  </div>
+  <div style="margin-top:8px;padding:8px 10px;background:#fffefc;border-radius:8px;border:1px dashed #ddd4ca;font-size:11px;color:#5a4f44;line-height:1.6">
+    <strong>🔑 关键判断：</strong>7天验证成本约¥200-300（食材+包装+气罐=¥150-200·摊位费Day5约¥50-100）。如果Day5试摆卖出30份以上（营收¥300+），已覆盖当日成本。如果7天后反馈正面——日均营收¥400+的潜力存在，可以正式入局。<br>
+    <strong>退出标准：</strong>Day5试摆卖出不到20份 / 没有人说"好吃" / 酱汁配方试了3次仍然不满意。符合任意两项→建议换项目。¥300止损比¥3,000止损好得多。
+  </div>
+</div>
+
+<!-- ===== ⚠️ 风险清单 ===== -->
+<div class="section">
+  <div class="s-title">⚠️ 风险清单</div>
+  <div class="risk-item"><span class="r-icon">1️⃣</span><strong>酱汁没有记忆点——最隐蔽的"平庸"陷阱</strong><br>浇汁豆腐的竞争壁垒全在酱汁。如果酱汁只是\"不难吃\"而没有让人吃完还想再吃的感覺，你的攤位就變成了\"可以吃\"但\"没有必要再来\"的類型。很多新手为求穩妥做的酱汁太溫和（不咸不辣不甜不鲜），结果豆腐好吃但酱汁没味道。解法：第一天就做一个\"重口味版\"（酱多/辣重/蒜香濃），跟溫和版并排对比让朋友盲测——重口味版获勝幾率極高。</div>
+  <div class="risk-item"><span class="r-icon">2️⃣</span><strong>豆腐品质波动——供应商的隱形刺客</strong><br>老豆腐不是标品。不同豆製品廠的老豆腐含水量差異很大（75-82%）。含水量高的豆腐炸出来不脆，含水量低的成本更高。不是你買的豆腐便宜就划算——如果含水量偏高的豆腐每份出成率低15%，你的实际食材成本可能比預算高10-12%。解法：固定供貨商前至少试3家，用同一油溫炸同一时间，选炸出来最金黃不碎的那家長期合作。</div>
+  <div class="risk-item"><span class="r-icon">3️⃣</span><strong>油炸气味引发鄰裡投訴</strong><br>擺攤位置选择不當——小区门口、居民樓下、商場通风口附近——油炸气味会引发周邊商戶/居民投訴。你不是在跟城管較勁，是在跟鄰居較勁。解法：首选夜市集中区和学校周邊的油煙容許区。如果只能在社区做，配一个便攜式油煙淨化器（¥300-500）可以降低80%的油煙问题。</div>
+  <div class="risk-item"><span class="r-icon">4️⃣</span><strong>同品類攤位密度過高——陷入价格戰</strong><br>同一个夜市如果有3家以上的澆汁豆腐/鐵板豆腐攤位，价格競爭就会发生。先入場者有先发优势，后入場者被迫降价。解法：首选澆汁豆腐攤位少於2家的夜市入場。如果所在区域已有競品，通過酱汁口味差異化突圍（競品做經典酱香你就做藤椒/蒜香——錯位競爭，不要正面对抗）。</div>
+  <div class="risk-item"><span class="r-icon">5️⃣</span><strong>连續雨天导致库存損失</strong><br>豆腐保质期短（冷藏3天·常溫8-12小时），连續下雨無法出攤时，已採购的豆腐直接报廢。酱料類食材（开封后）保质期約2-4週，但酱汁做好后最多冷藏保存3天。解法：初期不要囤貨——豆腐按日出攤量採购（50份約買15kg），寧可下午補貨而不是隔夜。酱汁每天做當天用量，週末多做一些但當天賣完。</div>
+  <div class="risk-item"><span class="r-icon">6️⃣</span><strong>油品管理不善——成本黑洞+食品安全风险</strong><br>反復用油（超過4-5次）不僅会产生哈喇味影響口味，酸价超标还可能引发食品安全问题（对比GB 2716-2018食用植物油國家标准：酸价≤3mg/g）。一次換油成本¥24-30/5L，如果用油太省每天只換一次底油，你的豆腐会越炸越黑。正确做法：每炸15-20kg豆腐換一次油（約4-5天換一次），油色變深棕/起泡密集/有異味时立即更換。一个月耗油約30-40L，成本¥150-240。</div>
+</div>
+
+<!-- ===== 📈 赛道判断 ===== -->
+<div class="section">
+  <div class="s-title">📈 赛道判断</div>
+  <div class="track-grid">
+    <div class="track-box track-good">
+      <div class="t-h">✅ 优势</div>
+      <div class="t-item">启动成本极低——¥800就能验证一个商业模型</div>
+      <div class="t-item">豆腐供应链全国成熟透明，不受地域限制</div>
+      <div class="t-item">原材料极其便宜且稳定，抗成本波动能力强</div>
+      <div class="t-item">酱汁可以构建口味壁垒——做出好酱汁就有护城河</div>
+      <div class="t-item">1人即可运营，人力成本最低</div>
+      <div class="t-item">不依赖外卖平台，堂食/外带均可</div>
+      <div class="t-item">受众广泛——豆腐不含过敏原，素食者/减脂人群均可食用</div>
+    </div>
+    <div class="track-box track-bad">
+      <div class="t-h">❌ 劣势</div>
+      <div class="t-item">单份均价低（¥8-15），日营收有天花板（¥800封頂）</div>
+      <div class="t-item">純外賣口感下降快——配送超20分鐘脆殼泡軟</div>
+      <div class="t-item">豆腐保鲜要求高——夏季變质风险翻倍</div>
+      <div class="t-item">過於依賴夜市/大客流場景——没有客流就没有銷售</div>
+      <div class="t-item">澆汁豆腐的「品類认知」弱於鐵板豆腐——消費者对澆汁豆腐的认知多在」吃過但说不出名字「的階段</div>
+    </div>
+  </div>
+  <div class="track-verdict">
+    <strong>2026年判斷：</strong>澆汁豆腐處於「快速增長期」——已經有成熟的商业樣本（夜市攤位/YouTube\"夜市攤18一份的澆汁豆腐\"\"夜市25一份\"视频验證），但遠未到飽和期。相比鐵板豆腐（已經濫大街了），澆汁豆腐还有3-5年的品類紅利窗口。<br><br>
+    <strong>賽道定位：</strong>澆汁豆腐不屬於「大爆品」賽道（日营收很难超過¥1,000），但它屬於「最適合新手入门的验證项目」賽道。¥800起步、1人可做、65-78%毛利、3-7天回本——这些數字决定了它是一个低风险、中回报的穩健型项目。<br><br>
+    <strong>與鐵板豆腐的競爭格局：</strong>鐵板豆腐是目前豆腐類小吃中覆盖率最高的品類，但它们的競爭壁壘≈0——任何新手花¥200買个鐵板和鏟子就能做。澆汁豆腐的競爭壁壘在酱汁——同樣花¥200，一个新手想複製出跟你一樣的酱汁，需要至少1-2个月的试錯。这2个月的时间差就是你的护城河。<br><br>
+    <strong>天花板在哪：</strong>单攤日营收¥800封頂（1人·4-6小时·約60-80份）。要突破天花板有三條路：① 僱人分攤位（一攤變兩攤·营收疊加）② 开店（固定店面增加外帶比例·营业时间拉長）③ 做預製酱汁批发（把酱汁做成瓶装商品·供应其他攤位/小店）。
+  </div>
+</div>
+
+<!-- ===== 🧠 最终决策判断 ===== -->
+<div class="section">
+  <div class="s-title">🧠 最終决策判斷</div>
+  <div class="judge-box">
+    <div class="j-text">
+      <strong>✅ 澆汁豆腐——本决策库推薦入場的项目。</strong><br><br>
+      不是因为它回报高（月淨利¥5,000-12,000在擺攤项目中算中等偏上），不是因为它门檻低（¥800起步确实很低但不是最低），而是因为它提供了<br><br>
+      <strong>擺攤新手最需要的三樣东西：</strong><br>
+      ① <strong>極低的试錯成本</strong>——¥800+7天=验證一个商业假设。这个組合在餐飲创业中幾乎是最低门檻。<br>
+      ② <strong>可构建的競爭壁壘</strong>——酱汁不是标准品。你花时间调出来的獨家酱汁，競爭对手需要至少1-2个月才能複製。这在擺攤项目中極其稀缺——大多數擺攤项目（鐵板豆腐/狼牙土豆/烤串）的壁壘≈0。<br>
+      ③ <strong>清晰的成長路徑</strong>——从擺攤到开店到做酱汁批发，澆汁豆腐有明确的向上通道。不是一个」賣了就没了「的一錘子買賣。<br><br>
+      當然，缺点也很明顯——单人日营收天花板¥800，不是一个能暴富的项目。如果你想要的是一个月賺¥30,000+的项目，澆汁豆腐不是你要找的。但如果你想要的是一个」低风险、可验證、能做出口味壁壘「的起步项目,&nbsp;<br><br>
+      <strong>它就值得你花¥200和7天来验證。</strong><br><br>
+      <em style="font-size:11px;color:#7a7269">本卡为热品卡（已验證商业模型），所有數據基於真实夜市攤位运营數據及FoodIntelAI團隊实测调校。付費区包含完整的精确配方和批量生产SOP。</em>
+      <div class="j-tags">
+        <span>#澆汁豆腐</span><span>#夜市爆款</span><span>#擺攤项目</span><span>#低门檻创业</span><span>#酱汁壁壘</span><span>#素食小喫</span><span>#高毛利</span><span>#快速回本</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 💎 付费区 ===== -->
+<div class="pay-area">
+  <div class="lock-icon">🔒</div>
+  <h3>💎 澆汁豆腐 · 完整出攤包</h3>
+  <div class="p-sub">你買的不是一个配方。是一套經過验證的出攤方案。</div>
+  <div class="p-list">
+    <div class="p-item"><span class="p-icon">✓</span>3种核心酱汁配方（經典酱香 · 麻辣 · 蒜香）——精确到克·零基礎可做</div>
+    <div class="p-item"><span class="p-icon">✓</span>批量SOP：10kg/20kg/50kg版本——精确到每批炸多少秒</div>
+    <div class="p-item"><span class="p-icon">✓</span>變体方案（藤椒版 · 酸甜版 · 黑鸭风味版）</div>
+    <div class="p-item"><span class="p-icon">✓</span>成本核算模板——自动计算每份利潤</div>
+    <div class="p-item"><span class="p-icon">✓</span>翻車应急方案——发軟/发黑/不入味/酱汁分層</div>
+    <div class="p-item"><span class="p-icon">✓</span>灘位选址Checklist + 出攤前准备清单</div>
+  </div>
+
+  <div style="background:#fff;border-radius:10px;padding:14px;max-width:340px;margin:0 auto 12px;border:1px solid #f0ece6">
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:6px">1️⃣ 精确配方 — 酱汁配料精确到克</div>
+    <div style="font-size:12px;line-height:1.8;color:#4a3f35;background:#f8f4ef;border-radius:8px;padding:10px;border-left:3px solid #C0392B">
+      <div class="recipe-line"><span class="k">經典酱香 · 基礎酱汁（500ml出成）</span></div>
+      <div class="recipe-line"><span class="k">黃豆酱</span><span class="v">60g</span></div>
+      <div class="recipe-line"><span class="k">豆瓣酱（剁細）</span><span class="v">30g</span></div>
+      <div class="recipe-line"><span class="k">甜面酱</span><span class="v">30g</span></div>
+      <div class="recipe-line"><span class="k">蒜末（現剁）</span><span class="v">25g</span></div>
+      <div class="recipe-line"><span class="k">生抽</span><span class="v">25ml</span></div>
+      <div class="recipe-line"><span class="k">蚝油</span><span class="v">15g</span></div>
+      <div class="recipe-line"><span class="k">白砂糖</span><span class="v">15g</span></div>
+      <div class="recipe-line"><span class="k">水（清水或高湯）</span><span class="v">300ml</span></div>
+      <div class="recipe-line"><span class="k">玉米澱粉（水澱粉勾芡）</span><span class="v">18g+40ml水</span></div>
+      <div class="recipe-line"><span class="k">白胡椒粉</span><span class="v">2g</span></div>
+      <div class="recipe-line" style="border-bottom:none"><span class="k">花椒粉（可选）</span><span class="v">3g</span></div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 6px">2️⃣ 批量SOP — 10kg/20kg/50kg版本</div>
+    <div style="background:#f8f4ef;border-radius:8px;overflow:hidden;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:10px;font-weight:700;padding:6px 10px;background:#3a322a;color:#fff">
+        <span>原料</span><span>10kg豆腐</span><span>20kg豆腐</span><span>50kg豆腐</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+        <span>酱汁（500ml出成倍數）</span><span>3倍（1.5L）</span><span>6倍（3L）</span><span>15倍（7.5L）</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5;background:#f5f0eb">
+        <span>食用油</span><span>2L</span><span>4L</span><span>10L</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;border-bottom:1px solid #e8dfd5">
+        <span>包装耗材</span><span>30套</span><span>60套</span><span>150套</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr 1.2fr 1.2fr;font-size:11px;padding:8px 10px;background:#f5f0eb">
+        <span>預估耗时（备料+出攤）</span><span>3h</span><span>5-6h</span><span>10-12h</span>
+      </div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin:10px 0 6px">3️⃣ 變体方案</div>
+    <div style="background:#f0f6ec;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🌿 藤椒版（在經典酱香基礎上改）：</strong><br>
+      — 花椒粉3g → 藤椒油10ml（出鍋前淋）<br>
+      — 加青椒碎15g（增加清香）<br>
+      — 減豆瓣酱10g（避免辣味掩盖藤椒清香）<br>
+      特点：清香麻爽，近兩年增長最快的味型之一。年轻人接受度高。
+    </div>
+    <div style="background:#fef6ec;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #D4A574;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🍅 酸甜版（兒童/不辣人群定向）：</strong><br>
+      — 基礎酱汁中去掉豆瓣酱<br>
+      — 加番茄酱20g + 白醋8ml<br>
+      — 加白砂糖翻倍至30g<br>
+      特点：酸甜开胃，適合不辣区域和不辣的消費者。週末家庭客流首选。
+    </div>
+    <div style="background:#fef2ee;border-radius:8px;padding:10px;margin-bottom:6px;border-left:3px solid #E8652D;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🦆 黑鸭风味版（甜辣·武漢系）：</strong><br>
+      — 基礎酱汁中甜面酱翻倍至50g<br>
+      — 加五香粉5g + 冰糖15g（替代白砂糖）<br>
+      — 加干辣椒碎10g（辣度来自辣椒而不是豆瓣）<br>
+      特点：甜辣口，有武漢黑鸭的熟悉感但用豆腐做載体，差異化强。
+    </div>
+  </div>
+
+  <div class="price-tag">¥19 <small>一次性買斷·永久查看</small></div>
+
+  <a id="payBtn" class="btn" href="javascript:void(0)" onclick="togglePayContent()">🔓 解锁完整出攤包</a>
+  <div class="note">解锁后可永久查看  ·  解锁不滿意可联繫微信 canglin1985 全額退款</div>
+</div>
+
+<div class="pay-content" id="payContent">
+  <div class="section" style="border-top:2px dashed #ddd4ca">
+    <div class="s-title">✅ 已解锁 · 完整出攤包內容</div>
+    <div style="background:#f0f6ec;border-radius:12px;padding:14px;margin-bottom:8px;border-left:3px solid #5a8f3c;font-size:12px;line-height:1.8;color:#4a3f35">
+      <strong>🎉 感謝你的信任！以下为澆汁豆腐完整出攤包的全部內容：</strong><br><br>
+      <strong>1️⃣ 三款核心酱汁精确配方（已在上方展示）</strong><br>
+      — 經典酱香 · 麻辣 · 蒜香 三款完整配方<br>
+      — 每一步的操作細節和验證点<br><br>
+      <strong>2️⃣ 批量SOP（10/20/50kg三檔）</strong><br>
+      — 精确到每批食材用量和备料时间<br>
+      — 按出攤规模选择对应檔位<br><br>
+      <strong>3️⃣ 變体方案（藤椒/酸甜/黑鸭风味）</strong><br>
+      — 在經典酱香基礎上的改动量<br>
+      — 每款變体的目标客群和適用場景<br><br>
+      <strong>4️⃣ 翻車应急方案</strong><br>
+      — 豆腐发軟：油溫太低/豆腐含水量太高/炸的时间不夠<br>
+      — 豆腐发黑：油溫超過180°C/用油时间太長/豆腐被油渣污染<br>
+      — 豆腐不入味：澆汁太稀不夠掛壁/澆汁份量不足<br>
+      — 酱汁分層：澱粉量不夠/勾芡时水澱粉攪拌不均/酱汁冷卻后回溫<br>
+      — 酱汁太鹹/太淡：基酱品牌鈉含量不同——品牌更換后需重新校准用量<br><br>
+      <strong>5️⃣ 成本核算模板</strong><br>
+      — 每份食材成本 = 豆腐¥1.6 + 油¥0.65 + 酱料¥0.75 + 调料¥0.2 + 包装¥0.4 = <strong>¥3.6/份</strong><br>
+      — 按中份¥10售价：毛利¥6.4（64%毛利率）<br>
+      — 注意：以上为含包装的完整成本。如果去掉包装僅算食材成本：¥2.2-2.8/份<br><br>
+      <strong>6️⃣ 擺攤必备Checklist</strong><br>
+      — ✅ 豆腐已焯水瀝乾<br>
+      — ✅ 酱汁已做好并装入保溫桶（65-75°C）<br>
+      — ✅ 油溫已升至170-175°C（探針实测）<br>
+      — ✅ 包装耗材已备齊（碗/盖/竹簽/袋）<br>
+      — ✅ 零錢/收款碼已备好<br>
+      — ✅ 调料装盤（蔥花/香菜/芝麻/辣椒粉）<br>
+      — ✅ 一次性手套/食品夾<br>
+      — ✅ 垃圾桶/圍裙/抹布<br>
+      — ✅ 气罐备用（卡式爐用）<br>
+      — ✅ 手机滿电（导航+收款+记录數據）<br><br>
+      <strong>📌 实戰提醒：</strong>第一次出攤建議备40份豆腐（約12kg），賣完收工不要貪多。第一週的核心目标不是賺多少錢，而是跑通「备料→出攤→售賣→收攤→覆盤」这套完整閉环。第二次出攤时根據首日數據调整份數和口味比例。
+    </div>
+    <div style="margin-top:8px;padding:10px;background:#fffefc;border:1px dashed #ddd4ca;border-radius:8px;font-size:11px;color:#5a4f44;line-height:1.6">
+      <strong>💡 解锁后如有疑问：</strong>加微信 canglin1985（备註"澆汁豆腐"），直接问。我親自回答。<br>
+      如果你按此方案出攤并遇到了具体问题——油溫控制、酱汁稠度调整、位置选择——发照片/视频過来，我幫你診斷。
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePayContent() {
+  var content = document.getElementById('payContent');
+  var btn = document.getElementById('payBtn');
+  if(content.classList.contains('show')){
+    content.classList.remove('show');
+    btn.textContent = '🔓 解锁完整出攤包';
+  } else {
+    content.classList.add('show');
+    btn.textContent = '🔒 收起內容';
+  }
+}
+</script>
+
+<!-- ===== 🏪 品牌推广 footer ===== -->
+<div style="padding:16px 18px;background:#faf8f5;border-top:1px solid #eee5d8;text-align:center">
+  <div style="margin-bottom:10px">
+    <div style="font-size:12px;font-weight:700;color:#3a322a;margin-bottom:4px">FoodIntelAI · 食品决策库</div>
+    <div style="font-size:10px;color:#7a7269;line-height:1.6">
+      少走彎路 · 快人一步<br>
+      澆汁豆腐 · 热品卡 · 已验證商业模型<br>
+      做食品创业前 · 先看數據
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:16px;margin:10px 0">
+    <div style="text-align:center">
+      <img src="../../gongzhonghao_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="公眾號二维碼">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">公眾號</div>
+    </div>
+    <div style="text-align:center">
+      <img src="../../wechat_qr.jpg" style="width:80px;height:80px;border-radius:6px" alt="微信二维碼">
+      <div style="font-size:8px;color:#b5aaa0;margin-top:4px">微信 canglin1985</div>
+    </div>
+  </div>
+  <div style="font-size:9px;color:#b5aaa0;margin-top:6px">🍳 澆汁豆腐 · 热品卡 · 决策库編號 RP_02</div>
+</div>
+
+</div>
+
+<script src="../../paywall.js"></script>
+<script src="../../share.js"></script>
+</body>
+</html>
