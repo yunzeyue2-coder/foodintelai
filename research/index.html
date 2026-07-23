@@ -7,7 +7,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
-.page{max-width:800px;width:100%;padding:48px 40px 60px}
+.page{max-width:720px;width:100%;padding:48px 40px 60px}
 
 /* 封面 */
 .cover{border-bottom:2px solid #e0ddd5;padding-bottom:20px;margin-bottom:32px;position:relative}
@@ -16,32 +16,34 @@ body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Micro
 .cover .sub{font-size:13px;color:#8a7a6a;line-height:1.6}
 .cover .counter{font-size:11px;color:#c4a35a;margin-top:8px;font-family:'Inter',sans-serif;letter-spacing:1px}
 
-/* 时间轴 */
-.timeline{position:relative}
-.timeline-line{position:absolute;left:120px;top:12px;bottom:12px;width:3px;background:linear-gradient(180deg,#c4a35a 0%,#c4a35a 60%,#e0ddd5 100%);border-radius:2px;box-shadow:0 0 4px rgba(196,163,90,.15)}
+/* 系列折叠卡 */
+.series-box{background:#fff;border:1px solid #e8e3db;border-radius:10px;margin-bottom:10px;overflow:hidden}
+.series-box[open]{border-color:#c4a35a}
 
-/* 分组 */
-.epoch{margin-bottom:28px;position:relative}
-.epoch-header{position:relative;z-index:1;margin-bottom:14px;display:flex;align-items:center;gap:14px}
-.epoch-dot{width:20px;height:20px;border-radius:50%;border:3px solid #c4a35a;background:#f7f5f0;flex-shrink:0;position:relative;z-index:2;box-shadow:0 0 0 4px rgba(196,163,90,.1)}
-.epoch-label{font-size:11px;font-weight:600;color:#8b6914;letter-spacing:2px;font-family:'Inter',sans-serif}
+.series-box summary{list-style:none;display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;transition:background .2s;user-select:none}
+.series-box summary::-webkit-details-marker{display:none}
+.series-box summary:hover{background:#fcfaf7}
+.series-box summary .sb-icon{font-size:18px}
+.series-box summary .sb-name{font-size:14px;font-weight:600;color:#2a2218}
+.series-box summary .sb-count{font-size:11px;color:#b5aaa0;font-family:'Inter',sans-serif;margin-left:auto}
+.series-box summary .sb-arrow{font-size:10px;color:#c4a35a;transition:transform .3s;font-family:'Inter',sans-serif}
+.series-box[open] summary .sb-arrow{transform:rotate(90deg)}
+
+/* 展开后的时间轴内容 */
+.series-box .tl-content{border-top:1px solid #f0ece4;padding:16px 20px 4px;position:relative;padding-left:44px}
+.series-box .tl-content .tl-line{position:absolute;left:22px;top:20px;bottom:16px;width:2px;background:linear-gradient(180deg,#c4a35a,#e0ddd5);border-radius:1px}
 
 /* 文章卡片 */
-.article{position:relative;margin-bottom:6px;padding-left:148px}
-.article::before{content:'';position:absolute;left:120px;top:24px;width:16px;height:1.5px;background:#d4c8a0;z-index:1}
-.article-meta{position:absolute;left:0;top:14px;width:106px;text-align:right;font-size:11px;color:#8a7a6a;line-height:1.4;font-family:'Inter',sans-serif}
-.article-meta .am-day{font-weight:500;color:#8a7a6a}
-.article-meta .am-date{font-size:10px;color:#b5aaa0}
-.article-card{display:block;background:#fff;border:1px solid #e8e3db;border-radius:8px;padding:12px 16px;text-decoration:none;color:inherit;transition:all .25s;position:relative}
-.article-card:hover{background:#fcfaf7;border-color:#c4a35a;box-shadow:0 4px 20px rgba(0,0,0,.05);transform:translateX(3px)}
-.article-card::before{content:'';position:absolute;left:-1px;top:50%;transform:translateY(-50%);width:3px;height:0;background:#c4a35a;border-radius:0 2px 2px 0;transition:height .25s}
-.article-card:hover::before{height:60%}
-.article-card .ac-top{display:flex;align-items:center;gap:6px;margin-bottom:2px;flex-wrap:wrap}
+.article{position:relative;margin-bottom:8px;display:block;text-decoration:none;color:inherit}
+.article::before{content:'';position:absolute;left:-22px;top:18px;width:10px;height:1.5px;background:#d4c8a0}
+.article .adot{position:absolute;left:-26px;top:15px;width:8px;height:8px;border-radius:50%;background:#c4a35a;border:2px solid #fff;z-index:1}
+.article .am-date{font-size:10px;color:#b5aaa0;margin-bottom:2px;font-family:'Inter',sans-serif}
+.article-card{background:#fafaf7;border:1px solid #e8e3db;border-radius:8px;padding:10px 14px;transition:all .2s}
+.article:hover .article-card{background:#fcfaf7;border-color:#c4a35a;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.article-card .ac-top{display:flex;align-items:center;gap:4px;margin-bottom:2px;flex-wrap:wrap}
 .article-card .ac-tag{font-size:9px;padding:1px 6px;border-radius:3px;background:#f0eee8;color:#8a7a6a;letter-spacing:1px}
-.article-card .ac-title{font-size:14px;font-weight:600;color:#2a2218;line-height:1.4;margin-bottom:2px}
-.article-card .ac-desc{font-size:12px;color:#8a7a6a;line-height:1.6}
-.article-card .ac-arrow{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:16px;color:#e0ddd5;transition:all .25s}
-.article-card:hover .ac-arrow{color:#c4a35a;right:12px}
+.article-card .ac-title{font-size:13px;font-weight:600;color:#2a2218;line-height:1.4;margin-bottom:1px}
+.article-card .ac-desc{font-size:11px;color:#8a7a6a;line-height:1.5}
 
 /* 底部 */
 .back{display:inline-block;margin-top:32px;font-size:12px;color:#8b6914;text-decoration:none;font-family:'Inter',sans-serif;letter-spacing:1px;transition:color .2s}
@@ -49,13 +51,10 @@ body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Micro
 
 @media(max-width:600px){
   .page{padding:28px 16px 40px}
-  .timeline-line{left:10px}
-  .epoch-dot{margin-left:-8px}
-  .article{padding-left:34px}
-  .article::before{left:10px;width:12px}
-  .article-meta{position:static;text-align:left;margin-bottom:2px;padding-top:4px}
-  .article-meta .am-date{display:inline;margin-left:4px}
-  .article-card .ac-arrow{display:none}
+  .series-box .tl-content{padding-left:36px;padding-right:12px}
+  .series-box .tl-content .tl-line{left:18px}
+  .article::before{left:-18px;width:8px}
+  .article .adot{left:-22px}
 }
 </style>
 </head>
@@ -65,34 +64,31 @@ body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Micro
 <div class="cover">
 <h1>研究</h1>
 <div class="sub">FoodIntelAI 食品决策库 · 研究内容归档</div>
-<div class="counter"><span id="totalCount">1</span> 篇研究 · 持续更新中</div>
+<div class="counter">1 篇研究 · 持续更新中</div>
 </div>
 
-<div class="timeline">
-<div class="timeline-line"></div>
-
-<!-- 2026年7月 -->
-<div class="epoch">
-<div class="epoch-header">
-<div class="epoch-dot"></div>
-<div class="epoch-label">2026 · 七月</div>
-</div>
+<details class="series-box">
+<summary>
+<span class="sb-icon">🍗</span>
+<span class="sb-name">炸鸡系列</span>
+<span class="sb-count">1 篇</span>
+<span class="sb-arrow">▶</span>
+</summary>
+<div class="tl-content">
+<div class="tl-line"></div>
 
 <a href="炸鸡_炸鸡门派.html" class="article">
-<div class="article-meta">
-<div class="am-date">07.06</div>
-</div>
+<div class="adot"></div>
+<div class="am-date">2026.07.06 · 第1篇</div>
 <div class="article-card">
-<div class="ac-top"><span class="ac-tag">🍗 炸鸡系列</span><span class="ac-tag" style="background:#e8e3db;color:#6a5a3a">第1篇</span></div>
+<div class="ac-top"><span class="ac-tag">门派分类</span></div>
 <div class="ac-title">炸鸡：全世界最受欢迎的鸡肉吃法，到底分几个门派？</div>
 <div class="ac-desc">美式·韩式·日式·菲律宾式·中式——五大门派的工艺逻辑、利润结构和适用人群</div>
-<div class="ac-arrow">→</div>
 </div>
 </a>
 
 </div>
-
-</div>
+</details>
 
 <a href="../index.html" class="back">← 返回首页</a>
 </div>
