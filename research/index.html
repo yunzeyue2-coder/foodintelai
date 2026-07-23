@@ -7,60 +7,51 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
-.page{max-width:720px;width:100%;padding:48px 40px 60px;position:relative}
+.page{max-width:680px;width:100%;padding:48px 40px 60px}
 
-/* 左侧连续时间轴 */
-.page::before{content:'';position:absolute;left:56px;top:100px;bottom:60px;width:2.5px;background:linear-gradient(180deg,#c4a35a,#d4c8a0 60%,#e8e3db);border-radius:2px}
-
-/* 封面 */
-.cover{padding-bottom:20px;margin-bottom:28px;position:relative;padding-left:60px}
+.cover{border-bottom:2px solid #e0ddd5;padding-bottom:20px;margin-bottom:36px;position:relative}
+.cover::after{content:'ARCHIVE';position:absolute;top:0;right:0;font-size:9px;color:#c4a35a;letter-spacing:3px;font-family:'Inter',sans-serif}
 .cover h1{font-size:24px;font-weight:700;color:#1a1a1a;letter-spacing:2px;margin-bottom:2px}
 .cover .sub{font-size:12px;color:#8a7a6a;line-height:1.5}
 
-/* 系列折叠卡 */
-.series-box{position:relative;margin-bottom:12px;padding-left:60px}
-.series-box .sd-dot{position:absolute;left:-4px;top:18px;width:14px;height:14px;border-radius:50%;border:3px solid #c4a35a;background:#f7f5f0;z-index:2}
+.year{margin-bottom:24px}
+.year-header{font-size:13px;font-weight:700;color:#1a1a1a;letter-spacing:4px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #e0ddd5;font-family:'Inter',sans-serif}
 
-.series-box summary{list-style:none;display:flex;align-items:center;gap:10px;padding:12px 18px;cursor:pointer;border-radius:10px;border:1px solid #e8e3db;background:#fff;transition:all .2s;user-select:none}
-.series-box summary::-webkit-details-marker{display:none}
-.series-box summary:hover{border-color:#c4a35a;box-shadow:0 2px 12px rgba(0,0,0,.04)}
-.series-box[open] summary{border-color:#c4a35a;border-radius:10px 10px 0 0}
-.series-box summary .sb-icon{font-size:16px}
-.series-box summary .sb-name{font-size:14px;font-weight:600;color:#2a2218}
-.series-box summary .sb-period{font-size:11px;color:#b5aaa0;font-family:'Inter',sans-serif;margin-left:4px}
-.series-box summary .sb-count{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif;margin-left:auto}
-.series-box summary .sb-arrow{font-size:10px;color:#c4a35a;transition:transform .3s;font-family:'Inter',sans-serif}
-.series-box[open] summary .sb-arrow{transform:rotate(90deg)}
+.week-box{border-left:2.5px solid #e0ddd5;margin-bottom:2px;transition:border-color .2s}
+.week-box[open]{border-left-color:#c4a35a}
 
-/* 展开区 */
-.series-box .sb-body{border:1px solid #c4a35a;border-top:none;border-radius:0 0 10px 10px;background:#fff;padding:4px 18px 12px}
+.week-box summary{list-style:none;display:flex;align-items:center;gap:12px;padding:10px 0 10px 16px;cursor:pointer;transition:background .2s;user-select:none;border-radius:0 4px 4px 0}
+.week-box summary::-webkit-details-marker{display:none}
+.week-box summary:hover{background:#faf8f5}
 
-/* 展开区内部时间轴 */
-.sb-tl{position:relative;padding-left:22px}
-.sb-tl::before{content:'';position:absolute;left:6px;top:8px;bottom:4px;width:1.5px;background:#e0ddd5}
+.week-box summary .wb-week{font-size:18px;font-weight:700;color:#c4a35a;font-family:'Inter',sans-serif;letter-spacing:1px;min-width:72px}
+.week-box summary .wb-title{font-size:15px;font-weight:600;color:#2a2218;letter-spacing:1px}
+.week-box summary .wb-count{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif;margin-left:auto}
+.week-box summary .wb-arrow{font-size:8px;color:#c4a35a;transition:transform .3s;font-family:'Inter',sans-serif}
+.week-box[open] summary .wb-arrow{transform:rotate(90deg)}
 
-/* 文章行 */
-.article{position:relative;margin-top:4px;display:flex;align-items:flex-start;gap:8px;text-decoration:none;color:inherit;padding:6px 8px 6px 0;border-radius:4px;transition:background .15s}
+.week-box .wb-content{border-top:1px solid #f5f0e8;padding:10px 0 6px 28px;position:relative}
+.week-box .wb-content .wl-line{position:absolute;left:10px;top:14px;bottom:10px;width:1.5px;background:#e0ddd5}
+
+.article{position:relative;margin-bottom:4px;display:flex;align-items:flex-start;gap:10px;text-decoration:none;color:inherit;padding:6px 8px 6px 0;border-radius:4px;transition:background .15s}
 .article:hover{background:#faf8f5}
 .article .adot{flex-shrink:0;width:6px;height:6px;border-radius:50%;background:#c4a35a;margin-top:7px;position:relative;z-index:1}
 .article .ar-body{flex:1;min-width:0}
-.article .ar-date{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif;margin-bottom:1px}
-.article .ar-top{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-.article .ar-tag{font-size:9px;padding:1px 5px;border-radius:3px;background:#f0eee8;color:#8a7a6a}
-.article .ar-title{font-size:13px;font-weight:500;color:#2a2218;line-height:1.4;margin-bottom:1px}
+.article .ar-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:1px}
+.article .ar-date{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif}
+.article .ar-tag{font-size:9px;padding:1px 6px;border-radius:3px;background:#f0eee8;color:#8a7a6a;letter-spacing:1px}
+.article .ar-title{font-size:13px;font-weight:500;color:#2a2218;line-height:1.4}
 .article:hover .ar-title{color:#8b6914}
-.article .ar-arrow{font-size:11px;color:#ddd;flex-shrink:0;margin-top:3px;transition:color .2s}
+.article .ar-arrow{font-size:12px;color:#ddd;flex-shrink:0;margin-top:2px;transition:color .2s}
 .article:hover .ar-arrow{color:#c4a35a}
 
-/* 底部 */
-.back{display:inline-block;margin-top:36px;font-size:12px;color:#8b6914;text-decoration:none;font-family:'Inter',sans-serif;letter-spacing:1px;transition:color .2s;margin-left:60px}
+.back{display:inline-block;margin-top:36px;font-size:12px;color:#8b6914;text-decoration:none;font-family:'Inter',sans-serif;letter-spacing:1px;transition:color .2s}
 .back:hover{color:#7a5a04;text-decoration:underline}
 
 @media(max-width:600px){
   .page{padding:28px 16px 40px}
-  .page::before{left:32px}
-  .cover,.series-box,.back{padding-left:36px;margin-left:0}
-  .series-box .sd-dot{left:-4px}
+  .week-box summary .wb-week{font-size:15px;min-width:55px}
+  .week-box summary .wb-title{font-size:13px}
 }
 </style>
 </head>
@@ -72,31 +63,35 @@ body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Micro
 <div class="sub">FoodIntelAI 食品决策库 · 研究内容归档</div>
 </div>
 
-<details class="series-box" open>
-<div class="sd-dot"></div>
+<div class="year">
+<div class="year-header">2026</div>
+
+<details class="week-box" open>
 <summary>
-<span class="sb-icon">🍗</span>
-<span class="sb-name">炸鸡门派分类</span>
-<span class="sb-period">7月第4周</span>
-<span class="sb-count">1 篇</span>
-<span class="sb-arrow">▶</span>
+<span class="wb-week">W28</span>
+<span class="wb-title">炸鸡门派分类</span>
+<span class="wb-count">1 篇</span>
+<span class="wb-arrow">▶</span>
 </summary>
-<div class="sb-body">
-<div class="sb-tl">
+<div class="wb-content">
+<div class="wl-line"></div>
 
 <a href="炸鸡_炸鸡门派.html" class="article">
 <span class="adot"></span>
 <div class="ar-body">
-<div class="ar-date">2026.07.06 周一</div>
+<div class="ar-top">
+<span class="ar-date">07.06</span>
+<span class="ar-tag">🍗 第1篇</span>
+</div>
 <div class="ar-title">炸鸡：全世界最受欢迎的鸡肉吃法，到底分几个门派？</div>
-<div class="ar-top"><span class="ar-tag">第1篇</span></div>
 </div>
 <span class="ar-arrow">→</span>
 </a>
 
 </div>
-</div>
 </details>
+
+</div>
 
 <a href="../index.html" class="back">← 返回首页</a>
 </div>
