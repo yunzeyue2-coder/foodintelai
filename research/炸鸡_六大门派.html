@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>中国炸鸡已经不止是炸鸡了 · FoodIntelAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
+.page{max-width:800px;width:100%;padding:48px 40px 60px}
+.breadcrumb{font-size:11px;color:#b5aaa0;margin-bottom:16px;letter-spacing:1px}
+.breadcrumb a{color:#8b6914;text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+.core{background:linear-gradient(135deg,#1a2a1a,#0B1F3A);color:#f5f0e8;border-radius:12px;padding:24px 28px;margin-bottom:24px}
+.core .cl{font-size:10px;color:#c4a35a;letter-spacing:4px;margin-bottom:6px}
+.core .ct{font-size:15px;font-weight:600;line-height:1.7;color:#f5f0e8;font-style:italic}
+h1{font-size:24px;font-weight:700;color:#1a1a1a;margin-bottom:4px;line-height:1.3;letter-spacing:1px}
+.meta{font-size:11px;color:#b5aaa0;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #e0ddd5;font-family:'Inter',sans-serif}
+.meta span{margin-right:16px}
+h2{font-size:17px;font-weight:700;color:#1a1a1a;margin:28px 0 10px;padding-left:10px;border-left:3px solid #c4a35a;line-height:1.4}
+h3{font-size:14px;font-weight:600;color:#2a2218;margin:18px 0 6px}
+p{font-size:14px;color:#2a2218;line-height:2;margin-bottom:10px}
+.highlight{background:#fcf8f2;border-left:3px solid #c4a35a;padding:12px 16px;margin:12px 0;border-radius:0 6px 6px 0;font-size:13px;line-height:1.8;color:#2a2218}
+.data-note{font-size:11px;color:#8a7a6a;margin:4px 0 12px;font-family:'Inter',sans-serif}
+.chart-box{background:#fff;border:1px solid #e8e3db;border-radius:10px;padding:12px;margin:16px 0;height:320px}
+.chart-med{background:#fff;border:1px solid #e8e3db;border-radius:10px;padding:10px;margin:16px 0;height:240px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+td,th{padding:8px 10px;border:1px solid #d4c8b0;text-align:left;color:#2a2218;vertical-align:top;line-height:1.5}
+th{background:#f0ece4;font-weight:600;color:#1a1a1a;font-size:12px}
+.school-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.school-card{background:#fff;border:1px solid #e8e3db;border-radius:8px;padding:12px 14px}
+.school-card .sc-name{font-size:14px;font-weight:700;color:#2a2218;margin-bottom:2px}
+.school-card .sc-core{font-size:11px;color:#8a7a6a;line-height:1.6;margin-bottom:4px}
+.school-card .sc-data{font-size:11px;color:#6a5a3a;line-height:1.5}
+.school-card .sc-fit{font-size:10px;color:#5a6a4a;margin-top:4px;padding-top:4px;border-top:1px solid #f0ece4}
+.interact{text-align:center;padding:20px;margin:24px 0;background:#fff;border:1px solid #e8e3db;border-radius:10px}
+.interact .iq{font-size:14px;font-weight:600;color:#2a2218;margin-bottom:8px}
+.interact .iopts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.interact .iopts span{font-size:12px;padding:6px 16px;border:1px solid #d4c8b0;border-radius:20px;color:#3a322a;background:#faf8f5}
+.frameworks-bar{background:#faf8f5;border:1px solid #d4c8b0;border-radius:8px;padding:14px 18px;margin:20px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.frameworks-bar .fb-label{font-size:10px;color:#7a5a04;letter-spacing:2px;font-weight:600}
+.frameworks-bar a{font-size:11px;padding:4px 12px;background:#fff;border:1px solid #d4c8b0;border-radius:14px;color:#5a4a3a;text-decoration:none;transition:all .2s}
+.frameworks-bar a:hover{background:#f5f0e8;border-color:#c4a35a;color:#8b6914}
+.insight-box{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1.5px solid #c4a35a;border-radius:10px;padding:16px 20px;margin:20px 0}
+.insight-box .ib-title{font-size:11px;color:#7a5a04;font-weight:600;letter-spacing:2px;margin-bottom:6px}
+.insight-box .ib-text{font-size:13px;color:#2a2218;line-height:1.8}
+hr{border:none;border-top:1px solid #e0ddd5;margin:28px 0}
+.footer{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1px solid #e8e3db;border-radius:12px;padding:28px;text-align:center;margin-top:40px}
+.footer .f1{font-size:15px;font-weight:700;color:#8b6914;letter-spacing:3px;margin-bottom:4px}
+.footer .f2{font-size:12px;color:#888;letter-spacing:2px;margin-bottom:2px}
+.footer .f3{font-size:11px;color:#aaa;margin-top:4px}
+@media(max-width:640px){.page{padding:28px 16px 40px}h1{font-size:20px}.school-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="breadcrumb"><a href="../research/">研究</a> / <span style="color:#8b6914">中国炸鸡六大门派</span></div>
+
+<div class="core">
+<div class="cl">CORE STATEMENT · 核心判断</div>
+<div class="ct">真正的竞争已经不是"谁会炸鸡"，而是谁能给炸鸡讲故事。中式炸鸡2.8万家门店中95.7%的品牌不超过5家店——窗口期还在，但谁先跑通标准化，谁就吃掉这95.7%的分散份额。</div>
+</div>
+
+<h1>中国炸鸡已经不止是炸鸡了：六大门派、八种口味、一场新战争</h1>
+<div class="meta"><span>📅 2026.07.07</span><span>🍗 炸鸡系列 · 第2篇</span><span>📖 约2800字</span></div>
+
+<p>大多数人对炸鸡的认知停留在两种：肯德基那种，和韩式那种。</p>
+<p>但2026年的中国炸鸡市场，远远不止这两类。</p>
+
+<div class="highlight">
+据红餐产业研究院测算，2026年全国中式炸鸡这一个细分市场规模预计达到300亿元<span class="data-note">来源：红餐产业研究院《中式炸鸡品类发展报告2026》<span style="background:#e8f4e8;color:#2a5a3a;padding:1px 5px;border-radius:3px;font-size:9px">FIE-A</span></span>。从工艺到口味到门店模型，中国炸鸡已经裂变成至少六个独立的门派。每一派的工艺、成本、利润逻辑都不一样。
+</div>
+
+<h2>（一）三个时代</h2>
+
+<p>中国炸鸡已经经历了三个时代：</p>
+
+<p><strong>第一阶段：教育时代（1990-2010）。</strong>西式炸鸡第一次系统进入中国市场，教会了中国消费者一件事：炸鸡应该是什么样。几乎没有真正意义上的竞争，谁先进来，谁就是标准。</p>
+
+<p><strong>第二阶段：扩张时代（2010-2020）。</strong>鸡排、韩式炸鸡、街头炸鸡集中爆发，炸鸡从西式快餐变成街边生意。许多区域市场出现过阶段性的"开店即盈利"红利。</p>
+
+<p><strong>第三阶段：就是现在。</strong>竞争已经不是谁会炸鸡，而是谁能给炸鸡讲故事。南乳炸鸡、潮汕炸鸡、贵州糍粑辣椒炸鸡——地域风味正在取代标准口味，成为新的增长点。</p>
+
+<div id="stageChart" class="chart-med"></div>
+
+<h2>（二）六大门派</h2>
+
+<div class="school-grid">
+
+<div class="school-card">
+<div class="sc-name">美式脆皮炸鸡系</div>
+<div class="sc-core">裹粉+高压炸，外脆内汁水足。核心竞争力是标准化能力。</div>
+<div class="sc-data">正新鸡排从2021年2.5万家降至约9500家<span class="data-note">来源：百度百科·正新鸡排<span style="background:#e8f4e8;color:#2a5a3a;padding:1px 5px;border-radius:3px;font-size:9px">FIE-B</span></span>，收缩超60%。增长已近天花板。</div>
+<div class="sc-fit">适合：成熟连锁品牌，增量空间有限</div>
+</div>
+
+<div class="school-card">
+<div class="sc-name">韩式炸鸡系</div>
+<div class="sc-core">复炸+裹酱。真正卖的是口味刺激，难点不在炸在酱。</div>
+<div class="sc-data">消费者第一次记住的是酱味，第二次容易忘记是谁家的酱。同质化风险高。</div>
+<div class="sc-fit">适合：商圈店铺，需持续口味更新</div>
+</div>
+
+<div class="school-card">
+<div class="sc-name" style="color:#c4a35a">中式现炸系 ⭐</div>
+<div class="sc-core">挂糊、生炸、香料重。卖的是烟火气，不是标准化。</div>
+<div class="sc-data">截至2026年6月全国2.8万家门店，95.7%品牌≤5家店。<br>临榆炸鸡腿：22家→1226家（2020-2023）</div>
+<div class="sc-fit">适合：个体户/区域品牌，窗口期最大</div>
+</div>
+
+<div class="school-card">
+<div class="sc-name">台湾夜市炸鸡系</div>
+<div class="sc-core">薄浆+高温快炸。卖的是"大、便宜、满足"。</div>
+<div class="sc-data">客单价偏低，原料人工上涨后一线城市越来越难跑。</div>
+<div class="sc-fit">适合：三四线城市的街边/夜市</div>
+</div>
+
+<div class="school-card">
+<div class="sc-name">鸡架副产物模型</div>
+<div class="sc-core">卖鸡架、鸡脖、鸡锁骨。卖的是供应链剩余价值，不是主产品。</div>
+<div class="sc-data">原料成本低、复购高。全国化受制于区域消费习惯差异。</div>
+<div class="sc-fit">适合：区域王者，难做全国品牌</div>
+</div>
+
+<div class="school-card">
+<div class="sc-name">创意风味炸鸡系</div>
+<div class="sc-core">南乳炸鸡、柠檬炸鸡、地域风味。卖的是社交传播力。</div>
+<div class="sc-data">南乳炸鸡约500家店（18省70+城），单店加盟12-18万，年净增超300家。</div>
+<div class="sc-fit">适合：差异化品牌，消费教育成本高</div>
+</div>
+
+</div>
+
+<h2>（三）八种口味母体</h2>
+
+<p>六个门派背后，其实只有八个口味母体：</p>
+
+<div id="flavorChart" class="chart-med"></div>
+
+<table>
+<tr><th>口味母体</th><th>代表性门派</th><th>特点</th></tr>
+<tr><td><strong>原味盐香型</strong></td><td>美式、中式现炸</td><td>基础口味，供应链最简单</td></tr>
+<tr><td><strong>香辣型</strong></td><td>中式现炸、韩式</td><td>接受度最广的辣味</td></tr>
+<tr><td><strong>麻辣型</strong></td><td>中式现炸（川渝）</td><td>川渝向外输出中</td></tr>
+<tr><td><strong>蒜香型</strong></td><td>中式现炸、韩式</td><td>全国通用，门槛最低</td></tr>
+<tr><td><strong>甜辣型</strong></td><td>韩式</td><td>韩式炸鸡基础味型</td></tr>
+<tr><td><strong>孜然烧烤型</strong></td><td>鸡架副产物</td><td>夜市场景核心味型</td></tr>
+<tr><td><strong>酱香发酵型</strong></td><td>创意风味（南乳）</td><td>差异化最大，教育成本最高</td></tr>
+<tr><td><strong>芝士奶香型</strong></td><td>创意风味、韩式</td><td>年轻消费者偏好，成本高</td></tr>
+</table>
+
+<div class="insight-box">
+<div class="ib-title">💡 研究者判断</div>
+<div class="ib-text">六大门派、八种口味。选哪条路，取决于你想做规模还是做利润。想做规模，走标准化高的路线；想做利润，走差异化强的路线。但一个赛道里95.7%的品牌不超过5家店——说明门槛没低到谁都能做，也没高到没人能进。谁先跑通标准化，谁就吃掉剩下那4.3%的集中份额。</div>
+</div>
+
+<div class="interact">
+<div class="iq">💬 六大门派里，你觉得哪个最有机会跑出下一个万店品牌？</div>
+<div class="iopts">
+<span>A 中式现炸——2.8万家店，极度分散</span>
+<span>B 创意风味——差异化最高</span>
+<span>C 鸡架副产物——毛利最高</span>
+<span>D 都不是，我觉得还有新门派</span>
+</div>
+</div>
+
+<div class="frameworks-bar">
+<span class="fb-label">📎 关联框架</span>
+<a href="../frameworks/FIS-002_五世界分类模型.html">FIS-002 五世界分类</a>
+<a href="../frameworks/FIF-003_品类定位框架.html">FIF-003 品类定位</a>
+<a href="../frameworks/FIS-003_品类生命周期模型.html">FIS-003 品类生命周期</a>
+</div>
+
+<hr>
+
+<div class="footer">
+<div class="f1">FoodIntelAI食品决策库</div>
+<div class="f2">少走弯路 · 快人一步</div>
+<div class="f3">单品拆解 · 落地路径 · 品类研判</div>
+</div>
+
+</div>
+
+<script>
+var stageChart = echarts.init(document.getElementById('stageChart'));
+stageChart.setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+    grid:{left:'6%',right:'6%',bottom:'14%',top:'10%'},
+    xAxis:{type:'category',data:['1990-2010\n教育时代','2010-2020\n扩张时代','2020-今\n故事时代'],axisLabel:{color:'#6a5a3a',fontSize:10,interval:0},axisLine:{lineStyle:{color:'#d4c8b0'}}},
+    yAxis:{type:'value',min:0,max:5,splitLine:{lineStyle:{color:'#e8e3db',type:'dashed'}},axisLabel:{color:'#8a7a6a',fontSize:10},show:false},
+    series:[{
+        type:'bar',barWidth:'30%',
+        data:[
+            {value:2,name:'教育时代',itemStyle:{color:'#d4c8b0',borderRadius:[4,4,0,0]}},
+            {value:3.5,name:'扩张时代',itemStyle:{color:'#C8A45D',borderRadius:[4,4,0,0]}},
+            {value:5,name:'故事时代',itemStyle:{color:'#8b6914',borderRadius:[4,4,0,0]}}
+        ],
+        label:{show:true,position:'top',color:'#6a5a3a',fontSize:11,fontWeight:500,
+            formatter:function(p){return ['西式进入·教育市场','鸡排爆发·开店红利','地域风味·讲故事'][p.dataIndex]}}
+    }]
+});
+window.addEventListener('resize',function(){stageChart.resize()});
+
+var flavorChart = echarts.init(document.getElementById('flavorChart'));
+flavorChart.setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'item'},
+    legend:{orient:'vertical',left:'left',textStyle:{color:'#6a5a3a',fontSize:10},itemWidth:10,itemHeight:10},
+    series:[{
+        type:'pie',radius:['35%','60%'],center:['60%','50%'],
+        label:{fontSize:10,color:'#3a322a',formatter:'{b}: {d}%'},
+        emphasis:{label:{fontSize:12,fontWeight:'bold'}},
+        data:[
+            {value:18,name:'原味盐香',itemStyle:{color:'#8b6914'}},
+            {value:20,name:'香辣型',itemStyle:{color:'#c43a3a'}},
+            {value:15,name:'麻辣型',itemStyle:{color:'#e87a2a'}},
+            {value:12,name:'蒜香型',itemStyle:{color:'#3A8D5D'}},
+            {value:15,name:'甜辣型',itemStyle:{color:'#C8A45D'}},
+            {value:10,name:'孜然烧烤',itemStyle:{color:'#5a3a1a'}},
+            {value:5,name:'酱香发酵',itemStyle:{color:'#7a3a6a'}},
+            {value:5,name:'芝士奶香',itemStyle:{color:'#d4a84a'}}
+        ]
+    }]
+});
+window.addEventListener('resize',function(){flavorChart.resize()});
+</script>
+</body>
+</html>
