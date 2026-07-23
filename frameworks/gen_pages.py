@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""批量生成 Frameworks 详情页"""
+"""批量生成 Frameworks 详情页 V2.0 — 加入 Core Statement"""
 import os
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
 pages = [
-    # (filename, code, name, subtitle, category, version, evidence, definition, why, scope, limit, method, related)
+    # (filename, code, name, subtitle, category, version, evidence, core_statement, definition, why, scope, limit, method, related)
     
     ("FIP-001_系统原则", "FIP-001", "系统原则", "FOODINTELAI PRINCIPLES · SYSTEM", "研究原则", "V1.0", "宪章级",
+     "产业的每一个现象都不是孤立的，而是因果链中的一个节点。",
      "产业不是孤立现象，而是由消费者、需求、场景、渠道、产品、技术、供应链、产业格局构成的八链因果系统。任何单一环节的变化都会通过因果链传导至其他环节。研究不能停留在局部现象，必须放在系统里理解。",
      "食品行业的大量分析停留在品类规模多大的局部描述层面，缺乏对产业运行机制的整体理解。系统原则要求研究者始终追问：这个现象在整条因果链的哪个位置？",
      "所有食品产业研究的第一原则。任何品类分析开始前，先定位它在八链因果链中的位置。",
@@ -16,6 +17,7 @@ pages = [
      '<a href="FIS-001_食品产业系统模型.html" class="rt">FIS-001</a> <a href="FIF-001_七维产业决策框架.html" class="rt">FIF-001</a>'),
 
     ("FIP-002_因果原则", "FIP-002", "因果原则", "FOODINTELAI PRINCIPLES · CAUSALITY", "研究原则", "V1.0", "宪章级",
+     "不描述表象，而是追问为什么发生、为什么成功、为什么失败。",
      "不描述表象，寻找为什么发生、为什么成功、为什么失败。建立现象到原因到规律到模型的完整分析路径。",
      "食品行业大量内容停留在是什么层面。因果原则要求穿透到为什么。",
      "适用于所有深度产业研究。是FoodIntelAI区别于普通行业报道的核心原则。",
@@ -24,6 +26,7 @@ pages = [
      '<a href="FIP-001_系统原则.html" class="rt">FIP-001</a>'),
 
     ("FIP-003_消费者优先原则", "FIP-003", "消费者优先原则", "FOODINTELAI PRINCIPLES · CONSUMER FIRST", "研究原则", "V1.0", "宪章级",
+     "所有产业变化的起点是消费者需求变化，而不是技术或渠道。",
      "所有产业变化的起点是消费者需求变化。技术、供应链、渠道变化都是结果，不是原因。",
      "食品行业容易被技术叙事带偏。真正驱动变化的不是技术，而是消费者需求变了。",
      "适用于消费者端品类分析。在分析任何产业变化时，先问：消费者的什么需求变了？",
@@ -32,6 +35,7 @@ pages = [
      '<a href="FIS-001_食品产业系统模型.html" class="rt">FIS-001</a>'),
 
     ("FIP-004_证据原则", "FIP-004", "证据原则", "FOODINTELAI PRINCIPLES · EVIDENCE", "研究原则", "V1.0", "宪章级",
+     "所有判断必须区分事实、判断和假设，三级信息不得作为核心结论依据。",
      "所有判断必须区分事实、判断和假设。三级信息不得作为核心结论依据。",
      "大量信息混杂在一起。证据原则要求研究者始终标注：这句话是事实、判断还是假设？",
      "适用于所有FoodIntelAI输出的内容。是内容生产的底线标准。",
@@ -40,6 +44,7 @@ pages = [
      '<a href="FIE-A_高可信事实.html" class="rt">FIE-A</a> <a href="FIE-B_可信参考信息.html" class="rt">FIE-B</a>'),
 
     ("FIP-005_边界原则", "FIP-005", "边界原则", "FOODINTELAI PRINCIPLES · BOUNDARY", "研究原则", "V1.0", "宪章级",
+     "每一个框架都有适用范围和边界条件，跨品类应用需重新验证。",
      "每一个框架都有适用范围和边界条件。任何分析模型不能超出其验证过的品类和场景。跨品类应用需重新验证。",
      "一个模型在卤味验证了，不等于在小吃也适用。边界原则要求研究者始终清楚框架的适用范围。",
      "适用于所有框架的使用和引用。每个框架的首页必须标注已验证的品类和场景。",
@@ -47,7 +52,17 @@ pages = [
      "在使用任何框架前，先确认它在什么品类验证过。",
      '<a href="FIM-003_多模型并列分析法.html" class="rt">FIM-003</a>'),
 
+    ("FIF-001_七维产业决策框架", "FIF-001", "七维产业决策框架", "FOODINTELAI FRAMEWORK · 7-DIMENSION", "分析框架", "V1.0", "FIS-001·已验证",
+     "产业基础决定市场空间，七个维度递进判断一个品类值不值得进入。",
+     "产业基础·市场定位·商业模式·产业周期·竞争优势·组织能力·资本价值——七个递进问题判断一个食品产业值不值得进入。从有没有产业基础到有没有资本放大价值，前一个问题的答案决定后一个问题能不能问。",
+     "大多数品类分析只回答两个问题：市场大不大、我能不能做。七个维度覆盖从产业基本面到退出机制的全链条。",
+     "适用于食品品类进入决策：卤味、炸鸡、早餐验证。",
+     "框架提供决策逻辑，不提供具体数值阈值。每个维度的评分需结合品类实际数据。",
+     "从七个维度逐一提问：有产业基础吗？有真市场吗？商业模式成立吗？处于什么周期？有竞争优势吗？团队能撑到吗？能放大吗？任一维度否定即不适合进入。",
+     '<a href="FIS-001_食品产业系统模型.html" class="rt">FIS-001</a> <a href="FIS-003_品类生命周期模型.html" class="rt">FIS-003</a>'),
+
     ("FIF-002_全国化分析框架", "FIF-002", "全国化分析框架", "FOODINTELAI FRAMEWORK · NATIONAL SCALE", "分析框架", "V1.0", "已验证",
+     "供应链成熟不等于能全国化，五个变量共同决定。",
      "五变量决定一个品类能否全国化：供应链成熟度、标准化深度、消费认知统一性、场景一致性、组织复制能力。",
      "大量食品企业把供应链标准化等同于可以全国化，忽略消费认知的地域壁垒。",
      "适用于食品品类全国化分析。已验证：早餐、卤味。",
@@ -56,6 +71,7 @@ pages = [
      '<a href="FIF-001_七维产业决策框架.html" class="rt">FIF-001</a>'),
 
     ("FIF-003_品类定位框架", "FIF-003", "品类定位框架", "FOODINTELAI FRAMEWORK · POSITIONING", "分析框架", "V0.9", "优化中",
+     "一个品类不在所有维度竞争，而是在特定位置竞争。",
      "产品、渠道、场景、供应链四维定位。一个品类在特定位置竞争。",
      "把赛道当作整体分析忽略内部不同定位的竞争逻辑差异。",
      "适用于品类内部分析。帮助定位品类竞争的真实位置。",
@@ -64,6 +80,7 @@ pages = [
      '<a href="FIS-002_五世界分类模型.html" class="rt">FIS-002</a>'),
 
     ("FIF-004_商业模式分析框架", "FIF-004", "商业模式分析框架", "FOODINTELAI FRAMEWORK · BUSINESS MODEL", "分析框架", "V1.0", "早餐验证",
+     "手艺驱动/流程驱动/供应链驱动/品牌驱动/平台驱动——五种模型各有各的天花板。",
      "手艺/流程/供应链/品牌/平台五种经营模型，各有各的天花板和杠杆。",
      "卖手艺的钱、卖流程的钱、卖供应链的钱，赚钱逻辑完全不同。",
      "适用于小餐饮及食品创业项目的商业模式归类。",
@@ -72,6 +89,7 @@ pages = [
      '<a href="FIS-004_老板自由度模型.html" class="rt">FIS-004</a>'),
 
     ("FIF-005_价值链分析框架", "FIF-005", "价值链分析框架", "FOODINTELAI FRAMEWORK · VALUE CHAIN", "分析框架", "V0.9", "定型中",
+     "利润分配由价值链结构决定，不是由品牌决定。",
      "从原料到消费者，利润在哪个环节产生、在哪个环节消耗。",
      "利润分配由价值链结构决定，不是由品牌决定。",
      "适用于产业链中上游分析和利润分配研究。",
@@ -80,6 +98,7 @@ pages = [
      '<a href="FIS-001_食品产业系统模型.html" class="rt">FIS-001</a>'),
 
     ("FIS-001_食品产业系统模型", "FIS-001", "食品产业系统模型", "FOODINTELAI SYSTEM · EIGHT CHAINS", "系统模型", "V1.2", "基础模型",
+     "八链因果模型：消费者→需求→场景→渠道→产品→技术→供应链→产业格局。方向不可逆。",
      "八链因果模型：消费者到需求到场景到渠道到产品到技术到供应链到产业格局。方向不可逆。",
      "没有系统模型时易把相关关系误认为因果关系。",
      "适用于所有品类研究的底层框架。",
@@ -88,6 +107,7 @@ pages = [
      '<a href="FIP-001_系统原则.html" class="rt">FIP-001</a>'),
 
     ("FIS-002_五世界分类模型", "FIS-002", "五世界分类模型", "FOODINTELAI SYSTEM · FIVE WORLDS", "系统模型", "V1.0", "已验证",
+     "同一品类内部不同世界的竞争逻辑完全不同，不能混为一谈。",
      "休闲、佐餐、地方、餐饮、工业。同一品类内部不同世界竞争逻辑完全不同。",
      "品类内部包含多个竞争逻辑截然不同的子市场。",
      "适用于内部结构复杂的食品品类。已验证：卤味。",
@@ -96,6 +116,7 @@ pages = [
      '<a href="FIF-003_品类定位框架.html" class="rt">FIF-003</a>'),
 
     ("FIS-003_品类生命周期模型", "FIS-003", "品类生命周期模型", "FOODINTELAI SYSTEM · LIFECYCLE", "系统模型", "V1.0", "已验证",
+     "同一品类在不同阶段的进入策略完全不同，生命周期决定竞争焦点。",
      "导入、成长、成熟、分化、重构。每个阶段的关键变量和竞争焦点不同。",
      "同一品类在不同阶段的进入策略完全不同。",
      "适用于品类层面的阶段判断和创业方向评估。",
@@ -104,6 +125,7 @@ pages = [
      '<a href="FIF-001_七维产业决策框架.html" class="rt">FIF-001</a>'),
 
     ("FIS-004_老板自由度模型", "FIS-004", "老板自由度模型", "FOODINTELAI SYSTEM · BOSS FREEDOM", "系统模型", "V1.0", "早餐验证",
+     "老板不在时这家店还能不能赚钱——三个指标判断经营自由度。",
      "生产自由度、管理自由度、复制自由度。三个指标判断一家店能否脱离老板独立运转。",
      "大多数分析忽略最根本的问题：老板不在时这家店还能不能赚钱？",
      "适用于小餐饮独立门店的经营模型评估。早餐验证。",
@@ -112,6 +134,7 @@ pages = [
      '<a href="FIF-004_商业模式分析框架.html" class="rt">FIF-004</a>'),
 
     ("FIS-005_压力测试与脆弱性分析", "FIS-005", "压力测试与脆弱性分析", "FOODINTELAI SYSTEM · STRESS TEST", "系统模型", "V0.9", "定型中",
+     "不只研究为什么成功，也研究在什么情况下会失败。",
      "外部冲击、内部缺陷、极端情景。不只研究为什么成功，也研究为什么可能失败。",
      "传统商业分析只看增长路径，很少问在什么情况下会崩溃。",
      "适用于任何商业模型的完整性评估。",
@@ -120,7 +143,8 @@ pages = [
      '<a href="FIF-001_七维产业决策框架.html" class="rt">FIF-001</a>'),
 
     ("FIM-001_八步研究法", "FIM-001", "八步研究法", "FOODINTELAI METHOD · 8-STEP RESEARCH", "研究方法", "V1.0", "核心流程",
-     "锁定框架、宏观资料、聚焦单篇、审结构、中微观资料、检查对比、写作、审核。数据缺口表先行。",
+     "先研究后动笔——八步法保证研究过程的完整性。",
+     "锁定框架→宏观资料→聚焦单篇→审结构→中微观资料→检查对比→写作→审核。数据缺口表先行。",
      "写作前不做充分研究是早期最大的教训。八步法强制先研究后动笔。",
      "适用于所有正式研究文章的生产流程。",
      "不适用于快速反应类内容。",
@@ -128,6 +152,7 @@ pages = [
      '<a href="FIM-004_数据交叉验证法.html" class="rt">FIM-004</a>'),
 
     ("FIM-002_第一性原理分析", "FIM-002", "第一性原理分析", "FOODINTELAI METHOD · FIRST PRINCIPLES", "研究方法", "V1.0", "核心方法",
+     "回归最基本的物理约束和经济学规律，从零开始推导品类天花板。",
      "回归产业最基本的物理约束和经济学规律，从零开始推导品类的结构性天花板。",
      "打破行业共识，回到最基本的事实。",
      "适用于创新型品类分析或需要打破既有认知框架的场景。",
@@ -136,6 +161,7 @@ pages = [
      '<a href="FIP-001_系统原则.html" class="rt">FIP-001</a>'),
 
     ("FIM-003_多模型并列分析法", "FIM-003", "多模型并列分析法", "FOODINTELAI METHOD · MULTI-MODEL", "研究方法", "V1.0", "核心方法",
+     "任何品类不能用单一模型解释，至少三种分析视角并列。",
      "任何食品品类不能用单一模型解释。按品类区域规模分别建立模型并列分析。",
      "把早餐当作一个整体来分析是最大的错误。",
      "适用于所有品类分析，是FoodIntelAI的默认方法。",
@@ -144,6 +170,7 @@ pages = [
      '<a href="FIP-005_边界原则.html" class="rt">FIP-005</a>'),
 
     ("FIM-004_数据交叉验证法", "FIM-004", "数据交叉验证法", "FOODINTELAI METHOD · CROSS-VERIFY", "研究方法", "V1.0", "核心方法",
+     "任何重要数据需要至少两个独立来源验证，无法验证的标记为待验证。",
      "任何重要数据需要至少两个独立来源验证。无法验证的数据标记为待验证信息。",
      "单一来源数据往往带有目的性，交叉验证是防范数据风险的核心手段。",
      "适用于所有涉及具体数据的分析场景。",
@@ -152,6 +179,7 @@ pages = [
      '<a href="FIP-004_证据原则.html" class="rt">FIP-004</a>'),
 
     ("FIM-005_认知重构写作法", "FIM-005", "认知重构写作法", "FOODINTELAI METHOD · COGNITIVE WRITING", "研究方法", "V1.0", "核心方法",
+     "不是提出观点然后给数据，而是重建读者的认知坐标系。",
      "重建读者的认知坐标系：反常识事实、拆解表象、揭示矛盾、提出新框架、留下开放问题。",
      "认知重构的阅读体验更强烈，传播性更好。",
      "适用于面向公众的深度分析文章。",
@@ -160,6 +188,7 @@ pages = [
      '<a href="FIM-001_八步研究法.html" class="rt">FIM-001</a>'),
 
     ("FIE-A_高可信事实", "FIE-A", "高可信事实", "FOODINTELAI EVIDENCE · LEVEL A", "证据体系", "V1.0", "可引用",
+     "官方公开数据、上市公司公告、权威机构报告——可直接用于核心结论。",
      "官方公开数据、上市公司公告、权威机构报告、可验证经营数据。可作为核心结论依据。",
      "A级证据是研究的基础。只有A级数据可以直接用于核心判断。",
      "适用于所有深度研究文章的核心论据引用。",
@@ -168,6 +197,7 @@ pages = [
      '<a href="FIM-004_数据交叉验证法.html" class="rt">FIM-004</a>'),
 
     ("FIE-B_可信参考信息", "FIE-B", "可信参考信息", "FOODINTELAI EVIDENCE · LEVEL B", "证据体系", "V1.0", "可引用",
+     "企业公开信息、行业访谈、专业媒体——可辅助引用，需标注来源。",
      "企业公开信息、行业访谈、专业媒体报道。可作为辅助论据需标注来源。",
      "行业洞察来自访谈和媒体，但缺乏验证路径。B级允许使用但限制用途。",
      "适用于趋势描述、案例背景等非核心论证部分。",
@@ -176,6 +206,7 @@ pages = [
      '<a href="FIE-A_高可信事实.html" class="rt">FIE-A</a>'),
 
     ("FIE-C_待验证信息", "FIE-C", "待验证信息", "FOODINTELAI EVIDENCE · LEVEL C", "证据体系", "V1.0", "有条件使用",
+     "企业宣传数据、市场传言、单一来源观点——不得直接作为核心结论依据。",
      "企业宣传数据、市场传言、单一来源观点。不得直接作为核心结论依据。",
      "C级信息风险最高，使用不当直接损害可信度。",
      "仅用于信息收集阶段或方向性讨论。",
@@ -184,6 +215,7 @@ pages = [
      '<a href="FIE-B_可信参考信息.html" class="rt">FIE-B</a>'),
 
     ("FIE-D_行业经验判断", "FIE-D", "行业经验判断", "FOODINTELAI EVIDENCE · LEVEL D", "证据体系", "V1.0", "谨慎使用",
+     "从业者的定性判断有参考价值，但经验不等于事实。",
      "基于从业经验的定性判断，无公开数据支撑。用于方向性分析需注明行业经验。",
      "大量有价值的洞察来自从业者经验，但经验不等于事实。",
      "适用于方向判断、趋势感知等非精确论证场景。",
@@ -202,6 +234,9 @@ template = '''<!DOCTYPE html>
 *{{margin:0;padding:0;box-sizing:border-box}}
 body{{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}}
 .page{{max-width:800px;width:100%;padding:48px 40px 60px}}
+.core{{background:linear-gradient(135deg,#1a2a1a,#0B1F3A);color:#f5f0e8;border-radius:10px;padding:18px 24px;margin-bottom:24px}}
+.core .cl{{font-size:9px;color:#c4a35a;letter-spacing:3px;margin-bottom:4px}}
+.core .ct{{font-size:14px;font-weight:600;line-height:1.6;color:#f5f0e8;font-style:italic}}
 .meta-bar{{display:flex;gap:14px;margin-bottom:24px;flex-wrap:wrap}}
 .meta-bar .mb-item{{font-size:11px;color:#8a7a6a;padding:4px 12px;border:1px solid #e0ddd5;border-radius:6px}}
 .meta-bar .mb-item strong{{color:#8b6914}}
@@ -222,6 +257,10 @@ hr{{border:none;border-top:1px solid #e0ddd5;margin:32px 0}}
 </head>
 <body>
 <div class="page">
+<div class="core">
+<div class="cl">CORE STATEMENT · 核心判断</div>
+<div class="ct">{core}</div>
+</div>
 <div class="meta-bar">
 <span class="mb-item"><strong>{code}</strong></span>
 <span class="mb-item">{category}</span>
@@ -261,13 +300,13 @@ hr{{border:none;border-top:1px solid #e0ddd5;margin:32px 0}}
 </div></body></html>
 '''
 
-for fname, code, name, subtitle, category, version, evidence, definition, why, scope, limit, method, related in pages:
+for fname, code, name, subtitle, category, version, evidence, core, definition, why, scope, limit, method, related in pages:
     path = os.path.join(base_dir, f"{fname}.html")
     content = template.format(code=code, name=name, subtitle=subtitle, category=category,
-                              version=version, evidence=evidence, definition=definition,
+                              version=version, evidence=evidence, core=core, definition=definition,
                               why=why, scope=scope, limit=limit, method=method, related=related)
     with open(path, 'w') as f:
         f.write(content)
-    print(f"  {code} {name}")
+    print(f"  {code} {name} ✓")
 
-print(f"\n共生成 {len(pages)} 个框架详情页")
+print(f"\n共生成 {len(pages)} 个框架详情页（V2.0）")
