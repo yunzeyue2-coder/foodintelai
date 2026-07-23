@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>中国到底有几个卤味世界？· FoodIntelAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
+.page{max-width:800px;width:100%;padding:48px 40px 60px}
+.breadcrumb{font-size:11px;color:#b5aaa0;margin-bottom:16px;letter-spacing:1px}
+.breadcrumb a{color:#8b6914;text-decoration:none}
+.core{background:linear-gradient(135deg,#1a2a1a,#0B1F3A);color:#f5f0e8;border-radius:12px;padding:24px 28px;margin-bottom:24px}
+.core .cl{font-size:10px;color:#c4a35a;letter-spacing:4px;margin-bottom:6px}
+.core .ct{font-size:15px;font-weight:600;line-height:1.7;color:#f5f0e8;font-style:italic}
+h1{font-size:23px;font-weight:700;color:#1a1a1a;margin-bottom:4px;line-height:1.3;letter-spacing:1px}
+.meta{font-size:11px;color:#b5aaa0;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #e0ddd5;font-family:'Inter',sans-serif}
+.meta span{margin-right:16px}
+h2{font-size:17px;font-weight:700;color:#1a1a1a;margin:28px 0 10px;padding-left:10px;border-left:3px solid #c4a35a;line-height:1.4}
+h3{font-size:14px;font-weight:600;color:#2a2218;margin:16px 0 6px}
+h4{font-size:13px;font-weight:600;color:#7a5a04;margin:12px 0 4px}
+p{font-size:14px;color:#2a2218;line-height:2;margin-bottom:10px}
+.highlight{background:#fcf8f2;border-left:3px solid #c4a35a;padding:12px 16px;margin:12px 0;border-radius:0 6px 6px 0;font-size:13px;line-height:1.8;color:#2a2218}
+.data-note{font-size:10px;color:#8a7a6a;margin:2px 0;font-family:'Inter',sans-serif;line-height:1.5}
+.chart-box{background:#fff;border:1px solid #e8e3db;border-radius:10px;padding:10px;margin:16px 0;height:300px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12.5px}
+td,th{padding:6px 8px;border:1px solid #d4c8b0;text-align:left;color:#2a2218;vertical-align:top;line-height:1.5}
+th{background:#f0ece4;font-weight:600;color:#1a1a1a;font-size:11px}
+.insight-box{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1.5px solid #c4a35a;border-radius:10px;padding:16px 20px;margin:20px 0}
+.insight-box .ib-title{font-size:11px;color:#7a5a04;font-weight:600;letter-spacing:2px;margin-bottom:6px}
+.insight-box .ib-text{font-size:13px;color:#2a2218;line-height:1.8}
+.interact{text-align:center;padding:20px;margin:24px 0;background:#fff;border:1px solid #e8e3db;border-radius:10px}
+.interact .iq{font-size:14px;font-weight:600;color:#2a2218;margin-bottom:8px}
+.interact .iopts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.interact .iopts span{font-size:12px;padding:6px 16px;border:1px solid #d4c8b0;border-radius:20px;color:#3a322a;background:#faf8f5}
+.frameworks-bar{background:#faf8f5;border:1px solid #d4c8b0;border-radius:8px;padding:14px 18px;margin:20px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.frameworks-bar .fb-label{font-size:10px;color:#7a5a04;letter-spacing:2px;font-weight:600}
+.frameworks-bar a{font-size:11px;padding:4px 12px;background:#fff;border:1px solid #d4c8b0;border-radius:14px;color:#5a4a3a;text-decoration:none}
+.frameworks-bar a:hover{background:#f5f0e8;border-color:#c4a35a;color:#8b6914}
+
+/* 四维模型 */
+.axis-box{border:1.5px solid #c4a35a;border-radius:10px;padding:16px 20px;margin:16px 0;background:#fff}
+.axis-box .ab-title{font-size:11px;color:#8b6914;font-weight:600;letter-spacing:2px;margin-bottom:10px}
+.axis-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.axis-item{background:#faf8f5;border:1px solid #e8e3db;border-radius:8px;padding:10px 12px}
+.axis-item .ai-label{font-size:9px;color:#c4a35a;letter-spacing:2px;font-family:'Inter',sans-serif;margin-bottom:2px}
+.axis-item .ai-name{font-size:14px;font-weight:700;color:#2a2218;margin-bottom:2px}
+.axis-item .ai-q{font-size:11px;color:#6a5a3a;line-height:1.5}
+
+hr{border:none;border-top:1px solid #e0ddd5;margin:28px 0}
+.footer{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1px solid #e8e3db;border-radius:12px;padding:28px;text-align:center;margin-top:40px}
+.footer .f1{font-size:15px;font-weight:700;color:#8b6914;letter-spacing:3px;margin-bottom:4px}
+.footer .f2{font-size:12px;color:#888;letter-spacing:2px;margin-bottom:2px}
+.footer .f3{font-size:11px;color:#aaa;margin-top:4px}
+@media(max-width:640px){.page{padding:28px 16px 40px}h1{font-size:20px}.axis-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="breadcrumb"><a href="../research/">研究</a> / <span style="color:#8b6914">中国卤味的五世界</span></div>
+
+<div class="core">
+<div class="cl">CORE STATEMENT · 核心判断</div>
+<div class="ct">中国不存在一个统一的卤味市场。这个问题不是「卤味有没有千亿市场」，而是「这个千亿由多少个互不兼容的小世界拼起来的」。</div>
+</div>
+
+<h1>中国到底有几个卤味世界？——四维定位模型与五类生态</h1>
+<div class="meta"><span>📅 2026.07.15</span><span>🦆 卤味系列 · 第3篇</span><span>📖 约3800字</span></div>
+
+<div class="highlight">
+休闲卤味和佐餐卤味几乎对半分，各占约45.6%。五家上市企业合计占市场仅约8%。500家门店以上规模的品牌只占1.4%。<br><br>
+这个市场不是「几个大玩家加一堆小玩家」的经典格局，而是「一个极其分散的底座上，悬浮着几个规模化的孤岛」。
+</div>
+
+<div id="structureChart" class="chart-box"></div>
+
+<h2>（一）四个为什么——卤味为什么碎成这个样子</h2>
+
+<h3>变量一：原料决定产业的起点</h3>
+<p>不同区域产不同的东西，直接决定了当地卤味能做什么。湖南、湖北、江西最先跑出鸭副工业化模型。江浙沪走整鸭制品路线。广东认烧鹅、白切鸡。河南猪副产品需求极大，但靠的是进口冻品集采，不是本地供给。鸡爪的供给更是严重依赖进口冷链。</p>
+<div class="highlight">
+先有产业，再有卤味。你的生意是否建立在可标准化、可规模化获取的原料基础之上，决定了你的增长天花板。
+</div>
+
+<h3>变量二：饮食文化决定口味天花板</h3>
+<p>四川复合麻辣、广东药材香、江苏酱香甜、湖南鲜辣——这些都是几百年饮食文化演化出来的标准，不是研发出来的。口味收敛有利于规模化，但会牺牲区域认同；保留区域特色可以赢得本地市场，但做不大。</p>
+
+<h3>变量三：消费场景决定产品形态</h3>
+<p>广东人买卤味是佐餐，四川人买是零食，东北人买是熟食。佐餐要分量大、口味适中；休闲要小包装、口味重；熟食要耐储存。场景本身也在演化——外卖平台正在创造第四种场景"即时犒劳"。</p>
+
+<h3>变量四：组织模式决定增长天花板</h3>
+<p>有一个物理层面的锁死往往被忽略：连锁品牌必须采用气调包装配合冷链，产品到消费者手里是冷食。社区店卖的是现捞热卤——带温感、带卤汁空气扩散。<strong>温度，在物理上锁死了这两套模型的体验边界。</strong></p>
+
+<h2>（二）FoodIntelAI 四维产业定位模型</h2>
+
+<div class="axis-box">
+<div class="ab-title">📐 四维产业定位模型</div>
+<div class="axis-grid">
+<div class="axis-item">
+<div class="ai-label">第一轴</div>
+<div class="ai-name">原料</div>
+<div class="ai-q">用什么动物蛋白？鸭、鸡、猪、牛、羊、鹅？决定了供应链起点和成本结构。</div>
+</div>
+<div class="axis-item">
+<div class="ai-label">第二轴</div>
+<div class="ai-name">组织形态</div>
+<div class="ai-q">门店加盟、工厂供货、产区集群多品牌共存、前店后厂？决定了复制能力和扩张节奏。</div>
+</div>
+<div class="axis-item">
+<div class="ai-label">第三轴</div>
+<div class="ai-name">地理范围</div>
+<div class="ai-q">全国、区域、还是地名绑定的本地产区？决定了市场空间和消费认知成本。</div>
+</div>
+<div class="axis-item">
+<div class="ai-label">第四轴</div>
+<div class="ai-name">资本背景</div>
+<div class="ai-q">零资本、家族资本、风险投资、证券上市？决定了资源天花板和抗风险能力。</div>
+</div>
+</div>
+<p style="font-size:12px;color:#8a7a6a;margin-top:8px">前两轴回答「企业靠什么活着」，后两轴回答「企业能长多大」。</p>
+</div>
+
+<h2>（三）五类典型的坐标组合</h2>
+
+<table>
+<tr><th>类型</th><th>原料</th><th>组织形态</th><th>地理范围</th><th>资本背景</th></tr>
+<tr><td><strong>社区卤味店</strong></td><td>混合</td><td>前店后厂</td><td>本地几百米</td><td>零资本/自有</td></tr>
+<tr><td><strong>产区老字号</strong></td><td>鸡（整鸡）</td><td>产区集群27家老字号</td><td>区域→全国</td><td>家族老字号</td></tr>
+<tr><td><strong>连锁品牌</strong></td><td>鸭（鸭副）</td><td>加盟连锁万店</td><td>全国</td><td>A股上市</td></tr>
+<tr><td><strong>渠道品牌</strong></td><td>鸡（凤爪）</td><td>工厂+经销零门店</td><td>全国</td><td>A股上市</td></tr>
+<tr><td><strong>新消费品牌</strong></td><td>鸡（凤爪）</td><td>工厂+电商/经销</td><td>全国</td><td>风险投资</td></tr>
+</table>
+
+<div class="insight-box">
+<div class="ib-title">💡 研究者判断</div>
+<div class="ib-text">四种生态位彼此之间几乎没有直接竞争。社区店的竞争对手不是连锁品牌，是隔壁的凉菜摊。连锁品牌的竞争对手是其他连锁品牌，不是菜市场那家姐妹档。<br><br>
+真正决定中国卤味格局的，不是哪个品牌更强，而是原料、组织形态、地理范围、资本背景四个坐标怎么组合。那几个经常出现在财经新闻里的名字，只是这四维空间里很小的一个角落。</div>
+</div>
+
+<h2>（四）下一章预告</h2>
+
+<p>既然每个生态位的坐标不同——那么钱到底流向哪里？不同坐标上的经营体，赚钱逻辑有什么本质区别？</p>
+<p style="font-size:13px;color:#8a7a6a">下一章：钱到底流向哪里？</p>
+
+<div class="interact">
+<div class="iq">💬 一家社区卤味店想要规模化扩张，最先要改变的是四条轴线里的哪一条？</div>
+<div class="iopts">
+<span>A 原料——换工业化原料</span>
+<span>B 组织形态——从手艺转向系统</span>
+<span>C 地理范围——走出本地</span>
+<span>D 资本背景——融资</span>
+</div>
+</div>
+
+<div class="frameworks-bar">
+<span class="fb-label">📎 关联框架</span>
+<a href="../frameworks/FIS-002_五世界分类模型.html">FIS-002 五世界分类</a>
+<a href="../frameworks/FIF-003_品类定位框架.html">FIF-003 品类定位</a>
+<a href="../frameworks/FIF-002_全国化分析框架.html">FIF-002 全国化分析</a>
+</div>
+
+<hr>
+
+<div class="footer">
+<div class="f1">FoodIntelAI食品决策库</div>
+<div class="f2">少走弯路 · 快人一步</div>
+<div class="f3">单品拆解 · 落地路径 · 品类研判</div>
+</div>
+
+</div>
+
+<script>
+var structureChart = echarts.init(document.getElementById('structureChart'));
+structureChart.setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'item',formatter:'{b}: {d}%'},
+    series:[{
+        type:'pie',radius:['28%','60%'],center:['50%','55%'],
+        label:{fontSize:11,color:'#3a322a',formatter:'{b}\n{d}%'},
+        emphasis:{label:{fontSize:13,fontWeight:'bold'}},
+        data:[
+            {value:8,name:'上市企业\n（绝味·周黑鸭·煌上煌·紫燕·有友）',itemStyle:{color:'#8b6914'}},
+            {value:92-45.6,name:'佐餐卤味\n长尾市场',itemStyle:{color:'#d4c8b0'}},
+            {value:45.6-8,name:'休闲卤味\n长尾市场',itemStyle:{color:'#C8A45D'}}
+        ]
+    }]
+});
+window.addEventListener('resize',function(){structureChart.resize()});
+</script>
+</body>
+</html>
