@@ -4,26 +4,29 @@
 <title>凉皮、擀面皮、米皮：同一个碗里的三条河流 · FoodIntelAI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
 .page{max-width:800px;width:100%;padding:48px 40px 60px}
-.breadcrumb{font-size:11px;color:#b5aaa0;margin-bottom:16px;letter-spacing:1px}
-.breadcrumb a{color:#8b6914;text-decoration:none}
+.breadcrumb{font-size:11px;color:#b5aaa0;margin-bottom:16px;letter-spacing:1px}.breadcrumb a{color:#8b6914;text-decoration:none}
 .core{background:linear-gradient(135deg,#1a2a1a,#0B1F3A);color:#f5f0e8;border-radius:12px;padding:24px 28px;margin-bottom:24px}
 .core .cl{font-size:10px;color:#c4a35a;letter-spacing:4px;margin-bottom:6px}
 .core .ct{font-size:15px;font-weight:600;line-height:1.7;color:#f5f0e8;font-style:italic}
-h1{font-size:23px;font-weight:700;color:#1a1a1a;margin-bottom:4px;letter-spacing:1px}
-.meta{font-size:11px;color:#b5aaa0;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #e0ddd5;font-family:'Inter',sans-serif}
+h1{font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:4px;letter-spacing:1px}
+.meta{font-size:11px;color:#b5aaa0;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #e0ddd5;font-family:'Inter',sans-serif}.meta span{margin-right:14px}
 h2{font-size:17px;font-weight:700;color:#1a1a1a;margin:28px 0 10px;padding-left:10px;border-left:3px solid #c4a35a}
+h3{font-size:14px;font-weight:600;color:#2a2218;margin:16px 0 6px}
 p{font-size:14px;color:#2a2218;line-height:2;margin-bottom:10px}
 .highlight{background:#fcf8f2;border-left:3px solid #c4a35a;padding:12px 16px;margin:12px 0;border-radius:0 6px 6px 0;font-size:13px;line-height:1.8;color:#2a2218}
+.data-note{font-size:11px;color:#8a7a6a;margin:4px 0;font-family:'Inter',sans-serif}
+.chart-box{background:#fff;border:1px solid #e8e3db;border-radius:10px;padding:10px;margin:16px 0;height:280px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12.5px}
+td,th{padding:6px 8px;border:1px solid #d4c8b0;color:#2a2218;line-height:1.5;vertical-align:top}
+th{background:#f0ece4;font-weight:600;color:#1a1a1a;font-size:11px}
 .insight-box{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1.5px solid #c4a35a;border-radius:10px;padding:16px 20px;margin:20px 0}
 .insight-box .ib-title{font-size:11px;color:#7a5a04;font-weight:600;letter-spacing:2px;margin-bottom:6px}
 .insight-box .ib-text{font-size:13px;color:#2a2218;line-height:1.8}
-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12.5px}
-td,th{padding:6px 8px;border:1px solid #d4c8b0;color:#2a2218;line-height:1.5}
-th{background:#f0ece4;font-weight:600;color:#1a1a1a;font-size:11px}
 .interact{text-align:center;padding:20px;margin:24px 0;background:#fff;border:1px solid #e8e3db;border-radius:10px}
 .interact .iq{font-size:14px;font-weight:600;color:#2a2218;margin-bottom:8px}
 .interact .iopts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
@@ -31,50 +34,100 @@ th{background:#f0ece4;font-weight:600;color:#1a1a1a;font-size:11px}
 .frameworks-bar{background:#faf8f5;border:1px solid #d4c8b0;border-radius:8px;padding:14px 18px;margin:20px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .frameworks-bar .fb-label{font-size:10px;color:#7a5a04;letter-spacing:2px;font-weight:600}
 .frameworks-bar a{font-size:11px;padding:4px 12px;background:#fff;border:1px solid #d4c8b0;border-radius:14px;color:#5a4a3a;text-decoration:none}
+.frameworks-bar a:hover{background:#f5f0e8;border-color:#c4a35a;color:#8b6914}
 hr{border:none;border-top:1px solid #e0ddd5;margin:28px 0}
 .footer{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1px solid #e8e3db;border-radius:12px;padding:28px;text-align:center;margin-top:40px}
-.footer .f1{font-size:15px;font-weight:700;color:#8b6914;letter-spacing:3px}
-@media(max-width:640px){.page{padding:28px 16px 40px}h1{font-size:20px}}
+.footer .f1{font-size:15px;font-weight:700;color:#8b6914;letter-spacing:3px;margin-bottom:4px}
+.footer .f2{font-size:12px;color:#888;letter-spacing:2px;margin-bottom:2px}
+.footer .f3{font-size:11px;color:#aaa;margin-top:4px}
+@media(max-width:640px){.page{padding:28px 16px 40px}h1{font-size:19px}}
 </style>
 </head>
 <body>
 <div class="page">
-<div class="breadcrumb"><a href="../research/">研究</a> / <span style="color:#8b6914">凉皮三姐妹</span></div>
-<div class="core">
-<div class="cl">CORE STATEMENT</div>
-<div class="ct">300亿的凉皮市场，行业前十品牌加起来不到3%的份额。97%被街边夫妻店瓜分。凉皮行业不是"没有人愿意做大"，而是"做大的代价太大"。</div>
-</div>
+<div class="breadcrumb"><a href="../research/">研究</a> / <span style="color:#8b6914">凉皮三条河流</span></div>
+<div class="core"><div class="cl">CORE STATEMENT · 核心判断</div>
+<div class="ct">全国凉皮市场年规模超过300亿，行业前十品牌加起来不到3%的份额。97%被街边夫妻店瓜分。凉皮行业不是"没有人愿意做大"，而是"做大的代价太大"。</div></div>
 <h1>凉皮、擀面皮、米皮：同一个碗里的三条河流</h1>
-<div class="meta"><span>📅 2026.07.01</span><span>🍜 陕西面食系列 · 第3篇</span></div>
+<div class="meta"><span>📅 2026.07.01</span><span>🍜 陕西面食系列 · 第3篇</span><span>📖 约3500字</span></div>
+
+<p>陕西有至少四万家卖凉皮的店。但你随便找十家店，要一份"凉皮"，可能端上来三个完全不同的东西——有白的、有黄的、有厚的、有薄的、有带面筋的、有不带面筋的、有用醋水的、有用红油泼的。不懂的人以为这是"每家做法不一样"。懂的人知道，这根本不是同一种东西。陕西凉皮这个词，底下藏着三个独立品类：凉皮（小麦淀粉）、擀面皮（发酵小麦淀粉）、米皮（大米）。</p>
+
+<h2>（一）凉皮——面皮之王</h2>
+<p>最正宗的凉皮——陕西人说的"面皮"或"蒸面皮"。核心工艺是洗面筋：高筋面粉加水和成面团，在水里反复揉洗，把淀粉洗出来，剩下的那一坨就是面筋。洗出来的淀粉水静置沉淀，倒掉上层清水，留下淀粉浆，舀一勺倒在锣锣里，薄薄一层，上锅蒸一两分钟，出来就是一张晶莹剔透的凉皮。面筋单独蒸熟，切成小块，铺在凉皮上面。</p>
+<p>一套流程走下来，从和面到出成品，两个半小时起步。洗面筋是一个纯手工活——洗得太轻，淀粉没洗透，凉皮发暗发黏；洗得太狠，面筋被洗散。洗面的水温、水量、揉搓的力度，全是师傅手感，没有标准参数。</p>
+<p>一份凉皮面粉成本约¥0.5-0.8，总成本约¥2.5-3.5，零售价¥8-12，毛利率65-75%。但一个熟练师傅一天最多出200-300份。凉皮最佳赏味期只有4-6小时。每一家卖凉皮的店，90%以上的收入都来自门口三公里范围。</p>
+
+<h2>（二）擀面皮——发酵的倔强</h2>
+<p>擀面皮的老家在宝鸡岐山。前半段跟凉皮一样：和面、洗面筋、沉淀淀粉。但在淀粉这一步，它做了一个凉皮绝对不敢做的事——<strong>发酵</strong>。沉淀好的淀粉浆不倒掉上层清水，让它自然发酵12到24小时，等淀粉浆微微发酸、冒小泡了，才拿出来做。</p>
+<p>发酵好的淀粉浆倒进锅里，小火慢搅，炒成半熟的淀粉团。拿出来反复擀压——这就是"擀面皮"的名字来源。最后切成条，上锅蒸熟。因为经过了发酵+炒制+擀压三道工序，擀面皮的质地比凉皮厚得多、韧得多，是一种独特的"脆韧"口感。</p>
+<p>岐山人吃擀面皮最讲究的是醋——岐山当地的粮食醋。但走出岐山，擀面皮就开始变形了。发酵环节太关键又太难控制——室温高一点发酵过头酸味太重，低一点发酵不足面皮发死。春夏秋冬四季不同，每一天的发酵时间都得调整。擀面皮出了宝鸡做走形的占大多数。</p>
+<p>擀面皮的唯一优势是保质期比凉皮长得多——凉皮4-6小时，擀面皮常温能撑12-24小时。因为发酵和炒制改变了淀粉的结构，让它更耐老化。这也是为什么你在宝鸡以外的陕西城市吃到凉皮，基本是面皮而不是擀面皮——不是不想做，是能做的人太少。</p>
+
+<h2>（三）米皮——另一条赛道</h2>
+<p>红油米皮的原料是大米。这个区别不是"换一种粉"那么简单，而是供应链、设备、工艺、口味的全线切换。大米浸泡4-6小时，磨成米浆，调好浓度，舀一勺上锅大火蒸一两分钟，出锅就是一张米皮。没有洗面筋、没有发酵、没有炒制、没有擀压。工序少了一半，技术要求低了一大截。米皮是所有面皮里最容易标准化的品类。</p>
+<p>它的根在汉中——陕南汉中盆地，水稻产区。红油米皮到了西安，是"北漂"——陕南食物跨越秦岭来到了关中。去到西安后被秦镇发扬光大，"秦镇米皮"以辣子油（红油）闻名。米皮的工序少了洗面筋，成本结构和人员要求完全不同。一份米皮大米成本约¥0.4-0.6，比凉皮的面粉成本还低，总成本约¥2.0-3.0，零售价¥8-12，毛利率比凉皮还高。</p>
+<p>但米皮也有死穴：出了陕西就没多少人知道。凉皮在全国有认知基础，擀面皮在西北有点名气。米皮出了陕西，十个人里有九个不知道是啥。它是一个强地域性品类。</p>
+
+<h2>（四）对比总结</h2>
 
 <table>
-<tr><th>维度</th><th>凉皮（小麦淀粉）</th><th>擀面皮（发酵小麦）</th><th>米皮（大米）</th></tr>
-<tr><td>工序</td><td>洗面+蒸</td><td>洗面+发酵+炒制+擀压+蒸</td><td>浸泡+磨浆+蒸</td></tr>
-<tr><td>耗时</td><td>约2.5h/批</td><td>24h+（含发酵）</td><td>4-6h（含泡米）</td></tr>
-<tr><td>保质期</td><td>4-6h</td><td>12-24h</td><td>4-6h</td></tr>
-<tr><td>毛利率</td><td>65-75%</td><td>60-70%</td><td>70-80%</td></tr>
-<tr><td>标准化</td><td>★★★★★极难</td><td>★★★★★极难</td><td>★★★☆☆中等</td></tr>
-<tr><td>全国认知度</td><td>★★★★★</td><td>★★☆☆☆</td><td>★★☆☆☆</td></tr>
+<tr><th style="width:18%">维度</th><th style="width:27%">凉皮</th><th style="width:28%">擀面皮</th><th style="width:27%">米皮</th></tr>
+<tr><td><strong>原料</strong></td><td>面粉</td><td>面粉</td><td>大米</td></tr>
+<tr><td><strong>工序</strong></td><td>洗面+蒸</td><td>洗面+发酵+炒制+擀压+蒸</td><td>浸泡+磨浆+蒸</td></tr>
+<tr><td><strong>耗时</strong></td><td>约2.5h/批</td><td>24h+（含发酵）</td><td>4-6h（含泡米）</td></tr>
+<tr><td><strong>保质期</strong></td><td>4-6h</td><td>12-24h</td><td>4-6h</td></tr>
+<tr><td><strong>毛利率</strong></td><td>65-75%</td><td>60-70%</td><td>70-80%</td></tr>
+<tr><td><strong>标准化难度</strong></td><td>极高（全凭手感）</td><td>极高（发酵不可控）</td><td>中等（可量化）</td></tr>
+<tr><td><strong>全国认知度</strong></td><td>★★★★★</td><td>★★☆☆☆</td><td>★★☆☆☆</td></tr>
+<tr><td><strong>可复制性</strong></td><td>★☆☆☆☆</td><td>★☆☆☆☆</td><td>★★★☆☆</td></tr>
 </table>
 
-<div class="highlight">三样东西放在一个碗里卖，是因为优缺点刚好拼在一起——凉皮拉客、擀面皮提客单价、米皮赚利润。这不是巧合，是陕西餐饮人几十年的经验沉淀。</div>
-<div class="insight-box">
-<div class="ib-title">💡 研究者判断</div>
-<div class="ib-text">凉皮的规模化困境：标准化的保质期从4小时延长到48小时，但付出的代价是口感妥协。工业化的本质是做取舍，没有例外。</div>
-</div>
+<div class="highlight">三样东西放在一个碗里卖，是因为优缺点刚好拼在一起——凉皮拉客（全国人民都知道），擀面皮提客单价（贵两块嚼头好），米皮赚利润（成本最低毛利率最高）。这不是巧合，是陕西餐饮人几十年的经验沉淀。</div>
 
-<div class="interact">
-<div class="iq">💬 你吃凉皮能分出是面皮还是米皮吗？</div>
-<div class="iopts"><span>A 能，区别很大</span><span>B 能，但说不清</span><span>C 不能</span><span>D 第一次知道有区别</span></div>
-</div>
+<div id="marketChart" class="chart-box"></div>
+
+<h2>（五）凉皮行业的规模化困境</h2>
+<p>全国凉皮市场年规模超过300亿。但行业前十品牌加起来不到3%的占有率。螺蛳粉从百亿到300亿用了三年，行业前十品牌占了超过20%的份额。凉皮卖了上千年，300亿的盘子头部品牌连3%都啃不动。</p>
+<p>问题出在面皮的保质期。螺蛳粉能做预包装保质期六个月，通过电商发到全国。凉皮不能。凉皮保质期以小时计算。做成预包装需要无菌生产、保鲜工艺、冷链运输、复热口感保持——每一个都是钱。标准化凉皮保质期从4小时延长到24-48小时，但付出的代价是口感妥协。工业化的本质就是做取舍，没有例外。</p>
+
+<h2>（六）凉皮的出路</h2>
+<p><strong>方向一：小店外带模式。</strong>不做堂食，只做外带窗口，租金人工降到最低。3-5平米外带窗口，日销150-250份，日流水¥1500-3000，月毛利¥3-6万。但依然是一个"方圆三公里"的生意。</p>
+<p><strong>方向二：套餐化路线。</strong>"凉皮+肉夹馍+冰峰"——用肉夹馍的供应链撑流量，凉皮做利润。魏家凉皮跑的就是这条路。但核心竞争力在于供应链，不在于凉皮本身。</p>
+<p><strong>方向三：预包装凉皮。</strong>真空包装熟制凉皮，保质期30-60天。满足了"想吃凉皮但楼下没有"的需求，但满足不了"想吃一口好凉皮"的需求。这两个需求之间的差距，就是凉皮品类的机会所在。</p>
+
+<div class="insight-box"><div class="ib-title">💡 研究者判断</div>
+<div class="ib-text">当你看着一碗凉皮的时候，你看到的不是一个产品，是一个行业的缩影。300亿的市场97%被街边小店占据——这不是一个"没有人愿意做大"的行业，是一个"做大的代价太大"的行业。在这个行业里，做一个口味好的小店养一家人不难。做一个全国品牌，比做一碗好凉皮难一百倍。</div></div>
+
+<div class="interact"><div class="iq">💬 你吃凉皮能分出是面皮还是米皮吗？</div>
+<div class="iopts"><span>A 能，区别很大</span><span>B 能但说不清</span><span>C 不能</span><span>D 第一次知道有区别</span></div></div>
 
 <div class="frameworks-bar">
 <span class="fb-label">📎 关联框架</span>
 <a href="../frameworks/FIF-003_品类定位框架.html">FIF-003 品类定位</a>
 <a href="../frameworks/FIF-002_全国化分析框架.html">FIF-002 全国化分析</a>
+<a href="../frameworks/FIS-005_压力测试与脆弱性分析.html">FIS-005 压力测试</a>
 </div>
 <hr>
 <div class="footer"><div class="f1">FoodIntelAI食品决策库</div><div class="f2">少走弯路 · 快人一步</div><div class="f3">单品拆解 · 落地路径 · 品类研判</div></div>
 </div>
+
+<script>
+var marketChart = echarts.init(document.getElementById('marketChart'));
+marketChart.setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'item',formatter:'{b}: {c}亿 ({d}%)'},
+    series:[{
+        type:'pie',radius:['30%','60%'],center:['50%','55%'],
+        label:{fontSize:11,color:'#3a322a',formatter:'{b}\n¥{c}亿'},
+        emphasis:{label:{fontSize:13,fontWeight:'bold'}},
+        data:[
+            {value:9,name:'头部品牌（前十总量）',itemStyle:{color:'#8b6914'}},
+            {value:291,name:'长尾市场（夫妻店·摊贩·本地小店）',itemStyle:{color:'#d4c8b0'}}
+        ]
+    }]
+});
+window.addEventListener('resize',function(){marketChart.resize()});
+</script>
 </body>
 </html>
