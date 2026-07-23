@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>炸鸡门派 · 全世界最受欢迎的鸡肉吃法，到底分几个门派？ · FoodIntelAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
+.page{max-width:800px;width:100%;padding:48px 40px 60px}
+
+.breadcrumb{font-size:11px;color:#b5aaa0;margin-bottom:16px;letter-spacing:1px}
+.breadcrumb a{color:#8b6914;text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+
+.core{background:linear-gradient(135deg,#1a2a1a,#0B1F3A);color:#f5f0e8;border-radius:12px;padding:24px 28px;margin-bottom:24px}
+.core .cl{font-size:10px;color:#c4a35a;letter-spacing:4px;margin-bottom:6px}
+.core .ct{font-size:15px;font-weight:600;line-height:1.7;color:#f5f0e8;font-style:italic}
+
+h1{font-size:24px;font-weight:700;color:#1a1a1a;margin-bottom:4px;line-height:1.3;letter-spacing:1px}
+.meta{font-size:11px;color:#b5aaa0;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #e0ddd5;font-family:'Inter',sans-serif;letter-spacing:1px}
+.meta span{margin-right:16px}
+
+h2{font-size:17px;font-weight:700;color:#1a1a1a;margin:28px 0 10px;padding-left:10px;border-left:3px solid #c4a35a;line-height:1.4}
+h3{font-size:14px;font-weight:600;color:#2a2218;margin:18px 0 6px}
+p{font-size:14px;color:#3a322a;line-height:2;margin-bottom:10px}
+
+.highlight{background:#fcf8f2;border-left:3px solid #c4a35a;padding:12px 16px;margin:12px 0;border-radius:0 6px 6px 0;font-size:13px;line-height:1.8;color:#5a4a3a}
+
+.data-note{font-size:11px;color:#b5aaa0;margin:4px 0 12px;font-family:'Inter',sans-serif}
+
+.chart-box{background:#fff;border:1px solid #e8e3db;border-radius:10px;padding:12px;margin:16px 0;height:340px}
+.chart-med{background:#fff;border:1px solid #e8e3db;border-radius:10px;padding:10px;margin:16px 0;height:240px}
+
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+td,th{padding:8px 10px;border:1px solid #e0ddd5;text-align:left;color:#3a322a;vertical-align:top;line-height:1.5}
+th{background:#f5f0e8;font-weight:600;color:#2a2218;font-size:12px}
+
+.tag{display:inline-block;font-size:9px;padding:1px 6px;border-radius:3px;margin-right:3px}
+.tag-a{background:#e8f4e8;color:#2a5a3a}
+.tag-b{background:#f0eef8;color:#5a4a9a}
+.tag-c{background:#fcf0e8;color:#8a5a2a}
+.tag-d{background:#f8ecec;color:#8a3a3a}
+
+.faction-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.faction-card{background:#fff;border:1px solid #e8e3db;border-radius:8px;padding:14px 16px}
+.faction-card .fc-label{font-size:11px;color:#c4a35a;font-weight:600;letter-spacing:2px;margin-bottom:2px}
+.faction-card .fc-name{font-size:15px;font-weight:700;color:#2a2218;margin-bottom:6px}
+.faction-card .fc-core{font-size:12px;color:#8a7a6a;line-height:1.6;margin-bottom:6px}
+.faction-card .fc-fit{font-size:11px;color:#6a7a5a}
+
+.insight-box{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1.5px solid #c4a35a;border-radius:10px;padding:16px 20px;margin:20px 0}
+.insight-box .ib-title{font-size:11px;color:#8b6914;font-weight:600;letter-spacing:2px;margin-bottom:6px}
+.insight-box .ib-text{font-size:13px;color:#3a322a;line-height:1.8}
+
+.interact{text-align:center;padding:20px;margin:24px 0;background:#fff;border:1px solid #e8e3db;border-radius:10px}
+.interact .iq{font-size:14px;font-weight:600;color:#2a2218;margin-bottom:8px}
+.interact .iopts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.interact .iopts span{font-size:12px;padding:6px 16px;border:1px solid #e0ddd5;border-radius:20px;color:#6a5a3a;background:#faf8f5}
+
+.frameworks-bar{background:#faf8f5;border:1px solid #e8e3db;border-radius:8px;padding:14px 18px;margin:20px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.frameworks-bar .fb-label{font-size:10px;color:#8b6914;letter-spacing:2px;font-weight:600}
+.frameworks-bar a{font-size:11px;padding:4px 12px;background:#fff;border:1px solid #e0ddd5;border-radius:14px;color:#6a5a3a;text-decoration:none;transition:all .2s}
+.frameworks-bar a:hover{background:#f5f0e8;border-color:#c4a35a;color:#8b6914}
+
+hr{border:none;border-top:1px solid #e0ddd5;margin:28px 0}
+
+.footer{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1px solid #e8e3db;border-radius:12px;padding:28px;text-align:center;margin-top:40px}
+.footer .f1{font-size:15px;font-weight:700;color:#8b6914;letter-spacing:3px;margin-bottom:4px}
+.footer .f2{font-size:12px;color:#888;letter-spacing:2px;margin-bottom:2px}
+.footer .f3{font-size:11px;color:#aaa;margin-top:4px}
+
+@media(max-width:640px){.page{padding:28px 16px 40px}h1{font-size:20px}.faction-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="breadcrumb"><a href="../research/">研究</a> / <span style="color:#8b6914">炸鸡门派</span></div>
+
+<div class="core">
+<div class="cl">CORE STATEMENT · 核心判断</div>
+<div class="ct">炸鸡不是一个统一的品类。它背后是四五套完全不同的工艺逻辑和生意模型。选对了，几千块就能起步。选错了，几十万打水漂。</div>
+</div>
+
+<h1>炸鸡：全世界最受欢迎的鸡肉吃法，到底分几个门派？</h1>
+<div class="meta"><span>📅 2026.07.06</span><span>🍗 炸鸡系列 · 第1篇</span><span>📖 约2200字</span></div>
+
+<p>2026年7月，餐饮大盘还在收缩。VORA景气指数47.2，低于荣枯线50，连续四个月在荣枯线以下运行。</p>
+
+<div class="highlight">
+但炸鸡这个品类在逆势增长。抖音"炸串"话题月播放量突破6亿，环比涨了43%。冻鸡胸肉价格同比降了12%——原料成本在降，消费热度在涨，这个品类的时间窗口就摆在这。<br><br>
+中国人一年吃掉大约70亿只白羽肉鸡。炸鸡是其中占比最大、增长最快的吃法。
+</div>
+
+<p>但炸鸡不是一个统一的品类。它背后是四五套完全不同的工艺逻辑和生意模型。每一套的切入点、成本结构、利润逻辑都不一样。</p>
+
+<h2>（一）全球四大门派</h2>
+
+<p>全球主流的炸鸡门派，按影响力和规模排序，大概是这么几个：</p>
+
+<div class="faction-grid">
+
+<div class="faction-card">
+<div class="fc-label">标准派</div>
+<div class="fc-name">美式炸鸡</div>
+<div class="fc-core">核心竞争力是<strong>标准化</strong>：压力炸锅+统一裹粉配方+冷链配送，确保口感差异控制在10%以内。KFC、Popeyes全球扩张的底层逻辑。</div>
+<div class="fc-fit">适合：品牌连锁</div>
+</div>
+
+<div class="faction-card">
+<div class="fc-label">裹酱派</div>
+<div class="fc-name">韩式炸鸡</div>
+<div class="fc-core">核心竞争力是<strong>裹酱多样性</strong>：复炸两遍出脆壳，裹上甜辣、蒜香等酱料，创造"炸鸡+啤酒"消费场景。</div>
+<div class="fc-fit">⚠️ 2018年韩国本土一年倒闭超8400家炸鸡店<span class="data-note"><br>来源：韩国餐饮行业统计年鉴2019 <span class="tag tag-b">FIE-B</span></span></div>
+</div>
+
+<div class="faction-card">
+<div class="fc-label">腌制派</div>
+<div class="fc-name">日式炸鸡（唐揚）</div>
+<div class="fc-core">核心竞争力是<strong>腌制入味</strong>：酱油、姜泥、清酒腌制后裹薄薄一层土豆淀粉，炸出来表皮酥脆、内里多汁。不依赖酱料。</div>
+<div class="fc-fit">中国消费者认知里"日式炸鸡"几乎不存在，品类教育需从零开始</div>
+</div>
+
+<div class="faction-card">
+<div class="fc-label">甜口派</div>
+<div class="fc-name">菲律宾式炸鸡</div>
+<div class="fc-core">以Jollibee为代表，全球1500+店。核心竞争力是<strong>口味差异化</strong>：甜酱+独特腌料制造辨识度。</div>
+<div class="fc-fit">国际市场已验证，中国市场需看消费者能否接受"偏甜的炸鸡"</div>
+</div>
+
+</div>
+
+<div id="factionChart" class="chart-box"></div>
+
+<h2>（二）中式炸鸡——最大的变量</h2>
+
+<p>以上四派加在一起，占全球炸鸡市场的大部分体量。但要单独拿出来说最多的，是<strong>中式炸鸡</strong>。</p>
+
+<div class="highlight">
+中式炸鸡是一个庞大的品类风味集群，覆盖了几千家区域品牌和无数街边摊。工艺路径是腌制+裹粉+复炸。不依赖酱料标准化，腌料可以统一配比，供应链门槛低于韩式炸鸡。
+</div>
+
+<h3>按工艺分三个分支</h3>
+
+<table>
+<tr><th style="width:16%">分支</th><th style="width:28%">工艺</th><th style="width:28%">代表</th><th style="width:28%">特点</th></tr>
+<tr><td><strong>薄浆派</strong></td><td>腌制后裹薄薄一层面糊，炸出来皮薄酥脆</td><td>南乳炸鸡（约500家店，18省70+城）</td><td>风味有辨识度，但消费教育未完成</td></tr>
+<tr><td><strong>厚粉派</strong></td><td>裹厚粉，表皮凹凸不平，口感更脆</td><td>正新鸡排、临榆炸鸡腿</td><td>出餐快、标准化高，适合连锁扩张</td></tr>
+<tr><td><strong>先卤后炸派</strong></td><td>先卤入味再炸，外酥里嫩</td><td>炸鸡架、鸡叉骨（区域连锁为主）</td><td>毛利70-80%，在所有炸鸡形态中存活率最高</td></tr>
+</table>
+
+<h3>按风味分六条路线</h3>
+
+<table>
+<tr><th>风味</th><th>适配工艺</th><th>一句话判断</th></tr>
+<tr><td><strong>原味/腌制本味</strong></td><td>全工艺适用</td><td>供应链最简单，中式炸鸡最普遍的起点</td></tr>
+<tr><td><strong>香辣/麻辣/藤椒</strong></td><td>全工艺适用</td><td>藤椒是近年增长最快的细分风味</td></tr>
+<tr><td><strong>奥尔良风味</strong></td><td>薄浆/厚粉</td><td>国内食品工业"造"出来的通用口味，接受度最广</td></tr>
+<tr><td><strong>蒜香风味</strong></td><td>全工艺适用</td><td>门槛低，小店最爱，全国通用</td></tr>
+<tr><td><strong>南乳风味</strong></td><td>薄浆</td><td>从区域风味向全国品类演进中</td></tr>
+<tr><td><strong>五香/卤香风味</strong></td><td>先卤后炸</td><td>传统卤味延伸，后味醇厚</td></tr>
+</table>
+
+<div id="flavorChart" class="chart-med"></div>
+
+<h2>（三）总结：各门派核心差异</h2>
+
+<table>
+<tr><th>门派</th><th>两个字</th><th>工艺核心</th><th>利润逻辑</th><th>适合谁</th></tr>
+<tr><td><strong>美式</strong></td><td>标准</td><td>压力炸+裹粉</td><td>规模效应</td><td>品牌连锁</td></tr>
+<tr><td><strong>韩式</strong></td><td>裹酱</td><td>复炸+裹酱</td><td>口味更新</td><td>商圈店铺</td></tr>
+<tr><td><strong>日式</strong></td><td>腌制</td><td>酱油腌+薄浆</td><td>食材本味</td><td>专门店</td></tr>
+<tr><td><strong>菲律宾式</strong></td><td>甜口</td><td>甜腌+独特裹粉</td><td>差异化</td><td>国际化品牌</td></tr>
+<tr><td><strong>中式</strong></td><td>腌裹</td><td>腌制+裹粉复炸</td><td>供应链简单</td><td>个体户/区域品牌</td></tr>
+</table>
+
+<div class="insight-box">
+<div class="ib-title">💡 研究者判断</div>
+<div class="ib-text">中式炸鸡的先卤后炸分支，虽工艺上属于中式炸鸡，但从门店形态（档口/外卖/街边摊）和客群来看，已独立成一门单独的生意逻辑。毛利70-80%，单店存活率反而是所有炸鸡形态里最高的。这是本篇文章隐藏最深的机会信号。</div>
+</div>
+
+<div class="interact">
+<div class="iq">💬 如果你是炸鸡创业者，你会选哪个门派切入？</div>
+<div class="iopts">
+<span>A 美式——标准化连锁</span>
+<span>B 韩式——裹酱+场景</span>
+<span>C 日式——腌制专门店</span>
+<span>D 中式——先卤后炸档口</span>
+</div>
+</div>
+
+<div class="frameworks-bar">
+<span class="fb-label">📎 关联框架</span>
+<a href="../frameworks/FIS-002_五世界分类模型.html">FIS-002 五世界分类</a>
+<a href="../frameworks/FIF-003_品类定位框架.html">FIF-003 品类定位</a>
+<a href="../frameworks/FIF-001_七维产业决策框架.html">FIF-001 七维决策</a>
+</div>
+
+<hr>
+
+<div class="footer">
+<div class="f1">FoodIntelAI食品决策库</div>
+<div class="f2">少走弯路 · 快人一步</div>
+<div class="f3">单品拆解 · 落地路径 · 品类研判</div>
+</div>
+
+</div>
+
+<script>
+var factionChart = echarts.init(document.getElementById('factionChart'));
+factionChart.setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+    legend:{data:['标准化程度','供应链门槛','口味差异化','连锁潜力'],textStyle:{color:'#8a7a6a',fontSize:11},top:0},
+    grid:{left:'8%',right:'6%',bottom:'12%',top:'16%'},
+    xAxis:{type:'category',data:['美式','韩式','日式','菲律宾式','中式'],axisLabel:{color:'#8a7a6a',fontSize:11,interval:0,rotate:0},axisLine:{lineStyle:{color:'#e0ddd5'}}},
+    yAxis:{type:'value',min:0,max:5,splitLine:{lineStyle:{color:'#f0ece4',type:'dashed'}},axisLabel:{color:'#b5aaa0',fontSize:10}},
+    series:[
+        {name:'标准化程度',type:'bar',barWidth:10,barGap:'30%',data:[5,3,2,3,2],itemStyle:{color:'#8b6914',borderRadius:[3,3,0,0]}},
+        {name:'供应链门槛',type:'bar',barWidth:10,data:[5,4,3,4,2],itemStyle:{color:'#3A8D5D',borderRadius:[3,3,0,0]}},
+        {name:'口味差异化',type:'bar',barWidth:10,data:[2,4,4,4,3],itemStyle:{color:'#C8A45D',borderRadius:[3,3,0,0]}},
+        {name:'连锁潜力',type:'bar',barWidth:10,data:[5,3,2,4,3],itemStyle:{color:'#0B1F3A',borderRadius:[3,3,0,0]}}
+    ]
+});
+window.addEventListener('resize',function(){factionChart.resize()});
+
+var flavorChart = echarts.init(document.getElementById('flavorChart'));
+flavorChart.setOption({
+    backgroundColor:'transparent',
+    tooltip:{trigger:'item'},
+    legend:{orient:'vertical',left:'left',textStyle:{color:'#8a7a6a',fontSize:11},itemWidth:12,itemHeight:12},
+    series:[{
+        type:'pie',radius:['40%','65%'],center:['58%','50%'],avoidLabelOverlap:true,
+        label:{fontSize:11,color:'#6a5a3a',formatter:'{b}'},
+        emphasis:{label:{fontSize:13,fontWeight:'bold'}},
+        data:[
+            {value:25,name:'原味/腌制本味',itemStyle:{color:'#8b6914'}},
+            {value:20,name:'香辣/麻辣/藤椒',itemStyle:{color:'#c43a3a'}},
+            {value:20,name:'奥尔良风味',itemStyle:{color:'#e87a2a'}},
+            {value:15,name:'蒜香风味',itemStyle:{color:'#3A8D5D'}},
+            {value:12,name:'南乳风味',itemStyle:{color:'#C8A45D'}},
+            {value:8,name:'五香/卤香风味',itemStyle:{color:'#5a3a1a'}}
+        ]
+    }]
+});
+window.addEventListener('resize',function(){flavorChart.resize()});
+</script>
+</body>
+</html>
