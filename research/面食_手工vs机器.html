@@ -34,6 +34,26 @@ hr{border:none;border-top:1px solid #e0ddd5;margin:28px 0}
 .footer .f2{font-size:12px;color:#888;letter-spacing:2px;margin-bottom:2px}
 .footer .f3{font-size:11px;color:#aaa;margin-top:4px}
 @media(max-width:640px){.page{padding:28px 16px 40px}h1{font-size:19px}}
+
+/* 投票组件 */
+.poll{background:#fff;border:1px solid #e8e3db;border-radius:10px;padding:20px 24px;margin:24px 0}
+.poll .pq{font-size:14px;font-weight:600;color:#2a2218;margin-bottom:12px;text-align:center}
+.poll .po{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.poll .po-btn{font-size:12px;padding:8px 16px;border:1.5px solid #d4c8b0;border-radius:20px;background:#faf8f5;color:#3a322a;cursor:pointer;transition:all .25s;user-select:none;font-family:inherit;line-height:1.4}
+.poll .po-btn:hover{border-color:#c4a35a;background:#fcfaf7;transform:translateY(-1px)}
+.poll .po-btn.voted{border-color:#8b6914;background:#fcf8f2;color:#7a5a04;font-weight:600}
+.poll .po-btn.voted::after{content:' ✓';color:#8b6914}
+.poll .po-btn:disabled{cursor:default;opacity:.8}
+.poll .po-btn:disabled:hover{transform:none;border-color:#d4c8b0;background:#faf8f5}
+.poll .results{margin-top:12px;display:none}
+.poll .results.show{display:block}
+.poll .rr{margin-bottom:6px}
+.poll .rr .rl{display:flex;justify-content:space-between;font-size:11px;color:#6a5a3a;margin-bottom:2px}
+.poll .rr .rl .rpct{font-weight:600;color:#8b6914}
+.poll .rr .rb{height:6px;border-radius:3px;background:#f0ece4;overflow:hidden}
+.poll .rr .rb .rf{height:100%;border-radius:3px;background:linear-gradient(90deg,#c4a35a,#8b6914);transition:width .6s ease;width:0}
+.poll .poll-total{font-size:10px;color:#b5aaa0;text-align:center;margin-top:8px;font-family:'Inter',sans-serif}
+
 </style>
 </head>
 <body>
@@ -72,9 +92,17 @@ hr{border:none;border-top:1px solid #e0ddd5;margin:28px 0}
 <div class="ib-text">日本小店和老西安馆子卖的不可复制的随机性。现代连锁卖的是可复制的确定性。你该选哪个？看你的品类卖什么——卖规模用机器，卖体验用手工，卖情绪故事比工艺更重要。真正的问题从来不是手工还是机器，是你作为经营者最该做的不是纠结选哪边，是想清楚你到底在卖什么。</div>
 </div>
 
-<div class="interact">
-<div class="iq">💬 你吃面能吃出是手工还是机器吗？</div>
-<div class="iopts"><span>A 能，口感区别明显</span><span>B 能，但说不清</span><span>C 不能</span><span>D 没想过这个问题</span></div>
+<div class="poll" data-qid="1d5a4d6a1b9f">
+<div class="pq">💬 💬 你吃面能吃出是手工还是机器吗？</div>
+<div class="po"><button class="po-btn" data-val="A">A 能，口感区别明显</button>
+<button class="po-btn" data-val="B">B 能，但说不清</button>
+<button class="po-btn" data-val="C">C 不能</button>
+<button class="po-btn" data-val="D">D 没想过这个问题</button></div>
+<div class="results"><div class="results-inner"><div class="rr"><div class="rl"><span>A 能，口感区别明显</span><span class="rpct">0%</span></div><div class="rb"><div class="rf"></div></div></div>
+<div class="rr"><div class="rl"><span>B 能，但说不清</span><span class="rpct">0%</span></div><div class="rb"><div class="rf"></div></div></div>
+<div class="rr"><div class="rl"><span>C 不能</span><span class="rpct">0%</span></div><div class="rb"><div class="rf"></div></div></div>
+<div class="rr"><div class="rl"><span>D 没想过这个问题</span><span class="rpct">0%</span></div><div class="rb"><div class="rf"></div></div></div></div></div>
+<div class="poll-total">共 0 票</div>
 </div>
 
 <div class="frameworks-bar">
@@ -85,5 +113,68 @@ hr{border:none;border-top:1px solid #e0ddd5;margin:28px 0}
 <hr>
 <div class="footer"><div class="f1">FoodIntelAI食品决策库</div><div class="f2">少走弯路 · 快人一步</div><div class="f3">单品拆解 · 落地路径 · 品类研判</div></div>
 </div>
+
+<script>
+document.querySelectorAll('.poll').forEach(function(poll){
+    var qid = poll.dataset.qid;
+    var opts = poll.querySelectorAll('.po-btn');
+    var resultsDiv = poll.querySelector('.results');
+    var totalSpan = poll.querySelector('.poll-total');
+
+    function loadResults(){
+        var raw = localStorage.getItem('poll_'+qid);
+        var votes = raw ? JSON.parse(raw) : {};
+        var total = 0;
+        opts.forEach(function(b){
+            var v = votes[b.dataset.val] || 0;
+            b._count = v;
+            total += v;
+        });
+        return {votes:votes, total:total};
+    }
+
+    function renderResults(){
+        var d = loadResults();
+        var total = d.total;
+        var bars = resultsDiv.querySelectorAll('.rf');
+        opts.forEach(function(b,i){
+            var pct = total>0 ? Math.round(b._count/total*100) : 0;
+            bars[i].style.width = pct+'%';
+        });
+        var rls = resultsDiv.querySelectorAll('.rpct');
+        opts.forEach(function(b,i){
+            var pct = total>0 ? Math.round(b._count/total*100) : 0;
+            rls[i].textContent = pct+'%';
+        });
+        totalSpan.textContent = '共 '+total+' 票';
+    }
+
+    // 检查是否已投
+    var voted = localStorage.getItem('poll_voted_'+qid);
+    if(voted){
+        opts.forEach(function(b){
+            b.disabled = true;
+            if(b.dataset.val===voted){b.classList.add('voted');}
+        });
+        resultsDiv.classList.add('show');
+        renderResults();
+    }
+
+    opts.forEach(function(b){
+        b.addEventListener('click',function(){
+            if(localStorage.getItem('poll_voted_'+qid)) return;
+            var val = this.dataset.val;
+            var raw = localStorage.getItem('poll_'+qid);
+            var votes = raw ? JSON.parse(raw) : {};
+            votes[val] = (votes[val]||0)+1;
+            localStorage.setItem('poll_'+qid,JSON.stringify(votes));
+            localStorage.setItem('poll_voted_'+qid,val);
+            opts.forEach(function(bb){bb.disabled=true;if(bb.dataset.val===val)bb.classList.add('voted');});
+            resultsDiv.classList.add('show');
+            renderResults();
+        });
+    });
+});
+</script>
 </body>
 </html>
