@@ -235,8 +235,25 @@ hr{{border:none;border-top:1px solid #e0ddd5;margin:32px 0}}
 <div class="field"><div class="fl">SCOPE</div><div class="fb">{scope}</div></div>
 <div class="field"><div class="fl">LIMITATION</div><div class="fb">{limit}</div></div>
 <div class="field"><div class="fl">METHOD</div><div class="fb">{method}</div></div>
-<div class="field"><div class="fl">RELATED</div><div class="rel-tags">{related}</div></div>
-<div class="field"><div class="fl">EVIDENCE</div><div class="fb"><strong style="color:#2a5a3a">{evidence}</strong></div></div>
+<div class="field"><div class="fl">RELATED · 关联框架</div>
+<div class="rel-tags">{related}</div></div>
+<div class="field"><div class="fl">USED IN · 应用于</div>
+<div class="rel-tags">
+<a href="../research/早餐系列_价格带锁死商业模式.html" class="rt">早餐价格带模型</a>
+<a href="../research/早餐系列_包子为什么不是蜜雪.html" class="rt">包子vs蜜雪</a>
+<a href="../research/早餐系列_老板隐形成本.html" class="rt">老板自由度</a>
+</div></div>
+<div class="field"><div class="fl">ASSET INFO · 资产信息</div>
+<div class="fb" style="font-size:12px;color:#888">
+<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:6px">
+<tr><td style="padding:4px 8px;border:1px solid #eee;color:#888">Asset ID</td><td style="padding:4px 8px;border:1px solid #eee;color:#2a2218">{code}</td>
+<td style="padding:4px 8px;border:1px solid #eee;color:#888">版本</td><td style="padding:4px 8px;border:1px solid #eee;color:#2a2218">{version}</td></tr>
+<tr><td style="padding:4px 8px;border:1px solid #eee;color:#888">分类</td><td style="padding:4px 8px;border:1px solid #eee;color:#2a2218">{category}</td>
+<td style="padding:4px 8px;border:1px solid #eee;color:#888">更新</td><td style="padding:4px 8px;border:1px solid #eee;color:#2a2218">2026.07.23</td></tr>
+<tr><td style="padding:4px 8px;border:1px solid #eee;color:#888">证据</td><td style="padding:4px 8px;border:1px solid #eee;color:#2a5a3a">{evidence}</td>
+<td style="padding:4px 8px;border:1px solid #eee;color:#888">可见性</td><td style="padding:4px 8px;border:1px solid #eee;color:#2a2218">公开 · 可引用</td></tr>
+</table>
+</div></div>
 <hr>
 <div style="text-align:center;font-size:12px;margin-top:20px"><a href="index.html" style="color:#8b6914;text-decoration:none">返回 Frameworks</a></div>
 <div class="footer"><div class="f1">FoodIntelAI 研究方法体系</div></div>
