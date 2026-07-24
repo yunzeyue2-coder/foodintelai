@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>术语库 · FoodIntelAI 框架体系 V2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;padding:0;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
+.page{max-width:960px;width:100%;padding:48px 40px 60px}
+
+.cover{text-align:center;padding:32px 0 30px;border-bottom:2px solid #e0ddd5;margin-bottom:32px;position:relative}
+.cover::after{content:'V2.0';position:absolute;top:12px;right:0;font-size:11px;color:#c4a35a;letter-spacing:2px;padding:4px 14px;border:1px solid #c4a35a;border-radius:20px}
+.cover h1{font-size:28px;font-weight:700;color:#1a1a1a;letter-spacing:2px;margin-bottom:4px}
+.cover .sub{font-size:13px;color:#8a7a6a;line-height:1.6;max-width:600px;margin:0 auto}
+.cover .badge{font-size:10px;color:#c4a35a;letter-spacing:5px;margin-bottom:8px}
+.cover .meta{font-size:11px;color:#b5aaa0;margin-top:10px}
+
+.breadcrumb{font-size:11px;color:#b5aaa0;margin-bottom:20px;letter-spacing:1px}
+.breadcrumb a{color:#8b6914;text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+
+/* 筛选标签 */
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid #e0ddd5}
+.filter-bar .fb-item{font-size:11px;padding:5px 16px;border-radius:16px;border:1px solid #e0ddd5;color:#8a7a6a;cursor:pointer;transition:all .2s;background:#fff;text-decoration:none;display:inline-block}
+.filter-bar .fb-item:hover{border-color:#c4a35a;color:#8b6914}
+.filter-bar .fb-item.active{background:#8b6914;border-color:#8b6914;color:#fff}
+.filter-bar .fb-item.all{background:linear-gradient(135deg,#1a2a1a,#0B1F3A);border-color:#0B1F3A;color:#f5f0e8}
+
+/* 术语区块 */
+.glossary-section{margin-bottom:28px}
+.glossary-section .gs-header{border-bottom:2px solid #e0ddd5;padding-bottom:10px;margin-bottom:14px;display:flex;align-items:baseline;gap:10px}
+.glossary-section .gs-header .gs-code{font-size:12px;font-weight:700;color:#8b6914;font-family:'Inter',sans-serif;letter-spacing:2px;white-space:nowrap}
+.glossary-section .gs-header .gs-name{font-size:16px;font-weight:700;color:#1a1a1a;letter-spacing:1px}
+.glossary-section .gs-header .gs-count{font-size:11px;color:#b5aaa0;margin-left:auto}
+
+.term-card{background:#fff;border:1px solid #e8e3db;border-radius:8px;padding:14px 18px;margin-bottom:8px;transition:all .2s;border-left:3px solid transparent}
+.term-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.04);border-color:#d4c8a0}
+.term-card.fip{border-left-color:#6a7a5a}
+.term-card.fif{border-left-color:#8b6914}
+.term-card.fis{border-left-color:#0B1F3A}
+.term-card.fim{border-left-color:#c4a35a}
+.term-card.fie{border-left-color:#b5aaa0}
+.term-card.fde{border-left-color:#2a5a3a}
+.term-card.general{border-left-color:#d4c8a0}
+
+.term-card .tc-header{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.term-card .tc-header .tc-name{font-size:14px;font-weight:700;color:#1a1a1a}
+.term-card .tc-header .tc-en{font-size:11px;color:#b5aaa0;font-family:'Inter',sans-serif;font-weight:400}
+.term-card .tc-header .tc-tag{font-size:9px;padding:1px 10px;border-radius:10px;font-family:'Inter',sans-serif;letter-spacing:1px;font-weight:600}
+.term-card .tc-header .tc-tag.t-fip{background:#e8f0e8;color:#4a6a3a}
+.term-card .tc-header .tc-tag.t-fif{background:#fef8e8;color:#8a6a2a}
+.term-card .tc-header .tc-tag.t-fis{background:#e8edf5;color:#2a4a7a}
+.term-card .tc-header .tc-tag.t-fim{background:#faf5e8;color:#8a7a3a}
+.term-card .tc-header .tc-tag.t-fie{background:#f0ece4;color:#7a6a5a}
+.term-card .tc-header .tc-tag.t-fde{background:#e8f0e8;color:#2a5a3a}
+.term-card .tc-header .tc-tag.t-general{background:#f5f0e8;color:#8a7a6a}
+
+.term-card .tc-def{font-size:13px;color:#3a322a;line-height:1.7;margin-bottom:4px}
+.term-card .tc-def .def-label{font-size:11px;color:#c4a35a;font-weight:600;margin-right:4px}
+.term-card .tc-detail{font-size:12px;color:#8a7a6a;line-height:1.6}
+
+hr{border:none;border-top:1px solid #e0ddd5;margin:32px 0}
+
+.footer{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1px solid #e8e3db;border-radius:12px;padding:24px;text-align:center;margin-top:40px}
+.footer .f1{font-size:14px;font-weight:700;color:#8b6914;letter-spacing:3px;margin-bottom:3px}
+.footer .f2{font-size:11px;color:#888;letter-spacing:2px}
+.footer .f3{font-size:10px;color:#aaa;margin-top:3px}
+
+@media(max-width:640px){
+  .page{padding:24px 14px 40px}
+  .cover h1{font-size:22px}
+  .filter-bar{gap:4px}
+  .filter-bar .fb-item{font-size:10px;padding:4px 12px}
+  .term-card{padding:12px 14px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="breadcrumb"><a href="index.html">Frameworks</a> / <span style="color:#8b6914">术语库 Glossary</span></div>
+
+<div class="cover">
+<div class="badge">FOODINTELAI GLOSSARY</div>
+<h1>框架体系术语库</h1>
+<div class="sub">FIP · FIF · FIS · FIM · FIE · FDE · 品类模型 · 方法论概念<br>覆盖全部六大体系的核心术语定义</div>
+<div class="meta">共 37 条 · 2026.07.24 更新</div>
+</div>
+
+<div class="filter-bar">
+<a href="#fip" class="fb-item">FIP 研究原则</a>
+<a href="#fif" class="fb-item">FIF 分析框架</a>
+<a href="#fis" class="fb-item">FIS 系统模型</a>
+<a href="#fim" class="fb-item">FIM 研究方法</a>
+<a href="#fie" class="fb-item">FIE 证据体系</a>
+<a href="#fde" class="fb-item">FDE 决策引擎</a>
+<a href="#category" class="fb-item">品类模型</a>
+<a href="#general" class="fb-item">通用概念</a>
+</div>
+
+<!-- ========== FIP ========== -->
+<div class="glossary-section" id="fip">
+<div class="gs-header"><span class="gs-code">FIP</span><span class="gs-name">研究原则</span><span class="gs-count">6 条</span></div>
+
+<div class="term-card fip">
+<div class="tc-header">
+<span class="tc-name">FIP 研究原则</span>
+<span class="tc-en">FoodIntelAI Principles</span>
+<span class="tc-tag t-fip">FIP</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>食品产业研究五项基本原则的编码体系</div>
+<div class="tc-detail">包含系统原则、因果原则、消费者优先原则、证据原则、边界原则。构成所有产业研究的底层逻辑——不依赖直觉和经验，而是系统框架、消费者起点、证据说话、知边界。</div>
+</div>
+
+<div class="term-card fip">
+<div class="tc-header">
+<span class="tc-name">FIP-001 系统原则</span>
+<span class="tc-en">System Principle</span>
+<span class="tc-tag t-fip">FIP</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>产业是八链因果系统，不可孤立研究</div>
+<div class="tc-detail">消费者→需求→场景→渠道→产品→技术→供应链→产业格局八链传导。任何单一环节变化会通过因果链传导至其他环节。研究不能停留在局部，必须放在系统里理解。</div>
+</div>
+
+<div class="term-card fip">
+<div class="tc-header">
+<span class="tc-name">FIP-002 因果原则</span>
+<span class="tc-en">Causality Principle</span>
+<span class="tc-tag t-fip">FIP</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>穿透现象寻找因果，而非描述表象</div>
+<div class="tc-detail">建立现象→原因→规律→模型的完整分析路径。结论需穿透「是什么」到「为什么发生、为什么成功、为什么失败」，避免停留在表面描述。</div>
+</div>
+
+<div class="term-card fip">
+<div class="tc-header">
+<span class="tc-name">FIP-003 消费者优先原则</span>
+<span class="tc-en">Consumer First Principle</span>
+<span class="tc-tag t-fip">FIP</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>需求变化是产业变化的起点和归因</div>
+<div class="tc-detail">技术、供应链、渠道变化都是现象而非原因。消费者需求变化才是真正起点。研究消费者→需求变化→产业响应，而非从供给侧倒推。研究从消费者出发。</div>
+</div>
+
+<div class="term-card fip">
+<div class="tc-header">
+<span class="tc-name">FIP-004 证据原则</span>
+<span class="tc-en">Evidence Principle</span>
+<span class="tc-tag t-fip">FIP</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>三级信息分级使用，C级不可作核心结论</div>
+<div class="tc-detail">区分事实（已发生可验证）、判断（基于事实的分析）、假设（需验证的推演）。每级信息有不同引用权限。无可靠来源的判断需标注来源等级。</div>
+</div>
+
+<div class="term-card fip">
+<div class="tc-header">
+<span class="tc-name">FIP-005 边界原则</span>
+<span class="tc-en">Boundary Principle</span>
+<span class="tc-tag t-fip">FIP</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>每个框架有适用范围和边界条件</div>
+<div class="tc-detail">任何分析模型不能超出已验证的品类和场景。跨品类应用需重新验证框架适配性。不承认「普适规律」，只承认「在特定条件下成立的规律」。</div>
+</div>
+
+</div>
+
+<!-- ========== FIF ========== -->
+<div class="glossary-section" id="fif">
+<div class="gs-header"><span class="gs-code">FIF</span><span class="gs-name">分析框架</span><span class="gs-count">6 条</span></div>
+
+<div class="term-card fif">
+<div class="tc-header">
+<span class="tc-name">FIF 分析框架</span>
+<span class="tc-en">FoodIntelAI Frameworks</span>
+<span class="tc-tag t-fif">FIF</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>五个产业分析标准框架的编码集合</div>
+<div class="tc-detail">包括七维决策框架、全国化分析、品类定位、商业模式分析、价值链分析。每个框架回答一个特定分析问题——该不该进入、能否全国化、在什么位置竞争、靠什么赚钱、利润在哪产生。</div>
+</div>
+
+<div class="term-card fif">
+<div class="tc-header">
+<span class="tc-name">FIF-001 七维产业决策框架</span>
+<span class="tc-en">Seven-Dimension Decision Framework</span>
+<span class="tc-tag t-fif">FIF</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>七个递进问题判断食品产业值不值得进入</div>
+<div class="tc-detail">产业基础·市场定位·商业模式·产业周期·竞争优势·组织能力·资本价值。前一个问题的答案决定后一个问题能不能问。一维不成立，后续维度无意义。已验证于卤味、炸鸡。</div>
+</div>
+
+<div class="term-card fif">
+<div class="tc-header">
+<span class="tc-name">FIF-002 全国化分析框架</span>
+<span class="tc-en">National Expansion Framework</span>
+<span class="tc-tag t-fif">FIF</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>五变量判断品类能否全国化</div>
+<div class="tc-detail">供应链成熟度×标准化深度×消费认知统一性×场景一致性×组织复制能力。供应链成熟≠全国品牌——五个变量缺一不可。已验证于卤味全国化分析。</div>
+</div>
+
+<div class="term-card fif">
+<div class="tc-header">
+<span class="tc-name">FIF-003 品类定位框架</span>
+<span class="tc-en">Category Positioning Framework</span>
+<span class="tc-tag t-fif">FIF</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>产品×渠道×场景×供应链四维定位</div>
+<div class="tc-detail">一个品类不在所有维度竞争，在特定位置竞争。四维坐标定位品类的核心竞争空间。目前处于优化中。</div>
+</div>
+
+<div class="term-card fif">
+<div class="tc-header">
+<span class="tc-name">FIF-004 商业模式分析框架</span>
+<span class="tc-en">Business Model Framework</span>
+<span class="tc-tag t-fif">FIF</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>五种经营模型的识别与天花板判断</div>
+<div class="tc-detail">手艺驱动型/流程驱动型/供应链驱动型/品牌驱动型/平台驱动型——各有各的天花板和杠杆。已验证于早餐产业（价格带锁死商业模式）。</div>
+</div>
+
+<div class="term-card fif">
+<div class="tc-header">
+<span class="tc-name">FIF-005 价值链分析框架</span>
+<span class="tc-en">Value Chain Framework</span>
+<span class="tc-tag t-fif">FIF</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>从原料到消费者，利润在哪产生和消耗</div>
+<div class="tc-detail">不是品牌竞争，是价值链竞争。利润在特定环节产生、在特定环节消耗。找准价值链核心节点是品类突破的关键。目前处于定型中。</div>
+</div>
+
+</div>
+
+<!-- ========== FIS ========== -->
+<div class="glossary-section" id="fis">
+<div class="gs-header"><span class="gs-code">FIS</span><span class="gs-name">系统模型</span><span class="gs-count">6 条</span></div>
+
+<div class="term-card fis">
+<div class="tc-header">
+<span class="tc-name">FIS 系统模型</span>
+<span class="tc-en">FoodIntelAI Systems</span>
+<span class="tc-tag t-fis">FIS</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>五个产业系统模型的编码集合，揭示运行机制</div>
+<div class="tc-detail">包括八链因果模型、五世界分类模型、品类生命周期模型、老板自由度模型、压力测试与脆弱性分析。每个模型揭示产业运行的一个特定剖面，不追求完整映射。</div>
+</div>
+
+<div class="term-card fis">
+<div class="tc-header">
+<span class="tc-name">FIS-001 食品产业系统模型（八链因果模型）</span>
+<span class="tc-en">Eight-Chain Causal Model</span>
+<span class="tc-tag t-fis">FIS</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>八链因果传导解释产业变化的底层机制</div>
+<div class="tc-detail">消费者→需求→场景→渠道→产品→技术→供应链→产业格局。方向不可逆。正向分析可追溯变化源头，反向预测可推演影响路径。基础模型，所有分析的起点。</div>
+</div>
+
+<div class="term-card fis">
+<div class="tc-header">
+<span class="tc-name">FIS-002 五世界分类模型</span>
+<span class="tc-en">Five Worlds Classification</span>
+<span class="tc-tag t-fis">FIS</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>卤味品类内部分为五个竞争逻辑不同的世界</div>
+<div class="tc-detail">休闲·佐餐·地方·餐饮·工业——以卤味产业为原型建立的品类内部分类体系。同一品类内部不同世界的竞争逻辑完全不同，可迁移至其他复杂品类。已验证。</div>
+</div>
+
+<div class="term-card fis">
+<div class="tc-header">
+<span class="tc-name">FIS-003 品类生命周期模型</span>
+<span class="tc-en">Category Lifecycle Model</span>
+<span class="tc-tag t-fis">FIS</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>品类发展的五阶段演变模型</div>
+<div class="tc-detail">导入→成长→成熟→分化→重构。每个阶段的关键变量、竞争焦点、利润结构不同。判断品类所处阶段，选择对应策略。已验证于卤味、炸鸡。</div>
+</div>
+
+<div class="term-card fis">
+<div class="tc-header">
+<span class="tc-name">FIS-004 老板自由度模型</span>
+<span class="tc-en">Owner Freedom Model</span>
+<span class="tc-tag t-fis">FIS</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>三指标判断门店能否脱离老板独立运转</div>
+<div class="tc-detail">生产自由度·管理自由度·复制自由度。三个指标判断一家店能否脱离老板独立运转。早餐产业验证，可迁移至所有小餐饮。老板自由度越高，连锁化潜力越大。</div>
+</div>
+
+<div class="term-card fis">
+<div class="tc-header">
+<span class="tc-name">FIS-005 压力测试与脆弱性分析</span>
+<span class="tc-en">Stress Test & Vulnerability Analysis</span>
+<span class="tc-tag t-fis">FIS</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>研究外部冲击和内部缺陷下的产业脆弱点</div>
+<div class="tc-detail">外部冲击（原料波动/消费变化/政策）×内部缺陷（供应链依赖/人员依赖）×极端情景（成本上涨30%/渠道失效）。不只研究为什么成功，也研究为什么可能失败。定型中。</div>
+</div>
+
+</div>
+
+<!-- ========== FIM ========== -->
+<div class="glossary-section" id="fim">
+<div class="gs-header"><span class="gs-code">FIM</span><span class="gs-name">研究方法</span><span class="gs-count">6 条</span></div>
+
+<div class="term-card fim">
+<div class="tc-header">
+<span class="tc-name">FIM 研究方法</span>
+<span class="tc-en">FoodIntelAI Methods</span>
+<span class="tc-tag t-fim">FIM</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>五个标准研究方法的编码集合</div>
+<div class="tc-detail">覆盖从「如何研究」到「如何写作」的完整生产链：八步研究法、第一性原理分析、多模型并列分析法、数据交叉验证法、认知重构写作法。FIP原则的执行层。</div>
+</div>
+
+<div class="term-card fim">
+<div class="tc-header">
+<span class="tc-name">FIM-001 八步研究法</span>
+<span class="tc-en">Eight-Step Research Method</span>
+<span class="tc-tag t-fim">FIM</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>八步标准化研究生产流程</div>
+<div class="tc-detail">锁定框架→宏观资料→聚焦单篇→审结构→中微观资料→检查对比→写作→审核→配图→发布。先研究后动笔，数据缺口表先行。默认流程，适合大多数品类分析。</div>
+</div>
+
+<div class="term-card fim">
+<div class="tc-header">
+<span class="tc-name">FIM-002 第一性原理分析</span>
+<span class="tc-en">First Principle Analysis</span>
+<span class="tc-tag t-fim">FIM</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>从产业基本物理和经济约束推导结论</div>
+<div class="tc-detail">回归产业最基本的物理约束和经济学规律。不依赖既有经验框架，从零开始推导品类的结构性天花板。适合创新型品类或需打破既有认知框架的场景。</div>
+</div>
+
+<div class="term-card fim">
+<div class="tc-header">
+<span class="tc-name">FIM-003 多模型并列分析法</span>
+<span class="tc-en">Multi-Model Parallel Analysis</span>
+<span class="tc-tag t-fim">FIM</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>不能用单一模型解释复杂品类</div>
+<div class="tc-detail">任何食品品类不能用单一模型解释。按品类/区域/规模分别建立模型，并列分析，不下统一结论。不绝对化。默认方法，适用于所有分析。</div>
+</div>
+
+<div class="term-card fim">
+<div class="tc-header">
+<span class="tc-name">FIM-004 数据交叉验证法</span>
+<span class="tc-en">Cross-Validation Method</span>
+<span class="tc-tag t-fim">FIM</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>重要数据需至少两个独立来源验证</div>
+<div class="tc-detail">企业规模不能只看自述，需结合财务、渠道、供应链、原料消耗交叉印证。无法验证的数据标记为待验证信息。防止单一来源数据误导。默认方法。</div>
+</div>
+
+<div class="term-card fim">
+<div class="tc-header">
+<span class="tc-name">FIM-005 认知重构写作法</span>
+<span class="tc-en">Cognitive Restructuring Writing</span>
+<span class="tc-tag t-fim">FIM</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>重建读者认知坐标系的写作范式</div>
+<div class="tc-detail">不是「观点→数据→结论」，而是反常识事实→拆解表象→揭示底层矛盾→提出新框架→留下开放问题。适用于面向公众的深度文章。</div>
+</div>
+
+</div>
+
+<!-- ========== FIE ========== -->
+<div class="glossary-section" id="fie">
+<div class="gs-header"><span class="gs-code">FIE</span><span class="gs-name">证据体系</span><span class="gs-count">5 条</span></div>
+
+<div class="term-card fie">
+<div class="tc-header">
+<span class="tc-name">FIE 证据体系</span>
+<span class="tc-en">FoodIntelAI Evidence</span>
+<span class="tc-tag t-fie">FIE</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>四级证据分级体系，界定信息的可信度和引用方式</div>
+<div class="tc-detail">A级（高可信事实）→B级（可信参考信息）→C级（待验证信息）→D级（行业经验判断）。FIP-004证据原则的执行层。让一篇文章的信息可信度在一分钟内可判断。</div>
+</div>
+
+<div class="term-card fie">
+<div class="tc-header">
+<span class="tc-name">FIE-A 高可信事实</span>
+<span class="tc-en">High-Credibility Facts</span>
+<span class="tc-tag t-fie">FIE</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>官方公开数据、上市公司公告、权威机构报告</div>
+<div class="tc-detail">可验证经营数据。可作为核心结论依据。注意：A级不等于100%准确——需关注采集时间和口径差异。</div>
+</div>
+
+<div class="term-card fie">
+<div class="tc-header">
+<span class="tc-name">FIE-B 可信参考信息</span>
+<span class="tc-en">Credible Reference</span>
+<span class="tc-tag t-fie">FIE</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>企业公开信息、行业访谈、专业媒体报道</div>
+<div class="tc-detail">可作为辅助论据，需标注来源。在证据等级中介于绝对可信与待验证之间。</div>
+</div>
+
+<div class="term-card fie">
+<div class="tc-header">
+<span class="tc-name">FIE-C 待验证信息</span>
+<span class="tc-en">Unverified Information</span>
+<span class="tc-tag t-fie">FIE</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>企业宣传数据、市场传言、单一来源观点</div>
+<div class="tc-detail">不得直接作为核心结论依据，需标注「待验证」。可用于提出假设方向，但不能作为分析基础。</div>
+</div>
+
+<div class="term-card fie">
+<div class="tc-header">
+<span class="tc-name">FIE-D 行业经验判断</span>
+<span class="tc-en">Industry Experience Judgment</span>
+<span class="tc-tag t-fie">FIE</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>基于从业经验的定性判断，无公开数据支撑</div>
+<div class="tc-detail">用于方向性分析，不用于精确论证。需注明「行业经验」。虽有价值但不能作为核心结论依据。关键是标注来源等级，而非排除。</div>
+</div>
+
+</div>
+
+<!-- ========== FDE ========== -->
+<div class="glossary-section" id="fde">
+<div class="gs-header"><span class="gs-code">FDE</span><span class="gs-name">决策引擎</span><span class="gs-count">2 条</span></div>
+
+<div class="term-card fde">
+<div class="tc-header">
+<span class="tc-name">FDE 食品产业决策引擎</span>
+<span class="tc-en">Food Decision Engine</span>
+<span class="tc-tag t-fde">FDE</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>从问题识别到商业决策的七层诊断体系</div>
+<div class="tc-detail">三个原则：先定位再解决、所有结论可验证、所有方案可复现。诊断是过程，决策才是产品。跨品类可复用——不同品类模型不同，诊断逻辑相同。</div>
+</div>
+
+<div class="term-card fde">
+<div class="tc-header">
+<span class="tc-name">七层诊断体系</span>
+<span class="tc-en">Seven-Layer Diagnostic System</span>
+<span class="tc-tag t-fde">FDE</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>FDE的七层递进诊断流程</div>
+<div class="tc-detail">问题分类→产业模型→诊断树→验证体系→解决方案库→标准数据库→决策建议。每一层的输出是下一层的输入。从自然语言问题到商业决策的可回溯推理链路。</div>
+</div>
+
+</div>
+
+<!-- ========== 品类模型 ========== -->
+<div class="glossary-section" id="category">
+<div class="gs-header"><span class="gs-code">CAT</span><span class="gs-name">品类模型</span><span class="gs-count">4 条</span></div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">炸鸡六维控制模型</span>
+<span class="tc-en">Six-Dimension Fried Chicken Control Model</span>
+<span class="tc-tag t-general">品类</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>炸鸡品类的六维产业控制体系</div>
+<div class="tc-detail">原料·腌制·裹粉·油炸·设备·供应链——六个可独立排查的控制维度。每维都是可控变量，通过调节六维参数实现产品稳定和品质控制。已发布完整白皮书（8篇·约6.5万字）。</div>
+</div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">卤味七维产业决策模型</span>
+<span class="tc-en">Seven-Dimension Braised Decision Model</span>
+<span class="tc-tag t-general">品类</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>卤味品类的七维产业分析标准</div>
+<div class="tc-detail">基于FIF-001七维决策框架应用于卤味品类的完整白皮书。首次应用FIS-002五世界分类模型。约18万字完整研究体系，经卤味行业深度验证。</div>
+</div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">早餐五维模型</span>
+<span class="tc-en">Breakfast Five-Dimension Model</span>
+<span class="tc-tag t-general">品类</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>早餐品类的五维分析模型</div>
+<div class="tc-detail">用于早餐产业的系统分析和决策判断。验证了老板自由度模型、商业模式分析框架等FIS/FIF子框架在早餐品类的适用性。涵盖早餐九大门派分析。</div>
+</div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">面食产业模型</span>
+<span class="tc-en">Noodle Industry Model</span>
+<span class="tc-tag t-general">品类</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>面食品类的七篇系统研究系列</div>
+<div class="tc-detail">包含手工vs机器、三张底牌、陕西的面、西安泡馍、凉皮三姐妹等7篇完整研究。验证FIM研究方法在面食品类的适用性。W26完成全部7篇。</div>
+</div>
+
+</div>
+
+<!-- ========== 通用概念 ========== -->
+<div class="glossary-section" id="general">
+<div class="gs-header"><span class="gs-code">GEN</span><span class="gs-name">通用概念</span><span class="gs-count">8 条</span></div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">八链因果系统</span>
+<span class="tc-en">Eight-Chain Causal System</span>
+<span class="tc-tag t-general">通用</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>FIS-001核心：产业变化的八环节因果传导链条</div>
+<div class="tc-detail">消费者→需求→场景→渠道→产品→技术→供应链→产业格局。方向不可逆。正向追溯变化源头，反向推演影响路径。所有分析以八链为底层框架。</div>
+</div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">五世界（卤味）</span>
+<span class="tc-en">Five Worlds (Braised Food)</span>
+<span class="tc-tag t-general">通用</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>卤味产业内部分为五个竞争逻辑不同的世界</div>
+<div class="tc-detail">休闲卤味（绝味/周黑鸭等）、佐餐卤味（紫燕等）、地方卤味（煌上煌等区域性品牌）、餐饮卤味（火锅店卤味/盛香亭等）、工业卤味（预制菜/卤味原料）。不同世界竞争逻辑完全不同。</div>
+</div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">连锁化率</span>
+<span class="tc-en">Chain Penetration Rate</span>
+<span class="tc-tag t-general">通用</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>衡量品类全国化潜力的核心指标</div>
+<div class="tc-detail">反映一个品类中连锁品牌门店占比。连锁化率低说明品类分散、品牌化程度低；连锁化率高说明标准化可行、可复制性强。用于FIF-002全国化分析框架。</div>
+</div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">价格带</span>
+<span class="tc-en">Price Band</span>
+<span class="tc-tag t-general">通用</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>品类/品牌的价格分布区间与竞争空间</div>
+<div class="tc-detail">价格带决定品类内竞争格局和利润空间。如早餐价格带锁死商业模式——低价格带限制了成本结构、供应链方式和扩张路径。</div>
+</div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">品类势能</span>
+<span class="tc-en">Category Momentum</span>
+<span class="tc-tag t-general">通用</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>品类的结构性增长动力和天花板判断</div>
+<div class="tc-detail">由需求确定性、供给弹性、场景延展性、可标准化程度等因子综合决定。用于判断品类势能而非证明商业成立。品类的结构性天花板往往比品牌自身天花板更早到来。</div>
+</div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">多品类验证</span>
+<span class="tc-en">Cross-Category Validation</span>
+<span class="tc-tag t-general">通用</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>跨品类验证框架的适配性和可靠性</div>
+<div class="tc-detail">FoodIntelAI的核心方法论原则之一。任何框架在一个品类验证后，迁移至另一品类需重新验证。已验证品类：卤味、炸鸡、早餐、面食。待验证：烘焙、茶饮、火锅。</div>
+</div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">数据缺口表</span>
+<span class="tc-en">Data Gap Table</span>
+<span class="tc-tag t-general">通用</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>研究启动时识别和记录数据缺失区域的工具</div>
+<div class="tc-detail">FIM-001八步研究法的前置工具。在研究前明确哪些数据已获取、哪些需要补充、哪些无法获取。防止研究过程中被数据缺失阻塞，确保研究可推进。</div>
+</div>
+
+<div class="term-card general">
+<div class="tc-header">
+<span class="tc-name">产业推理能力</span>
+<span class="tc-en">Industrial Reasoning Capability</span>
+<span class="tc-tag t-general">通用</span>
+</div>
+<div class="tc-def"><span class="def-label">定义：</span>FoodIntelAI的核心产品——可复现的产业诊断路径</div>
+<div class="tc-detail">不是知识库，而是推理能力。知识可以被复制，真正难以复制的是产业推理能力。目标是让每一个判断都有依据，每一个结论都可验证，每一个方案都能复现。</div>
+</div>
+
+</div>
+
+<hr>
+
+<div style="text-align:center;font-size:12px;margin-bottom:20px">
+<a href="index.html" style="color:#8b6914;text-decoration:none">← 返回 Frameworks 首页</a>
+&nbsp;&nbsp;·&nbsp;&nbsp;
+<a href="updates.html" style="color:#8b6914;text-decoration:none">更新日志 →</a>
+</div>
+
+<div class="footer">
+<div class="f1">FoodIntelAI食品决策库</div>
+<div class="f2">少走弯路 · 快人一步</div>
+<div class="f3">术语库 v1.0 · 37 条 · 2026.07.24</div>
+</div>
+
+</div>
+</body>
+</html>

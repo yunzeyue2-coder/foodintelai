@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>更新日志 · FoodIntelAI 框架体系</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;padding:0;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
+.page{max-width:860px;width:100%;padding:48px 40px 60px}
+
+.cover{text-align:center;padding:32px 0 30px;border-bottom:2px solid #e0ddd5;margin-bottom:32px;position:relative}
+.cover h1{font-size:28px;font-weight:700;color:#1a1a1a;letter-spacing:2px;margin-bottom:4px}
+.cover .sub{font-size:13px;color:#8a7a6a;line-height:1.6;max-width:500px;margin:0 auto}
+.cover .badge{font-size:10px;color:#c4a35a;letter-spacing:5px;margin-bottom:8px}
+.cover .meta{font-size:11px;color:#b5aaa0;margin-top:10px}
+
+.breadcrumb{font-size:11px;color:#b5aaa0;margin-bottom:20px;letter-spacing:1px}
+.breadcrumb a{color:#8b6914;text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+
+/* 版本概要 */
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
+.summary .sm-card{background:#fff;border:1px solid #e8e3db;border-radius:8px;padding:14px;text-align:center}
+.summary .sm-card .sm-val{font-size:20px;font-weight:700;color:#1a1a1a}
+.summary .sm-card .sm-label{font-size:10px;color:#b5aaa0;letter-spacing:1px;margin-top:2px}
+@media(max-width:640px){.summary{grid-template-columns:repeat(2,1fr)}}
+
+/* 时间线 */
+.timeline{position:relative;padding-left:30px}
+.timeline::before{content:'';position:absolute;left:9px;top:0;bottom:0;width:2px;background:#e0ddd5}
+
+.tl-month{position:relative;margin-bottom:28px}
+.tl-month::before{content:'';position:absolute;left:-21px;top:4px;width:12px;height:12px;border-radius:50%;background:#c4a35a;border:3px solid #f7f5f0}
+.tl-month .tm-label{font-size:11px;color:#8b6914;font-weight:700;letter-spacing:3px;margin-bottom:12px;font-family:'Inter',sans-serif}
+
+.tl-entry{position:relative;padding:10px 0 10px 16px;border-left:1px solid #e8e3db;margin-left:8px}
+.tl-entry:last-child{border-left-color:transparent}
+.tl-entry .tl-dot{position:absolute;left:-5px;top:14px;width:8px;height:8px;border-radius:50%;background:#fff;border:2px solid #b5aaa0}
+.tl-entry.major .tl-dot{background:#8b6914;border-color:#8b6914;width:10px;height:10px;left:-6px;top:13px}
+.tl-entry.add .tl-dot{border-color:#4a7a3a;background:#e8f0e8}
+.tl-entry.fix .tl-dot{border-color:#7a6a4a;background:#f5f0e8}
+.tl-entry.design .tl-dot{border-color:#6a5a8a;background:#f0ecf5}
+
+.tl-entry .tl-header{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px}
+.tl-entry .tl-header .tl-date{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif;letter-spacing:1px;white-space:nowrap}
+.tl-entry .tl-header .tl-tag{font-size:9px;padding:1px 10px;border-radius:10px;font-family:'Inter',sans-serif;letter-spacing:1px;font-weight:600}
+.tl-entry .tl-header .tl-tag.t-add{background:#e8f0e8;color:#3a6a3a}
+.tl-entry .tl-header .tl-tag.t-update{background:#fef8e8;color:#8a6a2a}
+.tl-entry .tl-header .tl-tag.t-fix{background:#f0ece4;color:#7a6a5a}
+.tl-entry .tl-header .tl-tag.t-design{background:#f0ecf5;color:#5a4a7a}
+.tl-entry .tl-header .tl-tag.t-version{background:linear-gradient(135deg,#1a2a1a,#0B1F3A);color:#f5f0e8}
+.tl-entry .tl-title{font-size:14px;font-weight:600;color:#1a1a1a;line-height:1.5}
+.tl-entry .tl-desc{font-size:12px;color:#8a7a6a;line-height:1.6;margin-top:2px}
+
+/* 大版本节点 */
+.version-node{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1.5px solid #c4a35a;border-radius:10px;padding:16px 20px;margin:20px 0;position:relative}
+.version-node .vn-badge{font-size:10px;color:#8b6914;font-weight:700;letter-spacing:2px;font-family:'Inter',sans-serif}
+.version-node .vn-title{font-size:16px;font-weight:700;color:#1a1a1a;margin:2px 0}
+.version-node .vn-desc{font-size:12px;color:#8a7a6a;line-height:1.6}
+
+hr{border:none;border-top:1px solid #e0ddd5;margin:32px 0}
+
+.footer{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1px solid #e8e3db;border-radius:12px;padding:24px;text-align:center;margin-top:40px}
+.footer .f1{font-size:14px;font-weight:700;color:#8b6914;letter-spacing:3px;margin-bottom:3px}
+.footer .f2{font-size:11px;color:#888;letter-spacing:2px}
+
+@media(max-width:640px){
+  .page{padding:24px 14px 40px}
+  .cover h1{font-size:22px}
+  .timeline{padding-left:20px}
+  .tl-entry{padding-left:12px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="breadcrumb"><a href="index.html">Frameworks</a> / <span style="color:#8b6914">更新日志 Updates</span></div>
+
+<div class="cover">
+<div class="badge">FOODINTELAI CHANGELOG</div>
+<h1>更新日志</h1>
+<div class="sub">版本演进 · 里程碑节点 · 品类研究上线记录</div>
+<div class="meta">2026.06.02 — 2026.07.24 · 基于 git 历史</div>
+</div>
+
+<div class="summary">
+<div class="sm-card"><div class="sm-val">54</div><div class="sm-label">天持续开发</div></div>
+<div class="sm-card"><div class="sm-val">170+</div><div class="sm-label">次提交</div></div>
+<div class="sm-card"><div class="sm-val">4</div><div class="sm-label">品类研究完结</div></div>
+<div class="sm-card"><div class="sm-val">6</div><div class="sm-label">体系框架</div></div>
+</div>
+
+<div class="timeline">
+
+<!-- ===== 2026-07 ===== -->
+<div class="tl-month"><span class="tm-label">2026-07 · 体系深化期</span></div>
+
+<div class="version-node">
+<div class="vn-badge">2026-07-24 · V1.0 · 新增</div>
+<div class="vn-title">FDE 食品产业决策引擎 V1.0</div>
+<div class="vn-desc">七层诊断体系正式发布：问题分类→产业模型→诊断树→验证体系→解决方案库→标准数据库→决策建议。三个核心原则：先定位再解决、所有结论可验证、所有方案可复现。</div>
+</div>
+
+<div class="tl-entry add">
+<div class="tl-header"><span class="tl-date">2026-07-24</span><span class="tl-tag t-add">新增</span></div>
+<div class="tl-title">早餐系列第5篇：历史演化与国际比较</div>
+<div class="tl-desc">早餐系列5篇全部上线，研究页面W30更新。</div>
+</div>
+
+<div class="tl-entry add">
+<div class="tl-header"><span class="tl-date">2026-07-24</span><span class="tl-tag t-add">新增</span></div>
+<div class="tl-title">品类势能预测卡（RP系列）恢复上线</div>
+<div class="tl-desc">11张品类势能预测卡补回catalog，恢复总数701。</div>
+</div>
+
+<div class="tl-entry update">
+<div class="tl-header"><span class="tl-date">2026-07-24</span><span class="tl-tag t-update">修复</span></div>
+<div class="tl-title">炸鸡六维模型排版优化</div>
+<div class="tl-desc">body CSS修复、封面边距、响应式结构、添加阅读声明。</div>
+</div>
+
+<div class="version-node">
+<div class="vn-badge">2026-07-23 · V2.0 · 重大更新</div>
+<div class="vn-title">Frameworks V2.0：五套编码体系正式发布</div>
+<div class="vn-desc">FIP/FIF/FIS/FIM/FIE 五体系首页+统一模板+Core Statement+阅读闭环。24个标准框架全部上线，每个框架配备标准化detail页面。包含版本/更新日期/应用研究字段。品牌字体系统升级（Inter+思源黑体）。知识资产编码体系FI-FR/FI-BM/FI-RS标注。</div>
+</div>
+
+<div class="tl-entry major">
+<div class="tl-header"><span class="tl-date">2026-07-23</span><span class="tl-tag t-version">里程碑</span></div>
+<div class="tl-title">炸鸡系列7篇完结 · 六维模型总纲发布</div>
+<div class="tl-desc">炸鸡第7篇·六维模型总纲上线，炸鸡系列7篇全部完成。包含：六大门派八种口味、九步法、产品架构、Vora利益函数理论、五种生存路径。</div>
+</div>
+
+<div class="tl-entry major">
+<div class="tl-header"><span class="tl-date">2026-07-23</span><span class="tl-tag t-version">里程碑</span></div>
+<div class="tl-title">卤味系列7篇完结 + 时间轴W29更新</div>
+<div class="tl-desc">卤味第1篇·七刀切卤味启动，至第7篇完结。卤味第7篇重制：八环节链条+四轴线+社区店真实案例。时间轴W29更新。</div>
+</div>
+
+<div class="tl-entry major">
+<div class="tl-header"><span class="tl-date">2026-07-23</span><span class="tl-tag t-version">里程碑</span></div>
+<div class="tl-title">面食系列7篇完结（W26）</div>
+<div class="tl-desc">面食7篇全部完成：凉皮三姐妹、西安泡馍四门生意、陕西的面、三张底牌、手工vs机器。每篇重制后包含完整工艺+经营数据+对比表。</div>
+</div>
+
+<div class="tl-entry design">
+<div class="tl-header"><span class="tl-date">2026-07-23</span><span class="tl-tag t-design">设计</span></div>
+<div class="tl-title">首页四大卡片升级 + 品牌统一</div>
+<div class="tl-desc">英雄区升级：FoodIntelAI品牌+食品商业决策系统+双CTA。字体升级Inter+思源黑体统一品牌字体系统。门店slogan更新。体系卡片升级：实线边框+渐变底色+阴影+层级标签。</div>
+</div>
+
+<div class="tl-entry design">
+<div class="tl-header"><span class="tl-date">2026-07-23</span><span class="tl-tag t-design">设计</span></div>
+<div class="tl-title">案例页面重设计 + 研究区改版</div>
+<div class="tl-desc">三个案例页面经营犹豫者视角重构。21篇文章加入分享条（复制链接/分享/打印）+ 可点击投票组件。研究页改为年度/周/日期三级时间轴，折叠式结构。</div>
+</div>
+
+<div class="tl-entry redesign">
+<div class="tl-header"><span class="tl-date">2026-07-23</span><span class="tl-tag t-update">重构</span></div>
+<div class="tl-title">Framework V2.0 设计重构</div>
+<div class="tl-desc">Frameworks landing page重设计：24个框架、Premium McKinsey风格。FIP/FIF/FIS/FIM/FIE编码体系detail页面全部上线。Framework Metadata + Applied Research字段添加。</div>
+</div>
+
+<div class="tl-entry add">
+<div class="tl-header"><span class="tl-date">2026-07-22</span><span class="tl-tag t-add">新增</span></div>
+<div class="tl-title">研究区上线 + 早餐系列启动</div>
+<div class="tl-desc">研究区上线、每周专栏启动。首页加入「中国早餐没有霸主」周一文章。早餐系列day2-day4：价格带锁死商业模式、老板隐形成本。</div>
+</div>
+
+<div class="tl-entry design">
+<div class="tl-header"><span class="tl-date">2026-07-22</span><span class="tl-tag t-design">设计</span></div>
+<div class="tl-title">首页深色品牌英雄区重设计</div>
+<div class="tl-desc">dark brand-first hero、stats section、大字数据+渐变过渡。修复404链接、emoji清理。</div>
+</div>
+
+<!-- ===== 2026-07 上半月 ===== -->
+<div class="tl-month"><span class="tm-label">2026-07 · 产品卡与基础建设</span></div>
+
+<div class="tl-entry add">
+<div class="tl-header"><span class="tl-date">2026-07-10</span><span class="tl-tag t-add">新增</span></div>
+<div class="tl-title">加入页面上线 + TG社群QR码</div>
+<div class="tl-desc">国际(TG) + 国内(微信)双渠道QR码加入。FoodIntelAI品牌标签统一。加入社群入口页面。</div>
+</div>
+
+<div class="tl-entry fix">
+<div class="tl-header"><span class="tl-date">2026-07-10</span><span class="tl-tag t-fix">修复</span></div>
+<div class="tl-title">RP品类势能预测卡恢复</div>
+<div class="tl-desc">11张RP卡恢复至cards-data.js，首页热品区恢复正常渲染。</div>
+</div>
+
+<div class="tl-entry add">
+<div class="tl-header"><span class="tl-date">2026-07-02</span><span class="tl-tag t-add">新增</span></div>
+<div class="tl-title">SEO优化：sitemap.xml + robots.txt</div>
+<div class="tl-desc">添加站点地图和搜索引擎优化配置。添加不蒜子站点访问计数。产品卡量更新至690张。</div>
+</div>
+
+<div class="tl-entry fix">
+<div class="tl-header"><span class="tl-date">2026-06-30 ~ 27</span><span class="tl-tag t-fix">修复</span></div>
+<div class="tl-title">产品卡付费体系与包子系列上线</div>
+<div class="tl-desc">擂辣椒系列补paywall.js+share.js + 付费墙CSS修复。包子总纲+母卡体系上线，包子系列加入STORE_DATA+首页hero卡。</div>
+</div>
+
+<!-- ===== 2026-06 ===== -->
+<div class="tl-month"><span class="tm-label">2026-06 · 产品卡与首页迭代</span></div>
+
+<div class="version-node">
+<div class="vn-badge">2026-06-27 · 包子系列</div>
+<div class="vn-title">包子体系总纲+母卡上线</div>
+<div class="vn-desc">产品档案更新。FDE 八维引擎复原、STORE_DATA体系集成。</div>
+</div>
+
+<div class="tl-entry update">
+<div class="tl-header"><span class="tl-date">2026-06-25 ~ 20</span><span class="tl-tag t-update">更新</span></div>
+<div class="tl-title">更多品类体系上线</div>
+<div class="tl-desc">牛排系列（母卡+子卡）、烤鸭系列上线、「卡王」称号系统加入、首页产品卡排重修复、C端消费向产品卡排重优化。</div>
+</div>
+
+<div class="tl-entry add">
+<div class="tl-header"><span class="tl-date">2026-06-17 ~ 16</span><span class="tl-tag t-add">新增</span></div>
+<div class="tl-title">多品类产品卡批量上线</div>
+<div class="tl-desc">牛丼系（母卡+VC）+ 米饭系上架。关东煮体系、热狗/肠系列、钵钵鸡、串串香体系批量上线。沙拉、轻食品类新增。饺子品类体系上线。</div>
+</div>
+
+<div class="tl-entry add">
+<div class="tl-header"><span class="tl-date">2026-06-15</span><span class="tl-tag t-add">新增</span></div>
+<div class="tl-title">面食、卤味体系上线</div>
+<div class="tl-desc">面食系列母卡+VC上线，卤味体系上线启动。</div>
+</div>
+
+<div class="tl-entry update">
+<div class="tl-header"><span class="tl-date">2026-06-14 ~ 10</span><span class="tl-tag t-update">更新</span></div>
+<div class="tl-title">首页优化 + 搜索系统</div>
+<div class="tl-desc">首页改版: Google风格 + 卡片式产品目录。全站搜索功能上线。FIS-003品类生命周期卡片区上线。V4分享系统上线。</div>
+</div>
+
+<div class="tl-entry add">
+<div class="tl-header"><span class="tl-date">2026-06-05 ~ 03</span><span class="tl-tag t-add">新增</span></div>
+<div class="tl-title">炸鸡系列 + 多品类V5产品卡系统</div>
+<div class="tl-desc">炸鸡系列白皮书启动。V5产品卡系统：熟食、炸鸡、小龙虾、麻辣烫、卤味、烧烤、烤鱼、寿司、轻食、牛杂、粉面等品类批量上线。STORE_DATA卡片系统+品类网格渲染。</div>
+</div>
+
+<div class="version-node">
+<div class="vn-badge">2026-06-03 · V5.0</div>
+<div class="vn-title">V5产品卡系统 + 1049张卡部署</div>
+<div class="vn-desc">v5.0-v5.13：场景入口三层结构改造（摆摊/开店/工厂）。关联推荐系统+三手册拆分。1049张产品卡(H5数据)导入。品类网格渲染1037张卡·26个品类。5维评分系统（市场/复购/难度/利润/成本）。密码锁+付费体系+AI咨询入口。</div>
+</div>
+
+<div class="tl-entry add">
+<div class="tl-header"><span class="tl-date">2026-06-03</span><span class="tl-tag t-add">新增</span></div>
+<div class="tl-title">CNAME + 域名 foodintelai.com</div>
+<div class="tl-desc">绑定自定义域名，网站正式部署。</div>
+</div>
+
+<div class="tl-entry add">
+<div class="tl-header"><span class="tl-date">2026-06-03 ~ 02</span><span class="tl-tag t-add">新增</span></div>
+<div class="tl-title">开店实战手册 + 线上运营知识库</div>
+<div class="tl-desc">开店实战手册：线上运营核心板块重构，11个分区全部上线。线上运营知识库tab + 3篇深度线上干货。</div>
+</div>
+
+<div class="version-node">
+<div class="vn-badge">2026-06-02 · V4.x</div>
+<div class="vn-title">网站初始发布 · 知识库首页</div>
+<div class="vn-desc">v4.0-v4.7：warm palette + 搜索 + 知识库 + 分享 + QR + AI入口。自定义SVG图标（摆摊/开店/工厂/趋势场景卡片）。免费知识库5分类16篇文章。移动端响应式。favicon + apple touch icon。开店实战手册。</div>
+</div>
+
+<div class="tl-entry major">
+<div class="tl-header"><span class="tl-date">2026-06-02</span><span class="tl-tag t-version">初始</span></div>
+<div class="tl-title">git init: 沧林食品工业知识库首页</div>
+<div class="tl-desc">项目初始化。v4 warm palette + search + knowledge + share + QR + AI entrance。自定义SVG icons for 4 scene cards。免费知识库5类16篇文章。移动端全断点适配。</div>
+</div>
+
+</div><!-- /timeline -->
+
+<hr>
+
+<div style="text-align:center;font-size:12px;margin-bottom:20px">
+<a href="index.html" style="color:#8b6914;text-decoration:none">← 返回 Frameworks 首页</a>
+&nbsp;&nbsp;·&nbsp;&nbsp;
+<a href="glossary.html" style="color:#8b6914;text-decoration:none">术语库 →</a>
+</div>
+
+<div class="footer">
+<div class="f1">FoodIntelAI食品决策库</div>
+<div class="f2">少走弯路 · 快人一步</div>
+<div class="f2" style="font-size:10px;color:#aaa;margin-top:2px">更新日志 v1.0 · 基于 git commit 历史</div>
+</div>
+
+</div>
+</body>
+</html>
