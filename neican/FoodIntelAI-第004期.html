@@ -5,6 +5,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#f5f3ef;font-family:'Noto Sans SC','Inter','PingFang SC',sans-serif;color:#2a2218;display:flex;justify-content:center}
@@ -30,6 +31,21 @@ th{background:#f5f0e8;font-weight:600;font-size:11px;color:#1a1a1a}
 .judge-box .jb-title{font-size:12px;font-weight:700;color:#8b6914;margin-bottom:4px}
 .judge-box .jb-body{font-size:12px;color:#3a322a;line-height:1.7}
 .judge-box .jb-tag{font-size:10px;color:#b5aaa0;display:block;margin-top:4px}
+.chart-box{background:#fff;border:1px solid #e8e3db;border-radius:10px;padding:12px;margin:10px 0}
+#radarChart{width:100%;height:340px}
+.ib-box{border:1.5px solid #c4a35a;border-radius:10px;padding:16px 18px;margin:8px 0;background:linear-gradient(135deg,#faf8f5,#fcf8f2)}
+.ib-box .ib-issue{font-size:10px;color:#c4a35a;letter-spacing:2px;font-weight:600;margin-bottom:2px}
+.ib-box .ib-title{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+.ib-box .ib-q{font-size:11px;color:#8a7a6a;margin-bottom:8px;padding:6px 10px;background:#fff;border-radius:4px;border:1px solid #e8e3db}
+.dim-row{display:flex;align-items:flex-start;gap:8px;margin:6px 0;padding:8px 10px;background:#faf8f5;border-radius:6px}
+.dim-row .dr-num{flex-shrink:0;width:20px;height:20px;background:#0B1F3A;color:#fff;font-size:10px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.dim-row .dr-body{flex:1;font-size:12px;color:#3a322a;line-height:1.6}
+.dim-row .dr-body strong{color:#1a1a1a}
+.dim-row .dr-score{flex-shrink:0;font-size:13px;font-weight:700;color:#8b6914;margin-left:auto}
+.ib-conclusion{background:#0B1F3A;color:#f5f0e8;border-radius:8px;padding:12px 14px;margin:10px 0;font-size:12px;line-height:1.8}
+.ib-conclusion strong{color:#c4a35a}
+.model-tag{display:inline-block;font-size:9px;padding:2px 8px;border-radius:3px;background:#f0eee8;color:#8a7a6a;margin:2px 2px 0 0}
+.model-tag.v{background:#e8f4e8;color:#2a5a3a}
 .split{border:none;border-top:1px solid #e0ddd5;margin:18px 0}
 .next-box{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1px solid #c4a35a;border-radius:8px;padding:14px 16px;margin:14px 0;font-size:12px;color:#3a322a;line-height:1.7}
 .next-box strong{color:#8b6914}
@@ -43,7 +59,7 @@ th{background:#f5f0e8;font-weight:600;font-size:11px;color:#1a1a1a}
 <h1>📋 FoodIntelAI Weekly Brief</h1>
 <p class="head-meta">第004期 · 2026.07.20—07.26</p>
 
-<!-- ===== PART 1: 这周我们干了什么 ===== -->
+<!-- ===== PART 1 ===== -->
 <div class="sec-title">一、这周我们干了什么</div>
 <div class="sec-sub">四个维度的资产沉淀，每一项都是小程序和知识库的底层支撑。</div>
 
@@ -67,7 +83,7 @@ th{background:#f5f0e8;font-weight:600;font-size:11px;color:#1a1a1a}
 <tr>
   <td><strong>🔧 FDE实战</strong></td>
   <td>杭州蘸汁炸鸡诊断案例</td>
-  <td style="font-size:11px">Food Decision Engine 第一次走通完整流程——从项目定义到供应链梳理到门店模型分析，验证了FDE的实操可行性。</td>
+  <td style="font-size:11px">Food Decision Engine 第一次走通完整流程——从项目定义到供应链梳理到门店模型分析。</td>
 </tr>
 <tr>
   <td><strong>🧭 六维判断模型</strong></td>
@@ -76,78 +92,145 @@ th{background:#f5f0e8;font-weight:600;font-size:11px;color:#1a1a1a}
 </tr>
 </table>
 
-<p style="font-size:12px;color:#2a2218;margin:6px 0"><strong>一句话总结这周：</strong>从"一篇篇写文章"切换到"建框架、搭底座、让知识可复用"。下周开始，每篇文章同时沉淀5样东西：文章+决策卡+知识库页+结构化数据+框架验证记录。</p>
+<p style="font-size:12px;color:#2a2218;margin:6px 0"><strong>一句话：</strong>从"一篇篇写文章"切换到"建框架、搭底座、让知识可复用"。</p>
 
 <hr class="split">
 
-<!-- ===== PART 2: 外面发生了什么 ===== -->
+<!-- ===== PART 2 ===== -->
 <div class="sec-title">二、外面发生了什么</div>
-<div class="sec-sub">六个跟食品创业相关的产业信号，每个都标注了来源可信度。</div>
+<div class="sec-sub">六个跟食品创业相关的产业信号。</div>
 
 <div class="signal-box">
 <span class="sb-tag sb-tech">🔬 技术</span>
 <div class="sb-title">裹粉薄粉体系渗透率从35%升到45%</div>
-<div class="sb-body">外卖场景正在推动炸鸡/炸串的裹粉配方从"单一粉"升级为"多层结构"（比如外酥里嫩的复合裹粉）。连锁品牌中薄粉占比持续提升，说明消费者对外卖的品质要求在涨。</div>
+<div class="sb-body">外卖场景正在推动炸鸡/炸串的裹粉配方从"单一粉"升级为"多层结构"。连锁品牌中薄粉占比持续提升，说明消费者对外卖的品质要求在涨。</div>
 <div class="sb-source">来源：行业调研</div>
 </div>
 
 <div class="signal-box">
 <span class="sb-tag sb-cap">💰 资本</span>
 <div class="sb-title">早餐门店品牌VC融资持续空白</div>
-<div class="sb-body">沪上阿姨2024年2月C轮1.22亿、夸父炸串2024年3月B轮——但包子、油条、胡辣汤品牌，零上榜。资本不是不喜欢早餐，而是不喜欢"增长结构不匹配资本模型"的生意。</div>
+<div class="sb-body">沪上阿姨2024.2 C轮1.22亿、夸父炸串2024.3 B轮——但包子/油条/胡辣汤品牌零上榜。不是资本不喜欢早餐，是不喜欢"增长结构不匹配资本模型"的生意。</div>
 <div class="sb-source">来源：沥金/蓝鲨消费/财通证券</div>
 </div>
 
 <div class="signal-box">
 <span class="sb-tag sb-con">🛒 消费</span>
 <div class="sb-title">早餐外食率约45%，便利店正在抢早餐生意</div>
-<div class="sb-body">全家、罗森、711的早餐SKU已经增加到15-20个。它们不是在跟早餐店比好吃，而是在跟通勤人群比方便。便利店=资本曲线进入早餐场景的路径。</div>
+<div class="sb-body">全家、罗森、711的早餐SKU已增加到15-20个。便利店=资本曲线进入早餐场景的路径。</div>
 <div class="sb-source">来源：行业公开数据</div>
 </div>
 
 <div class="signal-box">
 <span class="sb-tag sb-over">🌍 海外</span>
-<div class="sb-title">英国早餐连锁Greggs利润同比跌了20.3%</div>
-<div class="sb-body">Greggs营收21.51亿英镑但利润承压——证明早餐利润薄是全球共性问题，不是中国特有。不是中国人吃不起，是全球早餐商业模型都这样。</div>
+<div class="sb-title">英国早餐连锁Greggs利润同比跌20.3%</div>
+<div class="sb-body">营收21.51亿英镑但利润承压——早餐利润薄是全球共性问题，不是中国特有。</div>
 <div class="sb-source">来源：Greggs初步业绩公告</div>
 </div>
 
 <div class="signal-box">
 <span class="sb-tag sb-cap">📋 政策</span>
 <div class="sb-title">"早餐工程+一刻钟便民生活圈"深化</div>
-<div class="sb-body">政策在补位的本质：资本绕开早餐→政府兜底供给。这不是在扶持餐饮创业，是在填补资本主动让出的民生阵地。</div>
+<div class="sb-body">政策在补位：资本绕开早餐→政府兜底供给。这不是扶持餐饮创业，是填补资本让出的民生阵地。</div>
 <div class="sb-source">来源：公开政府文件</div>
 </div>
 
 <div class="signal-box">
 <span class="sb-tag sb-con">📦 供应链</span>
 <div class="sb-title">白羽鸡国产替代加速，圣泽901市占率上升</div>
-<div class="sb-body">种源自主可控降低进口依赖——这对下游炸鸡供应链是长期利好，原料价格会更稳。</div>
+<div class="sb-body">种源自主可控降低进口依赖，利好下游炸鸡供应链稳定性。</div>
 <div class="sb-source">来源：公开报道</div>
 </div>
 
 <hr class="split">
 
-<!-- ===== PART 3: 我们认为这意味着什么 ===== -->
+<!-- ===== PART 3 ===== -->
 <div class="sec-title">三、我们认为这意味着什么</div>
-<div class="sec-sub">三个判断，不是拍脑袋，是这周研究推出来的结论。</div>
 
 <div class="judge-box">
 <div class="jb-title">① 资本为什么绕开早餐？</div>
-<div class="jb-body">资本评一门生意只看两个坐标：规模复制能不能产生复利？退出渠道是否畅通？早餐在两个维度都不达标——不是因为不赚钱，是因为它的增长结构天生不匹配资本模型。这个判断已经写成正式的Framework入库了。</div>
+<div class="jb-body">资本评一门生意只看两个坐标：规模复制能不能产生复利？退出渠道是否畅通？早餐在两个维度都不达标。这个判断已写成正式Framework入库。</div>
 <div class="jb-tag">→ FIF系列·资本吸引力矩阵 已入库</div>
 </div>
 
 <div class="judge-box">
 <div class="jb-title">② 区域深耕比全国铺网更靠谱</div>
-<div class="jb-body">巴比华东5909家（占71%）、早阳华东约3000家。日本和美国能做到全国连锁，是因为它们的早餐客单价（¥15-72）和通勤结构完全不同。中国早餐连锁的正确方向不是"铺遍全国"，而是"在一个区域做透"。</div>
-<div class="jb-tag">→ 中国早餐连锁的正确方向</div>
+<div class="jb-body">巴比华东5909家占71%、早阳华东约3000家。中国早餐连锁的正确方向不是"铺遍全国"，而是"在一个区域做透"。</div>
 </div>
 
 <div class="judge-box">
-<div class="jb-title">③ 以后研究一个品类，就是验证一次模型</div>
-<div class="jb-body">FID三层架构已经确立：FSF（结构因子/客观事实）≠ Framework（分析工具）≠ Case（验证样本）。以后每研究一个品类，不只是增加一篇内容，而是给Framework加一块证据板——验证它、修正它、或者推翻它。</div>
-<div class="jb-tag">→ 方法论底座已确立</div>
+<div class="jb-title">③ FID三层架构确立</div>
+<div class="jb-body">FSF≠Framework≠Case。以后每研究一个品类，就是给Framework加一块证据板——验证它、修正它、或者推翻它。</div>
+</div>
+
+<hr class="split">
+
+<!-- ===== PART 4: Industry Brief ===== -->
+<div class="sec-title">四、行业案例拆解</div>
+<div class="sec-sub">根据行业读者提问，用FoodIntelAI六维模型拆解真实品牌。每期一个，同一套框架，持续验证方法论。</div>
+
+<div class="ib-box">
+<div class="ib-issue">INDUSTRY BRIEF · ISSUE 001</div>
+<div class="ib-title">551蓬莱（日本）——六维模型×大阪猪肉包</div>
+<div class="ib-q">💬 行业读者提问："分析下551包子"</div>
+
+<p style="font-size:12px;color:#3a322a;line-height:1.8;margin-bottom:8px">
+<strong>551是谁？</strong>大阪最知名的猪肉包品牌，1945年创立，全部61家门店集中在近畿圈（关西地区），关西以外一家都没有。但在全日本是国民级认知符号——"新干线上能不能吃551的包子"这种小事，常年被当热榜话题讨论。不是米粉品类，而是日式猪肉包（豚まん）。
+</p>
+
+<p style="font-size:12px;color:#8b6914;font-weight:600;margin-bottom:8px">这个案例的价值：它把六维模型"能不能"和"该不该"这两件事分得特别清楚。</p>
+
+<div class="chart-box">
+<div id="radarChart"></div>
+</div>
+
+<div class="dim-row">
+<div class="dr-num">1</div>
+<div class="dr-body"><strong>消费时段窗口</strong>——全天候即食品类，不受早/午/晚限制。而且跑出两条并行产品线：店内热食现蒸 + 礼盒冷藏带走（伴手礼场景又把消费窗口拉长到"出差旅游随时下单"）。</div>
+<div class="dr-score">9/10</div>
+</div>
+
+<div class="dim-row">
+<div class="dr-num">2</div>
+<div class="dr-body"><strong>客单价值</strong>——单个230日元，但真实消费很少买一个：4个装920、6个装1380、10个装2300日元（约¥45-110）。客单价被撑起来的关键是"大阪伴手礼"这个心智让顾客默认多件购买。</div>
+<div class="dr-score">7/10</div>
+</div>
+
+<div class="dim-row">
+<div class="dr-num">3</div>
+<div class="dr-body"><strong>消费认知一致性</strong>——全日本对"551=大阪名物"认知高度统一。但认知统一≠消费可得——61家店全部窝在近畿圈，认知辐射全国、门店半步没出关西。这是主动选择，不是认知没跑出去。</div>
+<div class="dr-score">10/10</div>
+</div>
+
+<div class="dim-row">
+<div class="dr-num">4</div>
+<div class="dr-body"><strong>标准化程度</strong>——本社工厂日产14万个。猪肉切配、洋葱切配等重工序工厂完成，最后包制保留手工作为卖点。标准化和手工感在这里不是对立的，是分层设计出来的。</div>
+<div class="dr-score">8/10</div>
+</div>
+
+<div class="dim-row">
+<div class="dr-num">5</div>
+<div class="dr-body"><strong>老板自由度</strong>——纯直营不做加盟，门店运营和工厂生产分属两家兄弟公司，员工2763人，标准公司化运作。家族三代传承，传的是股权和治理权，不是靠创始人在场运转。</div>
+<div class="dr-score">9/10</div>
+</div>
+
+<div class="dim-row">
+<div class="dr-num">6</div>
+<div class="dr-body"><strong>资本吸引力</strong>——两家运营主体年营收超450亿日元，60多年现金流验证。但551从创立至今没上市、没开放加盟、没有全国化计划——结构上具备、战略上放弃。</div>
+<div class="dr-score">8/10</div>
+</div>
+
+<div class="ib-conclusion">
+<strong>总结：</strong>551蓬莱六个维度至少四个表现不差，认知一致性甚至是国民级顶格分数，但企业选择不全国化——靠"只有大阪才有"把稀缺性做成了品牌资产。<br><br>
+<strong>这件事告诉我们：</strong>六维模型回答的是"这个品类具不具备全国化的结构条件"，不回答"该不该去做"。分数高不代表非要铺全国，分数低也不代表不值得做——这是两个完全不同的决策层面。
+</div>
+
+<p style="font-size:11px;color:#8a7a6a;margin-top:6px">
+<span class="model-tag v">✅ 六维产业模型</span>
+<span class="model-tag v">✅ 全国化模型</span>
+<span class="model-tag">案例编号：IB-001</span>
+<span class="model-tag">研究状态：Level A</span>
+</p>
 </div>
 
 <hr class="split">
@@ -164,5 +247,49 @@ th{background:#f5f0e8;font-weight:600;font-size:11px;color:#1a1a1a}
 </div>
 
 </div>
+
+<script>
+var chart = echarts.init(document.getElementById('radarChart'));
+var option = {
+  radar: {
+    indicator: [
+      { name: '消费时段窗口', max: 10 },
+      { name: '客单价值', max: 10 },
+      { name: '消费认知一致性', max: 10 },
+      { name: '标准化程度', max: 10 },
+      { name: '老板自由度', max: 10 },
+      { name: '资本吸引力', max: 10 }
+    ],
+    center: ['50%', '50%'],
+    radius: '60%',
+    axisName: { color: '#2a2218', fontSize: 11, fontWeight: 600 },
+    splitArea: { areaStyle: { color: ['rgba(196,163,90,0.02)', 'rgba(196,163,90,0.04)', 'rgba(196,163,90,0.06)', 'rgba(196,163,90,0.08)', 'rgba(196,163,90,0.10)'] } },
+    axisLine: { lineStyle: { color: '#d4c8b0' } },
+    splitLine: { lineStyle: { color: '#e0ddd5' } }
+  },
+  series: [{
+    type: 'radar',
+    data: [{
+      value: [9, 7, 10, 8, 9, 8],
+      name: '551蓬莱',
+      areaStyle: { color: 'rgba(11,31,58,0.2)' },
+      lineStyle: { color: '#0B1F3A', width: 2.5 },
+      itemStyle: { color: '#0B1F3A' }
+    }],
+    symbol: 'circle',
+    symbolSize: 6,
+    label: {
+      show: true,
+      formatter: function(p){return p.value},
+      fontSize: 11,
+      fontWeight: 700,
+      color: '#0B1F3A'
+    }
+  }]
+};
+chart.setOption(option);
+window.addEventListener('resize', function(){chart.resize()});
+</script>
+
 </body>
 </html>
