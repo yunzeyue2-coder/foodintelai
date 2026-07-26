@@ -1480,6 +1480,16 @@ body{
   </div>
 </a>
 
+<a href="research/早餐系列_Day7_决策课堂第1期.html" class="rp-card" style="grid-column:1/-1">
+  <div class="rp-day">周日 · 方法总结</div>
+  <div class="rp-title">研究了7天早餐，我们提炼出判断任何食品品类的6个维度</div>
+  <div class="rp-desc">这一周我们不是在研究早餐，而是在寻找那些企业都绕不过去的结构约束——六层因果链×六维判断模型，一套可以迁移到任何食品品类的研究方法</div>
+  <div class="rp-footer">
+    <span class="rp-tag">🧭 决策课堂第1期</span>
+    <span class="rp-arrow">→</span>
+  </div>
+</a>
+
 </div>
 
 <div class="rp-bottom">
@@ -1491,7 +1501,44 @@ body{
 
 </div>
 
-<!-- ===== 联系 ===== -->
+  <!-- ===== 产品卡片区 ===== -->
+  <div id="stallCats" class="zone-section"></div>
+  <div id="hotContent" class="zone-section"></div>
+  <div id="freeZone" class="zone-section">
+    <div id="freeCards" class="zone-free-cards"></div>
+  </div>
+  <!-- ===== 经营测算工具 ===== -->
+  <div style="display:none">
+    <select id="calcCategory"></select>
+  </div>
+  <div id="calcReport"></div>
+
+    <!-- ===== 知识库区域 ===== -->
+  <div id="knowTabContent" class="know-tab-content"></div>
+  
+  <!-- ===== AI问答区域 ===== -->
+  <div id="aiInputArea" class="ai-input-area" style="display:none">
+    <textarea id="aiQuestion" class="ai-question" placeholder="输入问题..."></textarea>
+    <div id="aiAnswer" class="ai-answer"></div>
+  </div>
+  
+  <!-- ===== 折叠区域 ===== -->
+  <div id="hookWrap" style="display:none">
+    <div id="hookFoldSection"></div>
+  </div>
+  <div id="kbFoldSection" style="display:none">
+    <div id="hookToggle" style="display:none"></div>
+    <div id="freeToggle" style="display:none"></div>
+    <div id="freeCardToggle" style="display:none"></div>
+  </div>
+  <div id="freeCardWrap" style="display:none"></div>
+  
+  <!-- ===== 微信联系区域 ===== -->
+  <div id="wechatSection"></div>
+
+  <!-- ===== 联系 ===== -->
+
+
   <div class="contact-box">
     <div class="contact-title">联系沧林</div>
     <div class="contact-row">
@@ -1518,6 +1565,11 @@ body{
 <div class="footer">
   <div class="brand">食品决策库 · 沧林频道</div>
   <div class="slogan">看见水面之下的力量 · 慢慢走的不一定走得慢</div>
+  <div style="display:none">
+    <span id="statCards">0</span>
+    <span id="statFree">0</span>
+    <span id="statCardsSub">0</span>
+  </div>
   <!-- QR码统一在上方contact-box，此处不再重复 -->
   <div class="footer-links" style="margin-top:8px;display:flex;gap:16px;font-size:11px;justify-content:center;flex-wrap:wrap">
     <a href="learn.html">行业认知库</a>
@@ -1949,7 +2001,7 @@ const CAT_ICON_MAP = {
 
 function getStallCatsFromData(){
   const raw = {};
-  const CARD_DATA = window.ALL_CARDS || {};
+  const CARD_DATA = (typeof ALL_CARDS !== "undefined") ? ALL_CARDS : {};
   for(const [catName, cards] of Object.entries(CARD_DATA)){
     if(!Array.isArray(cards)) continue;
     for(const [icon, keywords] of Object.entries(CAT_ICON_MAP)){
@@ -2043,18 +2095,10 @@ function updateHeroStats(){
 
 // 初始渲染
 renderKnowTab(0);
-// 从ALL_CARDS数据动态计算品类统计
-(function(){
-  const cats = getStallCatsFromData();
-  if(Object.keys(cats).length > 0){
-    Object.assign(STALL_CATS, cats);
-  } else {
-    // No fallback needed - getStallCatsFromData handles it
-  }
-})();
+// 从ALL_CARDS数据动态计算品类统计 - deferred to after cards-data.js loads
+// (moved to script block after card-catalog.js and cards-data.js)
 renderStallCats();
 updateHeroStats();
-renderHotZone();
 loadCardsData();
 
 function closeModal(){
@@ -2381,6 +2425,22 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <script src="card-catalog.js"></script>
 <script src="cards-data.js"></script>
+<script>
+// ALL_CARDS now available
+(function(){
+  try {
+    const cats = getStallCatsFromData();
+    if(typeof cats === "object" && Object.keys(cats).length > 0){
+      Object.assign(STALL_CATS, cats);
+    }
+    renderStallCats();
+    updateHeroStats();
+  } catch(e){
+    console.log("ALL_CARDS init deferred:", e);
+  }
+})();
+</script>
+
 <!-- 分享面板 -->
 <div class="share-overlay" id="shareOverlay" onclick="closeShare()"></div>
 <div class="share-panel" id="sharePanel">

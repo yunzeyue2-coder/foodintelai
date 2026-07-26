@@ -1,5 +1,5 @@
 // 自动生成 - 所有产品卡数据
-const ALL_CARDS = {
+window.ALL_CARDS = {
 
   "🥤 饮品系列": [
     {e:"🥤", n:"招牌手打柠檬茶 · 沧林食品", d:"", f:"cards/CD_009.html"},
@@ -648,6 +648,7 @@ const ALL_CARDS = {
     {e:"🔥", n:"RP_10 无骨鸡爪", d:"热品卡·网红单品·去骨泡制", f:"catalog/热品/RP_10_无骨鸡爪（热品卡）.html"},
     {e:"🔥", n:"RP_11 狼牙土豆", d:"热品卡·经典街头·口味百搭", f:"catalog/热品/RP_11_狼牙土豆（热品卡）.html"},
   ],
+};
 
 // 替换原来的渲染
 renderAllCards();

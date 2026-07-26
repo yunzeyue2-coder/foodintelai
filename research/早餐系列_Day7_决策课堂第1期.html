@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>研究了7天早餐，我们提炼出判断任何食品品类的6个维度 · FoodIntelAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
+.page{max-width:800px;width:100%;padding:48px 40px 60px}
+
+/* ===== 面包屑 ===== */
+.breadcrumb{font-size:11px;color:#b5aaa0;margin-bottom:16px;letter-spacing:1px}
+.breadcrumb a{color:#8b6914;text-decoration:none;border-bottom:1px solid transparent}
+.breadcrumb a:hover{border-bottom-color:#8b6914}
+
+/* ===== 顶部引言 ===== */
+.core{background:linear-gradient(135deg,#1a2a1a,#0B1F3A);color:#f5f0e8;border-radius:14px;padding:28px 32px;margin-bottom:28px;position:relative;overflow:hidden}
+.core::before{content:'';position:absolute;top:-30px;right:-20px;width:120px;height:120px;border-radius:50%;background:rgba(196,163,90,0.05);pointer-events:none}
+.core .cl{font-size:10px;color:#c4a35a;letter-spacing:5px;margin-bottom:8px;font-family:'Inter',sans-serif}
+.core .ct{font-size:15px;font-weight:500;line-height:1.8;color:#f5f0e8;font-style:italic}
+
+/* ===== 标题区 ===== */
+h1{font-size:24px;font-weight:700;color:#1a1a1a;margin-bottom:4px;line-height:1.35;letter-spacing:1px}
+.author{font-size:12px;color:#8a7a6a;margin-bottom:2px;font-family:'Inter',sans-serif}
+.meta{font-size:11px;color:#b5aaa0;margin-bottom:22px;padding-bottom:14px;border-bottom:2px solid #e0ddd5;font-family:'Inter',sans-serif}
+.meta span{margin-right:16px}
+
+/* ===== 导读框 ===== */
+.guide{border:1px solid #c4a35a;border-radius:10px;padding:14px 18px;margin-bottom:20px;background:#fcf8f2;font-size:13px;color:#5a4a3a;line-height:1.8}
+
+/* ===== 章节 ===== */
+h2{font-size:17px;font-weight:700;color:#1a1a1a;margin:32px 0 12px;padding-left:12px;border-left:3px solid #c4a35a;line-height:1.4}
+h3{font-size:14px;font-weight:600;color:#2a2218;margin:18px 0 8px}
+p{font-size:14px;color:#2a2218;line-height:2;margin-bottom:12px}
+p strong{color:#1a1a1a}
+sup{font-size:9px;color:#8a7a6a;cursor:default}
+sup:hover{color:#c4a35a}
+
+/* ===== 引用/高亮 ===== */
+.highlight{background:#fcf8f2;border-left:3px solid #c4a35a;padding:14px 18px;margin:14px 0;border-radius:0 8px 8px 0;font-size:13px;line-height:1.9;color:#2a2218}
+
+/* ===== 插图容器 ===== */
+.visual-box{background:#fff;border:1px solid #e8e3db;border-radius:12px;padding:16px 16px 12px;margin:20px 0;box-shadow:0 2px 12px rgba(0,0,0,.03)}
+.visual-box .vb-label{font-size:10px;color:#b0a090;text-align:center;margin-top:8px;font-family:'Inter',sans-serif;letter-spacing:1px}
+#radarChart{width:100%;height:400px}
+
+/* ===== 因果链图 ===== */
+.flow{display:flex;flex-direction:column;gap:2px;align-items:center;padding:4px 0}
+.flow-layer{width:100%;border-radius:6px;padding:10px 14px;text-align:center;font-size:12px;font-weight:600;line-height:1.5;transition:transform .15s}
+.flow-layer:hover{transform:translateX(4px)}
+.l1{background:#0B1F3A;color:#fff}
+.l2{background:#1a3a5a;color:#f0ece4}
+.l3{background:#2a4a6a;color:#f0ece4}
+.l4{background:#6a5a5a;color:#faf8f5}
+.l5{background:#9a8a7a;color:#2a2218}
+.l6{background:#c4b8a0;color:#2a2218}
+.flow-arrow{font-size:12px;color:#c4a35a;font-weight:700;line-height:1;opacity:.7}
+.flow-sub{font-size:10px;font-weight:400;opacity:.8;display:block;margin-top:2px}
+
+/* ===== 表格 ===== */
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12px}
+td,th{padding:6px 8px;border:1px solid #d4c8b0;text-align:center;color:#2a2218;line-height:1.5;vertical-align:middle}
+th{background:#f0ece4;font-weight:600;color:#1a1a1a;font-size:11px}
+td:first-child,th:first-child{text-align:left;white-space:nowrap}
+
+/* ===== 维度卡片 ===== */
+.dim-card{border:1px solid #e0ddd5;border-radius:10px;padding:16px 20px;margin:14px 0;background:#fff;transition:box-shadow .2s}
+.dim-card:hover{box-shadow:0 2px 16px rgba(0,0,0,.04)}
+.dim-card .dim-num{display:inline-block;font-size:10px;font-weight:700;color:#fff;background:#0B1F3A;padding:2px 8px;border-radius:10px;margin-bottom:4px;font-family:'Inter',sans-serif}
+.dim-card .dim-title{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:2px}
+.dim-card .dim-question{font-size:12px;color:#8b6914;font-weight:600;margin-bottom:4px;font-style:italic}
+.dim-card .dim-text{font-size:13px;color:#2a2218;line-height:1.8}
+
+/* ===== ONE INSIGHT ===== */
+.insight-box{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1.5px solid #c4a35a;border-radius:10px;padding:18px 22px;margin:22px 0}
+.insight-box .ib-title{font-size:11px;color:#7a5a04;font-weight:600;letter-spacing:2px;margin-bottom:8px}
+.insight-box .ib-text{font-size:13px;color:#2a2218;line-height:1.9}
+
+/* ===== DECISION SHIFT ===== */
+.decision-box{background:linear-gradient(135deg,#faf8f5,#fcf8f2);border:1.5px solid #c4a35a;border-radius:10px;padding:18px 22px;margin:22px 0;text-align:center}
+.decision-box .db-label{font-size:10px;color:#7a5a04;letter-spacing:2px;font-weight:600;font-family:'Inter',sans-serif;margin-bottom:6px}
+.decision-box .db-text{font-size:14px;font-weight:600;color:#1a1a1a;line-height:1.7}
+
+/* ===== 互动投票 ===== */
+.interact{text-align:center;padding:22px;margin:24px 0;background:#fff;border:1px solid #e8e3db;border-radius:10px}
+.interact .iq{font-size:14px;font-weight:600;color:#2a2218;margin-bottom:10px}
+.interact .iopts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.interact .iopts span{font-size:12px;padding:6px 16px;border:1px solid #d4c8b0;border-radius:20px;color:#3a322a;background:#faf8f5;cursor:default;transition:all .15s}
+.interact .iopts span:hover{background:#f5f0e8;border-color:#c4a35a;color:#8b6914}
+
+/* ===== 系列导航 ===== */
+.series-bar{background:#faf8f5;border:1px solid #d4c8b0;border-radius:10px;padding:16px 20px;margin:22px 0;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.series-bar .sb-label{font-size:10px;color:#7a5a04;letter-spacing:2px;font-weight:600;font-family:'Inter',sans-serif}
+.series-bar a{font-size:11px;padding:4px 14px;background:#fff;border:1px solid #d4c8b0;border-radius:16px;color:#5a4a3a;text-decoration:none;transition:all .15s}
+.series-bar a:hover{background:#f5f0e8;border-color:#c4a35a;color:#8b6914}
+.series-bar .sb-current{color:#c4a35a;font-size:11px;font-weight:600;padding:4px 10px}
+
+/* ===== 参考来源 ===== */
+.refs{font-size:11px;color:#8a7a6a;line-height:2;padding:0 4px}
+.refs .ref-title{font-size:11px;font-weight:600;color:#5a4a3a;margin-bottom:4px}
+
+/* ===== 页脚 ===== */
+hr{border:none;border-top:1px solid #e0ddd5;margin:30px 0}
+.footer{background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1px solid #e8e3db;border-radius:14px;padding:32px;text-align:center;margin-top:44px}
+.footer .f1{font-size:16px;font-weight:700;color:#8b6914;letter-spacing:3px;margin-bottom:4px}
+.footer .f2{font-size:12px;color:#888;letter-spacing:2px;margin-bottom:2px}
+.footer .f3{font-size:11px;color:#aaa;margin-top:4px;letter-spacing:1px}
+
+/* ===== 响应式 ===== */
+@media(max-width:640px){
+.page{padding:28px 16px 40px}
+h1{font-size:21px}
+.core{padding:20px 18px}
+.core .ct{font-size:14px}
+td,th{font-size:10px;padding:4px 5px}
+.dim-card{padding:12px 14px}
+#radarChart{height:320px}
+.flow-layer{font-size:11px;padding:8px 10px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="breadcrumb"><a href="https://foodintelai.com">FoodIntelAI</a> / 早餐系列 · 第⑦篇</div>
+
+<div class="core">
+<div class="cl">🧭 决策课堂 · 第1期</div>
+<div class="ct">这一周，我们不是在研究早餐，而是在寻找那些企业都绕不过去的结构约束。当越来越多的品类指向同一组结论时，我们得到的就不再是早餐知识，而是一套食品产业研究方法。</div>
+</div>
+
+<h1>研究了7天早餐，我们提炼出判断任何食品品类的6个维度</h1>
+<div class="author">文 / Vora · FoodIntelAI</div>
+<div class="meta"><span>🥟 早餐系列 · 方法总结篇</span><span>📅 2026.07.26</span><span>📖 第⑦篇</span></div>
+
+<div class="guide">📌 如果你正在考虑做早餐，或者已经在食品行业里——这篇文章不会告诉你"哪个品牌好"，但会给你一套判断任何品类值不值得做的思考框架。</div>
+
+<p>本文由两部分构成。前一部分由 FoodIntelAI 主笔撰写，论证"为什么要研究单一品类"以及"闭店背后六类原因"；后一部分为本期沉淀的六个判断维度，供读者参考。</p>
+
+<hr>
+
+<!-- ===== 第一部分 ===== -->
+<h2>一、为什么我们持续研究单一品类，而不是笼统谈"餐饮不好做"</h2>
+
+<p>行业大盘的数据已经说明了问题的量级——不同机构对餐饮行业的统计口径存在差异——窄门集团《2023-2024中国及全球餐饮最新数据报告》显示新增门店1年内存活率约53%、年度关店率约56%<sup>[1]</sup>；久谦中台的数据则指向约51%的年关店率<sup>[2]</sup>。两组数据的具体数值因统计范围和方法不同而有一定出入，但指向的是同一个趋势：<strong>餐饮行业进入和退出均十分频繁，创业成功率并不高。</strong></p>
+
+<p>但这组数字对一个正在判断要不要进早餐这个类目的人来说，没有直接指导意义——它只说明"餐饮不好做"，没有回答"早餐这个类目，难在哪里"。这正是我们不满足于停留在大盘数据、坚持逐品类深耕的原因：<strong>大盘告诉你风险的量级，品类研究告诉你风险的结构。</strong></p>
+
+<p>早餐尤其是一个反常识的类目——市场体量足够大，参与者足够多，但至今没有跑出全国性的绝对头部。<strong>巴比、早阳、三津、和善园</strong>这几个连锁品牌，同源于相似的加盟模式，却都止步于区域性规模，没有一个突破成全国霸主。这不是某几家企业能力不够，而是我们要在这篇研究里论证的核心判断：<strong>这种碎片化是早餐这个品类结构性的、内生的特征，不是阶段性的市场空白。</strong>这也是本期把早餐单独拎出来研究的原因——大盘规律和品类特殊性，在这个类目上叠加得格外明显。</p>
+
+<hr>
+
+<!-- ===== 第二部分 ===== -->
+<h2>二、闭店背后，不是六类问题并列，而是六层因果链</h2>
+
+<p>我们把公开可查的闭店归因，按发生的时间节点和性质做了归类。但更重要的是这些层级之间的<strong>传导关系</strong>——越靠前的决策，影响越深远，后期越难修复。</p>
+
+<!-- 插图：六层因果链 -->
+<div class="visual-box">
+<div class="flow">
+<div class="flow-layer l1">第一层 · 战略决策错误<span class="flow-sub">品类选择 / 生命周期判断 / 加盟模型验证</span></div>
+<div class="flow-arrow">▼</div>
+<div class="flow-layer l2">第二层 · 商业模型错误<span class="flow-sub">选址与场景错配 / 成本结构 / 扩张节奏</span></div>
+<div class="flow-arrow">▼</div>
+<div class="flow-layer l3">第三层 · 市场匹配错误<span class="flow-sub">供给过剩 / 消费下行 / 品类周期下行</span></div>
+<div class="flow-arrow">▼</div>
+<div class="flow-layer l4">第四层 · 运营效率错误<span class="flow-sub">隐性成本 / 供应链粗放 / 淡季应对</span></div>
+<div class="flow-arrow">▼</div>
+<div class="flow-layer l5">第五层 · 组织扩张错误<span class="flow-sub">管理层内耗 / 家族式边界模糊 / 加盟管控</span></div>
+<div class="flow-arrow">▼</div>
+<div class="flow-layer l6">第六层 · 品牌资产错误<span class="flow-sub">心智认知没跟上 / 品牌升级不系统</span></div>
+</div>
+<div class="vb-label">⬆ 越上层的决策错误越早埋下，修复成本随层级下行递增</div>
+</div>
+
+<table>
+<tr><th>层级</th><th>失败原因</th><th>具体表现</th></tr>
+<tr><td>第一层</td><td><strong>战略决策错误</strong></td><td>品类选择脱离目标客群实际 / 跟风热门品类未判断生命周期 / 加盟模型未经验证就规模化</td></tr>
+<tr><td>第二层</td><td><strong>商业模型错误</strong></td><td>选址与消费场景错配 / 大店模型租金/人力/食材三座大山压垮现金流 / 扩张节奏与融资结构不匹配</td></tr>
+<tr><td>第三层</td><td><strong>市场匹配错误</strong></td><td>行业供给过剩竞争加剧 / 消费意愿与客单价走低 / 品类处流量下行期</td></tr>
+<tr><td>第四层</td><td><strong>运营效率错误</strong></td><td>隐性成本核算缺失 / 供应链管理粗放 / 缺乏淡季及竞争应对预案</td></tr>
+<tr><td>第五层</td><td><strong>组织扩张错误</strong></td><td>管理层内耗权责不明 / 家族式经营亲情与职权边界模糊 / 加盟体系管控失序</td></tr>
+<tr><td>第六层</td><td><strong>品牌资产错误</strong></td><td>门店数量做起来了但消费者心智认知没跟上 / 品牌升级不系统导致品牌资产持续流失</td></tr>
+</table>
+
+<p>这个分类本身有一个容易被忽视的判断：<strong>决策类的问题，是在运营出问题之前几个月甚至更早就已经埋下的。</strong></p>
+
+<p>放到早餐这个类目上尤其成立——很多入局者是被"早餐刚需、稳赚不赔"这类认知吸引进来的，恰恰跳过了"这个类目本身能不能长出全国性品牌"这个最前置的判断，等做了两三年发现规模上不去，看到的是运营类症状（扩张乏力、单店模型难复制），但病根是决策阶段就没弄清楚这个类目的天花板在哪。</p>
+
+<p>品牌心智类，是这六个维度里跟本篇论点关系最直接的一个。前面五类回答的都是"为什么会关店"，但品牌心智类回答的是一个更根本的问题：<strong>为什么即使门店数量做起来了，也长不出全国性品牌。</strong>一个可查的案例是，三津汤包在珠三角做到千店规模后复盘发现，历经多次品牌升级但每次都不系统、不规范，导致品牌资产持续流失，始终没能在消费者心中形成规模性认知<sup>[4]</sup>——<strong>门店数量和品牌心智，是两件可以完全脱钩的事。</strong></p>
+
+<p>这正是本篇要论证的核心判断的另一层证据：早餐品类的碎片化，不只是"没有一家把门店铺满全国"，更深一层是"即使铺满了，消费者心里也未必认得出这是同一个品牌"。规模扩张能靠加盟模型复制，心智认知复制不了。</p>
+
+<hr>
+
+<h2>三、经营者面对这类问题时，反应也不止"困惑、被动、尴尬"三种</h2>
+
+<p>我们在观察案例时发现，还有两种更值得警惕的反应模式：</p>
+
+<p>前三种反应——困惑（不知道问题出在哪）、被动（问题接踵而至措手不及）、尴尬（投入达不到预期却找不到原因）——在行业案例中十分普遍，我们在系列前几篇中已有论述。但我们在进一步观察中还发现了两种更值得警惕的反应模式：<strong>归因错位</strong>——把决策层面的问题（对品类天花板的误判）当成执行层面的问题去修，加大加盟力度、换供应链、上新品类，却始终没有回头质疑"这个类目本身是否支持全国化"这个最初的判断。</p>
+
+<p><strong>沉没成本困境</strong>——加盟商体系越大、投入越多，越难承认"模型天花板已到"，于是继续复制同一套区域性模型，而不是及时停下重新判断。</p>
+
+<p>这两种反应比"困惑"更危险，因为它们看起来像是在"努力解决问题"，实际上是在同一个错误的地基上继续加码。</p>
+
+<hr>
+
+<!-- ===== 过渡 ===== -->
+<h2>四、那么，一个品类到底应该怎么判断？</h2>
+
+<p>前文用六类归因拆解了闭店的结构性原因，也指出"决策层的问题在运营出问题之前就已经埋下"。那么一个核心问题就摆在了面前：<strong>在做投入之前，有没有一套方法能提前判断一个品类值不值得进？</strong></p>
+
+<p>这个问题对不同的人，答案的颗粒度不一样。</p>
+
+<p>如果你只是想开一家店养家糊口，你关心的可能是"这个品类在我所在的城市有没有空间"；如果你已经在区域站稳了脚跟，你关心的可能是"这个品类能不能帮我从区域走向全国"；如果你是投资者或品牌方，你关心的可能是"这个品类的天花板在哪、资本会不会进来"。</p>
+
+<p>三种诉求不同，但底层判断逻辑是相通的——都需要回到品类本身的几个客观属性。我们把过去一周从早餐研究中提炼出来的判断维度整理如下，供不同角色的读者各取所需。</p>
+
+<hr>
+
+<!-- ===== 第五部分 ===== -->
+<h2>五、六个判断维度</h2>
+
+<p>以后面对任何一个食品品类，都可以从这六个维度入手，逐一评估：</p>
+
+<!-- 插图：六维模型雷达图 -->
+<div class="visual-box" style="padding:20px 20px 12px">
+<div id="radarChart"></div>
+<div class="vb-label">⬆ 六大维度评估框架 · 早餐品类示例评分</div>
+</div>
+
+<div class="dim-card">
+<div class="dim-num">维度一</div>
+<div class="dim-title">消费时段窗口</div>
+<div class="dim-question">如果每天只有3小时能卖钱，你的房租怎么算？</div>
+<div class="dim-text">这个品类的有效销售时间有多长？3小时和16小时的生意，商业模型完全不同。早餐的极端性在于主力消费窗口高度集中，通常仅两三个小时，这一物理约束直接决定了它的营收天花板。不先认清这个事实，后续的产品打磨、门店运营都难以突破结构性瓶颈。</div>
+</div>
+
+<div class="dim-card">
+<div class="dim-num">维度二</div>
+<div class="dim-title">客单价值</div>
+<div class="dim-question">一单赚5块和赚25块，你请得起店长吗？</div>
+<div class="dim-text">低价位和高价位的品类，能支撑的管理成本完全不是一个级别。客单价不只是价格问题，它决定了整条价值链的利润分配结构——客单价偏低的品类利润空间天然被上游挤压，留给门店端的余量有限。</div>
+</div>
+
+<div class="dim-card">
+<div class="dim-num">维度三</div>
+<div class="dim-title">消费认知一致性</div>
+<div class="dim-question">你的产品换一个城市，消费者还认吗？</div>
+<div class="dim-text">这个品类在全国范围内是否存在统一的消费认知？包子虽然南北都吃，但巴比的实际门店分布（据公司2022年三季度经营数据华东门店占比约七成<sup>[3]</sup>）说明"认知统一"和"实际可扩张"之间还有很长的路——消费认知是必要条件，但不是充分条件。真正需要判断的是：这个品类的认知基础，是否足以支撑跨区域的规模化复制。</div>
+</div>
+
+<div class="dim-card">
+<div class="dim-num">维度四</div>
+<div class="dim-title">标准化程度</div>
+<div class="dim-question">换一个人来做，出品还能一样吗？</div>
+<div class="dim-text">产品品质对个体师傅手艺的依赖程度如何？每少一个手工环节，连锁化的成功率就高一档。裹粉、油炸、蒸制——哪些环节可以设备替代，哪些必须依赖人工，决定了这家店能不能脱离核心师傅独立运转。</div>
+</div>
+
+<div class="dim-card">
+<div class="dim-num">维度五</div>
+<div class="dim-title">老板自由度</div>
+<div class="dim-question">你一天不在店里，利润会不会明显下降？</div>
+<div class="dim-text">这门生意的运转在多大程度上依赖老板本人？如果答案是不能脱离，这门生意就天然长不大。这一点对单店经营者来说可能不是问题——很多小店本身就是老板的终身职业；但对想要扩张的人来说，这是第一个要过的关。</div>
+</div>
+
+<div class="dim-card">
+<div class="dim-num">维度六</div>
+<div class="dim-title">资本吸引力</div>
+<div class="dim-question">规模做大以后，你的成本会降还是会升？</div>
+<div class="dim-text">这决定了它能不能拿到资本市场的门票。对于只想做一家店的人来说，这个维度可以跳过；但对于目标是建立品牌、走向全国的人来说，这是必须面对的问题。</div>
+</div>
+
+<div class="highlight">六个维度不必全部适用于每一个人。各维度的权重会因品类不同而变化——消费时段窗口对早餐这类时段性极强的品类权重很高，但对全天候经营的小吃快餐品类权重可能较低。使用时需结合具体品类的特性做调整。单店经营者可以重点看前四个，区域品牌可以看前五个，志在全国化的则需要六个全部过一遍。关键不是"全都用"，而是"知道自己在第几个维度上做判断"。</div>
+
+<p style="font-size:12px;color:#8a7a6a;margin-top:10px">💡 <strong>未来升级方向：</strong>这六个维度将逐步量化为评分模型（每个维度1-10分，加权综合评定），与FoodIntelAI小程序诊断系统打通，实现输入品类→输出全国化潜力评分的完整决策链路。</p>
+
+<hr>
+
+<h2>六、这套判断维度能帮你什么？</h2>
+
+<p>一个模型的真正价值，不是解释已经发生的事，而是在你投入真金白银之前，提前排除结构性风险。</p>
+
+<p>具体来说，这六个维度能帮你：</p>
+
+<p><strong>第一，避免把经营问题误判为产品问题。</strong> 很多经营者生意不顺，第一反应是"产品不够好"，换配方、换设备、换供应商——折腾一圈发现没用。因为问题根本不在产品，而在品类本身的约束结构。六个维度过一遍，至少能分清问题出在执行上，还是出在品类选择上。</p>
+
+<p><strong>第二，避免把结构问题误判为执行问题。</strong> "我执行力不够强"是很多创业者的自我归因。但消费时段3小时的品类，再努力也多卖不了几个小时。有些天花板不是靠更努力就能突破的。</p>
+
+<p><strong>第三，在做投入之前就过一遍。</strong> 无论你是准备开一家店、做一个区域品牌、还是计划全国扩张——在投入之前，先把这六个维度过一遍。它不会保证你成功，但它能帮你提前发现那些后期无法弥补的决策漏洞。</p>
+
+<div class="insight-box">
+<div class="ib-title">🧠 ONE INSIGHT · 今日认知</div>
+<div class="ib-text">真正决定一个行业的，从来不是某一家企业，而是那些企业都绕不过去的结构约束。研究的价值，不是证明自己正确，而是帮助别人在投入之前发现风险。</div>
+</div>
+
+<div class="decision-box">
+<div class="db-label">⚡ DECISION SHIFT · 决策改变</div>
+<div class="db-text">下次判断一个品类之前，先别急着做预算、签合同、选品牌——先问自己六个问题：这个品类的消费窗口有多长？客单价是多少？全国认知统一吗？标准化够吗？老板能脱身吗？我到底想做多大？前四个问题的答案，决定了你能不能做；后两个问题的答案，决定了你能做多大。</div>
+</div>
+
+<div class="interact">
+<div class="iq">🤔 这六个维度里，你觉得哪一个对创业决策影响最大？</div>
+<div class="iopts">
+<span>A. 消费时段窗口</span>
+<span>B. 客单价值</span>
+<span>C. 消费认知一致性</span>
+<span>D. 标准化程度</span>
+<span>E. 老板自由度</span>
+<span>F. 资本吸引力</span>
+</div>
+<p style="font-size:10px;color:#8a7a6a;margin-top:6px">选一个，下期内参结合数据一起看</p>
+</div>
+
+<hr>
+
+<div class="refs">
+<div class="ref-title">📚 参考来源</div>
+[1] 窄门集团、番茄资本《2023-2024中国及全球餐饮最新数据报告》<br>
+[2] 久谦中台数据，转引自中国旅游饭店业协会相关文章<br>
+[3] 中饮巴比食品股份有限公司（605338）2022年第三季度经营数据公告<br>
+[4] 华思咨询品牌案例《品牌五事》，三津汤包品牌升级案例
+</div>
+
+<hr>
+
+<div class="series-bar">
+<span class="sb-label">📌 早餐系列 · 全七篇</span>
+<a href="#">① 没有全国霸主</a>
+<a href="#">② 没有蜜雪冰城</a>
+<a href="#">③ 价格带决定商业模式</a>
+<a href="#">④ 越忙越不赚钱</a>
+<a href="#">⑤ 历史演化+国际比较</a>
+<a href="#">⑥ 资本为什么不投早餐</a>
+<span class="sb-current">⑦ 决策课堂第1期 ⬅</span>
+</div>
+
+<p style="font-size:12px;color:#5a4a3a;text-align:center;margin:12px 0">📬 更多产业研究、品类数据和决策工具，欢迎访问 <a href="https://foodintelai.com" style="color:#8b6914;text-decoration:none;border-bottom:1px solid #c4a35a">foodintelai.com</a></p>
+
+<div style="background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1.5px solid #c4a35a;border-radius:10px;padding:18px 22px;margin:18px 0;text-align:center">
+<p style="font-size:12px;color:#5a4a3a;margin-bottom:6px;line-height:1.6"><strong>📱 FoodIntelAI 小程序</strong><br>输入品类，获取六维评分和决策建议</p>
+<p style="font-size:12px;color:#8b6914;font-weight:600;letter-spacing:1px">回复"模型"获取测试入口 →</p>
+</div>
+
+<div class="footer">
+<p class="f1">FoodIntelAI食品决策库</p>
+<p class="f2">少走弯路 · 快人一步 · 做食品创业前，先看数据</p>
+<p class="f3">单品拆解 · 落地路径 · 品类研判</p>
+</div>
+
+</div>
+
+<script>
+var chart = echarts.init(document.getElementById('radarChart'));
+var option = {
+  radar: {
+    indicator: [
+      { name: '消费时段窗口', max: 10 },
+      { name: '客单价值', max: 10 },
+      { name: '消费认知一致性', max: 10 },
+      { name: '标准化程度', max: 10 },
+      { name: '老板自由度', max: 10 },
+      { name: '资本吸引力', max: 10 }
+    ],
+    center: ['50%', '50%'],
+    radius: '65%',
+    axisName: { color: '#2a2218', fontSize: 12, fontWeight: 600 },
+    splitArea: {
+      areaStyle: { color: ['rgba(196,163,90,0.01)', 'rgba(196,163,90,0.03)', 'rgba(196,163,90,0.05)', 'rgba(196,163,90,0.07)', 'rgba(196,163,90,0.09)'] }
+    },
+    axisLine: { lineStyle: { color: '#d4c8b0' } },
+    splitLine: { lineStyle: { color: '#e0ddd5' } }
+  },
+  series: [{
+    type: 'radar',
+    data: [{
+      value: [2, 3, 5, 4, 2, 2],
+      name: '早餐品类（示例评分）',
+      areaStyle: { color: 'rgba(11,31,58,0.2)' },
+      lineStyle: { color: '#0B1F3A', width: 2.5 },
+      itemStyle: { color: '#0B1F3A' }
+    }],
+    symbol: 'circle',
+    symbolSize: 6,
+    label: {
+      show: true,
+      formatter: function(p){return p.value},
+      fontSize: 11,
+      fontWeight: 700,
+      color: '#0B1F3A'
+    }
+  }]
+};
+chart.setOption(option);
+window.addEventListener('resize', function(){chart.resize()});
+</script>
+
+</body>
+</html>

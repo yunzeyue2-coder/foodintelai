@@ -20,14 +20,18 @@ share_html = '''
 <button class="share-btn" onclick="copyLink(this)" title="复制链接">
 <span class="sb-icon">🔗</span> 复制链接
 </button>
-<button class="share-btn" onclick="shareWeb()" title="分享给朋友">
-<span class="sb-icon">📤</span> 分享
+<button class="share-btn" onclick="toggleQR(this)" title="分享到微信">
+<span class="sb-icon">💬</span> 微信
 </button>
-<button class="share-btn" onclick="window.print()" title="打印/保存为PDF">
-<span class="sb-icon">🖨️</span> 打印
+<button class="share-btn" onclick="shareWeb()" title="分享给朋友">
+<span class="sb-icon">📤</span> 更多
 </button>
 </div>
 <div class="share-hint" id="shareHint" style="display:none">链接已复制</div>
+<div class="share-qr" id="shareQR" style="display:none">
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=" id="qrImg" alt="扫码阅读">
+<div style="font-size:10px;color:#b5aaa0;margin-top:4px">长按保存图片 · 分享到微信</div>
+</div>
 </div>
 
 <script>
@@ -48,6 +52,13 @@ function showHint(t){
     var h=document.getElementById('shareHint');h.textContent=t;h.style.display='block';
     setTimeout(function(){h.style.display='none';},2000);
 }
+function toggleQR(btn){
+    var qr=document.getElementById('shareQR');var img=document.getElementById('qrImg');
+    if(qr.style.display==='block'){qr.style.display='none';return;}
+    var url=window.location.href.split('?')[0].split('#')[0];
+    img.src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data='+encodeURIComponent(url);
+    qr.style.display='block';
+}
 </script>
 '''
 
@@ -58,6 +69,8 @@ share_css = '''
 .share-btn:hover{border-color:#c4a35a;background:#fcfaf7;color:#7a5a04}
 .share-btn .sb-icon{font-size:13px}
 .share-hint{font-size:11px;color:#3A8D5D;width:100%;text-align:center;font-family:'Inter',sans-serif}
+.share-qr{text-align:center;padding:10px 0 0;width:100%}
+.share-qr img{width:100px;height:100px;border-radius:6px;border:1px solid #e8e3db}
 '''
 
 def inject_share(html):
