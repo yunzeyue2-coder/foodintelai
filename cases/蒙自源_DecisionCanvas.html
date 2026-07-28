@@ -1,191 +1,192 @@
-1|<!DOCTYPE html>
-2|<html lang="zh-CN">
-3|<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>蒙自源 · Decision Canvas · FoodIntelAI</title>
-4|<link rel="preconnect" href="https://fonts.googleapis.com">
-5|<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-6|<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-7|<style>
-8|*{margin:0;padding:0;box-sizing:border-box}
-9|body{background:#f5f3ef;font-family:'Noto Sans SC','Inter','PingFang SC',sans-serif;color:#2a2218;display:flex;justify-content:center}
-10|.page{max-width:760px;width:100%;padding:40px 36px 52px;background:#fff;margin:24px auto;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.05)}
-11|.hd{border-bottom:2px solid #e0ddd5;padding-bottom:16px;margin-bottom:18px}
-12|.hd .hd-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
-13|.hd .hd-badge{padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;background:#e8f4e8;color:#2a5a3a}
-14|.hd .hd-code{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif;letter-spacing:1px}
-15|.hd h1{font-size:22px;font-weight:700;color:#1a1a1a;margin:2px 0;line-height:1.3}
-16|.hd .hd-lens{font-size:13px;color:#8a7a6a;line-height:1.6;margin-top:6px;padding:8px 12px;background:#faf8f5;border-radius:6px;border-left:3px solid #c4a35a}
-17|.data-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
-18|.dc{background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:10px;text-align:center}
-19|.dc .dn{font-size:20px;font-weight:700;color:#0B1F3A;font-family:'Inter',sans-serif}
-20|.dc .dl{font-size:10px;color:#8a7a6a;margin-top:1px}
-21|.dc .dnote{font-size:9px;color:#b5aaa0;margin-top:1px}
-22|.sec{margin:18px 0}
-23|.sec .st{font-size:13px;font-weight:700;color:#1a1a1a;padding-bottom:6px;border-bottom:1px solid #e0ddd5;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-24|.sec .st .st-note{font-size:10px;color:#b5aaa0;font-weight:400;margin-left:auto}
-25|
-26|/* Dimension grid with benchmark line */
-27|.dim-item{border:1px solid #e8e3db;border-radius:6px;padding:10px 12px;margin:5px 0;background:#fff}
-28|.dim-item .dm-row{display:flex;align-items:center;gap:8px}
-29|.dim-item .dm-label{width:85px;font-size:12px;font-weight:600;color:#1a1a1a;flex-shrink:0}
-30|.dim-item .dm-score{font-size:18px;font-weight:700;font-family:'Inter',sans-serif;width:28px;text-align:center}
-31|.dim-item .dm-bar{flex:1;height:10px;background:#f0ece4;border-radius:5px;position:relative;overflow:visible}
-32|.dim-item .dm-fill{height:100%;border-radius:5px;position:relative}
-33|.dim-item .dm-bench{position:absolute;top:-3px;width:2px;height:16px;background:#c0392b;border-radius:1px}
-34|.dim-item .dm-bench-label{position:absolute;top:-14px;font-size:8px;color:#c0392b;white-space:nowrap}
-35|.dim-item .dm-insight{font-size:11px;color:#5a4a3a;line-height:1.5;margin-top:4px;padding-top:4px;border-top:1px solid #f5f0e8}
-36|.dim-item .dm-bm{font-size:10px;color:#b5aaa0;margin-left:4px}
-37|
-38|/* Timeline */
-39|.tl-wrap{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
-40|.tl-wrap .tl-b{border:1px solid #e0ddd5;border-radius:4px;padding:3px 8px;font-size:11px;color:#3a322a;background:#fff}
-41|.tl-wrap .tl-b .tl-y{font-weight:700;color:#8b6914}
-42|.tl-wrap .tl-a{color:#ddd;font-size:10px;display:flex;align-items:center}
-43|
-44|/* Perspectives */
-45|.pg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
-46|.pg .pc{border:1px solid #e8e3db;border-radius:6px;padding:10px 12px;background:#faf8f5}
-47|.pg .pc .pl{font-size:10px;color:#c4a35a;font-weight:600;letter-spacing:1px}
-48|.pg .pc .pt{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
-49|
-50|/* Decision Tree */
-51|.dt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
-52|.dt .dcard{border:1px solid #e0e4ea;border-radius:6px;padding:10px 12px;background:#fff}
-53|.dt .dcard .dt-role{font-size:10px;color:#1e3a5f;font-weight:600;letter-spacing:1px}
-54|.dt .dcard .dt-body{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
-55|
-56|/* Tags */
-57|.tags{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}
-58|.tags .tag{font-size:10px;padding:2px 8px;border-radius:3px;background:#eef0f3;color:#4a5568}
-59|
-60|/* Signals */
-61|.signal{display:flex;gap:8px;padding:8px 10px;margin:5px 0;border-left:3px solid #c4a35a;font-size:12px;color:#5a4a3a;line-height:1.6;background:#faf8f5}
-62|.signal .sd{font-size:14px;flex-shrink:0;margin-top:1px}
-63|
-64|.ft{margin-top:20px;padding-top:10px;border-top:1px solid #e0ddd5;font-size:11px;color:#aaa;text-align:center;line-height:1.6}
-65|@media(max-width:640px){.page{padding:20px 14px 32px}.data-grid{grid-template-columns:1fr 1fr}.pg,.dt{grid-template-columns:1fr}}
-66|</style>
-67|</head>
-68|<body>
-69|<div class="page">
-70|
-71|<div class="hd">
-72|<div class="hd-top">
-73|<span class="hd-badge">✅ 成功</span>
-74|<span class="hd-code">DC-002 · 米线</span>
-75|</div>
-76|<h1>蒙自源：汤底工业化的千店路径</h1>
-77|<div class="hd-lens">一个可能的观察角度：米线品类的全国化突破口可能在汤底，不在米线本身。蒙自源绕开酸浆发酵壁垒，走干浆+工业化汤底路线——但这是路径之一，未必是唯一答案。</div>
-78|</div>
-79|
-80|<div class="data-grid">
-81|<div class="dc"><div class="dn">1,134</div><div class="dl">门店数</div><div class="dnote">窄门餐眼</div></div>
-82|<div class="dc"><div class="dn">115城</div><div class="dl">覆盖城市</div><div class="dnote">含海外</div></div>
-83|<div class="dc"><div class="dn">2001</div><div class="dl">创立</div><div class="dnote">广东东莞</div></div>
-84|</div>
-85|
-86|<div class="sec"><div class="st">六维视角 <span class="st-note">红标为米线品类均值参考</span></div></div>
-87|
-88|<div class="dim-item">
-89|<div class="dm-row">
-90|<span class="dm-label">消费时段窗口</span>
-91|<span class="dm-score" style="color:#3A8D5D">8</span>
-92|<div class="dm-bar"><div class="dm-fill" style="width:80%;background:#3A8D5D;position:relative"><span class="dm-bench" style="left:65%"></span><span class="dm-bench-label" style="left:55%">品类均值 6.5</span></div></div>
-93|</div>
-94|<div class="dm-insight">全天候品类（午+晚），对比早餐包子（2分）有明显时间优势。</div>
-95|</div>
-96|
-97|<div class="dim-item">
-98|<div class="dm-row">
-99|<span class="dm-label">客单价值</span>
-100|<span class="dm-score" style="color:#c4a35a">5</span>
-101|<div class="dm-bar"><div class="dm-fill" style="width:50%;background:#c4a35a;position:relative"><span class="dm-bench" style="left:50%"><span class="dm-bench-label" style="left:40%">品类均值 5.0</span></span></div></div>
-102|</div>
-103|<div class="dm-insight">¥15-25，中低客单。比包子高出一档，但利润空间仍有限。</div>
-104|</div>
-105|
-106|<div class="dim-item">
-107|<div class="dm-row">
-108|<span class="dm-label">消费认知一致性</span>
-109|<span class="dm-score" style="color:#c4a35a">5</span>
-110|<div class="dm-bar"><div class="dm-fill" style="width:50%;background:#c4a35a;position:relative"><span class="dm-bench" style="left:45%"><span class="dm-bench-label" style="left:35%">品类均值 4.5</span></span></div></div>
-111|</div>
-112|<div class="dm-insight">"米线=过桥米线"的刻板印象限制了品类想象空间。七套体系认知互不互通。</div>
-113|</div>
-114|
-115|<div class="dim-item">
-116|<div class="dm-row">
-117|<span class="dm-label">标准化程度</span>
-118|<span class="dm-score" style="color:#0B1F3A">8</span>
-119|<div class="dm-bar"><div class="dm-fill" style="width:80%;background:#0B1F3A;position:relative"><span class="dm-bench" style="left:45%"><span class="dm-bench-label" style="left:34%">品类均值 4.5</span></span></div></div>
-120|</div>
-121|<div class="dm-insight">自建汤料工厂+冷链配送，门店只做复热。标准化程度显著高于米线品类平均水平。</div>
-122|</div>
-123|
-124|<div class="dim-item">
-125|<div class="dm-row">
-126|<span class="dm-label">老板自由度</span>
-127|<span class="dm-score" style="color:#3A8D5D">7</span>
-128|<div class="dm-bar"><div class="dm-fill" style="width:70%;background:#3A8D5D;position:relative"><span class="dm-bench" style="left:50%"><span class="dm-bench-label" style="left:40%">品类均值 5.0</span></span></div></div>
-129|</div>
-130|<div class="dm-insight">汤底中央配送解绑了门店的核心手艺依赖。但仍低于包子冷冻面团的自由度水平。</div>
-131|</div>
-132|
-133|<div class="dim-item">
-134|<div class="dm-row">
-135|<span class="dm-label">资本吸引力</span>
-136|<span class="dm-score" style="color:#c4a35a">5</span>
-137|<div class="dm-bar"><div class="dm-fill" style="width:50%;background:#c4a35a;position:relative"><span class="dm-bench" style="left:50%"><span class="dm-bench-label" style="left:42%">品类均值 5.0</span></span></div></div>
-138|</div>
-139|<div class="dm-insight">米线品类融资稀缺，近一轮周期内仅肥汁米蘭一家（亿元A轮，港式米线细分）。</div>
-140|</div>
-141|
-142|<div class="sec"><div class="st">标签</div></div>
-143|<div class="tags">
-144|<span class="tag">#汤底工业化</span>
-145|<span class="tag">#干浆vs酸浆</span>
-146|<span class="tag">#非原产地逆袭</span>
-147|<span class="tag">#供应链驱动</span>
-148|<span class="tag">#千店天花板</span>
-149|</div>
-150|
-151|<div class="sec"><div class="st">时间线</div></div>
-152|<div class="tl-wrap">
-153|<span class="tl-b"><span class="tl-y">2001</span> 东莞创立</span><span class="tl-a">→</span>
-154|<span class="tl-b"><span class="tl-y">2004</span> 首家加盟</span><span class="tl-a">→</span>
-155|<span class="tl-b"><span class="tl-y">2022</span> 门店破千</span><span class="tl-a">→</span>
-156|<span class="tl-b"><span class="tl-y">2025</span> 1,134家</span><span class="tl-a" style="color:#c4a35a">→</span>
-157|<span class="tl-b" style="border-color:#c4a35a;background:#fcf8f2">自建汤料工厂（东莞·福建·上海）</span>
-158|</div>
-159|
-160|<div class="sec"><div class="st">多重视角</div></div>
-161|<div class="pg">
-162|<div class="pc"><div class="pl">视角A · 供应链驱动</div><div class="pt">蒙自源的核心能力不在产品创新，而是把最复杂的环节（汤底）工厂化。这条路能走通的前提是有足够的资本和供应链管理能力。对比巴比（冷冻面团），路径类似但技术门槛更高。</div></div>
-163|<div class="pc"><div class="pl">视角B · 工艺妥协</div><div class="pt">干浆线+工业化汤底实现了标准化，代价是丢失了酸浆发酵的风味层次。云南本地消费者可能不认可这是"正宗"米线——规模与风味的典型取舍。</div></div>
-164|<div class="pc"><div class="pl">视角C · 品类天花板</div><div class="pt">米线品类的千店水平（蒙自源1,134家、阿香696家）可能反映了品类全国化的上限。对比包子（巴比5,909家）、炸鸡（正新2,500家+），米线的天花板明显偏低。</div></div>
-165|<div class="pc"><div class="pl">视角D · 非原产地红利</div><div class="pt">从东莞出发而非云南，反而成了优势——没有"正宗"包袱，可以灵活选择工业化路径。如果从云南出发，可能被酸浆传统锁死在发酵路径上。</div></div>
-166|</div>
-167|
-168|<div class="sec"><div class="st">决策推演</div></div>
-169|<div class="dt">
-170|<div class="dcard"><div class="dt-role">如果你想做全国化米线品牌</div><div class="dt-body">一个可选路径：放弃酸浆，走干浆+冷链汤包。核心投入在汤底工业化而非门店体验。需评估供应链建设成本（汤料工厂投入）vs 预期回报周期的匹配度。</div></div>
-171|<div class="dcard"><div class="dt-role">如果你是区域米线老字号</div><div class="dt-body">守住本地酸浆风味做高客单体验可能是合理选择。全国化不是唯一路径——走区域性深度渗透，可能比跨省扩张风险更低。</div></div>
-172|<div class="dcard"><div class="dt-role">如果你在关注供应链机会</div><div class="dt-body">汤底标准化是米线行业的一个供应缺口。能提供稳定品质、冷链配送的汤料供应商，可能是连接"区域风味"和"全国化"的关键节点。</div></div>
-173|<div class="dcard"><div class="dt-role">如果你是投资者</div><div class="dt-body">米线品类的资本故事目前弱于米粉（螺蛳粉等）。关注要素：品牌能否证明跨区域复制能力、汤底标准化程度、单店模型是否跑通。</div></div>
-174|</div>
-175|
-176|<div class="sec"><div class="st">值得关注的信号</div></div>
-177|<div class="signal"><span class="sd">📊</span>米线品类融资稀缺——近期米面赛道20+笔融资，米线仅肥汁米蘭一家</div>
-178|<div class="signal"><span class="sd">🔬</span>消费认知分裂——七套米制粉体系认知互不共通，单个品牌极难覆盖全国</div>
-179|<div class="signal"><span class="sd">⚖️</span>酸浆vs干浆的路线之争——没有绝对正确答案，取决于品牌的目标市场定位</div>
-180|
-181|
-182|
-183|
-184|186|<div style="font-size:10px;color:#b5aaa0;margin-bottom:2px;letter-spacing:1px">真实商业案例 · 产业模型拆解 · 创业路径验证</div>
-187|<div style="font-size:10px;color:#c4a35a;margin-bottom:4px;font-family:Inter,sans-serif">© FoodIntelAI 2026 All Rights Reserved</div>
-188|<div style="font-size:9px;color:#b5aaa0">分析框架、模型结构及商业判断受版权保护。转载请联系授权。<br>FoodIntelAI · foodintelai.com</div>
-189|</div>
-190|</div>
-191|</body>
-192|</html>
-193|
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>蒙自源 · Decision Canvas · FoodIntelAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:'Noto Sans SC','Inter','PingFang SC',sans-serif;color:#2a2218;display:flex;justify-content:center}
+.page{max-width:760px;width:100%;padding:40px 36px 52px;background:#fff;margin:24px auto;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.05)}
+.hd{border-bottom:2px solid #e0ddd5;padding-bottom:16px;margin-bottom:18px}
+.hd .hd-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.hd .hd-badge{padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;background:#e8f4e8;color:#2a5a3a}
+.hd .hd-code{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif;letter-spacing:1px}
+.hd h1{font-size:22px;font-weight:700;color:#1a1a1a;margin:2px 0;line-height:1.3}
+.hd .hd-lens{font-size:13px;color:#8a7a6a;line-height:1.6;margin-top:6px;padding:8px 12px;background:#faf8f5;border-radius:6px;border-left:3px solid #c4a35a}
+.data-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.dc{background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:10px;text-align:center}
+.dc .dn{font-size:20px;font-weight:700;color:#0B1F3A;font-family:'Inter',sans-serif}
+.dc .dl{font-size:10px;color:#8a7a6a;margin-top:1px}
+.dc .dnote{font-size:9px;color:#b5aaa0;margin-top:1px}
+.sec{margin:18px 0}
+.sec .st{font-size:13px;font-weight:700;color:#1a1a1a;padding-bottom:6px;border-bottom:1px solid #e0ddd5;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.sec .st .st-note{font-size:10px;color:#b5aaa0;font-weight:400;margin-left:auto}
+
+/* Dimension grid with benchmark line */
+.dim-item{border:1px solid #e8e3db;border-radius:6px;padding:10px 12px;margin:5px 0;background:#fff}
+.dim-item .dm-row{display:flex;align-items:center;gap:8px}
+.dim-item .dm-label{width:85px;font-size:12px;font-weight:600;color:#1a1a1a;flex-shrink:0}
+.dim-item .dm-score{font-size:18px;font-weight:700;font-family:'Inter',sans-serif;width:28px;text-align:center}
+.dim-item .dm-bar{flex:1;height:10px;background:#f0ece4;border-radius:5px;position:relative;overflow:visible}
+.dim-item .dm-fill{height:100%;border-radius:5px;position:relative}
+.dim-item .dm-bench{position:absolute;top:-3px;width:2px;height:16px;background:#c0392b;border-radius:1px}
+.dim-item .dm-bench-label{position:absolute;top:-14px;font-size:8px;color:#c0392b;white-space:nowrap}
+.dim-item .dm-insight{font-size:11px;color:#5a4a3a;line-height:1.5;margin-top:4px;padding-top:4px;border-top:1px solid #f5f0e8}
+.dim-item .dm-bm{font-size:10px;color:#b5aaa0;margin-left:4px}
+
+/* Timeline */
+.tl-wrap{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.tl-wrap .tl-b{border:1px solid #e0ddd5;border-radius:4px;padding:3px 8px;font-size:11px;color:#3a322a;background:#fff}
+.tl-wrap .tl-b .tl-y{font-weight:700;color:#8b6914}
+.tl-wrap .tl-a{color:#ddd;font-size:10px;display:flex;align-items:center}
+
+/* Perspectives */
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.pg .pc{border:1px solid #e8e3db;border-radius:6px;padding:10px 12px;background:#faf8f5}
+.pg .pc .pl{font-size:10px;color:#c4a35a;font-weight:600;letter-spacing:1px}
+.pg .pc .pt{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
+
+/* Decision Tree */
+.dt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.dt .dcard{border:1px solid #e0e4ea;border-radius:6px;padding:10px 12px;background:#fff}
+.dt .dcard .dt-role{font-size:10px;color:#1e3a5f;font-weight:600;letter-spacing:1px}
+.dt .dcard .dt-body{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
+
+/* Tags */
+.tags{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}
+.tags .tag{font-size:10px;padding:2px 8px;border-radius:3px;background:#eef0f3;color:#4a5568}
+
+/* Signals */
+.signal{display:flex;gap:8px;padding:8px 10px;margin:5px 0;border-left:3px solid #c4a35a;font-size:12px;color:#5a4a3a;line-height:1.6;background:#faf8f5}
+.signal .sd{font-size:14px;flex-shrink:0;margin-top:1px}
+
+.ft{margin-top:20px;padding-top:10px;border-top:1px solid #e0ddd5;font-size:11px;color:#aaa;text-align:center;line-height:1.6}
+@media(max-width:640px){.page{padding:20px 14px 32px}.data-grid{grid-template-columns:1fr 1fr}.pg,.dt{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hd">
+<div class="hd-top">
+<span class="hd-badge">✅ 成功</span>
+<span class="hd-code">DC-002 · 米线</span>
+</div>
+<h1>蒙自源：汤底工业化的千店路径</h1>
+<div class="hd-lens">一个可能的观察角度：米线品类的全国化突破口可能在汤底，不在米线本身。蒙自源绕开酸浆发酵壁垒，走干浆+工业化汤底路线——但这是路径之一，未必是唯一答案。</div>
+</div>
+
+<div class="data-grid">
+<div class="dc"><div class="dn">1,134</div><div class="dl">门店数</div><div class="dnote">窄门餐眼</div></div>
+<div class="dc"><div class="dn">115城</div><div class="dl">覆盖城市</div><div class="dnote">含海外</div></div>
+<div class="dc"><div class="dn">2001</div><div class="dl">创立</div><div class="dnote">广东东莞</div></div>
+</div>
+
+<div class="sec"><div class="st">六维视角 <span class="st-note">红标为米线品类均值参考</span></div></div>
+
+<div class="dim-item">
+<div class="dm-row">
+<span class="dm-label">消费时段窗口</span>
+<span class="dm-score" style="color:#3A8D5D">8</span>
+<div class="dm-bar"><div class="dm-fill" style="width:80%;background:#3A8D5D;position:relative"><span class="dm-bench" style="left:65%"></span><span class="dm-bench-label" style="left:55%">品类均值 6.5</span></div></div>
+</div>
+<div class="dm-insight">全天候品类（午+晚），对比早餐包子（2分）有明显时间优势。</div>
+</div>
+
+<div class="dim-item">
+<div class="dm-row">
+<span class="dm-label">客单价值</span>
+<span class="dm-score" style="color:#c4a35a">5</span>
+<div class="dm-bar"><div class="dm-fill" style="width:50%;background:#c4a35a;position:relative"><span class="dm-bench" style="left:50%"><span class="dm-bench-label" style="left:40%">品类均值 5.0</span></span></div></div>
+</div>
+<div class="dm-insight">¥15-25，中低客单。比包子高出一档，但利润空间仍有限。</div>
+</div>
+
+<div class="dim-item">
+<div class="dm-row">
+<span class="dm-label">消费认知一致性</span>
+<span class="dm-score" style="color:#c4a35a">5</span>
+<div class="dm-bar"><div class="dm-fill" style="width:50%;background:#c4a35a;position:relative"><span class="dm-bench" style="left:45%"><span class="dm-bench-label" style="left:35%">品类均值 4.5</span></span></div></div>
+</div>
+<div class="dm-insight">"米线=过桥米线"的刻板印象限制了品类想象空间。七套体系认知互不互通。</div>
+</div>
+
+<div class="dim-item">
+<div class="dm-row">
+<span class="dm-label">标准化程度</span>
+<span class="dm-score" style="color:#0B1F3A">8</span>
+<div class="dm-bar"><div class="dm-fill" style="width:80%;background:#0B1F3A;position:relative"><span class="dm-bench" style="left:45%"><span class="dm-bench-label" style="left:34%">品类均值 4.5</span></span></div></div>
+</div>
+<div class="dm-insight">自建汤料工厂+冷链配送，门店只做复热。标准化程度显著高于米线品类平均水平。</div>
+</div>
+
+<div class="dim-item">
+<div class="dm-row">
+<span class="dm-label">老板自由度</span>
+<span class="dm-score" style="color:#3A8D5D">7</span>
+<div class="dm-bar"><div class="dm-fill" style="width:70%;background:#3A8D5D;position:relative"><span class="dm-bench" style="left:50%"><span class="dm-bench-label" style="left:40%">品类均值 5.0</span></span></div></div>
+</div>
+<div class="dm-insight">汤底中央配送解绑了门店的核心手艺依赖。但仍低于包子冷冻面团的自由度水平。</div>
+</div>
+
+<div class="dim-item">
+<div class="dm-row">
+<span class="dm-label">资本吸引力</span>
+<span class="dm-score" style="color:#c4a35a">5</span>
+<div class="dm-bar"><div class="dm-fill" style="width:50%;background:#c4a35a;position:relative"><span class="dm-bench" style="left:50%"><span class="dm-bench-label" style="left:42%">品类均值 5.0</span></span></div></div>
+</div>
+<div class="dm-insight">米线品类融资稀缺，近一轮周期内仅肥汁米蘭一家（亿元A轮，港式米线细分）。</div>
+</div>
+
+<div class="sec"><div class="st">标签</div></div>
+<div class="tags">
+<span class="tag">#汤底工业化</span>
+<span class="tag">#干浆vs酸浆</span>
+<span class="tag">#非原产地逆袭</span>
+<span class="tag">#供应链驱动</span>
+<span class="tag">#千店天花板</span>
+</div>
+
+<div class="sec"><div class="st">时间线</div></div>
+<div class="tl-wrap">
+<span class="tl-b"><span class="tl-y">2001</span> 东莞创立</span><span class="tl-a">→</span>
+<span class="tl-b"><span class="tl-y">2004</span> 首家加盟</span><span class="tl-a">→</span>
+<span class="tl-b"><span class="tl-y">2022</span> 门店破千</span><span class="tl-a">→</span>
+<span class="tl-b"><span class="tl-y">2025</span> 1,134家</span><span class="tl-a" style="color:#c4a35a">→</span>
+<span class="tl-b" style="border-color:#c4a35a;background:#fcf8f2">自建汤料工厂（东莞·福建·上海）</span>
+</div>
+
+<div class="sec"><div class="st">多重视角</div></div>
+<div class="pg">
+<div class="pc"><div class="pl">视角A · 供应链驱动</div><div class="pt">蒙自源的核心能力不在产品创新，而是把最复杂的环节（汤底）工厂化。这条路能走通的前提是有足够的资本和供应链管理能力。对比巴比（冷冻面团），路径类似但技术门槛更高。</div></div>
+<div class="pc"><div class="pl">视角B · 工艺妥协</div><div class="pt">干浆线+工业化汤底实现了标准化，代价是丢失了酸浆发酵的风味层次。云南本地消费者可能不认可这是"正宗"米线——规模与风味的典型取舍。</div></div>
+<div class="pc"><div class="pl">视角C · 品类天花板</div><div class="pt">米线品类的千店水平（蒙自源1,134家、阿香696家）可能反映了品类全国化的上限。对比包子（巴比5,909家）、炸鸡（正新2,500家+），米线的天花板明显偏低。</div></div>
+<div class="pc"><div class="pl">视角D · 非原产地红利</div><div class="pt">从东莞出发而非云南，反而成了优势——没有"正宗"包袱，可以灵活选择工业化路径。如果从云南出发，可能被酸浆传统锁死在发酵路径上。</div></div>
+</div>
+
+<div class="sec"><div class="st">决策推演</div></div>
+<div class="dt">
+<div class="dcard"><div class="dt-role">如果你想做全国化米线品牌</div><div class="dt-body">一个可选路径：放弃酸浆，走干浆+冷链汤包。核心投入在汤底工业化而非门店体验。需评估供应链建设成本（汤料工厂投入）vs 预期回报周期的匹配度。</div></div>
+<div class="dcard"><div class="dt-role">如果你是区域米线老字号</div><div class="dt-body">守住本地酸浆风味做高客单体验可能是合理选择。全国化不是唯一路径——走区域性深度渗透，可能比跨省扩张风险更低。</div></div>
+<div class="dcard"><div class="dt-role">如果你在关注供应链机会</div><div class="dt-body">汤底标准化是米线行业的一个供应缺口。能提供稳定品质、冷链配送的汤料供应商，可能是连接"区域风味"和"全国化"的关键节点。</div></div>
+<div class="dcard"><div class="dt-role">如果你是投资者</div><div class="dt-body">米线品类的资本故事目前弱于米粉（螺蛳粉等）。关注要素：品牌能否证明跨区域复制能力、汤底标准化程度、单店模型是否跑通。</div></div>
+</div>
+
+<div class="sec"><div class="st">值得关注的信号</div></div>
+<div class="signal"><span class="sd">📊</span>米线品类融资稀缺——近期米面赛道20+笔融资，米线仅肥汁米蘭一家</div>
+<div class="signal"><span class="sd">🔬</span>消费认知分裂——七套米制粉体系认知互不共通，单个品牌极难覆盖全国</div>
+<div class="signal"><span class="sd">⚖️</span>酸浆vs干浆的路线之争——没有绝对正确答案，取决于品牌的目标市场定位</div>
+
+
+
+
+186|<div style="font-size:10px;color:#b5aaa0;margin-bottom:2px;letter-spacing:1px">真实商业案例 · 产业模型拆解 · 创业路径验证</div>
+<div style="font-size:10px;color:#c4a35a;margin-bottom:4px;font-family:Inter,sans-serif">© FoodIntelAI 2026 All Rights Reserved</div>
+<div style="font-size:9px;color:#b5aaa0">分析框架、模型结构及商业判断受版权保护。转载请联系授权。<br>FoodIntelAI · foodintelai.com</div>
+</div>
+
+
+<div style="margin-top:20px;padding-top:10px;border-top:1px solid #e0ddd5;font-size:11px;color:#8a7a6a;text-align:center;line-height:1.6"><strong style="color:#8b6914;letter-spacing:1px">FoodIntelAI 商业验证库</strong><br><span style="font-size:10px;color:#b5aaa0">© FoodIntelAI 2026 All Rights Reserved · 转载请联系授权</span></div>
+</body>
+</html>
