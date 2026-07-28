@@ -1,0 +1,151 @@
+1|<!DOCTYPE html>
+2|<html lang="zh-CN">
+3|<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>钟薛高 · Decision Canvas · FoodIntelAI</title>
+4|<link rel="preconnect" href="https://fonts.googleapis.com">
+5|<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+6|<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+7|<style>
+8|*{margin:0;padding:0;box-sizing:border-box}
+9|body{background:#f5f3ef;font-family:'Noto Sans SC','Inter','PingFang SC',sans-serif;color:#2a2218;display:flex;justify-content:center}
+10|.page{max-width:760px;width:100%;padding:40px 36px 52px;background:#fff;margin:24px auto;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.05)}
+11|.hd{border-bottom:2px solid #e0ddd5;padding-bottom:16px;margin-bottom:18px}
+12|.hd .hd-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+13|.hd .hd-badge{padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;background:#f8ecec;color:#8a3a3a}
+14|.hd .hd-code{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif;letter-spacing:1px}
+15|.hd h1{font-size:22px;font-weight:700;color:#1a1a1a;margin:2px 0;line-height:1.3}
+16|.hd .hd-lens{font-size:13px;color:#8a7a6a;line-height:1.6;margin-top:6px;padding:8px 12px;background:#faf8f5;border-radius:6px;border-left:3px solid #c4a35a}
+17|.data-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+18|.dc{background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:10px;text-align:center}
+19|.dc .dn{font-size:20px;font-weight:700;color:#0B1F3A;font-family:'Inter',sans-serif}
+20|.dc .dl{font-size:10px;color:#8a7a6a;margin-top:1px}
+21|.dc .dnote{font-size:9px;color:#b5aaa0;margin-top:1px}
+22|.sec{margin:18px 0}
+23|.sec .st{font-size:13px;font-weight:700;color:#1a1a1a;padding-bottom:6px;border-bottom:1px solid #e0ddd5;margin-bottom:8px}
+24|.dim-item{border:1px solid #e8e3db;border-radius:6px;padding:10px 12px;margin:5px 0;background:#fff}
+25|.dim-item .dm-row{display:flex;align-items:center;gap:8px}
+26|.dim-item .dm-label{width:85px;font-size:12px;font-weight:600;color:#1a1a1a;flex-shrink:0}
+27|.dim-item .dm-score{font-size:18px;font-weight:700;font-family:'Inter',sans-serif;width:28px;text-align:center}
+28|.dim-item .dm-bar{flex:1;height:10px;background:#f0ece4;border-radius:5px;position:relative;overflow:visible}
+29|.dim-item .dm-fill{height:100%;border-radius:5px}
+30|.dim-item .dm-bench{position:absolute;top:-3px;width:2px;height:16px;background:#c0392b;border-radius:1px}
+31|.dim-item .dm-bench-label{position:absolute;top:-14px;font-size:8px;color:#c0392b;white-space:nowrap}
+32|.dim-item .dm-insight{font-size:11px;color:#5a4a3a;line-height:1.5;margin-top:4px;padding-top:4px}
+33|.tags{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}
+34|.tags .tag{font-size:10px;padding:2px 8px;border-radius:3px;background:#eef0f3;color:#4a5568}
+35|.pg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+36|.pg .pc{border:1px solid #e8e3db;border-radius:6px;padding:10px 12px;background:#faf8f5}
+37|.pg .pc .pl{font-size:10px;color:#c4a35a;font-weight:600;letter-spacing:1px}
+38|.pg .pc .pt{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
+39|.signal{display:flex;gap:8px;padding:8px 10px;margin:5px 0;border-left:3px solid #c4a35a;font-size:12px;color:#5a4a3a;line-height:1.6;background:#faf8f5}
+40|.signal .sd{font-size:14px;flex-shrink:0;margin-top:1px}
+41|.dt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+42|.dt .dcard{border:1px solid #e0e4ea;border-radius:6px;padding:10px 12px;background:#fff}
+43|.dt .dcard .dt-role{font-size:10px;color:#1e3a5f;font-weight:600;letter-spacing:1px}
+44|.dt .dcard .dt-body{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
+45|.ft{margin-top:20px;padding-top:10px;border-top:1px solid #e0ddd5;font-size:11px;color:#aaa;text-align:center;line-height:1.6}
+46|@media(max-width:640px){.page{padding:20px 14px 32px}.data-grid{grid-template-columns:1fr 1fr}.pg,.dt{grid-template-columns:1fr}}
+47|</style>
+48|</head>
+49|<body>
+50|<div class="page">
+51|
+52|<div class="hd">
+53|<div class="hd-top">
+54|<span class="hd-badge">❌ 失败</span>
+55|<span class="hd-code">DC-008 · 定价叙事</span>
+56|</div>
+57|<h1>钟薛高：60元雪糕降到3.5元，越降价越死得快</h1>
+58|<div class="hd-lens">一个可能的观察角度：高端品牌做下沉市场，不是简单的价格带扩容问题——降价可能击穿品牌叙事，导致高端用户流失的同时也吸引不到低端用户。</div>
+59|</div>
+60|
+61|<div class="data-grid">
+62|<div class="dc"><div class="dn" style="color:#8a3a3a">60→3.5</div><div class="dl">定价跨度（元）</div><div class="dnote">高端→平价</div></div>
+63|<div class="dc"><div class="dn" style="color:#8a3a3a">10亿+</div><div class="dl">峰值年销售额</div><div class="dnote">2021年</div></div>
+64|<div class="dc"><div class="dn" style="color:#8a3a3a">破产</div><div class="dl">终局</div><div class="dnote">2025年7月</div></div>
+65|</div>
+66|<div class="data-grid" style="grid-template-columns:1fr 1fr">
+67|<div class="dc"><div class="dn" style="color:#8a3a3a">84万</div><div class="dl">直播观看</div><div class="dnote">首秀仅卖8千元</div></div>
+68|<div class="dc"><div class="dn" style="color:#8a3a3a">2000→100</div><div class="dl">团队规模</div><div class="dnote">缩减95%+</div></div>
+69|</div>
+70|
+71|<div class="sec"><div class="st">六维视角 <span class="st-note">红标为中高端雪糕品类均值参考</span></div></div>
+72|
+73|<div class="dim-item">
+74|<div class="dm-row"><span class="dm-label">消费时段窗口</span><span class="dm-score" style="color:#3A8D5D">6</span>
+75|<div class="dm-bar"><div class="dm-fill" style="width:60%;background:#3A8D5D"><span class="dm-bench" style="left:70%"><span class="dm-bench-label" style="left:58%">品类均值 7.0</span></span></div></div></div>
+76|<div class="dm-insight">雪糕季节性极强（夏季为峰），钟薛高在品类上受季节约束。多元产品线（冰淇淋）可缓解但无法消除。</div>
+77|</div>
+78|
+79|<div class="dim-item">
+80|<div class="dm-row"><span class="dm-label">客单价值</span><span class="dm-score" style="color:#0B1F3A">8</span>
+81|<div class="dm-bar"><div class="dm-fill" style="width:80%;background:#0B1F3A"><span class="dm-bench" style="left:45%"><span class="dm-bench-label" style="left:33%">品类均值 4.5</span></span></div></div></div>
+82|<div class="dm-insight">60元定价远超品类均值，单支毛利率极高。但这依赖于品牌叙事支撑——叙事一旦崩塌，定价基础也随之瓦解。</div>
+83|</div>
+84|
+85|<div class="dim-item">
+86|<div class="dm-row"><span class="dm-label">消费认知一致性</span><span class="dm-score" style="color:#c4a35a">4</span>
+87|<div class="dm-bar"><div class="dm-fill" style="width:40%;background:#c4a35a"><span class="dm-bench" style="left:55%"><span class="dm-bench-label" style="left:42%">品类均值 5.5</span></span></div></div></div>
+88|<div class="dm-insight">消费者对钟薛高的认知从"网红高端"迅速变为"智商税"。"烧不化"事件后，认知从正到负的转变速度远快于品牌建设速度。</div>
+89|</div>
+90|
+91|<div class="dim-item">
+92|<div class="dm-row"><span class="dm-label">标准化程度</span><span class="dm-score" style="color:#0B1F3A">8</span>
+93|<div class="dm-bar"><div class="dm-fill" style="width:80%;background:#0B1F3A"><span class="dm-bench" style="left:65%"><span class="dm-bench-label" style="left:52%">品类均值 6.5</span></span></div></div></div>
+94|<div class="dm-insight">雪糕工业化生产标准化程度高，不是钟薛高失败的原因。供应链端没有硬伤。</div>
+95|</div>
+96|
+97|<div class="dim-item">
+98|<div class="dm-row"><span class="dm-label">老板自由度</span><span class="dm-score" style="color:#c4a35a">5</span>
+99|<div class="dm-bar"><div class="dm-fill" style="width:50%;background:#c4a35a"><span class="dm-bench" style="left:60%"><span class="dm-bench-label" style="left:48%">品类均值 6.0</span></span></div></div></div>
+100|<div class="dm-insight">创始人个人IP与品牌深度绑定。林盛直播卖红薯还债的行为让品牌和个人更难分割——品牌风险即个人风险。</div>
+101|</div>
+102|
+103|<div class="dim-item">
+104|<div class="dm-row"><span class="dm-label">资本吸引力</span><span class="dm-score" style="color:#c0392b">2</span>
+105|<div class="dm-bar"><div class="dm-fill" style="width:20%;background:#c0392b"><span class="dm-bench" style="left:55%"><span class="dm-bench-label" style="left:42%">品类均值 5.5</span></span></div></div></div>
+106|<div class="dm-insight">破产裁定后核心资产进入司法拍卖。资本市场上已无信任可言。</div>
+107|</div>
+108|
+109|<div class="sec"><div class="st">标签</div></div>
+110|<div class="tags">
+111|<span class="tag">#定价叙事</span>
+112|<span class="tag">#品牌击穿</span>
+113|<span class="tag">#高端下沉陷阱</span>
+114|<span class="tag">#价格带模型边界</span>
+115|<span class="tag">#创始人IP绑定</span>
+116|</div>
+117|
+118|<div class="sec"><div class="st">多重视角</div></div>
+119|<div class="pg">
+120|<div class="pc"><div class="pl">视角A · 定价叙事的脆弱性</div><div class="pt">钟薛高的60元定价不是基于产品成本，而是基于品牌叙事（稀缺原料、国潮设计、社交媒体传播）。当"烧不化"事件质疑了产品品质时，定价叙事的基础就出现了裂缝。叙事驱动的定价在没有产品硬实力支撑时，崩塌速度远快于品牌建设速度。</div></div>
+121|<div class="pc"><div class="pl">视角B · 下沉自救的悖论</div><div class="pt">推出3.5元"钟薛不高"的本意是下沉自救，但结果却是两头不讨好：高端用户觉得掉价不买了，低端用户觉得3.5元也不便宜。降价不是简单的价格调整，可能击穿原有的品牌定位，让品牌在任何一个价格带都没有立足之地。</div></div>
+122|<div class="pc"><div class="pl">视角C · 品牌与CEO个人IP的绑定风险</div><div class="pt">创始人林盛从打造钟薛高到直播卖红薯还债，个人IP与品牌深度绑定。这种绑定在品牌上升期是加分项（自带流量），但在下行期可能加速品牌价值的流失——因为消费者无法把品牌和创始人分开看待。</div></div>
+123|<div class="pc"><div class="pl">视角D · 价格带模型的边界条件</div><div class="pt">钟薛高案例给价格带模型增加了一个可能的边界条件：价格带的调整不只是数学问题——从¥60降到¥3.5，需要回答的不是"降多少"而是"降了之后你是谁"。当品牌叙事的核心是"贵"时，降价本身就是对品牌叙事的否定。</div></div>
+124|</div>
+125|
+126|<div class="sec"><div class="st">决策推演</div></div>
+127|<div class="dt">
+128|<div class="dcard"><div class="dt-role">如果你在做高端消费品</div><div class="dt-body">一个需要提前思考的问题：当市场环境变化需要降价时，你的品牌叙事还有没有立足点？如果品牌的核心卖点就是"贵"，那么降价就是对品牌自身的否定。可能需要在定价策略中提前预留"叙事弹性"。</div></div>
+129|<div class="dcard"><div class="dt-role">如果你在考虑高端品牌下沉</div><div class="dt-body">下沉不是简单的价格调整，可能需要产品线、渠道、品牌叙事的全面重构。一个可参考的思路：用独立子品牌做下沉（而非用主品牌降价），保持主品牌的高端定位不受影响。</div></div>
+130|<div class="dcard"><div class="dt-role">如果你是消费品投资人</div><div class="dt-body">关注品牌定价背后的支撑力：是产品硬实力还是叙事包装？两者兼有最好，如果纯粹靠叙事，需要评估叙事可持续的长度（通常短于预期）。"烧不化"事件对钟薛高的打击之所以致命，正是因为叙事之外没有产品护城河。</div></div>
+131|<div class="dcard"><div class="dt-role">如果你是创始人/CEO关注个人IP</div><div class="dt-body">个人IP与品牌的深度绑定是双刃剑。一个可能的建议：个人IP作为品牌放大器，但企业治理应独立于个人IP——这样当个人声誉出现波动时，品牌可以独立运转。</div></div>
+132|</div>
+133|
+134|<div class="sec"><div class="st">值得关注的信号</div></div>
+135|<div class="signal"><span class="sd">📊</span>钟薛高的生命周期（2018出圈→2021峰值10亿→2025破产）仅7年。对比哈根达斯进入中国30年仍保持高端定位——品牌建设的周期和寿命取决于定价基础的扎实程度</div>
+136|<div class="signal"><span class="sd">⚖️</span>"烧不化"事件揭示了一个规律：在社交媒体时代，品牌叙事一旦受到质疑，修复成本可能高于从零开始建一个新品牌</div>
+137|
+138|<div class="ft" style="margin-top:20px;padding-top:12px;border-top:1px solid #e0ddd5;font-size:11px;color:#aaa;text-align:center;line-height:1.6">
+<div style="font-weight:700;color:#8b6914;letter-spacing:2px;margin-bottom:2px">FoodIntelAI 商业验证库</div>
+<div style="font-size:10px;color:#b5aaa0;margin-bottom:4px;letter-spacing:1px">真实商业案例 · 产业模型拆解 · 创业路径验证</div>
+<div style="font-size:10px;color:#c4a35a;margin-bottom:6px">FIC-008</div>
+<div style="font-size:9px;color:#b5aaa0;line-height:1.5">依据：公开年报、行业监测数据及企业公开信息 | 六维评分为FoodIntelAI模型自评 | 多视角供参考<br>
+分析框架、模型结构及商业判断受版权保护。欢迎转发分享，转载需注明来源：FoodIntelAI 商业验证库</div>
+</div>
+140|<div>依据：新浪财经、21经济网、腾讯新闻、公开行业报道 | 六维评分为FoodIntelAI模型自评 | 多视角供参考</div>
+141|</div>
+142|
+143|</div>
+144|</body>
+145|</html>
+146|
