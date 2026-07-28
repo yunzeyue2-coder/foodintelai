@@ -1,182 +1,139 @@
-1|<!DOCTYPE html>
-2|<html lang="zh-CN">
-3|<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>巴比食品 · Decision Canvas · FoodIntelAI</title>
-4|<link rel="preconnect" href="https://fonts.googleapis.com">
-5|<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-6|<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-7|<style>
-8|*{margin:0;padding:0;box-sizing:border-box}
-9|body{background:#f5f3ef;font-family:'Noto Sans SC','Inter','PingFang SC',sans-serif;color:#2a2218;display:flex;justify-content:center}
-10|.page{max-width:760px;width:100%;padding:40px 36px 52px;background:#fff;margin:24px auto;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.05)}
-11|.dc-header{border-bottom:2px solid #e0ddd5;padding-bottom:18px;margin-bottom:20px}
-12|.dc-header .dc-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
-13|.dc-header .dc-badge{padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;background:#e8f4e8;color:#2a5a3a}
-14|.dc-header .dc-code{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif;letter-spacing:1px}
-15|.dc-header h1{font-size:22px;font-weight:700;color:#1a1a1a;margin:4px 0 2px;line-height:1.3}
-16|.dc-header .dc-judge{font-size:14px;color:#8b6914;font-weight:600;line-height:1.5}
-17|.snapshot{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
-18|.snap-card{background:#faf8f5;border:1px solid #e8e3db;border-radius:8px;padding:14px;text-align:center}
-19|.snap-card .snap-val{font-size:28px;font-weight:700;color:#0B1F3A;font-family:'Inter',sans-serif}
-20|.snap-card .snap-label{font-size:11px;color:#8a7a6a;margin-top:2px}
-21|.section{margin:22px 0}
-22|.section .s-title{font-size:14px;font-weight:700;color:#1a1a1a;padding-bottom:6px;border-bottom:1px solid #e0ddd5;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-23|.section .s-num{display:inline-flex;width:20px;height:20px;background:#0B1F3A;color:#fff;border-radius:50%;font-size:10px;align-items:center;justify-content:center;flex-shrink:0}
-24|.radar-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px}
-25|.radar-row .rr-label{width:75px;font-weight:600;color:#1a1a1a;text-align:right;flex-shrink:0}
-26|.radar-row .rr-bar{flex:1;height:14px;background:#f0ece4;border-radius:7px;overflow:hidden}
-27|.radar-row .rr-fill{height:100%;border-radius:7px}
-28|.radar-row .rr-score{width:24px;text-align:center;font-weight:700;color:#8b6914;font-family:'Inter',sans-serif}
-29|.tl-item{display:flex;gap:10px;padding:6px 0;border-left:2px solid #e0ddd5;padding-left:14px;position:relative;font-size:13px;color:#3a322a;line-height:1.6}
-30|.tl-item::before{content:'';position:absolute;left:-5px;top:10px;width:8px;height:8px;border-radius:50%;background:#c4a35a}
-31|.tl-item .tl-year{font-weight:700;color:#8b6914;white-space:nowrap}
-32|.chain{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:8px 0;font-size:13px}
-33|.chain .ch-node{background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:6px 12px;font-weight:600;color:#1a1a1a}
-34|.chain .ch-arrow{color:#c4a35a;font-size:14px}
-35|.chain .ch-end{border-color:#0B1F3A;background:#0B1F3A;color:#fff}
-36|.sim-box{background:#faf8f5;border:1px solid #e8e3db;border-radius:8px;padding:12px 14px;margin:8px 0}
-37|.sim-box .sim-q{font-size:13px;font-weight:700;color:#8b6914;margin-bottom:4px}
-38|.sim-box .sim-a{font-size:12px;color:#5a4a3a;line-height:1.7}
-39|table{width:100%;border-collapse:collapse;margin:8px 0;font-size:13px}
-40|td,th{padding:6px 8px;border-bottom:1px solid #f0ece4;text-align:left;color:#3a322a;line-height:1.5}
-41|th{font-weight:600;color:#1a1a1a;border-bottom:2px solid #e0ddd5}
-42|.stars{color:#c4a35a;font-size:11px}
-43|.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
-44|.action-card{border:1px solid #e8e3db;border-radius:6px;padding:10px 12px;background:#faf8f5}
-45|.action-card .ac-role{font-size:11px;color:#c4a35a;font-weight:600;letter-spacing:1px}
-46|.action-card .ac-text{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
-47|.verdict{background:#0B1F3A;color:#f5f0e8;border-radius:10px;padding:16px 20px;margin:16px 0}
-48|.verdict .vd-label{font-size:10px;color:#c4a35a;letter-spacing:2px;font-weight:600}
-49|.verdict .vd-text{font-size:14px;line-height:1.8;margin-top:4px}
-50|.risk-box{background:#fcf8f2;border:1.5px solid #d4a0a0;border-radius:8px;padding:12px 14px;margin:10px 0}
-51|.risk-box .rb-title{font-size:12px;font-weight:700;color:#8a3a3a;margin-bottom:4px}
-52|.risk-box .rb-item{font-size:12px;color:#5a4a3a;line-height:1.7;padding:2px 0}
-53|.ft{margin-top:24px;padding-top:12px;border-top:1px solid #e0ddd5;font-size:11px;color:#aaa;text-align:center;line-height:1.6}
-54|@media(max-width:640px){.page{padding:20px 14px 32px}.snapshot{grid-template-columns:1fr}.action-grid{grid-template-columns:1fr}}
-55|</style>
-56|</head>
-57|<body>
-58|<div class="page">
-59|
-60|<div class="dc-header">
-61|<div class="dc-top">
-62|<span class="dc-badge">✅ 成功</span>
-63|<span class="dc-code">DC-001 · 2026.07.28</span>
-64|</div>
-65|<h1>巴比食品：全国化的产能先行模式</h1>
-66|<div class="dc-judge">低客单包子品类可以做全国连锁，但前提是产能标准化要跑在加盟扩张前面。巴比的核心资产不是品牌，是产能。</div>
-67|</div>
-68|
-69|<!-- Screen 1: Snapshot -->
-70|<div class="section"><div class="s-title"><span class="s-num">1</span> Decision Snapshot</div></div>
-71|<div class="snapshot">
-72|<div class="snap-card"><div class="snap-val">87</div><div class="snap-label">综合评分</div></div>
-73|<div class="snap-card"><div class="snap-val" style="color:#8a3a3a">中偏高</div><div class="snap-label">风险等级</div></div>
-74|<div class="snap-card"><div class="snap-val">82</div><div class="snap-label">可复制指数</div></div>
-75|<div class="snap-card"><div class="snap-val">91</div><div class="snap-label">全国化指数</div></div>
-76|</div>
-77|<p style="font-size:11px;color:#8a7a6a;margin-top:-16px;margin-bottom:6px;text-align:center">创业适配度：区域连锁 ★★★★★ · 单店加盟 ★★★ · 夫妻店 ★★</p>
-78|<p style="font-size:11px;color:#b5aaa0;margin-bottom:18px;text-align:center">各项评分为FoodIntelAI六维模型自评，非第三方统计</p>
-79|
-80|<!-- 现状数据 -->
-81|<div class="section"><div class="s-title" style="font-size:13px">📊 关键运营数据（据2025年年度报告）</div></div>
-82|<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
-83|<div style="background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:8px;text-align:center">
-84|<div style="font-size:16px;font-weight:700;color:#0B1F3A">18.59亿</div>
-85|<div style="font-size:10px;color:#8a7a6a">营收（+11.22%）</div></div>
-86|<div style="background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:8px;text-align:center">
-87|<div style="font-size:16px;font-weight:700;color:#8a3a3a">2.73亿</div>
-88|<div style="font-size:10px;color:#8a7a6a">净利润（-1.28%）</div></div>
-89|<div style="background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:8px;text-align:center">
-90|<div style="font-size:16px;font-weight:700;color:#0B1F3A">5,909</div>
-91|<div style="font-size:10px;color:#8a7a6a">加盟门店（+766）</div></div>
-92|</div>
-93|<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-94|<div style="background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:8px;text-align:center">
-95|<div style="font-size:16px;font-weight:700;color:#8a3a3a">5</div>
-96|<div style="font-size:10px;color:#8a7a6a">直营门店（持续收缩）</div></div>
-97|<div style="background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:8px;text-align:center">
-98|<div style="font-size:16px;font-weight:700;color:#c4a35a">73.92%</div>
-99|<div style="font-size:10px;color:#8a7a6a">特许加盟收入占比</div></div>
-100|</div>
-101|<p style="font-size:11px;color:#c0392b;margin-bottom:16px">⚠ 风险信号：加盟店平均年收入¥23.26万（同比降4%）、净利润同比转负、加盟商开店意愿走低</p>
-102|
-103|<!-- Screen 2: Radar -->
-104|<div class="section"><div class="s-title"><span class="s-num">2</span> 六维诊断</div></div>
-105|<div class="radar-row"><span class="rr-label">消费时段窗口</span><div class="rr-bar"><div class="rr-fill" style="width:20%;background:#c0392b"></div></div><span class="rr-score">2</span></div>
-106|<div class="radar-row"><span class="rr-label">客单价值</span><div class="rr-bar"><div class="rr-fill" style="width:40%;background:#c4a35a"></div></div><span class="rr-score">4</span></div>
-107|<div class="radar-row"><span class="rr-label">消费认知一致性</span><div class="rr-bar"><div class="rr-fill" style="width:80%;background:#3A8D5D"></div></div><span class="rr-score">8</span></div>
-108|<div class="radar-row"><span class="rr-label">标准化程度</span><div class="rr-bar"><div class="rr-fill" style="width:80%;background:#0B1F3A"></div></div><span class="rr-score">8</span></div>
-109|<div class="radar-row"><span class="rr-label">老板自由度</span><div class="rr-bar"><div class="rr-fill" style="width:70%;background:#3A8D5D"></div></div><span class="rr-score">7</span></div>
-110|<div class="radar-row"><span class="rr-label">资本吸引力</span><div class="rr-bar"><div class="rr-fill" style="width:70%;background:#3A8D5D"></div></div><span class="rr-score">7</span></div>
-111|<p style="font-size:11px;color:#8a7a6a;margin:4px 0">注：标准化评8分——约80%产品（5-6款肉包）走中央工厂，菜包仍在门店现场制作，并非100%中央配送。已领先行业平均水平（约50:50），但非满分。</p>
-112|
-113|<!-- Screen 3: Timeline -->
-114|<div class="section"><div class="s-title"><span class="s-num">3</span> 事件链</div></div>
-115|<div class="tl-item"><span class="tl-year">2001</span> 刘会平在上海开设"刘师傅大包"门店起家</div>
-116|<div class="tl-item"><span class="tl-year">2003</span> 更名"巴比馒头"，启动品牌化</div>
-117|<div class="tl-item"><span class="tl-year">2004</span> 松江中央工厂投产，开始探索标准化生产</div>
-118|<div class="tl-item"><span class="tl-year">2007</span> 冷冻配送技术突破，扩大配送半径</div>
-119|<div class="tl-item"><span class="tl-year">2009</span> 冷冻面团技术突破，门店不再需要现做面团</div>
-120|<div class="tl-item"><span class="tl-year">2020</span> 上交所上市，成为"中国包子第一股"</div>
-121|<div class="tl-item"><span class="tl-year">2025</span> 门店5,909家（+766），直营收缩至5家；推"手工小笼包"新店型（24家）</div>
-122|<p style="font-size:12px;color:#8a7a6a;margin:6px 0">关键发现：巴比不是"先工厂后门店"，而是"先门店验证→渐进建设产能→标准化跑通后加速加盟"。产能标准化是成果而非起点。</p>
-123|
-124|<!-- Screen 4: Variable Chain -->
-125|<div class="section"><div class="s-title"><span class="s-num">4</span> 变量链</div></div>
-126|<div class="chain">
-127|<span class="ch-node">中央工厂</span><span class="ch-arrow">→</span>
-128|<span class="ch-node">冷冻面团</span><span class="ch-arrow">→</span>
-129|<span class="ch-node">标准化出品</span><span class="ch-arrow">→</span>
-130|<span class="ch-node">门店去厨师化</span><span class="ch-arrow">→</span>
-131|<span class="ch-node">加盟复制</span><span class="ch-arrow">→</span>
-132|<span class="ch-node ch-end">全国化</span>
-133|</div>
-134|
-135|<!-- Screen 5: Simulation -->
-136|<div class="section"><div class="s-title"><span class="s-num">5</span> 决策模拟</div></div>
-137|<div class="sim-box"><div class="sim-q">现状基准</div><div class="sim-a">巴比直营门店常年个位数（现仅5家），几乎全部走加盟。这是一个"纯加盟模型"，对总部管控能力要求极高。</div></div>
-138|<div class="sim-box"><div class="sim-q">如果跳过中央工厂阶段直接开放加盟</div><div class="sim-a">短期增速可能提升30-50%，但品控一致性下降，大概率走"先铺店再建厂"路线——这正是多数加盟品牌倒闭的路径（全国化成功概率预估从91%降至55-65%）。</div></div>
-139|<div class="sim-box"><div class="sim-q">如果先做区域直营再开放加盟</div><div class="sim-a">资金压力增大，扩张速度减慢，但单店模型验证更充分。适合资金充裕的进入者，不适合快周转模式。</div></div>
-140|
-141|<!-- Screen 6: Transfer -->
-142|<div class="section"><div class="s-title"><span class="s-num">6</span> 迁移矩阵</div></div>
-143|<p style="font-size:12px;color:#8a7a6a;margin-bottom:6px">注：全国化指数（91）衡量的是品类自身的全国化潜力；可借鉴程度衡量的是巴比模式能否迁移到该品类——两者含义不同。</p>
-144|<table>
-145|<tr><th>品类</th><th>可借鉴程度</th><th>原因</th></tr>
-146|<tr><td>包子</td><td class="stars">★★★★★</td><td style="font-size:12px">完全同模式——冷冻面团+门店蒸制</td></tr>
-147|<tr><td>饺子</td><td class="stars">★★★★★</td><td style="font-size:12px">工艺与供应链接近，可直接迁移</td></tr>
-148|<tr><td>馄饨</td><td class="stars">★★★★☆</td><td style="font-size:12px">可部分复制冷冻面团路径</td></tr>
-149|<tr><td>米线</td><td class="stars">★★★☆☆</td><td style="font-size:12px">供应链逻辑不同（汤底体系复杂）</td></tr>
-150|<tr><td>烧腊</td><td class="stars">★★☆☆☆</td><td style="font-size:12px">现制依赖度高，冷冻化难度大</td></tr>
-151|</table>
-152|
-153|<!-- Screen 7: Action -->
-154|<div class="section"><div class="s-title"><span class="s-num">7</span> 行动建议</div></div>
-155|<div class="action-grid">
-156|<div class="action-card"><div class="ac-role">如果你是创业者</div><div class="ac-text">研究巴比的工厂逻辑：你的品类能不能用"标准化前置+门店简化"的思路降低对人的依赖。</div></div>
-157|<div class="action-card"><div class="ac-role">如果你是连锁品牌</div><div class="ac-text">检查产能建设节奏是否落后于门店扩张速度。若工厂产能跟不上，应先暂停加盟扩张、优先解决标准化问题。</div></div>
-158|<div class="action-card"><div class="ac-role">如果你是工厂</div><div class="ac-text">冷冻面团路线在早餐领域有巨大ODM空间。巴比的路径证明"先有产能再输出"是可行的。</div></div>
-159|<div class="action-card"><div class="ac-role">如果你是供应商</div><div class="ac-text">巴比的冷链需求集中在华东。如果你的冷链能力能覆盖华东以外区域，就是巴比的潜在供应商。</div></div>
-160|</div>
-161|
-162|<div class="verdict">
-163|<div class="vd-label">⚡ FoodIntelAI VERDICT</div>
-164|<div class="vd-text">这是一个供应链能力领先于品牌建设的成功案例。巴比证明的不是包子能全国化，而是低客单品类的全国化路径和其他品类完全不同——产能标准化必须跑在加盟扩张前面。适合有工厂能力的进入者，不适合纯加盟模型创业者。</div>
-165|</div>
-166|
-167|<p style="font-size:10px;color:#b5aaa0;margin:6px 0;line-height:1.5">免责声明：本文为产业研究与案例分析，基于巴比食品公开年报及行业监测数据，不构成投资建议或商业决策依据。六维评分为FoodIntelAI内部模型评估，非第三方认证。反事实推演为基于公开数据的模型分析，非实际预测。</p>
-168|
-169|<div class="ft" style="margin-top:20px;padding-top:12px;border-top:1px solid #e0ddd5;font-size:11px;color:#aaa;text-align:center;line-height:1.6">
-<div style="font-weight:700;color:#8b6914;letter-spacing:2px;margin-bottom:2px">FoodIntelAI 商业验证库</div>
-<div style="font-size:10px;color:#b5aaa0;margin-bottom:4px;letter-spacing:1px">真实商业案例 · 产业模型拆解 · 创业路径验证</div>
-<div style="font-size:10px;color:#c4a35a;margin-bottom:6px">FIC-001</div>
-<div style="font-size:9px;color:#b5aaa0;line-height:1.5">依据：公开年报、行业监测数据及企业公开信息 | 六维评分为FoodIntelAI模型自评 | 多视角供参考<br>
-分析框架、模型结构及商业判断受版权保护。欢迎转发分享，转载需注明来源：FoodIntelAI 商业验证库</div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>巴比食品 · Decision Canvas · FoodIntelAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:'Noto Sans SC','Inter','PingFang SC',sans-serif;color:#2a2218;display:flex;justify-content:center}
+.page{max-width:760px;width:100%;padding:40px 36px 52px;background:#fff;margin:24px auto;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.05)}
+.dc-header{border-bottom:2px solid #e0ddd5;padding-bottom:18px;margin-bottom:20px}
+.dc-header .h-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.dc-header .dc-badge{padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;background:#e8f4e8;color:#2a5a3a}
+.dc-header .dc-code{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif;letter-spacing:1px}
+.dc-header h1{font-size:22px;font-weight:700;color:#1a1a1a;margin:4px 0 2px;line-height:1.3}
+.dc-header .dc-judge{font-size:14px;color:#8b6914;font-weight:600;line-height:1.5}
+.snapshot{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.snap-card{background:#faf8f5;border:1px solid #e8e3db;border-radius:8px;padding:14px;text-align:center}
+.snap-card .snap-val{font-size:28px;font-weight:700;color:#0B1F3A;font-family:'Inter',sans-serif}
+.snap-card .snap-label{font-size:11px;color:#8a7a6a;margin-top:2px}
+.section{margin:22px 0}
+.section .st{font-size:14px;font-weight:700;color:#1a1a1a;padding-bottom:6px;border-bottom:1px solid #e0ddd5;margin-bottom:10px}
+.section .s-num{display:inline-flex;width:20px;height:20px;background:#0B1F3A;color:#fff;border-radius:50%;font-size:10px;align-items:center;justify-content:center;flex-shrink:0}
+.radar-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px}
+.radar-row .rr-label{width:75px;font-weight:600;color:#1a1a1a;text-align:right;flex-shrink:0}
+.radar-row .rr-bar{flex:1;height:14px;background:#f0ece4;border-radius:7px;overflow:hidden}
+.radar-row .rr-fill{height:100%;border-radius:7px}
+.radar-row .rr-score{width:24px;text-align:center;font-weight:700;color:#8b6914;font-family:'Inter',sans-serif}
+.tl-item{display:flex;gap:10px;padding:6px 0;border-left:2px solid #e0ddd5;padding-left:14px;position:relative;font-size:13px;color:#3a322a;line-height:1.6}
+.tl-item::before{content:'';position:absolute;left:-5px;top:10px;width:8px;height:8px;border-radius:50%;background:#c4a35a}
+.tl-item .tl-year{font-weight:700;color:#8b6914;white-space:nowrap}
+.chain{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:8px 0;font-size:13px}
+.chain .ch-node{background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:6px 12px;font-weight:600;color:#1a1a1a}
+.chain .ch-arrow{color:#c4a35a;font-size:14px}
+.chain .ch-end{border-color:#0B1F3A;background:#0B1F3A;color:#fff}
+.sim-box{background:#faf8f5;border:1px solid #e8e3db;border-radius:8px;padding:12px 14px;margin:8px 0}
+.sim-box .sim-q{font-size:13px;font-weight:700;color:#8b6914;margin-bottom:4px}
+.sim-box .sim-a{font-size:12px;color:#5a4a3a;line-height:1.7}
+table{width:100%;border-collapse:collapse;margin:8px 0;font-size:13px}
+td,th{padding:6px 8px;border-bottom:1px solid #f0ece4;text-align:left;color:#3a322a;line-height:1.5}
+th{font-weight:600;color:#1a1a1a;border-bottom:2px solid #e0ddd5}
+.stars{color:#c4a35a;font-size:11px}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.action-card{border:1px solid #e0e4ea;border-radius:6px;padding:10px 12px;background:#fff}
+.action-card .ac-role{font-size:10px;color:#1e3a5f;font-weight:600;letter-spacing:1px}
+.action-card .ac-body{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
+.verdict{background:#0B1F3A;color:#f5f0e8;border-radius:10px;padding:16px 20px;margin:16px 0}
+.verdict .vd-label{font-size:10px;color:#c4a35a;letter-spacing:2px;font-weight:600}
+.verdict .vd-text{font-size:14px;line-height:1.8;margin-top:4px}
+.ft{margin-top:24px;padding-top:12px;border-top:1px solid #e0ddd5;font-size:11px;color:#aaa;text-align:center;line-height:1.6}
+@media(max-width:640px){.page{padding:20px 14px 32px}.snapshot{grid-template-columns:1fr}.action-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="dc-header">
+<div class="h-top">
+<span class="dc-badge">✅ 成功</span>
+<span class="dc-code">FIC-001 · 2026.07.28</span>
 </div>
-171|<div>依据：巴比食品2025年年度报告（2026年4月披露）、窄门餐眼（截至2025年7月）| 六维评分为FoodIntelAI模型自评 | 反事实推演为模型分析，非事实预测</div>
-172|</div>
-173|
-174|
-175|</body>
-176|</html>
-177|
+<h1>巴比食品：全国化的产能先行模式</h1>
+<div class="dc-judge">低客单包子品类可以做全国连锁，但前提是产能标准化要跑在加盟扩张前面。巴比的核心资产不是品牌，是产能。</div>
+</div>
+
+<div class="snapshot">
+<div class="snap-card"><div class="snap-val">87</div><div class="snap-label">综合评分</div></div>
+<div class="snap-card"><div class="snap-val" style="color:#8a3a3a">中偏高</div><div class="snap-label">风险等级</div></div>
+<div class="snap-card"><div class="snap-val">82</div><div class="snap-label">可复制指数</div></div>
+<div class="snap-card"><div class="snap-val">91</div><div class="snap-label">全国化指数</div></div>
+</div>
+<p style="font-size:11px;color:#b5aaa0;text-align:center;margin-bottom:18px">各项评分为FoodIntelAI六维模型自评，非第三方统计</p>
+
+<div class="section"><div class="st">📊 关键运营数据（据2025年年度报告）</div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+<div style="background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:8px;text-align:center"><div style="font-size:16px;font-weight:700;color:#0B1F3A">18.59亿</div><div style="font-size:10px;color:#8a7a6a">营收（+11.22%）</div></div>
+<div style="background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:8px;text-align:center"><div style="font-size:16px;font-weight:700;color:#8a3a3a">2.73亿</div><div style="font-size:10px;color:#8a7a6a">净利润（-1.28%）</div></div>
+<div style="background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:8px;text-align:center"><div style="font-size:16px;font-weight:700;color:#0B1F3A">5,909</div><div style="font-size:10px;color:#8a7a6a">加盟门店（+766）</div></div>
+</div>
+
+<div class="section"><div class="st">六维诊断</div></div>
+<div class="radar-row"><span class="rr-label">消费时段窗口</span><div class="rr-bar"><div class="rr-fill" style="width:20%;background:#c0392b"></div></div><span class="rr-score">2</span></div>
+<div class="radar-row"><span class="rr-label">客单价值</span><div class="rr-bar"><div class="rr-fill" style="width:40%;background:#c4a35a"></div></div><span class="rr-score">4</span></div>
+<div class="radar-row"><span class="rr-label">消费认知一致性</span><div class="rr-bar"><div class="rr-fill" style="width:80%;background:#3A8D5D"></div></div><span class="rr-score">8</span></div>
+<div class="radar-row"><span class="rr-label">标准化程度</span><div class="rr-bar"><div class="rr-fill" style="width:80%;background:#0B1F3A"></div></div><span class="rr-score">8</span></div>
+<div class="radar-row"><span class="rr-label">老板自由度</span><div class="rr-bar"><div class="rr-fill" style="width:70%;background:#3A8D5D"></div></div><span class="rr-score">7</span></div>
+<div class="radar-row"><span class="rr-label">资本吸引力</span><div class="rr-bar"><div class="rr-fill" style="width:70%;background:#3A8D5D"></div></div><span class="rr-score">7</span></div>
+
+<div class="section"><div class="st">时间线</div></div>
+<div class="tl-item"><span class="tl-year">2001</span> 刘会平在上海开设"刘师傅大包"门店起家</div>
+<div class="tl-item"><span class="tl-year">2003</span> 更名"巴比馒头"，启动品牌化</div>
+<div class="tl-item"><span class="tl-year">2004</span> 松江中央工厂投产</div>
+<div class="tl-item"><span class="tl-year">2007</span> 冷冻配送技术突破</div>
+<div class="tl-item"><span class="tl-year">2009</span> 冷冻面团技术突破</div>
+<div class="tl-item"><span class="tl-year">2020</span> 上交所上市</div>
+<div class="tl-item"><span class="tl-year">2025</span> 门店5,909家（+766），直营收缩至5家</div>
+
+<div class="section"><div class="st">决策模拟</div></div>
+<div class="sim-box"><div class="sim-q">现状基准</div><div class="sim-a">巴比直营门店常年个位数（现仅5家），几乎全部走加盟。</div></div>
+<div class="sim-box"><div class="sim-q">如果跳过中央工厂阶段直接开放加盟</div><div class="sim-a">短期增速提升但品控下降，大概率走"先铺店再建厂"路线——正是一般加盟品牌倒闭的路径。</div></div>
+<div class="sim-box"><div class="sim-q">如果先做区域直营再开放加盟</div><div class="sim-a">资金压力增大，扩张减慢，但单店模型验证更充分。适合资金充裕者。</div></div>
+
+<div class="section"><div class="st">迁移矩阵</div></div>
+<table><tr><th>品类</th><th>可借鉴</th><th>原因</th></tr>
+<tr><td>包子</td><td class="stars">★★★★★</td><td style="font-size:12px">同模式</td></tr>
+<tr><td>饺子</td><td class="stars">★★★★★</td><td style="font-size:12px">工艺接近，可直接迁移</td></tr>
+<tr><td>馄饨</td><td class="stars">★★★★☆</td><td style="font-size:12px">可部分复制冷冻面团路径</td></tr>
+<tr><td>米线</td><td class="stars">★★★☆☆</td><td style="font-size:12px">汤底体系不同</td></tr>
+<tr><td>烧腊</td><td class="stars">★★☆☆☆</td><td style="font-size:12px">现制依赖高，冷冻化难</td></tr>
+</table>
+
+<div class="section"><div class="st">行动建议</div></div>
+<div class="action-grid">
+<div class="action-card"><div class="ac-role">如果你是创业者</div><div class="ac-body">研究巴比的工厂逻辑：你的品类能不能用"标准化前置+门店简化"降低成本。</div></div>
+<div class="action-card"><div class="ac-role">如果你是连锁品牌</div><div class="ac-body">检查产能建设是否落后于扩张速度。工厂跟不上，应先暂停加盟。</div></div>
+<div class="action-card"><div class="ac-role">如果你是工厂</div><div class="ac-body">冷冻面团路线在早餐领域有ODM空间。</div></div>
+<div class="action-card"><div class="ac-role">如果你是供应商</div><div class="ac-body">冷链能力覆盖华东以外区域，是巴比的潜在供应商。</div></div>
+</div>
+
+<div class="verdict">
+<div class="vd-label">⚡ FoodIntelAI VERDICT</div>
+<div class="vd-text">这是一个供应链能力领先于品牌建设的成功案例。产能标准化必须跑在加盟扩张前面。适合有工厂能力的进入者。</div>
+</div>
+
+<p style="font-size:10px;color:#b5aaa0;line-height:1.5">免责声明：本文为产业研究分析，基于公开年报及行业监测数据，不构成投资建议。</p>
+
+<div class="ft">
+<div style="font-weight:700;color:#8b6914;letter-spacing:2px;margin-bottom:2px">FoodIntelAI 商业验证库</div>
+<div style="font-size:10px;color:#b5aaa0;margin-bottom:2px;letter-spacing:1px">真实商业案例 · 产业模型拆解 · 创业路径验证</div>
+<div style="font-size:10px;color:#c4a35a;margin-bottom:4px">FIC-001</div>
+<div style="font-size:9px;color:#b5aaa0">依据：巴比食品2025年年报、窄门餐眼（截至2025年7月）| 六维评分为模型自评</div>
+</div>
+
+</div>
+</body>
+</html>
