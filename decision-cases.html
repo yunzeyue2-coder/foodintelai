@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>决策案例库 · FoodIntelAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:'Noto Sans SC','Inter','PingFang SC',sans-serif;color:#2a2218;display:flex;justify-content:center}
+.page{max-width:860px;width:100%;padding:48px 40px 60px}
+
+/* 头部 */
+.hero{border-bottom:2px solid #e0ddd5;padding-bottom:24px;margin-bottom:32px}
+.hero h1{font-size:26px;font-weight:700;color:#1a1a1a;letter-spacing:1px;margin-bottom:4px}
+.hero .sub{font-size:14px;color:#8a7a6a;line-height:1.6;margin-bottom:8px}
+.hero .stats{display:flex;gap:20px;font-size:12px;color:#b5aaa0;font-family:'Inter',sans-serif}
+
+/* 筛选入口 */
+.filter-zone{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
+.filter-card{border-radius:10px;padding:20px;text-align:center;text-decoration:none;transition:all .25s;cursor:pointer}
+.filter-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.06)}
+.fc-success{background:linear-gradient(135deg,#e8f4e8,#d4e8d4);border:1px solid #b8d8b8}
+.fc-success .fc-icon{font-size:32px;margin-bottom:4px}
+.fc-success .fc-title{font-size:16px;font-weight:700;color:#2a5a3a}
+.fc-success .fc-count{font-size:12px;color:#5a8a5a}
+.fc-failure{background:linear-gradient(135deg,#f8ecec,#f0d8d8);border:1px solid #e0c0c0}
+.fc-failure .fc-icon{font-size:32px;margin-bottom:4px}
+.fc-failure .fc-title{font-size:16px;font-weight:700;color:#8a3a3a}
+.fc-failure .fc-count{font-size:12px;color:#a06a6a}
+.fc-boundary{background:linear-gradient(135deg,#fef8e8,#f8f0d8);border:1px solid #e8d8b0}
+.fc-boundary .fc-icon{font-size:32px;margin-bottom:4px}
+.fc-boundary .fc-title{font-size:16px;font-weight:700;color:#8a6a2a}
+.fc-boundary .fc-count{font-size:12px;color:#a08a5a}
+
+/* 筛选栏 */
+.filter-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.filter-bar .fb-label{font-size:12px;color:#8a7a6a;font-weight:600;margin-right:4px}
+.filter-bar .fb-tag{display:inline-block;font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid #d4c8b0;color:#3a322a;background:#fff;cursor:pointer;transition:all .15s;text-decoration:none}
+.filter-bar .fb-tag:hover{background:#f5f0e8;border-color:#c4a35a}
+.filter-bar .fb-tag.active{background:#0B1F3A;color:#fff;border-color:#0B1F3A}
+
+/* 案例卡片网格 */
+.case-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}
+.case-card{border:1px solid #e8e3db;border-radius:10px;padding:18px;background:#fff;text-decoration:none;color:inherit;transition:all .25s;display:flex;flex-direction:column}
+.case-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(196,163,90,.1);border-color:#c4a35a}
+.case-card .cc-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.case-card .cc-badge{font-size:10px;padding:2px 8px;border-radius:3px;font-weight:600}
+.case-card .cc-badge.s{background:#e8f4e8;color:#2a5a3a}
+.case-card .cc-badge.f{background:#f8ecec;color:#8a3a3a}
+.case-card .cc-badge.b{background:#fef8e8;color:#8a6a2a}
+.case-card .cc-cat{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif}
+.case-card .cc-title{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:3px;line-height:1.4}
+.case-card .cc-desc{font-size:12px;color:#8a7a6a;line-height:1.6;margin-bottom:8px;flex:1}
+.case-card .cc-meta{display:flex;gap:10px;font-size:11px;color:#b5aaa0;font-family:'Inter',sans-serif;margin-bottom:6px;flex-wrap:wrap}
+.case-card .cc-fw{font-size:11px;color:#8b6914;padding-top:6px;border-top:1px solid #f0ece4;font-family:'Inter',sans-serif}
+.case-card .cc-risk{display:flex;align-items:center;gap:4px;font-size:11px;color:#8a7a6a;margin-left:auto}
+
+/* 分页 */
+.pagination{text-align:center;margin:20px 0}
+.pagination .pg-btn{display:inline-block;padding:8px 20px;border:1px solid #d4c8b0;border-radius:6px;color:#3a322a;text-decoration:none;font-size:13px;transition:all .15s}
+.pagination .pg-btn:hover{background:#f5f0e8;border-color:#c4a35a}
+
+/* 页脚 */
+.ft{margin-top:32px;padding-top:16px;border-top:1px solid #e0ddd5;font-size:12px;color:#aaa;text-align:center;line-height:1.6}
+
+@media(max-width:640px){
+  .page{padding:24px 16px 36px}
+  .filter-zone{grid-template-columns:1fr}
+  .case-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hero">
+<h1>决策案例库</h1>
+<div class="sub">通过真实商业案例，验证食品产业机会、风险与复制条件。每个案例均关联 FoodIntelAI Framework，形成可验证的决策依据。</div>
+<div class="stats">
+  <span>案例总数：<strong style="color:#1a1a1a">12</strong></span>
+  <span>🟢 成功：<strong style="color:#2a5a3a">4</strong></span>
+  <span>🔴 失败：<strong style="color:#8a3a3a">5</strong></span>
+  <span>🟡 边界：<strong style="color:#8a6a2a">3</strong></span>
+</div>
+</div>
+
+<!-- 按结果筛选 -->
+<div class="filter-zone">
+<a href="#" class="filter-card fc-success">
+<div class="fc-icon">🟢</div>
+<div class="fc-title">成功案例</div>
+<div class="fc-count">4个案例 · 验证可行路径</div>
+</a>
+<a href="#" class="filter-card fc-failure">
+<div class="fc-icon">🔴</div>
+<div class="fc-title">失败案例</div>
+<div class="fc-count">5个案例 · 识别风险陷阱</div>
+</a>
+<a href="#" class="filter-card fc-boundary">
+<div class="fc-icon">🟡</div>
+<div class="fc-title">边界案例</div>
+<div class="fc-count">3个案例 · 探索模型边界</div>
+</a>
+</div>
+
+<!-- 筛选栏 -->
+<div class="filter-bar">
+<span class="fb-label">按品类：</span>
+<a href="#" class="fb-tag">全部</a>
+<a href="#" class="fb-tag">早餐</a>
+<a href="#" class="fb-tag">卤味</a>
+<a href="#" class="fb-tag">炸鸡</a>
+<a href="#" class="fb-tag">米线</a>
+<a href="#" class="fb-tag">包子</a>
+<a href="#" class="fb-tag">茶饮</a>
+<a href="#" class="fb-tag">烧烤</a>
+</div>
+
+<div class="filter-bar">
+<span class="fb-label">按变量：</span>
+<a href="#" class="fb-tag">全部</a>
+<a href="#" class="fb-tag">供应链</a>
+<a href="#" class="fb-tag">产品</a>
+<a href="#" class="fb-tag">渠道</a>
+<a href="#" class="fb-tag">成本</a>
+<a href="#" class="fb-tag">扩张</a>
+<a href="#" class="fb-tag">管理</a>
+</div>
+
+<!-- ===== 案例列表 ===== -->
+<div class="case-grid">
+
+<!-- 成功案例 -->
+<a href="#" class="case-card">
+<div class="cc-top">
+<span class="cc-badge s">✅ 成功</span>
+<span class="cc-cat">早餐·包子</span>
+</div>
+<div class="cc-title">巴比食品：从上海滩到5909家的工业化路径</div>
+<div class="cc-desc">冷冻面团中央工厂+加盟体系，验证了低客单品类的全国化可能——但条件是先做工厂再做门店。</div>
+<div class="cc-meta">
+<span>规模：5909家</span>
+<span>区域：华东71%</span>
+<span>周期：2003-2025</span>
+</div>
+<div class="cc-fw">验证：FIF-24 全国化模型 · FIF-23 老板自由度模型</div>
+</a>
+
+<a href="#" class="case-card">
+<div class="cc-top">
+<span class="cc-badge s">✅ 成功</span>
+<span class="cc-cat">米线</span>
+</div>
+<div class="cc-title">蒙自源：千店米线品牌的汤底工业化路径</div>
+<div class="cc-desc">自建汤料加工厂+冷链配送，绕开了酸浆发酵的工艺壁垒，走干浆线实现全国化。</div>
+<div class="cc-meta">
+<span>规模：1134家</span>
+<span>区域：全国115城</span>
+<span>周期：2001-2025</span>
+</div>
+<div class="cc-fw">验证：FIF-25 六维模型 · FIF-32 工艺锁定模型</div>
+</a>
+
+<!-- 失败案例 -->
+<a href="#" class="case-card">
+<div class="cc-top">
+<span class="cc-badge f">❌ 失败</span>
+<span class="cc-cat">早餐·胡辣汤</span>
+</div>
+<div class="cc-title">某区域胡辣汤品牌跨省扩张失败</div>
+<div class="cc-desc">区域强认知品类直接出省，消费认知壁垒过高，供应链模式不透明，三年关停80%省外门店。</div>
+<div class="cc-meta">
+<span>阶段：区域扩张期</span>
+<span>变量：消费认知·供应链</span>
+</div>
+<div class="cc-fw">验证：FIF-24 全国化模型（反例：区域强认知≠可扩张）</div>
+</a>
+
+<a href="#" class="case-card">
+<div class="cc-top">
+<span class="cc-badge f">❌ 失败</span>
+<span class="cc-cat">小吃·地方特色</span>
+</div>
+<div class="cc-title">新疆炒米粉品牌快速全国复制失败</div>
+<div class="cc-desc">供应链无法支撑跨区域配送，区域口味差异导致复购率低，加盟商半年内大量退出。</div>
+<div class="cc-meta">
+<span>阶段：快速扩张期</span>
+<span>变量：供应链·产品</span>
+</div>
+<div class="cc-fw">验证：FIF-32 工艺锁定模型 · FIF-24 全国化模型</div>
+</a>
+
+<a href="#" class="case-card">
+<div class="cc-top">
+<span class="cc-badge f">❌ 失败</span>
+<span class="cc-cat">卤味</span>
+</div>
+<div class="cc-title">某卤味品牌加盟体系失控</div>
+<div class="cc-desc">加盟商管理粗放，品控标准不统一，品牌资产持续流失，半年关店600+。</div>
+<div class="cc-meta">
+<span>阶段：加盟扩张期</span>
+<span>变量：管理·标准</span>
+</div>
+<div class="cc-fw">验证：FIF-23 老板自由度模型（管理自由度为零）</div>
+</a>
+
+<!-- 边界案例 -->
+<a href="#" class="case-card">
+<div class="cc-top">
+<span class="cc-badge b">🟡 边界</span>
+<span class="cc-cat">早餐·日式</span>
+</div>
+<div class="cc-title">551蓬莱：高分六维但主动不全国化</div>
+<div class="cc-desc">六维评分8.5/10但61家店全部锁在关西——证明分数高=具备条件，≠应该去做。</div>
+<div class="cc-meta">
+<span>规模：61家</span>
+<span>区域：近畿圈</span>
+<span>年营收：450亿日元</span>
+</div>
+<div class="cc-fw">验证：FIF-25 六维模型（边界：高分≠必须全国化）</div>
+</a>
+
+<a href="#" class="case-card">
+<div class="cc-top">
+<span class="cc-badge b">🟡 边界</span>
+<span class="cc-cat">西式快餐</span>
+</div>
+<div class="cc-title">肯德基早餐：高客单突破品类天花板</div>
+<div class="cc-desc">¥15-25客单+强品牌+标准化，打破了早餐"低客单难连锁"的行业认知——证明高客单可重构模型。</div>
+<div class="cc-meta">
+<span>模式：直营+特许</span>
+<span>变量：品牌·客单</span>
+</div>
+<div class="cc-fw">验证：FIF-22 价格带模型（边界：高客单可突破）</div>
+</a>
+</div>
+
+<div class="pagination">
+<a href="#" class="pg-btn" style="opacity:.5;cursor:default">← 上一页</a>
+<a href="#" class="pg-btn" style="margin-left:8px">下一页 →</a>
+</div>
+
+<div class="ft">
+<div><strong>FoodIntelAI</strong> · 决策案例库 · foodintelai.com</div>
+<div>案例持续更新中 · 当前为 Beta 版本</div>
+</div>
+
+</div>
+</body>
+</html>
