@@ -1,146 +1,139 @@
-1|<!DOCTYPE html>
-2|<html lang="zh-CN">
-3|<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>肯德基早餐 · Decision Canvas · FoodIntelAI</title>
-4|<link rel="preconnect" href="https://fonts.googleapis.com">
-5|<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-6|<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-7|<style>
-8|*{margin:0;padding:0;box-sizing:border-box}
-9|body{background:#f5f3ef;font-family:'Noto Sans SC','Inter','PingFang SC',sans-serif;color:#2a2218;display:flex;justify-content:center}
-10|.page{max-width:760px;width:100%;padding:40px 36px 52px;background:#fff;margin:24px auto;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.05)}
-11|.hd{border-bottom:2px solid #e0ddd5;padding-bottom:16px;margin-bottom:18px}
-12|.hd .hd-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
-13|.hd .hd-badge{padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;background:#fef8e8;color:#8a6a2a}
-14|.hd .hd-code{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif;letter-spacing:1px}
-15|.hd h1{font-size:22px;font-weight:700;color:#1a1a1a;margin:2px 0;line-height:1.3}
-16|.hd .hd-lens{font-size:13px;color:#8a7a6a;line-height:1.6;margin-top:6px;padding:8px 12px;background:#faf8f5;border-radius:6px;border-left:3px solid #c4a35a}
-17|.data-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
-18|.dc{background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:10px;text-align:center}
-19|.dc .dn{font-size:20px;font-weight:700;color:#0B1F3A;font-family:'Inter',sans-serif}
-20|.dc .dl{font-size:10px;color:#8a7a6a;margin-top:1px}
-21|.sec{margin:18px 0}
-22|.sec .st{font-size:13px;font-weight:700;color:#1a1a1a;padding-bottom:6px;border-bottom:1px solid #e0ddd5;margin-bottom:8px}
-23|.dim-item{border:1px solid #e8e3db;border-radius:6px;padding:10px 12px;margin:5px 0;background:#fff}
-24|.dim-item .dm-row{display:flex;align-items:center;gap:8px}
-25|.dim-item .dm-label{width:85px;font-size:12px;font-weight:600;color:#1a1a1a;flex-shrink:0}
-26|.dim-item .dm-score{font-size:18px;font-weight:700;font-family:'Inter',sans-serif;width:28px;text-align:center}
-27|.dim-item .dm-bar{flex:1;height:10px;background:#f0ece4;border-radius:5px;position:relative;overflow:visible}
-28|.dim-item .dm-fill{height:100%;border-radius:5px}
-29|.dim-item .dm-bench{position:absolute;top:-3px;width:2px;height:16px;background:#c0392b;border-radius:1px}
-30|.dim-item .dm-bench-label{position:absolute;top:-14px;font-size:8px;color:#c0392b;white-space:nowrap}
-31|.dim-item .dm-insight{font-size:11px;color:#5a4a3a;line-height:1.5;margin-top:4px;padding-top:4px}
-32|.tags{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}
-33|.tags .tag{font-size:10px;padding:2px 8px;border-radius:3px;background:#eef0f3;color:#4a5568}
-34|.pg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
-35|.pg .pc{border:1px solid #e8e3db;border-radius:6px;padding:10px 12px;background:#faf8f5}
-36|.pg .pc .pl{font-size:10px;color:#c4a35a;font-weight:600;letter-spacing:1px}
-37|.pg .pc .pt{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
-38|.signal{display:flex;gap:8px;padding:8px 10px;margin:5px 0;border-left:3px solid #c4a35a;font-size:12px;color:#5a4a3a;line-height:1.6;background:#faf8f5}
-39|.signal .sd{font-size:14px;flex-shrink:0;margin-top:1px}
-40|.dt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
-41|.dt .dcard{border:1px solid #e0e4ea;border-radius:6px;padding:10px 12px;background:#fff}
-42|.dt .dcard .dt-role{font-size:10px;color:#1e3a5f;font-weight:600;letter-spacing:1px}
-43|.dt .dcard .dt-body{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
-44|.ft{margin-top:20px;padding-top:10px;border-top:1px solid #e0ddd5;font-size:11px;color:#aaa;text-align:center;line-height:1.6}
-45|@media(max-width:640px){.page{padding:20px 14px 32px}.data-grid{grid-template-columns:1fr 1fr}.pg,.dt{grid-template-columns:1fr}}
-46|</style>
-47|</head>
-48|<body>
-49|<div class="page">
-50|
-51|<div class="hd">
-52|<div class="hd-top">
-53|<span class="hd-badge">🟡 边界</span>
-54|<span class="hd-code">DC-006 · 场景重构</span>
-55|</div>
-56|<h1>肯德基早餐：高客单突破品类天花板</h1>
-57|<div class="hd-lens">一个可能的观察角度：早餐"低客单难连锁"的行业认知可能不是铁律——当品牌力足够强、客单足够高时，模型可能被重构。但前提是你的品牌本身已经完成了用户积累。</div>
-58|</div>
-59|
-60|<div class="data-grid">
-61|<div class="dc"><div class="dn">¥15-25</div><div class="dl">早餐客单价</div><div class="dnote">比中式早餐高3-5倍</div></div>
-62|<div class="dc"><div class="dn">10,500+</div><div class="dl">全国门店数</div><div class="dnote">百胜中国口径</div></div>
-63|<div class="dc"><div class="dn">1987</div><div class="dl">进入中国</div><div class="dnote">30年+品牌积累</div></div>
-64|</div>
-65|
-66|<div class="sec"><div class="st">六维视角 <span class="st-note">红标为中式早餐品类均值参考</span></div></div>
-67|
-68|<div class="dim-item">
-69|<div class="dm-row"><span class="dm-label">消费时段窗口</span><span class="dm-score" style="color:#0B1F3A">6</span>
-70|<div class="dm-bar"><div class="dm-fill" style="width:60%;background:#0B1F3A"><span class="dm-bench" style="left:25%"><span class="dm-bench-label" style="left:14%">中式早餐均值 2.5</span></span></div></div></div>
-71|<div class="dm-insight">早餐时段集中（6:30-10:00），但肯德基全天经营，早餐只是其中一个场景分时。对比中式早餐店（仅早市），时段压力小得多。</div>
-72|</div>
-73|
-74|<div class="dim-item">
-75|<div class="dm-row"><span class="dm-label">客单价值</span><span class="dm-score" style="color:#0B1F3A">8</span>
-76|<div class="dm-bar"><div class="dm-fill" style="width:80%;background:#0B1F3A"><span class="dm-bench" style="left:40%"><span class="dm-bench-label" style="left:28%">中式早餐均值 4.0</span></span></div></div></div>
-77|<div class="dm-insight">¥15-25客单，是中式早餐（¥5-8）的3-5倍。高客单支撑了管理成本和品牌溢价，这是肯德基能做早餐连锁的前提条件。</div>
-78|</div>
-79|
-80|<div class="dim-item">
-81|<div class="dm-row"><span class="dm-label">消费认知一致性</span><span class="dm-score" style="color:#0B1F3A">10</span>
-82|<div class="dm-bar"><div class="dm-fill" style="width:100%;background:#0B1F3A"><span class="dm-bench" style="left:70%"><span class="dm-bench-label" style="left:58%">中式早餐均值 7.0</span></span></div></div></div>
-83|<div class="dm-insight">肯德基的品牌认知全国统一。消费者在北京、上海、乌鲁木齐吃到的早餐是一致的。这个品牌基础是中式早餐品牌不具备的。</div>
-84|</div>
-85|
-86|<div class="dim-item">
-87|<div class="dm-row"><span class="dm-label">标准化程度</span><span class="dm-score" style="color:#0B1F3A">10</span>
-88|<div class="dm-bar"><div class="dm-fill" style="width:100%;background:#0B1F3A"><span class="dm-bench" style="left:65%"><span class="dm-bench-label" style="left:52%">中式早餐均值 6.5</span></span></div></div></div>
-89|<div class="dm-insight">全球供应链+冷冻半成品配送，门店几乎没有现场加工环节。标准化是西式快餐的底层能力，不是后天补的。</div>
-90|</div>
-91|
-92|<div class="dim-item">
-93|<div class="dm-row"><span class="dm-label">老板自由度</span><span class="dm-score" style="color:#0B1F3A">10</span>
-94|<div class="dm-bar"><div class="dm-fill" style="width:100%;background:#0B1F3A"><span class="dm-bench" style="left:50%"><span class="dm-bench-label" style="left:38%">中式早餐均值 5.0</span></span></div></div></div>
-95|<div class="dm-insight">餐厅经理不需要会做产品，只需要会管理运营。人是可以替换的——这是公司化运作和个体户的本质区别。</div>
-96|</div>
-97|
-98|<div class="dim-item">
-99|<div class="dm-row"><span class="dm-label">资本吸引力</span><span class="dm-score" style="color:#0B1F3A">10</span>
-100|<div class="dm-bar"><div class="dm-fill" style="width:100%;background:#0B1F3A"><span class="dm-bench" style="left:40%"><span class="dm-bench-label" style="left:28%">中式早餐均值 4.0</span></span></div></div></div>
-101|<div class="dm-insight">全球上市公司，品牌价值数十亿美元。资本维度上肯德基和中式早餐品牌不在同一个竞争层面。</div>
-102|</div>
-103|
-104|<div class="sec"><div class="st">标签</div></div>
-105|<div class="tags">
-106|<span class="tag">#高客单破局</span>
-107|<span class="tag">#场景重构</span>
-108|<span class="tag">#品牌红利</span>
-109|<span class="tag">#西式快餐vs中式早餐</span>
-110|<span class="tag">#价格带模型边界</span>
-111|</div>
-112|
-113|<div class="sec"><div class="st">多重视角</div></div>
-114|<div class="pg">
-115|<div class="pc"><div class="pl">视角A · 品牌溢出效应</div><div class="pt">肯德基早餐能跑通，本质上吃的是肯德基整体品牌的红利。消费者不是冲着"早餐"去的，是冲着"肯德基"去的。早餐只是全场景运营中的一个新品切入口——没有主品牌的支持，早餐线单独成立的可能性很低。</div></div>
-116|<div class="pc"><div class="pl">视角B · 价格带模型的边界</div><div class="pt">早餐价格带模型（¥3以下→¥25+）在肯德基面前出现了一个有趣的偏移：它不是从低价位往上走，而是从高价位（午餐/晚餐）往下延伸。这个逆向路径说明价格带模型的适用前提是品牌势能。</div></div>
-117|<div class="pc"><div class="pl">视角C · 基础设施复用</div><div class="pt">肯德基做早餐的边际成本远低于中式早餐店——门店租金已由午晚餐覆盖、供应链已全国铺好、品牌已经建立。增加的只有食材成本和早班人力。中式早餐店没有这种基础设施复用优势。</div></div>
-118|<div class="pc"><div class="pl">视角D · 不可复制性</div><div class="pt">肯德基早餐的模式对于中式早餐创业者来说几乎没有参考价值——因为它成功的绝大部分因素（品牌、供应链、资本）都不是创业者可以短期建立的。这个案例的价值在于"证明上限"，而非"提供路径"。</div></div>
-119|</div>
-120|
-121|<div class="sec"><div class="st">决策推演</div></div>
-122|<div class="dt">
-123|<div class="dcard"><div class="dt-role">如果你做中式早餐想提客单</div><div class="dt-body">提客单的前提是品牌力足够支撑溢价。如果没有品牌积累，单纯涨价只会降低复购。一个可能的优先顺序：先做品牌认知，再做产品升级，最后才是价格调整。</div></div>
-124|<div class="dcard"><div class="dt-role">如果你是连锁品牌考虑增加早餐场景</div><div class="dt-body">评估你的品牌是否有足够多的门店和品牌认知来支撑早餐线。肯德基早餐的成功前提是30年品牌积累和3万+门店的基础设施——如果门店数不够，早餐线的投入可能很难回收。</div></div>
-125|<div class="dcard"><div class="dt-role">如果你是创业者想对标肯德基</div><div class="dt-body">一个可参考的认知：肯德基早餐的成功几乎不可复制。更现实的路径可能是从中式早餐的优势出发（新鲜现做、本土口味），而非试图复制西式快餐的标准化模型。</div></div>
-126|<div class="dcard"><div class="dt-role">如果你是早餐供应链/预制菜厂商</div><div class="dt-body">肯德基早餐的本质是"冷冻半成品+门店极简复热"。中式早餐要走连锁，出路可能不在门店现做，而在供应链端能否研发出"复热后口感损耗低于10%"的标准化中式早餐半成品。</div></div>
-127|</div>
-128|
-129|<div class="sec"><div class="st">值得关注的信号</div></div>
-130|<div class="signal"><span class="sd">⚖️</span>肯德基早餐对价格带模型的启示：品牌势能可以重构价格带结构。先有品牌后有价格带升级——顺序不能反过来。</div>
-131|<div class="signal"><span class="sd">🔬</span>中式早餐创业者不宜将肯德基早餐作为对标。两者的竞争基础不同：肯德基是"品牌溢出"，中式早餐是"产品驱动"。路径不同，结论不同。</div>
-132|
-133|<div class="ft" style="margin-top:20px;padding-top:12px;border-top:1px solid #e0ddd5;font-size:11px;color:#aaa;text-align:center;line-height:1.6">
-<div style="font-weight:700;color:#8b6914;letter-spacing:2px;margin-bottom:2px">FoodIntelAI 商业验证库</div>
-<div style="font-size:10px;color:#b5aaa0;margin-bottom:4px;letter-spacing:1px">真实商业案例 · 产业模型拆解 · 创业路径验证</div>
-<div style="font-size:10px;color:#c4a35a;margin-bottom:6px">FIC-006</div>
-<div style="font-size:9px;color:#b5aaa0;line-height:1.5">依据：公开年报、行业监测数据及企业公开信息 | 六维评分为FoodIntelAI模型自评 | 多视角供参考<br>
-分析框架、模型结构及商业判断受版权保护。欢迎转发分享，转载需注明来源：FoodIntelAI 商业验证库</div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>肯德基早餐 · Decision Canvas · FoodIntelAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f5f3ef;font-family:'Noto Sans SC','Inter','PingFang SC',sans-serif;color:#2a2218;display:flex;justify-content:center}
+.page{max-width:760px;width:100%;padding:40px 36px 52px;background:#fff;margin:24px auto;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.05)}
+.hd{border-bottom:2px solid #e0ddd5;padding-bottom:16px;margin-bottom:18px}
+.hd .hd-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.hd .hd-badge{padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;background:#fef8e8;color:#8a6a2a}
+.hd .hd-code{font-size:10px;color:#b5aaa0;font-family:'Inter',sans-serif;letter-spacing:1px}
+.hd h1{font-size:22px;font-weight:700;color:#1a1a1a;margin:2px 0;line-height:1.3}
+.hd .hd-lens{font-size:13px;color:#8a7a6a;line-height:1.6;margin-top:6px;padding:8px 12px;background:#faf8f5;border-radius:6px;border-left:3px solid #c4a35a}
+.data-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.dc{background:#faf8f5;border:1px solid #e8e3db;border-radius:6px;padding:10px;text-align:center}
+.dc .dn{font-size:20px;font-weight:700;color:#0B1F3A;font-family:'Inter',sans-serif}
+.dc .dl{font-size:10px;color:#8a7a6a;margin-top:1px}
+.sec{margin:18px 0}
+.sec .st{font-size:13px;font-weight:700;color:#1a1a1a;padding-bottom:6px;border-bottom:1px solid #e0ddd5;margin-bottom:8px}
+.dim-item{border:1px solid #e8e3db;border-radius:6px;padding:10px 12px;margin:5px 0;background:#fff}
+.dim-item .dm-row{display:flex;align-items:center;gap:8px}
+.dim-item .dm-label{width:85px;font-size:12px;font-weight:600;color:#1a1a1a;flex-shrink:0}
+.dim-item .dm-score{font-size:18px;font-weight:700;font-family:'Inter',sans-serif;width:28px;text-align:center}
+.dim-item .dm-bar{flex:1;height:10px;background:#f0ece4;border-radius:5px;position:relative;overflow:visible}
+.dim-item .dm-fill{height:100%;border-radius:5px}
+.dim-item .dm-bench{position:absolute;top:-3px;width:2px;height:16px;background:#c0392b;border-radius:1px}
+.dim-item .dm-bench-label{position:absolute;top:-14px;font-size:8px;color:#c0392b;white-space:nowrap}
+.dim-item .dm-insight{font-size:11px;color:#5a4a3a;line-height:1.5;margin-top:4px;padding-top:4px}
+.tags{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}
+.tags .tag{font-size:10px;padding:2px 8px;border-radius:3px;background:#eef0f3;color:#4a5568}
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.pg .pc{border:1px solid #e8e3db;border-radius:6px;padding:10px 12px;background:#faf8f5}
+.pg .pc .pl{font-size:10px;color:#c4a35a;font-weight:600;letter-spacing:1px}
+.pg .pc .pt{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
+.signal{display:flex;gap:8px;padding:8px 10px;margin:5px 0;border-left:3px solid #c4a35a;font-size:12px;color:#5a4a3a;line-height:1.6;background:#faf8f5}
+.signal .sd{font-size:14px;flex-shrink:0;margin-top:1px}
+.dt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.dt .dcard{border:1px solid #e0e4ea;border-radius:6px;padding:10px 12px;background:#fff}
+.dt .dcard .dt-role{font-size:10px;color:#1e3a5f;font-weight:600;letter-spacing:1px}
+.dt .dcard .dt-body{font-size:12px;color:#5a4a3a;line-height:1.6;margin-top:3px}
+.ft{margin-top:20px;padding-top:10px;border-top:1px solid #e0ddd5;font-size:11px;color:#aaa;text-align:center;line-height:1.6}
+@media(max-width:640px){.page{padding:20px 14px 32px}.data-grid{grid-template-columns:1fr 1fr}.pg,.dt{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hd">
+<div class="hd-top">
+<span class="hd-badge">🟡 边界</span>
+<span class="hd-code">DC-006 · 场景重构</span>
 </div>
-135|<div>依据：肯德基品牌公开信息、百胜中国财报、行业报道 | 六维评分为FoodIntelAI模型自评 | 多视角供参考</div>
-136|</div>
-137|
-138|
-139|</body>
-140|</html>
-141|
+<h1>肯德基早餐：高客单突破品类天花板</h1>
+<div class="hd-lens">一个可能的观察角度：早餐"低客单难连锁"的行业认知可能不是铁律——当品牌力足够强、客单足够高时，模型可能被重构。但前提是你的品牌本身已经完成了用户积累。</div>
+</div>
+
+<div class="data-grid">
+<div class="dc"><div class="dn">¥15-25</div><div class="dl">早餐客单价</div><div class="dnote">比中式早餐高3-5倍</div></div>
+<div class="dc"><div class="dn">33,596+</div><div class="dl">全国门店数</div><div class="dnote">瑞幸口径参考</div></div>
+<div class="dc"><div class="dn">1987</div><div class="dl">进入中国</div><div class="dnote">30年+品牌积累</div></div>
+</div>
+
+<div class="sec"><div class="st">六维视角 <span class="st-note">红标为中式早餐品类均值参考</span></div></div>
+
+<div class="dim-item">
+<div class="dm-row"><span class="dm-label">消费时段窗口</span><span class="dm-score" style="color:#0B1F3A">6</span>
+<div class="dm-bar"><div class="dm-fill" style="width:60%;background:#0B1F3A"><span class="dm-bench" style="left:25%"><span class="dm-bench-label" style="left:14%">中式早餐均值 2.5</span></span></div></div></div>
+<div class="dm-insight">早餐时段集中（6:30-10:00），但肯德基全天经营，早餐只是其中一个场景分时。对比中式早餐店（仅早市），时段压力小得多。</div>
+</div>
+
+<div class="dim-item">
+<div class="dm-row"><span class="dm-label">客单价值</span><span class="dm-score" style="color:#0B1F3A">8</span>
+<div class="dm-bar"><div class="dm-fill" style="width:80%;background:#0B1F3A"><span class="dm-bench" style="left:40%"><span class="dm-bench-label" style="left:28%">中式早餐均值 4.0</span></span></div></div></div>
+<div class="dm-insight">¥15-25客单，是中式早餐（¥5-8）的3-5倍。高客单支撑了管理成本和品牌溢价，这是肯德基能做早餐连锁的前提条件。</div>
+</div>
+
+<div class="dim-item">
+<div class="dm-row"><span class="dm-label">消费认知一致性</span><span class="dm-score" style="color:#0B1F3A">10</span>
+<div class="dm-bar"><div class="dm-fill" style="width:100%;background:#0B1F3A"><span class="dm-bench" style="left:70%"><span class="dm-bench-label" style="left:58%">中式早餐均值 7.0</span></span></div></div></div>
+<div class="dm-insight">肯德基的品牌认知全国统一。消费者在北京、上海、乌鲁木齐吃到的早餐是一致的。这个品牌基础是中式早餐品牌不具备的。</div>
+</div>
+
+<div class="dim-item">
+<div class="dm-row"><span class="dm-label">标准化程度</span><span class="dm-score" style="color:#0B1F3A">10</span>
+<div class="dm-bar"><div class="dm-fill" style="width:100%;background:#0B1F3A"><span class="dm-bench" style="left:65%"><span class="dm-bench-label" style="left:52%">中式早餐均值 6.5</span></span></div></div></div>
+<div class="dm-insight">全球供应链+冷冻半成品配送，门店几乎没有现场加工环节。标准化是西式快餐的底层能力，不是后天补的。</div>
+</div>
+
+<div class="dim-item">
+<div class="dm-row"><span class="dm-label">老板自由度</span><span class="dm-score" style="color:#0B1F3A">10</span>
+<div class="dm-bar"><div class="dm-fill" style="width:100%;background:#0B1F3A"><span class="dm-bench" style="left:50%"><span class="dm-bench-label" style="left:38%">中式早餐均值 5.0</span></span></div></div></div>
+<div class="dm-insight">餐厅经理不需要会做产品，只需要会管理运营。人是可以替换的——这是公司化运作和个体户的本质区别。</div>
+</div>
+
+<div class="dim-item">
+<div class="dm-row"><span class="dm-label">资本吸引力</span><span class="dm-score" style="color:#0B1F3A">10</span>
+<div class="dm-bar"><div class="dm-fill" style="width:100%;background:#0B1F3A"><span class="dm-bench" style="left:40%"><span class="dm-bench-label" style="left:28%">中式早餐均值 4.0</span></span></div></div></div>
+<div class="dm-insight">全球上市公司，品牌价值数十亿美元。资本维度上肯德基和中式早餐品牌不在同一个竞争层面。</div>
+</div>
+
+<div class="sec"><div class="st">标签</div></div>
+<div class="tags">
+<span class="tag">#高客单破局</span>
+<span class="tag">#场景重构</span>
+<span class="tag">#品牌红利</span>
+<span class="tag">#西式快餐vs中式早餐</span>
+<span class="tag">#价格带模型边界</span>
+</div>
+
+<div class="sec"><div class="st">多重视角</div></div>
+<div class="pg">
+<div class="pc"><div class="pl">视角A · 品牌溢出效应</div><div class="pt">肯德基早餐能跑通，本质上吃的是肯德基整体品牌的红利。消费者不是冲着"早餐"去的，是冲着"肯德基"去的。早餐只是全场景运营中的一个新品切入口——没有主品牌的支持，早餐线单独成立的可能性很低。</div></div>
+<div class="pc"><div class="pl">视角B · 价格带模型的边界</div><div class="pt">早餐价格带模型（¥3以下→¥25+）在肯德基面前出现了一个有趣的偏移：它不是从低价位往上走，而是从高价位（午餐/晚餐）往下延伸。这个逆向路径说明价格带模型的适用前提是品牌势能。</div></div>
+<div class="pc"><div class="pl">视角C · 基础设施复用</div><div class="pt">肯德基做早餐的边际成本远低于中式早餐店——门店租金已由午晚餐覆盖、供应链已全国铺好、品牌已经建立。增加的只有食材成本和早班人力。中式早餐店没有这种基础设施复用优势。</div></div>
+<div class="pc"><div class="pl">视角D · 不可复制性</div><div class="pt">肯德基早餐的模式对于中式早餐创业者来说几乎没有参考价值——因为它成功的绝大部分因素（品牌、供应链、资本）都不是创业者可以短期建立的。这个案例的价值在于"证明上限"，而非"提供路径"。</div></div>
+</div>
+
+<div class="sec"><div class="st">决策推演</div></div>
+<div class="dt">
+<div class="dcard"><div class="dt-role">如果你做中式早餐想提客单</div><div class="dt-body">提客单的前提是品牌力足够支撑溢价。如果没有品牌积累，单纯涨价只会降低复购。一个可能的优先顺序：先做品牌认知，再做产品升级，最后才是价格调整。</div></div>
+<div class="dcard"><div class="dt-role">如果你是连锁品牌考虑增加早餐场景</div><div class="dt-body">评估你的品牌是否有足够多的门店和品牌认知来支撑早餐线。肯德基早餐的成功前提是30年品牌积累和3万+门店的基础设施——如果门店数不够，早餐线的投入可能很难回收。</div></div>
+<div class="dcard"><div class="dt-role">如果你是创业者想对标肯德基</div><div class="dt-body">一个可参考的认知：肯德基早餐的成功几乎不可复制。更现实的路径可能是从中式早餐的优势出发（新鲜现做、本土口味），而非试图复制西式快餐的标准化模型。</div></div>
+</div>
+
+<div class="sec"><div class="st">值得关注的信号</div></div>
+<div class="signal"><span class="sd">⚖️</span>肯德基早餐对价格带模型的启示：品牌势能可以重构价格带结构。先有品牌后有价格带升级——顺序不能反过来。</div>
+<div class="signal"><span class="sd">🔬</span>中式早餐创业者不宜将肯德基早餐作为对标。两者的竞争基础不同：肯德基是"品牌溢出"，中式早餐是"产品驱动"。路径不同，结论不同。</div>
+
+<div class="ft">
+<div><strong>FoodIntelAI</strong> · Decision Canvas DC-006</div>
+<div>依据：肯德基品牌公开信息、百胜中国财报、行业报道 | 六维评分为FoodIntelAI模型自评 | 多视角供参考</div>
+</div>
+
+</div>
+</body>
+</html>
