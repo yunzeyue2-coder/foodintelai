@@ -1,0 +1,96 @@
+{
+  "schema": "foodintelai.report.v0.1",
+  "description": "食品创业决策报告 — 决策结果的结构化封装，非内容生成",
+  "version": "REPORT-V0.1",
+  "sections": {
+    "userProfile": {
+      "label": "创业画像",
+      "description": "回答：你是谁？",
+      "fields": {
+        "city": {"type": "string", "required": true, "description": "城市名称"},
+        "cityTier": {"type": "string", "required": true, "enum": ["一线","新一线","二线","三线","县城"]},
+        "budget": {"type": "string", "required": true, "description": "预算区间"},
+        "experience": {"type": "string", "required": true, "enum": ["首次创业","有经验","企业研究"]},
+        "direction": {"type": "string", "required": false, "description": "用户倾向方向"}
+      }
+    },
+    "decisionSummary": {
+      "label": "决策结论",
+      "description": "第一页核心——推荐+评分+结论",
+      "fields": {
+        "recommendation": {"type": "string", "required": true, "description": "推荐方向/模型"},
+        "score": {"type": "integer", "required": true, "min": 0, "max": 100, "description": "综合评分"},
+        "level": {"type": "string", "required": true, "enum": ["高度匹配","比较适合","条件匹配","匹配度较低"]},
+        "summary": {"type": "string", "required": true, "description": "一句话决策判断"}
+      }
+    },
+    "scoreAnalysis": {
+      "label": "品类评价",
+      "description": "FDE Score — 品类本身值不值得做",
+      "fields": {
+        "projectScore": {"type": "integer", "required": true},
+        "dimensions": {"type": "array", "items": {"type": "object", "fields": {
+          "name": {"type": "string"},
+          "score": {"type": "integer"},
+          "max": {"type": "integer"},
+          "reason": {"type": "string"}
+        }}}
+      }
+    },
+    "matchAnalysis": {
+      "label": "你的匹配度",
+      "description": "MATCH-V1 — 这个项目适不适合你",
+      "fields": {
+        "matchScore": {"type": "integer", "required": true},
+        "level": {"type": "string"},
+        "dimensions": {"type": "array", "items": {"type": "object", "fields": {
+          "name": {"type": "string"},
+          "score": {"type": "integer"},
+          "max": {"type": "integer"},
+          "reason": {"type": "string"}
+        }}}
+      }
+    },
+    "decisionLogic": {
+      "label": "决策逻辑",
+      "description": "顾问价值核心——为什么这样判断",
+      "fields": {
+        "advantages": {"type": "array", "items": "string"},
+        "risks": {"type": "array", "items": "string"},
+        "suggestions": {"type": "array", "items": "string"}
+      }
+    },
+    "evidenceChain": {
+      "label": "决策依据",
+      "description": "FoodIntelAI 最大区别——三层证据链",
+      "fields": {
+        "frameworks": {"type": "array", "items": {"type": "object", "fields": {
+          "id": {"type": "string"}, "name": {"type": "string"}, "relation": {"type": "string"}
+        }}},
+        "research": {"type": "array", "items": {"type": "object", "fields": {
+          "id": {"type": "string"}, "name": {"type": "string"}, "relation": {"type": "string"}
+        }}},
+        "case": {"type": "object", "fields": {
+          "id": {"type": "string"}, "name": {"type": "string"}, "relation": {"type": "string"}, "whyReference": {"type": "string"}
+        }}
+      }
+    },
+    "actionPlan": {
+      "label": "行动计划",
+      "description": "三步路径——从验证到扩大",
+      "fields": {
+        "phase1": {"type": "string", "description": "第一步验证期"},
+        "phase2": {"type": "string", "description": "第二步复制期"},
+        "phase3": {"type": "string", "description": "第三步规模期"}
+      }
+    },
+    "riskWarning": {
+      "label": "风险提醒",
+      "description": "专业报告必须——只说机会不专业",
+      "fields": {
+        "mainRisks": {"type": "array", "items": "string"},
+        "note": {"type": "string"}
+      }
+    }
+  }
+}
