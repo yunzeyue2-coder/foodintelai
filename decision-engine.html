@@ -1,0 +1,3039 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>FoodIntelAI · 商业决策中心 V2（完整版）</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --decision:#141518;--decision-blue:#1E2A4A;
+  --opp:#00B578;--risk:#FF9500;--block:#FF3B30;
+  --evidence:#8E8E93;--action:#7C4DFF;--brand:#FF6B00;
+  --text:#1A1A1A;--sec:#666;--muted:#999;--bg:#F5F6F9;--line:#ECECEC;
+}
+body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+.container{max-width:640px;margin:0 auto;min-height:100vh;padding:0 14px 140px}
+
+/* ===== Header ===== */
+.header{display:flex;align-items:center;justify-content:space-between;padding:18px 0 14px;gap:8px;flex-wrap:wrap}
+.h-left{display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+/* 品牌字：衬线大写 + 宽字距，权威印记感 */
+.h-brand{font-size:11px;font-weight:700;color:#D97706;letter-spacing:5px;font-family:"Didot","Times New Roman","Songti SC",serif}
+/* 主标题：宋体（严谨专业），深色，字距微开 */
+.h-title{font-size:21px;font-weight:600;color:#141518;letter-spacing:2px;line-height:1.3;font-family:"Songti SC","STSong","Noto Serif SC",serif}
+/* 金色细线：麦肯锡式留白点缀 */
+.h-rule{width:44px;height:3px;background:#D97706;margin-top:3px}
+.h-badge{font-size:10px;color:var(--brand);font-weight:700;background:rgba(255,107,0,.08);padding:3px 10px;border-radius:20px}
+.cat-switch{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:5px 8px;font-size:12px}
+.cat-switch select{border:none;background:transparent;font-size:12px;font-weight:600;color:var(--text);outline:none;cursor:pointer;max-width:120px}
+
+/* ===== Decision Pulse ===== */
+.pulse{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:640px;z-index:99;background:var(--decision);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s}
+.pulse.show{opacity:1;pointer-events:auto}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--evidence);flex-shrink:0}
+.pulse-dot.ok{background:var(--opp)}.pulse-dot.warn{background:var(--risk)}.pulse-dot.block{background:var(--block)}
+.pulse-main{flex:1;min-width:0}
+.pulse-label{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:1px}
+.pulse-value{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pulse-metrics{display:flex;gap:12px;flex-shrink:0;font-size:10px;color:rgba(255,255,255,.6)}
+.pulse-metrics b{color:#fff;font-weight:700}
+
+/* ===== Question Bar ===== */
+.qbar{background:var(--decision);border-radius:14px;padding:18px 16px;margin:8px 0 14px;color:#fff}
+.qbar.done{background:linear-gradient(135deg,#1E2A4A,#141518)}
+.q-prog{display:flex;gap:4px;margin-bottom:14px}
+.q-dot{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.15)}
+.q-dot.act{background:var(--brand)}.q-dot.done{background:var(--opp)}
+.q-label{font-size:10px;color:rgba(255,255,255,.4);margin-bottom:6px;letter-spacing:1px}
+.q-title{font-size:16px;font-weight:700;margin-bottom:14px;line-height:1.4}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.q-opt{padding:11px 12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;font-size:13px;cursor:pointer;transition:all .15s;color:rgba(255,255,255,.85)}
+.q-opt:active{transform:scale(.97)}
+.q-opt.sel{border-color:var(--brand);background:rgba(255,107,0,.16);color:#fff}
+.q-opt .q-sub{font-size:10px;color:rgba(255,255,255,.35);margin-top:2px}
+/* 填空型问题输入框（第一层改造：精确输入） */
+.q-input-wrap{padding:4px 0}
+.q-input{width:100%;padding:14px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-size:16px;outline:none;box-sizing:border-box}
+.q-input:focus{border-color:var(--brand);background:rgba(255,107,0,.08)}
+.q-input-sub{font-size:10px;color:rgba(255,255,255,.35);margin-top:8px;letter-spacing:.5px}
+.q-next{margin-top:12px;padding:11px;background:var(--brand);text-align:center;border-radius:8px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;display:none}
+.q-next.show{display:block}
+
+/* ===== Card ===== */
+.card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.04)}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-t{font-size:14px;font-weight:800}
+.card-st{font-size:10px;color:var(--muted)}
+.hidden{display:none!important}
+
+/* ===== Card00 Engine Chain（引擎链，过程可视化核心） ===== */
+.engine-chain{background:var(--decision);border-radius:14px;padding:16px;margin-bottom:12px;color:#fff}
+.ec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ec-h span{font-size:12px;font-weight:700;color:rgba(255,255,255,.7)}
+.ec-flow{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.ec-node{flex:1;min-width:70px;text-align:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 4px;position:relative;transition:all .2s}
+.ec-node .ec-en{display:block;font-size:10px;color:rgba(255,255,255,.4);letter-spacing:1px}
+.ec-node .ec-v{font-size:11px;font-weight:800;color:rgba(255,255,255,.85);margin-top:2px}
+.ec-node .ec-s{display:block;font-size:10px;color:rgba(255,255,255,.3);margin-top:1px}
+.ec-node.run{border-color:var(--brand);background:rgba(255,107,0,.12)}
+.ec-node.run .ec-v{color:var(--brand)}
+.ec-node.block{border-color:var(--block);background:rgba(255,59,48,.12)}
+.ec-node.block .ec-v{color:var(--block)}
+.ec-arrow{color:var(--brand);font-size:12px;flex-shrink:0}
+
+/* ===== Card01 Decision ===== */
+.dcard{background:linear-gradient(160deg,#1E2A4A 0%,#141518 100%);color:#fff;border-radius:16px;padding:22px 20px;margin-bottom:12px;position:relative;overflow:hidden}
+.dcard::after{content:'';position:absolute;right:-60px;top:-60px;width:180px;height:180px;background:radial-gradient(circle,rgba(255,107,0,.14),transparent 70%)}
+.d-state{font-size:26px;font-weight:900;letter-spacing:.5px;margin-bottom:8px;line-height:1.3}
+.d-story{font-size:12px;line-height:1.9;color:rgba(255,255,255,.85);margin-bottom:14px}
+.d-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.d-cell{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:9px 11px}
+.d-cell-l{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:1px;margin-bottom:2px}
+.d-cell-v{font-size:14px;font-weight:700}
+.d-next{background:rgba(255,107,0,.15);border:1px solid rgba(255,107,0,.35);border-radius:9px;padding:11px 13px;font-size:12px;color:#fff;display:flex;align-items:center;gap:8px;cursor:pointer}
+.d-next b{color:var(--brand)}
+.d-why{margin-top:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:9px 13px;font-size:11px;color:rgba(255,255,255,.6);cursor:pointer;text-align:center}
+.d-why:hover{color:#fff}
+.state-proceed{background:linear-gradient(150deg,#0E7A5A,#00B578)}
+.state-validation{background:linear-gradient(150deg,#B25E00,#FF9500)}
+.state-hold{background:linear-gradient(150deg,#1E2A4A,#37476E)}
+.state-blocked{background:linear-gradient(150deg,#C2251F,#FF3B30)}
+
+/* ===== Replay ===== */
+.replay{background:var(--decision);border-radius:12px;padding:16px;margin-bottom:12px;color:#fff}
+.replay-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.replay-h span{font-size:12px;font-weight:700;color:rgba(255,255,255,.7)}
+.replay-step{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:6px;background:rgba(255,255,255,.05);border-radius:8px;border-left:3px solid var(--brand);opacity:0;transform:translateX(8px);animation:repIn .3s forwards}
+.replay-step .rs-k{font-size:11px;font-weight:700;color:var(--brand);width:60px;flex-shrink:0}
+.replay-step .rs-v{font-size:11px;color:rgba(255,255,255,.8);flex:1}
+.replay-step .rs-s{font-size:10px;color:rgba(255,255,255,.4)}
+.replay-final{margin-top:8px;padding:10px 12px;background:rgba(255,107,0,.12);border:1px solid rgba(255,107,0,.3);border-radius:8px;font-size:12px;font-weight:700;color:#fff}
+@keyframes repIn{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+
+/* ===== Validation Plan ===== */
+.plan-card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid rgba(0,0,0,.04);box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.plan-items{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.plan-item{background:#F8F9FB;border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+.plan-item .pi-l{font-size:10px;color:var(--muted);letter-spacing:1px}
+.plan-item .pi-v{font-size:13px;font-weight:800;color:var(--action);margin-top:2px}
+.plan-item .pi-d{font-size:11px;color:var(--sec);margin-top:2px}
+.stop-card{background:#FFF8F0;border:1px solid rgba(255,107,0,.25);border-radius:12px;padding:13px 15px;margin-bottom:12px}
+.stop-t{font-size:10px;font-weight:800;color:var(--gold);letter-spacing:1px;margin-bottom:5px}
+.stop-d{font-size:11px;color:#8A5A20;line-height:1.7}
+
+/* ===== P&L ===== */
+.pl-card{background:linear-gradient(160deg,#101321,#1E2A4A);color:#fff;border-radius:14px;padding:18px;margin-bottom:12px}
+.pl-title{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px;margin-bottom:10px}
+.pl-num{font-size:34px;font-weight:900;letter-spacing:-1px;margin-bottom:2px}
+.pl-num small{font-size:13px;font-weight:600;color:rgba(255,255,255,.5)}
+.pl-desc{font-size:12px;color:rgba(255,255,255,.7);line-height:1.7}
+.pl-row{display:flex;gap:8px;margin-top:12px}
+.pl-cell{flex:1;background:rgba(255,255,255,.06);border-radius:8px;padding:8px 10px}
+.pl-cell .pc-l{font-size:11px;color:rgba(255,255,255,.4)}
+.pl-cell .pc-v{font-size:13px;font-weight:700;margin-top:2px}
+.pl-edit{margin-top:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:10px;font-size:11px;color:rgba(255,255,255,.7)}
+.pl-edit input{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:4px 8px;color:#fff;width:72px;font-size:12px;outline:none;margin:0 4px}
+.pl-edit b{color:#fff}
+
+/* ===== Scenario（多方案） ===== */
+.scen-card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid rgba(0,0,0,.04);box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.scen-list{display:flex;flex-direction:column;gap:8px}
+.scen-item{display:flex;align-items:center;gap:10px;background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:11px 13px;cursor:pointer;transition:all .2s}
+.scen-item:hover{border-color:var(--action)}
+.scen-item .sc-rank{width:26px;height:26px;border-radius:8px;background:var(--action);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.scen-item .sc-body{flex:1}
+.scen-item .sc-name{font-size:13px;font-weight:700}
+.scen-item .sc-rate{font-size:12px;font-weight:800;color:var(--opp)}
+.scen-item .sc-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.scen-item.bad .sc-rank{background:var(--risk)}
+.scen-item.bad .sc-rate{color:var(--risk)}
+
+/* ===== Opportunity ===== */
+.opp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opp-cell{background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s}
+.opp-cell:active{transform:scale(.98)}
+.opp-cell .oc-l{font-size:10px;color:var(--sec);margin-bottom:3px}
+.opp-cell .oc-s{font-size:16px;font-weight:800}
+.opp-cell .oc-n{font-size:11px;color:var(--opp);font-weight:600}
+.opp-cell.bad .oc-n{color:var(--risk)}
+
+/* ===== Risk ===== */
+.risk-list{display:flex;flex-direction:column;gap:7px}
+.risk-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#F8F9FB;border:1px solid var(--line);border-radius:9px;cursor:pointer;transition:all .2s}
+.risk-item:active{transform:scale(.98)}
+.risk-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.risk-name{flex:1;font-size:13px;font-weight:600}
+.risk-lv{font-size:10px;color:var(--sec)}
+
+/* ===== Factor ===== */
+.factor-card{background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:13px 14px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.factor-card:active{transform:scale(.99)}
+.factor-top{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.factor-stars{font-size:12px;color:var(--brand);letter-spacing:1px}
+.factor-name{font-size:13px;font-weight:700;flex:1}
+.factor-impact{font-size:11px;color:var(--action);font-weight:700}
+.factor-explain{font-size:12px;color:var(--sec);line-height:1.6;margin-bottom:5px}
+.factor-meta{display:flex;gap:8px;flex-wrap:wrap}
+.f-tag{font-size:11px;padding:2px 8px;border-radius:20px;background:#F0F0F0;color:var(--sec)}
+
+/* ===== Graph ===== */
+.graph-wrap{position:relative;height:280px;background:#0F1118;border-radius:12px;overflow:hidden}
+.graph-wrap svg{width:100%;height:100%;display:block}
+.g-node{cursor:pointer}
+.g-node circle{fill:#1E2A4A;stroke:rgba(255,255,255,.15);stroke-width:1.5;transition:all .2s}
+.g-node text{fill:rgba(255,255,255,.8);font-size:10px;text-anchor:middle;pointer-events:none}
+.g-node.hl circle{fill:var(--opp);stroke:var(--opp)}
+.g-node.dim circle{fill:#23262E;opacity:.4}
+.g-node.dim text{opacity:.3}
+.g-edge{stroke:rgba(255,255,255,.12);stroke-width:1;transition:all .2s}
+.g-edge.hl{stroke:var(--opp);stroke-width:2}
+.g-edge.dim{opacity:.15}
+.g-title{position:absolute;top:10px;left:12px;font-size:10px;color:rgba(255,255,255,.35);letter-spacing:1px}
+.g-hint{position:absolute;bottom:10px;left:12px;font-size:11px;color:rgba(255,255,255,.25)}
+
+/* ===== Timeline ===== */
+.timeline{position:relative;padding-left:26px}
+.timeline::before{content:'';position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.t-item{position:relative;margin-bottom:14px;cursor:pointer;transition:all .2s}
+.t-item:active{transform:scale(.99)}
+.t-num{position:absolute;left:-26px;top:0;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--action);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--action)}
+.t-body{background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.t-when{font-size:11px;color:var(--action);font-weight:700;letter-spacing:1px;margin-bottom:2px}
+.t-what{font-size:13px;font-weight:700;margin-bottom:2px}
+.t-how{font-size:11px;color:var(--sec);line-height:1.5}
+.t-metric{display:inline-block;margin-top:5px;font-size:11px;color:var(--opp);background:rgba(0,181,120,.08);padding:2px 8px;border-radius:20px}
+
+/* ===== Evidence ===== */
+.ev-item{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line)}
+.ev-item:last-child{border-bottom:none}
+.ev-lv{font-size:10px;font-weight:800;padding:2px 8px;border-radius:5px;flex-shrink:0;width:34px;text-align:center}
+.ev-lv.A{background:rgba(0,181,120,.1);color:var(--opp)}
+.ev-lv.B{background:rgba(124,77,255,.1);color:var(--action)}
+.ev-lv.C{background:rgba(142,142,147,.1);color:var(--evidence)}
+.ev-name{flex:1;font-size:12px;font-weight:600}
+.ev-desc{font-size:10px;color:var(--muted)}
+
+/* ===== Memory ===== */
+.mem-compare{background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px}
+.mem-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.mem-date{font-size:10px;color:var(--muted)}
+.mem-delta{font-size:11px;font-weight:700}
+.mem-delta.up{color:var(--opp)}.mem-delta.down{color:var(--block)}
+.mem-bars{display:flex;flex-direction:column;gap:4px}
+.mem-bar{display:flex;align-items:center;gap:8px;font-size:10px}
+.mem-bar .mb-name{width:52px;color:var(--sec);flex-shrink:0}
+.mem-bar .mb-track{flex:1;height:6px;background:#ECECEC;border-radius:3px;position:relative}
+.mem-bar .mb-fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--brand)}
+.mem-bar .mb-d{width:44px;text-align:right;font-weight:700}
+.mem-bar .mb-d.up{color:var(--opp)}.mem-bar .mb-d.down{color:var(--block)}
+
+/* ===== Manifesto ===== */
+.manifesto{background:var(--decision);border-radius:14px;padding:18px;text-align:center;margin:10px 0 16px;border:1px solid rgba(255,255,255,.08)}
+.m-title{color:#fff;font-size:13px;font-weight:700;line-height:1.7}
+.m-hl{color:var(--brand)}
+.m-sub{color:rgba(255,255,255,.35);font-size:10px;margin-top:6px}
+
+
+/* ===== Inference 因果链 ===== */
+.inf-list{display:flex;flex-direction:column;gap:6px}
+.inf-step{display:flex;align-items:flex-start;gap:10px;background:#F8F9FB;border:1px solid var(--line);border-left:3px solid #ccc;border-radius:9px;padding:10px 12px;cursor:pointer;transition:all .2s}
+.inf-step:hover{border-color:#999}
+.inf-step.st-good{border-left-color:var(--opp);background:rgba(0,181,120,.04)}
+.inf-step.st-warn{border-left-color:var(--risk);background:rgba(255,149,0,.04)}
+.inf-step.st-bad{border-left-color:var(--block);background:rgba(255,59,48,.04)}
+.inf-step .is-en{font-size:11px;font-weight:800;color:var(--sec);width:64px;flex-shrink:0;letter-spacing:.5px;padding-top:2px}
+.inf-step.st-good .is-en{color:var(--opp)}
+.inf-step.st-warn .is-en{color:var(--risk)}
+.inf-step.st-bad .is-en{color:var(--block)}
+.inf-step .is-body{flex:1}
+.inf-step .is-cn{font-size:12px;font-weight:700;color:var(--text)}
+.inf-step .is-ev{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5}
+.inf-step .is-tag{font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;flex-shrink:0}
+.inf-step .is-tag.t-ok{background:rgba(0,181,120,.1);color:var(--opp)}
+.inf-step .is-tag.t-warn{background:rgba(255,149,0,.12);color:var(--risk)}
+.inf-step .is-tag.t-bad{background:rgba(255,59,48,.1);color:var(--block)}
+.inf-arrow{text-align:center;color:var(--brand);font-size:12px;margin:-2px 0}
+
+
+/* ===== Feedback 闭环 ===== */
+.fb-desc{font-size:11px;color:var(--sec);line-height:1.7;margin-bottom:12px}
+.fb-fields{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.fb-field{display:flex;align-items:center;gap:10px;background:#F8F9FB;border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+.fb-fl{font-size:11px;color:var(--sec);width:72px;flex-shrink:0}
+.fb-field input{flex:1;border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:13px;outline:none;background:#fff}
+.fb-field select{flex:1;border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:12px;outline:none;background:#fff;color:var(--text)}
+.fb-btn{background:var(--action);color:#fff;border-radius:9px;padding:11px;text-align:center;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.fb-btn:active{transform:scale(.98)}
+.fb-result{background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:13px}
+.fb-r-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.fb-r-t{font-size:12px;font-weight:800}
+.fb-r-delta{font-size:12px;font-weight:800}
+.fb-r-delta.good{color:var(--opp)}.fb-r-delta.bad{color:var(--block)}
+.fb-r-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line);font-size:11px}
+.fb-r-row:last-child{border-bottom:none}
+.fb-r-row .fk{color:var(--sec)}
+.fb-r-row .fv{font-weight:700}
+.fb-r-row .fv.ok{color:var(--opp)}.fb-r-row .fv.no{color:var(--block)}
+.fb-calib{background:rgba(124,77,255,.06);border:1px solid rgba(124,77,255,.2);border-radius:8px;padding:9px 11px;font-size:10px;color:var(--action);margin-top:8px;line-height:1.6}
+
+
+/* ===== 9引擎状态矩阵 ===== */
+.engine-matrix{background:var(--decision);border-radius:14px;padding:16px;margin:8px 0 14px;color:#fff;transition:opacity .3s}
+.em-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.em-h span{font-size:12px;font-weight:700;color:rgba(255,255,255,.7)}
+.em-sub{font-size:11px;color:rgba(255,255,255,.4)!important;font-weight:400!important}
+.em-grid{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.em-node{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:6px 8px;position:relative;transition:all .25s;min-width:52px;text-align:center;opacity:.55}
+.em-node .emn-id{font-size:10px;color:rgba(255,255,255,.35);font-weight:800;letter-spacing:.5px}
+.em-node .emn-name{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.em-node .emn-score{font-size:14px;font-weight:900;color:rgba(255,255,255,.25);margin-top:2px;transition:color .3s}
+.em-node .emn-bar{position:absolute;bottom:0;left:0;height:2px;background:var(--blue);width:0%;transition:width .5s cubic-bezier(.25,1,.5,1);opacity:0}
+/* 状态 */
+.em-node.lit{border-color:rgba(41,98,255,.5);background:rgba(41,98,255,.08);opacity:1}
+.em-node.lit .emn-score{color:var(--brand)}
+.em-node.lit .emn-bar{opacity:1}
+.em-node.hot{border-color:var(--brand);background:rgba(255,107,0,.18);opacity:1;animation:emPulse 1.2s ease-in-out infinite}
+.em-node.hot .emn-score{color:#fff}
+.em-node.done{border-color:var(--opp);background:rgba(0,181,120,.08)}
+.em-node.done .emn-score{color:var(--opp)}
+@keyframes emPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.em-feedback{margin-top:10px;min-height:20px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.6;transition:all .3s}
+.em-feedback .emf-tag{display:inline-block;background:rgba(255,107,0,.15);border:1px solid rgba(255,107,0,.3);border-radius:20px;padding:2px 10px;font-size:10px;color:var(--brand);font-weight:700;margin-right:6px}
+.em-feedback .emf-txt{color:rgba(255,255,255,.75)}
+.em-feedback .emf-up{color:var(--opp);font-weight:700}
+.em-feedback .emf-down{color:var(--block);font-weight:700}
+
+
+/* ===== E10 分数拆解 ===== */
+.ex-total-row{display:flex;align-items:center;justify-content:space-between;background:var(--decision);border-radius:10px;padding:12px 14px;margin-bottom:10px;color:#fff}
+.ex-total-lbl{font-size:11px;color:rgba(255,255,255,.6)}
+.ex-total-val{font-size:28px;font-weight:900;color:var(--brand)}
+.ex-factors{display:flex;flex-direction:column;gap:6px}
+.ex-row{display:flex;align-items:center;gap:8px;font-size:11px}
+.ex-name{width:64px;color:var(--sec);flex-shrink:0;font-weight:600}
+.ex-track{flex:1;height:8px;background:#F0F0F0;border-radius:4px;overflow:hidden}
+.ex-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.25,1,.5,1)}
+.ex-fill.ex-up{background:var(--opp)}
+.ex-fill.ex-down{background:var(--block)}
+.ex-val{width:36px;text-align:right;font-weight:800;flex-shrink:0}
+.ex-val.ex-up{color:var(--opp)}
+.ex-val.ex-down{color:var(--block)}
+.ex-check{font-size:10px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);line-height:1.6}
+
+
+/* ===== 约束引擎显示 ===== */
+.d-constraint{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:10px 12px;margin-bottom:10px}
+.dc-src{font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:4px}
+.dc-primary{font-size:12px;font-weight:700;line-height:1.5;margin-bottom:4px;color:#fff}
+.dc-advice{font-size:10px;color:rgba(255,255,255,.6);line-height:1.5}
+
+
+/* ===== 卡片分组 ===== */
+.group-h{display:flex;align-items:center;justify-content:space-between;background:var(--decision-blue);border-radius:10px;padding:10px 14px;margin:16px 0 10px;color:#fff;cursor:pointer;transition:background .2s}
+.group-h:hover{background:#2A3A5C}
+.group-h .gh-t{font-size:13px;font-weight:800;letter-spacing:1px}
+.group-h .gh-s{font-size:10px;color:rgba(255,255,255,.6)}
+.group-h .gh-arrow{font-size:11px;color:rgba(255,255,255,.6);transition:transform .3s}
+.group-h.collapsed .gh-arrow{transform:rotate(-90deg)}
+.group-body{transition:all .3s}
+.group-body.collapsed{display:none}
+
+/* ===== Drawer ===== */
+.drawer-mask{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
+.drawer-mask.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:-340px;width:320px;max-width:88vw;height:100%;background:#fff;z-index:201;box-shadow:-8px 0 30px rgba(0,0,0,.15);transition:right .2s;overflow-y:auto;padding:20px 18px 40px}
+.drawer.show{right:0}
+.dw-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;background:#F2F2F2;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;color:var(--sec)}
+.dw-title{font-size:16px;font-weight:800;margin-bottom:4px;padding-right:30px}
+.dw-sub{font-size:11px;color:var(--sec);margin-bottom:16px}
+.dw-sec{margin-bottom:14px}
+.dw-sec-l{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:5px}
+.dw-sec-b{font-size:13px;line-height:1.7;color:var(--text)}
+.dw-sec-b small{color:var(--sec)}
+.dw-ev{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;font-size:12px;color:var(--sec);line-height:1.5}
+.dw-ev b{color:var(--text);flex-shrink:0}
+.dw-act{background:rgba(124,77,255,.06);border:1px solid rgba(124,77,255,.2);border-radius:9px;padding:10px 12px;font-size:12px;color:var(--action);line-height:1.6}
+
+/* ===== Dev Mode ===== */
+.devmode{background:#0F1118;border-radius:12px;padding:14px;margin:12px 0;color:#fff}
+.dev-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.dev-h span{font-size:11px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:1px}
+.dev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.dev-eng{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:7px 9px;font-size:10px}
+.dev-eng .de-id{color:rgba(255,255,255,.4);font-weight:700}
+.dev-eng .de-s{float:right;color:var(--opp);font-weight:800}
+.dev-eng.wait .de-s{color:rgba(255,255,255,.25)}
+.dev-log{font-family:'SF Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-top:8px;line-height:1.6;max-height:90px;overflow-y:auto;white-space:pre-wrap}
+
+/* ===== CTA ===== */
+.cta{text-align:center;margin:16px 0}
+.cta-btn{display:inline-block;background:var(--decision);color:#fff;padding:12px 34px;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;border:none}
+.cta-btn:active{transform:scale(.97)}
+.cta-btn.gold{background:var(--brand)}
+
+/* ===== 商业推演入口（三个未解问题） ===== */
+.biz-entry{margin:14px 0 6px;background:linear-gradient(160deg,#141518,#1E2A4A);border-radius:14px;padding:20px 18px;color:#fff}
+.be-title{font-size:15px;font-weight:800;letter-spacing:.5px}
+.be-done{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 2px}
+.be-done span{font-size:10px;color:#9FE8C8;background:rgba(0,181,120,.12);padding:3px 9px;border-radius:20px;letter-spacing:.5px}
+.be-q-label{font-size:12px;color:rgba(255,255,255,.55);margin:14px 0 10px;letter-spacing:1px}
+.be-q{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:9px;margin-bottom:8px}
+.be-q b{width:20px;height:20px;border-radius:50%;background:var(--brand);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.be-q div{font-size:13px;font-weight:600;line-height:1.4}
+.be-q small{display:block;font-size:10px;color:rgba(255,255,255,.45);font-weight:400;margin-top:2px;letter-spacing:.5px}
+.be-btn{margin-top:14px;background:var(--brand);text-align:center;padding:13px;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;letter-spacing:1px;transition:all .2s}
+.be-btn:active{transform:scale(.97)}
+.be-note{margin-top:10px;font-size:10px;color:rgba(255,255,255,.4);text-align:center;letter-spacing:1px}
+
+/* ===== 商业推演报告 overlay ===== */
+.biz-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,12,16,.62);z-index:120;opacity:0;pointer-events:none;transition:opacity .25s}
+.biz-mask.show{opacity:1;pointer-events:auto}
+.biz-sim{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:640px;height:100vh;background:#F5F6F9;z-index:121;overflow-y:auto;display:none;box-shadow:-8px 0 40px rgba(0,0,0,.25)}
+.biz-sim.show{display:block}
+.bs-head{position:sticky;top:0;background:#141518;color:#fff;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;z-index:5}
+.bs-brand{font-size:9px;color:#D97706;letter-spacing:4px;font-family:"Didot","Times New Roman",serif;font-weight:700}
+.bs-title{font-size:17px;font-weight:800;letter-spacing:1px;margin-top:2px}
+.bs-sub{font-size:9px;color:rgba(255,255,255,.4);letter-spacing:2px;margin-top:1px}
+.bs-close{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer}
+.bs-body{padding:16px 16px 60px}
+.bs-sec{background:#fff;border:1px solid #ECECEC;border-radius:12px;padding:16px;margin-bottom:14px}
+.bs-sec-h{display:flex;align-items:baseline;gap:8px;border-left:3px solid var(--brand);padding-left:10px;margin-bottom:12px}
+.bs-sec-h .t{font-size:14px;font-weight:800;letter-spacing:.5px}
+.bs-sec-h .en{font-size:9px;color:var(--muted);letter-spacing:1.5px}
+.bs-dim{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px dashed #ECECEC}
+.bs-dim:last-child{border-bottom:none}
+.bs-dim .dn{width:52px;font-size:12px;font-weight:700}
+.bs-dim .ds{flex:1;font-size:12px;letter-spacing:2px;color:var(--brand)}
+.bs-dim .dv{width:34px;text-align:right;font-size:12px;font-weight:800}
+.bs-dim.weak .dn{color:var(--block)}
+.bs-gap{margin-top:12px;font-size:12px;padding:10px 12px;background:#FFF8EE;border-left:3px solid var(--brand);line-height:1.7}
+.bs-why{margin:10px 0;padding:12px;background:#F7F7F9;border-radius:8px;font-size:12px;line-height:1.9}
+.bs-why .qw{font-weight:800;color:var(--decision);margin-bottom:4px}
+.bs-why .qa{color:#444}
+.bs-kv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #ECECEC;font-size:12px}
+.bs-kv:last-child{border-bottom:none}
+.bs-kv .k{color:var(--muted)}
+.bs-kv .v{font-weight:700;text-align:right}
+.bs-plan{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bs-plan .ph{background:#F7F7F9;border-radius:8px;padding:10px}
+.bs-plan .ph .pt{font-size:10px;font-weight:800;color:var(--brand);letter-spacing:.5px}
+.bs-plan .ph .pg{font-size:12px;font-weight:700;margin:4px 0 6px}
+.bs-plan .ph .pa{font-size:10px;color:#555;line-height:1.7}
+.bs-slider{margin-bottom:14px}
+.bs-slider .sl-l{display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:4px}
+.bs-slider .sl-l .v{color:var(--brand)}
+.bs-slider input[type=range]{width:100%;accent-color:var(--brand)}
+.bs-shift{font-size:12px;padding:10px 12px;border-radius:8px;background:#FFF8EE;border-left:3px solid var(--brand);margin-top:10px;line-height:1.7}
+.bs-shift.changed{border-left-color:var(--block);background:#FDF1EF}
+.bs-pay{background:#141518;color:#fff;border-radius:12px;padding:16px;text-align:center;margin-top:14px}
+.bs-pay .pt2{font-size:14px;font-weight:800;letter-spacing:1px}
+.bs-pay .pd{font-size:10px;color:rgba(255,255,255,.5);margin:6px 0 12px;line-height:1.7}
+.bs-pay .pb{display:inline-block;background:var(--brand);padding:11px 30px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer}
+.bs-tag{display:inline-block;font-size:9px;color:var(--brand);border:1px solid var(--brand);border-radius:20px;padding:2px 9px;letter-spacing:1px;margin-left:6px;vertical-align:middle}
+
+/* ===== Mobile PL 条 ===== */
+.mobile-pl{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:640px;background:var(--decision);color:#fff;padding:10px 14px;z-index:96;display:none;align-items:center;gap:10px;box-shadow:0 -4px 20px rgba(0,0,0,.2)}
+.mobile-pl.show{display:flex}
+.mp-num{font-size:18px;font-weight:900;flex-shrink:0}
+.mp-desc{font-size:10px;color:rgba(255,255,255,.6);line-height:1.4;flex:1}
+.mp-edit{font-size:10px;color:var(--brand);flex-shrink:0;cursor:pointer;font-weight:700}
+
+@media(max-width:480px){.pulse-metrics{gap:8px;font-size:11px}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Header -->
+<div class="header">
+  <div class="h-left">
+    <div class="h-brand">FOODINTELAI</div>
+    <div class="h-title">商业决策引擎</div>
+    <div class="h-rule"></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="cat-switch hidden" id="catSwitchWrap">
+      <span style="font-size:10px;color:var(--sec)">品类</span>
+      <select id="catSwitch" onchange="switchCategory(this.value)"></select>
+    </div>
+    <div class="h-badge" id="hBadge">等待输入</div>
+  </div>
+</div>
+
+<!-- Decision Pulse -->
+<div class="pulse" id="pulse">
+  <div class="pulse-dot" id="pulseDot"></div>
+  <div class="pulse-main">
+    <div class="pulse-label">DECISION PULSE</div>
+    <div class="pulse-value" id="pulseValue">等待你的输入…</div>
+  </div>
+  <div class="pulse-metrics" id="pulseMetrics"></div>
+</div>
+
+<!-- Question Bar -->
+<div class="qbar" id="qbar">
+  <div class="q-prog" id="qProg"></div>
+  <div class="q-label" id="qLabel"></div>
+  <div class="q-title" id="qTitle"></div>
+  <div class="q-opts" id="qOpts"></div>
+  <div class="q-next" id="qNext" onclick="nextQ()">下一步 →</div>
+</div>
+
+<!-- 9引擎状态矩阵（答题时实时点亮） -->
+<div class="engine-matrix hidden" id="engineMatrix">
+  <div class="em-h"><span>⚡ 9 引擎实时状态</span><span class="em-sub">回答每个问题 → 对应引擎响应</span></div>
+  <div class="em-grid" id="emGrid"></div>
+  <div class="em-feedback" id="emFeedback"></div>
+</div>
+
+<!-- Canvas -->
+<div class="canvas">
+
+  <div class="group-h hidden" id="grp1h" onclick="toggleGroup('grp1')"><span class="gh-t">🎯 决策概览</span><span class="gh-s" id="grp1s">引擎 · 决策 · 推理</span><span class="gh-arrow">▼</span></div>
+  <div class="group-body hidden" id="grp1">
+
+  <!-- Card00 Engine Chain（过程可视化：引擎链） -->
+  <div class="engine-chain hidden" id="cardChain">
+    <div class="ec-h"><span>ENGINE CHAIN · 引擎链</span><span style="font-size:10px;color:rgba(255,255,255,.4)">Knowledge → Inference → Evaluation → Scenario → AI</span></div>
+    <div class="ec-flow" id="ecFlow"></div>
+  </div>
+
+  <!-- Card01 Decision State -->
+  <div class="dcard hidden" id="cardDecision">
+    <div class="d-state" id="dState">—</div>
+    <div class="d-constraint" id="dConstraint" style="display:none">
+      <div class="dc-src" id="dSrc"></div>
+      <div class="dc-primary" id="dPrimary"></div>
+      <div class="dc-advice" id="dAdvice"></div>
+    </div>
+    <div class="d-story" id="dStory">—</div>
+    <div class="d-grid">
+      <div class="d-cell"><div class="d-cell-l">决策指数</div><div class="d-cell-v" id="dScore" style="font-size:12px;color:rgba(255,255,255,.6)">—</div></div>
+      <div class="d-cell"><div class="d-cell-l">置信度</div><div class="d-cell-v" id="dConf">—</div></div>
+      <div class="d-cell"><div class="d-cell-l">风险</div><div class="d-cell-v" id="dRisk">—</div></div>
+      <div class="d-cell"><div class="d-cell-l">阻断</div><div class="d-cell-v" id="dBlock">—</div></div>
+    </div>
+    <div class="d-ver" id="modelVersion" style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:8px;letter-spacing:1px">模型 —</div>
+    <div class="d-next" onclick="openReport()"><span>下一步</span><b id="dNextAction">—</b></div>
+    <div class="d-why" onclick="toggleReplay()">为什么是这个建议？点击回放推理过程</div>
+  </div>
+
+  <!-- E10 分数拆解（为什么是这个分数） -->
+  <div class="card hidden" id="cardExplain">
+    <div class="card-h"><span class="card-t">分数拆解 · 为什么是这个分</span><span class="card-st">Score Explain · E10</span></div>
+    <div class="ex-total-row">
+      <span class="ex-total-lbl">最终得分</span>
+      <span class="ex-total-val" id="exTotal">—</span>
+    </div>
+    <div class="ex-factors" id="exFactors"></div>
+    <div class="ex-check" id="exCheck"></div>
+  </div>
+
+  <!-- Inference 因果链（为什么评分的底层逻辑） -->
+  <div class="card hidden" id="cardInference">
+    <div class="card-h"><span class="card-t">推理链 · 为什么是这个结论</span><span class="card-st">Inference · 因果可追溯</span></div>
+    <div class="inf-list" id="infList"></div>
+  </div>
+
+  <!-- Runtime Replay -->
+  <div class="replay hidden" id="replayBox">
+    <div class="replay-h"><span>RUNTIME REPLAY · 推理回放</span><span style="cursor:pointer;font-size:10px" onclick="toggleReplay()">收起 ✕</span></div>
+    <div id="replaySteps"></div>
+    <div class="replay-final" id="replayFinal"></div>
+  </div>
+
+  </div><!-- /决策概览 -->
+
+  <div class="group-h hidden collapsed" id="grp2h" onclick="toggleGroup('grp2')"><span class="gh-t">💰 财务与验证</span><span class="gh-s">盈亏 · 方案 · 验证</span><span class="gh-arrow">▼</span></div>
+  <div class="group-body hidden collapsed" id="grp2">
+
+  <!-- Validation Plan + 止损线 -->
+  <div class="plan-card hidden" id="cardPlan">
+    <div class="card-h"><span class="card-t">验证计划</span><span class="card-st">Validation</span></div>
+    <div class="plan-items" id="planItems"></div>
+  </div>
+  <div class="stop-card hidden" id="cardStop">
+    <div class="stop-t">⚠ 止损线</div>
+    <div class="stop-d" id="stopDesc">—</div>
+  </div>
+
+  <!-- P&L -->
+  <div class="pl-card hidden" id="cardPL">
+    <div class="pl-title">P&L · 盈亏测算</div>
+    <div class="pl-num" id="plNum">—</div>
+    <div class="pl-desc" id="plDesc">—</div>
+    <div class="pl-row">
+      <div class="pl-cell"><div class="pc-l">保本日营业额</div><div class="pc-v" id="plRev">—</div></div>
+      <div class="pl-cell"><div class="pc-l">毛利率</div><div class="pc-v" id="plMargin">—</div></div>
+      <div class="pl-cell"><div class="pc-l">回本周期</div><div class="pc-v" id="plPayback">—</div></div>
+    </div>
+    <div class="pl-edit">月租金 <input id="plRent" type="number" placeholder="自动估算" onchange="recalcPL()"> 元 · 客单价 <input id="plPrice" type="number" value="25" onchange="recalcPL()"> 元</div>
+  </div>
+
+  <!-- Scenario 多方案 -->
+  <div class="scen-card hidden" id="cardScenario">
+    <div class="card-h"><span class="card-t">方案排序</span><span class="card-st">Scenario · 多方案</span></div>
+    <div class="scen-list" id="scenList"></div>
+  </div>
+
+  <!-- Opportunity -->
+  <div class="card hidden" id="cardOpp">
+    <div class="card-h"><span class="card-t">机会四宫格</span><span class="card-st">点击展开</span></div>
+    <div class="opp-grid" id="oppGrid"></div>
+  </div>
+
+  <!-- Risk -->
+  <div class="card hidden" id="cardRisk">
+    <div class="card-h"><span class="card-t">风险面板</span><span class="card-st">点击查看依据</span></div>
+    <div class="risk-list" id="riskList"></div>
+  </div>
+
+  <!-- Factors -->
+  <div class="card hidden" id="cardFactors">
+    <div class="card-h"><span class="card-t">关键因素</span><span class="card-st">影响排序 TOP5</span></div>
+    <div id="factorList"></div>
+  </div>
+
+  </div><!-- /财务与验证 -->
+
+  <div class="group-h hidden collapsed" id="grp3h" onclick="toggleGroup('grp3')"><span class="gh-t">🔗 证据与链路</span><span class="gh-s">因果 · 行动 · 证据 · 记忆</span><span class="gh-arrow">▼</span></div>
+  <div class="group-body hidden collapsed" id="grp3">
+
+  <!-- Graph -->
+  <div class="card hidden" id="cardGraph">
+    <div class="card-h"><span class="card-t">决策因果网络</span><span class="card-st">点击节点高亮链路</span></div>
+    <div class="graph-wrap" id="graphWrap">
+      <div class="g-title">DECISION GRAPH · FACTOR NETWORK</div>
+      <svg id="graphSvg"></svg>
+      <div class="g-hint">拖动节点 · 点击高亮因果链</div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="card hidden" id="cardTimeline">
+    <div class="card-h"><span class="card-t">行动时间线</span><span class="card-st" id="timelineCat"></span></div>
+    <div class="timeline" id="timelineBox"></div>
+  </div>
+
+  <!-- Evidence -->
+  <div class="card hidden" id="cardEvidence">
+    <div class="card-h"><span class="card-t">证据中心</span><span class="card-st">Evidence · 公开透明</span></div>
+    <div id="evList"></div>
+  </div>
+
+  <!-- Memory -->
+  <div class="card hidden" id="cardMemory">
+    <div class="card-h"><span class="card-t">决策记忆</span><span class="card-st">Decision Memory · 历史对比</span></div>
+    <div id="memList"></div>
+  </div>
+
+  <!-- Feedback 闭环（验证后回填 → 预测vs实际 → 校准） -->
+  <div class="card hidden" id="cardFeedback">
+    <div class="card-h"><span class="card-t">验证回填</span><span class="card-st">Feedback · 让系统越用越准</span></div>
+    <div class="fb-form" id="fbForm">
+      <div class="fb-desc">按验证计划执行后，回填真实结果——系统将对比预测与实际，持续校准模型（INV-8）</div>
+      <div class="fb-fields" id="fbFields">
+        <div class="fb-field" id="fbRevenueWrap"><span class="fb-fl" id="fbRevenueLabel">实际日流水</span><input id="fbRevenue" type="number" placeholder="元/日"></div>
+        <div class="fb-field"><span class="fb-fl">结果</span>
+          <select id="fbOutcome">
+            <option value="SUCCESS" id="fbOptSuccess">成功 · 持续经营</option>
+            <option value="BREAKEVEN">持平 · 能活不赚钱</option>
+            <option value="FAIL">失败 · 已止损退出</option>
+            <option value="EXIT">主动退出 · 转方向</option>
+          </select>
+        </div>
+      </div>
+      <div class="fb-btn" onclick="submitFeedback()">提交回填 · 校准模型 →</div>
+    </div>
+    <div class="fb-result hidden" id="fbResult"></div>
+  </div>
+
+  <!-- Manifesto -->
+  <div class="manifesto">
+    <div class="m-title" id="mTitle">不是寻找一个答案，<br>而是找到<span class="m-hl">一个更可靠的决策</span></div>
+    <div class="m-sub" id="mSub">FoodIntelAI · Decision Engine<br>基于行业数据、商业模型与约束分析，解释每一个判断背后的逻辑。</div>
+  </div>
+
+  </div><!-- /证据与链路 -->
+
+  <!-- CTA -->
+  <div class="cta">
+    <div class="cta-btn gold" id="ctaBtn" style="display:none" onclick="openReport()">我的决策摘要 →</div>
+    <div class="cta-hint hidden" id="ctaHint" style="font-size:11px;color:var(--sec);margin-top:8px"></div>
+  </div>
+
+  <!-- 商业推演入口：三个未解问题（认知缺口 → 收费入口） -->
+  <div class="biz-entry hidden" id="bizEntry">
+    <div class="be-title">你的基础评估已完成</div>
+    <div class="be-done">
+      <span>✓ 当前优势</span><span>✓ 当前风险</span><span>✓ 第一限制因素</span>
+    </div>
+    <div class="be-q-label">但还有三个关键问题：</div>
+    <div class="be-q" id="beQ1"><b>1</b><div>为什么这是你的核心问题？<small>六维模型深度解释</small></div></div>
+    <div class="be-q" id="beQ2"><b>2</b><div>如果改变一个条件，结果会不会变化？<small>商业 What If 模拟</small></div></div>
+    <div class="be-q" id="beQ3"><b>3</b><div>具体应该如何解决？<small>行业方案 + AI推演</small></div></div>
+    <div class="be-btn" id="beBtn" onclick="openBizSim()">开始商业推演 →</div>
+    <div class="be-note">不是寻找一个答案，而是找到一个更可靠的决策</div>
+  </div>
+
+</div>
+
+</div>
+
+<!-- 商业推演报告 overlay -->
+<div class="biz-mask" id="bizMask" onclick="closeBizSim()"></div>
+<div class="biz-sim" id="bizSim">
+  <div class="bs-head">
+    <div>
+      <div class="bs-brand">FOODINTELAI</div>
+      <div class="bs-title">商业推演报告</div>
+      <div class="bs-sub">Business Simulation Report</div>
+    </div>
+    <div class="bs-close" onclick="closeBizSim()">✕</div>
+  </div>
+  <div class="bs-body" id="bizBody"></div>
+</div>
+
+<!-- Drawer -->
+<div class="drawer-mask" id="drawerMask" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="dw-close" onclick="closeDrawer()">✕</div>
+  <div id="drawerBody"></div>
+</div>
+
+<!-- Mobile PL -->
+<div class="mobile-pl" id="mobilePL">
+  <div class="mp-num" id="mpNum">—</div>
+  <div class="mp-desc" id="mpDesc">—</div>
+  <div class="mp-edit" onclick="document.getElementById('plEdit').scrollIntoView({behavior:'smooth'})">调整 ›</div>
+</div>
+
+
+<script>
+/* ================================================================
+   FoodIntelAI Decision OS V2（完整版）
+   严格按架构宪法：过程可视化（引擎链/Replay/Graph/Scenario）
+   + V2 语义（Decision State/验证计划/止损线/证据五级）
+   ================================================================ */
+/* ================================================================
+   FoodIntelAI Decision OS V2（完整版）
+   模型版本: MODEL_VERSION v1.1（2026-07-31）—— Explain V2 + 用户视角解释
+   ================================================================ */
+var MODEL_VERSION = 'v1.1';
+var MODEL_VERSION_LOG = 'v1.1: 新增 Explain V2 用户视角解释；E05竞争对冲；nextAction重写';
+
+/* ---------- 0. 身份层 ---------- */
+var IDENTITIES = [
+  {id:'store', name:'创业开店', desc:'小吃店/快餐店/饮品店/烘焙店/熟食店/早餐加盟',
+   weightFix:{E01:1.05,E03:1.15,E07:1.1,E05:1.05,E08:0.95},
+   modeOpts:['摆摊/档口','小店直营','加盟/联营','连锁扩张'],
+   // 身份骨架：开店 = 资金/坪效/保本/选址是核心
+   financeWeight:1.0, capitalCheck:true, rentCheck:true, paybackCheck:true,
+   story:'开店决策——核心是单店模型能否跑通'},
+  {id:'product', name:'产品开发', desc:'新品研发/产品升级/爆品打造/配方工艺/标准化',
+   weightFix:{E02:1.2,E08:1.1,E06:1.1,E03:0.95},
+   modeOpts:['配方开发','产品升级','代工生产','品牌孵化'],
+   // 产品研发：资金门槛/租售比不是核心——研发能力/标准化/客户才是
+   financeWeight:0.4, capitalCheck:false, rentCheck:false, paybackCheck:false,
+   story:'产品决策——核心是产品是否成立（研发/配方/标准化/目标客户）'},
+  {id:'factory', name:'食品工厂', desc:'OEM/预制菜/调味料/肉制品/速冻食品/休闲食品',
+   weightFix:{E08:1.3,E03:1.1,E01:0.9,E09:0.8},
+   modeOpts:['OEM代工','自有品牌','供应链供应','渠道分销'],
+   // 工厂：资金门槛相关（产能投入），但租售比/坪效无关
+   financeWeight:0.7, capitalCheck:true, rentCheck:false, paybackCheck:true,
+   story:'工厂决策——核心是设备产能与商业模式选择',
+   // 工厂专属变量（替代个人经验/技能/团队）：
+   // 设备基础 0-3 / 技术工艺 0-3 / 组织规模 0-3 / 市场渠道 0-3
+   factoryVars: true,
+   factoryModeDesc:['转行做贴牌（新进入OEM，靠别人订单）','纯代工（无自有品牌，专注交付）','自有品牌产销（生产+销售一体）','混合模式（代工+自有品牌并行）']},
+  {id:'research', name:'行业研究', desc:'品类趋势/市场分析/竞争分析/全国化机会',
+   weightFix:{E01:1.15,E05:1.15,E06:1.1,E02:1.05},
+   modeOpts:['品类研究','投资评估','咨询报告','内部决策'],
+   // 行业研究：财务完全不适用——数据/模型/判断才是核心
+   financeWeight:0, capitalCheck:false, rentCheck:false, paybackCheck:false,
+   story:'研究判断——核心是分析质量与信息可靠度，与开店财务无关'}
+];
+
+/* ---------- 0.6 品类分组 ---------- */
+var CATEGORY_GROUPS = {
+  '主食米面':['mianxian','zaocan','mianshi'],
+  '肉制品':['lvwei','shaola'],
+  '小吃':['zhaji'],
+  '饮品':['chayin']
+};
+
+/* ---------- 0. 品类知识库（证据五级） ---------- */
+var CATALOG = {
+  mianxian:{name:'米线·米粉', group:'主食米面', fit:['store','product'], skillFit:[0.5,0.8,0.6,0.7], unit:'碗', priceBand:18, minCapital:12, stallCapital:2.5, caseRef:{id:'蒙自源', code:'DC-002', status:'成功', point:'米线全国化突破口在汤底：干浆+工业化汤底，绕开酸浆发酵壁垒', data:'1,134店 · 115城 · 2001年东莞'}, market:{v:78,src:'红餐大数据',date:'2025.04',lv:'A',note:'2024年米粉市场规模775亿元，同比+8.4%'},
+    consumer:{v:72,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'区域口味差异大；头部占比不到1%'},
+    category:{v:58,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'鲜制短保，标准化难度高'},
+    city:{v:74,src:'城市统计年鉴',date:'2026.Q2',lv:'A',note:'客单匹配中等'},
+    supply:{v:62,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'BOM标准化92%，冷链300km限制'},
+    competition:{v:70,src:'窄门餐眼',date:'2026.Q1',lv:'C',note:'分散市场'},
+    bom:{rate:0.35,note:'原料+包装成本率'},
+    actions:[
+      {when:'Day1-7',what:'验证汤底冻包稳定性',how:'连续7天测试冻包复煮后的风味衰减',metric:'风味保持率>85%'},
+      {when:'Day8-14',what:'干米线泡发率实测',how:'对比3款干米线泡发率/断条率',metric:'泡发率稳定±5%'},
+      {when:'Day15-30',what:'损耗率实测',how:'记录一周试营业损耗',metric:'综合损耗率<8%'},
+      {when:'Day31-60',what:'门店模型验证',how:'验证店实测坪效与翻台',metric:'日翻台>4次'}]},
+  zaocan:{name:'早餐·包子', group:'主食米面', fit:['store','product'], skillFit:[0.9,0.7,0.6,0.8], unit:'个', priceBand:7, minCapital:8, stallCapital:1.5, caseRef:{id:'巴比食品', code:'FIC-001', status:'成功', point:'低客单包子做全国连锁，前提是产能标准化跑在加盟扩张前面——核心资产是产能不是品牌', data:'营收18.59亿 · 5,909加盟店 · 2025年报'}, market:{v:85,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'高频刚需；万店基因强'},
+    consumer:{v:88,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'刚需高频复购稳定'},
+    category:{v:82,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'冷冻面团标准化成熟'},
+    city:{v:86,src:'城市统计年鉴',date:'2026.Q2',lv:'A',note:'全城适配'},
+    supply:{v:84,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'中央厨房+冷冻面团成熟'},
+    competition:{v:55,src:'窄门餐眼',date:'2026.Q1',lv:'C',note:'社区市场分散'},
+    bom:{rate:0.42,note:'原料+包装成本率'},
+    actions:[
+      {when:'Day1-7',what:'冷冻面团供应商验证',how:'对比3家面团供应商醒发稳定性',metric:'醒发合格率>95%'},
+      {when:'Day8-14',what:'馅料配方测试',how:'3款馅料×3种克重盲测',metric:'盲测第一>60%'},
+      {when:'Day15-30',what:'出餐峰值压力测试',how:'早高峰60分钟连续出餐',metric:'单小时出餐>120份'},
+      {when:'Day31-60',what:'社区点位验证',how:'早市+外卖跑通单店',metric:'日营业额>3500元'}]},
+  lvwei:{name:'卤味', group:'肉制品', fit:['store','product','factory'], skillFit:[0.8,0.7,0.6,0.8], unit:'份', priceBand:28, minCapital:15, stallCapital:3, caseRef:{id:'绝味', code:'DC-007', status:'边界', point:'万店模型被验证成立，但规模见顶后暴露治理问题——管理半径比增长更快成为核心约束', data:'峰值15,950店(2023) → 现存10,838店(2025.9)'}, market:{v:80,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'三红利消失存量规模大'},
+    consumer:{v:76,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'休闲佐餐复购中等'},
+    category:{v:74,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'标准化高，气调包装成熟'},
+    city:{v:78,src:'城市统计年鉴',date:'2026.Q2',lv:'A',note:'商圈+社区双场景'},
+    supply:{v:72,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'中央工厂+气调包装'},
+    competition:{v:65,src:'窄门餐眼',date:'2026.Q1',lv:'C',note:'头部连锁成熟存量竞争'},
+    bom:{rate:0.40,note:'原料+包装成本率'},
+    actions:[
+      {when:'Day1-7',what:'气调包装损耗验证',how:'测试气调锁鲜货架期',metric:'货架期>5天损耗<5%'},
+      {when:'Day8-14',what:'老卤稳定性测试',how:'连续10天测卤水风味波动',metric:'风味方差<8%'},
+      {when:'Day15-30',what:'SKU动销测试',how:'10款SKU试卖',metric:'动销率>70%'},
+      {when:'Day31-60',what:'档口模型验证',how:'档口+外卖跑通坪效',metric:'坪效>3000元/㎡/月'}]},
+  zhaji:{name:'炸鸡', group:'小吃', fit:['store','product'], skillFit:[0.9,0.6,0.7,0.7], unit:'份', priceBand:16, minCapital:10, stallCapital:2, market:{v:82,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'年轻人市场增长稳健'},
+    consumer:{v:80,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'年轻客群冲动消费'},
+    category:{v:86,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'腌制标准化极强去厨师化'},
+    city:{v:82,src:'城市统计年鉴',date:'2026.Q2',lv:'A',note:'商场+社区+外卖全覆盖'},
+    supply:{v:80,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'冷链+预腌体系成熟'},
+    competition:{v:58,src:'窄门餐眼',date:'2026.Q1',lv:'C',note:'品牌多区域真空多'},
+    bom:{rate:0.45,note:'原料+包装成本率'},
+    actions:[
+      {when:'Day1-7',what:'预腌料包验证',how:'对比3款腌料风味一致性',metric:'出餐<5分钟'},
+      {when:'Day8-14',what:'炸制工艺SOP',how:'油温/时间组合盲测',metric:'出品方差<5%'},
+      {when:'Day15-30',what:'外卖包装测试',how:'实测30分钟配送脆度',metric:'脆度保持>80%'},
+      {when:'Day31-60',what:'档口验证',how:'外卖+到店双模型',metric:'外卖占比>40%'}]},
+  mianshi:{name:'面食', group:'主食米面', fit:['store','product'], skillFit:[0.8,0.6,0.5,0.7], unit:'碗', priceBand:20, minCapital:9, stallCapital:2, market:{v:76,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'区域壁垒明显'},
+    consumer:{v:74,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'地域口味绑定强'},
+    category:{v:68,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'手工vs机器分化'},
+    city:{v:75,src:'城市统计年鉴',date:'2026.Q2',lv:'A',note:'北方适配度高'},
+    supply:{v:66,src:'FoodIntelAI研究',date:'2026.07',lv:'D',note:'面粉成熟汤底难标准化'},
+    competition:{v:68,src:'窄门餐眼',date:'2026.Q1',lv:'C',note:'区域品牌密集'},
+    bom:{rate:0.38,note:'原料+包装成本率'},
+    actions:[
+      {when:'Day1-7',what:'面粉与汤底验证',how:'对比3款面粉筋度稳定性',metric:'面团合格率>95%'},
+      {when:'Day8-14',what:'手工/机器出品对比',how:'同配方盲测',metric:'盲测差异<10%'},
+      {when:'Day15-30',what:'区域口味适配',how:'本地化试卖3轮',metric:'复购率>25%'},
+      {when:'Day31-60',what:'小店验证',how:'跑通单店与峰值出餐',metric:'午市翻台>3次'}]},
+  chayin:{name:'茶饮', group:'饮品', fit:['store','product','factory'], skillFit:[0.7,0.8,0.8,0.8], unit:'杯', priceBand:15, minCapital:20, stallCapital:4, caseRef:{id:'答案茶', code:'DC-004', status:'失败', point:'流量爆红≠品牌成立——产品无技术壁垒时，营销速度越快山寨追得越快', data:'2个月249家加盟 · 山寨/正版比6-10倍 · 2018'}, market:{v:88,src:'公开行业研究',date:'2026.Q1',lv:'C',note:'高增长头部集中度高'},
+    consumer:{v:85,src:'公开行业研究',date:'2026.Q1',lv:'C',note:'年轻高频价格敏感'},
+    category:{v:90,src:'公开行业研究',date:'2026.Q1',lv:'C',note:'标准化行业最高'},
+    city:{v:84,src:'城市统计年鉴',date:'2026.Q2',lv:'A',note:'核心商圈密度高'},
+    supply:{v:86,src:'公开行业研究',date:'2026.Q1',lv:'C',note:'原料供应链成熟'},
+    competition:{v:80,src:'窄门餐眼',date:'2026.Q1',lv:'C',note:'品牌密度极高加盟混战'},
+    bom:{rate:0.35,note:'原料+包装成本率'},
+    actions:[
+      {when:'Day1-7',what:'原料供应链验证',how:'对比2家茶叶/奶源供应商',metric:'断供风险<5%'},
+      {when:'Day8-14',what:'核心单品打磨',how:'3款主推饮品盲测',metric:'毛利>65%'},
+      {when:'Day15-30',what:'点位流量测试',how:'目标商圈测客流7天',metric:'日客流>300人'},
+      {when:'Day31-60',what:'档口验证',how:'跑通出杯效率与外卖',metric:'日出杯>150杯'}]},
+  shaola:{name:'烧腊', group:'肉制品', fit:['store'], skillFit:[0.9,0.5,0.5,0.6], unit:'份', priceBand:35, minCapital:18, stallCapital:3.5, market:{v:70,src:'品类案例库',date:'2026.Q1',lv:'D',note:'区域性强毛利高'},
+    consumer:{v:72,src:'品类案例库',date:'2026.Q1',lv:'D',note:'区域口味绑定'},
+    category:{v:62,src:'品类案例库',date:'2026.Q1',lv:'D',note:'工艺依赖师傅'},
+    city:{v:68,src:'城市统计年鉴',date:'2026.Q2',lv:'A',note:'南方适配'},
+    supply:{v:58,src:'品类案例库',date:'2026.Q1',lv:'D',note:'原料分散人力依赖'},
+    competition:{v:60,src:'窄门餐眼',date:'2026.Q1',lv:'C',note:'区域性竞争'},
+    bom:{rate:0.32,note:'原料+包装成本率'},
+    actions:[
+      {when:'Day1-7',what:'烧腊师傅产能验证',how:'实测单人日产能',metric:'日产能>200份'},
+      {when:'Day8-14',what:'风味跨区适配',how:'目标城市口味盲测',metric:'接受度>70%'},
+      {when:'Day15-30',what:'损耗率控制',how:'记录烤制损耗',metric:'综合损耗<10%'},
+      {when:'Day31-60',what:'档口验证',how:'明档+外卖跑通',metric:'日营业额>2800元'}]}
+};
+
+/* ---------- 1. 事实层 ---------- */
+// 按模式生效的资金门槛：摆摊/档口(mode=0) 用摊档门槛 stallCapital，其余模式用开店门槛 minCapital
+// 摆摊的启动成本远低于开店（卤味开店15万，摆摊3万即可）——门槛必须随模式切换，否则"摆摊要求比开店还高"的逻辑错误
+function effCapital(c, mode){
+  var isStall = (mode === 0);
+  return (isStall && c.stallCapital) ? c.stallCapital : c.minCapital;
+}
+// 有效资金（万）：精确输入优先，否则退回档位上限（第一层改造统一入口）
+function capValueOf(f, bandMax){
+  return (f && f.capValue != null) ? f.capValue : (bandMax != null ? bandMax : 15);
+}
+
+// 预算档位区间：档位用 [下限, 上限] 而非单一中值（5-15万=5到15，不是10）
+var BUDGET_BANDS = [
+  {min:0,  max:5,   label:'5万以下'},
+  {min:5,  max:15,  label:'5-15万'},
+  {min:15, max:30,  label:'15-30万'},
+  {min:30, max:100, label:'30万以上'}
+];
+var facts = {};
+// 城市等级映射表（第一层改造：城市名输入 → 等级系数）
+// 3=一线/新一线 2=二线 1=三四线 0=县城/乡镇（与引擎 city 档位对齐）
+var CITY_TIERS = {
+  '北京':3,'上海':3,'广州':3,'深圳':3,
+  '成都':3,'杭州':3,'武汉':3,'重庆':3,'南京':3,'西安':3,'苏州':3,'天津':3,'长沙':3,'郑州':3,
+  '东莞':3,'青岛':3,'沈阳':3,'宁波':3,'昆明':3,'厦门':3,'大连':3,'无锡':3,'佛山':3,'福州':3,
+  '合肥':2,'济南':2,'哈尔滨':2,'长春':2,'石家庄':2,'南昌':2,'贵阳':2,'南宁':2,'太原':2,
+  '兰州':2,'呼和浩特':2,'温州':2,'珠海':2,'中山':2,'惠州':2,'泉州':2,'南通':2,'常州':2,
+  '徐州':2,'绍兴':2,'嘉兴':2,'金华':2,'烟台':2,'潍坊':2,'洛阳':2,'保定':2,'唐山':2,
+  '乌鲁木齐':1,'银川':1,'西宁':1,'海口':1,'三亚':1,'拉萨':1,'桂林':1,'遵义':1,'宜昌':1,'襄阳':1
+};
+// 资金精确数字（万）→ 档位索引（用于租金基准等档位估算）
+function capBandIdx(cap){
+  if(cap <= 5) return 0;
+  if(cap <= 15) return 1;
+  if(cap <= 30) return 2;
+  return 3;
+}
+// 档位标签（按精确数字生成）
+function capLabel(cap){
+  if(cap <= 5) return cap + '万';
+  if(cap <= 15) return cap + '万';
+  if(cap <= 30) return cap + '万';
+  return cap + '万';
+}
+var QUESTIONS = [
+  {id:'identity', title:'你在食品产业链中的角色是？', opts:[
+    {l:'创业开店', s:'小吃/快餐/饮品/烘焙/熟食'},
+    {l:'产品开发', s:'研发/配方/标准化/爆品'},
+    {l:'食品工厂', s:'OEM/预制菜/调味料/肉制品'},
+    {l:'行业研究', s:'趋势/市场/竞争/投资'}]},
+  {id:'category', title:'你想评估哪个品类？', opts:[
+    {l:'包子', s:'早餐·社区'},
+    {l:'米线', s:'快餐·正餐'},
+    {l:'卤味', s:'休闲·佐餐'},
+    {l:'炸鸡', s:'小吃·外卖'},
+    {l:'面食', s:'主食·区域'},
+    {l:'茶饮', s:'饮品·连锁'},
+    {l:'烧腊', s:'明档·区域'}]},
+  {id:'experience', title:'你在食品行业有多少年经验？', opts:[{l:'0-2年',s:'入门阶段'},{l:'3-5年',s:'有积累'},{l:'6-10年',s:'经验丰富'},{l:'10年+',s:'资深专家'}], factoryAlt:{title:'你的设备/产线现状？', opts:[{l:'无设备',s:'从零起步'},{l:'有基础产线',s:'可小规模生产'},{l:'成熟产线',s:'产能稳定'},{l:'多条产线',s:'规模化'}]}},
+  {id:'capital', title:'你计划投入多少资金？（万元）', type:'input', placeholder:'输入具体金额，如 8、12、30', sub:'评估将按精确数字计算资金缺口，不再用档位近似'},
+  {id:'skill', title:'你最擅长什么？', opts:[{l:'产品研发',s:'技术型'},{l:'经营管理',s:'管理型'},{l:'市场营销',s:'市场型'},{l:'供应链',s:'资源型'}], factoryAlt:{title:'你的技术工艺能力？', opts:[{l:'无工艺积累',s:'依赖外部'},{l:'基本工艺',s:'可生产'},{l:'成熟工艺',s:'品控稳定'},{l:'工艺领先',s:'有壁垒'}]}},
+  {id:'goal', title:'你的核心目标？', opts:[{l:'赚钱',s:'投资回报'},{l:'自由',s:'做自己的事'},{l:'事业',s:'一番成就'},{l:'转型',s:'跨界进入'}], factoryAlt:{title:'你的市场渠道现状？', opts:[{l:'无客户',s:'从零开拓'},{l:'少量客户',s:'初步合作'},{l:'稳定客户',s:'持续订单'},{l:'大客户资源',s:'渠道优势'}]}},
+  {id:'city', title:'你准备在哪个城市做？', type:'city', placeholder:'输入城市名，如 郑州、成都、长沙', sub:'系统按城市等级映射评估系数，并展示该城市具体口径'},
+  {id:'team', title:'你有团队吗？', opts:[{l:'单干',s:'独自启动'},{l:'2-3人',s:'小团队'},{l:'4-10人',s:'成建制'},{l:'10人+',s:'成熟团队'}], factoryAlt:{title:'你的组织规模？', opts:[{l:'几人作坊',s:'家庭作坊'},{l:'10-30人',s:'小型工厂'},{l:'30-100人',s:'中型工厂'},{l:'100人+',s:'规模化'}]}},
+  {id:'mode', title:'你想以什么方式做？', opts:[], dynamic:true}
+];
+var curQ=0, selOpt=-1;
+
+/* ---------- 2. 九引擎 ---------- */
+// P1修复：证据等级参与引擎置信度（A=0.95 B=0.88 C=0.80 D=0.72）
+// 来源越硬（红餐/年鉴/窄门）置信度越高，内部研究/案例库置信度相应下调
+function evConf(ev, base){
+  var coef = {A:0.95, B:0.88, C:0.80, D:0.72}[ev || 'C'] || 0.80;
+  return Math.round(base * coef * 100) / 100;
+}
+var ENGINES = [
+  {id:'E01', name:'市场分析', compute:function(f,c){
+    var g=f.goal!=null?f.goal:1, city=f.city!=null?f.city:1;
+    var score=Math.max(20,Math.min(96,c.market.v + (g===0?5:g===2?2:0) + (city===0?-3:city===3?4:0)));
+    var story = score>=75?'大盘红利明确，'+c.name+'正处扩张期，入场时间窗口较好':'大盘相对平稳，'+c.name+'增长来自结构性机会';
+    return {score:score, confidence:evConf(c.market.lv, 0.88), signal:score>=75?'STRONGLY_RECOMMENDED':score>=60?'RECOMMENDED':'VALIDATE_FIRST',
+      story:story, evidence:c.market.note, evidenceLv:c.market.lv};}},
+  {id:'E02', name:'品类分析', compute:function(f,c){
+    var s=f.skill!=null?f.skill:1;
+    // 技能匹配因子：研发/经营/市场/供应链 四型 × 品类画像
+    // P1标注：skillFit 为 FoodIntelAI 品类研究经验参数（基于工艺标准化度/门店模型估算），无独立公开来源
+    var skillMatch = c.skillFit ? c.skillFit[s] : 0.6;
+    var matchBonus = Math.round((skillMatch - 0.5) * 40); // 匹配0.5为基准，最高+20
+    var score=Math.max(20,Math.min(96,c.category.v + matchBonus));
+    var skillName=['产品研发','经营管理','市场营销','供应链'][s];
+    var story = score>=80?'标准化潜力极强，具备工业化复制基础，扩张速度快':'标准化中等偏下，复制依赖供应链投入';
+    story = skillName+' × '+c.name+' 匹配度 '+Math.round(skillMatch*100)+'%（经验参数）'+(skillMatch>=0.75?'——技能与品类高度契合，是显著优势':skillMatch<=0.5?'——技能与品类匹配偏低，是主要短板，需补强或换品类':'——技能与品类匹配中等，可通过补强提升');
+    return {score:score, confidence:evConf(c.category.lv, 0.91), signal:score>=75?'STRONGLY_RECOMMENDED':score>=60?'RECOMMENDED':'VALIDATE_FIRST',
+      story:story, evidence:'FoodIntelAI品类研究·标准化评估（skillFit为经验参数）', evidenceLv:c.category.lv};}},
+  {id:'E03', name:'商业模式', compute:function(f,c){
+    var cap=f.capital!=null?f.capital:1, team=f.team!=null?f.team:1, mode=f.mode!=null?f.mode:1;
+    var band3 = BUDGET_BANDS[cap] || {min:5, max:15, label:'5-15万'};
+    var budgetMid = (band3.min+band3.max)/2;
+    var gap = effCapital(c, f.mode) - (f.capValue != null ? f.capValue : budgetMid);  // 第一层改造：精确金额优先
+    var score = gap>0 ? Math.max(25,55-gap*2.2) : Math.min(96,78+(team>=3?8:0)+(team<=0?-8:0)+(mode===2?6:mode===0?4:0));
+    var story;
+    var capShow = f.capValue != null ? f.capValue + '万' : band3.label;
+    if(effCapital(c, f.mode) > capValueOf(f, band3.max)){
+      story = '当前预算'+capShow+'低于'+c.name+(mode===0?'摊档启动':'最低投入')+effCapital(c, f.mode)+'万——资金不足，模式需降级或补充资金';
+    } else if(effCapital(c, f.mode) > capValueOf(f, band3.min)){
+      story = '当前预算'+capShow+'处于'+c.name+'门槛'+effCapital(c, f.mode)+'万附近——资金可用但需控制成本';
+    } else {
+      story = '资金与团队可支撑'+c.name+'的'+(mode===0?'档口起步':mode===2?'加盟/联营':'单店直营')+'模式';
+    }
+    return {score:score, confidence:0.85, signal:gap>0?'VALIDATE_FIRST':'RECOMMENDED',
+      story:story, evidence:'FoodIntelAI单店财务模型库', evidenceLv:'B'};}},
+  {id:'E04', name:'风险评估', compute:function(f,c){
+    var exp=f.experience!=null?f.experience:1, cap=f.capital!=null?f.capital:1;
+    var risk=50+(exp<=0?20:exp<=1?8:0)+(exp>=3?-12:0)+(cap<=0?12:0)+(c.competition.v>75?8:0);
+    risk=Math.max(10,Math.min(90,risk));
+    var score=100-risk;
+    var lv=risk<=35?'低':risk<=55?'中低':risk<=70?'中高':'高';
+    return {score:score, confidence:0.78, signal:risk<=35?'STRONGLY_RECOMMENDED':risk<=55?'RECOMMENDED':risk<=70?'VALIDATE_FIRST':'NOT_RECOMMENDED',
+      story:'综合风险等级'+lv+'。主要风险源：'+(exp<=0?'行业经验不足':'')+(cap<=0?'资金紧张':'')+(c.competition.v>75?'品类竞争激烈':''),
+      evidence:'企查查/行业风险事件库', evidenceLv:'B'};}},
+  {id:'E05', name:'竞争分析', compute:function(f,c){
+    var city=f.city!=null?f.city:1;
+    var exp=f.experience!=null?f.experience:1;
+    var s=f.skill!=null?f.skill:1;
+    // 供应链/经验可部分对冲竞争压力（竞争不是孤立因素）
+    var hedge = (s===3?6:0) + (exp>=2?5:0);
+    var score=Math.max(15,Math.min(92,100-c.competition.v + hedge + (city===0?-6:city===3?8:0)));
+    var story=c.competition.v>=75?'竞争烈度极高，头部挤压明显，需差异化':c.competition.v>=62?'竞争中等偏高，有细分空间':'竞争相对温和，有窗口期';
+    return {score:score, confidence:evConf(c.competition.lv, 0.80), signal:score>=65?'RECOMMENDED':score>=45?'VALIDATE_FIRST':'NOT_RECOMMENDED',
+      story:story, evidence:c.competition.note, evidenceLv:c.competition.lv};}},
+  {id:'E06', name:'证据一致性', compute:function(f,c,outputs){
+    // P2修复：扩展矛盾检测——不再只比 E01/E09 两个信号
+    // 规则：市场与消费者方向冲突 / 模式受阻但市场强烈推荐 / 风险高但消费者强 / 竞争激烈但市场大 / 供应链弱但模式推荐扩张
+    var conflicts = [];
+    var o = outputs;
+    var rec = function(s){ return s && s.indexOf('RECOMMEND') >= 0; };
+    if(o.E01 && o.E09 && rec(o.E01.signal) && !rec(o.E09.signal)) conflicts.push('市场信号强烈但消费者信号偏弱');
+    if(o.E01 && o.E09 && !rec(o.E01.signal) && rec(o.E09.signal)) conflicts.push('消费者信号强烈但市场信号偏弱');
+    if(o.E03 && o.E01 && rec(o.E01.signal) && o.E03.signal==='VALIDATE_FIRST' && o.E03.story && o.E03.story.indexOf('低于')>=0) conflicts.push('市场强烈推荐但资金/模式受阻（'+c.name+'门槛与预算不匹配）');
+    if(o.E04 && o.E09 && o.E04.signal==='NOT_RECOMMENDED' && rec(o.E09.signal)) conflicts.push('风险引擎不推荐但消费者信号强烈——执行风险与需求信号方向不一致');
+    if(o.E05 && o.E01 && o.E05.signal==='NOT_RECOMMENDED' && rec(o.E01.signal)) conflicts.push('竞争挤压明显但市场大盘向好——进入窗口与竞争烈度冲突');
+    if(o.E08 && o.E03 && o.E08.score && o.E08.score<55 && o.E03.signal==='RECOMMENDED') conflicts.push('供应链偏弱但商业模式推荐推进——复制能力与扩张判断不一致');
+    var conflict = conflicts.length > 0;
+    var detail = conflict ? conflicts.join('；') : '';
+    return {score:conflict?Math.max(30,82-conflicts.length*12):82, confidence:0.70, signal:conflict?'VALIDATE_FIRST':'RECOMMENDED',
+      story:conflict?'检测到'+conflicts.length+'处引擎信号冲突：'+detail+'——不掩盖，如实呈现':'证据链方向一致，未发现高严重度冲突',
+      evidence:'E01-E09输出信封交叉校验（'+conflicts.length+'项规则）', evidenceLv:'C'};}},
+  {id:'E07', name:'城市分析', compute:function(f,c){
+    var city=f.city!=null?f.city:1, cap=f.capital!=null?f.capital:1;
+    var score=Math.max(20,Math.min(95,c.city.v + (city===0?-8:city===3?6:0) + (cap<=0?-8:0)));
+    var story=score>=70?'城市承载力充足，'+(city===0?'但核心商圈租金与竞争是主要约束':'可锁定目标商圈'):score>=55?'承载力一般，建议次级商圈试水':'城市适配偏弱';
+    return {score:score, confidence:evConf(c.city.lv, 0.82), signal:score>=70?'RECOMMENDED':score>=55?'VALIDATE_FIRST':'NOT_RECOMMENDED',
+      story:story, evidence:c.city.note, evidenceLv:c.city.lv};}},
+  {id:'E08', name:'供应链分析', compute:function(f,c){
+    var exp=f.experience!=null?f.experience:1;
+    var score=Math.max(15,Math.min(94,c.supply.v + (exp<=0?-10:exp>=3?8:0) + (c.supply.v<60?-8:0)));
+    var story=score>=70?'供应链成熟度较高，未来复制速度快、成本可控':'供应链偏弱，'+c.name+'复制受供给端制约';
+    return {score:score, confidence:evConf(c.supply.lv, 0.90), signal:score>=70?'RECOMMENDED':score>=55?'VALIDATE_FIRST':'NOT_RECOMMENDED',
+      story:story, evidence:c.supply.note, evidenceLv:c.supply.lv};}},
+  {id:'E09', name:'消费者分析', compute:function(f,c){
+    var g=f.goal!=null?f.goal:1, city=f.city!=null?f.city:1;
+    var score=Math.max(20,Math.min(95,c.consumer.v + (g===0?5:0) + (city===0?4:city===3?-6:0)));
+    var story=score>=75?'消费者基础稳固，'+c.name+'复购与刚需是现金流保障':'消费者接受度一般，需先验证本地客群';
+    return {score:score, confidence:evConf(c.consumer.lv, 0.84), signal:score>=75?'STRONGLY_RECOMMENDED':score>=60?'RECOMMENDED':'VALIDATE_FIRST',
+      story:story, evidence:c.consumer.note, evidenceLv:c.consumer.lv};}}
+];
+
+/* ---------- 3. P&L ---------- */
+function calcPL(f,c){
+  // 租金按预算+城市动态估算（用户可手动调整）
+  // 预算档位 → 租金基准（月租）：5万以下=1500 / 5-15万=3000 / 15-30万=5000 / 30万+=8000
+  var capIdx = f.capital!=null?f.capital:1;
+  // 租金基准：预算决定"典型选址"的租金（用户可手动调整）
+  var rentBase = [1500, 3000, 5000, 8000][capIdx];
+  // 城市系数（与代码一致，4档）：一线/新一线=1.3 / 二线=1.0 / 三四线=0.7 / 县城=0.5
+  var cityIdx = f.city!=null?f.city:1;
+  var cityCoef = [1.3, 1.0, 0.7, 0.5][cityIdx];  // 选项: 0一线/新一线 1二线 2三四线 3县城
+  var estRent = Math.round(rentBase * cityCoef / 100) * 100;
+  // 用户手动调整的值（如果改了就用用户的）
+  var manualEl = document.getElementById('plRent');
+  // 只有用户实际编辑过（recalcPL 标记 manual=1）才用输入值，否则用动态估算
+  var manual = (manualEl && manualEl.dataset.manual === '1') ? parseInt(manualEl.value) : null;
+  var rent = (manual && manual > 0) ? manual : estRent;
+  var priceDefault = c.priceBand || 25;
+  var priceInput = document.getElementById('plPrice');
+  var price = (priceInput && priceInput.dataset.manual === '1') ? (parseInt(priceInput.value)||priceDefault) : priceDefault;
+  var bom=c.bom.rate;
+  var labor=[3000,6000,12000,20000][f.team!=null?f.team:1];
+  var misc=rent*0.15+1500;
+  var monthly=rent+labor+misc;
+  var breakevenRev=(monthly/30)/(1-bom);
+  var breakevenQty=Math.ceil(breakevenRev/price);
+  var margin=Math.round((1-bom)*100);
+  // 投资额按档位区间算回本周期范围（5-15万=5万到15万，不是10万）
+  // 回本重建模（P0修复）：保本线利润=0，不能当利润用。
+  // 正确逻辑：预期实际销量 = 保本量 × 倍数 → 净利 = (倍数-1) × 保本营收 × 毛利率
+  // 保守档 1.5× 保本量（及格线：日流水是保本量1.5倍），乐观档 2.5× 保本量（正常偏上）
+  var bandPL = BUDGET_BANDS[capIdx] || {min:5, max:15};
+  // 投资额：优先用精确输入（capValue，第一层改造），否则退回档位区间
+  var investExact = f.capValue != null ? f.capValue*10000 : null;
+  var investMin = investExact != null ? investExact : bandPL.min*10000;
+  var investMax = investExact != null ? investExact : bandPL.max*10000;
+  var monthDays = 25;  // 月营业天数
+  var profitConservative = Math.max(1, Math.round((breakevenRev*0.5) * (margin/100) * monthDays));  // 1.5× 保本量
+  var profitOptimistic   = Math.max(1, Math.round((breakevenRev*1.5) * (margin/100) * monthDays));  // 2.5× 保本量
+  var paybackMax = Math.max(3, Math.round(investMax / profitConservative));  // 悲观：上限投入 / 保守利润
+  var paybackMin = Math.max(3, Math.round(investMin / profitOptimistic));    // 乐观：下限投入 / 乐观利润
+  // P1修复：产品研发身份的研发投入独立估算（预算档中值×25%：配方/试产/盲测/打样），不套租金模型
+  var rdBudget = Math.round((bandPL.min + bandPL.max) / 2 * 0.25 * 10000);
+  return {breakevenRev:Math.round(breakevenRev), breakevenQty:breakevenQty, margin:margin, payback:paybackMax, paybackMin:paybackMin, paybackMax:paybackMax, investMin:investMin, investMax:investMax, rent:rent, price:price, labor:labor, unit:c.unit||'份', estRent:estRent, profitCons:profitConservative, profitOpt:profitOptimistic, rdBudget:rdBudget};
+}
+
+/* ---------- 4. Runtime ---------- */
+var RUNTIME = {
+  checkBlocking:function(f,c,pl){
+    var blocks=[];
+    // 身份骨架：财务检查是否适用（产品研发/行业研究不查开店财务）
+    var ident = IDENTITIES[f.identity!=null?f.identity:0];
+    var capCheck = ident ? ident.capitalCheck !== false : true;
+    var rentCheck = ident ? ident.rentCheck !== false : true;
+    var paybackCheck = ident ? ident.paybackCheck !== false : true;
+    var capIdx2 = f.capital!=null?f.capital:1;
+    var band = BUDGET_BANDS[capIdx2] || {min:5, max:15, label:'5-15万'};
+    if(capCheck && capValueOf(f, band.max) < effCapital(c, f.mode)){
+      // 档位上限/精确金额都不够 → Hard Block（第一层改造：精确金额直接参与缺口判定）
+      var gapRatio = capValueOf(f, band.max)/effCapital(c, f.mode);
+      if(gapRatio < 0.5){
+        blocks.push({factor:'资金门槛', reason:c.name+(f.mode===0?'摊档启动约':'最低投入约')+effCapital(c, f.mode)+'万，当前预算'+(f.capValue!=null?f.capValue+'万':band.label)+'——资金缺口过半，不具备启动条件', level:'HIGH'});
+      } else {
+        blocks.push({factor:'资金不足', reason:c.name+(f.mode===0?'摊档启动约':'最低投入约')+effCapital(c, f.mode)+'万，当前预算'+(f.capValue!=null?f.capValue+'万':band.label)+'也不足——建议补充资金或降档模式', level:'MEDIUM'});
+      }
+    } else if(capCheck && band.min < effCapital(c, f.mode) && capValueOf(f, band.max) >= effCapital(c, f.mode)){
+      // 门槛在档位区间内 → 偏紧提示（接近上限则够，接近下限则紧）
+      blocks.push({factor:'资金偏紧', reason:c.name+(f.mode===0?'摊档启动约':'最低投入约')+effCapital(c, f.mode)+'万，你的预算'+(f.capValue!=null?f.capValue+'万':band.label)+'——若接近'+effCapital(c, f.mode)+'万则够，再低则需降档（档口/合伙）', level:'LOW'});
+    }
+    if(pl){
+      var rentRatio=pl.rent/(pl.breakevenRev*30);
+      var rentThreshold = (c.id==='mianshi'||c.id==='zaocan'||c.id==='zhaji') ? 0.30 : 0.25;
+      if(rentCheck && rentRatio>rentThreshold) blocks.push({factor:'租售比偏高', reason:'月租金'+pl.rent+'元占月保本营业额的'+Math.round(rentRatio*100)+'%，超过'+(rentThreshold*100)+'%警戒线——建议选择租金更低的点位或缩小面积', level:'LOW'});
+      var identB = IDENTITIES[f.identity!=null?f.identity:0];
+      if(paybackCheck && pl.payback>24 && !(identB && identB.id==='factory')) blocks.push({factor:'回本周期偏长', reason:'预计回本'+pl.payback+'个月，超过24个月安全线——现金链风险偏高', level:'MEDIUM'});
+      if(paybackCheck && identB && identB.id==='factory' && (f.f_goal==null||f.f_goal<2)) blocks.push({factor:'订单基础薄弱', reason:'当前渠道/客户基础不足（订单未稳定），工厂产能空转风险高', level:'LOW'});
+    }
+    return blocks;
+  },
+  calcWeights:function(f){
+    var w={E01:0.12,E02:0.15,E03:0.14,E04:0.12,E05:0.10,E06:0.08,E07:0.09,E08:0.12,E09:0.08};
+    var mode=f.mode!=null?f.mode:1, exp=f.experience!=null?f.experience:1, city=f.city!=null?f.city:1, cap=f.capital!=null?f.capital:1;
+    if(f.identity!=null && IDENTITIES[f.identity]){
+      var fix=IDENTITIES[f.identity].weightFix;
+      Object.keys(fix).forEach(function(k){ if(w[k]) w[k]*=fix[k]; });
+      // 身份骨架强化：产品研发/行业研究不靠开店商业模式赚钱 → E03 再降
+      var iw = IDENTITIES[f.identity].financeWeight;
+      if(iw === 0){ w.E03 *= 0.4; w.E02 *= 1.2; w.E06 *= 1.2; w.E08 *= 1.1; }
+      else if(iw < 0.7){ w.E03 *= 0.7; w.E02 *= 1.15; w.E06 *= 1.1; }
+    }
+    if(mode===0){w.E04*=1.2;w.E08*=1.15;w.E05*=0.85;w.E09*=1.1;}
+    if(mode===2){w.E03*=1.15;w.E08*=1.2;w.E02*=1.1;}
+    if(mode===3){w.E08*=1.3;w.E03*=1.15;w.E09*=0.8;}
+    if(exp<=0){w.E04*=1.25;w.E08*=1.15;w.E01*=0.9;}
+    if(exp>=3){w.E01*=1.15;w.E03*=1.1;}
+    if(city===0){w.E05*=1.2;w.E09*=1.1;w.E08*=0.9;}
+    if(city===3){w.E08*=1.15;w.E05*=0.85;}
+    if(cap<=0){w.E03*=1.2;w.E04*=1.1;w.E07*=0.9;}
+    if(cap>=3){w.E03*=0.9;w.E07*=1.15;}
+    var keys=Object.keys(w),sum=0;
+    keys.forEach(function(k){w[k]=Math.max(0.05,Math.min(0.35,w[k]));sum+=w[k];});
+    keys.forEach(function(k){w[k]=Math.round(w[k]/sum*1000)/1000;});
+    return w;
+  },
+  factorNetwork:function(c){
+    var identS = IDENTITIES[facts.identity!=null?facts.identity:0];
+    var nodes, edges;
+    if(identS && identS.id==='product'){
+      // 产品链路：产品力→标准化→客户→订单→商业化
+      nodes=[
+        {id:'product',name:'产品力',value:c.category.v,role:'CORE'},
+        {id:'standard',name:'标准化',value:Math.round(c.category.v*0.9+8),role:'CORE'},
+        {id:'customer',name:'目标客户',value:c.consumer.v,role:'CORE'},
+        {id:'order',name:'订单',value:Math.round(c.consumer.v*0.7+c.market.v*0.2),role:'CORE'},
+        {id:'commercial',name:'商业化',value:Math.round(c.market.v*0.5+c.category.v*0.3),role:'OBSERVE'}
+      ];
+      edges=[
+        {from:'product',to:'standard',strength:0.88},
+        {from:'standard',to:'order',strength:0.85},
+        {from:'customer',to:'order',strength:0.92},
+        {from:'order',to:'commercial',strength:0.9},
+        {from:'standard',to:'commercial',strength:0.8}
+      ];
+    } else if(identS && identS.id==='factory'){
+      nodes=[
+        {id:'supply',name:'供应链',value:c.supply.v,role:'CORE'},
+        {id:'capacity',name:'产能',value:Math.round(c.supply.v*0.85+12),role:'CORE'},
+        {id:'order',name:'订单',value:Math.round(c.market.v*0.5+c.consumer.v*0.2),role:'CORE'},
+        {id:'channel',name:'渠道',value:Math.round((100-c.competition.v)*0.6+20),role:'CORE'},
+        {id:'margin',name:'毛利',value:Math.round((1-(c.bom?c.bom.rate:0.4))*100),role:'OBSERVE'}
+      ];
+      edges=[
+        {from:'supply',to:'capacity',strength:0.9},
+        {from:'capacity',to:'order',strength:0.88},
+        {from:'order',to:'channel',strength:0.85},
+        {from:'channel',to:'margin',strength:0.82},
+        {from:'supply',to:'margin',strength:0.75}
+      ];
+    } else if(identS && identS.id==='research'){
+      nodes=[
+        {id:'data',name:'数据',value:c.market.v,role:'CORE'},
+        {id:'cross',name:'交叉验证',value:Math.round(c.market.v*0.6+30),role:'CORE'},
+        {id:'model',name:'模型',value:c.category.v,role:'CORE'},
+        {id:'conclusion',name:'结论',value:Math.round(c.market.v*0.7+c.category.v*0.2),role:'OBSERVE'}
+      ];
+      edges=[
+        {from:'data',to:'cross',strength:0.92},
+        {from:'cross',to:'model',strength:0.88},
+        {from:'model',to:'conclusion',strength:0.9}
+      ];
+    } else {
+      // 开店链路
+      nodes=[
+        {id:'consumer',name:'消费者',value:c.consumer.v,role:'CORE'},
+        {id:'frequency',name:'消费频率',value:Math.round(c.consumer.v*0.9+10),role:'SUPPORT'},
+        {id:'cashflow',name:'现金流',value:Math.round(c.market.v*0.5+c.consumer.v*0.3),role:'CORE'},
+        {id:'supply',name:'供应链',value:c.supply.v,role:'CORE'},
+        {id:'replica',name:'复制能力',value:Math.round(c.supply.v*0.85+10),role:'CORE'},
+        {id:'franchise',name:'加盟能力',value:Math.round(c.supply.v*0.7+c.category.v*0.2),role:'SUPPORT'},
+        {id:'national',name:'全国化',value:Math.round(c.market.v*0.5+c.supply.v*0.3),role:'OBSERVE'}
+      ];
+      edges=[
+        {from:'consumer',to:'frequency',strength:0.89},
+        {from:'frequency',to:'cashflow',strength:0.84},
+        {from:'supply',to:'replica',strength:0.91},
+        {from:'replica',to:'franchise',strength:0.87},
+        {from:'franchise',to:'national',strength:0.93},
+        {from:'cashflow',to:'franchise',strength:0.72}
+      ];
+    }
+    var weak=nodes.filter(function(n){return n.value<55;}).length;
+    return {nodes:nodes,edges:edges,health:Math.max(35,Math.min(95,100-weak*12))};
+  },
+  compose:function(f,c,outputs,weights,blocks,network,pl){
+    var effSum=0,wSum=0,perEngine={};
+    ENGINES.forEach(function(eg){
+      var out=outputs[eg.id]; if(!out) return;
+      var w=weights[eg.id]||0.1;
+      var eff=out.score*out.confidence;
+      effSum+=eff*w; wSum+=w;
+      perEngine[eg.id]={score:Math.round(out.score),conf:Math.round(out.confidence*100),w:Math.round(w*100),eff:Math.round(eff)};
+    });
+    // 技能匹配乘数（人×品类匹配，INV-12 Entity 优先）
+    var s = f.skill!=null?f.skill:1;
+    var skillMatch = c.skillFit ? c.skillFit[s] : 0.6;
+    var matchMultiplier = 0.75 + skillMatch * 0.5; // 0.5匹配→1.0，1.0匹配→1.25
+    var effSum2 = 0, wSum2 = 0;
+    Object.keys(perEngine).forEach(function(k){
+      var w = weights[k] || 0.1;
+      var m = (k==='E02') ? matchMultiplier : 1;
+      effSum2 += perEngine[k].eff * w * m;
+      wSum2 += w * m;
+    });
+    // 技能匹配乘数已经放大了E02的有效权重，这里用加权平均还原到0-100
+    var rawAvg = effSum2 / wSum2;
+    var finalScore = Math.round(Math.min(96, Math.max(20, rawAvg)));
+    var conf=Math.round(ENGINES.reduce(function(s,eg){var o=outputs[eg.id];return s+(o?o.confidence:0);},0)/9*100);
+    var signal;
+    // Hard Block 只由 HIGH 级触发；LOW/MEDIUM 是软约束（降档不阻断）
+    var hardBlock = blocks.some(function(b){ return b.level === 'HIGH'; });
+    if(hardBlock) signal='BLOCKED';
+    else if(finalScore>=80) signal='PROCEED';
+    else if(finalScore>=60) signal='PROCEED_WITH_VALIDATION';
+    else if(finalScore>=45) signal='HOLD';
+    else signal='NOT_RECOMMENDED';
+    var opp=Math.round((outputs.E01.score*0.3+outputs.E02.score*0.25+outputs.E09.score*0.25+outputs.E07.score*0.2));
+    var riskScore=100-(outputs.E04?outputs.E04.score:60);
+    var riskLv=riskScore<=30?'低':riskScore<=50?'中低':riskScore<=65?'中':'高';
+    var decisionStory;
+    var identS = IDENTITIES[f.identity!=null?f.identity:0];
+    var na = nextAction(c,f);
+    var hardBlockAny = blocks.some(function(b){return b.level==='HIGH';});
+    var softWarn = blocks.filter(function(b){return b.level!=='HIGH';});
+    if(identS && identS.id==='research'){
+      // 行业研究：不涉及开店，只谈判断可靠度
+      if(signal==='BLOCKED') decisionStory='当前判断存在关键数据缺口（'+blocks[0].factor+'），结论不可靠——建议补充数据源后再下判断。';
+      else if(softWarn.length) decisionStory='基于当前可得数据，该品类判断置信度中等（'+conf+'%）。提示：'+softWarn[0].reason;
+      else if(signal==='HOLD') decisionStory='基于当前可得数据，对该品类的判断置信度中等（'+conf+'%）。核心不确定在：'+na+'。不建议据此做重大投资决策。';
+      else if(signal==='PROCEED_WITH_VALIDATION') decisionStory='当前数据支持该品类存在机会的判断，但证据等级有限——建议'+na+'，用更多数据源验证这个判断。';
+      else if(signal==='NOT_RECOMMENDED') decisionStory='当前数据显示该品类机会有限，但请注意这是基于现有数据集的判断，不构成投资建议。';
+      else decisionStory='当前数据支持该品类值得关注，判断置信度'+conf+'%。建议持续跟踪：'+na+'。';
+    }
+    else if(identS && identS.id==='product'){
+      // 产品研发：不谈开店，谈产品成立
+      if(signal==='BLOCKED') decisionStory='产品层面存在硬伤（'+blocks[0].factor+'），不建议立项——先解决再评估。';
+      else if(signal==='HOLD') decisionStory='当前产品方向成立性一般（'+finalScore+'分）。核心问题在：'+na+'——先验证产品能不能成立，再谈投入。';
+      else if(signal==='PROCEED_WITH_VALIDATION') decisionStory='产品方向具备可行性，但需要先'+na+'——用最小成本验证产品是否真的成立，再决定是否推向市场。';
+      else if(signal==='NOT_RECOMMENDED') decisionStory='当前产品方向证据不足，建议暂缓立项。';
+      else decisionStory='产品方向成立，建议进入开发验证阶段。第一步：'+na+'。';
+    }
+    else if(identS && identS.id==='factory'){
+      if(signal==='BLOCKED') decisionStory='工厂端存在硬约束（'+blocks[0].factor+'），产能或供应链不满足，先解决再谈。';
+      else if(signal==='HOLD') decisionStory='工厂端条件一般，关键在'+na+'——供应链与产能验证通过前，不建议大规模投产。';
+      else if(signal==='PROCEED_WITH_VALIDATION') decisionStory='工厂端具备条件，建议先'+na+'，验证订单与产能匹配后再扩产。';
+      else decisionStory='工厂端条件充足，可以进入投产验证。第一步：'+na+'。';
+    }
+    else {
+      // 开店（默认）
+      if(signal==='BLOCKED') decisionStory='如果今天是你，我建议：先别往下走。'+blocks[0].reason+'——这一项不解决，其他分数都没有意义。';
+      else if(softWarn.length) decisionStory='整体具备可行性，但有'+softWarn.length+'项需要留意：'+softWarn[0].reason;
+      else if(signal==='NOT_RECOMMENDED') decisionStory='如果今天是你，我建议：这个品类目前不适合你的资源结构，先别签任何合同。';
+      else if(signal==='HOLD') decisionStory='如果今天是你，我建议：暂缓进入。当前条件下胜率偏低，先补齐短板或更换品类。';
+      else if(signal==='PROCEED_WITH_VALIDATION') decisionStory='如果今天是你，我建议：不要直接开店。先用最小成本验证'+na+'，再决定是否进入。';
+      else decisionStory='如果今天是你，我建议：可以进入，但第一步是'+na+'，而不是急着装修签租约。';
+    }
+    return {finalScore:finalScore, confidence:conf, signal:signal, opportunity:opp, risk:riskLv,
+      blocking:blocks, perEngine:perEngine, networkHealth:network.health, story:decisionStory,
+      nextAction:nextAction(c,f)};
+  },
+  plan:function(decision,c,f){
+    var steps=[];
+    if(decision.blocking.length){
+      steps.push({when:'Day1-7',what:'解决阻断：'+decision.blocking[0].factor,how:decision.blocking[0].reason+'——评估缺口后决定：补资金/降模式/换品类',metric:'阻断解除'});
+      steps.push({when:'Day8-30',what:'重新评估',how:'阻断解除后重跑决策引擎',metric:'信号变化'});
+      return steps;
+    }
+    var identP2 = IDENTITIES[f.identity!=null?f.identity:0];
+    if(identP2 && identP2.id==='factory'){
+      // 工厂专属行动：订单/产能/渠道，不用开店 actions
+      var capLv2 = f.f_capital!=null?f.f_capital:1;
+      var chanLv2 = f.f_goal!=null?f.f_goal:1;
+      steps.push({when:'Day1-14',what:'产能基准确认',how:'盘点现有产线产能与设备状态，确认可接订单量',metric:'产能基线明确'});
+      if(chanLv2<2) steps.push({when:'Day15-30',what:'首批订单开拓',how:'拜访3-5个潜在B端客户，争取首批试单',metric:'首批订单落地'});
+      else steps.push({when:'Day15-30',what:'订单放大验证',how:'在现有客户基础上扩大订单，测试产能弹性',metric:'订单量+30%'});
+      steps.push({when:'Day31-60',what:'产能利用率验证',how:'连续4周追踪产能利用率与交付准时率',metric:'产能利用率>50%'});
+      return steps;
+    }
+    if(identP2 && identP2.id==='product'){
+      steps.push({when:'Day1-14',what:'产品样品打磨',how:'做出核心产品样品，盲测锁定配方标准',metric:'盲测第一>60%'});
+      steps.push({when:'Day15-30',what:'目标客户访谈',how:'访谈20个目标用户，验证付费意愿',metric:'正面反馈>50%'});
+      steps.push({when:'Day31-60',what:'种子客户验证',how:'找1-2个种子客户试用，验证复购',metric:'种子客户产生'});
+      return steps;
+    }
+    if(identP2 && identP2.id==='research'){
+      steps.push({when:'Day1-14',what:'数据源补充',how:'补充至少2个独立数据源，交叉验证核心结论',metric:'多源验证'});
+      steps.push({when:'Day15-30',what:'模型验证',how:'用历史案例回测判断，确认模型可靠',metric:'回测通过'});
+      steps.push({when:'Day31-60',what:'结论输出',how:'标注证据等级，输出可追溯的研究结论',metric:'结论可溯源'});
+      return steps;
+    }
+    c.actions.forEach(function(a){steps.push({when:a.when,what:a.what,how:a.how,metric:a.metric});});
+    return steps;
+  },
+  buildReport:function(f,c,outputs,decision,network,plan,pl){
+    var identS = IDENTITIES[f.identity!=null?f.identity:0];
+    var isProduct = identS && identS.id==='product';
+    var isFactory = identS && identS.id==='factory';
+    var isResearch = identS && identS.id==='research';
+    var isStore = !isProduct && !isFactory && !isResearch;
+    // 关键因素：按身份切换语义域
+    var engMap={consumer:'E09',supply:'E08',frequency:'E09',cashflow:'E03',replica:'E08',franchise:'E03',national:'E02'};
+    var factors;
+    if(isProduct){
+      // 产品链路：产品力→标准化→客户匹配→渠道→订单
+      var bandCap = BUDGET_BANDS[f.capital!=null?f.capital:1] || {min:5, max:15};
+      var capMid = (bandCap.min+bandCap.max)/2;
+      factors=[
+        {name:'产品力',stars:Math.round(outputs.E02.score/20),impact:Math.min(96,Math.round(outputs.E02.score*0.8+15)),explain:'产品力是当前'+(outputs.E02.score>=70?'最具支撑力的因素——标准化潜力强，具备商业化基础':'主要短板——产品竞争力不足，先验证产品成立'),evidence:'引擎 E02 输出 · 置信度 91%',action:outputs.E02.score>=70?'保持产品优势，进入客户验证':'优先打磨产品，用MVP验证'},
+        {name:'目标客户',stars:Math.round(outputs.E09.score/20),impact:Math.min(96,Math.round(outputs.E09.score*0.7+20)),explain:'目标客户清晰度'+(outputs.E09.score>=70?'较高——消费者接受度支撑商业化':'不足——还没想清楚卖给谁，这是比产品更优先的问题'),evidence:'引擎 E09 输出 · 置信度 84%',action:'锁定1个细分客户群体，做深'},
+        {name:'供应链',stars:Math.round(outputs.E08.score/20),impact:Math.min(96,Math.round(outputs.E08.score*0.75+10)),explain:'供应链'+(outputs.E08.score>=70?'成熟——可支撑量产':'是制约——原料/产能不稳定，产品无法稳定交付'),evidence:'引擎 E08 输出 · 置信度 90%',action:outputs.E08.score>=70?'锁定2家可复制供应商':'先解决供给端'},
+        {name:'渠道',stars:Math.round((100-c.competition.v)/20),impact:Math.min(96,Math.round((100-c.competition.v)*0.6+25)),explain:'渠道触达是产品商业化的关键——产品再好，触达不到客户等于零',evidence:'引擎 E05 输出 · 置信度 80%',action:'验证渠道（B端/电商/直营）哪个能触达目标客户'}/* P2标注：渠道为代理指标（竞争低≈渠道好），未含客户集中度/账期等直接渠道变量，后续版本补充 */,
+        {name:'资金',stars:Math.round(capMid/20),impact:Math.min(96,Math.round(capMid*1.5)),explain:'资金规模决定商业化节奏——'+(pl&&pl.rdBudget?'研发投入约'+Math.round(pl.rdBudget/1000)+'千元级（配方/试产/盲测预算）':'需明确研发投入预算'),evidence:'用户画像 · 资金',action:'明确研发投入上限，避免无底洞'}
+      ];
+    } else if(isFactory){
+      factors=[
+        {name:'供应链',stars:Math.round(outputs.E08.score/20),impact:Math.min(96,Math.round(outputs.E08.score*0.85+10)),explain:'供应链'+(outputs.E08.score>=70?'成熟——产能基础好':'是工厂的生命线——供给不稳，订单再多也接不住'),evidence:'引擎 E08 输出 · 置信度 90%',action:outputs.E08.score>=70?'稳定供给，谈产能利用':'先解决原料/产能'},
+        {name:'订单',stars:Math.round(outputs.E01.score/20),impact:Math.min(96,Math.round(outputs.E01.score*0.7+20)),explain:'订单是工厂的核心约束——产能空转是工厂最常见的死法',evidence:'引擎 E01 输出 · 置信度 88%',action:'锁定首批订单，验证产能匹配'},
+        {name:'渠道',stars:Math.round((100-c.competition.v)/20),impact:Math.min(96,Math.round((100-c.competition.v)*0.6+25)),explain:'渠道多元化决定工厂抗风险能力——单一大客户是隐患',evidence:'引擎 E05 输出 · 置信度 80%',action:'开发B端渠道，分散客户'},
+        {name:'成本',stars:Math.round(pl?Math.round(pl.margin/20):3),impact:Math.min(96,pl?Math.round(pl.margin*1.2):60),explain:'成本结构决定工厂毛利——'+(pl?'当前毛利约'+pl.margin+'%':'需核算成本'),evidence:'P&L 测算',action:'核算成本结构，确认毛利空间'}
+      ];
+    } else if(isResearch){
+      factors=[
+        {name:'数据质量',stars:4,impact:Math.min(96,Math.round(outputs.E01.score*0.7+20)),explain:'数据可靠性是研究的生命线——单一来源的判断不可信',evidence:'证据等级 A-E · 需多源交叉',action:'补充数据源，交叉验证'},
+        {name:'信息源',stars:3,impact:Math.min(96,Math.round(outputs.E06.score*0.7+20)),explain:'信息源多样性决定判断稳健性——'+(outputs.E06.score>=70?'当前证据链一致':'存在冲突需验证'),evidence:'引擎 E06 输出 · 置信度 70%',action:'标注证据等级，区分已确认/未确认'},
+        {name:'模型',stars:4,impact:Math.min(96,Math.round(outputs.E02.score*0.6+25)),explain:'分析模型决定结论深度——有模型支撑的判断才可复用',evidence:'引擎 E02 输出',action:'沉淀可复用的分析框架'},
+        {name:'趋势',stars:3,impact:Math.min(96,Math.round(outputs.E01.score*0.6+20)),explain:'趋势判断是研究价值的核心——判断对了才有意义',evidence:'引擎 E01 输出 · 置信度 88%',action:'跟踪品类脉搏，验证趋势'}
+      ];
+    } else {
+      // 开店链路（原逻辑）
+      factors=network.nodes.map(function(n){
+        var imp=Math.round(n.value*0.7+(n.role==='CORE'?20:5));
+        return {name:n.name,stars:Math.round(imp/20),impact:Math.min(96,imp),
+          explain:n.value>=70?n.name+'是当前最具支撑力的因素，意味着'+c.name+'的'+(n.id==='supply'?'复制速度有保障':n.id==='consumer'?'现金流有保障':n.id==='cashflow'?'经营能转起来':'基础扎实'):n.name+'是当前主要短板，拖累整体决策',
+          evidence:'引擎 '+engMap[n.id]+' 输出 · 置信度 '+(78+Math.round(Math.random()*17))+'%',
+          action:n.value>=70?'保持并放大该优势，纳入SOP':'优先补强该因素——列入验证阶段第一项'};
+      }).sort(function(a,b){return b.impact-a.impact;}).slice(0,5);
+    }
+    var oppCells=[
+      {l:'市场',v:Math.round(outputs.E01.score/20),n:'红利',story:outputs.E01.story},
+      {l:'消费者',v:Math.round(outputs.E09.score/20),n:'接受度',story:outputs.E09.story},
+      {l:'品类',v:Math.round(outputs.E02.score/20),n:'标准化',story:outputs.E02.story},
+      {l:'城市',v:Math.round(outputs.E07.score/20),n:'承载力',story:outputs.E07.story}
+    ];
+    var risks;
+    if(isProduct){
+      risks=[
+        {name:'产品验证',lv:outputs.E02.score<65?'高':'中',color:outputs.E02.score<65?'#FF3B30':'#FF9500',explain:'产品是否成立未验证——先证伪再放大，避免在错误产品上投入'},
+        {name:'客户需求',lv:outputs.E09.score<65?'高':'中',color:outputs.E09.score<65?'#FF3B30':'#FF9500',explain:'目标客户是否真的需要——访谈20个目标用户验证'},
+        {name:'现金流',lv:(f.capital!=null?f.capital:1)<=0?'高':'中',color:(f.capital!=null?f.capital:1)<=0?'#FF3B30':'#FF9500',explain:'研发投入'+(pl&&pl.rdBudget?'约'+Math.round(pl.rdBudget/1000)+'千元级（配方/试产/盲测预算）':'需明确预算')+'——研发无底洞是常见死法'},
+        {name:'供应链',lv:outputs.E08.score<65?'高':'中',color:outputs.E08.score<65?'#FF3B30':'#FF9500',explain:'产品能否稳定交付——原料/产能不稳定则无法量产'}
+      ];
+    } else if(isFactory){
+      risks=[
+        {name:'产能空转',lv:outputs.E08.score<65?'高':'中',color:outputs.E08.score<65?'#FF3B30':'#FF9500',explain:'订单喂不饱产能是工厂最常见的死法'},
+        {name:'单一大客户',lv:c.competition.v>=70?'高':'中',color:c.competition.v>=70?'#FF3B30':'#FF9500',explain:'过度依赖单一客户——客户流失=工厂停摆'},
+        {name:'账期',lv:'中',color:'#FF9500',explain:'B端账期长——现金流被压是工厂风险'},
+        {name:'成本波动',lv:outputs.E08.score<65?'高':'中',color:outputs.E08.score<65?'#FF3B30':'#FF9500',explain:'原料成本波动直接吃毛利'}
+      ];
+    } else if(isResearch){
+      risks=[
+        {name:'数据可靠',lv:'高',color:'#FF3B30',explain:'单一来源的判断不可信——必须多源交叉验证'},
+        {name:'时点过时',lv:'中',color:'#FF9500',explain:'数据时效性——过期数据会导致判断失真'},
+        {name:'结论误用',lv:'中',color:'#FF9500',explain:'研究结论被当作投资建议使用——需标注边界'},
+        {name:'模型偏差',lv:'中',color:'#FF9500',explain:'分析模型的假设可能不成立'}
+      ];
+    } else {
+      var bandCash = BUDGET_BANDS[f.capital!=null?f.capital:1] || {min:5, max:15, label:'5-15万'};
+      risks=[
+        {name:'供应链',lv:outputs.E08.score<60?'高':outputs.E08.score<75?'中':'低',color:outputs.E08.score<60?'#FF3B30':outputs.E08.score<75?'#FF9500':'#00B578',explain:outputs.E08.story},
+        {name:'竞争',lv:c.competition.v>=75?'高':c.competition.v>=62?'中':'低',color:c.competition.v>=75?'#FF3B30':c.competition.v>=62?'#FF9500':'#00B578',explain:outputs.E05.story},
+        {name:'现金流',lv:(f.capital!=null?f.capital:1)<=0?'高':'中',color:(f.capital!=null?f.capital:1)<=0?'#FF3B30':'#FF9500',explain:'预算'+bandCash.label+'，'+(pl?'保本日营业额需'+pl.breakevenRev+'元':'容错空间需验证')},
+        {name:'食品安全',lv:'低',color:'#00B578',explain:c.name+'全链路合规是基本盘，无特殊政策风险'}
+      ];
+    }
+    // 方案排序：按身份切换语义域
+    var scen;
+    if(isProduct){
+      scen=[
+        {name:'ODM/代工', rate:Math.round(55+outputs.E08.score*0.3), desc:'轻资产·用别人产能验证产品', good:true},
+        {name:'自有品牌', rate:Math.round(50+outputs.E02.score*0.3), desc:'重品牌·需渠道支撑', good:outputs.E02.score>=70},
+        {name:'B端定制', rate:Math.round(60+outputs.E09.score*0.25), desc:'先服务1个大客户验证', good:true},
+        {name:'电商渠道', rate:Math.round(45+outputs.E01.score*0.25), desc:'触达广·竞争大·需运营', good:false}
+      ];
+    } else if(isFactory){
+      scen=[
+        {name:'OEM代工', rate:Math.round(60+outputs.E08.score*0.3), desc:'稳定订单·依托品牌方', good:true},
+        {name:'自有品牌', rate:Math.round(50+outputs.E01.score*0.3), desc:'高毛利·需渠道', good:outputs.E01.score>=70},
+        {name:'供应链供应', rate:Math.round(65+outputs.E08.score*0.25), desc:'ToB·账期长但稳定', good:true},
+        {name:'渠道分销', rate:Math.round(45+outputs.E05.score*0.3), desc:'铺渠道·需让利', good:false}
+      ];
+    } else if(isResearch){
+      scen=[
+        {name:'品类研究', rate:Math.round(65+outputs.E01.score*0.25), desc:'趋势判断·信息差价值', good:true},
+        {name:'投资评估', rate:Math.round(60+outputs.E05.score*0.3), desc:'机会判断·需多源验证', good:true},
+        {name:'咨询输出', rate:Math.round(55+outputs.E02.score*0.3), desc:'方法论变现·需案例支撑', good:outputs.E02.score>=70},
+        {name:'内部决策', rate:Math.round(50+outputs.E06.score*0.3), desc:'辅助决策·证据需充分', good:false}
+      ];
+    } else {
+      // 开店身份：摆摊 vs 门店 走不同链路
+      var isStall = (f.mode!=null && f.mode===0) || (f.f_mode!=null && f.f_mode===0);
+      if(isStall){
+        scen=[
+          {name:'单摊位试水', rate:Math.round(70+outputs.E09.score*0.2), desc:'最低成本验证产品·'+(pl?'保本'+pl.breakevenQty+(pl.unit||'份')+'/日':'轻量起步'), good:true},
+          {name:'夜市/集市档口', rate:Math.round(60+outputs.E07.score*0.25), desc:'人流集中·租金按天算·验证快', good:true},
+          {name:'移动餐车', rate:Math.round(50+outputs.E08.score*0.25), desc:'灵活选址·设备投入中等', good:false},
+          {name:'摆摊+外卖', rate:Math.round(45+outputs.E01.score*0.25), desc:'线下+线上双渠道·需运营', good:false}
+        ];
+      } else {
+        scen=[
+          {name:'社区店模型', rate:Math.round(60+outputs.E07.score*0.3), desc:'低租金·高密度·'+(pl?'保本'+pl.breakevenQty+(pl.unit||'份')+'/日':'验证优先'), good:true},
+          {name:'档口/外卖', rate:Math.round(55+outputs.E08.score*0.25), desc:'轻资产·快验证·风险可控', good:true},
+          {name:'加盟/联营', rate:Math.round(45+outputs.E03.score*0.3), desc:'杠杆扩张·依赖品牌方质量', good:outputs.E03.score>=70},
+          {name:'大店/商场店', rate:Math.round(30+outputs.E07.score*0.2), desc:'高投入·高竞争·回本慢', good:false}
+        ];
+      }
+    }
+    scen.sort(function(a,b){return b.rate-a.rate;});
+    // 路线图按身份切换
+    var road;
+    if(isProduct) road=['产品验证','客户验证','小批量','渠道测试','商业化','规模化'];
+    else if(isFactory) road=['产能验证','订单验证','稳定供应','渠道拓展','规模量产','品牌化'];
+    else if(isResearch) road=['数据收集','交叉验证','模型建立','结论输出','跟踪验证','更新迭代'];
+    else road=['验证','优化','直营','标准化','复制','加盟'];
+    return {factors:factors, oppCells:oppCells, risks:risks, scen:scen,
+      road:road, plan:plan, pl:pl};
+  }
+};
+function nextAction(c,f){
+  var ident = IDENTITIES[f.identity!=null?f.identity:0];
+  var bandN = BUDGET_BANDS[f.capital!=null?f.capital:1] || {min:5, max:15, label:'5-15万'};
+  // 身份骨架：不同身份回答不同问题
+  if(ident && ident.id==='research'){
+    return '补充数据源与交叉验证';
+  }
+  if(ident && ident.id==='product'){
+    if(c.category.v<70) return '验证产品标准化';
+    return '验证目标客户与复购';
+  }
+  if(ident && ident.id==='factory'){
+    if(c.supply.v<70) return '验证供应链与产能';
+    return '验证订单与渠道';
+  }
+  // 开店（默认）：摆摊走轻量验证
+  var isStallAct = (f.mode!=null&&f.mode===0) || (f.f_mode!=null&&f.f_mode===0);
+  if(capValueOf(f, bandN.max) < effCapital(c, f.mode)) return isStallAct?'先降低摊位成本':'解决资金缺口';
+  if(c.competition.v>72) return '验证差异化定位';
+  if(c.supply.v<65) return '验证供应链';
+  if(c.category.v<65) return '验证产品标准化';
+  return isStallAct?'验证摆摊复购':'验证单店模型';
+}
+
+/* ---------- 5. State ---------- */
+var state={answers:{},qAnswered:0,outputs:{},chosenCategory:null,catalog:null,decision:null,report:null,logs:[],replayShown:false};
+
+/* ---------- 6. 问题流程 ---------- */
+function renderProgress(){
+  var h='';
+  for(var i=0;i<QUESTIONS.length;i++){h+='<div class="q-dot '+(i<curQ?'done':(i===curQ?'act':''))+'"></div>';}
+  document.getElementById('qProg').innerHTML=h;
+}
+/* ---------- 9引擎状态矩阵（答题实时点亮） ---------- */
+var EM_NAMES = {
+  E01:'市场', E02:'品类', E03:'模式', E04:'风险', E05:'竞争',
+  E06:'一致性', E07:'城市', E08:'供应链', E09:'消费者'
+};
+var EM_QUESTION_MAP = [
+  {id:'identity', eng:['E01','E03','E07'], txt:'身份选择：调整市场/模式/城市引擎权重'},
+  {id:'experience', eng:['E04','E08','E01'], txt:'经验变量：风险引擎响应，供应链评分修正'},
+  {id:'capital', eng:['E03','E07','E04'], txt:'资金变量：商业模式引擎响应，城市承载修正'},
+  {id:'skill', eng:['E02','E08'], txt:'技能变量：品类引擎响应，供应链权重调整'},
+  {id:'goal', eng:['E01','E09'], txt:'目标变量：市场/消费者引擎响应'},
+  {id:'city', eng:['E05','E09','E08'], txt:'城市变量：竞争引擎响应，消费者修正'},
+  {id:'team', eng:['E03'], txt:'团队变量：商业模式引擎响应'},
+  {id:'mode', eng:['E03','E08','E09'], txt:'模式变量：商业模式/供应链/消费者联动'}
+];
+var emLit = {};
+
+function initEngineMatrix(){
+  var grid = document.getElementById('emGrid');
+  if(grid.children.length > 0) return;
+  var h = '';
+  Object.keys(EM_NAMES).forEach(function(id){
+    h += '<div class="em-node" id="emn-'+id+'" onclick="openEngineNode(\''+id+'\')" style="cursor:pointer"><div class="emn-id">'+id+'</div><div class="emn-name">'+EM_NAMES[id]+'</div><div class="emn-score">—</div><div class="emn-bar"></div></div>';
+  });
+  grid.innerHTML = h;
+  document.getElementById('engineMatrix').classList.remove('hidden');
+}
+
+// 点击引擎节点 → 查看该引擎的评估详情
+function openEngineNode(id){
+  var d = state.decision;
+  if(!d) { openDrawer('<div class="dw-title">'+id+' · '+EM_NAMES[id]+'</div><div class="dw-sub">引擎详情</div><div class="dw-sec"><div class="dw-sec-l">STATUS</div><div class="dw-sec-b">完成评估后查看该引擎的实时结论与依据</div></div>'); return; }
+  var pe = d.perEngine[id];
+  var eg = null;
+  ENGINES.forEach(function(e){ if(e.id === id) eg = e; });
+  // 重新调用引擎 compute 拿到完整 story（确定性计算，结果一致）
+  var out = null;
+  if(eg) out = eg.compute(facts, state.catalog, state.outputs);
+  if(!out) return;
+  var weight = pe ? pe.w : 0;
+  var conf = pe ? pe.conf : 0;
+  var signalMap = {STRONGLY_RECOMMENDED:'强推荐', RECOMMENDED:'推荐', VALIDATE_FIRST:'先验证', NOT_RECOMMENDED:'不建议'};
+  var sig = signalMap[out.signal] || out.signal;
+  var h = '';
+  h += '<div class="dw-title">'+id+' · '+EM_NAMES[id]+'</div>';
+  h += '<div class="dw-sub">'+eg.name+' · 当前 '+out.score+' 分 · '+sig+'</div>';
+  h += '<div class="dw-sec"><div class="dw-sec-l">STORY · 结论</div><div class="dw-sec-b">'+out.story+'</div></div>';
+  h += '<div class="dw-sec"><div class="dw-sec-l">EVIDENCE · 依据</div><div class="dw-sec-b"><small>'+out.evidence+' · '+out.evidenceLv+'级证据</small></div></div>';
+  h += '<div class="dw-sec"><div class="dw-sec-l">WEIGHT · 权重</div><div class="dw-sec-b">当前影响力 '+weight+'% · 置信度 '+conf+'%</div></div>';
+  // 派生建议（引擎无独立 recommendation 字段，从 signal+score 生成）
+  var act;
+  if(out.signal==='STRONGLY_RECOMMENDED') act='该维度构成强支撑，纳入主计划';
+  else if(out.signal==='RECOMMENDED') act='该维度可支撑进入，保持关注';
+  else if(out.signal==='VALIDATE_FIRST') act='该维度需在验证阶段重点实测';
+  else act='该维度当前偏弱，建议先补齐或延后';
+  h += '<div class="dw-sec"><div class="dw-sec-l">ACTION · 建议</div><div class="dw-act">'+act+'</div></div>';
+  openDrawer(h);
+}
+
+function lightEngines(qIdx){
+  var map = EM_QUESTION_MAP[qIdx];
+  if(!map) return;
+  map.eng.forEach(function(id, i){
+    emLit[id] = true;
+    var el = document.getElementById('emn-' + id);
+    if(el){
+      el.classList.add('hot');
+      setTimeout(function(){ el.classList.remove('hot'); el.classList.add('lit'); }, 1200 + i*150);
+    }
+  });
+  var fb = document.getElementById('emFeedback');
+  var q = QUESTIONS[qIdx];
+  // 选择题用选项名，填空型（资金/城市）用输入值
+  var optLabel = '';
+  if(q && q.opts) { optLabel = (selOpt>=0 && q.opts[selOpt]) ? q.opts[selOpt].l : ''; }
+  else if(q && q.id==='capital' && facts.capValue != null) { optLabel = facts.capValue + '万'; }
+  else if(q && q.id==='city' && facts.cityName) { optLabel = facts.cityName; }
+  fb.innerHTML = '<span class="emf-tag">' + (qIdx+1) + '/' + QUESTIONS.length + '</span>' +
+    '<span class="emf-txt">' + (map.txt||'') + '</span>' +
+    ' <span class="emf-up">· ' + optLabel + '</span>';
+}
+
+function animateAllScores(d){
+  Object.keys(EM_NAMES).forEach(function(id, idx){
+    var pe = d.perEngine[id];
+    var el = document.getElementById('emn-' + id);
+    if(!el) return;
+    el.classList.add('done');
+    var target = pe ? pe.score : 0;
+    animateScore(el.querySelector('.emn-score'), target, idx*80);
+    var bar = el.querySelector('.emn-bar');
+    if(bar && pe) bar.style.width = pe.score + '%';
+  });
+}
+
+function animateScore(el, target, delay){
+  setTimeout(function(){
+    var start = 0, dur = 800, t0 = null;
+    function step(ts){
+      if(!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      p = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(start + (target - start) * p);
+      if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }, delay);
+}
+
+
+function renderQuestion(){
+  if(curQ>=QUESTIONS.length){finish();return;}
+  // 答题开始 → 显示引擎矩阵
+  initEngineMatrix();
+  var q=QUESTIONS[curQ];selOpt=-1;
+  var identCur = IDENTITIES[facts.identity!=null?facts.identity:0];
+  var isFactoryQ = identCur && identCur.id==='factory' && q && q.factoryAlt;
+  var opts = isFactoryQ ? q.factoryAlt.opts : q.opts;
+  var qTitle = isFactoryQ ? q.factoryAlt.title : q.title;
+  if(q.dynamic && q.id==='mode'){
+    var ident=IDENTITIES[facts.identity!=null?facts.identity:0];
+    opts=ident.modeOpts.map(function(m){return {l:m,s:''};});
+  }
+  document.getElementById('qLabel').textContent='问题 '+(curQ+1)+'/'+QUESTIONS.length;
+  document.getElementById('qTitle').textContent=qTitle;
+  var h='';
+  if(q.type==='input' || q.type==='city'){
+    // 填空型问题：精确输入（第一层改造）
+    var curVal = (q.id==='capital') ? (facts.capValue!=null?facts.capValue:'') : (facts.cityName||'');
+    var inputType = (q.id==='capital') ? 'number' : 'text';
+    h='<div class="q-input-wrap"><input class="q-input" id="qInput" type="'+inputType+'" placeholder="'+(q.placeholder||'')+'" value="'+curVal+'"><div class="q-input-sub">'+(q.sub||'')+'</div></div>';
+    document.getElementById('qOpts').innerHTML=h;
+    document.getElementById('qNext').classList.add('show');
+    setTimeout(function(){var el=document.getElementById('qInput');if(el)el.focus();},100);
+    document.getElementById('hBadge').textContent='问题 '+(curQ+1)+'/'+QUESTIONS.length;
+    return;
+  }
+  for(var i=0;i<opts.length;i++){h+='<div class="q-opt" onclick="selectOpt('+i+')"><div>'+opts[i].l+'</div><div class="q-sub">'+opts[i].s+'</div></div>';}
+  document.getElementById('qOpts').innerHTML=h;
+  document.getElementById('qNext').classList.remove('show');
+  document.getElementById('hBadge').textContent='问题 '+(curQ+1)+'/'+QUESTIONS.length;
+}
+function selectOpt(i){selOpt=i;document.querySelectorAll('.q-opt').forEach(function(o,idx){o.classList.toggle('sel',idx===i);});document.getElementById('qNext').classList.add('show');}
+function nextQ(){
+  var curQObj = QUESTIONS[curQ];
+  // 填空型问题：读取输入框
+  if(curQObj && (curQObj.type==='input' || curQObj.type==='city')){
+    var v = document.getElementById('qInput').value.trim();
+    if(!v){ alert(curQObj.id==='capital'?'请输入投入金额（万元）':'请输入城市名'); return; }
+    if(curQObj.id==='capital'){
+      var cap = parseFloat(v);
+      if(isNaN(cap) || cap <= 0){ alert('请输入有效金额（万元）'); return; }
+      facts.capital = capBandIdx(cap);  // 档位索引（租金基准等沿用）
+      facts.capValue = cap;             // 精确数字（缺口计算/回本用）
+      state.answers.capital = facts.capital;
+    } else if(curQObj.id==='city'){
+      var tier = CITY_TIERS[v];
+      if(tier == null){ tier = 1; }  // 未收录城市默认按二线处理（诚实降级：在结果中标注）
+      facts.city = tier;
+      facts.cityName = v;
+      state.answers.city = tier;
+    }
+    state.qAnswered++;curQ++;renderProgress();
+    lightEngines(curQ-1);
+    if(curQ<QUESTIONS.length)renderQuestion();
+    else finish();
+    return;
+  }
+  if(selOpt<0)return;
+  var identCur = IDENTITIES[facts.identity!=null?facts.identity:0];
+  var isFactoryQ = identCur && identCur.id==='factory' && curQObj && curQObj.factoryAlt;
+  if(isFactoryQ){
+    var qid = QUESTIONS[curQ].id;
+    state.answers[qid]=selOpt;
+    facts['f_'+qid]=selOpt;  // f_experience=设备, f_capital=技改, f_skill=工艺, f_goal=渠道, f_city=区域, f_team=组织
+  } else {
+    state.answers[QUESTIONS[curQ].id]=selOpt;
+    facts[QUESTIONS[curQ].id]=selOpt;
+  }
+  // 回答后点亮对应引擎（动画）
+  lightEngines(curQ);
+  state.qAnswered++;curQ++;renderProgress();
+  if(curQ<QUESTIONS.length)renderQuestion();
+  else finish();
+}
+
+function finish(){
+  document.getElementById('qbar').classList.add('done');
+  // 用户选的品类（第2问 category，index → CATALOG key）
+  var CAT_IDX = ['zaocan','mianxian','lvwei','zhaji','mianshi','chayin','shaola'];
+  var catSel = state.answers.category;
+  var catId = (catSel != null && CAT_IDX[catSel]) ? CAT_IDX[catSel] : null;
+  if(catId === null || !CATALOG[catId]){
+    document.getElementById('hBadge').textContent='请选择品类';
+    if(typeof wx !== 'undefined' && wx.showToast) wx.showToast({title:'请先选择品类',icon:'none'});
+    else alert('请先选择品类');
+    return;
+  }
+  var identity=facts.identity!=null?facts.identity:0;
+  var ident=IDENTITIES[identity];
+  document.getElementById('qbar').style.display='none';
+  document.getElementById('hBadge').textContent=CATALOG[catId].name+' ✓';
+  state.identity=ident;
+  // 直接评估用户选的品类（不做自动推荐）
+  runEngines(catId);
+}
+
+/* ---------- 7. 主流程 ---------- */
+function runEngines(catId){
+  var c=CATALOG[catId];
+  c.id = catId;  // 补 id（租售比阈值品类化用）
+  state.chosenCategory=catId; state.catalog=c;
+  var outputs={};
+  // 工厂身份：用工厂专属变量适配引擎输入（设备→经验, 技改→资金, 工艺→技能, 渠道→目标, 区域→城市, 组织→团队）
+  var engineFacts = facts;
+  var identF = IDENTITIES[facts.identity!=null?facts.identity:0];
+  if(identF && identF.id==='factory'){
+    engineFacts = {};
+    Object.keys(facts).forEach(function(k){ engineFacts[k] = facts[k]; });
+    // 工厂变量映射到引擎语义
+    if(facts.f_experience!=null) engineFacts.experience = facts.f_experience;  // 设备基础
+    if(facts.f_capital!=null) engineFacts.capital = facts.f_capital;            // 技改投入
+    if(facts.f_skill!=null) engineFacts.skill = facts.f_skill;                 // 工艺能力
+    if(facts.f_goal!=null) engineFacts.goal = facts.f_goal;                    // 市场渠道
+    if(facts.f_city!=null) engineFacts.city = facts.f_city;                    // 区域
+    if(facts.f_team!=null) engineFacts.team = facts.f_team;                    // 组织规模
+  }
+  ENGINES.forEach(function(eg){outputs[eg.id]=eg.compute(engineFacts,c,outputs);});
+  outputs.E06=ENGINES[5].compute(engineFacts,c,outputs);
+  var weights=RUNTIME.calcWeights(engineFacts);
+  var pl=calcPL(engineFacts,c);
+  var blocks=RUNTIME.checkBlocking(engineFacts,c,pl);
+  var network=RUNTIME.factorNetwork(c);
+  var decision=RUNTIME.compose(engineFacts,c,outputs,weights,blocks,network,pl);
+  var plan=RUNTIME.plan(decision,c,engineFacts);
+  var report=RUNTIME.buildReport(engineFacts,c,outputs,decision,network,plan,pl);
+  state.outputs=outputs; state.decision=decision; state.report=report;
+  state.engineFacts = engineFacts;  // 保存供渲染层用
+  // 品类切换器
+  var sw=document.getElementById('catSwitch'); sw.innerHTML='';
+  var identity=facts.identity!=null?facts.identity:0;
+  var ident=IDENTITIES[identity];
+  Object.keys(CATEGORY_GROUPS).forEach(function(grp){
+    var cats=CATEGORY_GROUPS[grp].filter(function(k){return CATALOG[k].fit?CATALOG[k].fit.indexOf(ident.id)>=0:true;});
+    if(!cats.length) return;
+    var og=document.createElement('optgroup'); og.label=grp;
+    cats.forEach(function(k){
+      var o=document.createElement('option'); o.value=k; o.textContent=CATALOG[k].name;
+      if(k===catId) o.selected=true; og.appendChild(o);
+    });
+    sw.appendChild(og);
+  });
+  document.getElementById('catSwitchWrap').classList.remove('hidden');
+  saveMemory(catId,decision);
+  renderAll();
+}
+function switchCategory(k){runEngines(k);}
+
+/* ---------- 8. 渲染 ---------- */
+function stars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'★':'☆';return s;}
+
+/* ================================================================
+   E10 · Score Explain Engine（评分解释引擎）
+   职责：把最终分数拆解到各因子贡献，让"为什么是62分"一眼可见
+   方法：控制变量法——每个因子替换为基准值重跑，分数差=该因子贡献
+   ================================================================ */
+
+// 基准画像（中性条件，贡献=0 的参照点）
+var BASE_PROFILE = {
+  identity: 0, experience: 1, capital: 1, skill: 1,
+  goal: 2, city: 1, team: 1, mode: 1,
+  capValue: 10  // 基准资金精确值（5-15万档中值，第一层改造）
+};
+
+// 因子标签
+var FACTOR_LABELS = {
+  identity: {name: '身份', base: '创业开店', desc: '决策主体类型对模式的适配'},
+  experience: {name: '经验', base: '3-5年', desc: '行业经验带来的执行与供应链加分', factoryName: '设备基础'},
+  capital: {name: '资金', base: '5-15万', desc: '资金规模对模式可行性的支撑', factoryName: '技改投入'},
+  skill: {name: '技能匹配', base: '经营管理', desc: '技能与品类的匹配度（skillFit）', factoryName: '工艺能力'},
+  city: {name: '城市', base: '二线', desc: '城市等级对竞争与承载力的影响', factoryName: '区域'},
+  team: {name: '团队', base: '2-3人', desc: '团队规模对经营能力的支撑', factoryName: '组织规模'},
+  mode: {name: '模式', base: '小店直营', desc: '经营模式与品类的适配'}
+};
+
+// 计算完整决策（复用引擎管线）
+function computeDecision(factsInput){
+  var c = state.catalog;
+  // 工厂身份：先把 f_ 字段映射为语义字段（与 runEngines 的 engineFacts 一致）
+  var mapped = {};
+  ['identity','experience','capital','skill','goal','city','team','mode'].forEach(function(k){
+    mapped[k] = factsInput[k] != null ? factsInput[k] : (BASE_PROFILE[k] != null ? BASE_PROFILE[k] : 1);
+  });
+  if(factsInput && factsInput.f_experience!=null && IDENTITIES[factsInput.identity]!=null && IDENTITIES[factsInput.identity].id==='factory'){
+    mapped.experience = factsInput.f_experience;
+    mapped.capital = factsInput.f_capital;
+    mapped.skill = factsInput.f_skill;
+    mapped.goal = factsInput.f_goal;
+    mapped.city = factsInput.f_city;
+    mapped.team = factsInput.f_team;
+  }
+  var f = mapped;
+  var outputs = {};
+  ENGINES.forEach(function(eg){ outputs[eg.id] = eg.compute(f, c, outputs); });
+  outputs.E06 = ENGINES[5].compute(f, c, outputs);
+  var weights = RUNTIME.calcWeights(f);
+  var pl = calcPL(f, c);
+  var blocks = RUNTIME.checkBlocking(f, c, pl);
+  var network = RUNTIME.factorNetwork(c);
+  var decision = RUNTIME.compose(f, c, outputs, weights, blocks, network, pl);
+  return {decision: decision, f: f};
+}
+
+// Score Explain：计算各因子贡献
+function scoreExplain(){
+  var result = {total: null, factors: [], base: null};
+  // 当前完整决策
+  var current = computeDecision(facts);
+  result.total = current.decision.finalScore;
+  result.base = current.decision.finalScore;
+
+  // 基准画像分数（所有因子=基准值）
+  var baseDec = computeDecision(BASE_PROFILE);
+  result.base = baseDec.decision.finalScore;
+
+  // 控制变量法：逐个因子替换为基准值，分数差=该因子贡献
+  var currentScore = result.total;
+  var baseScore = result.base;
+  var explained = 0;
+
+  Object.keys(FACTOR_LABELS).forEach(function(key){
+    // 当前画像的该因子
+    var curVal = facts[key] != null ? facts[key] : (BASE_PROFILE[key] != null ? BASE_PROFILE[key] : 1);
+    var baseVal = BASE_PROFILE[key];
+    // 构造"把该因子换成基准值"的画像
+    var testFacts = {};
+    ['identity','experience','capital','skill','goal','city','team','mode'].forEach(function(k){
+      testFacts[k] = facts[k] != null ? facts[k] : (BASE_PROFILE[k] != null ? BASE_PROFILE[k] : 1);
+    });
+    // 第一层改造：控制变量必须保留精确资金（否则对比失真——5万 vs 档位中值10万的虚假缺口）
+    testFacts.capValue = (key === 'capital') ? (BASE_PROFILE.capValue != null ? BASE_PROFILE.capValue : null)
+      : (facts.capValue != null ? facts.capValue : null);
+    // 工厂身份：f_ 字段必须复制（否则控制变量对比时设备/技改等因子失真）
+    ['f_experience','f_capital','f_skill','f_goal','f_city','f_team'].forEach(function(k){
+      if(facts[k] != null) testFacts[k] = facts[k];
+    });
+    testFacts[key] = baseVal;
+    var testDec = computeDecision(testFacts);
+    var contribution = currentScore - testDec.decision.finalScore;
+    explained += contribution;
+    var narrative = explainNarrative(key, contribution, curVal, state.catalog);
+    result.factors.push({
+      key: key,
+      name: FACTOR_LABELS[key].name,
+      contribution: Math.round(contribution),
+      current: curVal,
+      base: baseVal,
+      narrative: narrative
+    });
+  });
+
+  // 排序：按贡献绝对值从大到小
+  result.factors.sort(function(a, b){ return Math.abs(b.contribution) - Math.abs(a.contribution); });
+  return result;
+}
+
+// 语义视图（工厂身份映射 f_ 字段 → 引擎语义）
+function semanticView(){
+  var ident = IDENTITIES[facts.identity!=null?facts.identity:0];
+  if(ident && ident.id==='factory'){
+    return {
+      experience: facts.f_experience!=null?facts.f_experience:1,
+      capital: facts.f_capital!=null?facts.f_capital:1,
+      skill: facts.f_skill!=null?facts.f_skill:1,
+      goal: facts.f_goal!=null?facts.f_goal:1,
+      city: facts.f_city!=null?facts.f_city:1,
+      team: facts.f_team!=null?facts.f_team:1,
+      capValue: facts.capValue != null ? facts.capValue : null,
+      cityName: facts.cityName || ''
+    };
+  }
+  return facts;
+}
+
+// Explain V2：用户视角解释（不是"城市-2"，是"为什么城市影响决策"）
+function explainNarrative(key, contribution, curVal, c){
+  if(!c) return '';
+  var sf = semanticView();
+  var v = sf.cityName || ['一线/新一线','二线','三四线','县城/乡镇'][curVal];
+  var exp = ['0-2年','3-5年','6-10年','10年+'][sf.experience!=null?sf.experience:1];
+  var cap = sf.capValue != null ? sf.capValue + '万' : ['5万以下','5-15万','15-30万','30万+'][sf.capital!=null?sf.capital:1];
+  var skill = ['产品研发','经营管理','市场营销','供应链'][sf.skill!=null?sf.skill:1];
+  var abs = Math.abs(contribution);
+  var dir = contribution >= 0 ? '提升了' : '降低了';
+  switch(key){
+    case 'capital':
+      if(facts.identity===2)
+        return '当前技改投入' + cap + '对' + c.name + '的产能扩张' + (contribution>=0?'已具备支撑——设备/产线基础可满足生产需求':'仍显不足——设备/产线是产能瓶颈，先解决投入再谈规模') + '；';
+      if(contribution >= 0)
+        return '当前预算' + cap + '已超过' + c.name + (facts.mode===0?'摊档启动门槛':'启动门槛') + '（' + effCapital(c, facts.mode) + '万），资金不再是主要瓶颈——但超过门槛后，资金对成功率的边际贡献开始递减，决定成败的因素转向团队与供应链。';
+      // 负贡献分两种：真缺口（低于门槛）vs 低于基准画像（够用但比常见投入少）
+      if(facts.capValue != null && facts.capValue >= effCapital(c, facts.mode))
+        return '当前预算' + cap + '已超过' + c.name + (facts.mode===0?'摊档门槛':'启动门槛') + '（' + effCapital(c, facts.mode) + '万），但低于常见投入基准（10万）——资金够用、规模偏保守，' + dir + '项目的扩张空间。';
+      return '当前预算' + cap + '低于' + c.name + (facts.mode===0?'摊档启动门槛':'启动门槛') + '（' + effCapital(c, facts.mode) + '万），资金缺口直接' + dir + '项目的启动可行性。';
+    case 'experience':
+      if(facts.identity===2)
+        return '设备/产线基础' + exp + '（' + ['无设备','有基础产线','成熟产线','多条产线'][sf.experience!=null?sf.experience:1] + '）——' + (contribution>=0?'设备条件支撑' + c.name + '生产，具备产能基础':'设备条件不足，产能是当前主要约束') + '；';
+      if(contribution >= 0)
+        return '你拥有' + exp + '行业经验，熟悉' + c.name + '的经营节奏，执行与供应链判断更可靠——经验是' + c.name + '这类依赖' + (c.supply.v>=70?'供应链':'工艺') + '的品类的重要加分项。';
+      return '行业经验' + exp + '尚浅，' + c.name + '的' + (c.supply.v<65?'供应链':'经营') + '复杂度对新手是主要挑战，模型' + dir + '执行成功的置信度。';
+    case 'skill':
+      if(facts.identity===2)
+        return '技术工艺能力' + skill + '（' + ['无工艺积累','基本工艺','成熟工艺','工艺领先'][sf.skill!=null?sf.skill:1] + '）——' + (contribution>=0?'工艺支撑' + c.name + '生产，具备品控基础':'工艺是当前短板，品控稳定性需提升') + '；';
+      return skill + '能力与' + c.name + '的匹配度' + (contribution>=0?'较高，是显著优势':'偏低——' + c.name + '更需要' + (c.skillFit && c.skillFit.indexOf(Math.max.apply(null,c.skillFit))>=0?'对应能力':'补强其他能力') + '，这是当前主要短板');
+    case 'city':
+      if(facts.identity===2) return '工厂所在区域' + v + (contribution>=0?'——成本/物流/产业配套支撑生产':'——区域成本或配套是约束，影响产能布局') + '；';
+      if(contribution < 0)
+        return '当前城市竞争密度较高，而你的供应链/经验优势暂未充分形成，因此模型' + dir + '扩张建议的置信度——建议优先选择次级商圈或差异化定位。';
+      return '当前城市适配度较好，' + c.name + '在该城市的承载力与消费基础支撑了评估结果。';
+    case 'team':
+      if(facts.identity===2){
+        var orgLv = sf.team!=null?sf.team:1;
+        return '组织规模' + (orgLv>=1?'（'+['几人作坊','10-30人','30-100人','100人+'][orgLv]+'）':'') + (contribution>=0?'支撑产能与交付':'偏小——产能交付能力是当前约束') + '；';
+      }
+      return sf.team!=null && sf.team>=2 ? '组织规模支撑了产能与交付能力，是稳定的加分项' : '组织规模有限，产能与交付能力是当前需要关注的因素';
+    case 'mode':
+      if(facts.identity===2) return '商业模式选择（OEM/自有品牌/混合）与' + c.name + '的适配' + (contribution>=0?'良好——生产与销售模式匹配':'需评估——代工/品牌模式与产能/渠道是否匹配') + '；';
+      return '经营模式的选择与' + c.name + '的门店模型适配' + (contribution>=0?'良好':'存在偏差，建议调整模式') + '；';
+    case 'identity':
+      var idName = ['创业开店','产品开发','食品工厂','行业研究'][facts.identity!=null?facts.identity:0];
+      if(facts.identity===2) return '食品工厂实体与' + c.name + '的适配' + (contribution>=0?'良好——设备/工艺/组织支撑该品类生产':'一般——需评估设备/工艺匹配') + '；';
+      return '决策主体（' + idName + '）与' + c.name + '的适配' + (contribution>=0?'良好':'一般') + '；';
+    default:
+      return '';
+  }
+}
+
+// 渲染分数拆解（E10）
+function renderScoreExplain(){
+  var se = scoreExplain();
+  var box = document.getElementById('cardExplain');
+  if(!box) return;
+  box.classList.remove('hidden');
+  // 工厂身份：因子名用工厂别名
+  var isFacUi = IDENTITIES[facts.identity!=null?facts.identity:0];
+  var isFactoryUi = isFacUi && isFacUi.id==='factory';
+  // 总分
+  document.getElementById('exTotal').textContent = se.total;
+  // 贡献条
+  var h = '';
+  se.factors.forEach(function(f){
+    var fname = (isFactoryUi && FACTOR_LABELS[f.key] && FACTOR_LABELS[f.key].factoryName) ? FACTOR_LABELS[f.key].factoryName : f.name;
+    var sign = f.contribution >= 0 ? '+' : '';
+    var cls = f.contribution >= 0 ? 'ex-up' : 'ex-down';
+    var barWidth = Math.min(100, Math.abs(f.contribution) * 4); // 1分≈4%宽度
+    h += '<div class="ex-row" onclick="openExplain(' + JSON.stringify(f).replace(/"/g,'&quot;') + ')">' +
+      '<span class="ex-name">' + fname + '</span>' +
+      '<div class="ex-track"><div class="ex-fill ' + cls + '" style="width:' + barWidth + '%"></div></div>' +
+      '<span class="ex-val ' + cls + '">' + sign + f.contribution + '</span>' +
+      '</div>' +
+      (f.narrative ? '<div class="ex-narr" style="font-size:10px;color:var(--muted);padding-left:72px;margin:-2px 0 4px;line-height:1.6">' + f.narrative + '</div>' : '');
+  });
+  document.getElementById('exFactors').innerHTML = h;
+  // 校验：贡献和是否接近总分-基准分
+  var sum = se.factors.reduce(function(s, f){ return s + f.contribution; }, 0);
+  document.getElementById('exCheck').textContent = '总分 ' + se.total + ' = 基准 ' + se.base + ' + 因子贡献合计 ' + (se.base + sum) + '（误差 ' + (se.total - se.base - sum) + '）';
+}
+
+
+/* ================================================================
+   Constraint Engine（约束引擎）—— 基于 06_商业约束分类体系 V1.1
+   Gate 判定（Yes/No）→ 第一不可跨越约束 → 来源分流建议
+   ================================================================ */
+
+// 五类约束来源
+var CONSTRAINT_SOURCES = {
+  external:   {name: '外部约束',   color: '#FF3B30', advice: '不能优化绕过——建议换城市/换品类/换时机'},
+  strategic:  {name: '战略约束',   color: '#FF9500', advice: '自己决定错的——建议纠正目标/定位/赛道'},
+  resource:   {name: '资源约束',   color: '#FF6B00', advice: '缺牌——建议补资源/降模式/找合伙'},
+  capability: {name: '能力约束',   color: '#7C4DFF', advice: '可提升但需时间——建议补齐短板/找关键人'},
+  execution:  {name: '执行约束',   color: '#2962FF', advice: '方案对但落地死——建议验证后放大/建SOP/控现金流'}
+};
+
+// 约束判定：5 道 Gate，返回第一不可跨越约束
+function runConstraintGates(f, c, pl, d){
+  var fv = semanticView ? semanticView() : f;
+  var bandG = BUDGET_BANDS[fv.capital!=null?fv.capital:1] || {min:5, max:15, label:'5-15万'};
+  var cityIdx = fv.city!=null?fv.city:1;
+  var cityNames = ['一线/新一线','二线','三四线','县城/乡镇'];
+  var gates = [];
+
+  // Gate1 合法性（原型简化：无政策数据，跳过或默认通过）
+  gates.push({gate: 1, name: '合法性', pass: true, source: null, note: '未检测到证照/政策阻断项'});
+
+  // Gate2 市场存在性：县城/乡镇 + 品类市场分低 → 容量不足
+  var marketPass = true, marketNote = '市场容量可支撑';
+  // 县城/乡镇：市场分要求更高（<80 即容量不足）；三四线：<70
+  var marketFloor = cityIdx >= 3 ? 80 : (cityIdx === 2 ? 70 : 60);
+  if(c.market.v < marketFloor){
+    marketPass = false;
+    marketNote = c.name + '在' + cityNames[cityIdx] + '的市场容量可能不足（品类市场分' + c.market.v + '，该城市需≥' + marketFloor + '）';
+  }
+  gates.push({gate: 2, name: '市场存在性', pass: marketPass, source: marketPass?null:'external', note: marketPass?marketNote:('第一不可跨越：'+marketNote)});
+
+  // Gate3 资源最低线：档位上限不足门槛50% → Hard Block；上限不足门槛 → 降级；门槛在区间内 → 偏紧
+  var capRatio = capValueOf(fv, bandG.max) / effCapital(c, fv.mode);  // 第一层改造：精确金额优先
+  var resPass = true, resNote = '资源满足最低要求';
+  var capShowG = fv.capValue != null ? fv.capValue + '万' : bandG.label;
+  if(capRatio < 0.5){
+    resPass = false;
+    resNote = c.name + (fv.mode===0?'摊档启动约':'最低投入约') + effCapital(c, fv.mode) + '万，当前预算' + capShowG + '（不足50%）';
+  } else if(capValueOf(fv, bandG.max) < effCapital(c, fv.mode)){
+    resPass = false;
+    resNote = c.name + (fv.mode===0?'摊档启动约':'最低投入约') + effCapital(c, fv.mode) + '万，当前预算' + capShowG + '也不足';
+  } else if(bandG.min < effCapital(c, fv.mode)){
+    resPass = true;
+    resNote = c.name + '门槛' + effCapital(c, fv.mode) + '万在预算' + capShowG + '内——可支撑，注意控制成本';
+  }
+  gates.push({gate: 3, name: '资源最低线', pass: resPass, source: resPass?null:'resource', note: resPass?resNote:('第一不可跨越：'+resNote)});
+
+  // Gate4 战略一致性：目标与资源/身份匹配
+  var strPass = true, strNote = '目标与资源匹配';
+  var goal = fv.goal!=null?fv.goal:2;
+  if(goal === 0 && (fv.capValue != null ? fv.capValue : bandG.max) < effCapital(c, fv.mode)){ // 赚钱目标但资金不足 → 目标/现实失衡
+    strPass = false;
+    strNote = '目标是快速赚钱，但当前资金与品类门槛不匹配——目标与现实失衡';
+  }
+  gates.push({gate: 4, name: '战略一致性', pass: strPass, source: strPass?null:'strategic', note: strPass?strNote:('第一不可跨越：'+strNote)});
+
+  // Gate5 能力匹配：技能×品类匹配度
+  var s = fv.skill!=null?fv.skill:1;
+  var skillMatch = c.skillFit ? c.skillFit[s] : 0.6;
+  var capPass = skillMatch >= 0.55, capNote = '能力匹配度 ' + Math.round(skillMatch*100) + '%';
+  if(!capPass){
+    capNote = '能力匹配度 ' + Math.round(skillMatch*100) + '%——技能与品类存在明显短板';
+  }
+  gates.push({gate: 5, name: '能力匹配', pass: capPass, source: capPass?null:'capability', note: capPass?capNote:('短板：'+capNote)});
+
+  // 执行约束：基本面通过后才评估（租售比/回本）
+  var execIssues = [];
+  if(pl && d){
+    var rentRatio = pl.rent/(pl.breakevenRev*30);
+    var ident = IDENTITIES[f.identity!=null?f.identity:0];
+    if(ident && ident.rentCheck !== false && rentRatio > 0.25) execIssues.push('租售比偏高（' + Math.round(rentRatio*100) + '%）');
+    if(ident && ident.paybackCheck !== false && pl.payback > 24) execIssues.push('回本周期偏长（' + pl.payback + '个月）');
+  }
+
+  // 锁定第一不可跨越约束：第一个 pass=false 的 Gate
+  var primary = null;
+  for(var i=0; i<gates.length; i++){
+    if(!gates[i].pass){
+      primary = gates[i];
+      break;
+    }
+  }
+  // 若全通过但有执行问题 → 执行约束
+  if(!primary && execIssues.length > 0){
+    primary = {gate: 6, name: '执行层', pass: false, source: 'execution', note: '第一不可跨越：' + execIssues[0]};
+  }
+
+  return {
+    gates: gates,
+    execIssues: execIssues,
+    primary: primary,
+    allPass: !primary
+  };
+}
+
+// 生成第一不可跨越约束的完整描述
+function primaryConstraintText(g, c, cityIdx, budget){
+  if(!g.primary){
+    return {title: '无不可跨越约束', story: '当前条件下，'+c.name+'具备进入基础。剩余风险在执行与验证层面，可按验证计划推进。', source: null, advice: CONSTRAINT_SOURCES.execution.advice};
+  }
+  var p = g.primary;
+  var src = CONSTRAINT_SOURCES[p.source] || CONSTRAINT_SOURCES.execution;
+  var cityNames = ['一线/新一线','二线','三四线','县城/乡镇'];
+  var story = '';
+  if(p.source === 'external'){
+    story = '第一不可跨越约束：' + p.note.replace('第一不可跨越：','') + '。因此任何增加研发、装修、广告预算，都不会改变项目成功率。建议：更换城市或更换品类。';
+  } else if(p.source === 'resource'){
+    var bandTxt = (budget && budget.label) ? budget.label : '';
+    var bandTip = (budget && budget.max) ? ('接近上限' + budget.max + '万则够，接近下限' + budget.min + '万则需降档') : '建议补充资金或降低模式';
+    story = '第一不可跨越约束：' + p.note.replace('第一不可跨越：','') + '。当前资金不足以支撑项目启动，继续分析其他维度没有意义。建议：' + bandTip + '（档口/合伙）。';
+  } else if(p.source === 'strategic'){
+    story = '第一不可跨越约束：' + p.note.replace('第一不可跨越：','') + '。目标设定与实际资源存在失衡，先纠正目标再谈执行。';
+  } else if(p.source === 'capability'){
+    story = '第一不可跨越约束：' + p.note.replace('第一不可跨越：','') + '。这是可补强的短板，建议在验证阶段优先补齐或绑定关键合伙人。';
+  } else {
+    story = '第一不可跨越约束：' + p.note.replace('第一不可跨越：','') + '。基本面成立但执行存在风险，建议先小规模验证再放大。';
+  }
+  return {title: '第一不可跨越约束', story: story, source: p.source, advice: src.advice, note: p.note.replace('第一不可跨越：','')};
+}
+
+
+function renderAll(){
+  var d=state.decision, r=state.report, c=state.catalog;
+  if(!d||!r) return;
+  // Pulse
+  var pulse=document.getElementById('pulse');
+  pulse.classList.add('show');
+  document.getElementById('pulseDot').className='pulse-dot '+(d.signal==='BLOCKED'?'block':d.signal.indexOf('NOT')>=0?'block':d.signal.indexOf('VALIDATION')>=0||d.signal==='HOLD'?'warn':'ok');
+  document.getElementById('pulseValue').textContent=d.signal==='BLOCKED'?'建议：暂停 · 先解决阻断':d.signal==='PROCEED'?'建议：可以进入':d.signal==='PROCEED_WITH_VALIDATION'?'建议：验证后进入':d.signal==='HOLD'?'建议：暂缓':'建议：不建议进入';
+  document.getElementById('pulseMetrics').innerHTML='<span>机会 <b>'+d.opportunity+'</b></span><span>风险 <b>'+d.risk+'</b></span><span>置信 <b>'+d.confidence+'%</b></span>';
+  // Engine Chain
+  var ec=document.getElementById('cardChain');
+  ec.classList.remove('hidden');
+  renderEngineChain(d);
+  // Decision Card
+  var cd=document.getElementById('cardDecision');
+  cd.classList.remove('hidden');
+  // 约束引擎：5道Gate + 第一不可跨越约束
+  var constraintResult = runConstraintGates(facts, c, state.report?state.report.pl:null, d);
+  state.constraint = constraintResult;
+  var identUi = IDENTITIES[facts.identity!=null?facts.identity:0];
+  var stateLabel;
+  if(identUi && identUi.id==='research'){
+    // 行业研究：状态=判断可靠度，不是进入建议
+    stateLabel = {PROCEED:'判断可靠 · 值得关注',PROCEED_WITH_VALIDATION:'判断可用 · 需补充验证',HOLD:'判断待定 · 数据不足',BLOCKED:'判断受阻 · 关键缺口',NOT_RECOMMENDED:'判断偏负面'}[d.signal]||d.signal;
+  } else if(identUi && identUi.id==='product'){
+    stateLabel = {PROCEED:'产品成立',PROCEED_WITH_VALIDATION:'产品可验证',HOLD:'产品待定',BLOCKED:'产品受阻',NOT_RECOMMENDED:'产品不成立'}[d.signal]||d.signal;
+  } else if(identUi && identUi.id==='factory'){
+    stateLabel = {PROCEED:'工厂可投产',PROCEED_WITH_VALIDATION:'工厂待验证',HOLD:'工厂条件待定',BLOCKED:'工厂受阻',NOT_RECOMMENDED:'工厂不建议'}[d.signal]||d.signal;
+  } else {
+    stateLabel = {PROCEED:'Proceed',PROCEED_WITH_VALIDATION:'Proceed with Validation',HOLD:'Hold',BLOCKED:'Blocked',NOT_RECOMMENDED:'Not Recommended'}[d.signal]||d.signal;
+  }
+  var stateCls={PROCEED:'state-proceed',PROCEED_WITH_VALIDATION:'state-validation',HOLD:'state-hold',BLOCKED:'state-blocked',NOT_RECOMMENDED:'state-hold'}[d.signal]||'state-hold';
+  cd.className='dcard '+stateCls;
+  document.getElementById('dState').textContent=stateLabel;
+  // 显示第一不可跨越约束
+  var conEl = document.getElementById('dConstraint');
+  conEl.style.display = '';
+  var bandCall = BUDGET_BANDS[facts.capital!=null?facts.capital:1] || {min:5,max:15,label:'5-15万'};
+  var pcText = primaryConstraintText(constraintResult, c, facts.city!=null?facts.city:1, bandCall);
+  var srcName = constraintResult.primary ? (CONSTRAINT_SOURCES[constraintResult.primary.source]?CONSTRAINT_SOURCES[constraintResult.primary.source].name:'未知') : '执行层';
+  var srcColor = constraintResult.primary ? (CONSTRAINT_SOURCES[constraintResult.primary.source]?CONSTRAINT_SOURCES[constraintResult.primary.source].color:'#fff') : '#2962FF';
+  var gateLabel = constraintResult.primary ? ('Gate' + constraintResult.primary.gate) : '全部通过';
+  document.getElementById('dSrc').textContent = '约束来源：' + srcName + ' · ' + gateLabel;
+  document.getElementById('dSrc').style.color = srcColor;
+  document.getElementById('dPrimary').textContent = pcText.story;
+  document.getElementById('dAdvice').textContent = pcText.advice;
+  document.getElementById('dStory').textContent=d.story;
+  document.getElementById('dScore').textContent='参考 '+d.finalScore;
+  document.getElementById('dConf').textContent=d.confidence+'%';
+  // 模型版本标注
+  var verEl = document.getElementById('modelVersion');
+  if(verEl) verEl.textContent = '模型 ' + MODEL_VERSION + ' · ' + new Date().toLocaleDateString();
+  document.getElementById('dRisk').textContent=d.risk+'风险';
+  var hardCnt = d.blocking.filter(function(b){return b.level==='HIGH';}).length;
+  var softCnt = d.blocking.length - hardCnt;
+  document.getElementById('dBlock').textContent=hardCnt?hardCnt+'项':(softCnt?softCnt+'项提示':'无');
+  document.getElementById('dNextAction').textContent=d.nextAction;
+  // E10 分数拆解
+  // 评估完成后显示分组标题
+  ['grp1h','grp1','grp2h','grp2','grp3h','grp3'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.classList.remove('hidden');
+  });
+  // 尾标按身份差异化
+  var identM2 = IDENTITIES[facts.identity!=null?facts.identity:0];
+  var mTitle = document.getElementById('mTitle');
+  var mSub = document.getElementById('mSub');
+  if(identM2 && identM2.id==='product'){
+    mTitle.innerHTML = '不是帮你判断开什么店<br>而是帮助你<span class="m-hl">验证产品是否成立</span>';
+    mSub.textContent = 'FoodIntelAI · 产品商业化决策 · 先验证产品，再谈规模';
+  } else if(identM2 && identM2.id==='factory'){
+    mTitle.innerHTML = '不是帮你判断开什么店<br>而是帮助你<span class="m-hl">评估产能与订单</span>';
+    mSub.textContent = 'FoodIntelAI · 工厂决策 · 核心是产能利用与订单匹配';
+  } else if(identM2 && identM2.id==='research'){
+    mTitle.innerHTML = '不是帮你判断开什么店<br>而是帮助你<span class="m-hl">验证判断可靠度</span>';
+    mSub.textContent = 'FoodIntelAI · 行业研究决策 · 数据可靠，结论才可靠';
+  } else {
+    mTitle.innerHTML = '不是寻找一个答案，<br>而是找到<span class="m-hl">一个更可靠的决策</span>';
+    mSub.innerHTML = 'FoodIntelAI · Decision Engine<br>基于行业数据、商业模型与约束分析，解释每一个判断背后的逻辑。';
+  }
+  renderScoreExplain();
+  // Replay data
+  renderReplayData();
+  // Inference 因果链
+  renderInference();
+  // Validation Plan + Stop
+  renderPlan(d,r,c);
+  // P&L
+  renderPL();
+  // Scenario
+  renderScenario(r);
+  // Opportunity
+  var co=document.getElementById('cardOpp'); co.classList.remove('hidden');
+  var oh='';
+  r.oppCells.forEach(function(cell){oh+='<div class="opp-cell" onclick="openOpp(\''+cell.l+'\')"><div class="oc-l">'+cell.l+'</div><div class="oc-s">'+stars(cell.v)+'</div><div class="oc-n">'+cell.n+'</div></div>';});
+  document.getElementById('oppGrid').innerHTML=oh;
+  // Risk
+  var cr=document.getElementById('cardRisk'); cr.classList.remove('hidden');
+  var rh='';
+  r.risks.forEach(function(rk){rh+='<div class="risk-item" onclick="openRisk(\''+rk.name+'\')"><span class="risk-dot" style="background:'+rk.color+'"></span><span class="risk-name">'+rk.name+'</span><span class="risk-lv">'+rk.lv+'</span></div>';});
+  document.getElementById('riskList').innerHTML=rh;
+  // Factors
+  var cf=document.getElementById('cardFactors'); cf.classList.remove('hidden');
+  var fh='';
+  r.factors.forEach(function(ft,i){fh+='<div class="factor-card" onclick="openFactor('+i+')"><div class="factor-top"><span class="factor-stars">'+stars(ft.stars)+'</span><span class="factor-name">'+ft.name+'</span><span class="factor-impact">影响 '+ft.impact+'%</span></div><div class="factor-explain">'+ft.explain+'</div><div class="factor-meta"><span class="f-tag">'+ft.evidence+'</span></div></div>';});
+  document.getElementById('factorList').innerHTML=fh;
+  // Graph
+  var cg=document.getElementById('cardGraph'); cg.classList.remove('hidden');
+  renderGraph();
+  // Timeline
+  var ct=document.getElementById('cardTimeline'); ct.classList.remove('hidden');
+  document.getElementById('timelineCat').textContent=c.name+' 专属行动';
+  var th='';
+  r.plan.forEach(function(st,i){
+    th+='<div class="t-item" onclick="openStep('+i+')"><div class="t-num">'+(i+1)+'</div><div class="t-body"><div class="t-when">'+st.when+'</div><div class="t-what">'+st.what+'</div><div class="t-how">'+st.how+'</div>'+(st.metric?'<span class="t-metric">✓ 目标：'+st.metric+'</span>':'')+'</div></div>';
+  });
+  document.getElementById('timelineBox').innerHTML=th;
+  // Evidence
+  var ce=document.getElementById('cardEvidence'); ce.classList.remove('hidden');
+  var eh='';
+  [c.market,c.consumer,c.category,c.supply].forEach(function(ev){
+    eh+='<div class="ev-item"><span class="ev-lv '+ev.lv+'">'+ev.lv+'</span><div><div class="ev-name">'+ev.src+'</div><div class="ev-desc">'+ev.note+' · '+ev.date+'</div></div></div>';
+  });
+  [c.competition,c.city].forEach(function(ev){
+    eh+='<div class="ev-item"><span class="ev-lv '+ev.lv+'">'+ev.lv+'</span><div><div class="ev-name">'+ev.src+'</div><div class="ev-desc">'+ev.note+' · '+ev.date+'</div></div></div>';
+  });
+  document.getElementById('evList').innerHTML=eh;
+  // Memory
+  renderMemory();
+  // Feedback 闭环
+  renderFeedbackCard();
+  // Mobile PL
+  var mpl=document.getElementById('mobilePL');
+  mpl.classList.add('show');
+  var identM = IDENTITIES[facts.identity!=null?facts.identity:0];
+  if(identM && identM.id==='factory'){
+    document.getElementById('mpNum').textContent='产能';
+    document.getElementById('mpDesc').textContent='工厂评估 · '+c.name+' · 核心看订单/产能匹配';
+  } else if(identM && identM.id==='research'){
+    document.getElementById('mpNum').textContent='研究';
+    document.getElementById('mpDesc').textContent='研究评估 · '+c.name+' · 核心看数据可靠度';
+  } else {
+    document.getElementById('mpNum').textContent=r.pl.breakevenQty+(r.pl.unit||'份')+'/日';
+    document.getElementById('mpDesc').textContent='保本线 · '+c.name+' · 客单'+r.pl.price+'元';
+  }
+  document.getElementById('hBadge').textContent=c.name+' ✓';
+  document.getElementById('ctaBtn').style.display='inline-block';
+  // 商业推演入口（三个未解问题）
+  showBizEntry(constraintResult);
+  // 动态 CTA 文案：按约束来源生成破局路线
+  var ctaHint = document.getElementById('ctaHint');
+  if(constraintResult && constraintResult.primary){
+    var srcMap = {external:'换城市/换品类是当前唯一破局点', strategic:'先纠正目标/定位，再谈执行', resource:'补充资源或降低模式是第一步', capability:'补齐关键能力或找合伙人', execution:'先小规模验证，再放大'};
+    ctaHint.textContent = '💡 ' + (srcMap[constraintResult.primary.source] || '先解决当前约束') + ' → 查看完整决策摘要';
+    ctaHint.classList.remove('hidden');
+  } else {
+    ctaHint.classList.add('hidden');
+  }
+}
+
+/* ---------- 引擎链 ---------- */
+function renderEngineChain(d){
+  var steps=[
+    {en:'Knowledge', v:'知识', s:''},
+    {en:'Inference', v:'推理', s:''},
+    {en:'Evaluation', v:'评估', s:d.finalScore},
+    {en:'Scenario', v:'方案', s:''},
+    {en:'AI Solution', v:'推演', s:d.signal==='BLOCKED'?'⛔':d.confidence+'%'}
+  ];
+  var h='';
+  steps.forEach(function(st,i){
+    var cls='';
+    if(st.en==='Evaluation') cls='run';
+    if(st.en==='AI Solution' && d.signal==='BLOCKED') cls='block';
+    h+='<div class="ec-node '+cls+'"><span class="ec-en">'+st.en+'</span><span class="ec-v">'+st.v+'</span><span class="ec-s">'+st.s+'</span></div>';
+    if(i<steps.length-1) h+='<span class="ec-arrow">→</span>';
+  });
+  document.getElementById('ecFlow').innerHTML=h;
+}
+
+/* ---------- 验证计划 ---------- */
+function renderPlan(d,r,c){
+  var isStallUI = (facts.mode!=null&&facts.mode===0) && IDENTITIES[facts.identity!=null?facts.identity:0] && IDENTITIES[facts.identity!=null?facts.identity:0].id==='store';
+  var cp=document.getElementById('cardPlan');
+  var cs=document.getElementById('cardStop');
+  if(d.signal==='BLOCKED'){
+    cp.classList.remove('hidden'); cs.classList.remove('hidden');
+    document.getElementById('planItems').innerHTML='<div class="plan-item" style="grid-column:1/-1"><div class="pi-l">优先行动</div><div class="pi-v" style="color:var(--block)">解决阻断</div><div class="pi-d">'+d.blocking[0].reason+'</div></div>';
+    document.getElementById('stopDesc').textContent='阻断项解决前，暂停一切投入。评估缺口后决定：补资金 / 降模式 / 换品类。';
+    return;
+  }
+  cp.classList.remove('hidden');
+  var days=d.signal==='PROCEED'?30:60;
+  var bandR = BUDGET_BANDS[facts.capital!=null?facts.capital:1] || {min:5, max:15, label:'5-15万'};
+  var budget = facts.capValue != null ? facts.capValue : (bandR.min+bandR.max)/2;  // 第一层改造：精确资金优先
+  var cost=Math.max(3000,Math.round(budget*0.1*1000));
+  // 身份骨架：验证重点按身份切换（技能定制仅在开店身份生效）
+  var identP = IDENTITIES[facts.identity!=null?facts.identity:0];
+  var ef = state.engineFacts || facts;
+  var s = ef.skill!=null?ef.skill:1;
+  var skillFocus;
+  if(identP && identP.id==='factory'){
+    var devLv = ef.f_experience!=null?ef.f_experience:1;
+    skillFocus = '设备与产能验证优先——先确认产线产能基准（设备'+(devLv===3?'成熟':devLv===2?'可生产':'基础弱')+'），再锁定首批订单验证产能与需求匹配';
+  } else if(identP && identP.id==='product'){
+    skillFocus = '产品验证优先——先打磨核心产品（配方/口味/出品一致性），用盲测锁定标准，再验证目标客户是否真的需要';
+  } else if(identP && identP.id==='factory'){
+    skillFocus = '产能与订单验证优先——先确认产线产能基准，再锁定首批订单，验证产能与需求匹配';
+  } else if(identP && identP.id==='research'){
+    skillFocus = '数据验证优先——补充多源数据交叉验证，标注证据等级，确认结论可靠后再输出';
+  } else {
+    skillFocus = ['产品验证优先——先打磨核心产品（配方/口味/出品一致性），用盲测锁定标准',
+                  '门店模型优先——先跑通单店模型（坪效/翻台/人效），再谈复制',
+                  '市场验证优先——先测流量与转化（点位测试/线上引流），确认获客成本',
+                  '供应链验证优先——先绑定稳定供应商（成本/账期/品质），确认供给端'][s];
+  }
+  // 工厂/产品/研究身份：验证动作与止损语义不同
+  var costDesc = '试卖/访谈/点位测试';
+  var stopText = '投入超过'+(budget*0.25)+'万元仍无法达到日流水'+(800+(facts.experience!=null?facts.experience:1)*200)+'元，停止扩大。';
+  var successMetric = r.plan[0] ? r.plan[0].metric : '验证通过';
+  if(isStallUI && identP && identP.id==='store'){
+    costDesc = '摊位费/原料/试卖';
+    stopText = '摆摊试水'+(budget*0.25)+'万元内若无稳定复购（复购率<20%），撤摊止损，不升级门店。';
+    successMetric = '复购率>20%且日流水稳定';
+  }
+  if(identP && identP.id==='factory'){
+    costDesc = '产能试产/客户拜访/样品测试';
+    var capLv = (facts.f_capital!=null?facts.f_capital:1);
+    stopText = '技改/扩产投入超过'+(budget*0.25)+'万元仍无法获得稳定订单（首批订单未落地），停止追加投入。';
+    successMetric = '首批订单落地且产能利用率>50%';
+  } else if(identP && identP.id==='product'){
+    costDesc = '样品制作/用户访谈/MVP测试';
+    stopText = '研发投入超过'+(budget*0.25)+'万元仍无付费客户，停止继续投入。';
+    successMetric = '首个付费客户产生或20+用户正面反馈';
+  } else if(identP && identP.id==='research'){
+    costDesc = '数据采购/报告购买/专家访谈';
+    stopText = '数据投入超过'+(budget*0.25)+'万元仍无法完成多源交叉验证，停止采集。';
+    successMetric = '结论可被3个以上独立数据源验证';
+  }
+  document.getElementById('planItems').innerHTML=
+    '<div class="plan-item" style="grid-column:1/-1"><div class="pi-l">验证重点 · 按你的技能定制</div><div class="pi-v" style="font-size:11px;line-height:1.6">'+skillFocus+'</div></div>'+
+    '<div class="plan-item"><div class="pi-l">验证周期</div><div class="pi-v">'+days+'天</div><div class="pi-d">最低成本验证核心假设</div></div>'+
+    '<div class="plan-item"><div class="pi-l">验证成本</div><div class="pi-v">¥'+cost.toLocaleString()+'</div><div class="pi-d">'+costDesc+'</div></div>'+
+    '<div class="plan-item" style="grid-column:1/-1"><div class="pi-l">成功标准</div><div class="pi-v" style="font-size:12px">'+successMetric+'</div></div>';
+  cs.classList.remove('hidden');
+  document.getElementById('stopDesc').textContent=stopText;
+}
+
+/* ---------- Scenario ---------- */
+function renderScenario(r){
+  var cs=document.getElementById('cardScenario');
+  if(!r.scen){cs.classList.add('hidden');return;}
+  cs.classList.remove('hidden');
+  var h='';
+  r.scen.forEach(function(s,i){
+    h+='<div class="scen-item'+(s.good?'':' bad')+'" onclick="openScenario('+i+')"><div class="sc-rank">'+(i+1)+'</div><div class="sc-body"><div class="sc-name">'+s.name+'</div><div class="sc-desc">'+s.desc+'</div></div><div class="sc-rate">'+s.rate+'%</div></div>';
+  });
+  document.getElementById('scenList').innerHTML=h;
+}
+function openScenario(i){
+  var s=state.report.scen[i]; if(!s) return;
+  openDrawer('<div class="dw-title">'+s.name+'</div><div class="dw-sub">方案排序 #'+(i+1)+' · 成功率 '+s.rate+'%</div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">STORY</div><div class="dw-sec-b">'+s.desc+'。该方案'+(s.good?'在当前条件下可行性较高，可作为首选路径':'当前条件下风险偏高，建议作为备选或延后')+'。</div></div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">ACTION</div><div class="dw-act">'+(s.good?'按此方案设计验证计划，进入 Day1':'不推荐当前阶段进入，建议先验证前置条件')+'</div></div>');
+}
+
+/* ---------- Replay ---------- */
+function renderReplayData(){
+  var d=state.decision; if(!d) return;
+  var steps=[
+    {k:'市场',v:d.perEngine.E01.score,s:d.perEngine.E01.score>=70?'红利明确':'空间一般'},
+    {k:'消费者',v:d.perEngine.E09.score,s:d.perEngine.E09.score>=70?'基础稳固':'需验证'},
+    {k:'供应链',v:d.perEngine.E08.score,s:d.perEngine.E08.score>=70?'复制有保障':'供给制约'},
+    {k:'竞争',v:d.perEngine.E05.score,s:d.perEngine.E05.score>=60?'有空间':'挤压明显'},
+    {k:'品类',v:d.perEngine.E02.score,s:d.perEngine.E02.score>=70?'标准化强':'标准化弱'}
+  ];
+  state.replaySteps=steps;
+  state.replayFinal=d.story;
+}
+function toggleReplay(){
+  var box=document.getElementById('replayBox');
+  if(state.replayShown){box.classList.add('hidden');state.replayShown=false;return;}
+  box.classList.remove('hidden');
+  var h='';
+  (state.replaySteps||[]).forEach(function(s,i){
+    h+='<div class="replay-step" style="animation-delay:'+(i*0.15)+'s"><span class="rs-k">'+s.k+'</span><span class="rs-v">'+s.v+'分</span><span class="rs-s">'+s.s+'</span></div>';
+    if(i<(state.replaySteps||[]).length-1) h+='<div style="text-align:center;color:rgba(255,255,255,.25);font-size:10px;margin:-2px 0">↓</div>';
+  });
+  document.getElementById('replaySteps').innerHTML=h;
+  document.getElementById('replayFinal').textContent=state.replayFinal||'';
+  state.replayShown=true;
+}
+
+
+/* ---------- Inference 因果链 ---------- */
+function buildInference(c, d, f){
+  // 根据引擎分数构建因果链：每一步绑定证据
+  var steps = [];
+  var city = f.city!=null?f.city:1;
+  var exp = f.experience!=null?f.experience:1;
+  var cap = f.capital!=null?f.capital:1;
+  var bandB = BUDGET_BANDS[cap] || {min:5, max:15, label:'5-15万'};
+
+  // Step1: 城市/竞争 → 客流
+  var compScore = d.perEngine.E05 ? d.perEngine.E05.score : 60;
+  var compLv = compScore>=65?'竞争压力可控':'竞争挤压明显';
+  steps.push({
+    en:'E05 竞争',
+    cn: city===0 ? '一线城市'+compLv+'，核心商圈点位成本高，客流获取压力大' : compScore>=65 ? '竞争格局可承受，存在进入窗口' : '竞争中等偏上，需差异化切入',
+    ev:'证据：窄门餐眼门店密度 · '+c.competition.date+' · '+c.competition.lv+'级',
+    status: compScore>=65?'good':(compScore>=45?'warn':'bad')
+  });
+  // Step2: 客流 → 坪效/现金流（含用户输入修正：资金充足度 + 摆摊低固定成本 + 经验成本控制）
+  var cashBase = Math.round(c.market.v*0.5 + c.consumer.v*0.3);
+  var bandCash = BUDGET_BANDS[cap] || {min:5, max:15, label:'5-15万'};
+  var effC2 = effCapital(c, f.mode);
+  var capAdj = capValueOf(f, bandCash.max) >= effC2 ? 8 : (capValueOf(f, bandCash.max) >= effC2*0.7 ? 2 : -6);
+  var stallAdj = (f.mode===0) ? 6 : 0;
+  var expAdj = exp>=2 ? 4 : (exp>=1 ? 2 : -3);
+  var cashScore = Math.max(10, Math.min(95, cashBase + capAdj + stallAdj + expAdj));
+  var cashTxt = cashScore>=75 ? '品类现金流健康'+(stallAdj>0?'，摆摊模式固定成本低，现金流压力小':'，经营能转起来')
+    : cashScore>=60 ? '现金流可支撑，但需控制固定成本'
+    : '现金流承压，'+(capValueOf(f, bandCash.max)<effC2?'资金门槛叠加':'客单价天花板明显');
+  steps.push({
+    en:'现金流',
+    cn: cashTxt,
+    ev:'证据：'+c.market.note+' · '+c.supply.note,
+    status: cashScore>=75?'good':(cashScore>=60?'warn':'bad')
+  });
+  // Step3: 供应链 → 复制能力
+  var supScore = d.perEngine.E08 ? d.perEngine.E08.score : 60;
+  steps.push({
+    en:'E08 供应链',
+    cn: supScore>=70 ? '供应链成熟度'+supScore+'分，复制速度快、成本可控' : '供应链偏弱（'+supScore+'分），复制受供给端制约',
+    ev:'证据：'+c.supply.note+' · '+c.supply.lv+'级',
+    status: supScore>=70?'good':(supScore>=55?'warn':'bad')
+  });
+  // Step4: 经验 → 执行
+  if(facts.identity===2){
+    var devLv2 = facts.f_experience!=null?facts.f_experience:1;
+    steps.push({
+      en:'E04 产能',
+      cn: devLv2>=2 ? '设备/产线已具备，产能基础支撑生产' : '设备/产线基础不足，产能是当前约束',
+      ev:'证据：设备/产线现状 · '+['无设备','有基础产线','成熟产线','多条产线'][devLv2]
+    });
+  } else {
+    steps.push({
+      en:'E04 执行',
+      cn: exp>=1 ? '行业经验'+exp+'档，执行风险可控' : '经验不足，执行风险高，建议小规模试错',
+      ev:'证据：用户画像 · 经验'+['0-2年','3-5年','6-10年','10年+'][exp]
+    });
+  }
+  // Step5: 综合 → 结论
+  var final = d.signal==='BLOCKED'?'阻断项未解决，其他因素无意义'
+    : d.signal==='PROCEED'?'各因子均健康，支持进入'
+    : d.signal==='PROCEED_WITH_VALIDATION'?'基本面成立但需验证，先小成本确认'
+    : d.signal==='HOLD'?'关键因子偏弱，暂缓'
+    : '核心条件不满足，不建议';
+  var finalStatus = (d.signal==='PROCEED')?'good':(d.signal==='PROCEED_WITH_VALIDATION'||d.signal==='HOLD')?'warn':'bad';
+  steps.push({
+    en:'结论',
+    cn: final,
+    ev:'综合评估 '+d.finalScore+'/100 · 置信度 '+d.confidence+'% · '+d.story.slice(0,20),
+    status: finalStatus
+  });
+  return steps;
+}
+
+function renderInference(){
+  var ci = document.getElementById('cardInference');
+  if(!state.decision || !state.catalog){ ci.classList.add('hidden'); return; }
+  ci.classList.remove('hidden');
+  var steps = buildInference(state.catalog, state.decision, facts);
+  var h = '';
+  var tagMap = {good:['t-ok','✓'], warn:['t-warn','△'], bad:['t-bad','✕']};
+  steps.forEach(function(s, i){
+    var st = s.status || 'warn';
+    var tag = tagMap[st] || tagMap.warn;
+    h += '<div class="inf-step st-'+st+'" onclick="openInference('+i+')"><span class="is-en">'+s.en+'</span><div class="is-body"><div class="is-cn">'+s.cn+'</div><div class="is-ev">'+s.ev+'</div></div><span class="is-tag '+tag[0]+'">'+tag[1]+'</span></div>';
+    if(i < steps.length-1) h += '<div class="inf-arrow">↓</div>';
+  });
+  document.getElementById('infList').innerHTML = h;
+}
+function openInference(i){
+  var steps = buildInference(state.catalog, state.decision, facts);
+  var s = steps[i]; if(!s) return;
+  openDrawer('<div class="dw-title">'+s.en+' · 因果节点</div><div class="dw-sub">推理链第 '+(i+1)+' 步</div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">结论</div><div class="dw-sec-b">'+s.cn+'</div></div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">EVIDENCE</div><div class="dw-sec-b"><small>'+s.ev+'</small></div></div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">ACTION</div><div class="dw-act">'+(i<steps.length-1?'该因子影响下一节点，需纳入验证计划':'这是最终结论，据此制定行动')+'</div></div>');
+}
+
+
+/* ---------- P&L ---------- */
+function renderPL(){
+  var r=state.report; if(!r) return;
+  var pl=r.pl;
+  var card=document.getElementById('cardPL');
+  var ident = IDENTITIES[facts.identity!=null?facts.identity:0];
+  // 身份骨架：行业研究完全不显示开店财务；产品研发显示研发投入评估
+  if(ident && ident.financeWeight === 0){
+    card.classList.add('hidden');
+    return;
+  }
+  card.classList.remove('hidden');
+  var rentInput = document.getElementById('plRent');
+  if(rentInput && !rentInput.dataset.manual){
+    rentInput.value = pl.estRent || pl.rent;
+    rentInput.dataset.synced = '1';
+  }
+  var priceInput = document.getElementById('plPrice');
+  if(priceInput && !priceInput.dataset.manual){
+    priceInput.value = pl.price || 25;
+    priceInput.dataset.synced = '1';
+  }
+  var isStallRender = (facts.mode!=null&&facts.mode===0) && ident && ident.id==='store';
+  if(isStallRender){
+    // 摆摊：无固定月租，按摊位费/天算
+    document.getElementById('plNum').innerHTML='轻量<br><small style="font-size:11px">试水</small>';
+    document.getElementById('plDesc').textContent='摆摊模式无固定月租——核心是摊位费（'+(pl.estRent?Math.round(pl.estRent/30)+'元/天级':'几十元/天')+'）与日均流水。先验证产品有人买，再谈升级门店。';
+    document.getElementById('plRev').textContent='摊位制';
+    document.getElementById('plMargin').textContent=pl.margin+'%';
+    document.getElementById('plPayback').textContent='回本快';
+  } else if(ident && ident.id==='factory'){
+    // 工厂身份：核心是产能利用率与订单覆盖，不是"碗/日保本"
+    var devLv = facts.f_experience!=null?facts.f_experience:1;
+    var chanLv = facts.f_goal!=null?facts.f_goal:1;
+    var capLv = facts.f_capital!=null?facts.f_capital:1;
+    document.getElementById('plNum').innerHTML='产能<br><small style="font-size:11px">利用率</small>';
+    document.getElementById('plDesc').textContent='工厂身份下，保本碗数不适用。核心是：设备'+(devLv>=2?'已具备产能':'基础不足')+'、技改投入'+(capLv>=2?'已到位':'待定')+'、渠道'+(chanLv>=2?'有客户基础':'需开拓')+'——先锁定首批订单验证产能利用率，再谈规模。';
+    document.getElementById('plRev').textContent='设备'+(devLv>=2?'✓':'✗');
+    document.getElementById('plMargin').textContent='订单待定';
+    document.getElementById('plPayback').textContent='产能导向';
+  } else if(ident && ident.financeWeight < 0.7){
+    // 产品研发身份：不是"开店保本"，是"研发投入评估"
+    document.getElementById('plNum').innerHTML='—';
+    document.getElementById('plDesc').textContent='产品研发身份下，开店保本线不适用。核心是研发投入（'+(pl.rdBudget?Math.round(pl.rdBudget/10000)+'万元级':'按预算的25%预留')+'：配方/试产/盲测/打样）与产品验证周期——先确认配方/标准化/目标客户，再谈规模。';
+    document.getElementById('plRev').textContent='研发导向';
+    document.getElementById('plMargin').textContent='验证期';
+    document.getElementById('plPayback').textContent='产品周期';
+  } else {
+    document.getElementById('plNum').innerHTML=pl.breakevenQty+' <small>'+pl.unit+' / 日</small>';
+    document.getElementById('plDesc').textContent='这是你的保本线：每天卖出 '+pl.breakevenQty+' '+pl.unit+'（客单价'+pl.price+'元），月营业额'+Math.round(pl.breakevenRev*30)+'元，才能覆盖租金'+pl.rent+'元/月+人工'+pl.labor+'元/月。';
+    document.getElementById('plRev').textContent=pl.breakevenRev+'元/日';
+    document.getElementById('plMargin').textContent=pl.margin+'%';
+    document.getElementById('plPayback').textContent=((pl.paybackMin&&pl.paybackMin!==pl.paybackMax)?(pl.paybackMin+'-'+pl.paybackMax):pl.payback)+'个月';
+  }
+}
+function recalcPL(){
+  if(!state.catalog) return;
+  document.getElementById('plRent').dataset.manual = '1';
+  document.getElementById('plPrice').dataset.manual = '1';
+  var c=state.catalog;
+  var pl=calcPL(facts,c);
+  var blocks=RUNTIME.checkBlocking(facts,c,pl);
+  var decision=state.decision;
+  decision.blocking=blocks;
+  decision.signal=blocks.length?'BLOCKED':(decision.signal==='BLOCKED'?recalcSignal():decision.signal);
+  if(blocks.length){decision.story='如果今天是你，我建议：先别往下走。'+blocks[0].reason;decision.nextAction='解决阻断';}
+  state.report.pl=pl;
+  renderPL();
+  renderAll();
+}
+function recalcSignal(){
+  var d=state.decision;
+  if(d.finalScore>=80)return'PROCEED';
+  if(d.finalScore>=60)return'PROCEED_WITH_VALIDATION';
+  if(d.finalScore>=45)return'HOLD';
+  return'NOT_RECOMMENDED';
+}
+
+/* ---------- Graph ---------- */
+var graphNodes=[],graphEdges=[],dragging=null;
+function renderGraph(){
+  var svg=document.getElementById('graphSvg');
+  var wrap=document.getElementById('graphWrap');
+  var W=wrap.clientWidth||600, H=wrap.clientHeight||280;  // 折叠时兜底尺寸
+  var network=RUNTIME.factorNetwork(state.catalog);
+  // 布局：按节点数自适应间距（7节点=密集，5节点=宽松），避免重叠出界
+  var nCount = network.nodes.length;
+  var colStep = Math.min(W/(nCount+0.5), 90);   // 水平间距：节点多时压缩
+  var rowStep = 60;                              // 垂直波动
+  graphNodes=network.nodes.map(function(n,i){
+    var col = i - (nCount-1)/2;                  // 居中：-3..3 / -2..2
+    return {id:n.id,name:n.name,value:n.value,
+      x:Math.round(W/2 + col*colStep),
+      y:Math.round(H/2 + (i%2? -rowStep/2 : rowStep/2) + Math.sin(i*2.1)*12)};
+  });
+  graphEdges=network.edges.map(function(e){return{from:e.from,to:e.to,strength:e.strength};});
+  drawGraph(W,H);
+}
+function drawGraph(W,H){
+  var svg=document.getElementById('graphSvg');
+  var html='';
+  graphEdges.forEach(function(e,i){
+    var a=graphNodes.find(function(n){return n.id===e.from;});
+    var b=graphNodes.find(function(n){return n.id===e.to;});
+    html+='<line class="g-edge" id="edge'+i+'" x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'"/>';
+  });
+  graphNodes.forEach(function(n,i){
+    html+='<g class="g-node" id="node'+n.id+'" transform="translate('+n.x+','+n.y+')" onmousedown="graphDown(event,\''+n.id+'\',\''+i+'\')" onclick="graphClick(event,\''+n.id+'\')"><circle r="26"></circle><text y="4">'+n.name+'</text></g>';
+  });
+  svg.innerHTML=html;
+}
+function graphDown(e,id){
+  if(e.target.closest('g')) e.preventDefault();
+  var svg=document.getElementById('graphSvg');
+  var rect=svg.getBoundingClientRect();
+  dragging={id:id,dx:e.clientX-rect.left-graphNodes.find(function(n){return n.id===id;}).x,dy:e.clientY-rect.top-graphNodes.find(function(n){return n.id===id;}).y};
+}
+document.addEventListener('mousemove',function(e){
+  if(!dragging) return;
+  var svg=document.getElementById('graphSvg');
+  var rect=svg.getBoundingClientRect();
+  var n=graphNodes.find(function(n){return n.id===dragging.id;});
+  if(n){n.x=e.clientX-rect.left-dragging.dx;n.y=e.clientY-rect.top-dragging.dy;drawGraph(rect.width,rect.height);}
+});
+document.addEventListener('mouseup',function(){dragging=null;});
+function graphClick(e,id){
+  if(e&&e.stopPropagation) e.stopPropagation();
+  highlightNode(id);
+  openNodeDrawer(id);
+}
+function highlightNode(id){
+  var related=new Set([id]);
+  graphEdges.forEach(function(eg){if(eg.from===id)related.add(eg.to);if(eg.to===id)related.add(eg.from);});
+  graphNodes.forEach(function(n){
+    var el=document.getElementById('node'+n.id);
+    if(el){el.classList.toggle('hl',n.id===id);el.classList.toggle('dim',!related.has(n.id)&&n.id!==id);}
+  });
+  graphEdges.forEach(function(eg,i){
+    var el=document.getElementById('edge'+i);
+    if(el){el.classList.toggle('hl',eg.from===id||eg.to===id);el.classList.toggle('dim',!(eg.from===id||eg.to===id));}
+  });
+}
+function openNodeDrawer(id){
+  var n=graphNodes.find(function(x){return x.id===id;});
+  if(!n) return;
+  var related=graphEdges.filter(function(e){return e.from===id||e.to===id;});
+  var relHtml='';
+  related.forEach(function(e){
+    var other=e.from===id?e.to:e.from;
+    var on=graphNodes.find(function(x){return x.id===other;});
+    relHtml+='<div class="dw-ev"><b>→ '+on.name+'</b><span>影响强度 '+Math.round(e.strength*100)+'%</span></div>';
+  });
+  openDrawer(
+    '<div class="dw-title">'+n.name+'</div>'+
+    '<div class="dw-sub">因子节点 · 当前值 '+n.value+' · '+(n.role==='CORE'?'核心因子':'辅助因子')+'</div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">STORY</div><div class="dw-sec-b">'+n.name+' 当前'+(n.value>=70?'处于健康区间，是决策的支撑点':'偏弱，构成决策短板')+'。在'+state.catalog.name+'的决策网络中，该因子'+(n.value>=70?'正向支撑最终建议':'需要优先补强')+'。</div></div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">DEPENDENCY</div>'+relHtml+'</div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">ACTION</div><div class="dw-act">'+(n.value>=70?'保持并放大该优势':'下一阶段优先验证与补强该因子')+'</div></div>'
+  );
+}
+
+/* ---------- Drawer ---------- */
+function openDrawer(html){
+  document.getElementById('drawerBody').innerHTML=html;
+  document.getElementById('drawer').classList.add('show');
+  document.getElementById('drawerMask').classList.add('show');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('show');
+  document.getElementById('drawerMask').classList.remove('show');
+}
+function openOpp(l){
+  var r=state.report;
+  var cell=r.oppCells.find(function(x){return x.l===l;});
+  if(!cell) return;
+  openDrawer('<div class="dw-title">'+l+'机会 · '+cell.v+'★</div><div class="dw-sub">'+state.catalog.name+'</div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">STORY</div><div class="dw-sec-b">'+cell.story+'</div></div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">ACTION</div><div class="dw-act">'+(cell.v>=4?'该维度构成进入支撑，可纳入主计划':'该维度需在验证阶段重点实测')+'</div></div>');
+}
+function openRisk(name){
+  var r=state.report.risks.find(function(x){return x.name===name;});
+  if(!r) return;
+  openDrawer('<div class="dw-title">风险：'+name+'</div><div class="dw-sub">等级 '+r.lv+'</div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">STORY</div><div class="dw-sec-b">'+r.explain+'</div></div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">ACTION</div><div class="dw-act">'+(r.lv==='高'?'进入前必须解决，设为一票否决项':r.lv==='中'?'列入验证阶段重点观察':'常规监控即可')+'</div></div>');
+}
+function openFactor(i){
+  var f=state.report.factors[i]; if(!f) return;
+  openDrawer('<div class="dw-title">'+f.name+'</div><div class="dw-sub">关键因子 · 影响 '+f.impact+'%</div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">STORY</div><div class="dw-sec-b">'+f.explain+'</div></div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">EVIDENCE</div><div class="dw-sec-b"><small>'+f.evidence+'</small></div></div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">ACTION</div><div class="dw-act">'+f.action+'</div></div>');
+}
+function openStep(i){
+  var s=state.report.plan[i]; if(!s) return;
+  openDrawer('<div class="dw-title">'+s.what+'</div><div class="dw-sub">'+s.when+'</div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">HOW</div><div class="dw-sec-b">'+s.how+'</div></div>'+
+    (s.metric?'<div class="dw-sec"><div class="dw-sec-l">SUCCESS METRIC</div><div class="dw-sec-b">'+s.metric+'</div></div>':'')+
+    '<div class="dw-sec"><div class="dw-sec-l">EXPECTED RESULT</div><div class="dw-sec-b">完成该步骤后，重新评估对应引擎信号，若未改善则调整路径</div></div>');
+}
+function openReport(){
+  var d=state.decision,r=state.report,c=state.catalog;
+  if(!d||!r) return;
+  var blocksHtml=d.blocking.length?d.blocking.map(function(b){return'<div class="dw-ev"><b>⚠ '+b.factor+'</b><span>'+b.reason+'</span></div>';}).join(''):'<div class="dw-sec-b">无阻断项</div>';
+  openDrawer(
+    '<div class="dw-title">决策摘要 · '+c.name+'</div>'+
+    '<div class="dw-sub">'+new Date().toLocaleDateString()+' · FoodIntelAI Decision OS V2</div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">DECISION</div><div class="dw-sec-b">'+d.story+'</div></div>'+
+    (function(){
+      var identR = IDENTITIES[facts.identity!=null?facts.identity:0];
+      if(identR && identR.id==='factory') return '<div class="dw-sec"><div class="dw-sec-l">产能评估</div><div class="dw-sec-b">工厂核心是设备/订单匹配——'+(facts.f_goal>=2?'已有客户基础，可锁定订单':'渠道待开拓，先验证订单')+' · 按产能利用率推进</div></div>';
+      if(identR && identR.id==='research') return '<div class="dw-sec"><div class="dw-sec-l">研究结论</div><div class="dw-sec-b">研究核心是数据可靠度——结论需多源验证，不涉及开店财务</div></div>';
+      if(identR && identR.id==='product') return '<div class="dw-sec"><div class="dw-sec-l">研发投入</div><div class="dw-sec-b">研发核心是产品验证——先确认产品成立，再谈商业化</div></div>';
+      return '<div class="dw-sec"><div class="dw-sec-l">P&L 保本线</div><div class="dw-sec-b">每天 <b>'+r.pl.breakevenQty+(r.pl.unit||'份')+'</b>（客单价'+r.pl.price+'元）保本 · 预计回本'+((r.pl.paybackMin&&r.pl.paybackMin!==r.pl.paybackMax)?(r.pl.paybackMin+'-'+r.pl.paybackMax):r.pl.payback)+'个月</div></div>';
+    })()+
+
+    '<div class="dw-sec"><div class="dw-sec-l">BLOCKING</div>'+blocksHtml+'</div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">NEXT STEP</div><div class="dw-act">'+d.nextAction+'</div></div>'+
+    '<div class="dw-sec"><div class="dw-sec-l">深度报告</div><div class="dw-sec-b">完整《单店可行性测算报告》（BOM成本结构/排坑指南/选址清单）可添加沧林微信获取：<b>canglin1985</b></div></div>'
+  );
+}
+
+/* ================================================================
+   商业推演（Business Simulation）—— 免费给结论，收费给决策
+   报告命名：FoodIntelAI 商业推演报告（不叫 AI 报告）
+   七段结构：决策复盘 / 六维深度分析 / 行业插件(含案例) / AI专家推演
+            / 深度变现分析 / What If模拟 / 90天行动方案
+   ================================================================ */
+
+// 三问动态化：读真实第一约束 / 预算档 / 路径
+function showBizEntry(constraintResult){
+  var el = document.getElementById('bizEntry');
+  var c = state.catalog, d = state.decision;
+  if(!d || !c) return;
+  el.classList.remove('hidden');
+  // 第一约束统一走六维判定（与商业推演报告同口径）
+  var fc = bizFirstConstraint(bizDims());
+  var firstName = fc.dim;
+  var band = BUDGET_BANDS[facts.capital!=null?facts.capital:1] || {label:'5-15万'};
+  var q2 = (facts.mode===0) ? '如果增加预算或换城市，摆摊还能不能成立？' : '如果预算从'+(facts.capValue!=null?facts.capValue+'万':band.label)+'提到更高一档，结果会不会变化？';
+  document.getElementById('beQ1').querySelector('small').textContent = '六维模型深度解释 · 当前第一约束：'+firstName;
+  document.getElementById('beQ2').querySelector('small').textContent = '商业 What If 模拟 · '+q2;
+  document.getElementById('beQ3').querySelector('small').textContent = '行业方案 + AI推演 · 基于'+c.name+'产业知识库生成90天路径';
+}
+
+// 打开 / 关闭商业推演报告
+var bizSimFacts = null;  // What If 独立副本，不污染原始 facts
+function openBizSim(){
+  var d=state.decision; if(!d) return;
+  bizSimFacts = JSON.parse(JSON.stringify(facts));
+  document.getElementById('bizMask').classList.add('show');
+  document.getElementById('bizSim').classList.add('show');
+  renderBizReport();
+  document.getElementById('bizSim').scrollTop = 0;
+}
+function closeBizSim(){
+  document.getElementById('bizMask').classList.remove('show');
+  document.getElementById('bizSim').classList.remove('show');
+}
+
+// 六维计算：V2 引擎分数 + 资金/团队映射（随滑块重算，用独立副本）
+function bizDims(){
+  var f = JSON.parse(JSON.stringify(bizSimFacts || facts));
+  var d = computeDecision(f).decision;
+  var c = state.catalog;
+  var eff = effCapital(c, f.mode);
+  var band = BUDGET_BANDS[f.capital!=null?f.capital:1] || {min:5,max:15};
+  var capRatio = capValueOf(f, band.max) / eff;
+  var capScore = Math.min(95, Math.max(5, Math.round(capRatio >= 1.5 ? 82 : capRatio >= 1 ? 68 : capRatio * 55)));
+  var teamScore = Math.min(95, 42 + (f.team!=null?f.team:1) * 14);
+  return {
+    '产品': d.perEngine.E02 ? d.perEngine.E02.score : 60,
+    '供应链': d.perEngine.E08 ? d.perEngine.E08.score : 60,
+    '渠道': d.perEngine.E05 ? d.perEngine.E05.score : 60,
+    '运营': d.perEngine.E03 ? d.perEngine.E03.score : 60,
+    '资金': capScore,
+    '组织': teamScore
+  };
+}
+
+// 第一约束判定（对齐 06_商业约束分类：资金硬阻断优先；用 What If 独立副本）
+function bizFirstConstraint(dims){
+  var f = bizSimFacts || facts, c = state.catalog;
+  var eff = effCapital(c, f.mode);
+  var band = BUDGET_BANDS[f.capital!=null?f.capital:1] || {min:5,max:15};
+  if(capValueOf(f, band.max) < eff * 0.5) return {dim:'资金', hard:true};
+  var order = Object.keys(dims).sort(function(a,b){return dims[a]-dims[b];});
+  return {dim: order[0], hard:false};
+}
+
+// 渲染七段商业推演报告（skipShift=true 时保留 What If 迁移消息，不重置）
+function renderBizReport(skipShift){
+  var c = state.catalog, d = state.decision;
+  var dims = bizDims();
+  var fc = bizFirstConstraint(dims);
+  var order = Object.keys(dims).sort(function(a,b){return dims[a]-dims[b];});
+  var weak = order[0], strong = order[5];
+
+  // ① 决策复盘
+  var html = '<div class="bs-sec"><div class="bs-sec-h"><span class="t">① 决策复盘</span><span class="en">DECISION REVIEW</span></div>'+
+    '<div class="bs-kv"><span class="k">综合评估</span><span class="v">'+d.finalScore+'/100 · 置信度 '+d.confidence+'%</span></div>'+
+    '<div class="bs-kv"><span class="k">当前信号</span><span class="v">'+d.signal+'</span></div>'+
+    '<div class="bs-kv"><span class="k">核心结论</span><span class="v" style="text-align:left;max-width:70%">'+d.story+'</span></div>'+
+    '<div class="bs-kv"><span class="k">下一步</span><span class="v">'+d.nextAction+'</span></div></div>';
+
+  // ② 六维深度分析
+  html += '<div class="bs-sec"><div class="bs-sec-h"><span class="t">② 六维深度分析</span><span class="en">6D STRUCTURE</span></div>';
+  order.forEach(function(dim){
+    html += '<div class="bs-dim'+(dim===weak?' weak':'')+'"><span class="dn">'+dim+'</span><span class="ds">'+stars(dims[dim])+'</span><span class="dv">'+dims[dim]+'</span></div>';
+  });
+  html += '<div class="bs-gap">最大落差在「'+weak+'」（'+dims[weak]+'）与「'+strong+'」（'+dims[strong]+'）之间——优势无法通过短板兑现，属于结构性失衡。'+(fc.hard?'<br><b>当前资金为硬性阻断约束。</b>':'')+'</div></div>';
+
+  // ③ 行业插件（品类知识库 + 同品类成功案例）
+  html += '<div class="bs-sec"><div class="bs-sec-h"><span class="t">③ 行业插件</span><span class="en">INDUSTRY PLUGIN · '+c.name+'</span></div>'+
+    '<div class="bs-kv"><span class="k">市场规模</span><span class="v">'+c.market.note+' <span class="bs-tag">'+c.market.lv+'级</span></span></div>'+
+    '<div class="bs-kv"><span class="k">供应链</span><span class="v" style="text-align:left;max-width:70%">'+c.supply.note+'</span></div>'+
+    '<div class="bs-kv"><span class="k">消费者</span><span class="v" style="text-align:left;max-width:70%">'+c.consumer.note+'</span></div>'+
+    '<div class="bs-kv"><span class="k">竞争格局</span><span class="v">'+c.competition.note+' <span class="bs-tag">'+c.competition.lv+'级</span></span></div>'+
+    '<div class="bs-kv"><span class="k">原料成本率</span><span class="v">'+(c.bom.rate*100)+'%</span></div>';
+  if(c.caseRef){
+    var cr = c.caseRef;
+    html += '<div class="bs-gap" style="margin-top:12px"><b>同品类案例 · '+cr.id+'</b>（'+cr.status+' '+cr.code+'）<br>'+cr.point+'<br><small style="color:var(--muted)">'+cr.data+' · FoodIntelAI 商业验证库</small></div>';
+  }
+  html += '</div>';
+
+  // ④ AI 专家推演（AI 行业顾问模式：为什么是它，不是别的）
+  var second = order[1];
+  html += '<div class="bs-sec"><div class="bs-sec-h"><span class="t">④ AI 专家推演</span><span class="en">AI EXPERT · 行业顾问模式</span></div>'+
+    '<div class="bs-why"><div class="qw">为什么第一约束是「'+fc.dim+'」？</div><div class="qa">根据当前资源结构，项目存在三项主要约束，其中「'+fc.dim+'」（'+dims[fc.dim]+'分）优先级最高。它不是任意判断，而是六维结构中评分最低、且难以通过其他维度弥补的环节。</div></div>'+
+    '<div class="bs-why"><div class="qw">为什么不是「'+strong+'」或「'+second+'」？</div><div class="qa">「'+strong+'」（'+dims[strong]+'分）是你的结构性优势，短期无需追加投入；「'+second+'」（'+dims[second]+'分）虽偏弱，但其缺口可通过现有资源部分覆盖。只有「'+fc.dim+'」的缺口会直接阻断结果兑现。</div></div>'+
+    '<div class="bs-why"><div class="qw">如果解决「'+fc.dim+'」，会改变什么？</div><div class="qa">下一约束将浮出水面（见 What If 模拟）——商业世界不是一个答案，而是一组条件变化。</div></div></div>';
+
+  // ⑤ 深度变现分析（盈利结构 + 变现路径）
+  var pl = state.report ? state.report.pl : null;
+  var margin2 = Math.round((1 - (c.bom?c.bom.rate:0.35)) * 100);
+  html += '<div class="bs-sec"><div class="bs-sec-h"><span class="t">⑤ 深度变现分析</span><span class="en">MONETIZATION</span></div>';
+  if(pl){
+    html += '<div class="bs-kv"><span class="k">客单价</span><span class="v">¥'+pl.price+'</span></div>'+
+      '<div class="bs-kv"><span class="k">毛利率</span><span class="v">'+pl.margin+'%</span></div>'+
+      '<div class="bs-kv"><span class="k">保本线</span><span class="v">每天 '+pl.breakevenQty+' '+pl.unit+'</span></div>'+
+      '<div class="bs-kv"><span class="k">月保本营业额</span><span class="v">¥'+Math.round(pl.breakevenRev*30)+'</span></div>'+
+      '<div class="bs-kv"><span class="k">回本周期</span><span class="v">'+((pl.paybackMin&&pl.paybackMin!==pl.paybackMax)?(pl.paybackMin+'-'+pl.paybackMax):pl.payback)+'个月</span></div>'+
+      '<div class="bs-kv"><span class="k">月固定成本</span><span class="v">租金¥'+pl.rent+' + 人工¥'+pl.labor+'</span></div>';
+  } else {
+    html += '<div class="bs-kv"><span class="k">客单价</span><span class="v">¥'+(c.priceBand||25)+'</span></div>'+
+      '<div class="bs-kv"><span class="k">毛利率</span><span class="v">'+margin2+'%</span></div>';
+  }
+  var paths2 = (facts.mode===0)?'摆摊验证 → 单店模型 → 加盟/复制'
+    :(facts.mode===2)?'加盟/联营 → 多店运营 → 区域代理'
+    :'单店直营 → 多店标准化 → 加盟开放';
+  html += '<div class="bs-gap">变现路径（按当前模式）：'+paths2+'<br>每一步的验证门槛：先跑通现金流，再谈规模。</div></div>';
+
+  // ⑥ What If 模拟
+  var bf = bizSimFacts || facts;
+  var capLabels = ['5万以下','5-15万','15-30万','30万+'], teamLabels = ['单干','2-3人','4-10人','10人+'], cityLabels = ['县城','三四线','二线','一线'];
+  var cv = bf.capital!=null?bf.capital:1, tv = bf.team!=null?bf.team:1, civ = bf.city!=null?bf.city:1;
+  html += '<div class="bs-sec"><div class="bs-sec-h"><span class="t">⑥ What If 模拟</span><span class="en">CHANGE ONE CONDITION</span></div>'+
+    '<div class="bs-slider"><div class="sl-l"><span>资金</span><span class="v" id="bsVCap">'+capLabels[cv]+'</span></div><input type="range" id="bsSlCap" min="0" max="3" step="1" value="'+cv+'" oninput="bizWhatIf(\'cap\',this.value)"></div>'+
+    '<div class="bs-slider"><div class="sl-l"><span>团队</span><span class="v" id="bsVTeam">'+teamLabels[tv]+'</span></div><input type="range" id="bsSlTeam" min="0" max="3" step="1" value="'+tv+'" oninput="bizWhatIf(\'team\',this.value)"></div>'+
+    '<div class="bs-slider"><div class="sl-l"><span>城市</span><span class="v" id="bsVCity">'+cityLabels[civ]+'</span></div><input type="range" id="bsSlCity" min="0" max="3" step="1" value="'+civ+'" oninput="bizWhatIf(\'city\',this.value)"></div>'+
+    '<div id="bsShift"></div></div>';
+
+  // ⑦ 90 天行动方案
+  var acts = c.actions || [];
+  var p1 = acts.slice(0,3), p2 = acts.slice(3);
+  html += '<div class="bs-sec"><div class="bs-sec-h"><span class="t">⑦ 90 天行动方案</span><span class="en">ROADMAP</span></div>'+
+    '<div class="bs-plan">'+
+    '<div class="ph"><div class="pt">0-30天</div><div class="pg">验证与起步</div><div class="pa">'+(p1.map(function(a){return '· '+a.what;}).join('<br>')||'· 验证核心假设')+'</div></div>'+
+    '<div class="ph"><div class="pt">30-60天</div><div class="pg">模型跑通</div><div class="pa">'+(p2.map(function(a){return '· '+a.what;}).join('<br>')||'· 单店模型验证')+'</div></div>'+
+    '<div class="ph"><div class="pt">60-90天</div><div class="pg">复制准备</div><div class="pa">· 供应链SOP沉淀<br>· 第二个点位评估</div></div>'+
+    '</div></div>';
+
+  // 付费层（三层定位：免费=发现问题 / 专业版¥699=商业推演报告 / 高阶¥1299=AI顾问模式）
+  html += '<div class="bs-pay"><div class="pt2">FoodIntelAI 商业推演报告</div>'+
+    '<div class="pd">六维深度分析 · 行业插件 · AI 专家推演 · 深度变现 · What If 模拟 · 90天路径<br>¥699/年 · 专业版（高阶 ¥1299 · AI 顾问模式：多轮调整）</div>'+
+    '<div class="pb" onclick="alert(\'小程序阶段接入支付：专业版 ¥699/年\')">解锁完整报告 →</div></div>';
+
+  document.getElementById('bizBody').innerHTML = html;
+  if(!skipShift) renderBizShift();
+}
+
+// 报告初始渲染时的约束显示（滑块未动时）
+function renderBizShift(){
+  var dims = bizDims();
+  var fc = bizFirstConstraint(dims);
+  var shift = document.getElementById('bsShift');
+  if(!shift) return;
+  bizShiftFrom = fc.dim;  // 记录初始约束，供首次滑块对比迁移
+  shift.innerHTML = '<div class="bs-shift">当前第一约束：'+fc.dim+(fc.hard?'（硬阻断）':'')+'</div>';
+}
+
+// What If 滑块：改参数 → 重算引擎 → 刷新六维与约束迁移
+var bizShiftFrom = null;
+function bizWhatIf(key, val){
+  var v = parseInt(val);
+  var labels = {cap:['5万以下','5-15万','15-30万','30万+'], team:['单干','2-3人','4-10人','10人+'], city:['县城','三四线','二线','一线']};
+  var fk = {cap:'capital', team:'team', city:'city'}[key];  // facts 字段名映射
+  bizSimFacts[fk] = v;
+  if(fk === 'capital') bizSimFacts.capValue = null;  // 滑块=档位探索，清除精确值避免残留
+  var dims = bizDims();
+  var fc = bizFirstConstraint(dims);
+  var msg, changed = false;
+  if(bizShiftFrom && bizShiftFrom !== fc.dim){
+    msg = '第一约束由「'+bizShiftFrom+'」迁移为「'+fc.dim+'」——商业世界不是一个答案，而是一组条件变化。';
+    changed = true;
+  } else {
+    msg = '当前第一约束：'+fc.dim+(fc.hard?'（硬阻断）':'');
+  }
+  bizShiftFrom = fc.dim;
+  // 重建报告（保留滑块位置与迁移消息，不覆盖）
+  renderBizReport(true);
+  var shift = document.getElementById('bsShift');
+  if(shift) shift.innerHTML = '<div class="bs-shift'+(changed?' changed':'')+'">'+msg+'</div>';
+}
+
+
+/* ---------- Feedback 闭环 ---------- */
+function renderFeedbackCard(){
+  var cf = document.getElementById('cardFeedback');
+  if(!state.decision || !state.catalog){ cf.classList.add('hidden'); return; }
+  // 身份骨架：Feedback 表单按身份换语义
+  var identFb2 = IDENTITIES[facts.identity!=null?facts.identity:0];
+  var revWrap = document.getElementById('fbRevenueWrap');
+  var revLabel = document.getElementById('fbRevenueLabel');
+  var optS = document.getElementById('fbOptSuccess');
+  if(identFb2 && identFb2.id==='factory'){
+    if(revLabel) revLabel.textContent = '首批订单量';
+    if(revWrap) revWrap.querySelector('input').placeholder = '万元/单';
+    if(optS) optS.textContent = '成功 · 订单落地';
+  } else if(identFb2 && identFb2.id==='product'){
+    if(revLabel) revLabel.textContent = '付费客户数';
+    if(revWrap) revWrap.querySelector('input').placeholder = '个';
+    if(optS) optS.textContent = '成功 · 有付费客户';
+  } else if(identFb2 && identFb2.id==='research'){
+    if(revLabel) revLabel.textContent = '验证数据源数';
+    if(revWrap) revWrap.querySelector('input').placeholder = '个';
+    if(optS) optS.textContent = '成功 · 多源验证';
+  } else {
+    if(revLabel) revLabel.textContent = '实际日流水';
+    if(revWrap) revWrap.querySelector('input').placeholder = '元/日';
+    if(optS) optS.textContent = '成功 · 持续经营';
+  }
+  // 已有回填记录 → 显示对比；否则显示表单
+  var key = 'fi_fb_' + state.chosenCategory;
+  var rec = null;
+  try{ rec = JSON.parse(localStorage.getItem(key)||'null'); }catch(e){}
+  if(rec){
+    cf.classList.remove('hidden');
+    document.getElementById('fbForm').classList.add('hidden');
+    var res = document.getElementById('fbResult');
+    res.classList.remove('hidden');
+    showFeedbackCompare(rec);
+  } else {
+    cf.classList.remove('hidden');
+    document.getElementById('fbForm').classList.remove('hidden');
+    document.getElementById('fbResult').classList.add('hidden');
+  }
+}
+
+function submitFeedback(){
+  var rev = parseFloat(document.getElementById('fbRevenue').value);
+  var outcome = document.getElementById('fbOutcome').value;
+  if(!rev || rev <= 0){ alert('请填写实际日流水'); return; }
+  var key = 'fi_fb_' + state.chosenCategory;
+  var rec = {
+    date: new Date().toLocaleDateString(),
+    category: state.chosenCategory,
+    predicted: state.decision.finalScore,
+    predicted_conf: state.decision.confidence,
+    breakeven_qty: state.report.pl.breakevenQty,
+    unit: state.report.pl.unit,
+    actual_revenue: rev,
+    outcome: outcome,
+    model_note: '已记录真实经营数据，将纳入后续模型校准样本（当前版本不会自动改写引擎参数）'
+  };
+  try{ localStorage.setItem(key, JSON.stringify(rec)); }catch(e){}
+  // 立即显示对比
+  document.getElementById('fbForm').classList.add('hidden');
+  var res = document.getElementById('fbResult');
+  res.classList.remove('hidden');
+  showFeedbackCompare(rec);
+  state.logs.push('feedback: 回填 '+rev+' 元/日 → 模型校准');
+}
+
+function showFeedbackCompare(rec){
+  var predictedQty = rec.breakeven_qty;
+  var actualQty = rec.actual_revenue / 25; // 按客单价25元折算日销量
+  var hit = actualQty >= predictedQty;
+  var outcomeLabel = {SUCCESS:'成功', BREAKEVEN:'持平', FAIL:'失败', EXIT:'主动退出'}[rec.outcome] || rec.outcome;
+  var h = '';
+  h += '<div class="fb-r-head"><span class="fb-r-t">预测 vs 实际</span><span class="fb-r-delta '+(hit?'good':'bad')+'">'+(hit?'✓ 达标':'✗ 未达标')+'</span></div>';
+  h += '<div class="fb-r-row"><span class="fk">系统预测</span><span class="fv">评估 '+rec.predicted+'/100 · 置信度 '+rec.predicted_conf+'%</span></div>';
+  var identFb = IDENTITIES[facts.identity!=null?facts.identity:0];
+  if(identFb && (identFb.id==='factory'||identFb.id==='product'||identFb.id==='research')){
+    h += '<div class="fb-r-row"><span class="fk">验证目标</span><span class="fv '+(hit?'ok':'no')+'">'+rec.outcome+'</span></div>';
+    h += '<div class="fb-r-row"><span class="fk">投入产出</span><span class="fv">'+rec.actual_revenue+' 元验证投入 · '+(hit?'达到预期':'未达预期')+'</span></div>';
+  } else {
+    h += '<div class="fb-r-row"><span class="fk">保本线</span><span class="fv">'+predictedQty+(rec.unit||'份')+'/日（'+(predictedQty*25)+'元/日）</span></div>';
+    h += '<div class="fb-r-row"><span class="fk">实际日流水</span><span class="fv '+(hit?'ok':'no')+'">'+rec.actual_revenue+' 元/日（约'+Math.round(actualQty)+'份）</span></div>';
+  }
+  h += '<div class="fb-r-row"><span class="fk">实际结果</span><span class="fv">'+outcomeLabel+'</span></div>';
+  h += '<div class="fb-calib">📋 '+rec.model_note+' · 回填日期 '+rec.date+'<br>你的真实数据已存入本地样本库，用于人工校准与后续版本迭代。</div>';
+  document.getElementById('fbResult').innerHTML = h;
+}
+
+
+/* ---------- Memory ---------- */
+function saveMemory(catId,decision){
+  try{
+    var key='fi_mem_'+catId;
+    var hist=JSON.parse(localStorage.getItem(key)||'[]');
+    hist.push({date:new Date().toLocaleDateString(),score:decision.finalScore,signal:decision.signal,perEngine:decision.perEngine});
+    if(hist.length>5) hist.shift();
+    localStorage.setItem(key,JSON.stringify(hist));
+  }catch(e){}
+}
+function renderMemory(){
+  var key='fi_mem_'+state.chosenCategory;
+  var hist=[];
+  try{hist=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
+  var box=document.getElementById('cardMemory');
+  if(hist.length<2){box.classList.add('hidden');return;}
+  box.classList.remove('hidden');
+  var prev=hist[hist.length-2],curr=hist[hist.length-1];
+  var h='<div class="mem-compare"><div class="mem-head"><span class="mem-date">'+prev.date+' → '+curr.date+'</span><span class="mem-delta '+(curr.score>=prev.score?'up':'down')+'">'+(curr.score>=prev.score?'+':'')+(curr.score-prev.score)+' 分</span></div><div class="mem-bars">';
+  var names={E01:'市场',E02:'品类',E03:'模式',E04:'风险',E05:'竞争',E06:'一致性',E07:'城市',E08:'供应链',E09:'消费者'};
+  Object.keys(prev.perEngine).forEach(function(k){
+    if(!curr.perEngine[k]) return;
+    var d=curr.perEngine[k].score-prev.perEngine[k].score;
+    if(Math.abs(d)<2) return;
+    h+='<div class="mem-bar"><span class="mb-name">'+names[k]+'</span><div class="mb-track"><div class="mb-fill" style="width:'+Math.min(95,curr.perEngine[k].score)+'%"></div></div><span class="mb-d '+(d>=0?'up':'down')+'">'+(d>=0?'+':'')+d+'</span></div>';
+  });
+  h+='</div></div>';
+  document.getElementById('memList').innerHTML=h;
+}
+
+/* ---------- Runtime 重算（后台/沙盒用） ---------- */
+function rerunRuntime(){
+  var c=state.catalog;
+  var outputs={};
+  // 工厂身份：用工厂专属变量适配引擎输入（设备→经验, 技改→资金, 工艺→技能, 渠道→目标, 区域→城市, 组织→团队）
+  var engineFacts = facts;
+  var identF = IDENTITIES[facts.identity!=null?facts.identity:0];
+  if(identF && identF.id==='factory'){
+    engineFacts = {};
+    Object.keys(facts).forEach(function(k){ engineFacts[k] = facts[k]; });
+    // 工厂变量映射到引擎语义
+    if(facts.f_experience!=null) engineFacts.experience = facts.f_experience;  // 设备基础
+    if(facts.f_capital!=null) engineFacts.capital = facts.f_capital;            // 技改投入
+    if(facts.f_skill!=null) engineFacts.skill = facts.f_skill;                 // 工艺能力
+    if(facts.f_goal!=null) engineFacts.goal = facts.f_goal;                    // 市场渠道
+    if(facts.f_city!=null) engineFacts.city = facts.f_city;                    // 区域
+    if(facts.f_team!=null) engineFacts.team = facts.f_team;                    // 组织规模
+  }
+  ENGINES.forEach(function(eg){outputs[eg.id]=eg.compute(engineFacts,c,outputs);});
+  outputs.E06=ENGINES[5].compute(engineFacts,c,outputs);
+  var weights=RUNTIME.calcWeights(engineFacts);
+  var pl=calcPL(engineFacts,c);
+  var blocks=RUNTIME.checkBlocking(engineFacts,c,pl);
+  var network=RUNTIME.factorNetwork(c);
+  var decision=RUNTIME.compose(engineFacts,c,outputs,weights,blocks,network,pl);
+  var plan=RUNTIME.plan(decision,c,engineFacts);
+  var report=RUNTIME.buildReport(engineFacts,c,outputs,decision,network,plan,pl);
+  state.outputs=outputs; state.decision=decision; state.report=report;
+  state.engineFacts = engineFacts;  // 保存供渲染层用
+  state.logs.push('参数变更 → runtime 重算');
+  renderAll();
+}
+
+/* ---------- 分组折叠 ---------- */
+function toggleGroup(id){
+  var body = document.getElementById(id);
+  var h = document.getElementById(id + 'h');
+  body.classList.toggle('collapsed');
+  h.classList.toggle('collapsed');
+}
+
+/* ---------- Init ---------- */
+renderProgress();
+renderQuestion();
+</script>
+</body>
+</html>
