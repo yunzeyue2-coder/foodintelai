@@ -1,0 +1,41 @@
+# Category Profile Schema V0.1
+# CPE 统一输出结构 · FoodIntelAI 品类认知层
+# 所有 CPE 画像（米线/炸鸡/胡辣汤…）输出同一结构，FDE 据此稳定调用。冻结后再接 FDE。
+
+asset_id: CPE-XXX
+engine: Category Profile Engine
+engine_version: 0.1
+input:
+  - FID-00X            # 数据资产
+category:              # 品类定义（见 CPE_STANDARD 品类定义章）
+  keyword: 米线
+  includes: [米线, 云南米线, 过桥米线, 酸辣米线]
+  excludes: [米粉, 螺蛳粉, 河粉]
+output:
+  market_scale:
+    store_count: 0
+    coverage: {price: 0%, rating: 0%, comment: 0%}
+  structure:           # 平台分类分布
+    top3: []
+  spatial:             # 区域/商圈
+    district_top: []
+    biz_top: []
+  competition:         # 品牌集中度
+    brands: {}
+    chain_rate: 0%
+  price:
+    median: 0
+    bands: {}
+  quality:
+    score_mean: 0.0
+    score_median: 0.0
+    bands: {}
+  risk:
+    - coverage_warning
+    - anomaly_notes
+status: frozen            # frozen（双实例验证：CPE-001米线/CPE-002炸鸡）
+evidence_level: B+     # 与 FIF-37 证据校准一致
+limitation: 静态快照 2025H1，不可做趋势判断
+
+# 冻结记录：2026.08.02，CPE-Schema-V0.1 frozen；输出结构九字段不得改动；新实例只换数据不换结构。
+# 接入 FDE 前：FID→CPE→FDE，CPE 负责品类状态，FDE 负责个体适配判断。

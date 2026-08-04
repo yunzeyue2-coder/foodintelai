@@ -1,0 +1,2529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>FoodIntel AI · 食品创业决策系统</title>
+<meta name="description" content="690张食品创业决策卡 · 小摊爆品 · 门店配方 · 卤味烧烤早餐饮品全品类覆盖">
+<!-- cb:20260617v3 -->
+<link rel="manifest" href="manifest.json?v=2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-icon.png?v=2">
+<meta name="theme-color" content="#d4a070">
+<meta name="color-scheme" content="light">
+<meta name="msapplication-TileColor" content="#d4a070">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+html{background:#F8FAFC}
+</style>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#F8FAFC;
+  --card:#ffffff;
+  --text:#111827;
+  --muted:#6B7280;
+  --light:#9CA3AF;
+  --accent:#0F172A;
+  --accent-light:#334155;
+  --green:#10B981;
+  --border:#E5E7EB;
+  --tag-bg:#F3F4F6;
+  --radius:14px;
+  --shadow:0 2px 12px rgba(0,0,0,.04);
+  --font-lg:18px;
+  --font-md:15px;
+  --font-sm:13px;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100dvh;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  width:100%;
+}
+
+/* ===== 导航 ===== */
+.nav{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 16px;
+}
+.nav-inner{
+  max-width:720px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:52px;
+}
+.nav-brand{font-size:18px;font-weight:700;color:var(--accent)}
+.nav-brand{text-decoration:none}
+
+/* ===== 搜索栏 ===== */
+.nav-search{
+  max-width:720px;
+  margin:0 auto;
+  padding:0 16px 12px;
+}
+.nav-search input{
+  width:100%;
+  padding:10px 16px;
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  font-size:14px;
+  background:var(--card);
+  color:var(--text);
+  outline:none;
+  transition:.2s;
+}
+.nav-search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(192,57,43,.08)}
+.nav-search input::placeholder{color:var(--light)}
+
+/* ===== 英雄区 ===== */
+.hero{
+  padding:56px 20px 40px;
+  text-align:center;
+  background:linear-gradient(180deg,#ffffff 0%,#F3F4F6 100%);
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(ellipse at 20% 50%,rgba(255,255,255,.15) 0%,transparent 60%),
+             radial-gradient(ellipse at 80% 30%,rgba(192,57,43,.06) 0%,transparent 50%);
+  pointer-events:none;
+}
+.hb-en{font-family:"Inter",sans-serif;font-size:32px;font-weight:700;color:#0B1F3A;letter-spacing:3px;margin-bottom:4px}
+.hb-cn{font-size:18px;font-weight:400;color:#8a7a6a;letter-spacing:6px;margin-bottom:24px}
+.hs-en{font-family:"Inter",sans-serif;font-size:14px;font-weight:500;color:#6B7280;letter-spacing:4px;margin-bottom:4px;text-transform:uppercase}
+.hs-cn{font-size:24px;font-weight:700;color:#111827;letter-spacing:3px;margin-bottom:28px}
+.hero-tagline{font-size:14px;color:#334155;font-weight:500;margin-bottom:22px;letter-spacing:1px}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;padding:12px 32px;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;transition:.2s;letter-spacing:1px}
+  margin-bottom:6px;
+  border:1.5px solid var(--accent);
+}
+.hero-cta:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+
+/* ===== 卡片展示 ===== */
+.hero-showcase{
+  margin-top:24px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  text-align:left;
+}
+.hero-card{
+  display:block;
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  border-radius:10px;
+  padding:14px 12px;
+  text-decoration:none;
+  color:var(--text);
+  transition:.25s;
+  border:1px solid rgba(255,255,255,.4);
+  box-shadow:0 2px 8px rgba(0,0,0,.03);
+}
+.hero-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 8px 24px rgba(0,0,0,.08);
+  border-color:rgba(232,101,45,.4);
+}
+.hero-card .hc-emoji{font-size:26px;display:block;margin-bottom:4px;line-height:1.2}
+.hero-card .hc-emoji .sep{margin:0 2px;color:#ccc}
+.hero-card .hc-name{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:3px}
+.hero-card .hc-tags{display:flex;gap:4px;flex-wrap:wrap}
+.hero-card .hc-tags span{
+  font-size:9px;padding:1px 6px;border-radius:3px;
+  font-weight:600;
+}
+@media(max-width:520px){
+  .hero-showcase{grid-template-columns:1fr 1fr}
+  .hero h1{font-size:28px}
+}
+
+/* ===== 入口卡片网格 ===== */
+.entry-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:20px;
+}
+.entry-card{
+  display:block;
+  padding:14px 14px;
+  border-radius:12px;
+  text-decoration:none;
+  color:var(--text);
+  transition:.2s;
+  position:relative;
+}
+.entry-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.entry-card .ec-emoji{font-size:22px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+.entry-card .ec-code{font-size:9px;color:#666666;letter-spacing:1px;font-family:'Inter',sans-serif;font-weight:500}
+.entry-card .ec-title{font-size:14px;font-weight:700;margin-bottom:1px}
+.entry-card .ec-desc{font-size:10px;color:var(--muted);line-height:1.4}
+.entry-card .ec-tag{
+  display:inline-block;
+  font-size:8px;
+  font-weight:700;
+  color:#475569;
+  padding:1px 7px;
+  border-radius:3px;
+  background:#F1F5F9;
+  margin-top:4px;
+}
+
+/* ===== 筛选条 ===== */
+
+/* ===== 案例展示区（取代会员区） ===== */
+.case-box{
+  background:linear-gradient(135deg,#2a1a0a,#3a2a1a);
+  border-radius:16px;
+  padding:28px 22px 22px;
+  margin:20px 0;
+  color:#f5ede5;
+  position:relative;
+  overflow:hidden;
+}
+.case-box::before{
+  content:'';
+  position:absolute;
+  top:-60px;right:-60px;
+  width:180px;height:180px;
+  background:radial-gradient(circle,rgba(232,101,45,.12) 0%,transparent 70%);
+  border-radius:50%;
+}
+.case-box .cb-badge{
+  display:inline-block;
+  font-size:9px;
+  padding:2px 10px;
+  border-radius:3px;
+  background:rgba(255,255,255,.1);
+  color:#d4a574;
+  letter-spacing:2px;
+  font-weight:600;
+  margin-bottom:10px;
+}
+.case-box .cb-title{
+  font-size:18px;
+  font-weight:800;
+  line-height:1.3;
+  margin-bottom:4px;
+  color:#faf5f0;
+}
+.case-box .cb-sub{
+  font-size:12px;
+  color:#b5a090;
+  margin-bottom:16px;
+  line-height:1.5;
+}
+.case-box .cb-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:6px;
+  margin-bottom:14px;
+}
+.case-box .cb-stat{
+  background:rgba(255,255,255,.06);
+  border-radius:8px;
+  padding:10px 8px;
+  text-align:center;
+}
+.case-box .cb-stat .num{
+  font-size:20px;
+  font-weight:800;
+  color:#E8652D;
+}
+.case-box .cb-stat .num .unit{
+  font-size:11px;
+  font-weight:400;
+  color:#b5a090;
+}
+.case-box .cb-stat .label{
+  font-size:9px;
+  color:#b5a090;
+  margin-top:1px;
+}
+.case-box .cb-divider{
+  height:1px;
+  background:rgba(255,255,255,.08);
+  margin:12px 0;
+}
+.case-box .cb-section-title{
+  font-size:11px;
+  font-weight:700;
+  color:#d4a574;
+  margin-bottom:8px;
+  letter-spacing:1px;
+}
+.case-box .cb-products{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-bottom:12px;
+}
+.case-box .cb-product{
+  background:rgba(255,255,255,.05);
+  border-radius:8px;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.case-box .cb-product .emoji{font-size:16px;flex-shrink:0}
+.case-box .cb-product .info{flex:1;min-width:0}
+.case-box .cb-product .name{font-size:12px;font-weight:600;color:#faf5f0}
+.case-box .cb-product .desc{font-size:9px;color:#b5a090;margin-top:1px}
+.case-box .cb-product .price-tag{
+  font-size:10px;
+  font-weight:700;
+  color:#E8652D;
+  flex-shrink:0;
+}
+.case-box .cb-process{
+  background:rgba(255,255,255,.04);
+  border-radius:8px;
+  padding:10px 12px;
+  margin-bottom:12px;
+}
+.case-box .cb-process .steps{
+  display:flex;
+  gap:2px;
+  align-items:center;
+  flex-wrap:wrap;
+  font-size:10px;
+  color:#b5a090;
+}
+.case-box .cb-process .steps .step{
+  background:rgba(255,255,255,.08);
+  padding:2px 8px;
+  border-radius:3px;
+  color:#e8ddd0;
+}
+.case-box .cb-process .steps .arrow{color:#5a4a3a;font-size:8px}
+.case-box .cb-cta{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px;
+  background:rgba(232,101,45,.15);
+  border:1px solid rgba(232,101,45,.25);
+  border-radius:8px;
+  text-decoration:none;
+  color:#E8652D;
+  font-size:12px;
+  font-weight:700;
+  margin-top:4px;
+  transition:background .2s;
+}
+.case-box .cb-cta:hover{background:rgba(232,101,45,.25)}
+.case-box .cb-cta .arrow{font-size:14px;transition:transform .2s}
+.case-box .cb-cta:hover .arrow{transform:translateX(3px)}
+.case-box .cb-footer{
+  font-size:9px;
+  color:#7a6a5a;
+  text-align:center;
+  margin-top:12px;
+  letter-spacing:.5px;
+}
+
+/* ===== 联系 ===== */
+.contact-box{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+.contact-title{font-size:13px;font-weight:700;text-align:center;margin-bottom:12px}
+.contact-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;max-width:360px;margin:0 auto}
+.contact-item{text-align:center}
+.contact-qr{width:90px;height:90px;margin:0 auto 6px;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.contact-qr img{width:100%;height:100%;object-fit:cover}
+.contact-label{font-size:11px;font-weight:600}
+
+/* ===== 密码锁 ===== */
+/* ===== 主内容 ===== */
+.main{
+  max-width:720px;
+  margin:0 auto;
+  padding:0 16px 40px;
+}
+
+/* ===== 区块标题 ===== */
+.section-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin:24px 0 12px;
+  padding-bottom:8px;
+  border-bottom:1.5px solid var(--border);
+}
+.section-header h2{font-size:18px;font-weight:700}
+.section-header .more{font-size:13px;color:var(--muted)}
+
+/* ===== 场景入口（三层结构） ===== */
+.scene-grid{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:16px;
+}
+.scene-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:.2s;
+}
+.scene-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.scene-card-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:16px;
+  cursor:pointer;
+  transition:.2s;
+  text-decoration:none;
+  color:var(--text);
+  position:relative;
+}
+.scene-card-header:hover{background:#f8f4ef}
+.scene-card-header .icon{width:38px;height:38px;flex-shrink:0}
+.scene-card-header .info{flex:1}
+.scene-card-header .info .name{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.scene-card-header .info .desc{font-size:13px;color:var(--muted);margin-top:1px}
+.scene-card-header .price-tag{
+  font-size:12px;
+  font-weight:700;
+  padding:3px 10px;
+  border-radius:4px;
+  white-space:nowrap;
+}
+.price-green{background:#f0f6ec;color:#7B9A45}
+.price-orange{background:#fef6f2;color:#E8652D}
+.price-red{background:#fef2f2;color:#C0392B}
+.scene-card-header .arrow{
+  font-size:16px;color:var(--light);transition:.2s;margin-left:4px;
+}
+.scene-card.open .scene-card-header .arrow{transform:rotate(90deg)}
+.scene-card-body{
+  display:none;
+  padding:0 16px 16px;
+  border-top:1px solid var(--border);
+}
+.scene-card.open .scene-card-body{display:block}
+.scene-body-section{margin-top:14px}
+.scene-body-section h4{
+  font-size:14px;
+  font-weight:700;
+  color:var(--accent);
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.scene-body-section h4 .badge{
+  font-size:11px;
+  font-weight:600;
+  padding:1px 6px;
+  border-radius:3px;
+}
+.scene-feature-list{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.scene-feature-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+  padding:6px 10px;
+  background:var(--bg);
+  border-radius:6px;
+  text-decoration:none;
+  color:var(--text);
+  transition:.2s;
+}
+.scene-feature-item:hover{background:var(--tag-bg)}
+.scene-feature-item .dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dot-green{background:#7B9A45}
+.dot-orange{background:#E8652D}
+.dot-accent{background:#C0392B}
+.scene-feature-item .tag-sm{
+  font-size:11px;
+  padding:1px 5px;
+  border-radius:2px;
+  font-weight:600;
+  margin-left:auto;
+  flex-shrink:0;
+}
+
+/* ===== 摆摊品类网格 ===== */
+.stall-cats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+.stall-cat-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 12px;
+  background:var(--bg);
+  border-radius:8px;
+  text-decoration:none;
+  color:var(--text);
+  font-size:13px;
+  transition:.2s;
+}
+.stall-cat-item:hover{background:var(--tag-bg)}
+.stall-cat-item .cat-icon{font-size:16px}
+.stall-cat-item .cat-name{flex:1}
+.stall-cat-item .cat-count{
+  font-size:11px;
+  color:var(--light);
+  font-weight:600;
+}
+.scene-body-cta{
+  display:block;
+  text-align:center;
+  margin-top:12px;
+  padding:10px 14px;
+  background:var(--green);
+  color:#fff;
+  border-radius:6px;
+  font-size:14px;
+  font-weight:600;
+  text-decoration:none;
+  transition:.2s;
+}
+.scene-body-cta:hover{background:#06AD56}
+@media(max-width:480px){
+  .scene-card-header{padding:14px}
+  .scene-card-header .info .name{font-size:14px}
+  .scene-card-body{padding:0 14px 14px}
+}
+
+/* ===== 产品卡列表 ===== */
+.card-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.card-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  background:var(--card);
+  border-radius:10px;
+  text-decoration:none;
+  color:var(--text);
+  box-shadow:var(--shadow);
+  transition:.2s;
+}
+.card-item:hover{transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,.08)}
+.card-item .emoji{font-size:22px;width:30px;text-align:center}
+.card-item .info{flex:1;min-width:0}
+.card-item .name{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+.card-item .desc{font-size:11px;color:var(--muted);margin-top:1px}
+.tag{
+  font-size:9px;
+  padding:2px 7px;
+  border-radius:3px;
+  font-weight:600;
+  white-space:nowrap;
+}
+.tag-free{background:#f0f6ec;color:#7B9A45}
+.tag-paid{background:#fef6f2;color:var(--accent-light)}
+.card-item .arrow{color:#ddd;font-size:14px}
+
+/* ===== 钩子区 ===== */
+.hook-box{
+  background:linear-gradient(135deg,#fff 0%,#fef9f5 100%);
+  border-radius:16px;
+  padding:24px 20px;
+  margin:20px 0;
+  border:1px solid #f5ede5;
+}
+.hook-box h3{font-size:15px;font-weight:700;margin-bottom:12px}
+.hook-item{
+  display:flex;
+  gap:10px;
+  margin-bottom:10px;
+  align-items:flex-start;
+}
+.hook-item:last-child{margin-bottom:0}
+.hook-num{
+  width:22px;
+  height:22px;
+  background:var(--accent);
+  color:#fff;
+  border-radius:50%;
+  font-size:11px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.hook-text{font-size:12.5px;line-height:1.6;color:#555}
+.hook-text strong{color:var(--text)}
+
+/* ===== 场景专区切换 ===== */
+.zone-tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:10px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.zone-tab{
+  padding:7px 14px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:600;
+  background:var(--tag-bg);
+  color:var(--muted);
+  cursor:pointer;
+  border:none;
+  transition:.2s;
+  white-space:nowrap;
+}
+.zone-tab.active{background:var(--accent);color:#fff}
+.zone-tab:hover:not(.active){background:#e4ddd4}
+.zone-content{display:none;width:100%;max-width:100%}
+.zone-content.active{display:block}
+
+/* ===== 付费产品卡·移动端热榜 ===== */
+.zone-hot-wrap{
+  background:var(--card);
+  border-radius:16px;
+  padding:16px 0;
+  margin:14px 0;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.zone-hot-tabs{
+  display:flex;
+  gap:4px;
+  padding:0 14px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  margin-bottom:8px;
+}
+.zone-hot-tabs::-webkit-scrollbar{display:none}
+.zone-hot-tab{
+  flex-shrink:0;
+  padding:6px 12px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:600;
+  background:var(--tag-bg);
+  color:var(--muted);
+  border:none;
+  cursor:pointer;
+  transition:.2s;
+  white-space:nowrap;
+}
+.zone-hot-tab.active{
+  background:var(--accent);
+  color:#fff;
+  box-shadow:0 2px 8px rgba(192,57,43,.25);
+}
+.zone-sep{
+  flex-shrink:0;
+  padding:6px 8px;
+  font-size:10px;
+  color:var(--light);
+  letter-spacing:2px;
+  white-space:nowrap;
+  display:flex;
+  align-items:center;
+}
+.zone-hot-cards{
+  padding:0 14px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.zone-hot-card{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  background:var(--bg);
+  border-radius:10px;
+  text-decoration:none;
+  color:var(--text);
+  transition:.2s;
+  position:relative;
+}
+.zone-hot-card:active{background:var(--tag-bg);transform:scale(.98)}
+.zone-hot-card .rank{
+  font-size:11px;
+  font-weight:800;
+  width:20px;
+  text-align:center;
+  flex-shrink:0;
+  color:#bbb;
+}
+.zone-hot-card .rank.top1{color:#FF6B35}
+.zone-hot-card .rank.top2{color:#E8652D}
+.zone-hot-card .rank.top3{color:#C0392B}
+.zone-hot-card .h-emoji{font-size:18px;flex-shrink:0;width:26px;text-align:center}
+.zone-hot-card .h-info{flex:1;min-width:0}
+.zone-hot-card .h-name{font-size:13px;font-weight:600;display:flex;align-items:center;gap:4px}
+.zone-hot-card .h-name .h-tag{
+  font-size:8px;
+  padding:1px 5px;
+  border-radius:3px;
+  font-weight:600;
+}
+.zone-hot-card .h-name .h-hot{background:#fef2f2;color:#C0392B}
+.zone-hot-card .h-name .h-new{background:#f0f6ec;color:#7B9A45}
+.zone-hot-card .h-name .h-fire{background:#fef6f2;color:#E8652D}
+/* 移除 - card-desc 已从JS渲染中删除 */
+.zone-hot-card .h-arrow{color:#ccc;font-size:12px;flex-shrink:0}
+.zone-hot-sub{
+  font-size:10px;
+  color:var(--muted);
+  padding:2px 14px 10px;
+  line-height:1.5;
+}
+.wechat-box{
+  background:var(--card);
+  border-radius:16px;
+  padding:28px 20px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  margin:20px 0;
+}
+.wechat-box h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.wechat-box .sub{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+.wechat-box .qrcode{
+  width:80px;
+  height:80px;
+  margin:0 auto 8px;
+  border-radius:8px;
+  border:2px dashed var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  color:#ccc;
+  background:#faf8f6;
+}
+.wechat-box .qrcode img{width:100%;height:100%;border-radius:10px;object-fit:cover}
+.wechat-box .wxid{font-size:13px;color:#666;margin-bottom:4px}
+.wechat-box .wxid strong{color:var(--green)}
+.wechat-box .tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  justify-content:center;
+  margin:12px 0;
+}
+.wechat-box .tags span{
+  font-size:11px;
+  padding:4px 12px;
+  background:var(--tag-bg);
+  border-radius:20px;
+  color:#666;
+}
+.wechat-box .hint{font-size:10px;color:#ccc;margin-top:8px}
+
+
+
+/* ===== 知识体系展示 ===== */
+.knowledge-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin:6px 0;
+}
+.know-item{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:6px 10px;
+  box-shadow:var(--shadow);
+  text-align:center;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+}
+.know-item .icon{font-size:15px}
+.know-item .title{font-size:12px;font-weight:600;white-space:nowrap}
+.know-item .desc{display:none}
+
+/* 流行趋势动效 */
+@keyframes firePulse{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-3px)}
+}
+
+/* 折叠查看更多 */
+.cat-fold{position:relative;margin-bottom:4px}
+.cat-grid{overflow:visible;max-height:none}
+.cat-more{
+  display:block;width:100%;
+  padding:10px;margin:4px 0;
+  font-size:12px;color:var(--muted);
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  cursor:pointer;
+  text-align:center;
+  transition:.2s;
+}
+.cat-more:hover{background:var(--tag-bg);color:var(--text)}
+
+/* ===== 科普卡片 ===== */
+.know-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:16px;
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition:.2s;
+  border:1px solid transparent;
+}
+.know-card:hover{border-color:var(--border);transform:translateY(-1px)}
+.know-card .k-icon{font-size:26px;margin-bottom:6px}
+.know-card .k-title{font-size:14px;font-weight:600;margin-bottom:3px}
+.know-card .k-summary{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ===== 知识库tab ===== */
+.knowledge-tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:12px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.know-tab{
+  padding:7px 14px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:600;
+  background:var(--tag-bg);
+  color:var(--muted);
+  cursor:pointer;
+  border:none;
+  transition:.2s;
+  white-space:nowrap;
+}
+.know-tab.active{background:var(--accent);color:#fff}
+.know-tab:hover:not(.active){background:var(--border)}
+
+/* ===== 分享按钮 ===== */
+.share-row{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+  justify-content:flex-end;
+}
+.share-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  font-size:10px;
+  padding:3px 8px;
+  border-radius:4px;
+  background:var(--tag-bg);
+  color:var(--muted);
+  border:none;
+  cursor:pointer;
+  transition:.2s;
+}
+.share-btn:hover{background:var(--border);color:var(--text)}
+
+/* ===== AI入口 ===== */
+.ai-entrance{
+  background:linear-gradient(135deg,#faf6f0 0%,#fef9f5 100%);
+  border-radius:16px;
+  padding:24px 20px;
+  text-align:center;
+  margin:24px 0;
+  border:1px solid #f5ede5;
+}
+.ai-entrance h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.ai-entrance p{font-size:12px;color:var(--muted);margin-bottom:12px}
+.ai-row{display:flex;gap:8px;max-width:400px;margin:0 auto}
+.ai-row input{
+  flex:1;
+  padding:9px 14px;
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  font-size:13px;
+  outline:none;
+  background:var(--card);
+}
+.ai-row input:focus{border-color:var(--accent)}
+.ai-row button{
+  padding:9px 18px;
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.ai-row button:hover{background:#9a2b20}
+.ai-answer{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--muted);
+  min-height:20px;
+  text-align:left;
+  max-width:400px;
+  margin-left:auto;
+  margin-right:auto;
+  line-height:1.6;
+}
+
+/* ===== 科普弹窗 ===== */
+.modal-overlay{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.5);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.show{display:flex}
+.modal-box{
+  background:var(--card);
+  border-radius:18px;
+  padding:28px 24px;
+  max-width:520px;
+  width:100%;
+  max-height:70vh;
+  overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+.modal-box .close-btn{
+  float:right;
+  background:none;
+  border:none;
+  font-size:22px;
+  color:var(--light);
+  cursor:pointer;
+  line-height:1;
+}
+.modal-box h3{font-size:18px;font-weight:700;margin-bottom:12px}
+.modal-box p{font-size:13.5px;line-height:1.8;color:#444;white-space:pre-line}
+.modal-recommend{
+  margin-top:16px;
+  padding-top:12px;
+  border-top:1px solid var(--border);
+}
+.modal-recommend .rec-title{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.modal-recommend .rec-list{display:flex;flex-direction:column;gap:5px}
+.modal-recommend .rec-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  padding:6px 10px;
+  background:var(--bg);
+  border-radius:6px;
+  cursor:pointer;
+  transition:.2s;
+  text-decoration:none;
+  color:var(--text);
+}
+.modal-recommend .rec-item:hover{background:var(--tag-bg)}
+.modal-recommend .rec-item .rec-icon{font-size:14px}
+
+/* ===== 底部 ===== */
+.footer{
+  text-align:center;
+  padding:32px 20px;
+  font-size:11px;
+  color:#bbb;
+  line-height:1.8;
+  border-top:1px solid var(--border);
+  margin-top:10px;
+  max-width:720px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.footer .brand{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:4px}
+.footer .slogan{font-size:11px;color:#bbb;margin-bottom:2px;line-height:1.6}
+.footer a{color:#bbb;text-decoration:none}
+.footer a:hover{color:var(--accent)}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;
+  bottom:80px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,.85);
+  color:#fff;
+  padding:10px 22px;
+  border-radius:8px;
+  font-size:13px;
+  z-index:99;
+  display:none;
+  white-space:nowrap;
+  pointer-events:none;
+}
+.toast.show{display:block;animation:toastAnim 2.5s}
+
+/* ===== AI浮动聊天 ===== */
+.fab{position:fixed;bottom:32px;right:16px;z-index:999;width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 10px rgba(192,57,43,0.2);cursor:pointer;text-decoration:none;transition:opacity .5s,transform .2s;border:none;opacity:0;pointer-events:none}
+.fab.visible{opacity:0.85;pointer-events:auto}
+.fab:hover{transform:scale(1.06);opacity:1}
+.chat-box{position:fixed;bottom:88px;right:24px;z-index:999;width:340px;max-height:460px;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.12);display:none;flex-direction:column;overflow:hidden;border:1px solid #eeeae2}
+.chat-box.show{display:flex}
+.chat-head{padding:14px 16px;background:var(--accent);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.chat-head .close-btn{margin-left:auto;background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:0 4px}
+.chat-msgs{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-height:200px;max-height:280px}
+.chat-msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.6;word-break:break-word}
+.chat-msg.bot{background:#f5f0eb;color:#3a322a;align-self:flex-start;border-bottom-left-radius:4px}
+.chat-msg.user{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-input{padding:10px 12px;border-top:1px solid #eeeae2;display:flex;gap:8px;align-items:center;background:#faf8f5}
+.chat-input input{flex:1;border:1px solid #ddd4ca;border-radius:8px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit}
+.chat-input input:focus{border-color:var(--accent)}
+.chat-input button{padding:8px 16px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.chat-input button:active{background:#9a2b20}
+.chat-welcome{text-align:center;padding:20px 14px;color:#999;font-size:12px;line-height:1.7}
+@media(max-width:420px){.chat-box{width:calc(100vw - 32px);right:16px;bottom:80px}}
+@keyframes toastAnim{
+  0%{opacity:0;transform:translateX(-50%) translateY(10px)}
+  12%{opacity:1;transform:translateX(-50%) translateY(0)}
+  82%{opacity:1}
+  100%{opacity:0;transform:translateX(-50%) translateY(-10px)}
+}
+
+@media(max-width:480px){
+  .hero{padding:36px 16px 28px}
+  .hero h1{font-size:26px}
+  .hero-stats{gap:8px;flex-wrap:wrap}
+  .hero-stat{padding:6px 10px;min-width:0;flex:1 1 0;max-width:90px}
+  .hero-stat .num{font-size:15px}
+  .hero-stat .lb{font-size:9px}
+  .scene-grid{grid-template-columns:1fr}
+  .knowledge-grid{grid-template-columns:1fr}
+  .lock-card{padding:24px 16px}
+  .ai-row{flex-direction:column}
+  .share-row{justify-content:flex-start}
+  .scene-card{padding:14px}
+  .scene-card .icon svg{width:28px;height:28px}
+  .wechat-box{padding:20px 14px}
+  .wechat-box .qrcode{width:120px;height:120px}
+  .hook-box{padding:18px 14px}
+  .case-box.is-store{background:linear-gradient(135deg,#3a2818,#4a3828)}
+.case-box.is-store .cb-badge{color:#f0c060}
+.case-box.is-store .cb-cta{background:rgba(240,192,96,.12);border-color:rgba(240,192,96,.25);color:#f0c060}
+.case-box.is-store .cb-cta:hover{background:rgba(240,192,96,.22)}
+.case-box.is-workshop{background:linear-gradient(135deg,#1a2a2a,#2a3a3a)}
+.case-box.is-workshop .cb-badge{color:#6fc0c0}
+.case-box.is-workshop .cb-cta{background:rgba(111,192,192,.12);border-color:rgba(111,192,192,.25);color:#6fc0c0}
+.case-box.is-workshop .cb-cta:hover{background:rgba(111,192,192,.22)}
+.case-box.is-workshop .cb-stat .num{color:#6fc0c0}
+.case-box.is-workshop .cb-section-title{color:#6fc0c0}
+.case-box{padding:20px 14px}
+  .ai-entrance{padding:18px 14px}
+  .know-card{padding:14px}
+  .knowledge-tabs{gap:4px}
+  .know-tab{padding:5px 10px;font-size:11px}
+  .modal-box{padding:20px 16px;margin:10px}
+  .modal-box h3{font-size:16px}
+  .modal-box p{font-size:13px}
+  .section-header{flex-direction:column;gap:4px}
+  .section-header .more{font-size:10px}
+  .card-item{padding:10px 12px}
+  .card-item .emoji{font-size:18px;width:24px}
+  .card-item .name{font-size:12px}
+  .card-item .desc{font-size:10px}
+  .zone-tab{padding:5px 10px;font-size:11px}
+  .lock-input{flex-direction:column;gap:6px}
+  .lock-input input{width:100%}
+  .lock-input button{width:100%}
+  footer{padding:24px 16px 32px}
+  .hero-cta{padding:11px 24px;font-size:14px}
+  .hero-cta-sub{font-size:10px}
+  .hero-badge{font-size:9px}
+  nav{padding:0 12px}
+  .nav-inner{height:46px}
+  .nav-brand{font-size:16px}
+  .nav-links a{padding:5px 8px;font-size:11px}
+  .nav-search{padding:0 12px 10px}
+  .nav-search input{padding:8px 12px;font-size:13px}
+}
+
+@media(min-width:481px) and (max-width:768px){
+  .scene-grid{grid-template-columns:1fr 1fr}
+  .knowledge-grid{grid-template-columns:1fr 1fr}
+  .hero h1{font-size:28px}
+  .hero{padding:40px 16px 32px}
+  .hero-stats{gap:12px}
+  .section-header{flex-direction:row}
+}
+
+
+/* ===== 主标题毛笔字 ===== */
+.hero h1{
+  font-family:"PingFang SC","Microsoft YaHei","Noto Serif SC",serif;
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:2px;
+  line-height:1.3;
+  margin-bottom:10px;
+}
+.hero h1 span{
+  font-family:"PingFang SC","Microsoft YaHei","Noto Serif SC",serif;
+  color:var(--accent);
+}
+
+/* ===== 筛选条 ===== */
+.stall-filter{
+  display:flex;
+  gap:6px;
+  margin:12px 0 16px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding:2px 0;
+}
+.stall-filter::-webkit-scrollbar{display:none}
+.filter-tag{
+  flex-shrink:0;
+  padding:7px 14px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:600;
+  background:var(--card);
+  color:var(--muted);
+  text-decoration:none;
+  white-space:nowrap;
+  transition:.2s;
+  box-shadow:0 1px 4px rgba(0,0,0,.03);
+}
+.filter-tag.active{background:var(--accent);color:#fff}
+.filter-tag:hover:not(.active){background:var(--tag-bg);color:var(--text)}
+
+/* ===== 热门项目 ===== */
+.hot-projects{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin:12px 0 20px;
+}
+.hot-card{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 14px;
+  background:var(--card);
+  border-radius:12px;
+  text-decoration:none;
+  color:var(--text);
+  box-shadow:var(--shadow);
+  transition:.2s;
+}
+.hot-card:active{transform:scale(.98);background:#f8f4ef}
+.hot-card .hc-icon{font-size:24px;width:34px;text-align:center;flex-shrink:0}
+.hot-card .hc-info{flex:1;min-width:0}
+.hot-card .hc-name{font-size:14px;font-weight:700;margin-bottom:3px}
+.hot-card .hc-tags{display:flex;gap:4px;flex-wrap:wrap}
+.htag{
+  font-size:9px;
+  padding:2px 6px;
+  border-radius:3px;
+  font-weight:600;
+  white-space:nowrap;
+}
+.htag.hot{background:#fef2f2;color:#C0392B}
+.htag.money{background:#f0f6ec;color:#7B9A45}
+.htag.solo{background:#fef6f2;color:#E8652D}
+.htag.rep{background:#eef2ff;color:#4f6ef7}
+.hot-card .hc-price{
+  font-size:14px;
+  font-weight:700;
+  color:var(--accent-light);
+  flex-shrink:0;
+}
+
+
+/* ===== 分享面板 ===== */
+.nav-actions{display:flex;align-items:center;gap:4px;margin-left:auto}
+/* 决策引擎悬浮预览卡（16px 圆角 + 内发光 + 指标预览） */
+.decision-preview{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#18181B;border-radius:16px;padding:20px 24px;margin:18px auto 4px;max-width:560px;text-decoration:none;box-shadow:0 8px 30px rgba(24,24,27,.18),inset 0 0 0 1px rgba(196,163,90,.2);transition:all .25s;border:1px solid rgba(196,163,90,.28);position:relative;overflow:hidden}
+.decision-preview:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(24,24,27,.24),inset 0 0 0 1px rgba(196,163,90,.32);border-color:rgba(196,163,90,.42)}
+.dp-left{text-align:left}
+.dp-en{font-size:15px;font-weight:700;color:#fff;letter-spacing:.5px;font-family:'Inter','PingFang SC',sans-serif}
+.dp-cn{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:.5px}
+.dp-right{display:flex;align-items:center;gap:14px}
+.dp-metric{display:flex;flex-direction:column;align-items:center}
+.dpm-label{font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1px}
+.dpm-val{font-size:22px;font-weight:800;color:#C4A35A;font-family:'SF Mono','Menlo',monospace;line-height:1.2}
+.dpm-tag{font-size:13px;font-weight:700;padding:3px 12px;border-radius:12px;margin-top:2px}
+.dpm-tag.ok{background:#27272A;color:#10B981;border:1px solid rgba(16,185,129,.4)}
+.dp-arrow{font-size:20px;color:#C4A35A;font-weight:700}
+.share-btn,.bookmark-btn{border:none;background:none;font-size:17px;cursor:pointer;padding:4px 6px;border-radius:6px;transition:.15s;line-height:1;color:var(--muted)}
+.share-btn:hover,.bookmark-btn:hover{background:var(--tag-bg);color:var(--text)}
+.share-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99;background:rgba(0,0,0,.12);opacity:0;pointer-events:none;transition:.2s}
+.share-overlay.show{opacity:1;pointer-events:auto}
+.share-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.92);z-index:100;background:var(--card);border-radius:16px;padding:20px;width:280px;box-shadow:0 8px 40px rgba(0,0,0,.12);opacity:0;pointer-events:none;transition:.2s}
+.share-panel.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.share-panel h3{font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;text-align:center}
+.share-options{display:flex;flex-direction:column;gap:8px}
+.share-option{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:none;background:var(--bg);cursor:pointer;font-size:14px;color:var(--text);transition:.15s;width:100%;text-align:left}
+.share-option:hover{background:var(--tag-bg)}
+.share-option .ico{font-size:20px;width:28px;text-align:center}
+.share-option .label{font-weight:500}
+.share-option .desc{font-size:11px;color:var(--light);margin-left:auto}
+.share-close{margin-top:12px;width:100%;padding:8px;border:none;border-radius:10px;background:var(--tag-bg);color:var(--muted);font-size:13px;cursor:pointer;transition:.15s}
+.share-close:hover{background:var(--border);color:var(--text)}
+.share-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#333;color:#fff;font-size:13px;padding:8px 16px;border-radius:8px;z-index:200;opacity:0;pointer-events:none;transition:.3s}
+.share-toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand" style="display:flex;align-items:baseline;gap:6px;font-family:'IBM Plex Sans',sans-serif">
+      <span style="font-weight:600;font-size:18px;color:#111">FoodIntel</span>
+      <span style="font-weight:400;font-size:18px;color:#6B7280">AI</span>
+      <span style="font-size:13px;color:var(--muted);font-weight:600">食品决策库</span>
+    </a>
+    <div class="nav-actions">
+      <button onclick="toggleShare()" class="share-btn" title="分享本页">📤</button>
+      <button onclick="bookmark()" class="bookmark-btn" title="收藏本页">⭐</button>
+    </div>
+  </div>
+</div>
+
+<div class="nav-search">
+  <input type="text" id="searchInput" placeholder="🔍 搜索产品、配方、工艺、知识..." oninput="searchCards(this.value)">
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-brand">
+      <div class="hb-en">FoodIntelAI</div>
+      <div class="hb-en" style="font-size:14px;font-weight:400;color:#6B7280;letter-spacing:4px;margin-bottom:10px">Food Intelligence</div>
+      <div class="hb-cn">食品产业智库</div>
+    </div>
+    <div class="hero-sub">
+      <div class="hs-en">Decision System</div>
+      <div class="hs-cn">食品商业决策系统</div>
+    </div>
+    <div class="hero-tagline">做正确的决策，<br>而不是更快的决策</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+      <a href="stall.html" class="hero-cta">探索产品机会 →</a>
+      <a href="store.html" class="hero-cta" style="background:#f5f0e8;color:#6a5a3a;border:1px solid #d4c8b0">开始经营诊断 →</a>
+    </div>
+
+    <!-- ===== 商业决策引擎 悬浮预览卡（Hero 下方交互卡片） ===== -->
+    <a href="decision-engine.html" class="decision-preview">
+      <div class="dp-left">
+        <div class="dp-en">FoodIntelAI · 商业决策引擎</div>
+        <div class="dp-cn">不是生成一份报告，而是完成一次商业决策分析</div>
+      </div>
+      <div class="dp-right">
+        <div class="dp-metric"><span class="dpm-label">决策指数</span><span class="dpm-val">82</span></div>
+        <div class="dp-metric"><span class="dpm-label">风险等级</span><span class="dpm-tag ok">低</span></div>
+        <div class="dp-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- ===== 4大入口（品牌版） ===== -->
+    <div class="entry-grid" style="margin-top:24px;margin-bottom:12px;gap:14px">
+      <a href="stall.html" class="entry-card" style="background:#ffffff;border:1px solid #E5E7EB;border-left:4px solid #E04E1A">
+        <div class="ec-emoji">🔥<span class="ec-code">Product Opportunity Engine</span></div>
+        <div class="ec-title">产品机会库</div>
+        <div class="ec-desc">发现值得进入的品类、产品机会</div>
+        <div class="ec-tag">找机会</div>
+      </a>
+      <a href="store.html" class="entry-card" style="background:#ffffff;border:1px solid #E5E7EB;border-left:4px solid #B82C1E">
+        <div class="ec-emoji">🏪<span class="ec-code">Store Growth Engine</span></div>
+        <div class="ec-title">门店增长系统</div>
+        <div class="ec-desc">从经营模型中找到增长路径</div>
+        <div class="ec-tag">做模型</div>
+      </a>
+      <a href="learn.html" class="entry-card" style="background:#ffffff;border:1px solid #E5E7EB;border-left:4px solid #d4a843">
+        <div class="ec-emoji">📖<span class="ec-code">Food Industry Intelligence</span></div>
+        <div class="ec-title">行业认知库</div>
+        <div class="ec-desc">用产业研究理解市场变化</div>
+        <div class="ec-tag">看趋势</div>
+      </a>
+      <a href="factory.html" class="entry-card" style="background:#ffffff;border:1px solid #E5E7EB;border-left:4px solid #4a2c2c">
+        <div class="ec-emoji">🏭<span class="ec-code">Industrial Scale Engine</span></div>
+        <div class="ec-title">工业落地系统</div>
+        <div class="ec-desc">从产品走向供应链和规模复制</div>
+        <div class="ec-tag">做规模</div>
+      </a>
+    </div>
+
+    <!-- ===== 新增入口：决策分析 + 供应方案 ===== -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+      <a href="decision-cases.html" style="background:#fff;border:1px solid #e0e4ea;border-radius:10px;padding:16px;text-decoration:none;color:inherit;transition:all .25s;display:flex;flex-direction:column;gap:4px">
+        <div style="font-size:20px">🧠</div>
+        <div style="font-size:14px;font-weight:700;color:#1a1a1a">商业验证库</div>
+        <div style="font-size:11px;color:#b5aaa0;font-weight:500;letter-spacing:1px;font-family:'Inter',sans-serif">Decision Lab</div>
+        <div style="font-size:12px;color:#6a7280;line-height:1.5">通过真实案例验证食品商业模型</div>
+        <div style="display:flex;gap:4px;margin-top:2px">
+          <span style="font-size:10px;padding:2px 8px;border-radius:3px;background:#eef0f3;color:#4a5568">9个案例</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:3px;background:#eef0f3;color:#4a5568">FIC编号</span>
+        </div>
+      </a>
+      <a href="supply-assets.html" style="background:#fff;border:1px solid #e0e4ea;border-radius:10px;padding:16px;text-decoration:none;color:inherit;transition:all .25s;display:flex;flex-direction:column;gap:4px">
+        <div style="font-size:20px">📦</div>
+        <div style="font-size:14px;font-weight:700;color:#1a1a1a">供应方案库</div>
+        <div style="font-size:11px;color:#b5aaa0;font-weight:500;letter-spacing:1px;font-family:'Inter',sans-serif">Solution Hub</div>
+        <div style="font-size:12px;color:#6a7280;line-height:1.5">产业供应方案智能匹配系统</div>
+        <div style="display:flex;gap:4px;margin-top:2px">
+          <span style="font-size:10px;padding:2px 8px;border-radius:3px;background:#eef0f3;color:#4a5568">按痛点检索</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:3px;background:#eef0f3;color:#4a5568">需求提交</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- ===== Frameworks + Intelligence ===== -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0">
+      <a href="frameworks/" style="background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1.5px solid #d4c8b0;border-radius:12px;padding:18px;text-align:center;text-decoration:none;color:inherit;transition:all .25s;box-shadow:0 2px 8px rgba(0,0,0,.03);display:flex;flex-direction:column;align-items:center;gap:4px;position:relative">
+        <div style="font-size:10px;color:#c4a35a;font-family:'Inter',sans-serif;font-weight:600;letter-spacing:2px;margin-bottom:2px">FI-FR</div>
+        <div style="font-size:26px;margin-bottom:2px">📚</div>
+        <div style="font-size:14px;font-weight:700;color:#7a5a04;margin-bottom:1px;letter-spacing:2px;font-family:'Inter',sans-serif">Framework Architecture</div>
+        <div style="font-size:10px;color:#b5aaa0;letter-spacing:1px;margin-bottom:2px;font-family:'Inter',sans-serif">总纲模型</div>
+        <div style="font-size:11px;color:#6a5a3a;line-height:1.5">产业分析框架 · 模型 · 研究体系</div>
+      </a>
+      <a href="neican/" style="background:linear-gradient(135deg,#faf8f5,#f5f0e8);border:1.5px solid #d4c8b0;border-radius:12px;padding:18px;text-align:center;text-decoration:none;color:inherit;transition:all .25s;box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:center;gap:4px;position:relative">
+        <div style="font-size:10px;color:#8a7a6a;font-family:'Inter',sans-serif;font-weight:600;letter-spacing:2px;margin-bottom:2px">FI-RS</div>
+        <div style="font-size:26px;margin-bottom:2px">📡</div>
+        <div style="font-size:14px;font-weight:700;color:#7a5a04;margin-bottom:1px;letter-spacing:2px;font-family:'Inter',sans-serif">Research Series</div>
+        <div style="font-size:10px;color:#8a7a6a;letter-spacing:1px;margin-bottom:2px;font-family:'Inter',sans-serif">研究系列</div>
+        <div style="font-size:11px;color:#6a5a3a;line-height:1.5">产业研究 · 内参 · 品类观察</div>
+      </a>
+    </div>
+
+    <!-- ===== 体系推荐 ===== -->
+    <div style="margin:10px 0 6px;display:flex;align-items:center;gap:6px;padding-bottom:20px">
+      <span style="font-size:14px">🏪</span>
+      <span style="font-size:13px;font-weight:700;color:#3a322a">体系推荐</span>
+      <span style="font-size:10px;color:#b5aaa0">总纲·母卡·VC卡</span>
+    </div>
+
+    <div class="hero-showcase">
+      <a href="catalog/BBQ/BBQ_M01_中式烧烤创业母卡.html" class="hero-card">
+        <span class="hc-emoji">🔥<span class="sep"> </span>🥩</span>
+        <div class="hc-name">中式烧烤创业母卡</div>
+        <div class="hc-tags"><span style="background:#F1F5F9;color:#475569">母卡</span><span style="background:#f5f2ed;color:#7a6a52">BBQ</span></div>
+      </a>
+      <a href="catalog/HG/HG_M01_火锅创业母卡.html" class="hero-card">
+        <span class="hc-emoji">🫕<span class="sep"> </span>🌶️</span>
+        <div class="hc-name">火锅创业母卡</div>
+        <div class="hc-tags"><span style="background:#F1F5F9;color:#475569">母卡</span><span style="background:#f5f2ed;color:#7a6a52">HG</span></div>
+      </a>
+      <a href="catalog/LB/LB_T01_凉菜总纲.html" class="hero-card">
+        <span class="hc-emoji">🥬<span class="sep"> </span>🌶️</span>
+        <div class="hc-name">凉菜总纲·万能利润品</div>
+        <div class="hc-tags"><span style="background:#3a6b2e;color:#fff">免费</span><span style="background:#f5f2ed;color:#7a6a52">LB</span></div>
+      </a>
+      <a href="catalog/SL/SL_M01_烧腊创业母卡.html" class="hero-card">
+        <span class="hc-emoji">🦆<span class="sep"> </span>🍯</span>
+        <div class="hc-name">烧腊创业母卡</div>
+        <div class="hc-tags"><span style="background:#F1F5F9;color:#475569">母卡</span><span style="background:#f5f2ed;color:#7a6a52">SL</span></div>
+      </a>
+      <a href="catalog/MLT/MLT_M01_麻辣烫冒菜创业母卡.html" class="hero-card">
+        <span class="hc-emoji">🥘<span class="sep"> </span>🌶️</span>
+        <div class="hc-name">麻辣烫冒菜创业母卡</div>
+        <div class="hc-tags"><span style="background:#F1F5F9;color:#475569">母卡</span><span style="background:#f5f2ed;color:#7a6a52">MLT</span></div>
+      </a>
+      <a href="catalog/XLX/XLX_M01_小龙虾创业母卡.html" class="hero-card">
+        <span class="hc-emoji">🦞<span class="sep"> </span>🌶️</span>
+        <div class="hc-name">小龙虾创业母卡</div>
+        <div class="hc-tags"><span style="background:#F1F5F9;color:#475569">母卡</span><span style="background:#f5f2ed;color:#7a6a52">XLX</span></div>
+      </a>
+      <a href="catalog/KY/KY_M01_烤鱼创业母卡.html" class="hero-card">
+        <span class="hc-emoji">🐟<span class="sep"> </span>🔥</span>
+        <div class="hc-name">烤鱼创业母卡</div>
+        <div class="hc-tags"><span style="background:#F1F5F9;color:#475569">母卡</span><span style="background:#f5f2ed;color:#7a6a52">KY</span></div>
+      </a>
+      <a href="catalog/CJ/CJ_M01_炒鸡创业母卡.html" class="hero-card">
+        <span class="hc-emoji">🐔<span class="sep"> </span>🔥</span>
+        <div class="hc-name">炒鸡创业母卡</div>
+        <div class="hc-tags"><span style="background:#F1F5F9;color:#475569">母卡</span><span style="background:#f5f2ed;color:#7a6a52">CJ</span></div>
+      </a>
+      <a href="catalog/ZHA/ZHA_M01_炸串创业母卡.html" class="hero-card">
+        <span class="hc-emoji">🍢<span class="sep"> </span>✨</span>
+        <div class="hc-name">炸串创业母卡</div>
+        <div class="hc-tags"><span style="background:#F1F5F9;color:#475569">母卡</span><span style="background:#f5f2ed;color:#7a6a52">ZHA</span></div>
+      </a>
+      <a href="catalog/YN/YN_M01_云南米线创业母卡.html" class="hero-card">
+        <span class="hc-emoji">🍜<span class="sep"> </span>🌿</span>
+        <div class="hc-name">云南米线创业母卡</div>
+        <div class="hc-tags"><span style="background:#F1F5F9;color:#475569">母卡</span><span style="background:#f5f2ed;color:#7a6a52">YN</span></div>
+      </a>
+      <a href="catalog/JX/JX_M01_江西小炒创业母卡.html" class="hero-card">
+        <span class="hc-emoji">🥘<span class="sep"> </span>🌶️</span>
+        <div class="hc-name">江西小炒创业母卡</div>
+        <div class="hc-tags"><span style="background:#F1F5F9;color:#475569">母卡</span><span style="background:#f5f2ed;color:#7a6a52">JX</span></div>
+      </a>
+      <a href="catalog/HM/HM_T01_河南烩面总纲.html" class="hero-card">
+        <span class="hc-emoji">🍜<span class="sep"> </span>🐑</span>
+        <div class="hc-name">河南烩面总纲</div>
+        <div class="hc-tags"><span style="background:#e8f0e8;color:#2a6a2a">总纲·免费</span><span style="background:#f5f2ed;color:#7a6a52">HM</span></div>
+      </a>
+      <a href="system.html?id=HP" class="hero-card">
+        <span class="hc-emoji">🐯<span class="sep"> </span>🍗</span>
+        <div class="hc-name">虎皮炸卤系列</div>
+        <div class="hc-tags"><span style="background:#fef2ee;color:#8a3a1a">炸卤一体</span><span style="background:#f5f2ed;color:#7a6a52">HP</span></div>
+      </a>
+      <a href="catalog/BZ/BZ_T01_煲系列总纲.html" class="hero-card">
+        <span class="hc-emoji">🏺<span class="sep"> </span>🍲</span>
+        <div class="hc-name">煲系列总纲</div>
+        <div class="hc-tags"><span style="background:#e8f0e8;color:#2a6a2a">总纲·免费</span><span style="background:#f5f2ed;color:#7a6a52">BZ</span></div>
+      </a>
+      <a href="catalog/SG/SG_T01_砂锅总纲.html" class="hero-card">
+        <span class="hc-emoji">🥘<span class="sep"> </span>🌶️</span>
+        <div class="hc-name">砂锅总纲</div>
+        <div class="hc-tags"><span style="background:#e8f0e8;color:#2a6a2a">总纲·免费</span><span style="background:#f5f2ed;color:#7a6a52">SG</span></div>
+      </a>
+      <a href="catalog/包子/MP_T01_包子总纲.html" class="hero-card">
+        <span class="hc-emoji">🥟<span class="sep"> </span>🧄</span>
+        <div class="hc-name">包子总纲</div>
+        <div class="hc-tags"><span style="background:#e8f0e8;color:#2a6a2a">总纲·免费</span><span style="background:#f5f2ed;color:#7a6a52">MP</span></div>
+      </a>
+      <a href="catalog/其他/LSF_T01_螺蛳粉总纲.html" class="hero-card">
+        <span class="hc-emoji">🐌</span>
+        <div class="hc-name">螺蛳粉总纲</div>
+        <div class="hc-tags"><span style="background:#e8f0e8;color:#2a6a2a">总纲·免费</span><span style="background:#f5f2ed;color:#7a6a52">LSF</span></div>
+      </a>
+      <a href="catalog/其他/SX_T01_陕西面食总纲.html" class="hero-card">
+        <span class="hc-emoji">🍜</span>
+        <div class="hc-name">陕西面食总纲</div>
+        <div class="hc-tags"><span style="background:#e8f0e8;color:#2a6a2a">总纲·免费</span><span style="background:#f5f2ed;color:#7a6a52">SX</span></div>
+      </a>
+    </div>
+    <a href="stall.html" style="display:inline-block;margin-top:12px;font-size:13px;font-weight:600;color:var(--accent);text-decoration:none;border:1.5px solid var(--accent);border-radius:6px;padding:6px 20px;transition:.2s" onmouseover="this.style.background='var(--accent)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='var(--accent)'">更多产品 →</a>
+  </div>
+</div>
+
+<div class="main" id="mainContent">
+
+<!-- ===== 本周研究专栏 ===== -->
+<style>
+.rp-section{margin:28px 0;padding:0;position:relative}
+.rp-header{background:linear-gradient(135deg,#F9FAFB,#F3F4F6);border-radius:12px;padding:18px 20px;margin-bottom:16px;position:relative;overflow:hidden}
+.rp-header::after{content:'';position:absolute;top:0;right:0;width:120px;height:100%;background:linear-gradient(90deg,transparent,rgba(196,163,90,.08));pointer-events:none}
+.rp-header .rp-week{font-size:11px;color:#c4a35a;letter-spacing:3px;font-weight:500;margin-bottom:2px}
+.rp-header .rp-topic{font-size:18px;font-weight:700;color:#1a1a1a;letter-spacing:1px;margin-bottom:4px}
+.rp-header .rp-sub{font-size:12px;color:#888;line-height:1.5}
+.rp-header .rp-status{display:inline-block;font-size:10px;color:#fff;background:#8b6914;padding:2px 12px;border-radius:10px;margin-top:6px;letter-spacing:1px}
+.rp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.rp-card{background:var(--card);border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.04);border:1px solid #e8e3db;transition:all .25s;text-decoration:none;color:inherit;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.rp-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,#c4a35a,#8b6914);border-radius:0 0 3px 0}
+.rp-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(196,163,90,.12);border-color:#c4a35a}
+.rp-card .rp-day{font-size:10px;color:#c4a35a;letter-spacing:2px;font-weight:500;margin-bottom:3px}
+.rp-card .rp-title{font-size:14px;font-weight:600;color:#1a1a1a;line-height:1.4;margin-bottom:3px;flex:1}
+.rp-card .rp-desc{font-size:11px;color:#888;line-height:1.5;margin-bottom:4px}
+.rp-card .rp-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.rp-card .rp-tag{font-size:9px;padding:2px 8px;border-radius:8px;background:#F3F4F6;color:#8b6914}
+.rp-card .rp-arrow{font-size:12px;color:#c4a35a;transition:transform .2s}
+.rp-card:hover .rp-arrow{transform:translateX(3px)}
+.rp-card.pending{opacity:.6;border-color:#e0ddd5;cursor:default}
+.rp-card.pending::before{background:linear-gradient(180deg,#ddd,#bbb)}
+.rp-bottom{display:flex;gap:10px;align-items:stretch}
+.rp-all-link{background:#fff;border:1px solid #e8e3db;border-radius:10px;padding:14px 24px;text-align:center;text-decoration:none;color:#8b6914;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;letter-spacing:1px}
+.rp-all-link:hover{background:#faf8f5;border-color:#c4a35a;gap:12px;color:#7a5a04}
+@media(max-width:600px){
+  .rp-grid{grid-template-columns:1fr}
+  .rp-bottom{flex-direction:column}
+}
+</style>
+
+<div class="rp-section">
+
+<div class="rp-header">
+  <div class="rp-week">WEEK 31 · 2026</div>
+  <div class="rp-topic">🍜 中国米线产业研究</div>
+  <div class="rp-sub">第一研究季——从七个平行宇宙到全国化路径，七篇回答同一个问题</div>
+  <span class="rp-status">Day1已发布 · 持续更新中</span>
+</div>
+
+<div class="rp-grid">
+
+<a href="research/米线_Day1_中国米线的七个平行宇宙.html" class="rp-card" style="grid-column:1/-1">
+  <div class="rp-day">周一 · 产业边界</div>
+  <div class="rp-title">中国米线的七个平行宇宙</div>
+  <div class="rp-desc">七大体系的产业碎片化与认知鸿沟——中国有七套米制粉体系，十二万家门店，但消费者对"米线到底是什么"至今没有统一答案</div>
+  <div class="rp-footer">
+    <span class="rp-tag">含数据图表</span>
+    <span class="rp-arrow">→</span>
+  </div>
+</a>
+
+<a href="research/Day2_为什么云南成为米线创新中心.html" class="rp-card" style="grid-column:1/-1">
+  <div class="rp-day">周二 · 区域创新</div>
+  <div class="rp-title">为什么云南形成了中国最丰富的米制品体系？</div>
+  <div class="rp-desc">区域饮食创新的四层驱动力——地理·稻种·民族·微气候，四重条件同时满足，造就了云南米线体系品类最多、风味最完整的地位</div>
+  <div class="rp-footer">
+    <span class="rp-tag">含数据图表</span>
+    <span class="rp-arrow">→</span>
+  </div>
+</a>
+
+<a href="research/Day3_为什么同样的大米形成几十种产品.html" class="rp-card" style="grid-column:1/-1">
+  <div class="rp-day">周三 · 产品分化</div>
+  <div class="rp-title">为什么同样的大米形成几十种产品？</div>
+  <div class="rp-desc">一粒米的分化逻辑：六道分叉口如何让同一原料走向不同产业路径，以及工艺锁定如何让分化无法逆转</div>
+  <div class="rp-footer">
+    <span class="rp-tag">含工艺锁定模型</span>
+    <span class="rp-arrow">→</span>
+  </div>
+</a>
+
+<a href="research/Day4_为什么米线有品类没有超级品牌.html" class="rp-card" style="grid-column:1/-1">
+  <div class="rp-day">周四 · 品牌瓶颈</div>
+  <div class="rp-title">为什么米线有品类，没有超级品牌？</div>
+  <div class="rp-desc">FIF-33品类品牌化三角模型：当品类的认知统一度、供应链复制能力、价值价格迁移能力同时偏低时，品牌自然长不出来</div>
+  <div class="rp-footer">
+    <span class="rp-tag">含品类品牌化模型</span>
+    <span class="rp-arrow">→</span>
+  </div>
+</a>
+
+<a href="research/Day5_米线全国化的代价.html" class="rp-card" style="grid-column:1/-1">
+  <div class="rp-day">周五 · 全国化路径</div>
+  <div class="rp-title">米线全国化的代价：标准化，还是风味？</div>
+  <div class="rp-desc">全国化从来不是把一家店复制一千次——蒙自源的千店之路背后，是产品定义本身的改变，以及风味与效率之间不可回避的取舍</div>
+  <div class="rp-footer">
+    <span class="rp-tag">含全国化权衡模型</span>
+    <span class="rp-arrow">→</span>
+  </div>
+</a>
+
+<a href="research/Day6_一碗米线如何跨越地域.html" class="rp-card" style="grid-column:1/-1">
+  <div class="rp-day">周六 · 全国化迁移</div>
+  <div class="rp-title">一碗米线如何跨越地域？</div>
+  <div class="rp-desc">区域品类全国化的四种迁移机制——供应链先行/品类重构/场景迁移/文化资产，从地方味觉到全国市场的产业迁移规律</div>
+  <div class="rp-footer">
+    <span class="rp-tag">含三重约束模型 · 反例证据墙</span>
+    <span class="rp-arrow">→</span>
+  </div>
+</a>
+
+<a href="research/Day7_我们为什么研究食品产业.html" class="rp-card" style="grid-column:1/-1">
+  <div class="rp-day">周日 · 研究收官（方法论说明）</div>
+  <div class="rp-title">我们为什么研究食品产业？</div>
+  <div class="rp-desc">关于 FoodIntelAI 阶段性研究方式的一次说明——从米线研究开始沉淀一套产业分析方法，35天五个品类，同一个问题，本周沉淀 FIF-006 区域食品生态演化模型</div>
+  <div class="rp-footer">
+    <span class="rp-tag">研究方法说明 · FIF-006 资产沉淀</span>
+    <span class="rp-arrow">→</span>
+  </div>
+</a>
+
+</div>
+
+<div class="rp-bottom">
+  <a href="research/" class="rp-all-link">
+    📂 浏览全部研究
+    <span>→</span>
+  </a>
+</div>
+
+</div>
+
+<!-- ===== 联系 ===== -->
+  <div class="contact-box">
+    <div class="contact-title">联系沧林</div>
+    <div class="contact-row">
+      <div class="contact-item">
+        <div class="contact-qr"><img src="qr_tg_channel.png" alt="频道"></div>
+        <div class="contact-label">Telegram 频道</div>
+        <div class="contact-label" style="font-size:10px;font-weight:400;color:#bbb">@canglinguanju</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-qr"><img src="wechat_qr.jpg" alt="微信"></div>
+        <div class="contact-label">个人微信</div>
+        <div class="contact-label" style="font-size:10px;font-weight:400;color:#bbb">canglin1985</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-qr"><img src="gongzhonghao_qr.jpg" alt="公众号"></div>
+        <div class="contact-label">公众号</div>
+        <div class="contact-label" style="font-size:10px;font-weight:400;color:#c8a86e">FoodIntelAI</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<div class="footer" style="padding:20px 12px 12px;text-align:center">
+  <div style="font-size:13px;font-weight:600;color:#5a4a3a;letter-spacing:1px">食品决策库 · 沧林频道</div>
+  <div style="font-size:11px;color:#b5aaa0;margin-top:6px;line-height:1.5">看见水面之下的力量 · 慢慢走的不一定走得慢</div>
+  <div style="margin-top:10px;font-size:11px;color:#999"><a href="https://foodintelai.com" style="color:#8b6914;text-decoration:none">foodintelai.com</a> · 微信 canglin1985</div>
+</div>
+
+<!-- ===== 科普弹窗 ===== -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="close-btn" onclick="closeModal()">✕</button>
+    <h3 id="modalTitle"></h3>
+    <p id="modalBody"></p>
+    <div class="modal-recommend" id="modalRecommend"></div>
+  </div>
+  </div>
+</div>
+
+<!-- ===== AI浮动聊天 ===== -->
+<button class="fab" id="fabBtn" onclick="toggleChat()">🤖</button>
+<div class="chat-box" id="chatBox">
+  <div class="chat-head">
+    🤖 沧林知识库AI
+    <button class="close-btn" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-msgs" id="chatMsgs">
+    <div class="chat-welcome">👋 你好！我是食品决策库AI助手。<br>问任何跟产品、配方、工艺有关的问题</div>
+  </div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="输入问题..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button onclick="sendChat()">发送</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const FREE_CARDS = [
+  {e:"🏮",n:"道口烧鸡",d:"400年老汤 · 先炸后卤",f:"daokou-shaoji.html"},
+  {e:"🍃",n:"茶香鸡",d:"白卤水遇上茶香 · 清新不腻",f:"cards_moved_to_store/茶香鸡_产品卡.html"},
+  {e:"🏺",n:"叫花鸡（郑州版）",d:"荷叶黄泥 · 敲开吃 · 郑州老味道",f:"叫花鸡_郑州版_产品卡.html"},
+];
+
+const ZONES = [
+  {
+    name:"🔥 🍢 摆摊爆品",
+    cards:[
+      {e:"🥩",n:"酱卤牛肉",d:"五香+酱香双口味 · 单日300斤产能",f:"cards_moved_to_store/酱卤牛肉_产品卡.html"},
+      {e:"🏮",n:"道口烧鸡",d:"400年老汤 · 先炸后卤",f:"daokou-shaoji.html"},
+      {e:"🍃",n:"茶香鸡",d:"白卤水遇上茶香 · 清新不腻",f:"cards_moved_to_store/茶香鸡_产品卡.html"},
+      {e:"🏺",n:"叫花鸡（郑州版）",d:"荷叶黄泥 · 敲开吃 · 郑州老味道",f:"叫花鸡_郑州版_产品卡.html"},
+      {e:"🐓",n:"开封桶子鸡",d:"白卤脆韧 · 108刀文吃",f:"cards_moved_to_store/桶子鸡_产品卡.html"},
+      {e:"🌶️",n:"椒麻鸡",d:"卤香入骨 · 14种散料 · 麻辣劲爽",f:"cards_moved_to_store/椒麻鸡_产品卡.html"},
+      {e:"🫘",n:"麻油鸡",d:"油卤风干 · 手撕越嚼越香",f:"cards_moved_to_store/麻油鸡_产品卡.html"},
+      {e:"🔥",n:"沟帮子熏鸡",d:"中国四大名鸡 · 百年糖熏工艺",f:"cards_moved_to_store/沟帮子熏鸡_商业产品卡.html"},
+      {e:"🍋",n:"招牌手打柠檬茶",d:"成本6元卖15 · 60%毛利 · 手打出品",f:"delivery/CD_009_交付包.html"},
+    ]
+  },
+  {
+    name:"🥤 饮品小吃",
+    cards:[
+      {e:"🍓",n:"芝芝莓莓",d:"草莓晶球芝士奶盖 · 冷饮700ml",f:"delivery/YL_001_交付包.html"},
+      {e:"🍓",n:"莓莓奶冻",d:"草莓双皮奶冻奶油顶 · 冷饮700ml",f:"delivery/YL_002_交付包.html"},
+      {e:"🍓",n:"霸气莓莓脆啵啵",d:"草莓晶球清爽果茶 · 冷饮700ml",f:"delivery/YL_003_交付包.html"},
+      {e:"🍓",n:"草莓小丸子",d:"草莓糯米丸子生椰 · 冷饮700ml",f:"delivery/YL_004_交付包.html"},
+      {e:"🍑",n:"草莓桃桃茶",d:"草莓水蜜桃双果茶 · 冷饮700ml",f:"delivery/YL_005_交付包.html"},
+      {e:"🍫",n:"生椰可可冰茶",d:"巧克力生椰冰沙 · 冷饮500ml",f:"delivery/YL_006_交付包.html"},
+      {e:"🥥",n:"椰子三兄弟",d:"椰奶冻爆爆珠 · 冷饮500ml",f:"delivery/YL_007_交付包.html"},
+      {e:"🖤",n:"超浓郁椰丸黑芝麻",d:"黑芝麻生椰糯米丸子 · 冷饮500ml",f:"delivery/YL_008_交付包.html"},
+      {e:"🥥",n:"清补凉",d:"多料椰冰 · 冷饮500ml",f:"delivery/YL_009_交付包.html"},
+      {e:"🥭",n:"杨枝甘露",d:"经典芒果西柚 · 冷饮700ml",f:"delivery/YL_010_交付包.html"},
+    ]
+  },
+  {name:"— — — 更 多 — — —",cards:[],is_sep:true},
+  {
+    name:"🥟 包子专区",
+    cards:[
+      {e:"🥟",n:"灌汤包",d:"江浙风味 · 皮冻爆汁 · 咬开先喝汤",f:"delivery/BZ_001_交付包.html"},
+      {e:"🥟",n:"龙眼汤包",d:"龙眼形状 · 皮薄汤多",f:"delivery/BZ_002_交付包.html"},
+      {e:"🥟",n:"馨香猪肉灌汤包",d:"葱香浓郁 · 经典猪肉馅",f:"delivery/BZ_003_交付包.html"},
+      {e:"🥟",n:"开封猪肉灌汤包",d:"开封老味道 · 皮薄馅鲜",f:"delivery/BZ_004_交付包.html"},
+      {e:"🥟",n:"草菇蔬菜汤包",d:"菌菇清香 · 素食精品",f:"delivery/BZ_005_交付包.html"},
+      {e:"🥟",n:"长沙清香猪肉灌汤包",d:"湘式清香 · 鲜而不腻",f:"delivery/BZ_007_交付包.html"},
+      {e:"🥟",n:"酱肉包子",d:"酱香浓郁 · 肥瘦相间",f:"delivery/BZ_03_交付包.html"},
+      {e:"🥟",n:"咖喱牛肉包子",d:"咖喱辛香 · 牛肉扎实",f:"delivery/BZ_04_交付包.html"},
+      {e:"🥟",n:"香菇青菜包子",d:"香菇提鲜 · 青菜清爽",f:"delivery/BZ_05_交付包.html"},
+      {e:"🥟",n:"玫瑰豆沙包",d:"豆沙绵密 · 甜而不腻",f:"delivery/BZ_06_交付包.html"},
+    ]
+  },
+  {name:"— — — 更 多 — — —",cards:[],is_sep:true},
+  {
+    name:"🏪 开店专区",
+    cards:[]
+  },
+  {
+    name:"🏭 工业标准",
+    cards:[]
+  },
+  {
+    name:"📈 趋势新品",
+    cards:[]
+  }
+];// 渲染免费卡
+const freeEl = document.getElementById('freeCards');
+if(freeEl){
+FREE_CARDS.forEach(c => {
+  const sid = 's'+Math.random().toString(36).slice(2,6);
+  freeEl.innerHTML += `<div style="position:relative">
+    <a class="card-item" href="${c.f}">
+      <div class="emoji">${c.e}</div>
+      <div class="info">
+        <div class="name">${c.n} <span class="tag tag-free">免费</span></div>
+        <div class="desc">${c.d}</div>
+      </div>
+      <div class="arrow">›</div>
+    </a>
+    <div class="share-row">
+      <button class="share-btn" onclick="event.preventDefault();event.stopPropagation();shareWx('${c.n}','${c.f}')">💬 微信</button>
+      <button class="share-btn" onclick="event.preventDefault();event.stopPropagation();shareWb('${c.n}','${c.f}')">📣 微博</button>
+      <button class="share-btn" onclick="event.preventDefault();event.stopPropagation();shareLink('${c.n}','${c.f}')">🔗 复制</button>
+    </div>
+  </div>`;
+});
+}
+
+// 渲染所有产品卡（替换原来的热榜渲染）
+function renderAllCards() {
+  const container = document.getElementById('hotContent');
+  if (!container) return;
+  if (!container) return;
+  container.innerHTML = '';
+  
+  const hotTags = ['🔥', '📈', '💥', '⭐', '💎', '🚀'];
+  let tagIdx = 0;
+  
+  Object.keys(ALL_CARDS).forEach((catName) => {
+    const cards = ALL_CARDS[catName];
+    if (!cards || cards.length === 0) return;
+    const tagType = hotTags[tagIdx % hotTags.length];
+    tagIdx++;
+    
+    let html = '<div class="zone-hot-sub">' + catName + ' <span class="h-tag h-hot">' + tagType + '</span></div>';
+    html += '<div class="zone-hot-cards">';
+    
+    cards.forEach((c, i) => {
+      const rankClass = i===0 ? 'top1' : i===1 ? 'top2' : i===2 ? 'top3' : '';
+      html += '<a class="zone-hot-card" href="' + c.f + '" title="' + c.n + '">' +
+        '<div class="rank ' + rankClass + '">' + (i+1) + '</div>' +
+        '<div class="h-emoji">' + c.e + '</div>' +
+        '<div class="h-info">' +
+          '<div class="h-name">' + c.n + ' <span class="h-tag h-hot">' + tagType + '</span></div>' +
+        '</div>' +
+        '<div class="h-arrow">›</div>' +
+      '</a>';
+    });
+    
+    html += '</div>';
+    container.innerHTML += html;
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderAllCards();
+});
+
+function toggleFree(){
+  const zone = document.getElementById('freeZone');
+  const toggle = document.getElementById('freeToggle');
+  if(!zone||!toggle) return;
+  const vis = zone.style.display !== 'none';
+  zone.style.display = vis ? 'none' : 'block';
+  toggle.textContent = vis ? '▼ 展开' : '▲ 收起';
+}
+
+function toggleHooks(){
+  const w = document.getElementById('hookWrap');
+  const t = document.getElementById('hookToggle');
+  if(!w||!t) return;
+  const vis = w.style.display !== 'none';
+  w.style.display = vis ? 'none' : 'block';
+  t.textContent = vis ? '▼ 展开' : '▲ 收起';
+}
+
+
+function scrollToSection(e, id){
+  if(e && e.preventDefault) e.preventDefault();
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function scrollToWechat(){
+  document.getElementById('wechatSection').scrollIntoView({behavior:'smooth',block:'center'});
+  const t = document.getElementById('toast');
+  t.textContent = '📱 微信号已复制：canglin1985';
+  t.classList.add('show');
+  if(navigator.clipboard) navigator.clipboard.writeText('canglin1985');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// 长按识别微信
+function copyWx(){
+  const t = document.getElementById('toast');
+  t.textContent = '📱 长按图片识别二维码添加微信 · 已复制微信号 canglin1985';
+  t.classList.add('show');
+  if(navigator.clipboard) navigator.clipboard.writeText('canglin1985');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+// 长按识别公众号
+function copyGzh(){
+  const t = document.getElementById('toast');
+  t.textContent = '📱 长按图片识别二维码关注公众号工作站';
+  t.classList.add('show');
+  if(navigator.clipboard) navigator.clipboard.writeText('沧林食品工作站');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ===== 分享功能 =====
+function shareWx(name,url){
+  const full = 'https://foodintelai.com/' + url;
+  const t = document.getElementById('toast');
+  t.textContent = '📋 已复制「'+name+'」链接，可粘贴到微信';
+  t.classList.add('show');
+  if(navigator.clipboard) navigator.clipboard.writeText(full);
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+function shareWb(name,url){
+  const full = 'https://foodintelai.com/' + url;
+  window.open('https://service.weibo.com/share/share.php?title='+encodeURIComponent(name+' - 食品决策库')+'&url='+encodeURIComponent(full),'_blank','width=600,height=500');
+}
+function shareLink(name,url){
+  const full = 'https://foodintelai.com/' + url;
+  const t = document.getElementById('toast');
+  t.textContent = '✅ 链接已复制';
+  t.classList.add('show');
+  if(navigator.clipboard) navigator.clipboard.writeText(full);
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ===== 搜索功能 =====
+function searchCards(q){
+  q = q.toLowerCase().trim();
+  // 搜索英雄区展示卡
+  document.querySelectorAll('.hero-card').forEach(c => {
+    c.style.display = (!q || c.textContent.toLowerCase().includes(q)) ? '' : 'none';
+  });
+  // 搜索免费产品卡
+  document.querySelectorAll('.card-item').forEach(c => {
+    const p = c.closest('[style*="position:relative"]') || c.parentElement;
+    p.style.display = (!q || c.textContent.toLowerCase().includes(q)) ? '' : 'none';
+  });
+  // 搜索热门爆品卡
+  document.querySelectorAll('.zone-hot-card').forEach(c => {
+    c.style.display = (!q || c.textContent.toLowerCase().includes(q)) ? '' : 'none';
+  });
+}
+
+// ===== 免费知识库（五大类） =====
+const KNOWLEDGE_LIB = [
+  { // 0: 香料
+    name:"🌿 香料",
+    articles:[
+      {t:"香料·君臣佐使",tag:"香料",s:"卤味香料的配伍法则和中药一模一样，八角为君、肉桂为臣、草果为佐、甘草为使。",b:"卤味香料配伍讲究“君臣佐使“，和中药完全一样。\n\n君料（占40-50%）：八角、肉桂——定基调，占主导风味。\n\n臣料（20-30%）：花椒、小茴香、丁香——辅助君料，增加层次。\n\n佐料（10-15%）：白芷、草果、砂仁——去腥解腻，调和冲突。\n\n使料（5-10%）：甘草、陈皮——平衡苦味和麻感，让回味悠长。\n\n不懂君臣佐使，堆再多香料也是白搭。\n\n——\n📌 想拿到精确到克的配方？加微信 canglin1985"},
+      {t:"八角·卤肉之魂",tag:"香料",s:"八角含反式茴香脑，是卤水“肉香“的核心来源。没有八角的卤水，就像没有盐的菜。",b:"八角是卤水中用量最大的香料之一，它的核心风味来自反式茴香脑（trans-anethole），含量高达80%以上。\n\n反式茴香脑在热油中溶解度极高，所以卤肉前“炒香料“这个步骤非常关键——油温120°C时，八角的香气物质释放最充分。\n\n八角还有一个隐藏技能：抗氧化。它含有的莽草酸和槲皮素能延缓卤水氧化变黑，这就是为什么老汤里八角不能少。\n\n一颗八角，既是香，也是防腐。"},
+      {t:"花椒·麻感科学",tag:"香料",s:"麻不是味觉，是触觉——花椒麻素激活了口腔的震动感受器，频率约50Hz。",b:"花椒的“麻“严格来说不是味觉，而是触觉。\n\n花椒中的羟基-α-山椒素（hydroxy-α-sanshool）会激活口腔中的TRPV1和TRPA1受体，产生一种50Hz频率的震动感——就像你的舌头在轻微颤抖。\n\n不同产地的花椒麻度不同：\n- 四川汉源花椒：麻度最高，香气浓郁\n- 甘肃花椒：清香偏麻\n- 云南青花椒：麻味清爽带柑橘香\n\n麻度会随着加热时间衰减，所以花椒最好在卤水中后期加入，或者出锅前淋花椒油。"},
+      {t:"白芷·去腥之王",tag:"香料",s:"白芷中的呋喃香豆素能与胺类物质结合，把腥味“打包“带走。",b:"白芷是卤水中最被低估的香料。它不提供主要风味，但它做一件其他香料做不到的事：去腥。\n\n腥味主要来自胺类化合物（三甲胺、尸胺等），白芷中的呋喃香豆素（furanocoumarins）能与这些胺类结合，形成稳定的复合物，腥味就不再挥发到空气中。\n\n白芷用量控制在0.5-1%（占香料总量），多了会发苦。\n\n搭配逻辑：白芷+砂仁=去腥王者组合。"},
+    ]
+  },
+  { // 1: 工艺
+    name:"🔥 工艺",
+    articles:[
+      {t:"老汤的秘密：越煮越香的化学",tag:"工艺",s:"美拉德反应生成200+风味分子，脂肪乳化形成风味载体，微生物代谢产生呈味核苷酸。",b:"卤水为什么越煮越香？答案不在配方里，在化学里。\n\n第一，美拉德反应。糖和氨基酸在高温下生成数百种风味化合物——呋喃、吡嗪、噻唑……卤水的“肉香“至少来自200种以上的风味分子。\n\n第二，脂肪乳化。卤油中的磷脂和脂肪酸在水相中形成微乳液滴，这些液滴是风味的载体。\n\n第三，微生物。老汤里的耐热乳酸菌和酵母菌持续代谢，生成呈味核苷酸——这就是“老汤比新汤鲜“的秘密。\n\n所以：一锅老汤不倒、不刷、不过滤到清澈，不是脏，是科学。\n\n——\n📌 想要一锅能传家的老汤配方？加微信 canglin1985"},
+      {t:"为什么你的肉总柴？温度曲线解密",tag:"工艺",s:"鸡胸65°C开始变性，85°C完全变柴。正确做法：80°C卤20分钟+浸泡30分钟。",b:"鸡肉柴，不是因为你煮久了——是因为你不懂蛋白质变性温度。\n\n鸡胸肉从65°C开始变性，75°C时肌纤维收缩失去水分，达到85°C完全“变柴”。\n\n正确操作：整鸡入卤水，保持微沸（约85-90°C），而不是滚沸。温度控制在90°C以内，让胶原蛋白缓慢水解成明胶——肉才会“滑嫩”。\n\n一条简单法则：卤鸡胸，80°C/20分钟→浸泡30分钟。卤全鸡，85°C/35分钟→浸泡1小时。\n\n超过这个时间，神仙也救不了你的鸡胸。"},
+      {t:"先炸后卤vs直接卤，区别在哪？",tag:"工艺",s:"先炸后卤：表面美拉德反应更充分，皮更Q，但成本高30%。直接卤：省事，但风味层次少一层。",b:"道口烧鸡的经典工艺是“先炸后卤”——鸡身抹饴糖后油炸至金黄，再入老汤慢卤。\n\n先炸的好处：\n1. 美拉德反应在表面产生大量吡嗪类化合物——焦香\n2. 高温油炸让鸡皮快速脱水，形成脆皮层\n3. 炸过的皮在卤水中不易煮烂\n\n缺点：多一道工序，多耗油，成本增加25-30%。\n\n直接卤的好处：\n1. 省工序、省成本\n2. 鸡肉更嫩（没有二次加热）\n3. 适合家庭和小作坊\n\n怎么选？走量走低价：直接卤。走品质走品牌：先炸后卤。"},
+      {t:"卤水的保养：一锅好汤养十年",tag:"工艺",s:"每天烧开一次，每周过滤一次，每月补料一次。老汤不是放着的，是养出来的。",b:"一锅好卤水，不是煮出来的，是养出来的。\n\n日常养护三件事：\n1. 每天烧开一次——杀菌，防止发酵变酸\n2. 每周过滤一次——滤掉碎肉渣、香料渣，防止发苦\n3. 每月补料一次——盐度、香料、糖色调回基准线\n\n常见翻车：\n- 不烧开直接放冷藏→3天就馊\n- 过滤太干净把油全撇了→卤肉发干\n- 觉得不够咸就加盐→越煮越咸\n\n正确做法：卤水过滤后保留1-2cm厚的卤油层，这是天然“密封盖“。\n\n——\n📌 想要老汤养护的完整参数表？加微信 canglin1985"},
+      {t:"卤水盐度控制：2.7%的秘密",tag:"工艺",s:"盐度2.7-2.8%是卤汤的黄金基准。腌制的盐度1.7-1.8%。差了0.5%，味道天差地别。",b:"盐是卤水中最容易被低估的东西。多了咸得发苦，少了肉没味道。正确的盐度差0.5%，成品味道就天差地别。\n\n沧林19年经验确定的黄金基准：\n- 卤汤盐度：2.7-2.8%\n- 腌制盐度：1.7-1.8%（花椒盐抹匀，内外腌过夜）\n\n为什么腌制盐度比卤汤低？\n腌制的作用是让盐分渗透到肉内部，如果腌制盐度太高，肉表面会脱水变硬，影响口感。卤汤的盐度负责给肉“穿上味道外衣“，内外配合。\n\n实操要点：\n1. 用盐度计测量，不要靠尝——热汤和冷汤的咸度感知完全不同\n2. 每补一次水，必须补盐\n3. 不同产品的吸盐率不同——鸡类比牛肉吸盐快\n\n一条经验：做卤味第一年，买个好盐度计，比买任何香料都值。"},
+      {t:"三大工序组：前处理→卤制→后处理",tag:"工艺",s:"拆包解冻→清洗修整→腌制→焯水→卤制→出锅→摊凉→包装。每一步有标准才有好产品。",b:"沧林亲自设计的工业化SOP三大工序组：\n\n第一组：前处理（通用）\n拆包→解冻→清洗→修整→腌制\n这一步80%的问题出在解冻不彻底。中心温度没到0°C就下锅，外面熟了里面还是生的。\n\n第二组：卤制核心（参数联动）\n腌制→焯水→卤制→出锅→除渣→摊凉→斩块→风干\n这是整个流程的核心。每个参数的改变都会联动影响其他环节——温度变了，时间要调；时间变了，料包比例要调。\n\n第三组：后处理（通用）\n称量→包装→入库\n后处理最容易被忽略的是“摊凉速度“——凉得太慢，细菌滋生；凉得太快，表面干裂。\n\n工业化SOP的价值：同样的配方，同样的原料，不同的人做出来味道一样。这就是标准化的力量。\n\n——\n📌 想拿到完整的SOP模板？加微信 canglin1985"},
+    ]
+  },
+  { // 2: 成本
+    name:"💰 成本",
+    articles:[
+      {t:"一只烧鸡的成本拆解",tag:"成本",s:"原料55%、人工12%、香料3%、包装5%、水电2%、损耗8%、毛利15%。定价是成本的2-3倍。",b:"以一只800g的道口烧鸡为例：\n\n原料成本：约11元（鸡胚8元+香料1.5元+油0.8元+糖色0.2元+调料0.5元）\n人工分摊：约2.4元（按日产300只，2人）\n香料耗材：0.6元（每次补料分摊）\n包装：1元（真空袋+标签）\n水电燃气：0.4元\n损耗：1.6元（出品率损耗、次品）\n\n合计成本：约17元/只\n\n售价逻辑：\n- 摆摊：35-38元（毛利53%）\n- 门店：42-48元（毛利60%）\n- 电商：55-68元（含快递）\n\n一只能赚多少钱？摆摊卖38元，净赚约8-10元。"},
+      {t:"摆摊vs开店vs工厂，投资回报对比",tag:"成本",s:"摆摊3万起步月入1.5万，开店20万起步回本8个月，工厂200万起步回本18个月。",b:"三种路径的投入产出：\n\n🛵 摆摊·小吃车\n· 投入：3-5万（车+设备+首批原料）\n· 月流水：2-4万\n· 净利：1-1.5万\n· 回本周期：3-4个月\n· 风险：低（试错成本低）\n· 上限：月入3万到顶\n\n🏪 门店·熟食档\n· 投入：15-25万（装修+设备+租金押金）\n· 月流水：6-12万\n· 净利：2-4万\n· 回本周期：8-12个月\n· 风险：中（租金是硬成本）\n· 上限：可复制开分店\n\n🏭 工厂·标准化\n· 投入：150-300万（设备+场地+SC证）\n· 月流水：30-80万\n· 净利：5-15万\n· 回本周期：18-24个月\n· 风险：高\n· 上限：无上限\n\n路径选择建议：先摆摊验证产品→赚到第一桶金→开店做品牌→有渠道了再上工厂。"},
+      {t:"香料的成本陷阱",tag:"成本",s:"同一味香料，产地不同价格差5倍。用对产地，味道不变成本降一半。",b:"香料是卤味中用量少但成本差距最大的原料。\n\n示例：\n- 八角：广西产35元/kg vs 越南进口65元/kg → 茴香脑含量差不多，选广西\n- 花椒：甘肃梅花椒120元/kg vs 陕西大红袍60元/kg → 麻度差2倍，用量不同\n- 肉桂：越南清化桂80元/kg vs 广西肉桂30元/kg → 香气差异明显\n\n省钱策略：\n1. 大批量采购（50kg起）价格低30-40%\n2. 整粒买、自己打粉（比买粉便宜50%）\n3. 找产地直接发货（跳过中间商）\n4. 用量大的香料（八角、花椒）对标产地价\n\n一条经验：香料成本占总成本3-5%，但影响70%的风味。该省省该花花。\n\n——\n📌 想要完整香料采购清单和产地价？加微信 canglin1985"},
+      {t:"产品完整度模型：50-70-80-100",tag:"成本",s:"沧林讲透≈50-70%，网络比对≈80%，市场数据预测≈最后20%。好产品不是一次做出来的。",b:"一个产品从想法到落地，完整度是逐步填满的。\n\n沧林19年经验总结的产品完整度模型：\n\n第一阶段（50-70%）：沧林讲透\n核心配方、关键工艺、行业经验。这是产品的骨架，决定了“能不能做“。\n\n第二阶段（补至80%）：网络抓取比对\n公开信息补充——竞品参数、行业标准、原料行情。把骨架填上肉，验证“A”方案是不是最优解。\n\n第三阶段（最后20%）：市场数据预测\n价格行情、消费趋势、区域口味差异、渠道数据。这是产品的“灵魂“——决定了“能不能卖出去“。\n\n很多食品人死在第一步就以为做完了——有了配方就开始投产，结果卖不动。其实产品做得好和卖得好是两回事。\n\n能做出来且能卖出去——这才是完整的产品。\n\n——\n📌 想用这个模型评估你的产品？加微信 canglin1985"},
+    ]
+  },
+  { // 3: 设备
+    name:"🔧 设备",
+    articles:[
+      {t:"摆摊必备6件套",tag:"设备",s:"保温桶、电磁炉、电子秤、真空机、展示柜、收款码。总投入不超过8000元。",b:"摆摊卤味不需要大设备，6样东西就能开：\n\n1. 保温桶（200元）——装卤好的热货\n2. 电磁炉/卡式炉（300元）——现场加热\n3. 电子秤（100元）——按斤计价\n4. 真空包装机（500元）——锁鲜、长途\n5. 小型展示柜（2000元二手）——冷卤展示\n6. 收款码牌（免费）——微信支付宝\n\n总计：约3100-8000元（看二手比例）\n\n小贴士：二手设备比新的便宜60%，但检查好密封圈和温控。"},
+      {t:"从摆摊到开店，设备升级路线图",tag:"设备",s:"日销50只以下用家用设备，100只以上必须上商用。中间那档最尴尬。",b:"设备选型跟着产量走：\n\n日销50只以下：\n· 家用40cm卤锅（200元）\n· 家用电磁炉（300元）\n· 够用，但效率低\n\n日销50-150只：\n· 商用60cm夹层锅（3000-5000元）\n· 商用电磁灶（2000元）\n· 必须上，不然来不及\n\n日销150只以上：\n· 100L蒸汽夹层锅（8000-12000元）\n· 工业级真空机（5000元）\n· 冷柜+冷藏展示柜\n\n最尴尬的是50-100只这个区间——家用不够用，商用又嫌贵。\n\n解决方案：租用中央厨房的时段，按小时付费，跳过买设备阶段。\n\n——\n📌 需要帮你算设备投入产出比？加微信 canglin1985"},
+      {t:"解冻的学问：80%的翻车出在这一步",tag:"设备",s:"中心温度没到0°C就下锅，外面熟了里面还是生的。正确的解冻方法是冷藏慢解。",b:"解冻是整个卤制流程中最容易被忽视的环节，但80%的“肉不熟“”口感差“问题出在这里。\n\n错误的做法：\n- 热水解冻——表面熟了里面还是冰的\n- 室温解冻——外层先化，细菌开始繁殖，里面还是冻的\n- 微波解冻——局部熟了，其他部分没化\n\n正确的做法：\n- 冷藏慢解：0-4°C冷库，每10kg鸡肉需要12-15小时\n- 流水解冻：流动冷水，每10kg需要4-6小时（包装完好）\n\n检验标准：\n- 中心温度达到0°C以上\n- 肉质柔软有弹性，没有冰晶感\n- 没有血水渗出（说明细胞壁没破）\n\n一个简单判断：肉能轻松弯折、没有硬芯，就是解冻到位了。"},
+    ]
+  },
+  { // 4: 趋势
+    name:"📈 趋势",
+    articles:[
+      {t:"2026卤味赛道5个趋势",tag:"趋势",s:"鲜卤现捞持续火爆、辣卤零食化、卤+粉/饭复合店、健康低钠卤、预制菜卤味包。",b:"1. 鲜卤现捞：消费者要“看得见的现做”，明档操作+当日现卤是标配。\n\n2. 辣卤零食化：小包装、即食、撕开就吃。绝味的店中店模式验证了这条路。\n\n3. 卤+粉/饭复合店：一碗卤肉饭+一份卤味拼盘=客单价拉到45元。\n\n4. 健康低钠卤：减盐30%的卤味开始出现在超市货架上。钠含量标注将成为硬性要求。\n\n5. 预制菜卤味包：家庭场景的“10分钟卤一锅“调理包，天猫增速超过200%。\n\n你的产品卡里，有多少张能跟上这些趋势？"},
+      {t:"工业化vs手工：为什么同配方不同味",tag:"趋势",s:"小作坊的5cm卤油层形成天然密封，工厂的搅拌破坏了风味分层。解决方案：卤油后加。",b:"很多人问：为什么同样的配方，工厂做出来就是不如小作坊香？\n\n答案不是“手工有灵魂”——是设备逻辑不同。\n\n小作坊：一锅出200斤，明火加热，自然对流。老汤表层有5-10cm厚的卤油层，形成天然“密封“，风味挥发少。\n\n工厂：夹层锅/蒸汽锅，强制搅拌，热交换效率更高。但搅拌破坏了油脂分层，风味物质损失更大。\n\n解决方案：\n1. 卤油后加——卤好后再加5%的卤油回填\n2. 降温浸泡——高温卤制+低温真空浸泡，风味回吸\n3. 不强制搅拌——自然对流更接近手工\n\n同样的配方，换一套参数，工厂也能做出小作坊的香。\n\n——\n📌 想要工厂级工艺参数表？加微信 canglin1985"},
+      {t:"从卖产品到卖知识：食品人的商业模式跃迁",tag:"趋势",s:"实体产品全链条重资产，数字产品写一次卖一万次。19年经验封装成工具，边际成本趋零。",b:"2026年5月，沧林完成了一个关键认知突破——不卖鸭肉条，卖19年攒的酱卤工艺系统。\n\n传统食品人路径：研发→采购→生产→品控→直播→投流→发货→售后。每一个环节都是重资产，利润被各个环节吃掉。\n\n新路径：输出行业内容→封装成H5工具/模板/方案→数字产品交付。写一次卖一万次，边际成本趋零。\n\n沧林的三大数字产品已验证：\n1. 酱卤产品成本核算报价表——做完直接用了，好使\n2. SOP标准工艺模板——一天九迭代，从V1到V9\n3. 配方付费系统——工艺免费看，配方付费才解锁\n\n行业现状：一家头部企业的2013年卤制操作规范文件至今仍是行业标准模板，食品行业的数字化程度极低。这意味着先做的人有巨大先发优势。\n\n——\n📌 想看看数字化的酱卤工具长什么样？加微信 canglin1985"},
+    ]
+  },
+  { // 5: 线上运营
+    name:"📱 线上运营",
+    articles:[
+      {t:"社区卤味店抖音同城号：2000预算跑通引流",tag:"线上",s:"账号定位（人名+品类+街道）→7个选题方向→2000预算分三期→视频→到店完整链路。",b:"2000块不是让你爆火的预算，是让你门店每天多来5-10个人的钱。\n\n**账号定位：** 昵称=人名+品类+街道。简介前3秒说清你在哪、卖什么、为什么买你的。头像用老板端着产品的半身照。\n\n**7个选题直接拍：**\n① 产品展示：「这个点还在排队」——拍下午5点排队+卤锅冒热气+切肉特写\n② 老板人设：「我是怎么开始做卤味的」——站卤锅前讲16年经历\n③ 知识科普：「外面买的卤味为什么不好吃」——对比自家和超市产品\n④ 制作过程：「凌晨4点的卤味店」——延时摄影拍下料到出锅\n⑤ 顾客证言：「你住哪个区？」——自然拍顾客端卤味\n⑥ 本地生活：「航海路最好吃的三家店」——互推带流量\n⑦ 限时限量：「今天只卤了这些」——拍快卖完了的真实场景\n\n**DOU+2000预算分配：**\n· 第1-3天 500元：测5条选题方向，每条投100，看哪条数据好\n· 第4-10天 800元：追投爆款。目标从「涨粉」切换到「私信/评论」\n· 第11-30天 700元：每天50-100精准投周边1-3公里\n\n**转化链路：** 视频埋钩子→评论区运营（黄金1小时）→私信话术→到店报暗号→拉进微信群→二次传播\n\n关键数据：5个人×人均40×30天=6000块增量营收，ROI>3倍。\n\n——\n📌 想拿完整版（含脚本模板+DOU+详细设置）？加微信 canglin1985"},
+      {t:"餐饮老板小红书种草：让周边3公里搜到你",tag:"线上",s:"个人IP型起步→5个爆款选题→关键词+地理标签→从种草到到店完整链路。",b:"小餐饮做小红书的核心不是涨粉，是让周边的人搜卤味的时候刷到你。\n\n**账号定位：** 推荐个人IP型——「老王在郑州做卤味」比「张记卤味食品店」打开率高得多。头像用老板工作照（系围裙、戴厨师帽、正在干活）。\n\n**5个爆款选题：**\n① 创业故事：「从工厂下岗到开卤味店」——不写奋斗史，写具体画面：第一次卤坏了一锅肉、凌晨4点起来熬汤\n② 行业揭秘：「超市的卤牛肉为什么比店里红？」——制造认知差：不是肉好，是亚硝酸钠加得多\n③ 工艺展示：「这锅汤我养了16年」——展示老汤的差异点，不贬低同行，只说我是怎么做的\n④ 必点推荐：「来我家必点的4样」——用「推荐」代替「推销」，每样一句话\n⑤ 日常翻车：「今天接到一个大单/今天卤坏了一锅」——真实比精致有用\n\n**本地流量获取：**\n· 关键词布局：标题前3字含核心词「郑州卤味」「航海路美食」\n· 每篇必挂门店地理标签\n· 标签控制在5个以内：郑州美食/卤味/社区美食/郑州探店\n· 发布时段：中午11:30、下午5点、晚上8-10点、周末10-12点\n\n**到店转化：** 评论区引导「想知道地址评论扣1」→私信回地址+暗号福利→到店→满意发打卡笔记→二次传播\n\n——\n📌 想拿完整版（含30天内容日历+话术模板）？加微信 canglin1985"},
+      {t:"美团团购套餐设计公式：引流品+利润品+高毛利品",tag:"线上",s:"固定配比3:5:2→4个套餐示例→核销率从65%提到85%→团购转私域话术。",b:"团购不是打折，是花钱买一个新客的首次体验权。\n\n**套餐配比公式：**\n· 引流品（1-2个，毛利0-15%）：拉新客、冲排名。价格≈成本的1-1.2倍。限每桌1份/每天限量\n· 利润品（3-5个，毛利50-65%）：赚钱主力。客人觉得价格正常，你利润够厚\n· 高毛利品（1-2个，毛利70-85%）：拉高客单价。成本极低、制作简单（卤蛋/酸梅汤）\n· 总店毛利率控制在45-55%\n\n**卤味店套餐示例：**\n· 引流品：9.9元卤豆干（成本4元） / 19.9元卤鸡爪半斤（成本12元）\n· 利润品：双人卤味拼盘68元（毛利56%）/ 单人卤肉饭28元（毛利50%）\n· 高毛利品：加卤蛋3元（成本0.8元，毛利73%）/ 酸梅汤8元（成本1-2元）\n\n**核销率提升5招：** ①购买后自动发券+3天有效期（+8-12%）②到店核销送饮品（+8-10%）③到期前提醒（+3-5%）④周中核销优惠（+5-8%）⑤设自提（+20-25%）。组合拳打下来核销率从65%→85%+\n\n**团购→私域转化：** 核销时顺口一句「加个微信，下次来提前给你留」→拉进群→群里每天发今日菜品+快卖完提醒+每周秒杀。加了微信的人复购率比没加的高2-3倍。\n\n——\n📌 想拿完整版（含套餐定价计算表+社群运营SOP）？加微信 canglin1985"},
+    ]
+  }
+];
+
+// 渲染知识库
+function renderKnowTab(idx){
+  const tab = KNOWLEDGE_LIB[idx];
+  let html = '<div class="knowledge-grid">';
+  tab.articles.forEach((a,i) => {
+    // 随机从一组icon中取，同一张卡片刷新保持稳定（基于标题hash）
+    const iconPool = ['🌿','🔥','💰','🔧','📈','📱','🍳','🧂','🥩','📊','🏗️','📋','⚙️','🧪','📦','🎯'];
+    let icon = iconPool[Math.abs(a.t.split('').reduce((a,c)=>a+ +c.charCodeAt(0),0)) % iconPool.length];
+    html += `<div class="know-card" onclick="openKnowModal(${idx},${i})">
+      <div class="k-icon">${icon}</div>
+      <div class="k-title">${a.t}</div>
+      <div class="k-summary">${a.s}</div>
+    </div>`;
+  });
+  html += '</div>';
+  document.getElementById('knowTabContent').innerHTML = html;
+}
+function switchKnowTab(idx){
+  document.querySelectorAll('.know-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  renderKnowTab(idx);
+}
+function openKnowModal(catIdx, artIdx){
+  const a = KNOWLEDGE_LIB[catIdx].articles[artIdx];
+  document.getElementById('modalTitle').textContent = a.t;
+  document.getElementById('modalBody').textContent = a.b;
+  // 关联推荐
+  const recEl = document.getElementById('modalRecommend');
+  const tag = a.tag || '';
+  let recs = [];
+  if(tag === '香料' || tag === '工艺'){
+    recs = [
+      {i:'📖',t:'看完这篇，去看看「香料平衡术」',c:0,a:0},
+      {i:'📈',t:'想做产品？先看「产品完整度模型」',c:2,a:3},
+      {i:'📱',t:'产品做好了？学「抖音怎么卖」',c:5,a:0},
+    ];
+  } else if(tag === '成本' || tag === '设备'){
+    recs = [
+      {i:'📊',t:'算清成本之后，看「投资回报对比」',c:2,a:1},
+      {i:'🔥',t:'设备配好了？学「卤水温度曲线」',c:1,a:1},
+      {i:'🏪',t:'想开店？去「开店实战手册」看看',c:-1},
+    ];
+  } else if(tag === '趋势'){
+    recs = [
+      {i:'📚',t:'看完趋势，看看具体「产品案例」',c:2,a:0},
+      {i:'📱',t:'趋势产品怎么卖？「线上运营」来帮你',c:5,a:0},
+    ];
+  } else if(tag === '线上'){
+    recs = [
+      {i:'🔥',t:'线上引流来了，产品「工艺」得跟上',c:1,a:0},
+      {i:'💰',t:'流量进来了，先算清「成本账」',c:2,a:0},
+      {i:'🏪',t:'想看完整版？去「开店实战手册」',c:-1},
+    ];
+  } else {
+    recs = [
+      {i:'📱',t:'学完技术，看看怎么「线上卖」',c:5,a:0},
+      {i:'🎯',t:'不知道从哪入手？看看「你在哪条线」',c:-2},
+    ];
+  }
+  if(recs.length){
+    let html = '<div class="rec-title">🔗 关联推荐</div><div class="rec-list">';
+    recs.forEach(r => {
+      if(r.c === -1){
+        html += `<a class="rec-item" href="shop_manual.html"><span class="rec-icon">${r.i}</span>${r.t}</a>`;
+      } else if(r.c === -2){
+        html += `<a class="rec-item" href="#" onclick="event.preventDefault();document.getElementById('modalOverlay').classList.remove('show');document.body.style.overflow='';document.querySelector('.scene-card').scrollIntoView({behavior:'smooth'})"><span class="rec-icon">${r.i}</span>${r.t}</a>`;
+      } else {
+        html += `<div class="rec-item" onclick="closeModal();openKnowModal(${r.c},${r.a})"><span class="rec-icon">${r.i}</span>${r.t}</div>`;
+      }
+    });
+    html += '</div>';
+    recEl.innerHTML = html;
+  } else {
+    recEl.innerHTML = '';
+  }
+  document.getElementById('modalOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+// ===== 摆摊品类数据（自动渲染） =====
+// 品类与cards-data.js中的键名映射
+const CAT_ICON_MAP = {
+  '🍰':['葡式/甜品','葡式蛋挞','甜品系列'],
+  '🍦':['甜点/烘焙','烘焙系列','面包','蛋糕'],
+  '🥬':['素菜/凉菜','傣舂系列','凉菜'],
+  '🍢':['小吃','小吃炸物','炸物','XC','XS'],
+  '🌶️':['调料/酱料','多维酱料','酱料','调味料','NF'],
+  '🧁':['烘焙','烘焙'],
+  '🥘':['综合','综合系列','套餐'],
+  '🍚':['盖浇饭','盖饭简餐','盖浇饭','盖饭'],
+  '🍜':['面饭/浇头','粉面系列','面饭'],
+  '🥟':['鲜香/预制','预制半成品','YC','鲜香'],
+  '🥩':['夜市烧烤','韩式烤肉','KR','烧烤'],
+  '🍵':['汤品','汤品','汤'],
+  '🫕':['傣味','傣味'],
+  '🫓':['火锅','火锅','麻辣烫冒菜','MLT'],
+  '🥓':['卤煮','卤炸帮','LZ','卤煮','酱卤'],
+  '🍟':['炸品','香酥炸鸡排','炸鸡排','炸品','韩式炸鸡','HZ'],
+  '🧋':['夜市饮品','手打柠檬茶','饮品','饮料','CD'],
+  '🥫':['熏卤','熏卤','酱卤类','JL'],
+  '🥣':['粥品','粥品系列','粥','ZS','早餐粥品'],
+  '🥗':['轻食','轻食','汉堡轻食','沙拉'],
+  '🍶':['茶食/茶饮','手搓咖啡','咖啡','茶饮','奶茶','茶'],
+  '🍣':['日料','日式烧鸟','日料','RB','YB'],
+  '🍖':['烧烤(开发中)','烤串'],
+  '🫘':['肠粉(开发中)','肠粉'],
+  '🥦':['汤菜','汤菜'],
+  '🍝':['其他','其他','门店运营','运营'],
+  '🗂️':['胡辣汤','HLT','粉面系列','FM'],
+  '🍗':['卤炸帮','LZ'],
+  '🥢':['傣舂系列','DC'],
+};
+
+function getStallCatsFromData(){
+  const raw = {};
+  const CARD_DATA = window.ALL_CARDS || {};
+  for(const [catName, cards] of Object.entries(CARD_DATA)){
+    if(!Array.isArray(cards)) continue;
+    for(const [icon, keywords] of Object.entries(CAT_ICON_MAP)){
+      for(const kw of keywords){
+        if(catName.includes(kw)){
+          raw[icon] = (raw[icon]||0) + cards.length;
+          break;
+        }
+      }
+    }
+  }
+  // Build STALL_CATS format with n, c, idx
+  const result = {};
+  let idx = 0;
+  const nameMap = {
+    '🍰':'葡式/甜品','🍦':'甜点/烘焙','🥬':'素菜/凉菜','🍢':'小吃',
+    '🌶️':'调料/酱料','🧁':'烘焙','🥘':'综合','🍚':'盖浇饭',
+    '🍜':'面饭/浇头','🥟':'鲜香/预制','🥩':'夜市烧烤','🍵':'汤品',
+    '🫕':'傣味','🫓':'火锅','🥓':'卤煮','🍟':'炸品',
+    '🧋':'夜市饮品','🥫':'熏卤','🥣':'粥品','🥗':'轻食',
+    '🍶':'茶食/茶饮','🍣':'日料','🍖':'烧烤(开发中)','🫘':'肠粉(开发中)',
+    '🥦':'汤菜','🍝':'其他','🗂️':'胡辣汤/粉面'
+  };
+  for(const [icon, count] of Object.entries(raw)){
+    result[icon] = {n: nameMap[icon]||icon, c: count, idx: idx++};
+  }
+  return result;
+}
+
+const STALL_CATS = {};  // Will be populated from CARD_DATA
+// 从cards-data.json加载真实卡片数据
+let CARDS_DATA = null;
+let CARDS_LOADED = false;
+async function loadCardsData(){
+  if(CARDS_LOADED) return;
+  try{
+    const r = await fetch('cards-data.json');
+    CARDS_DATA = await r.json();
+    CARDS_LOADED = true;
+    // 更新品类统计
+    let catCount = {};
+    for(const [uid, card] of Object.entries(CARDS_DATA)){
+      const cat = card.category || '其他';
+      catCount[cat] = (catCount[cat]||0) + 1;
+    }
+    // 更新STALL_CATS的count
+    for(const [icon, info] of Object.entries(STALL_CATS)){
+      if(catCount[info.n]) info.c = catCount[info.n];
+    }
+    renderStallCats();
+    updateHeroStats();
+  }catch(e){
+    console.log('卡片数据加载失败，使用本地数据', e);
+  }
+}
+
+function renderStallCats(){
+  const el = document.getElementById('stallCats');
+  if(!el) return;
+  let html = '';
+  for(const [icon, info] of Object.entries(STALL_CATS)){
+    if(info.c > 0){
+      html += `<a class="stall-cat-item" href="stall_manual.html#cat${info.idx}">
+        <span class="cat-icon">${icon}</span>
+        <span class="cat-name">${info.n}</span>
+        <span class="cat-count">${info.c}</span>
+      </a>`;
+    } else {
+      html += `<div class="stall-cat-item" style="opacity:0.5">
+        <span class="cat-icon">${icon}</span>
+        <span class="cat-name">${info.n}</span>
+        <span class="cat-count">开发中</span>
+      </div>`;
+    }
+  }
+  el.innerHTML = html;
+}
+
+// 更新表头数字——基于实际卡片数据
+function updateHeroStats(){
+  let totalCards = 0;
+  for(const [icon, info] of Object.entries(STALL_CATS)){
+    totalCards += info.c;
+  }
+  const freeCount = FREE_CARDS.length;
+  document.getElementById('statCards').textContent = totalCards;
+  document.getElementById('statFree').textContent = freeCount;
+  const subEl = document.getElementById('statCardsSub');
+  if(subEl) subEl.textContent = totalCards;
+}
+
+// 初始渲染
+renderKnowTab(0);
+// 从ALL_CARDS数据动态计算品类统计
+(function(){
+  const cats = getStallCatsFromData();
+  if(Object.keys(cats).length > 0){
+    Object.assign(STALL_CATS, cats);
+  } else {
+    // No fallback needed - getStallCatsFromData handles it
+  }
+})();
+renderStallCats();
+updateHeroStats();
+renderHotZone();
+loadCardsData();
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// ===== AI入口 =====
+function askAI(){
+  const q = document.getElementById('aiQuestion').value.trim();
+  const r = document.getElementById('aiAnswer');
+  if(!q){r.textContent = '⚠️ 请输入问题';return;}
+  r.innerHTML = '⏳ 思考中...';
+  fetch('/api/ai-chat', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({question:q})
+  }).then(res=>res.json()).then(d=>{
+    r.innerHTML = d.answer || '抱歉，暂时无法回答';
+  }).catch(()=>{
+    r.innerHTML = '⚠️ AI接口暂不可用，请稍后再试';
+  });
+}
+
+// ===== AI浮动聊天 =====
+const API_URLS = ['https://foodintelai-ai-dykogmozfo.cn-hangzhou.fcapp.run', 'http://localhost:8766'];
+let chatHistory = [];
+
+function toggleChat(){
+  const box = document.getElementById('chatBox');
+  box.classList.toggle('show');
+  if(box.classList.contains('show')){
+    document.getElementById('chatInput').focus();
+  }
+}
+function bookmark(){
+  var u=window.location.href;
+  if(window.sidebar&&window.sidebar.addPanel){window.sidebar.addPanel(document.title,u,'')}
+  else if(window.external&&window.external.AddFavorite){window.external.AddFavorite(u,document.title)}
+  else{alert('请按 Ctrl+D (Mac: Cmd+D) 收藏本页')}
+}
+
+async function sendChat(){
+  const input = document.getElementById('chatInput');
+  const q = input.value.trim();
+  if(!q) return;
+  input.value = '';
+  
+  const msgs = document.getElementById('chatMsgs');
+  const welcome = msgs.querySelector('.chat-welcome');
+  if(welcome) welcome.remove();
+  
+  msgs.innerHTML += `<div class="chat-msg user">${q}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  
+  msgs.innerHTML += `<div class="chat-msg bot" id="chatLoading">⏳ 思考中...</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  
+  let answer = '';
+  for(const url of API_URLS){
+    try{
+      const r = await fetch(url, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({question:q}),
+        signal: AbortSignal.timeout(6000)
+      });
+      if(!r.ok) continue;
+      const d = await r.json();
+      answer = d.answer || '';
+      if(answer) break;
+    }catch(e){ continue; }
+  }
+  
+  document.getElementById('chatLoading').remove();
+  msgs.innerHTML += `<div class="chat-msg bot">${answer || '⚠️ 暂时无法回答，请稍后再试'}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+async function sendChat(){
+  const input = document.getElementById('chatInput');
+  const q = input.value.trim();
+  if(!q) return;
+  input.value = '';
+  
+  const msgs = document.getElementById('chatMsgs');
+  // Remove welcome
+  const welcome = msgs.querySelector('.chat-welcome');
+  if(welcome) welcome.remove();
+  
+  // Add user msg
+  msgs.innerHTML += `<div class="chat-msg user">${q}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  
+  // Add loading
+  msgs.innerHTML += `<div class="chat-msg bot" id="chatLoading">⏳ 思考中...</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  
+  try{
+    const r = await fetch('/api/ai-chat', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:q})
+    });
+    const d = await r.json();
+    document.getElementById('chatLoading').remove();
+    msgs.innerHTML += `<div class="chat-msg bot">${d.answer || '抱歉，暂时无法回答'}</div>`;
+  }catch(e){
+    document.getElementById('chatLoading').remove();
+    msgs.innerHTML += `<div class="chat-msg bot">⚠️ AI接口暂不可用，请稍后再试</div>`;
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function toggleFreeCards(){
+  const wrap = document.getElementById('freeCardWrap');
+  const toggle = document.getElementById('freeCardToggle');
+  if(!wrap||!toggle) return;
+  const isOpen = wrap.style.display !== 'none';
+  wrap.style.display = isOpen ? 'none' : 'block';
+  toggle.textContent = isOpen ? '▼ 展开' : '▲ 收起';
+}
+
+// 免费知识库折叠切换
+function toggleFreeKB(){
+  const wrap = document.getElementById('kbFoldSection');
+  const toggle = document.getElementById('freeKBToggle');
+  if(!wrap||!toggle) return;
+  const isOpen = wrap.style.maxHeight !== '0px';
+  wrap.style.maxHeight = isOpen ? '0px' : wrap.scrollHeight + 'px';
+  toggle.textContent = isOpen ? '点击展开 ▼' : '收起 ▲';
+}
+
+// 钩子区折叠切换
+function toggleHook(){
+  const wrap = document.getElementById('hookFoldSection');
+  const toggle = document.getElementById('hookToggle');
+  if(!wrap||!toggle) return;
+  const isOpen = wrap.style.maxHeight !== '0px';
+  wrap.style.maxHeight = isOpen ? '0px' : wrap.scrollHeight + 'px';
+  toggle.textContent = isOpen ? '点击展开 ▼' : '收起 ▲';
+}
+
+// AI输入区切换
+function toggleAIInput(){
+  const area = document.getElementById('aiInputArea');
+  if(area) area.style.display = area.style.display === 'none' ? 'block' : 'none';
+}
+
+// AI助手点击展开提问区
+function askAI(){
+  const area = document.getElementById('aiInputArea');
+  if(area) area.style.display = 'block';
+}
+
+// 知识库条目点击弹窗（补全）
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.know-item').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', function(){
+      const title = this.querySelector('.title')?.textContent || '知识条目';
+      const desc = this.querySelector('.desc')?.textContent || '';
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalBody').textContent = desc;
+      document.getElementById('modalOverlay').classList.add('show');
+    });
+  });
+});
+
+
+
+// ===== 经营测算工具 =====
+const CALC_INDEX_URL = '测算数据/index.json';
+const CALC_DATA_DIR = '测算数据/';
+let calcIndex = null;
+let selectedCat = '';
+let selectedScene = '';
+
+// 加载品类列表
+async function loadCalcIndex(){
+  try{
+    const r = await fetch(CALC_INDEX_URL);
+    calcIndex = await r.json();
+    const sel = document.getElementById('calcCategory');
+    if(!sel) return;
+    for(const [name, info] of Object.entries(calcIndex)){
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = info.emoji + ' ' + name + ' (' + info.card_count + '张)';
+      sel.appendChild(opt);
+    }
+  }catch(e){ console.log('测算工具加载失败', e); }
+}
+
+function onCalcCatChange(){
+  const sel = document.getElementById('calcCategory');
+  selectedCat = sel.value;
+  if(selectedCat && selectedScene) loadCalcReport();
+}
+
+function onCalcScene(scene){
+  selectedScene = scene;
+  document.querySelectorAll('.calc-scene-btn').forEach(b => {
+    b.style.borderColor = 'var(--border)';
+    b.style.background = '#faf8f5';
+  });
+  const btn = document.getElementById(scene === 'stall' ? 'calcSceneStall' : 'calcSceneStore');
+  if(btn) { btn.style.borderColor = 'var(--accent)'; btn.style.background = '#fef2f2'; }
+  if(selectedCat && selectedScene) loadCalcReport();
+}
+
+async function loadCalcReport(){
+  const info = calcIndex[selectedCat];
+  if(!info) return;
+  const file = selectedScene === 'stall' ? info.stall_file : info.store_file;
+  let data;
+  try{
+    const r = await fetch(CALC_DATA_DIR + file);
+    data = await r.json();
+  }catch(e){
+    document.getElementById('calcReport').innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px">⚠️ 该品类暂无' + (selectedScene==='stall'?'摆摊':'开店') + '版数据</div>';
+    return;
+  }
+  
+  const sceneLabel = selectedScene === 'stall' ? '🛵 摆摊' : '🏪 开店';
+  const emoji = data.emoji || info.emoji || '';
+  
+  let html = '<div style="border-top:1px solid var(--border);padding-top:14px;margin-top:8px">';
+  // 品类概览
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+  html += '<span style="font-size:15px;font-weight:700">' + info.emoji + ' ' + selectedCat + '</span>';
+  html += '<span style="font-size:11px;color:var(--muted)">' + info.card_count + '张产品卡</span>';
+  html += '</div>';
+  // 四指标卡片
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">';
+  html += '<div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted)">成本/份</div><div style="font-size:15px;font-weight:700;color:var(--text);margin-top:2px">¥' + data.cost.min + '-' + data.cost.max + '</div></div>';
+  html += '<div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted)">评分</div><div style="font-size:15px;font-weight:700;color:var(--accent);margin-top:2px">' + (data.score || "8.0") + '/A</div></div>';
+  html += '<div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted)">毛利率</div><div style="font-size:15px;font-weight:700;color:var(--green);margin-top:2px">' + data.margin.min + '-' + data.margin.max + '%</div></div>';
+  html += '<div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:var(--muted)">日利润</div><div style="font-size:15px;font-weight:700;color:var(--text);margin-top:2px">¥' + data.daily.profit.min + '-' + data.daily.profit.max + '</div></div>';
+  html += '</div>';
+  
+  html += '<div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.8">';
+  html += '<span style="font-weight:600">日销</span> ' + data.daily.sales.min + '-' + data.daily.sales.max + '份 · ';
+  html += '<span style="font-weight:600">日营收</span> ¥' + data.daily.revenue.min + '-' + data.daily.revenue.max + ' · ';
+  html += '<span style="font-weight:600">月利润</span> ¥' + data.monthly.profit.min + '-' + data.monthly.profit.max;
+  html += '</div>';
+  
+  // 建议
+  if(data.suggestions && data.suggestions.length){
+    html += '<div style="font-size:11px;background:#fef6f2;border-radius:8px;padding:10px;color:var(--muted);line-height:1.7">';
+    html += '<div style="font-size:10px;font-weight:600;color:var(--accent-light);margin-bottom:4px">💡 建议</div>';
+    data.suggestions.forEach(s => { html += '· ' + s + '<br>'; });
+    html += '</div>';
+  }
+  
+  // 该品类下的产品卡列表
+  html += '<div style="margin-top:14px;border-top:1px solid var(--border);padding-top:10px">';
+  html += '<div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px">📋 该品类产品卡（点卡片看详情）</div>';
+  // 匹配品类名到STALL_CATS
+  const catIcon = info.emoji || '📄';
+  const stallEntry = Object.entries(STALL_CATS).find(([e,o]) => o.n.includes(selectedCat) || selectedCat.includes(o.n));
+  const catIdx = stallEntry ? stallEntry[1].idx : 0;
+  html += '<div style="display:flex;margin-bottom:6px">';
+  html += '<a href="stall_manual.html#cat' + catIdx + '" style="flex:1;text-align:center;padding:8px;background:var(--accent);color:#fff;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600">查看全部 ' + info.card_count + ' 张 →</a>';
+  html += '</div>';
+  
+  // 如果有单品级推荐，展示top picks（后续虾哥数据完善后可以补充）
+  if(data.top_picks && data.top_picks.length){
+    html += '<div class="scene-feature-list" style="margin-top:8px">';
+    data.top_picks.forEach(p => {
+      html += '<a class="scene-feature-item" href="' + (p.file || 'stall_manual.html') + '"><span class="dot dot-orange"></span>' + p.name + ' <span class="tag-sm tag-free">查看</span></a>';
+    });
+    html += '</div>';
+  }
+  html += '</div>';
+  
+  html += '</div>';
+  
+  document.getElementById('calcReport').innerHTML = html;
+  document.getElementById('calcReport').style.display = 'block';
+}
+
+// 页面加载后初始化
+document.addEventListener('DOMContentLoaded', function(){
+  if(document.getElementById('calcCategory')) loadCalcIndex();
+
+  // ===== 品类标签联动（简化版：品类专区已有id） =====
+  const catTags = document.querySelector('.cat-tags');
+  if(catTags){
+    catTags.addEventListener('click', function(e){
+      const tag = e.target.closest('a[href^="#"]');
+      if(!tag) return;
+      e.preventDefault();
+      const href = tag.getAttribute('href').slice(1);
+      catTags.querySelectorAll('a').forEach(a => {
+        a.style.background = '';
+        a.style.color = '';
+      });
+      tag.style.background = '#C0392B';
+      tag.style.color = '#fff';
+
+      // 直接通过id查找
+      const target = document.getElementById(href);
+      if(target){
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+        target.style.transition = 'background .3s';
+        target.style.background = '#fef2f2';
+        target.style.borderRadius = '8px';
+        target.style.padding = '4px 8px';
+        setTimeout(() => { target.style.background = ''; target.style.padding = ''; }, 1200);
+      }else{
+        window.location.hash = '#' + href;
+      }
+    });
+  }
+});
+</script>
+
+<!-- ===== 一键到底/回到顶部 ===== -->
+<div style="position:fixed;bottom:90px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px">
+  <div style="width:44px;height:44px;border-radius:50%;background:#fff;color:#999;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 10px rgba(0,0,0,.1);cursor:pointer;border:1.5px solid #ddd4ca;transition:.2s" onmouseover="this.style.borderColor='#C0392B';this.style.color='#C0392B'" onmouseout="this.style.borderColor='#ddd4ca';this.style.color='#999'" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</div>
+  <div style="width:44px;height:44px;border-radius:50%;background:#fff;color:#C0392B;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 10px rgba(0,0,0,.1);cursor:pointer;border:1.5px solid #ddd4ca;transition:.2s" onmouseover="this.style.borderColor='#C0392B'" onmouseout="this.style.borderColor='#ddd4ca'" onclick="window.scrollTo({top:document.querySelector('.main').offsetTop-60,behavior:'smooth'})">⬇</div>
+</div>
+
+<script src="card-catalog.js"></script>
+<script src="cards-data.js"></script>
+<!-- 分享面板 -->
+<div class="share-overlay" id="shareOverlay" onclick="closeShare()"></div>
+<div class="share-panel" id="sharePanel">
+  <div id="shareMenu">
+    <h3>📤 分享本页</h3>
+    <div class="share-options">
+      <a class="share-option" onclick="copyLink()">
+        <span class="ico">🔗</span>
+        <span class="label">复制链接</span>
+        <span class="desc">直接复制</span>
+      </a>
+      <a class="share-option" onclick="showQRCode()">
+        <span class="ico">📱</span>
+        <span class="label">二维码</span>
+        <span class="desc">扫码打开</span>
+      </a>
+      <a class="share-option" onclick="shareToWechat()">
+        <span class="ico">💬</span>
+        <span class="label">微信分享</span>
+        <span class="desc">截图发送</span>
+      </a>
+    </div>
+    <button class="share-close" onclick="closeShare()">取消</button>
+  </div>
+  <div id="shareQRView" style="display:none;text-align:center">
+    <h3 id="qrTitle">📱 扫一扫打开</h3>
+    <div id="qrcode" style="width:180px;height:180px;margin:12px auto;background:#fff;padding:12px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--light)">生成中...</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px" id="qrHint">使用微信/浏览器扫码打开</div>
+    <button class="share-close" onclick="backToMenu()" style="margin-bottom:6px">← 返回</button>
+    <button class="share-close" onclick="closeShare()">关闭</button>
+  </div>
+</div>
+<div class="share-toast" id="shareToast"></div>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+var QR_SHOWN = false;
+function toggleShare(){
+  document.getElementById('shareOverlay').classList.toggle('show');
+  document.getElementById('sharePanel').classList.toggle('show');
+}
+function closeShare(){
+  document.getElementById('shareOverlay').classList.remove('show');
+  document.getElementById('sharePanel').classList.remove('show');
+  backToMenu();
+}
+function backToMenu(){
+  document.getElementById('shareMenu').style.display='block';
+  document.getElementById('shareQRView').style.display='none';
+}
+function showToast(msg){
+  var t=document.getElementById('shareToast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2000);
+}
+function copyLink(){
+  var url=window.location.href;
+  if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){showToast('✅ 链接已复制');closeShare();});}
+  else{var i=document.createElement('input');i.value=url;document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);showToast('✅ 链接已复制');closeShare();}
+}
+function showQRCode(){
+  document.getElementById('shareMenu').style.display='none';
+  document.getElementById('shareQRView').style.display='block';
+  document.getElementById('qrTitle').textContent='📱 扫一扫打开';
+  document.getElementById('qrHint').textContent='使用微信/浏览器扫码打开';
+  generateQR();
+}
+function shareToWechat(){
+  document.getElementById('shareMenu').style.display='none';
+  document.getElementById('shareQRView').style.display='block';
+  document.getElementById('qrTitle').textContent='💬 截图分享到微信';
+  document.getElementById('qrHint').textContent='保存二维码图片，发送给微信好友或群聊';
+  generateQR();
+}
+function generateQR(){
+  if(QR_SHOWN) return;
+  var c=document.getElementById('qrcode');
+  c.innerHTML='';
+  try{
+    new QRCode(c,{text:window.location.href,width:160,height:160});
+    QR_SHOWN=true;
+  }catch(e){c.innerHTML='⚠️ 生成失败，请手动复制链接';}
+}
+</script>
+<!-- 不蒜子访问统计 -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<div style="margin-top:20px;padding:10px 14px 0;border-top:1px solid #e0ddd5;font-size:10px;color:#b5aaa0;text-align:center;line-height:1.5;width:100%;max-width:860px;box-sizing:border-box;word-break:break-word">
+<strong style="color:#8b6914;letter-spacing:1px">© FoodIntelAI 2026 All Rights Reserved</strong><br>
+分析框架、模型结构及商业判断受版权保护。转载请联系授权，并在显著位置保留来源。<br>
+FoodIntelAI 商业验证库 · foodintelai.com
+</div>
+
+</body>
+</html>
