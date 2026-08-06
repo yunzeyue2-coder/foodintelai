@@ -18,6 +18,7 @@
 | FIF-004 | 商业模式分析框架 | 分析框架 | 已发布 | frameworks/FIF-004.html |
 | FIF-005 | 价值链分析框架 | 分析框架 | 已发布 | frameworks/FIF-005.html |
 | **FIF-37** | 区域食品生态模型 | Core Framework | 完善中 | frameworks/FIF-37_区域食品生态模型.html |
+| **FBIS-001** | FoodIntelAI Brand Intelligence Standard V1.0（品牌三层命名/连锁化/CRN/工业化矩阵/BSPI） | 品牌分析标准 | active V1.0 | Obsidian 07_Standards/FBIS/FBIS_V1.0_品牌分析标准.md |
 | FIM-001~005 | 八步研究法/第一性原理/多模型/交叉验证/认知重构 | 方法论 | 已发布 | frameworks/FIM*.html |
 | FIS-001~005 | 食品产业系统/五世界/品类生命周期/老板自由度/压力测试 | 系统模型 | 已发布 | frameworks/FIS*.html |
 | FIE | 证据分级（A高可信/D行业经验） | 证据体系 | 已发布 | frameworks/FIE*.html |
@@ -48,6 +49,8 @@
 | **CPE-RN** | CPE Release Note V0.1 | frozen | engines/category-profile/RELEASE_NOTE_CPE_V0.1.md |
 | **FDE-IFC** | FDE Interface Contract V0.1（CPE→FDE） | 接口就绪·待实施 | engines/FDE_INTERFACE_CONTRACT.md |
 | **INS-001** | FID Insight Engine V1.0（X1供给结构已固化，X2-X5待扩展） | X1 frozen | data/FID-001_INSIGHT_ENGINE_V1.0.md |
+| **BIE-001** | Brand Intelligence Engine V1.0（三层分离/连锁化/CRN/HHI/工业化矩阵/BSPI） | active（郑州已验证） | Obsidian 02_Models/引擎源码/bie.py |
+| **BIE-ZZ-001** | 郑州品牌生态分析报告（FBIS V1.0 口径，108,350 POI） | validated 2026-08-06 | Obsidian 03_DataAssets（输出副本 ~/Desktop/滄林/fbis_output/） |
 | **BDE** | Business District Engine（商圈画像） | 规划中（Schema 可复用） | — |
 | **CE** | Competition Engine（竞争密度） | 规划中（Schema 可复用） | — |
 
