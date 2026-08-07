@@ -19,6 +19,7 @@
 | FIF-005 | 价值链分析框架 | 分析框架 | 已发布 | frameworks/FIF-005.html |
 | **FIF-37** | 区域食品生态模型 | Core Framework | 完善中 | frameworks/FIF-37_区域食品生态模型.html |
 | **FBIS-001** | FoodIntelAI Brand Intelligence Standard V1.0（品牌三层命名/连锁化/CRN/工业化矩阵/BSPI） | 品牌分析标准 | active V1.0 | Obsidian 07_Standards/FBIS/FBIS_V1.0_品牌分析标准.md |
+| **PVEM-001** | Price-Value-Experience Model V1.0（价格拓扑/价值鸿沟/价值迁移曲线/体验归因/渠道模型） | 价格价值分析标准 | active V1.0 | Obsidian 07_Standards/PVEM_价格价值体验模型/ |
 | FIM-001~005 | 八步研究法/第一性原理/多模型/交叉验证/认知重构 | 方法论 | 已发布 | frameworks/FIM*.html |
 | FIS-001~005 | 食品产业系统/五世界/品类生命周期/老板自由度/压力测试 | 系统模型 | 已发布 | frameworks/FIS*.html |
 | FIE | 证据分级（A高可信/D行业经验） | 证据体系 | 已发布 | frameworks/FIE*.html |
