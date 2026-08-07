@@ -1434,6 +1434,84 @@ body{
 
 <div class="main" id="mainContent">
 
+<!-- ===== 行业信号栏（小窗口滚动·点击展开全部） ===== -->
+<style>
+.sig-section{margin:20px 0 2px;padding:0;position:relative}
+.sig-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.sig-dot{width:6px;height:6px;border-radius:50%;background:#c4a35a;box-shadow:0 0 0 3px rgba(196,163,90,.15);animation:sigPulse 2s infinite}
+@keyframes sigPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sig-title{font-size:10px;color:#8b6914;letter-spacing:3px;font-weight:600}
+.sig-note{font-size:9px;color:#b0a48c;letter-spacing:1px}
+.sig-ticker{position:relative;overflow:hidden;border:1px solid #ece5d8;border-radius:8px;background:linear-gradient(135deg,#FDFCFA,#F8F5EF);padding:6px 0;height:32px}
+.sig-track{display:flex;align-items:center;gap:36px;white-space:nowrap;width:max-content;animation:sigScroll 36s linear infinite;padding:0 12px}
+.sig-ticker:hover .sig-track{animation-play-state:paused}
+@keyframes sigScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.sig-item{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#4a4030}
+.sig-tag{font-size:8px;padding:1px 6px;border-radius:6px;background:#8b6914;color:#fff;letter-spacing:1px;flex-shrink:0}
+.sig-tag.blue{background:#4a6b8a}.sig-tag.green{background:#5a7a5a}
+.sig-item .sig-txt{color:#6a5a3a}
+.sig-item .sig-date{font-size:9px;color:#b0a48c}
+.sig-more{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:#8b6914;cursor:pointer;letter-spacing:1px;border:none;background:none;padding:2px 0;margin-top:6px;transition:color .2s}
+.sig-more:hover{color:#c4a35a}
+.sig-more .arrow{transition:transform .25s}
+.sig-more.open .arrow{transform:rotate(180deg)}
+/* 全部列表（默认隐藏，点击展开） */
+.sig-full{display:none;margin-top:8px;border:1px solid #ece5d8;border-radius:8px;background:#FDFCFA;overflow:hidden}
+.sig-full.open{display:block}
+.sig-full-item{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;font-size:11px;color:#4a4030;line-height:1.6;border-bottom:1px solid #f0ebe0}
+.sig-full-item:last-child{border-bottom:none}
+.sig-full-item .sig-tag{margin-top:1px}
+.sig-full-item .sig-txt{color:#6a5a3a;flex:1}
+.sig-full-item .sig-date{font-size:9px;color:#b0a48c;flex-shrink:0;margin-top:2px}
+@media(max-width:600px){
+  .sig-ticker{height:auto;padding:0;border:none;background:none}
+  .sig-track{animation:none;white-space:normal;flex-direction:column;align-items:stretch;gap:4px;width:100%;padding:0}
+  .sig-item{border:1px solid #ece5d8;border-radius:6px;background:#FDFCFA;padding:6px 8px}
+}
+</style>
+
+<div class="sig-section" id="signalBar">
+  <div class="sig-header">
+    <span class="sig-dot"></span>
+    <span class="sig-title">行业信号 · 本周</span>
+    <span class="sig-note">INDUSTRY SIGNALS</span>
+  </div>
+  <div class="sig-ticker">
+    <div class="sig-track" id="sigTrack"></div>
+  </div>
+  <button class="sig-more" id="sigMore" onclick="toggleSignals(this)">
+    查看本周全部信号 <span class="arrow">▾</span>
+  </button>
+  <div class="sig-full" id="sigFull"></div>
+</div>
+
+<script>
+const SIG_SIGNALS = [
+  {tag:"资本", cls:"", date:"08-07", txt:"零售巨头入局短保卤味：三只松鼠首家全品类新鲜零食店8月8日芜湖开业，165㎡约200 SKU，含鲜辣鸭脖等（红餐网）"},
+  {tag:"模式", cls:"blue", date:"08-07", txt:"短保卤味'店中店'已验证：大润发/鲜风生活/汤猫子6㎡专柜单日单店销售额超8000元，生活馆试营业3天破100万"},
+  {tag:"资本", cls:"", date:"08-05", txt:"连锁快餐加速下沉：头部品牌上半年新开社区型门店占比明显提升，'小店+外卖'模型成为扩张主流"},
+  {tag:"品类", cls:"green", date:"08-04", txt:"茶咖竞争外溢：咖啡品牌扎堆进入早餐时段，'咖啡+烘焙'组合套餐带动客单价结构变化"},
+  {tag:"模式", cls:"blue", date:"08-03", txt:"社区团购卤味档口试点增多：次日达短保熟食在部分二线城市跑通复购模型"},
+  {tag:"品类", cls:"green", date:"08-02", txt:"炸鸡品类区域品牌分化：头部区域玩家开始收缩多品类扩张，回归核心单品聚焦"},
+  {tag:"资本", cls:"", date:"08-01", txt:"预制菜新规落地首月：渠道端短保鲜食占比提升，长保品类进入调整期"}
+];
+const sigTrack = document.getElementById('sigTrack');
+if(sigTrack){
+  const items = SIG_SIGNALS.map(s=>`<span class="sig-item"><span class="sig-tag${s.cls?' '+s.cls:''}">${s.tag}</span><span class="sig-date">${s.date}</span><span class="sig-txt">${s.txt}</span></span>`).join('');
+  sigTrack.innerHTML = items + items;  // 双份实现无缝循环
+}
+const sigFull = document.getElementById('sigFull');
+if(sigFull){
+  const fullItems = SIG_SIGNALS.map(s=>`<div class="sig-full-item"><span class="sig-tag${s.cls?' '+s.cls:''}">${s.tag}</span><span class="sig-txt">${s.txt}</span><span class="sig-date">${s.date}</span></div>`).join('');
+  sigFull.innerHTML = fullItems;
+}
+function toggleSignals(btn){
+  const panel = document.getElementById('sigFull');
+  const isOpen = panel.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  btn.innerHTML = (isOpen ? '收起信号列表' : '查看本周全部信号') + ' <span class="arrow">▾</span>';
+}
+</script>
 <!-- ===== 本周研究专栏 ===== -->
 <style>
 .rp-section{margin:28px 0;padding:0;position:relative}
