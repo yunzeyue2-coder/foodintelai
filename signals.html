@@ -47,13 +47,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei
 .sig-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:10px;transition:.2s}
 .sig-card:hover{border-color:var(--gold-light);box-shadow:0 2px 10px rgba(196,163,90,.08)}
 .sig-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.sig-tag{font-size:10px;padding:2px 10px;border-radius:10px;background:var(--tag-bg);color:var(--gold);letter-spacing:1px;font-weight:600}
+.sig-tag{font-size:11px;padding:3px 12px;border-radius:10px;background:var(--tag-bg);color:var(--gold);letter-spacing:1px;font-weight:600}
 .sig-tag.new{background:#c0392b;color:#fff;animation:newPulse 1.5s infinite}
 @keyframes newPulse{0%,100%{opacity:1}50%{opacity:.6}}
-.sig-date{font-size:11px;color:var(--light);margin-left:auto;font-family:"IBM Plex Sans",monospace}
-.sig-txt{font-size:14px;color:var(--text);line-height:1.7}
+.sig-date{font-size:12px;color:var(--light);margin-left:auto;font-family:"IBM Plex Sans",monospace}
+.sig-txt{font-size:15px;color:var(--text);line-height:1.8}
 .sig-txt b{color:var(--accent)}
-.sig-meta{display:flex;align-items:center;gap:14px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);font-size:11px;color:var(--muted)}
+.sig-meta{display:flex;align-items:center;gap:14px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);font-size:12px;color:var(--muted)}
 .sig-meta .sub{color:var(--light)}
 
 /* 归档说明 */
@@ -134,14 +134,15 @@ const SIGNAL_LIBRARY = {
   ]
 };
 
-// 渲染
+// 渲染：每月内按时间倒序（最新在上），不按标签排序
 const sigList = document.getElementById('sigList');
 let total = 0, monthCount = 0, newCount = 0;
 const months = Object.keys(SIGNAL_LIBRARY).sort().reverse();
 const currentMonth = months[0];
 
 months.forEach(month => {
-  const signals = SIGNAL_LIBRARY[month];
+  // 按日期倒序排列（d 字段是 MM-DD，倒序=最新在前）
+  const signals = [...SIGNAL_LIBRARY[month]].sort((a, b) => b.d.localeCompare(a.d));
   total += signals.length;
   if (month === currentMonth) monthCount = signals.length;
 
