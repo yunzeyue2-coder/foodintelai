@@ -1488,38 +1488,26 @@ body{
 </div>
 
 <script>
+// 信号池：6条，涵盖不同领域（卤味/政策/平台/烘焙/快餐/供应链），最新在前
 const SIG_SIGNALS = [
-  {tag:"资本", cls:"new", date:"08-08", txt:"零售巨头正式入局短保卤味：三只松鼠首家全品类新鲜零食店今日于芜湖开业，165㎡、约200款SKU（鲜辣鸭脖/香辣脆骨丝等），垂直'现制+短保'赛道——此前'店中店'模式已跑出单日单店8000+销售额，生活馆试营业3天破100万"},
-  {tag:"模式", cls:"new", date:"08-08", txt:"短保卤味'店中店'模型被验证：大润发/鲜风生活/汤猫子6㎡专柜，单日单店销售额超8000元——小面积+大卖场流量的组合，成为卤味连锁低成本扩张的新路径"},
-  {tag:"资本", cls:"new", date:"08-07", txt:"连锁快餐加速下沉：头部品牌上半年新开门店中社区型占比明显提升，'小店+外卖'模型成为扩张主流——从商场店转向社区店，租金成本下降但运营半径要求更高"},
-  {tag:"品类", cls:"green", date:"08-06", txt:"茶咖竞争外溢至早餐时段：咖啡品牌扎堆推出'咖啡+烘焙'早餐组合，客单价结构变化——咖啡正在从下午茶场景向早餐刚需场景渗透"},
-  {tag:"模式", cls:"blue", date:"08-05", txt:"社区团购卤味档口试点增多：次日达短保熟食在部分二线城市跑通复购模型——'预售+自提'模式降低卤味库存损耗，复购率是关键指标"},
-  {tag:"品类", cls:"green", date:"08-04", txt:"炸鸡品类区域品牌分化：头部区域玩家开始收缩多品类扩张，回归核心单品聚焦——从'多品类摊大饼'转向'单品打透'，聚焦战略成为区域品牌主流选择"},
-  {tag:"资本", cls:"", date:"08-02", txt:"预制菜新规落地首月：渠道端短保鲜食占比提升，长保品类进入调整期——监管趋严下，'新鲜短保'成为渠道更愿意进货的品类方向"}
+  {tag:"卤味", cls:"new", date:"08-08", txt:"零售巨头入局短保卤味：三只松鼠首家全品类新鲜零食店于芜湖开业，165㎡、约200款SKU，垂直'现制+短保'赛道——此前'店中店'模式已跑出单日单店8000+销售额"},
+  {tag:"政策", cls:"", date:"08-07", txt:"预制菜新规落地首月：渠道端短保鲜食占比提升、长保品类进入调整期——监管趋严下，'新鲜短保'成为渠道更愿意进货的方向"},
+  {tag:"平台", cls:"blue", date:"08-06", txt:"外卖平台费率调整试点：部分城市中小商户综合抽佣下调1-2个百分点——单店利润空间小幅回升，平台转向会员制收费"},
+  {tag:"烘焙", cls:"green", date:"08-05", txt:"烘焙赛道新动作：现烤面包+咖啡复合店型在社区商圈批量开出——'新鲜现烤'对抗'冷链长保'，客单价区间上探"},
+  {tag:"快餐", cls:"green", date:"08-04", txt:"连锁快餐加速下沉：头部品牌新开门店中社区型占比明显提升，'小店+外卖'模型成主流——从商场店转向社区店"},
+  {tag:"供应链", cls:"blue", date:"08-02", txt:"食品设备智能化渗透：AI点餐与智能称重在中腰部连锁铺开，单店人效提升约15%——数字化从头部向腰部扩散"}
 ];
-// 滚动条只显示最新6条；展开默认5条，可再展开全部
-const TICKER_COUNT = 6;
-const EXPAND_FIRST = 5;
 const sigTrack = document.getElementById('sigTrack');
 if(sigTrack){
-  const items = SIG_SIGNALS.slice(0, TICKER_COUNT).map(s=>`<span class="sig-item"><span class="sig-tag${s.cls?' '+s.cls:''}">${s.tag}</span><span class="sig-date">${s.date}</span><span class="sig-txt">${s.txt}</span></span>`).join('');
+  const items = SIG_SIGNALS.map(s=>`<span class="sig-item"><span class="sig-tag${s.cls?' '+s.cls:''}">${s.tag}</span><span class="sig-date">${s.date}</span><span class="sig-txt">${s.txt}</span></span>`).join('');
   sigTrack.innerHTML = items + items;  // 双份实现无缝循环
 }
 const sigFull = document.getElementById('sigFull');
 if(sigFull){
-  // 展开默认显示前5条，底部"展开更多"
-  const first = SIG_SIGNALS.slice(0, EXPAND_FIRST).map(s=>`<div class="sig-full-item"><span class="sig-tag${s.cls?' '+s.cls:''}">${s.tag}</span><span class="sig-txt">${s.txt}</span><span class="sig-date">${s.date}</span></div>`).join('');
-  const rest = SIG_SIGNALS.slice(EXPAND_FIRST).map(s=>`<div class="sig-full-item rest-item" style="display:none"><span class="sig-tag${s.cls?' '+s.cls:''}">${s.tag}</span><span class="sig-txt">${s.txt}</span><span class="sig-date">${s.date}</span></div>`).join('');
-  const footer = '<div style="padding:10px 12px;text-align:center;display:flex;flex-direction:column;gap:8px">' +
-    '<button id="sigMoreBtn" onclick="expandAllSignals()" style="font-size:12px;color:#8b6914;background:#fff;border:1px solid #c4a35a;border-radius:6px;padding:6px 20px;cursor:pointer;letter-spacing:1px">展开更多信号 ▾</button>' +
-    '<a href="/signals.html" style="font-size:11px;color:#b0a48c;text-decoration:none">查看完整信号库（按月归档）→</a>' +
-    '</div>';
-  sigFull.innerHTML = first + rest + footer;
-}
-function expandAllSignals(){
-  document.querySelectorAll('.rest-item').forEach(el=>el.style.display='flex');
-  const btn = document.getElementById('sigMoreBtn');
-  if(btn) btn.style.display='none';
+  // 展开直接显示全部6条（不再分页）
+  const fullItems = SIG_SIGNALS.map(s=>`<div class="sig-full-item"><span class="sig-tag${s.cls?' '+s.cls:''}">${s.tag}</span><span class="sig-txt">${s.txt}</span><span class="sig-date">${s.date}</span></div>`).join('');
+  const footer = '<div style="padding:10px 12px;text-align:center"><a href="/signals.html" style="font-size:11px;color:#b0a48c;text-decoration:none">查看完整信号库（按月归档）→</a></div>';
+  sigFull.innerHTML = fullItems + footer;
 }
 function toggleSignals(btn){
   const panel = document.getElementById('sigFull');
