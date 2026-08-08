@@ -1449,6 +1449,8 @@ body{
 .sig-item{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:#4a4030;line-height:22px}
 .sig-tag{font-size:8px;padding:1px 5px;border-radius:5px;background:#8b6914;color:#fff;letter-spacing:1px;flex-shrink:0}
 .sig-tag.blue{background:#4a6b8a}.sig-tag.green{background:#5a7a5a}
+.sig-tag.new{background:#c0392b;animation:sigNewPulse 1.5s infinite}
+@keyframes sigNewPulse{0%,100%{opacity:1}50%{opacity:.55}}
 .sig-item .sig-txt{color:#6a5a3a}
 .sig-item .sig-date{font-size:9px;color:#b0a48c}
 .sig-more{display:inline-flex;align-items:center;gap:4px;font-size:9px;color:#8b6914;cursor:pointer;letter-spacing:1px;border:none;background:none;padding:1px 0;margin-top:3px;transition:color .2s}
@@ -1487,17 +1489,19 @@ body{
 
 <script>
 const SIG_SIGNALS = [
-  {tag:"资本", cls:"", date:"08-07", txt:"零售巨头入局短保卤味：三只松鼠首家全品类新鲜零食店8月8日芜湖开业，165㎡约200 SKU，含鲜辣鸭脖等（红餐网）"},
-  {tag:"模式", cls:"blue", date:"08-07", txt:"短保卤味'店中店'已验证：大润发/鲜风生活/汤猫子6㎡专柜单日单店销售额超8000元，生活馆试营业3天破100万"},
-  {tag:"资本", cls:"", date:"08-05", txt:"连锁快餐加速下沉：头部品牌上半年新开社区型门店占比明显提升，'小店+外卖'模型成为扩张主流"},
-  {tag:"品类", cls:"green", date:"08-04", txt:"茶咖竞争外溢：咖啡品牌扎堆进入早餐时段，'咖啡+烘焙'组合套餐带动客单价结构变化"},
-  {tag:"模式", cls:"blue", date:"08-03", txt:"社区团购卤味档口试点增多：次日达短保熟食在部分二线城市跑通复购模型"},
-  {tag:"品类", cls:"green", date:"08-02", txt:"炸鸡品类区域品牌分化：头部区域玩家开始收缩多品类扩张，回归核心单品聚焦"},
-  {tag:"资本", cls:"", date:"08-01", txt:"预制菜新规落地首月：渠道端短保鲜食占比提升，长保品类进入调整期"}
+  {tag:"最新", cls:"new", date:"08-08", txt:"零售巨头入局短保卤味：三只松鼠首家全品类新鲜零食店8月8日芜湖开业，165㎡约200 SKU，含鲜辣鸭脖等（红餐网）"},
+  {tag:"最新", cls:"new", date:"08-08", txt:"短保卤味'店中店'已验证：大润发/鲜风生活/汤猫子6㎡专柜单日单店销售额超8000元，生活馆试营业3天破100万"},
+  {tag:"资本", cls:"", date:"08-07", txt:"连锁快餐加速下沉：头部品牌上半年新开社区型门店占比明显提升，'小店+外卖'模型成为扩张主流"},
+  {tag:"品类", cls:"green", date:"08-06", txt:"茶咖竞争外溢：咖啡品牌扎堆进入早餐时段，'咖啡+烘焙'组合套餐带动客单价结构变化"},
+  {tag:"模式", cls:"blue", date:"08-05", txt:"社区团购卤味档口试点增多：次日达短保熟食在部分二线城市跑通复购模型"},
+  {tag:"品类", cls:"green", date:"08-04", txt:"炸鸡品类区域品牌分化：头部区域玩家开始收缩多品类扩张，回归核心单品聚焦"},
+  {tag:"资本", cls:"", date:"08-02", txt:"预制菜新规落地首月：渠道端短保鲜食占比提升，长保品类进入调整期"}
 ];
+// 滚动条只显示前6条（最新在前），展开显示全部
+const TICKER_COUNT = 6;
 const sigTrack = document.getElementById('sigTrack');
 if(sigTrack){
-  const items = SIG_SIGNALS.map(s=>`<span class="sig-item"><span class="sig-tag${s.cls?' '+s.cls:''}">${s.tag}</span><span class="sig-date">${s.date}</span><span class="sig-txt">${s.txt}</span></span>`).join('');
+  const items = SIG_SIGNALS.slice(0, TICKER_COUNT).map(s=>`<span class="sig-item"><span class="sig-tag${s.cls?' '+s.cls:''}">${s.tag}</span><span class="sig-date">${s.date}</span><span class="sig-txt">${s.txt}</span></span>`).join('');
   sigTrack.innerHTML = items + items;  // 双份实现无缝循环
 }
 const sigFull = document.getElementById('sigFull');
