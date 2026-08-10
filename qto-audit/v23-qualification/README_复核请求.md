@@ -24,6 +24,53 @@ Decision 不再只是 Evidence 的必然产物
 
 ## 请审计 6 件事
 
+### 0. 审计姿态（最高优先，GPT必读）
+
+> **把自己当成攻击者，不证明 V2.3 正确，而是证明 V2.3 可以被绕过。**
+> 如果攻击不出漏洞，V2.3 才有资格冻结。
+
+### 0.5 最高优先级：图级审计（Graph-Level Audit）
+
+> **不要在字段级找 D/E，要在 Decision Graph 上找所有 D/E Evidence → Final Decision 的间接路径。**
+
+检查以下路径是否被 Authority Gate 拦截：
+```
+D Evidence → Insight → Hypothesis → FDE Score → Decision
+D Evidence → Insight → Decision（间接引用）
+D Evidence → Hypothesis → Decision
+D Evidence → Condition → Decision（藏在条件里影响判断）
+D Evidence → Narrative（Executive Summary/Recommendation 文本引用）
+D Evidence → FDE 评分维度 → Decision
+```
+
+**必须证明：D ──X──→ Decision（所有路径）。** 否则 Authority Gate 只是字段校验器，还不是 Decision Authority。
+
+### 0.6 审计重点（沧林 2026-08-10 追加）
+
+#### ① Evidence Lineage（证据谱系）
+每个 Decision 必须可追溯：
+```
+Decision → Reason/Score/Condition → Insight/Hypothesis → Evidence
+```
+然后检查**最低 Evidence Authority**（链上任一环节是 D/E → 整条链权限不高于 D）。
+
+#### ② Authority Propagation（权限传播）⭐ 当前最缺
+Authority 必须沿 Evidence Graph **向上继承**：
+```
+E008(D) → I005 → I005 的 Authority 不能高于 D
+I005(D) → H003 → H003 也不能获得 A/B 权限
+H003(D) → FDE Score → 该 Score 不得作为独立 Decision Authority
+```
+**问题：当前代码是否实现了这个传播？** 还是只有 decision_memo 的 Reason 直连被检查？
+
+#### ③ Negative Evidence（负证据）
+```
+A/B/C 证据 → Decision（支持）
+D 证据 → 反证/挑战信息 → 可以存在，但不能升级成事实
+```
+例："D级资料提示可能存在盈利模型问题" → 可作为 Challenge/Condition/Unknown，但**不能**变成"盈利模型已被证明存在问题"。
+**检查：Evidence Authority ≠ Evidence Utility——低等级证据不是没用，而是权限低。**
+
 ### 1. Evidence Authority Gate
 - A/B/C/D/E 分级是否符合 Decision Authority 原则？
 - C 是否真的只能进入 conditions？代码里是否有路径让 C 混入主理由？
