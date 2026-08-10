@@ -37,6 +37,7 @@ class FoodBusinessOntology:
     }
 
     # ============ 推导规则（产品形态 → 加工复杂度/损耗）============
+    # 注意：键是"产品形态"（工艺/出品方式的属性），不是品类名
     PRODUCT_RULES = {
         "整只/大件":  {"processing": 40, "speed": 30, "loss": 35, "note": "备料耗时，损耗中等"},
         "切件/小块":  {"processing": 25, "speed": 45, "loss": 30, "note": "出品快，损耗中"},
@@ -47,8 +48,8 @@ class FoodBusinessOntology:
         "烤制类":     {"processing": 45, "speed": 20, "loss": 30, "note": "烤制耗时，翻台慢"},
         "炸制类":     {"processing": 25, "speed": 40, "loss": 28, "note": "现炸出品快"},
         "卤制类":     {"processing": 30, "speed": 35, "loss": 20, "note": "可批量预制，损耗低"},
-        "饮品/杯装":  {"processing": 15, "speed": 55, "loss": 10, "note": "标准化高，损耗低"},
-        "烤冷面/手抓饼": {"processing": 20, "speed": 50, "loss": 20, "note": "档口快出品"},
+        "杯装/便携":  {"processing": 15, "speed": 55, "loss": 10, "note": "标准化高，损耗低"},
+        "现做卷饼/板": {"processing": 20, "speed": 50, "loss": 20, "note": "档口快出品"},
     }
 
     # ============ 推导规则（价格带 → 投资/利润空间）============
@@ -181,7 +182,7 @@ if __name__ == "__main__":
 
     # 验收2: 换品类——烤冷面（根本没登记过）
     print("\n[烤冷面]（未登记品类，直接推导）")
-    r2 = o.replication_path({"category": "烤冷面", "process": "烤制", "product_form": "烤冷面/手抓饼",
+    r2 = o.replication_path({"category": "烤冷面", "process": "烤制", "product_form": "现做卷饼/板",
                              "price_band": [8, 12], "business_model": "档口", "style": "东北"})
     for step in r2["path"]:
         print(f"  {step[0]}: {step[1]}")
@@ -197,7 +198,7 @@ if __name__ == "__main__":
 
     # 验收4: 三画像完整生成
     print("\n[三画像验证·烤冷面]")
-    p = o.build_profiles({"category": "烤冷面", "process": "烤制", "product_form": "烤冷面/手抓饼",
+    p = o.build_profiles({"category": "烤冷面", "process": "烤制", "product_form": "现做卷饼/板",
                           "price_band": [8, 12], "business_model": "档口", "style": "东北"})
     print(f"  消费: {p['consumer_profile']}")
     print(f"  经营: {json.dumps(p['operation_profile'], ensure_ascii=False)}")
