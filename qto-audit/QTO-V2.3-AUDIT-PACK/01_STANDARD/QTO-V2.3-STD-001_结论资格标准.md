@@ -34,7 +34,7 @@ DECISION REASONS
 └── Conditional Evidence  C → 仅支持条件，不得独立形成方向
 ```
 
-**机器约束**：`evidence_authority_gate.py` — 决策理由生成时强制分级，D/E 引用直接 FAIL。
+**机器约束**：`decision_qualification_gate.py`（组合引擎）——Authority PASS AND Coverage PASS/降级 → Qualification；图级反向追溯阻断间接路径；UNKNOWN 不得 PASS；参数需独立 provenance。
 
 ## 二、Sample Coverage Gate（样本覆盖闸门）
 
