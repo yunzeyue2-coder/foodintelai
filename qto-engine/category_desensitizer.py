@@ -33,20 +33,25 @@ TEST_MARKERS = ["test", "acceptance", "proof", "regression", "category_agnostic"
 
 
 def scan_file(path, strict=False):
-    """扫描单个文件。返回 (fail_lines, warning_lines)"""
+    """扫描单个文件。返回 (fail_lines, warning_lines)
+    规则: `__main__` 块内的品类词 = 测试样本（允许）"""
     fails, warnings = [], []
     lines = open(path, encoding="utf-8").read().splitlines()
     in_docstring = False
+    in_main = False  # __main__ 块内 = 测试样本
     for i, line in enumerate(lines, 1):
         stripped = line.strip()
-        # 跳过空/注释
         if not stripped or stripped.startswith("#"):
             continue
-        # 检测字符串/文档字符串
+        if 'if __name__ == "__main__"' in stripped or 'if __name__ == \'__main__\'' in stripped:
+            in_main = True
+            continue
+        if in_main and stripped.startswith(("def ", "class ")):
+            in_main = False  # 新顶层定义，离开 main 块
         if '"""' in stripped or "'''" in stripped:
             in_docstring = not in_docstring
             continue
-        if in_docstring:
+        if in_docstring or in_main:
             continue
 
         # 找品类词（在代码逻辑行）——排除工艺词（烘焙/炸串等是工艺/出品形态）

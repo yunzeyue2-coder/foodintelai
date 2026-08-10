@@ -98,9 +98,14 @@ class Pipeline:
     def _build_reasons(self, inputs, op, rep):
         """规则推导理由（不依赖品类名）"""
         reasons = []
-        if op["replication_difficulty"] < 50:
+        # 复制难度分档：<35 易复制 / 35-55 中等 / >55 难复制
+        if op["replication_difficulty"] < 35:
             reasons.append({
-                "text": f"复制难度{op['replication_difficulty']}/100——模型易标准化，具备连锁潜力",
+                "text": f"复制难度{op['replication_difficulty']}/100——模型高度标准化，具备连锁复制潜力",
+                "evidence_level": "B", "source": "ontology_rules"})
+        elif op["replication_difficulty"] < 55:
+            reasons.append({
+                "text": f"复制难度{op['replication_difficulty']}/100——中等，技能依赖{op['skill_dependency']}，需验证标准化后扩张",
                 "evidence_level": "B", "source": "ontology_rules"})
         else:
             reasons.append({
