@@ -1,0 +1,66 @@
+{
+  "$schema": "FDR-PRECONDITION-Schema-V1.0",
+  "description": "FDR 报告生成前置条件——Renderer 只是把 Schema 变成人看的东西。先定义系统必须拥有什么，才允许生成报告。",
+  "version": "1.0.0",
+  "preconditions": {
+    "decision_question": {
+      "description": "决策问题定义——不是'这个行业是什么'，而是'这事为什么值得做/什么时候不能做/怎么降低失败概率'",
+      "required_fields": ["city", "category", "budget", "experience", "goal", "entry_model"],
+      "example": "20万+无经验创业者，是否应进入郑州生炸赛道？如果进入怎么进？失败什么时候退？"
+    },
+    "industry_ontology": {
+      "description": "行业Ontology——行业插件：关注什么变量（餐饮=需求频率/客单价/坪效/复购/标准化；制造=产能/良率/订单/库存；零售=选址/周转/SKU/毛利）",
+      "required": ["consumer_variables", "operation_variables", "supply_chain_variables"],
+      "principle": "通用引擎负责'怎么判断'，行业插件负责'判断什么'"
+    },
+    "decision_factor_tree": {
+      "description": "决策因子树——机会判断的完整因子结构",
+      "structure": {
+        "market_attractiveness": ["市场规模", "需求频率", "增长趋势"],
+        "competition_pressure": ["品牌集中度", "密度", "差异化空间"],
+        "supply_chain_maturity": ["原料可得性", "成本波动", "供应稳定性"],
+        "unit_model": ["客单价", "毛利", "坪效", "盈亏平衡"],
+        "replication_potential": ["标准化程度", "技能依赖", "资本强度"],
+        "risk_factors": ["损耗", "政策", "季节性", "竞争反应"]
+      },
+      "principle": "决策链: 需求变化→用户行为→产品结构→供应链→竞争格局→商业模型→投资判断"
+    },
+    "weight_model": {
+      "description": "权重模型——因子如何合成综合判断",
+      "required": ["factor_weights", "gate_constraints", "veto_rules"],
+      "principle": "机会不能掩盖能力不足（Veto 独立于加权）"
+    },
+    "evidence_requirements": {
+      "description": "证据要求——每个核心判断必须有证据支撑",
+      "levels": {"A": "直接证据", "B": "主理由+限制", "C": "仅条件/假设", "D": "不得进入正式依据", "E": "过实验Gate"},
+      "rule": "每个判断: 事实数据 + 来源 + 解释 + 推论"
+    },
+    "risk_model": {
+      "description": "风险模型——不是'有风险'，而是'什么触发、概率多大、影响多大、怎么应对、何时止损'",
+      "required": ["risk_inventory", "probability", "impact", "mitigation", "kill_criteria"],
+      "principle": "先定义何时停止，再谈进入"
+    },
+    "simulation_model": {
+      "description": "模拟模型——Business Twin：三世界（乐观/基准/压力）生存推演",
+      "required": ["investment_structure", "unit_economics", "cash_flow_scenarios", "break_even"],
+      "principle": "输出风险区间，不是单一答案"
+    },
+    "output_template": {
+      "description": "输出模板——由 Decision Graph 驱动展开，页数随决策复杂度变",
+      "principle": "页数不是标准，决策复杂度才是标准（摆摊25页/连锁60页/工厂100页）",
+      "density_standard": {
+        "fact_description": "≤30%",
+        "analysis_explanation": "≥40%",
+        "decision_recommendation": "≥30%"
+      }
+    }
+  },
+  "gating": {
+    "rule": "8 要素缺任一 → 禁止生成报告（FQA BLOCK）",
+    "checker": "fqa_check.py check_preconditions()"
+  },
+  "quality_definition": {
+    "低质量": ["市场很大", "消费者年轻化", "行业增长", "竞争激烈", "未来趋势很好"],
+    "高质量": "消费需求变化→用户行为改变→产品结构变化→供应链变化→竞争格局变化→商业模型变化→投资机会/风险判断（每一环有数据+机制解释+行业经验+推理过程）"
+  }
+}
