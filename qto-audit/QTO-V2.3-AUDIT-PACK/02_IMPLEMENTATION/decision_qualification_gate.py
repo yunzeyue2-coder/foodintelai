@@ -44,7 +44,7 @@ class DecisionQualificationGate:
         self.provenance = provenance or {}
         self.findings = []
 
-    # ============ P0-1: Authority Propagation（图级追溯）============
+    # ============ P0-RC3: 通用递归 Graph Traversal ============
 
     def resolve_evidence_level(self, eid):
         """取证据等级（UNKNOWN 时返回 UNKNOWN 而非默认）"""
@@ -52,95 +52,146 @@ class DecisionQualificationGate:
         level = (e.get("evidence_status") or e.get("evidence_level") or "").upper()
         return level if level in self.LEVEL_ORDER else "UNKNOWN"
 
-    def node_authority(self, node):
-        """计算某节点的 Authority Ceiling = 其直接引用的最低证据等级"""
-        ev_ids = node.get("evidence", []) if isinstance(node, dict) else []
-        if not ev_ids:
-            return "UNKNOWN", []
-        levels = [self.resolve_evidence_level(e) for e in ev_ids]
-        # 最低等级（保守）
-        min_level = min(levels, key=lambda x: self.LEVEL_ORDER.get(x, 0))
-        return min_level, levels
+    def _get_node(self, node_id):
+        """按 id 取任意类型节点（insight/hypothesis/score/condition 统一注册表）"""
+        if node_id in self.insight_layer:
+            return ("insight", self.insight_layer[node_id])
+        if node_id in self.hypothesis_layer:
+            return ("hypothesis", self.hypothesis_layer[node_id])
+        return (None, None)
 
-    def trace_decision_chain(self, decision_refs):
-        """反向追溯: Decision → Reason/Score/Condition → Insight/Hypothesis → Evidence
-        decision_refs: {"reasons": [...], "score": {...}, "conditions": [...]}
-        返回每条链的节点序列 + 最低 Authority"""
+    def _links_of(self, node):
+        """节点的下一跳链接（统一取 linked_insights/linked_hypotheses/linked_nodes）"""
+        links = []
+        for k in ("linked_insights", "linked_hypotheses", "linked_nodes", "links"):
+            for lid in node.get(k, []) if isinstance(node, dict) else []:
+                if isinstance(lid, str):
+                    links.append(lid)
+                elif isinstance(lid, dict) and lid.get("id"):
+                    links.append(lid["id"])
+        return links
+
+    def _evidence_of(self, node):
+        """节点的直接证据引用（统一取 evidence/evidence_for/evidence_against）"""
+        ev = []
+        for k in ("evidence", "evidence_for", "evidence_against"):
+            ev.extend(node.get(k, []) if isinstance(node, dict) else [])
+        return ev
+
+    def trace_decision_chain(self, decision_refs, max_depth=10):
+        """通用递归图遍历（DFS + visited + cycle detection + max depth）。
+        Decision → 任意节点（Insight/Hypothesis/...）→ ... → Evidence。
+        任意深度：D/E 无论藏在图多深，都能被追溯到。
+
+        decision_refs: {"reasons": [...], "conditions": [...], "scores": [...]}
+        每个 ref: {id, evidence[], linked_insights[], linked_hypotheses[], linked_nodes[]}
+        """
         chains = []
+        seen_global = set()  # 全局 visited（防跨链重复）
+        CYCLES = []  # 环记录（cycle detection）
 
-        def walk(node_id, role, depth=0):
-            """递归向上：node -> evidence（含间接 insight/hypothesis）"""
-            chain = []
+        def dfs(node_id, role, depth, path):
+            """返回该节点可达的所有证据（递归）"""
+            if depth > max_depth:
+                return []  # 深度上限保护
+            if node_id in seen_global:
+                return []  # visited（防环/防重复）
+            seen_global.add(node_id)
 
-            def _trace(obj, role, seen):
-                if id(obj) in seen:
-                    return []
-                seen = seen | {id(obj)}
-                ev_ids = obj.get("evidence", []) if isinstance(obj, dict) else []
-                direct = [("evidence", e, self.resolve_evidence_level(e)) for e in ev_ids]
-                # 间接引用：insight/hypothesis 作为中介
-                indirect = []
-                for lid in obj.get("linked_insights", []) if isinstance(obj, dict) else []:
-                    if lid in self.insight_layer:
-                        sub = self._trace(self.insight_layer[lid], "insight", seen)
-                        indirect.extend(sub)
-                for hid in obj.get("linked_hypotheses", []) if isinstance(obj, dict) else []:
-                    if hid in self.hypothesis_layer:
-                        sub = self._trace(self.hypothesis_layer[hid], "hypothesis", seen)
-                        indirect.extend(sub)
-                return direct + indirect
+            t, node = self._get_node(node_id)
+            if node is None:
+                return []
 
-            # 决策引用 -> 追溯
-            return _trace({"evidence": decision_refs}, "decision", set())
+            # 环检测：路径上重复
+            if node_id in path:
+                CYCLES.append(node_id)
+                return []
 
-        # 简化：收集所有决策引用的证据（含间接层）
+            ev_ids = self._evidence_of(node)
+            result = [("evidence", e, self.resolve_evidence_level(e)) for e in ev_ids]
+
+            # 递归展开子链接（任意深度）
+            for link_id in self._links_of(node):
+                sub = dfs(link_id, t, depth + 1, path | {node_id})
+                result.extend(sub)
+            return result
+
+        # 收集决策引用
         all_refs = []
         for r in decision_refs.get("reasons", []):
-            all_refs.append(("reason", r.get("id", "?"), r.get("evidence", []), r.get("linked_insights", []), r.get("linked_hypotheses", [])))
+            all_refs.append(("reason", r))
         for c in decision_refs.get("conditions", []):
-            all_refs.append(("condition", c.get("id", "?"), c.get("evidence", []), c.get("linked_insights", []), c.get("linked_hypotheses", [])))
+            all_refs.append(("condition", c))
         for s in decision_refs.get("scores", []):
-            all_refs.append(("score", s.get("id", "?"), s.get("evidence", []), s.get("linked_insights", []), s.get("linked_hypotheses", [])))
+            all_refs.append(("score", s))
 
-        # 逐链展开（含间接层）
-        for role, rid, ev_ids, li, lh in all_refs:
+        # 每个 ref：直接证据 + 递归子图
+        for role, ref in all_refs:
+            rid = ref.get("id", "?")
             chain = []
-            for e in ev_ids:
+
+            # 直接证据
+            for e in self._evidence_of(ref):
                 chain.append(("evidence", e, self.resolve_evidence_level(e)))
-            for iid in li:
-                if iid in self.insight_layer:
-                    ins = self.insight_layer[iid]
-                    chain.append(("insight", iid, self.node_authority(ins)[0]))
-                    for e in ins.get("evidence", []):
-                        chain.append(("evidence", e, self.resolve_evidence_level(e)))
-            for hid in lh:
-                if hid in self.hypothesis_layer:
-                    hyp = self.hypothesis_layer[hid]
-                    chain.append(("hypothesis", hid, self.node_authority(hyp)[0]))
-                    for e in hyp.get("evidence_for", []) + hyp.get("evidence_against", []):
-                        chain.append(("evidence", e, self.resolve_evidence_level(e)))
+
+            # 递归展开链接
+            for link_id in self._links_of(ref):
+                seen_global = set()  # 每条链独立 visited
+                sub = dfs(link_id, "linked", 0, set())
+                chain.extend(sub)
+
             if chain:
-                # 链路最低 Authority = 整条链最高可用上限
                 min_level = min((x[2] for x in chain), key=lambda x: self.LEVEL_ORDER.get(x, 0))
                 chains.append({
                     "role": role, "ref_id": rid, "chain": chain,
                     "chain_min_authority": min_level,
+                    "authority_role": ref.get("authority_role", ""),
                 })
         return chains
 
     # ============ P0-2: Indirect Bypass Block ============
 
+    # Condition 语义分类（GPT RC2 审计 P1）：
+    # 允许 D/E 的 role：VALIDATION_REQUIRED / CHALLENGE / UNKNOWN
+    # 拒绝 D/E 的 role：FACTUAL_PREMISE / DECISION_DRIVER / 未分类(空)
+    # 未分类条件含 D → 保守拒绝（不能默认放行，否则 AI 可写无 role 条件藏 D）
+    CONDITION_ALLOW_DE = {"VALIDATION_REQUIRED", "CHALLENGE", "UNKNOWN"}
+    CONDITION_DENY_DE = {"FACTUAL_PREMISE", "DECISION_DRIVER"}
+
     def check_indirect_bypass(self, chains):
         """检查任何链路上是否有 D/E 证据（含间接 Insight/Hypothesis 路径）。
         Negative Evidence 原则（GPT 审计第③点）：
           - reasons / scores：D/E 严禁（支撑决策的依据必须有资格）
-          - conditions：允许 D/E（低权限≠没用——可作验证条件/Unknown，
-            但不能升级成事实判断）
+          - conditions：按语义分类——
+            VALIDATION_REQUIRED/CHALLENGE/UNKNOWN 允许 D（验证条件）
+            FACTUAL_PREMISE/DECISION_DRIVER 拒绝 D（当作事实/决策驱动）
         """
         violations = []
         for ch in chains:
             if ch["role"] == "condition":
-                continue  # condition 允许 D/E（Negative Evidence 语义）
+                role_tag = ch.get("authority_role", "") or ""
+                if role_tag in self.CONDITION_ALLOW_DE:
+                    continue  # 验证型条件允许 D/E
+                if role_tag in self.CONDITION_DENY_DE:
+                    has_de = [x for x in ch["chain"] if x[2] in ("D", "E")]
+                    if has_de:
+                        path = " → ".join(f"{r}({l})" for _, r, l in has_de)
+                        violations.append({
+                            "ref": f"condition:{ch['ref_id']}",
+                            "issue": f"DECISION_DRIVER/FACTUAL_PREMISE 条件含 D/E 证据: {path}",
+                            "level": "VIOLATION",
+                        })
+                    continue
+                # 未知 role：保守处理——reasons 语义（不允许 D 藏条件）
+                has_de = [x for x in ch["chain"] if x[2] in ("D", "E")]
+                if has_de:
+                    path = " → ".join(f"{r}({l})" for _, r, l in has_de)
+                    violations.append({
+                        "ref": f"condition:{ch['ref_id']}",
+                        "issue": f"未分类条件含 D/E 证据: {path}",
+                        "level": "VIOLATION",
+                    })
+                continue
             has_de = [x for x in ch["chain"] if x[2] in ("D", "E")]
             if has_de:
                 path = " → ".join(f"{r}({l})" for _, r, l in has_de)
@@ -191,13 +242,17 @@ class DecisionQualificationGate:
         cov = coverage_result or coverage_gate.evaluate(self.coverage_params)
 
         # 5. P1-2: provenance 检查（参数不能由被审计节点自评）
+        #    RC3: PROVENANCE_INVALID → BLOCKED（不是 CONDITIONAL）
+        #    理由：不能证明来源 = 不能作为正式决策依据（V2.3 核心原则）
         prov_issues = []
+        prov_blocked = False
         if self.coverage_params:
             for k in ["coverage", "bias", "geographic", "category_penetration", "completeness", "temporal"]:
                 p = self.provenance.get(k, {})
                 source = p.get("source", "UNSPECIFIED")
                 if source in ("AI_SELF", "UNSPECIFIED", ""):
                     prov_issues.append(f"{k}: 参数来源={source}（需独立 provenance，不能由被审计节点自评）")
+                    prov_blocked = True
 
         # 6. 组合裁决（AND）
         auth_pass = auth_result["status"] == "PASS"
@@ -211,9 +266,10 @@ class DecisionQualificationGate:
         elif not cov_ok:
             qualification = "REJECTED"
             reason = f"Sample Coverage INSUFFICIENT（{cov['decision_scope']}）"
-        elif prov_issues:
-            qualification = "CONDITIONAL"
-            reason = f"provenance 缺失（{len(prov_issues)} 项参数来源不明）"
+        elif prov_blocked:
+            # RC3 升级：provenance 无效 → BLOCKED（调用方不得把 AI 自评数据带进 Decision）
+            qualification = "BLOCKED"
+            reason = f"provenance 无效（{len(prov_issues)} 项参数来源不明/AI自评，不能作为正式决策依据）"
         else:
             qualification = "QUALIFIED"
             reason = f"Authority PASS + Coverage {cov['decision_scope']}（降级适用）"
