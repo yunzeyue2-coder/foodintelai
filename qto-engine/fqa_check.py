@@ -81,6 +81,56 @@ def check_business(R):
 
     return issues, passed
 
+def check_decision_completeness(R):
+    """Decision Completeness Score（DCS）——GPT 工业化加固 P0-3
+    决策闭环五要素，各 20%：
+      Decision / Reason / Evidence / Risk / Action
+    缺任何一个 → DCS < 100% → 禁止发布（BLOCK）
+    """
+    issues, passed = [], []
+    memo = R.get("decision_memo", {})
+
+    # 1. Decision（20%）
+    if memo.get("decision") or memo.get("recommended_direction"):
+        passed.append("DCS-Decision: 有明确决策")
+    else:
+        issues.append("DCS-Decision: 缺决策")
+
+    # 2. Reason（20%）
+    reasons = memo.get("reasons") or memo.get("reason_refs")
+    if reasons:
+        passed.append(f"DCS-Reason: {len(reasons)}条理由")
+    else:
+        issues.append("DCS-Reason: 缺理由")
+
+    # 3. Evidence（20%）
+    ev_count = len(R.get("evidence_layer", {}))
+    if ev_count > 0:
+        passed.append(f"DCS-Evidence: {ev_count}条证据")
+    else:
+        issues.append("DCS-Evidence: 缺证据层")
+
+    # 4. Risk（20%）
+    risks = R.get("risk_layer", [])
+    if risks:
+        passed.append(f"DCS-Risk: {len(risks)}项风险")
+    else:
+        issues.append("DCS-Risk: 缺风险")
+
+    # 5. Action（20%）
+    actions = R.get("action_layer", [])
+    if actions or memo.get("action_30days"):
+        passed.append("DCS-Action: 有行动方案")
+    else:
+        issues.append("DCS-Action: 缺行动")
+
+    # DCS 分数
+    dcs = round(len(passed) / 5 * 100)
+    passed.append(f"Decision Completeness Score: {dcs}/100")
+    if dcs < 100:
+        issues.append(f"DCS {dcs}/100 < 100 —— 决策闭环不完整，禁止发布")
+    return issues, passed
+
 def check_consulting(R):
     """咨询检查：咨询交付要素"""
     issues, passed = [], []
@@ -135,7 +185,8 @@ def main(path):
     total_passed = 0
     groups = []
 
-    for name, fn in [("逻辑组", check_logic), ("商业组", check_business), ("咨询组", check_consulting)]:
+    for name, fn in [("逻辑组", check_logic), ("商业组", check_business),
+                     ("决策闭环组", check_decision_completeness), ("咨询组", check_consulting)]:
         issues, passed = fn(R)
         groups.append((name, issues, passed))
         print(f"── {name} ──")
