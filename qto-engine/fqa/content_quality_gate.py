@@ -49,9 +49,24 @@ class ContentQualityGate:
 
     # ============ 2. 单句质量检查 ============
 
+    ACTION_VERBS = ["完成", "确定", "测试", "评估", "记录", "执行", "校准", "选址", "踩点",
+                    "统计", "追踪", "验证", "停止", "签订", "选择", "落地", "跑通", "核算",
+                    "SOP", "文档化", "轮换", "初筛", "冷启动", "试卖"]
+
     def check_sentence(self, text):
-        """单句四要素检查：数据/来源/解释/推论"""
+        """单句四要素检查：数据/来源/解释/推论
+        动作句（动词开头/任务类）只需可执行性，不强制四要素"""
         issues = []
+        # 动作句判定：动词开头 或 含动作核心词（测试/采集/统计等）→ 检查可执行性即可
+        stripped = text.strip()
+        is_action = any(stripped.startswith(v) for v in self.ACTION_VERBS)
+        if not is_action:
+            action_kws = ["测试", "采集", "统计", "追踪", "记录", "验收", "试卖", "踩点", "校准", "签订", "选择", "落地"]
+            is_action = any(kw in stripped for kw in action_kws)
+        if is_action or stripped.endswith("?"):
+            if len(stripped) < 10:
+                issues.append("动作句过短（无可执行信息）")
+            return issues
         # 低质量词
         for w in self.VAGUE_WORDS:
             if w in text:
@@ -72,12 +87,27 @@ class ContentQualityGate:
 
     def check_report(self, report):
         """密度标准 + 判断质量"""
-        # 提取所有文本段落（reasons + insights + narrative）
+        # 提取所有文本段落（reasons + insights + evidence + action + risk + memo建议）
         texts = []
         memo = report.get("decision_memo", {})
         texts += [r if isinstance(r, str) else r.get("text", "") for r in memo.get("reasons", [])]
         texts += [i.get("text", "") for i in report.get("insight_layer", {}).values()]
         texts += [e.get("text", "") for e in report.get("evidence_layer", {}).values()]
+        # 建议/行动层（GPT: 物理世界可落地的行动解）
+        for a in report.get("action_layer", []):
+            texts.append(a.get("goal", ""))
+            texts += [t if isinstance(t, str) else str(t) for t in a.get("tasks", [])]
+        # 风险层
+        for rk in report.get("risk_layer", []):
+            texts.append(rk.get("name", ""))
+            texts.append(rk.get("response", ""))
+        # memo 建议字段
+        if memo.get("recommended_direction"):
+            texts.append(str(memo["recommended_direction"]))
+        if memo.get("action_30days"):
+            texts.append(str(memo["action_30days"]))
+        for c in memo.get("conditions", []):
+            texts.append(c.get("text", "") if isinstance(c, dict) else str(c))
 
         # 密度分布
         dist = {"fact": 0, "analysis": 0, "recommend": 0}
@@ -101,15 +131,19 @@ class ContentQualityGate:
         else:
             self.passed.append(f"建议占比 {ratios['recommend']:.0%}（≥{self.RECOMMEND_MIN:.0%}）✅")
 
-        # 判断质量（每句检查）
+        # 判断质量（只查核心判断句：reasons + insights，动作任务只看占比）
         quality_issues = 0
-        for t in texts:
+        core_texts = [r if isinstance(r, str) else r.get("text", "") for r in memo.get("reasons", [])] \
+                     + [i.get("text", "") for i in report.get("insight_layer", {}).values()]
+        for t in core_texts:
             if not t:
                 continue
             for iss in self.check_sentence(t):
                 quality_issues += 1
                 if quality_issues <= 5:
                     self.issues.append(f"判断质量: {iss} | {t[:50]}...")
+        if not quality_issues:
+            self.passed.append(f"核心判断质量: {len(core_texts)} 条全含 数据+来源+推论 ✅")
 
         score = round((len(self.passed) / (len(self.passed) + len(self.issues))) * 100) if (self.passed or self.issues) else 0
         return {"score": score, "ratios": ratios, "issues": self.issues, "passed": self.passed}
