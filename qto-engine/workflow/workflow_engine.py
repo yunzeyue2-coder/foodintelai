@@ -141,6 +141,21 @@ class WorkflowEngine:
         })
         return True, f"{old} → {self.state}"
 
+    # ---- 安全：受限推进（防止死循环）----
+    def run_to_terminal(self, output_provider, max_steps=20):
+        """带步数上限的状态机推进。output_provider(state) -> output dict。
+        失败或超限即停止并返回结果——咨询系统不允许无限重试。"""
+        results = []
+        step = 0
+        while not self.is_terminal() and step < max_steps:
+            out = output_provider(self.get_state()) or {}
+            ok, msg = self.advance(out)
+            results.append((self.get_state(), ok, msg))
+            if not ok:
+                break  # 校验失败：停止，不无限重试
+            step += 1
+        return results
+
     def get_state(self):
         return self.state
 
