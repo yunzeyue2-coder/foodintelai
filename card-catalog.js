@@ -200,6 +200,7 @@ const STALL_DATA = [
 // 添加新品时push到数组末尾，旧的定期轮换
 // 排除类目：GF裹粉、FL粉料、JL_酱料、PC_拌菜、KF_咖啡
 var HOT_PICKS = [
+  {name:"🦞 XLX_01 小龙虾八口味合集",shortName:"小龙虾合集",file:"catalog/XLX/XLX_01_小龙虾八口味合集.html",emoji:"🦞",cat:"小龙虾"},
   {name:"🔥 铜炉火锅鸡（母）HG_10",shortName:"铜炉火锅鸡",file:"catalog/HG/HG_10_铜炉火锅鸡（母）.html",emoji:"🔥",cat:"火锅体系"},
   {name:"🔥 擂辣椒·街头档口创业母卡",shortName:"擂辣椒",file:"catalog/其他/LL_M01 擂辣椒·街头档口创业母卡.html",emoji:"🌶️",cat:"街头档口"},
   {name:"五指毛桃椰乳（母）TS_065",shortName:"五指毛桃椰乳",file:"catalog/其他/五指毛桃椰乳（母）TS_065.html",emoji:"🌿",cat:"甜品饮品"},
