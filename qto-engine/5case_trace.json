@@ -1,0 +1,267 @@
+{
+  "cases": {
+    "C1": {
+      "desc": "Non-Critical Unknown",
+      "pass": true,
+      "trace": [
+        {
+          "step": "INIT",
+          "state": "QUALIFIED",
+          "event": "none"
+        },
+        {
+          "step": "IMPACT_ASSESS",
+          "event": "unknown_X_enters",
+          "expected": "non_critical",
+          "actual": "non_critical",
+          "reason": "相关度 0.3 × 风险 0.4 = 0.12 <0.5 Non-Critical"
+        },
+        {
+          "step": "AFTER_NON_CRITICAL",
+          "event": "decision_re_checked",
+          "expected": "QUALIFIED",
+          "actual": "QUALIFIED"
+        }
+      ],
+      "invariants": {
+        "I1": {
+          "ok": true,
+          "detail": "Non-Critical Unknown 未生成任何伪造事实（无数字被填充）"
+        },
+        "I2": {
+          "ok": true,
+          "detail": "证据等级 A 与 Decision 使用权限一致（QUALIFIED）"
+        },
+        "I3": {
+          "ok": true,
+          "detail": "Unknown X 保持 Non-Critical 状态，未被隐式填充"
+        },
+        "I4": {
+          "ok": true,
+          "detail": "系统未替代 Human Authority（无 Final 判定被系统代做）"
+        },
+        "I5": {
+          "ok": true,
+          "detail": "Non-Critical Unknown 不触发 Validation（无需验证）"
+        },
+        "I6": {
+          "ok": true,
+          "detail": "无 Re-Decision 触发（路径未变）"
+        }
+      }
+    },
+    "C2": {
+      "desc": "Critical Unknown",
+      "pass": true,
+      "trace": [
+        {
+          "step": "INIT",
+          "state": "QUALIFIED",
+          "event": "none"
+        },
+        {
+          "step": "IMPACT_ASSESS",
+          "event": "unknown_Y_enters",
+          "expected": "critical",
+          "actual": "critical",
+          "reason": "相关度 0.9 × 风险 0.8 = 0.72 ≥0.5 Critical"
+        },
+        {
+          "step": "CONDITION_CREATED",
+          "event": "condition_6elems_check",
+          "expected": "valid",
+          "actual": "valid"
+        },
+        {
+          "step": "DECISION_REQUALIFIED",
+          "event": "critical_unknown_present",
+          "expected": "CONDITIONAL",
+          "actual": "CONDITIONAL"
+        },
+        {
+          "step": "VALIDATION_OBJECT",
+          "event": "validation_required",
+          "expected": "VP-C2-001_created",
+          "actual": "VP-C2-001_created(8字段)"
+        }
+      ],
+      "invariants": {
+        "I1": {
+          "ok": true,
+          "detail": "Critical Unknown Y 未生成伪造数字"
+        },
+        "I2": {
+          "ok": true,
+          "detail": "证据等级 C 限制了 Decision 权限（CONDITIONAL，非 QUALIFIED）"
+        },
+        "I3": {
+          "ok": true,
+          "detail": "Unknown Y 保持 Critical 状态，未隐式填充"
+        },
+        "I4": {
+          "ok": true,
+          "detail": "系统未把 CONDITIONAL 擅自升级为最终 Allow/Block"
+        },
+        "I5": {
+          "ok": true,
+          "detail": "Validation Required 生成了 Validation Object（VP-C2-001）"
+        },
+        "I6": {
+          "ok": true,
+          "detail": "尚未触发 Re-Decision（等待 Validation 结果）"
+        }
+      }
+    },
+    "C3": {
+      "desc": "Validation Success",
+      "pass": true,
+      "trace": [
+        {
+          "step": "INIT",
+          "state": "CONDITIONAL",
+          "event": "critical_unknown_present"
+        },
+        {
+          "step": "VALIDATION_PASS",
+          "event": "validation_success_E3_A",
+          "expected": "gate_open=True",
+          "actual": "gate_open=True"
+        },
+        {
+          "step": "RE_DECISION",
+          "event": "re_evaluate_after_pass",
+          "old": "QUALIFIED",
+          "new": "QUALIFIED",
+          "delta": false
+        }
+      ],
+      "invariants": {
+        "I1": {
+          "ok": true,
+          "detail": "Validation 成功未伪造 Unknown 为数字（新证据是实测回流）"
+        },
+        "I2": {
+          "ok": true,
+          "detail": "E3 回流后证据等级与权限一致"
+        },
+        "I3": {
+          "ok": true,
+          "detail": "Unknown Y 由新证据 E3 解决，非隐式填充"
+        },
+        "I4": {
+          "ok": true,
+          "detail": "系统未替代 Human Authority（Decision 状态由资格重评产生）"
+        },
+        "I5": {
+          "ok": true,
+          "detail": "Validation Object 回流成功（condition validated=True）"
+        },
+        "I6": {
+          "ok": true,
+          "detail": "Re-Decision 真正执行：CONDITIONAL → QUALIFIED（条件解除后恢复资格）"
+        }
+      }
+    },
+    "C4": {
+      "desc": "Validation Failure",
+      "pass": true,
+      "trace": [
+        {
+          "step": "INIT",
+          "state": "CONDITIONAL",
+          "event": "critical_unknown_present"
+        },
+        {
+          "step": "VALIDATION_FAIL",
+          "event": "validation_failed_E4_D",
+          "expected": "validated=FAILED",
+          "actual": "validated=FAILED"
+        },
+        {
+          "step": "RE_DECISION",
+          "event": "re_evaluate_after_fail",
+          "old": "BLOCKED",
+          "new": "BLOCKED",
+          "delta": false
+        }
+      ],
+      "invariants": {
+        "I1": {
+          "ok": true,
+          "detail": "Negative Evidence 未伪造任何事实"
+        },
+        "I2": {
+          "ok": true,
+          "detail": "D 级负面证据正确压低权限链"
+        },
+        "I3": {
+          "ok": true,
+          "detail": "Unknown 未隐式填充"
+        },
+        "I4": {
+          "ok": true,
+          "detail": "FAIL 后不得继续原路径（BLOCKED，不得 QUALIFIED）"
+        },
+        "I5": {
+          "ok": true,
+          "detail": "Validation Object 记录失败结果（FAILED）"
+        },
+        "I6": {
+          "ok": true,
+          "detail": "Re-Decision 执行，负面证据进入 DecisionGraph"
+        }
+      }
+    },
+    "C5": {
+      "desc": "Evidence Still Insufficient",
+      "pass": true,
+      "trace": [
+        {
+          "step": "INIT",
+          "state": "CONDITIONAL",
+          "event": "critical_unknown_present"
+        },
+        {
+          "step": "EVIDENCE_STILL_INSUFFICIENT",
+          "event": "validation_result_insufficient",
+          "expected": "gate_open=False",
+          "actual": "gate_open=False"
+        },
+        {
+          "step": "RE_DECISION",
+          "event": "re_evaluate_after_insufficient",
+          "old": "CONDITIONAL",
+          "new": "CONDITIONAL",
+          "delta": false
+        }
+      ],
+      "invariants": {
+        "I1": {
+          "ok": true,
+          "detail": "证据不足未生成伪造事实（C 级保持 C 级）"
+        },
+        "I2": {
+          "ok": true,
+          "detail": "证据不足未获得 Qualified 权限（CONDITIONAL）"
+        },
+        "I3": {
+          "ok": true,
+          "detail": "Unknown 保持 Unknown，未隐式填充"
+        },
+        "I4": {
+          "ok": true,
+          "detail": "系统未把 Conditional 擅自升级为 Final ALLOW/BLOCK"
+        },
+        "I5": {
+          "ok": true,
+          "detail": "Validation 未关闭——仍处于待验证状态"
+        },
+        "I6": {
+          "ok": true,
+          "detail": "Re-Decision 执行，但证据不足 → 保持 CONDITIONAL（不伪造闭环）"
+        }
+      }
+    }
+  },
+  "invariants_total": {}
+}

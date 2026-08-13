@@ -291,6 +291,25 @@ class DecisionGraph:
                     if not p or p.get("source") in ("AI_SELF", "UNSPECIFIED", ""):
                         prov_issues.append(f"证据 {e} provenance 不明")
 
+        # 5b. Conditional Gate（DO-02/DO-07 2026-08-13 沧林拍板）
+        # 决策链上存在 VALIDATION_REQUIRED 条件 → 三态裁决：
+        #   validated=True        → 条件满足，放行
+        #   validated=FAILED      → 验证失败 = 条件不成立 → BLOCKED（No-Go/Exit）
+        #   validated=INSUFFICIENT/未设 → 仍待验证 → CONDITIONAL（不得 QUALIFIED）
+        pending_validations = []
+        failed_validations = []
+        for nid, node in self.nodes.items():
+            if node.get("type") == "condition" and node.get("authority_role") == "VALIDATION_REQUIRED":
+                v = node.get("validated")
+                if v is True:
+                    continue  # 条件满足，放行
+                elif v == "FAILED":
+                    failed_validations.append(nid)
+                elif v == "INSUFFICIENT":
+                    pending_validations.append(f"{nid}(INSUFFICIENT)")
+                else:
+                    pending_validations.append(nid)
+
         # 裁决
         if fail_closed:
             qualification = "BLOCKED"
@@ -304,6 +323,12 @@ class DecisionGraph:
         elif prov_issues:
             qualification = "BLOCKED"
             reason = f"provenance 无效: {prov_issues[0]}"
+        elif failed_validations:
+            qualification = "BLOCKED"
+            reason = f"验证失败，条件不成立: {failed_validations} → No-Go/Exit（不得沿原路径继续）"
+        elif pending_validations:
+            qualification = "CONDITIONAL"
+            reason = f"存在未满足的验证条件: {pending_validations} → 需 Validation 回流后才能 Final Decision"
         else:
             qualification = "QUALIFIED"
             reason = f"全路径安全 + Coverage {cov_scope} + ceiling={decision_ceiling}"
@@ -442,6 +467,40 @@ class EvidenceRecoveryLoop:
             "new": new_result,
             "delta": delta,
             "version": len(self.decision_versions),
+        }
+
+    # ============ Validation 结果回流（DO-02/DO-06）============
+
+    def validate(self, condition_id, result, evidence_id=None, provenance=None):
+        """Validation 结果回流：标记 condition 为 validated / FAILED，
+        新 Evidence 进入图 → 下一次 re_evaluate 时 Conditional Gate 解除/保持。
+        返回: {"condition": condition_id, "validated": result, "gate_open": bool}
+        """
+        g = self.graph
+        if condition_id not in g.nodes:
+            return {"error": f"条件 {condition_id} 不存在"}
+
+        if result in ("PASS", True):
+            g.nodes[condition_id]["validated"] = True
+        elif result in ("FAIL", "FAILED", False):
+            g.nodes[condition_id]["validated"] = "FAILED"
+        else:  # INSUFFICIENT
+            g.nodes[condition_id]["validated"] = "INSUFFICIENT"
+
+        # 新 Evidence 入图（回流）
+        if evidence_id:
+            lv = (g.evidence_levels.get(evidence_id) or "C")
+            if evidence_id not in g.nodes:
+                g.register_node(evidence_id, "evidence",
+                                evidence_refs=[], provenance=provenance or {"source": "FID_PIPELINE"})
+            g.evidence_levels[evidence_id] = lv
+            # 链到条件节点（回流路径）
+            g.nodes[condition_id].setdefault("links", []).append(evidence_id)
+
+        return {
+            "condition": condition_id,
+            "validated": g.nodes[condition_id]["validated"],
+            "gate_open": g.nodes[condition_id]["validated"] is True,
         }
 
     def get_version_history(self):
