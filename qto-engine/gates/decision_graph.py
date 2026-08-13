@@ -291,24 +291,49 @@ class DecisionGraph:
                     if not p or p.get("source") in ("AI_SELF", "UNSPECIFIED", ""):
                         prov_issues.append(f"证据 {e} provenance 不明")
 
-        # 5b. Conditional Gate（DO-02/DO-07 2026-08-13 沧林拍板）
-        # 决策链上存在 VALIDATION_REQUIRED 条件 → 三态裁决：
-        #   validated=True        → 条件满足，放行
-        #   validated=FAILED      → 验证失败 = 条件不成立 → BLOCKED（No-Go/Exit）
-        #   validated=INSUFFICIENT/未设 → 仍待验证 → CONDITIONAL（不得 QUALIFIED）
+        # 5b. Conditional Gate（DO-02/DO-07 · 2026-08-13 审计修正版）
+        # 核心：C1 的 Satisfied/Unsatisfied 由 DecisionGraph 基于证据值推导，
+        # 不是 validate() 直接赋值（Evidence/Condition/Authority 三层解耦）。
+        # Condition 节点带评估规则：{evaluate: {source_evidence, compare, threshold}}
+        #   - 有证据值且满足规则 → SATISFIED（放行）
+        #   - 有证据值但不满足   → UNSATISFIED（BLOCKED：条件不成立）
+        #   - 无证据值/证据不足  → PENDING（CONDITIONAL：仍待验证）
         pending_validations = []
         failed_validations = []
         for nid, node in self.nodes.items():
-            if node.get("type") == "condition" and node.get("authority_role") == "VALIDATION_REQUIRED":
-                v = node.get("validated")
-                if v is True:
-                    continue  # 条件满足，放行
-                elif v == "FAILED":
-                    failed_validations.append(nid)
-                elif v == "INSUFFICIENT":
-                    pending_validations.append(f"{nid}(INSUFFICIENT)")
+            if node.get("type") != "condition" or node.get("authority_role") != "VALIDATION_REQUIRED":
+                continue
+            rule = node.get("evaluate")
+            if not rule:
+                # 无评估规则的验证条件 → 保守 PENDING（不得放行）
+                pending_validations.append(f"{nid}(无评估规则)")
+                continue
+
+            # 读取源证据值（Evidence-Recovery：从链接证据推导）
+            source_ev = rule.get("source_evidence") or ""
+            ev_value = None
+            if source_ev in self.nodes:
+                ev_value = self.nodes[source_ev].get("value")
+
+            if ev_value is None:
+                pending_validations.append(f"{nid}(缺实测值)")
+                continue
+
+            # 比较（compare: lt/le/gt/ge/eq）
+            compare = rule.get("compare", "gt")
+            threshold = rule.get("threshold")
+            try:
+                if compare == "lt":  sat = ev_value < threshold
+                elif compare == "le": sat = ev_value <= threshold
+                elif compare == "eq": sat = ev_value == threshold
+                elif compare == "ge": sat = ev_value >= threshold
+                else:                 sat = ev_value > threshold  # gt 默认
+                if sat:
+                    continue  # 条件满足 → 放行（不阻断）
                 else:
-                    pending_validations.append(nid)
+                    failed_validations.append(f"{nid}(实测{ev_value}不满足{compare}{threshold})")
+            except TypeError:
+                pending_validations.append(f"{nid}(值类型不可比较)")
 
         # 裁决
         if fail_closed:
@@ -469,38 +494,39 @@ class EvidenceRecoveryLoop:
             "version": len(self.decision_versions),
         }
 
-    # ============ Validation 结果回流（DO-02/DO-06）============
+    # ============ Validation 结果回流（DO-02/DO-06 · 2026-08-13 审计修正）============
 
-    def validate(self, condition_id, result, evidence_id=None, provenance=None):
-        """Validation 结果回流：标记 condition 为 validated / FAILED，
-        新 Evidence 进入图 → 下一次 re_evaluate 时 Conditional Gate 解除/保持。
-        返回: {"condition": condition_id, "validated": result, "gate_open": bool}
+    def submit_validation_evidence(self, condition_id, evidence_id, value, evidence_level="A", provenance=None):
+        """Validation 实测证据提交（Evidence Object，不是 Condition Satisfaction Object）。
+
+        语义（沧林审计定稿）：
+        - E3(A) 是 Evidence，回流给 DecisionGraph **重新评估** C1，
+          C1 的 Satisfied/Unsatisfied 由 Gate 基于证据值推导，不是 validate() 直接赋值。
+        - 这条链：Validation → Evidence E3(value) → Evidence Qualification
+          → DecisionGraph Re-Evaluation → C1 Evaluated → Decision State
+
+        返回: {"evidence": evidence_id, "value": value, "linked_condition": condition_id}
         """
         g = self.graph
         if condition_id not in g.nodes:
             return {"error": f"条件 {condition_id} 不存在"}
 
-        if result in ("PASS", True):
-            g.nodes[condition_id]["validated"] = True
-        elif result in ("FAIL", "FAILED", False):
-            g.nodes[condition_id]["validated"] = "FAILED"
-        else:  # INSUFFICIENT
-            g.nodes[condition_id]["validated"] = "INSUFFICIENT"
+        # ① 注册/更新 Evidence 节点（带实测值 value——Evidence Object）
+        if evidence_id not in g.nodes:
+            g.register_node(evidence_id, "evidence",
+                            evidence_refs=[], provenance=provenance or {"source": "FID_PIPELINE"})
+        g.evidence_levels[evidence_id] = evidence_level
+        g.nodes[evidence_id]["value"] = value  # 实测值（Evidence 携带数据）
 
-        # 新 Evidence 入图（回流）
-        if evidence_id:
-            lv = (g.evidence_levels.get(evidence_id) or "C")
-            if evidence_id not in g.nodes:
-                g.register_node(evidence_id, "evidence",
-                                evidence_refs=[], provenance=provenance or {"source": "FID_PIPELINE"})
-            g.evidence_levels[evidence_id] = lv
-            # 链到条件节点（回流路径）
-            g.nodes[condition_id].setdefault("links", []).append(evidence_id)
+        # ② 链到条件节点（回流路径：DecisionGraph Re-Evaluation 会从这里读到值）
+        links = g.nodes[condition_id].setdefault("links", [])
+        if evidence_id not in links:
+            links.append(evidence_id)
 
         return {
-            "condition": condition_id,
-            "validated": g.nodes[condition_id]["validated"],
-            "gate_open": g.nodes[condition_id]["validated"] is True,
+            "evidence": evidence_id,
+            "value": value,
+            "linked_condition": condition_id,
         }
 
     def get_version_history(self):

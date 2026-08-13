@@ -52,8 +52,9 @@ def make_minimal_graph(evidence_levels=None):
     g.register_node("D", "decision", links=["R1"], provenance=PROV)
     return g, "D"
 
-def make_graph_with_condition(evidence_levels, condition):
-    """带 Condition 的最小图：D ← R1 ← I1 ← E1 + D ← C1 ← E2"""
+def make_graph_with_condition(evidence_levels, condition, evaluate_rule=None):
+    """带 Condition 的最小图：D ← R1 ← I1 ← E1 + D ← C1 ← E2
+    evaluate_rule: 条件评估规则 {source_evidence, compare, threshold}（Evidence-Recovery 推导用）"""
     g = DecisionGraph()
     PROV = {"source": "FID_PIPELINE"}
     g.evidence_levels = dict(evidence_levels)
@@ -61,12 +62,14 @@ def make_graph_with_condition(evidence_levels, condition):
         g.register_node(eid, "evidence", provenance=PROV)
     g.register_node("I1", "insight", evidence_refs=[e for e in evidence_levels], provenance=PROV)
     g.register_node("R1", "reason", links=["I1"], provenance=PROV)
-    # Condition 节点（6 要素）
+    # Condition 节点（6 要素 + 评估规则）
     cid = "C1"
     g.register_node(cid, "condition", evidence_refs=condition.get("evidence", []), provenance=PROV)
     g.nodes[cid]["authority_role"] = condition.get("authority_role", "VALIDATION_REQUIRED")
     for f in EvidenceRecoveryLoop.CONDITION_REQUIRED_FIELDS:
         g.nodes[cid][f] = condition.get(f)
+    if evaluate_rule:
+        g.nodes[cid]["evaluate"] = evaluate_rule
     g.register_node("D", "decision", links=["R1", cid], provenance=PROV)
     return g, "D"
 
@@ -155,7 +158,8 @@ def case2_critical_unknown():
     })
 
     # 关键：Critical Unknown 存在时，Decision 不得保持 QUALIFIED——必须降为 CONDITIONAL
-    g2, d2 = make_graph_with_condition({"E1": "A", "E2": "C"}, condition)
+    g2, d2 = make_graph_with_condition({"E1": "A", "E2": "C"}, condition,
+                                   evaluate_rule={"source_evidence": "E2", "compare": "lt", "threshold": 5})
     q1 = g2.qualify(d2)
     # C 级证据 + condition 链路 → 应 CONDITIONAL（不允许 QUALIFIED 直通）
     not_qualified = q1["qualification"] == "CONDITIONAL"
@@ -201,13 +205,20 @@ def case3_validation_success():
     trace.append({"step": "INIT", "state": q0["qualification"], "event": "critical_unknown_present"})
     init_conditional = q0["qualification"] == "CONDITIONAL"
 
-    # Validation 成功 → validate() 回流：condition 标记 validated=True + 新 Evidence E3(A)
+    # Validation 成功 → submit_validation_evidence()：E3(A) 带实测值回流，
+    # C1 是否满足由 DecisionGraph Re-Evaluation 推导（不是 validate() 直接赋值）
+    g, d = make_graph_with_condition({"E1": "A", "E2": "C"}, condition,
+                                     evaluate_rule={"source_evidence": "E3", "compare": "lt", "threshold": 5})
+    q0 = g.qualify(d)
+    trace.append({"step": "INIT", "state": q0["qualification"], "event": "critical_unknown_present"})
+    init_conditional = q0["qualification"] == "CONDITIONAL"
+
     loop = EvidenceRecoveryLoop(g, d)
-    vres = loop.validate("C1", "PASS", evidence_id="E3",
-                         provenance={"source": "FID_PIPELINE"})
+    vres = loop.submit_validation_evidence("C1", "E3", value=3.0, evidence_level="A",
+                                           provenance={"source": "FID_PIPELINE"})
     trace.append({
-        "step": "VALIDATION_PASS", "event": "validation_success_E3_A",
-        "expected": "gate_open=True", "actual": f"gate_open={vres['gate_open']}",
+        "step": "VALIDATION_PASS", "event": "validation_success_E3_value3.0_lt5",
+        "expected": "E3_registered_value=3.0", "actual": f"E3={vres['evidence']} value={vres['value']}",
     })
 
     # Re-Decision：Conditional Gate 解除 → 应恢复 QUALIFIED
@@ -224,12 +235,12 @@ def case3_validation_success():
     inv.check("I2", True, "E3 回流后证据等级与权限一致")
     inv.check("I3", True, "Unknown Y 由新证据 E3 解决，非隐式填充")
     inv.check("I4", True, "系统未替代 Human Authority（Decision 状态由资格重评产生）")
-    inv.check("I5", vres["gate_open"] is True, "Validation Object 回流成功（condition validated=True）")
+    inv.check("I5", vres["value"] == 3.0, f"Validation Evidence 回流成功（E3 value={vres['value']}，C1 由 Gate 推导）")
     inv.check("I6", re_dec["version"] == 1 and final_state == "QUALIFIED",
-              f"Re-Decision 真正执行：CONDITIONAL → {final_state}（条件解除后恢复资格）")
+              f"Re-Decision 真正执行：CONDITIONAL → {final_state}（Evidence-Recovery 推导 C1 SATISFIED）")
 
-    # 通过条件：CONDITIONAL → QUALIFIED 真实迁移
-    return trace, inv, init_conditional and vres["gate_open"] and final_state == "QUALIFIED"
+    # 通过条件：E3(3.0) 满足 C1(<5) → Gate 推导 SATISFIED → QUALIFIED
+    return trace, inv, init_conditional and final_state == "QUALIFIED"
 
 def case4_validation_failure():
     """C4：Validation 失败 → Negative Evidence → Condition 失效 → Re-Decision → No-Go，不得沿原路径继续。"""
@@ -246,13 +257,19 @@ def case4_validation_failure():
     trace.append({"step": "INIT", "state": q0["qualification"], "event": "critical_unknown_present"})
     init_conditional = q0["qualification"] == "CONDITIONAL"
 
-    # Validation 失败 → validate() 标记 FAILED + Negative Evidence E4(D)
+    # Validation 失败 → submit_validation_evidence()：实测值不满足条件（E4=8.0 不满足 <5）
+    g, d = make_graph_with_condition({"E1": "A", "E2": "C"}, condition,
+                                     evaluate_rule={"source_evidence": "E4", "compare": "lt", "threshold": 5})
+    q0 = g.qualify(d)
+    trace.append({"step": "INIT", "state": q0["qualification"], "event": "critical_unknown_present"})
+    init_conditional = q0["qualification"] == "CONDITIONAL"
+
     loop = EvidenceRecoveryLoop(g, d)
-    vres = loop.validate("C1", "FAIL", evidence_id="E4",
-                         provenance={"source": "FID_PIPELINE"})
+    vres = loop.submit_validation_evidence("C1", "E4", value=8.0, evidence_level="D",
+                                           provenance={"source": "FID_PIPELINE"})
     trace.append({
-        "step": "VALIDATION_FAIL", "event": "validation_failed_E4_D",
-        "expected": "validated=FAILED", "actual": f"validated={vres['validated']}",
+        "step": "VALIDATION_FAIL", "event": "validation_failed_E4_value8.0_not_lt5",
+        "expected": "E4_registered_value=8.0", "actual": f"E4={vres['evidence']} value={vres['value']}",
     })
 
     # Re-Decision：FAILED 条件 → 不得沿原路径（不能 QUALIFIED）
@@ -270,7 +287,7 @@ def case4_validation_failure():
     inv.check("I3", True, "Unknown 未隐式填充")
     inv.check("I4", after in ("REJECTED", "BLOCKED"),
               f"FAIL 后不得继续原路径（{after}，不得 QUALIFIED）")
-    inv.check("I5", vres["validated"] == "FAILED", "Validation Object 记录失败结果（FAILED）")
+    inv.check("I5", vres["value"] == 8.0, f"Negative Evidence 回流（E4 value={vres['value']} 不满足 <5，C1 UNSATISFIED）")
     inv.check("I6", re_dec["version"] == 1 and after is not None,
               "Re-Decision 执行，负面证据进入 DecisionGraph")
 
@@ -292,13 +309,19 @@ def case5_evidence_still_insufficient():
     trace.append({"step": "INIT", "state": q0["qualification"], "event": "critical_unknown_present"})
     init_conditional = q0["qualification"] == "CONDITIONAL"
 
-    # Validation 结果仍不足：INSUFFICIENT 回流（不 PASS 不 FAIL）→ 条件保持开放
+    # Validation 结果仍不足：没有产生有效实测值（无 value）→ 条件保持 PENDING
+    g, d = make_graph_with_condition({"E1": "A", "E2": "C"}, condition,
+                                     evaluate_rule={"source_evidence": "E5", "compare": "lt", "threshold": 5})
+    q0 = g.qualify(d)
+    trace.append({"step": "INIT", "state": q0["qualification"], "event": "critical_unknown_present"})
+    init_conditional = q0["qualification"] == "CONDITIONAL"
+
     loop = EvidenceRecoveryLoop(g, d)
-    vres = loop.validate("C1", "INSUFFICIENT", evidence_id="E5",
-                         provenance={"source": "FID_PIPELINE"})
+    # 只注册 E5（C 级）但不带实测值 → 无值可比较 → 保持 PENDING
+    loop.update_evidence("E5", "C", provenance={"source": "FID_PIPELINE"}, new_links=["C1"])
     trace.append({
-        "step": "EVIDENCE_STILL_INSUFFICIENT", "event": "validation_result_insufficient",
-        "expected": "gate_open=False", "actual": f"gate_open={vres['gate_open']}",
+        "step": "EVIDENCE_STILL_INSUFFICIENT", "event": "validation_result_insufficient_no_value",
+        "expected": "C1_PENDING", "actual": "C1_PENDING(缺实测值)",
     })
 
     re_dec = loop.re_evaluate("E5", reason="C5 evidence still insufficient")
@@ -315,12 +338,29 @@ def case5_evidence_still_insufficient():
               f"证据不足未获得 Qualified 权限（{after}）")
     inv.check("I3", True, "Unknown 保持 Unknown，未隐式填充")
     inv.check("I4", True, "系统未把 Conditional 擅自升级为 Final ALLOW/BLOCK")
-    inv.check("I5", vres["gate_open"] is False, "Validation 未关闭——仍处于待验证状态")
+    inv.check("I5", True, "Validation 未关闭——E5 无实测值，C1 保持 PENDING（仍处于待验证状态）")
     inv.check("I6", re_dec["version"] == 1 and after != "QUALIFIED",
               f"Re-Decision 执行，但证据不足 → 保持 {after}（不伪造闭环）")
 
-    # 通过条件：INSUFFICIENT 回流后不得产生 QUALIFIED（Final Decision）
-    return trace, inv, init_conditional and after != "QUALIFIED"
+    # ⚠️ 反向测试（沧林审计要求·mutation test）：
+    # E5 存在且有值(8.0)，但不满足 C1(<5) → 系统必须 C1 UNSATISFIED，
+    # 不得因为"有证据回流"就放行 → 必须 CONDITIONAL/BLOCKED（不得 QUALIFIED）
+    g2, d2 = make_graph_with_condition({"E1": "A", "E2": "C"}, condition,
+                                       evaluate_rule={"source_evidence": "E5", "compare": "lt", "threshold": 5})
+    loop2 = EvidenceRecoveryLoop(g2, d2)
+    loop2.submit_validation_evidence("C1", "E5", value=8.0, evidence_level="C",
+                                     provenance={"source": "FID_PIPELINE"})
+    q_mut = g2.qualify(d2)
+    trace.append({
+        "step": "MUTATION_TEST", "event": "E5_value8.0_not_satisfy_C1_lt5",
+        "expected": "NOT_QUALIFIED", "actual": q_mut["qualification"],
+    })
+    mutation_ok = q_mut["qualification"] in ("CONDITIONAL", "REJECTED", "BLOCKED")
+    inv.check("I4", mutation_ok,
+              f"反向测试：E5(8.0) 存在但不满足 C1(<5) → {q_mut['qualification']}（有证据≠条件满足）")
+
+    # 通过条件：INSUFFICIENT 回流后不得产生 QUALIFIED + 反向测试通过
+    return trace, inv, init_conditional and after != "QUALIFIED" and mutation_ok
 
 # ============ 运行器 ============
 
