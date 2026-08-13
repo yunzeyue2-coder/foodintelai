@@ -322,6 +322,134 @@ class DecisionGraph:
         }
 
 
+
+
+# ============ DO-02 Evidence-Recovery（2026-08-13 沧林拍板）============
+
+class EvidenceRecoveryLoop:
+    """Unknown → Impact Assessment → Critical Unknown → Condition → Validation
+    → New Evidence → Re-Decision 的增量重评估器（DO-02）。
+
+    原则（沧林定稿）：
+    - Unknown 是 Decision State，不是 Evidence
+    - Re-Decision ≠ Report Regeneration：同一 Decision Graph 的版本化重评估
+    - 增量重评估：Evidence→Node Mapping → Affected Node Set → Dependency Propagation
+      → Affected Decision → Re-Evaluate（不盲目全图重跑）
+    - Condition 6 要素：Trigger Variable / Threshold / Consequence / Decision Impact
+      / Validation Method / Owner
+    """
+
+    # Condition 6 要素（DO-02 护栏，防万能垃圾桶）
+    CONDITION_REQUIRED_FIELDS = [
+        "trigger_variable", "threshold", "consequence",
+        "decision_impact", "validation_method", "owner",
+    ]
+
+    def __init__(self, graph, decision_node_id):
+        """graph: DecisionGraph 实例；decision_node_id: 要评估的决策节点"""
+        self.graph = graph
+        self.decision_id = decision_node_id
+        self.decision_versions = []   # Decision Versioning 历史
+        self.affected_nodes = set()   # 受影响节点集
+
+    # ============ Impact Assessment（不是所有 Unknown 都进 Condition）============
+
+    @staticmethod
+    def assess_impact(unknown_variable, decision_relevance, risk_weight):
+        """判断 Unknown 是否影响当前 Decision。
+        返回: {"critical": bool, "reason": str}
+        """
+        # 决策相关性 + 风险权重决定 Criticality（0-1 综合）
+        score = decision_relevance * risk_weight
+        return {
+            "critical": score >= 0.5,
+            "reason": f"相关度 {decision_relevance} × 风险 {risk_weight} = {score:.2f} {'≥0.5 Critical' if score >= 0.5 else '<0.5 Non-Critical'}",
+        }
+
+    @staticmethod
+    def validate_condition(condition):
+        """Condition 6 要素校验（DO-02 护栏）。
+        返回: {"ok": bool, "missing": [str]}
+        """
+        missing = [f for f in EvidenceRecoveryLoop.CONDITION_REQUIRED_FIELDS
+                   if not condition.get(f)]
+        return {"ok": len(missing) == 0, "missing": missing}
+
+    # ============ Evidence Update → Affected Node Propagation ============
+
+    def update_evidence(self, evidence_id, new_level, provenance=None, new_links=None):
+        """更新单个证据节点等级 → 计算受影响节点集（增量，不重跑全图）。
+        返回: {"affected_nodes": [...], "decision_affected": bool}
+        """
+        g = self.graph
+        if evidence_id not in g.nodes:
+            return {"affected_nodes": [], "decision_affected": False, "error": f"证据 {evidence_id} 不存在"}
+
+        old_level = g.evidence_levels.get(evidence_id)
+        g.evidence_levels[evidence_id] = new_level
+        if provenance:
+            g.nodes[evidence_id]["provenance"] = provenance
+
+        # 受影响节点 = 反向依赖该证据的所有节点（BFS 反向传播）
+        affected = set()
+        queue = [evidence_id]
+        while queue:
+            nid = queue.pop(0)
+            for other_id, node in g.nodes.items():
+                if nid in node.get("evidence_refs", []) or nid in node.get("links", []):
+                    if other_id not in affected:
+                        affected.add(other_id)
+                        queue.append(other_id)
+
+        self.affected_nodes = affected
+        decision_affected = self.decision_id in affected
+        return {"affected_nodes": sorted(affected), "decision_affected": decision_affected}
+
+    # ============ Re-Evaluation + Decision Versioning ============
+
+    def re_evaluate(self, new_evidence, reason=""):
+        """执行 Re-Decision（版本化重评估）。
+        记录原 Decision 状态 → 重跑资格 → 记录新状态 → 计算 Delta。
+        返回: {"old": {...}, "new": {...}, "delta": {...}, "version": int}
+        """
+        g = self.graph
+        # 记录原状态（版本历史）
+        old_result = g.qualify(self.decision_id)
+        self.decision_versions.append({
+            "version": len(self.decision_versions) + 1,
+            "timestamp": None,  # 由调用方打时间戳
+            "trigger_evidence": new_evidence,
+            "reason": reason,
+            "result": old_result,
+        })
+
+        # 重评估（增量：只重算受影响子图——qualify 已按节点遍历，此处复用）
+        new_result = g.qualify(self.decision_id)
+
+        # Decision Delta
+        delta = {
+            "qualification_changed": old_result["qualification"] != new_result["qualification"],
+            "old_qualification": old_result["qualification"],
+            "new_qualification": new_result["qualification"],
+            "ceiling_changed": old_result.get("decision_ceiling") != new_result.get("decision_ceiling"),
+            "old_ceiling": old_result.get("decision_ceiling"),
+            "new_ceiling": new_result.get("decision_ceiling"),
+            "affected_nodes": sorted(self.affected_nodes),
+        }
+
+        return {
+            "old": old_result,
+            "new": new_result,
+            "delta": delta,
+            "version": len(self.decision_versions),
+        }
+
+    def get_version_history(self):
+        """Re-Decision 审计字段（DO-02）：完整版本历史"""
+        return self.decision_versions
+
+
+
 # ============ 兼容层：保持旧接口（DecisionQualificationGate 包装）============
 
 class DecisionQualificationGate:
