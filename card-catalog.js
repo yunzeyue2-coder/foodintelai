@@ -16,9 +16,9 @@ const STORE_DATA = [
   {p:"BZ",n:"煲系列",e:"🏺",c:[{f:"catalog/BZ/BZ_T01_煲系列总纲.html",n:"BZ_T01_煲系列总纲"},{f:"catalog/BZ/BZ_M01_煲系列创业母卡.html",n:"BZ_M01_煲系列创业母卡"},{f:"catalog/BZ/BZ_01_鸡煲.html",n:"BZ_01 鸡煲"},{f:"catalog/BZ/BZ_02_牛杂煲.html",n:"BZ_02 牛杂煲"},{f:"catalog/BZ/BZ_03_牛腩煲.html",n:"BZ_03 牛腩煲"},{f:"catalog/BZ/BZ_04_猪脚煲.html",n:"BZ_04 猪脚煲"},{f:"catalog/BZ/BZ_05_羊肉煲.html",n:"BZ_05 羊肉煲"},{f:"catalog/BZ/BZ_06_黑鸭煲.html",n:"BZ_06 黑鸭煲"},{f:"catalog/BZ/BZ_07_鹅煲.html",n:"BZ_07 鹅煲"},{f:"catalog/BZ/BZ_08_鱼煲.html",n:"BZ_08 鱼煲"},{f:"catalog/BZ/BZ_09_排骨煲.html",n:"BZ_09 排骨煲"}]},
     {p:"HLT",n:"胡辣汤系列",e:"🥣",c:[
     {f:"catalog/HLT/HLT_T01_胡辣汤总纲.html",n:"HLT_T01 胡辣汤总纲（免费）"},
-    {f:"catalog/HLT/HLT_M01_胡辣汤创业母卡.html",n:"HLT_M01 胡辣汤创业母卡（¥39）"},
-    {f:"catalog/HLT/HLT_01_逍遥镇胡辣汤.html",n:"HLT_01 逍遥镇胡辣汤（¥19）"},
-    {f:"catalog/HLT/HLT_02_北舞渡胡辣汤.html",n:"HLT_02 北舞渡胡辣汤（¥19）"}
+    {f:"catalog/HLT/HLT_M01_胡辣汤创业母卡.html",n:"HLT_M01 胡辣汤创业母卡（¥69）"},
+    {f:"catalog/HLT/HLT_01_逍遥镇胡辣汤.html",n:"HLT_01 逍遥镇胡辣汤（¥39）"},
+    {f:"catalog/HLT/HLT_02_北舞渡胡辣汤.html",n:"HLT_02 北舞渡胡辣汤（¥39）"}
   ]},
   {p:"SG",n:"砂锅系列",e:"🏺",c:[{f:"catalog/SG/SG_T01_砂锅总纲.html",n:"SG_T01_砂锅总纲"},{f:"catalog/SG/SG_M01_砂锅创业母卡.html",n:"SG_M01_砂锅创业母卡"},{f:"catalog/SG/SG_01_砂锅肥肠.html",n:"SG_01 砂锅肥肠"},{f:"catalog/SG/SG_02_砂锅鸡.html",n:"SG_02 砂锅鸡"},{f:"catalog/SG/SG_03_砂锅牛肉.html",n:"SG_03 砂锅牛肉"},{f:"catalog/SG/SG_04_砂锅豆腐.html",n:"SG_04 砂锅豆腐"},{f:"catalog/SG/SG_05_砂锅什锦.html",n:"SG_05 砂锅什锦"},{f:"catalog/SG/SG_06_腊味煲仔饭.html",n:"SG_06 腊味煲仔饭"},{f:"catalog/SG/SG_07_排骨煲仔饭.html",n:"SG_07 排骨煲仔饭"},{f:"catalog/SG/SG_08_砂锅丸子.html",n:"SG_08 砂锅丸子"},{f:"catalog/SG/SG_09_砂锅白肉.html",n:"SG_09 砂锅白肉"},{f:"catalog/SG/SG_10_砂锅粥.html",n:"SG_10 砂锅粥"}]},
   {p:"BZ2",n:"包子系列",e:"🥟",c:[{f:"catalog/包子/MP_M01_包子创业母卡.html",n:"MP_M01 包子创业母卡"}]},
@@ -112,7 +112,7 @@ const STALL_DATA = [
     {f:"catalog/其他/烤红薯（母）XC_108.html",n:"烤红薯（母）XC_108"},
     {f:"catalog/其他/蒜蓉烤生蚝（母）XC_109.html",n:"蒜蓉烤生蚝（母）XC_109"},
     {f:"catalog/其他/酸辣粉（母）XC_110.html",n:"酸辣粉（母）XC_110"},
-    {f:"catalog/其他/螺蛳粉（母）XC_111.html",n:"🆕 螺蛳粉（母）XC_111 · 升级版"},{f:"catalog/其他/SX_T01_陕西面食总纲.html",n:"🆕 SX_T01 陕西面食总纲（免费）"},{f:"catalog/其他/SX_M01_陕西面食创业母卡.html",n:"SX_M01 陕西面食创业母卡（¥39）"},{f:"catalog/其他/SX_01_肉夹馍凉皮档口子卡.html",n:"SX_01 肉夹馍·凉皮档口（¥19）"},{f:"catalog/其他/SX_02_陕西面馆子卡.html",n:"SX_02 陕西面馆（¥19）"},{f:"catalog/其他/SX_03_泡馍小吃子卡.html",n:"SX_03 泡馍·小吃（¥19）"},{f:"catalog/其他/SX_04_油泼辣子腊汁肉VC卡.html",n:"SX_04 VC油泼辣子·腊汁肉（¥39）"},{f:"catalog/其他/LSF_T01_螺蛳粉总纲.html",n:"🆕 LSF_T01 螺蛳粉总纲（免费）"},{f:"catalog/其他/LSF_M01_螺蛳粉创业母卡.html",n:"LSF_M01 螺蛳粉创业母卡（¥39）"},{f:"catalog/其他/LSF_01_螺蛳粉汤底工艺子卡.html",n:"LSF_01 汤底工艺（¥39）"},{f:"catalog/其他/LSF_02_螺蛳粉配菜体系子卡.html",n:"LSF_02 配菜体系（¥39）"},{f:"catalog/其他/LSF_03_螺蛳粉外卖运营子卡.html",n:"🆕 LSF_03 外卖运营（¥39）"},{f:"catalog/其他/LSF_04_螺蛳粉供应链子卡.html",n:"🆕 LSF_04 供应链（¥39）"},{f:"catalog/其他/LSF_05_螺蛳粉北方开店子卡.html",n:"🆕 LSF_05 北方开店（¥39）"},
+    {f:"catalog/其他/螺蛳粉（母）XC_111.html",n:"🆕 螺蛳粉（母）XC_111 · 升级版"},{f:"catalog/其他/SX_T01_陕西面食总纲.html",n:"🆕 SX_T01 陕西面食总纲（免费）"},{f:"catalog/其他/SX_M01_陕西面食创业母卡.html",n:"SX_M01 陕西面食创业母卡（¥69）"},{f:"catalog/其他/SX_01_肉夹馍凉皮档口子卡.html",n:"SX_01 肉夹馍·凉皮档口（¥39）"},{f:"catalog/其他/SX_02_陕西面馆子卡.html",n:"SX_02 陕西面馆（¥39）"},{f:"catalog/其他/SX_03_泡馍小吃子卡.html",n:"SX_03 泡馍·小吃（¥39）"},{f:"catalog/其他/SX_04_油泼辣子腊汁肉VC卡.html",n:"SX_04 VC油泼辣子·腊汁肉（¥69）"},{f:"catalog/其他/LSF_T01_螺蛳粉总纲.html",n:"🆕 LSF_T01 螺蛳粉总纲（免费）"},{f:"catalog/其他/LSF_M01_螺蛳粉创业母卡.html",n:"LSF_M01 螺蛳粉创业母卡（¥69）"},{f:"catalog/其他/LSF_01_螺蛳粉汤底工艺子卡.html",n:"LSF_01 汤底工艺（¥69）"},{f:"catalog/其他/LSF_02_螺蛳粉配菜体系子卡.html",n:"LSF_02 配菜体系（¥69）"},{f:"catalog/其他/LSF_03_螺蛳粉外卖运营子卡.html",n:"🆕 LSF_03 外卖运营（¥69）"},{f:"catalog/其他/LSF_04_螺蛳粉供应链子卡.html",n:"🆕 LSF_04 供应链（¥69）"},{f:"catalog/其他/LSF_05_螺蛳粉北方开店子卡.html",n:"🆕 LSF_05 北方开店（¥69）"},
     {f:"catalog/其他/干炒牛河（母）XC_112.html",n:"干炒牛河（母）XC_112"},
     {f:"catalog/其他/关东煮（母）XC_113.html",n:"关东煮（母）XC_113"},
     {f:"catalog/其他/麻辣拌（母）XC_114.html",n:"麻辣拌（母）XC_114"},
