@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FoodIntelAI 供应链资产采集</title>
+    <title>食品企业供应能力展示卡 · FoodIntelAI</title>
     <style>
         /* ===== 全局重置 & 麦肯锡风格 ===== */
         * {
@@ -461,8 +461,8 @@
     <div class="sending-overlay" id="sendingOverlay">
         <div class="sending-box">
             <span class="spinner">📤</span>
-            <h3>正在准备提交</h3>
-            <p>请稍候，系统正在打包您的供应链资料。</p>
+            <h3>正在生成展示卡</h3>
+            <p>请稍候，系统正在整理您的供应能力信息。</p>
         </div>
     </div>
 
@@ -481,7 +481,7 @@
         <!-- PAGE 1：企业身份 -->
         <div class="page active" data-page="1">
             <div class="page-title">企业身份</div>
-            <div class="page-desc">用于资产建档，所有信息仅用于供应链匹配。</div>
+            <div class="page-desc">这些信息将整理成您的供应能力展示卡。</div>
 
             <div class="form-group">
                 <label>企业全称 <span class="required">*</span></label>
@@ -723,8 +723,8 @@
         <!-- ============================================================ -->
         <!-- PAGE 6：提交 -->
         <div class="page" data-page="6">
-            <div class="page-title">资料上传与提交</div>
-            <div class="page-desc">已有资料直接上传，没有则跳过。</div>
+            <div class="page-title">资料上传与生成</div>
+            <div class="page-desc">已有资料可上传，没有则跳过。</div>
 
             <div class="form-group">
                 <label>上传现有资料</label>
@@ -751,7 +751,7 @@
 
             <div class="btn-row">
                 <button class="btn btn-prev" onclick="goToPage(5)">← 上一步</button>
-                <button class="btn btn-next" onclick="submitForm()">提交资产 →</button>
+                <button class="btn btn-next" onclick="submitForm()">生成展示卡 →</button>
             </div>
         </div>
 
@@ -760,12 +760,13 @@
         <div class="page" data-page="success">
             <div class="success-page">
                 <span class="icon">✓</span>
-                <h2>资料已生成</h2>
-                <p>您的供应链资料已保存为 JSON 文件（浏览器已自动下载）。<br><br>
-                <strong>请把该文件发送给 FoodIntelAI：</strong><br>
+                <h2>展示卡资料已生成</h2>
+                <p>您的资料已保存为 JSON 文件（浏览器已自动下载）。<br><br>
+                <strong>请把该文件发送给我们：</strong><br>
                 ① 微信：直接发送文件给「沧林」<br>
                 ② 或发送邮件至 canglin@foodintelai.com<br><br>
-                我们收到后会在 3 个工作日内完成核验，<br>符合标准后进入供应链匹配池。</p>
+                我们会对企业及供应能力进行基础核验。<br>
+                核验完成后，符合条件的企业将进入相关采购需求匹配。</p>
                 <button class="reset-btn" onclick="resetForm()">重新填写</button>
             </div>
         </div>
@@ -1154,16 +1155,16 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = '供应链资产_' + submittedData.company_name + '_' + submittedData.asset_id + '.json';
+                a.download = '供应能力展示卡_' + submittedData.company_name + '_' + submittedData.asset_id + '.json';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
 
                 // 2. 可选：邮件发送（带附件提示）
-                const subject = encodeURIComponent('供应链资产提交：' + submittedData.company_name);
+                const subject = encodeURIComponent('供应能力展示卡提交：' + submittedData.company_name);
                 const body = encodeURIComponent(
-                    '供应链资产已提交\n\n资产ID：' + submittedData.asset_id + '\n企业名称：' + submittedData.company_name + '\n提交时间：' + submittedData.submitted_at + '\n\n已将完整数据保存为 JSON 文件（浏览器自动下载）。\n\n请将该 JSON 文件发送给 FoodIntelAI（微信/邮件均可），或直接复制下方数据：\n\n--- 完整数据 ---\n\n' + jsonStr
+                    '供应能力展示卡已提交\n\n卡片ID：' + submittedData.asset_id + '\n企业名称：' + submittedData.company_name + '\n提交时间：' + submittedData.submitted_at + '\n\n已将完整数据保存为 JSON 文件（浏览器自动下载）。\n\n请将该 JSON 文件发送给 FoodIntelAI（微信/邮件均可），或直接复制下方数据：\n\n--- 完整数据 ---\n\n' + jsonStr
                 );
                 window.open('mailto:' + YOUR_EMAIL + '?subject=' + subject + '&body=' + body, '_blank');
 
