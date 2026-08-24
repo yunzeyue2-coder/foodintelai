@@ -309,6 +309,17 @@
             margin-bottom: 6px;
             letter-spacing: -0.2px;
         }
+        .success-page .verification-badge {
+            display: inline-block;
+            background: #f5f0e8;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #b8860b;
+            border: 1px solid #b8860b;
+            margin: 12px 0 16px;
+            letter-spacing: 0.5px;
+        }
         .success-page p {
             color: #8c8c8c;
             font-size: 14px;
@@ -429,6 +440,20 @@
             color: #4a4a4a;
         }
 
+        /* ===== 验证等级标签 ===== */
+        .verification-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 0;
+            margin-left: 6px;
+        }
+        .verification-tag.s { background: #1a1a1a; color: #fff; }
+        .verification-tag.a { background: #b8860b; color: #fff; }
+        .verification-tag.b { background: #e8e8e8; color: #4a4a4a; }
+        .verification-tag.c { background: #f0f0f0; color: #999; }
+
         /* ===== 响应式 ===== */
         @media (max-width: 420px) {
             .container { padding: 16px 14px; }
@@ -438,10 +463,6 @@
             .form-group label { font-size: 12px; }
             .btn-row .btn { font-size: 14px; padding: 12px 14px; }
         }
-
-        /* ===== 打印 & 工具 ===== */
-        .no-print { display: initial; }
-        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
     </style>
 </head>
 <body>
@@ -461,8 +482,8 @@
     <div class="sending-overlay" id="sendingOverlay">
         <div class="sending-box">
             <span class="spinner">📤</span>
-            <h3>正在生成展示卡</h3>
-            <p>请稍候，系统正在整理您的供应能力信息。</p>
+            <h3>正在准备提交</h3>
+            <p>请稍候，系统正在打包您的供应链资料。</p>
         </div>
     </div>
 
@@ -623,6 +644,9 @@
 
             <div class="form-group">
                 <label>客户案例</label>
+                <div style="font-size:13px;color:#8c8c8c;margin-bottom:8px;">
+                    您服务过的品牌是供应能力最有力的证明。关于是否公开，由您逐一定义。未经授权，不会对外展示。
+                </div>
                 <div class="dynamic-list" id="clientList"></div>
                 <button class="add-btn" onclick="addClient()">＋ 添加客户</button>
             </div>
@@ -723,8 +747,8 @@
         <!-- ============================================================ -->
         <!-- PAGE 6：提交 -->
         <div class="page" data-page="6">
-            <div class="page-title">资料上传与生成</div>
-            <div class="page-desc">已有资料可上传，没有则跳过。</div>
+            <div class="page-title">资料上传与提交</div>
+            <div class="page-desc">已有资料直接上传，没有则跳过。</div>
 
             <div class="form-group">
                 <label>上传现有资料</label>
@@ -761,6 +785,7 @@
             <div class="success-page">
                 <span class="icon">✓</span>
                 <h2>展示卡资料已生成</h2>
+                <div id="successBadge" class="verification-badge">客户验证等级：A级</div>
                 <p>您的资料已保存为 JSON 文件（浏览器已自动下载）。<br><br>
                 <strong>请把该文件发送给我们：</strong><br>
                 ① 微信：直接发送文件给「沧林」<br>
@@ -804,6 +829,10 @@
             const checks = document.querySelectorAll('#' + id + ' input[type="checkbox"]:checked');
             return Array.from(checks).map(c => c.value);
         }
+        function getRadioValue(name) {
+            const el = document.querySelector('input[name="' + name + '"]:checked');
+            return el ? el.value : '';
+        }
         function getCheckboxBoolean(id) {
             const el = document.getElementById(id);
             return el ? el.checked : false;
@@ -823,6 +852,10 @@
         function setCheckbox(id, v) {
             const el = document.getElementById(id);
             if (el) el.checked = !!v;
+        }
+        function setRadio(name, val) {
+            const el = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
+            if (el) el.checked = true;
         }
 
         function saveDraft() {
@@ -1009,17 +1042,18 @@
         function removeProduct(i) { formData.products.splice(i,1); renderProducts(); saveDraft(); }
         function updateProduct(i,f,v) { formData.products[i][f]=v; saveDraft(); }
 
-        // ===== 客户 =====
+        // ===== 客户（含公开授权） =====
         function renderClients() {
             const c = document.getElementById('clientList');
             c.innerHTML = '';
             formData.clients.forEach((cl, i) => {
                 const div = document.createElement('div');
                 div.className = 'dynamic-item';
+                const authValue = cl.authorization || '脱敏公开';
                 div.innerHTML = `
                     <button class="remove-btn" onclick="removeClient(${i})">✕</button>
                     <div class="item-index">客户 ${i+1}</div>
-                    <div class="form-group"><input class="form-control" placeholder="客户名称/代号" value="${cl.name||''}" onchange="updateClient(${i},'name',this.value)"></div>
+                    <div class="form-group"><input class="form-control" placeholder="客户名称/代号 *" value="${cl.name||''}" onchange="updateClient(${i},'name',this.value)"></div>
                     <div class="form-group"><input class="form-control" placeholder="合作时间，例：2020年至今" value="${cl.cooperation_time||''}" onchange="updateClient(${i},'cooperation_time',this.value)"></div>
                     <div class="form-group"><input class="form-control" placeholder="供应产品，例：馍、卤肉" value="${cl.products||''}" onchange="updateClient(${i},'products',this.value)"></div>
                     <div class="form-group"><input class="form-control" placeholder="门店规模，例：300+家" value="${cl.store_count||''}" onchange="updateClient(${i},'store_count',this.value)"></div>
@@ -1036,13 +1070,21 @@
                             <option value="已结束" ${cl.status==='已结束'?'selected':''}>已结束</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;color:#666;font-weight:400;">公开展示授权</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="client_auth_${i}" value="全名公开" ${authValue==='全名公开'?'checked':''} onchange="updateClient(${i},'authorization','全名公开')"> 全名公开</label>
+                            <label><input type="radio" name="client_auth_${i}" value="脱敏公开" ${authValue==='脱敏公开'?'checked':''} onchange="updateClient(${i},'authorization','脱敏公开')"> 脱敏公开</label>
+                            <label><input type="radio" name="client_auth_${i}" value="仅内部核验" ${authValue==='仅内部核验'?'checked':''} onchange="updateClient(${i},'authorization','仅内部核验')"> 仅内部核验</label>
+                        </div>
+                    </div>
                 `;
                 c.appendChild(div);
             });
         }
 
         function addClient() {
-            formData.clients.push({ name: '', cooperation_time: '', products: '', store_count: '', cooperation_mode: '', status: '' });
+            formData.clients.push({ name: '', cooperation_time: '', products: '', store_count: '', cooperation_mode: '', status: '', authorization: '脱敏公开' });
             renderClients();
             saveDraft();
         }
@@ -1108,6 +1150,53 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // ===== 计算客户验证等级 =====
+        function calculateVerificationLevel(clients) {
+            if (!clients || clients.length === 0) return { level: 'C', label: 'C级（暂无客户验证）', detail: '暂未提供客户案例' };
+            
+            const total = clients.length;
+            const hasEvidence = false; // 未来可接入文件上传判断
+            const authorizedFull = clients.filter(c => c.authorization === '全名公开').length;
+            const authorizedAnon = clients.filter(c => c.authorization === '脱敏公开').length;
+            const authorizedInternal = clients.filter(c => c.authorization === '仅内部核验').length;
+            
+            // 计算最大门店规模
+            let maxStores = 0;
+            clients.forEach(c => {
+                const match = String(c.store_count || '').match(/(\d+)/);
+                if (match) maxStores = Math.max(maxStores, parseInt(match[1]));
+            });
+            
+            // 评级逻辑
+            let level = 'C';
+            let label = 'C级（暂无有效客户验证）';
+            
+            if (total >= 2 && maxStores >= 200) {
+                level = 'S';
+                label = 'S级（大型连锁验证，' + total + '家客户，最大' + maxStores + '+门店）';
+            } else if (total >= 2 && maxStores >= 50) {
+                level = 'A';
+                label = 'A级（已验证，' + total + '家客户，最大' + maxStores + '+门店）';
+            } else if (total >= 1) {
+                level = 'B';
+                label = 'B级（有客户案例，' + total + '家客户）';
+            } else {
+                level = 'C';
+                label = 'C级（暂无客户验证）';
+            }
+            
+            return {
+                level: level,
+                label: label,
+                total: total,
+                authorized_full: authorizedFull,
+                authorized_anonymized: authorizedAnon,
+                authorized_internal: authorizedInternal,
+                max_stores: maxStores,
+                has_evidence: hasEvidence
+            };
+        }
+
         function updateProgress() {
             const total = 6;
             const pct = Math.round((currentPage / total) * 100);
@@ -1136,20 +1225,24 @@
 
             saveDraft();
 
+            // 计算客户验证等级
+            const verification = calculateVerificationLevel(formData.clients);
+
             const assetId = 'FIA-SC-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + String(Math.floor(Math.random()*10000)).padStart(4,'0');
             submittedData = {
                 ...formData,
                 asset_id: assetId,
                 submitted_at: new Date().toISOString(),
                 status: 'submitted',
-                completeness_score: parseInt(document.getElementById('completenessLabel').textContent.replace('完成度 ','').replace('%','')) || 0
+                completeness_score: parseInt(document.getElementById('completenessLabel').textContent.replace('完成度 ','').replace('%','')) || 0,
+                client_verification: verification
             };
 
             document.getElementById('sendingOverlay').classList.add('show');
 
             setTimeout(function() {
                 const jsonStr = JSON.stringify(submittedData, null, 2);
-
+                
                 // 1. 生成 JSON 文件下载（数据留在本地）
                 const blob = new Blob([jsonStr], {type: 'application/json'});
                 const url = URL.createObjectURL(blob);
@@ -1161,12 +1254,42 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
 
-                // 2. 可选：邮件发送（带附件提示）
-                const subject = encodeURIComponent('供应能力展示卡提交：' + submittedData.company_name);
-                const body = encodeURIComponent(
-                    '供应能力展示卡已提交\n\n卡片ID：' + submittedData.asset_id + '\n企业名称：' + submittedData.company_name + '\n提交时间：' + submittedData.submitted_at + '\n\n已将完整数据保存为 JSON 文件（浏览器自动下载）。\n\n请将该 JSON 文件发送给 FoodIntelAI（微信/邮件均可），或直接复制下方数据：\n\n--- 完整数据 ---\n\n' + jsonStr
-                );
-                window.open('mailto:' + YOUR_EMAIL + '?subject=' + subject + '&body=' + body, '_blank');
+                // 构建邮件摘要
+                const summary = [
+                    '【客户验证摘要】',
+                    '- 客户案例数：' + verification.total,
+                    '- 可公开验证（脱敏）：' + verification.authorized_anonymized + '家',
+                    '- 全名公开：' + verification.authorized_full + '家',
+                    '- 仅内部核验：' + verification.authorized_internal + '家',
+                    '- 验证等级：' + verification.level,
+                    '- 最大门店规模：' + (verification.max_stores > 0 ? verification.max_stores + '+家' : '未提供'),
+                    '',
+                    '【企业信息】',
+                    '- 企业名称：' + submittedData.company_name,
+                    '- 资产ID：' + submittedData.asset_id,
+                    '- 提交时间：' + submittedData.submitted_at,
+                    '',
+                    '【提交方式】',
+                    '- JSON 文件已自动下载，请将该文件发送给 FoodIntelAI（微信/邮件均可）',
+                    '',
+                    '--- 完整数据 ---',
+                    jsonStr
+                ].join('\n');
+
+                const subject = encodeURIComponent('[供应能力展示卡] ' + submittedData.company_name + ' | 验证等级 ' + verification.level);
+                const body = encodeURIComponent(summary);
+                window.location.href = 'mailto:' + YOUR_EMAIL + '?subject=' + subject + '&body=' + body;
+
+                // 成功页显示验证等级
+                const badge = document.getElementById('successBadge');
+                if (badge) {
+                    badge.textContent = '客户验证等级：' + verification.label;
+                    badge.className = 'verification-badge';
+                    if (verification.level === 'S') badge.classList.add('s');
+                    else if (verification.level === 'A') badge.classList.add('a');
+                    else if (verification.level === 'B') badge.classList.add('b');
+                    else badge.classList.add('c');
+                }
 
                 document.getElementById('sendingOverlay').classList.remove('show');
                 localStorage.removeItem('foodintelai_draft');
@@ -1212,6 +1335,9 @@
             }
             if (formData.products.length === 0) {
                 formData.products.push({ name: '', category: '', selling_point: '', moq: '', lead_time: '', customizable: false });
+            }
+            if (formData.clients.length === 0) {
+                formData.clients.push({ name: '', cooperation_time: '', products: '', store_count: '', cooperation_mode: '', status: '', authorization: '脱敏公开' });
             }
             renderFactories(); renderProducts(); renderClients();
             const draft = loadDraft();
