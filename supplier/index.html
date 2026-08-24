@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>供应链资产库 · FoodIntelAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;padding:0;display:flex;justify-content:center}
+.page{max-width:760px;width:100%;min-height:100vh;padding:48px 40px 60px}
+
+.cover{border-bottom:1px solid #e0ddd5;padding-bottom:28px;margin-bottom:36px}
+.cover .badge{font-size:10px;color:#c4a35a;letter-spacing:4px;margin-bottom:8px}
+.cover h1{font-size:26px;font-weight:700;color:#1a1a1a;letter-spacing:2px;margin-bottom:4px}
+.cover .sub{font-size:13px;color:#8a7a6a;letter-spacing:2px;margin-bottom:6px}
+.cover .desc{font-size:12px;color:#b5aaa0;line-height:1.6;max-width:520px}
+
+.section{margin-bottom:36px}
+.sec-h{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sec-h .line{flex:1;height:1px;background:linear-gradient(90deg,#c4a35a,transparent)}
+.sec-h .label{font-size:15px;font-weight:600;color:#8b6914;letter-spacing:3px;white-space:nowrap}
+.sec-h .sub{font-size:11px;color:#b5aaa0;letter-spacing:1px;font-weight:400}
+
+/* 供应商卡片 */
+.sup{background:#fff;border:1px solid #e8e3db;border-radius:10px;padding:20px;margin-bottom:14px;transition:all .2s}
+.sup:hover{border-color:#c4a35a;box-shadow:0 4px 16px rgba(0,0,0,.04)}
+.sup-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sup-name{font-size:17px;font-weight:700;color:#2a2218}
+.sup-brand{font-size:11px;padding:2px 8px;border-radius:4px;background:#f0eee8;color:#8b6914;letter-spacing:1px}
+.sup-city{font-size:11px;color:#b5aaa0;margin-left:auto}
+.sup-pos{font-size:13px;color:#6a5a3a;line-height:1.7;margin-bottom:10px}
+.sup-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.sup-tag{font-size:10px;padding:2px 8px;border-radius:4px;background:#faf8f4;border:1px solid #ece5d8;color:#8a7a6a;letter-spacing:.5px}
+.sup-foot{display:flex;align-items:center;gap:10px;border-top:1px solid #f5f2ec;padding-top:10px;font-size:11px;color:#b5aaa0}
+.sup-foot .dot{width:5px;height:5px;border-radius:50%;background:#27ae60}
+.sup-foot .detail{cursor:pointer;color:#8b6914;font-weight:600;margin-left:auto}
+
+.empty{padding:40px;text-align:center;color:#b5aaa0;font-size:13px;border:1px dashed #e0ddd5;border-radius:10px}
+
+.cta{margin-top:32px;padding:24px;background:#0b1f3a;border-radius:10px;text-align:center}
+.cta h3{font-size:16px;color:#fff;letter-spacing:1px;margin-bottom:8px}
+.cta p{font-size:12px;color:#8a97ad;line-height:1.7;margin-bottom:14px}
+.cta a{display:inline-block;background:#c4a35a;color:#fff;padding:10px 28px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;letter-spacing:1px}
+.cta a:hover{background:#b3924d}
+
+.footer{text-align:center;padding-top:24px;border-top:1px solid #e0ddd5;font-size:10px;color:#b5aaa0;letter-spacing:1px;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="cover">
+<div class="badge">SUPPLY CHAIN</div>
+<h1>供应链资产库</h1>
+<div class="sub">食品供应链 · 能力档案 · 匹配池</div>
+<div class="desc">经过 FoodIntelAI 核验的食品供应链企业能力档案。每个供应商都经过资质、产能、交付能力验证,可放心对接。</div>
+</div>
+
+<div class="section">
+<div class="sec-h">
+<span class="label">📦 已入库供应商</span>
+<span class="line"></span>
+<span class="sub" id="countLabel">LOADING</span>
+</div>
+<div id="supplierList"></div>
+</div>
+
+<div class="cta">
+<h3>你的供应链,想被更多品牌看到?</h3>
+<p>填写供应链资产档案,通过核验后进入匹配池<br>对接餐饮连锁 · 食品品牌 · 经销商 · 海外客户</p>
+<a href="supplier_form.html">立即入驻 →</a>
+</div>
+
+<div class="footer">FoodIntelAI · 供应链资产库 · foodintelai.com</div>
+
+</div>
+
+<script>
+// 官网展示数据(由本地 site-data/suppliers.json 生成后粘贴)
+const SUPPLIERS = [
+  {
+    "asset_id": "FIA-SC-20260824-0001",
+    "submitted_at": "2026-08-24T12:00:00+08:00",
+    "company": {
+      "name": "陕西秦吼供应链管理有限公司",
+      "brand": "秦吼",
+      "city": "陕西西安",
+      "founded_year": 2016,
+      "positioning": "为陕西特色餐饮连锁提供肉夹馍、凉皮、泡馍一体化供应解决方案",
+      "core_advantages": [
+        "产品体系完整",
+        "工厂制造能力"
+      ],
+      "scenarios": [
+        "肉夹馍专门店",
+        "连锁餐饮"
+      ]
+    },
+    "contact": {
+      "person": "张三",
+      "phone": "13800000000",
+      "wechat": "zhangsan123",
+      "position": "供应链总监"
+    },
+    "supply": {
+      "categories": [
+        "肉夹馍（馍/卤肉/料汁）",
+        "凉皮/擀面皮"
+      ],
+      "category_other": ""
+    },
+    "factories": [
+      {
+        "name": "秦吼中央工厂",
+        "location": "陕西西安",
+        "ownership": "自有",
+        "main_products": "馍/卤肉/料汁",
+        "annual_capacity": 5000,
+        "certifications": [
+          "SC",
+          "ISO"
+        ]
+      }
+    ],
+    "products": [
+      {
+        "name": "白吉馍",
+        "category": "肉夹馍",
+        "selling_point": "外酥里软",
+        "moq": "1000个",
+        "lead_time": 3,
+        "customizable": true
+      }
+    ],
+    "delivery": {
+      "clients": [
+        {
+          "name": "某连锁",
+          "cooperation_time": "2020年至今",
+          "products": "馍/卤肉",
+          "store_count": "300+家"
+        }
+      ],
+      "store_coverage_percent": 80,
+      "store_items": [
+        "馍",
+        "卤肉",
+        "料汁"
+      ],
+      "has_sop": true,
+      "has_training": true,
+      "regions": [
+        "西北"
+      ],
+      "temperature_layers": [
+        "常温",
+        "冷藏"
+      ],
+      "national_logistics": true,
+      "drop_shipping": false,
+      "export": {
+        "countries": "",
+        "scale": "",
+        "certified": false
+      },
+      "rnd": {
+        "staff": 8,
+        "has_lab": true
+      },
+      "customization_scope": [
+        "配方",
+        "克重",
+        "包装"
+      ]
+    },
+    "match": {
+      "targets": [
+        "餐饮连锁",
+        "区域合伙人"
+      ],
+      "biggest_need": "希望对接西北区域连锁客户"
+    },
+    "files": [],
+    "status": "listed"
+  }
+];
+
+function render() {
+  const list = document.getElementById('supplierList');
+  const label = document.getElementById('countLabel');
+  if (!SUPPLIERS.length) {
+    list.innerHTML = '<div class="empty">暂无已入库供应商 · 首批核验中</div>';
+    label.textContent = '0 家';
+    return;
+  }
+  const verified = SUPPLIERS.filter(s => s.status === 'listed');
+  label.textContent = verified.length + ' 家';
+  list.innerHTML = verified.map(s => {
+    const c = s.company;
+    const adv = (c.core_advantages || []).join(' · ');
+    const cats = (s.supply && s.supply.categories || []).join(' / ');
+    const tags = [cats, adv].filter(Boolean);
+    return `<div class="sup">
+      <div class="sup-top">
+        <span class="sup-name">${c.name}</span>
+        ${c.brand ? `<span class="sup-brand">${c.brand}</span>` : ''}
+        <span class="sup-city">${c.city || ''}</span>
+      </div>
+      <div class="sup-pos">${c.positioning || ''}</div>
+      <div class="sup-tags">${tags.map(t => `<span class="sup-tag">${t}</span>`).join('')}</div>
+      <div class="sup-foot">
+        <span class="dot"></span>
+        <span>已核验 · ${(s.factories||[]).length} 工厂 · ${(s.products||[]).length} 产品</span>
+        <span class="detail">查看详情 →</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+render();
+</script>
+</body>
+</html>

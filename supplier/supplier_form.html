@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FoodIntelAI 供应链资产采集</title>
+    <style>
+        /* ===== 全局重置 & 麦肯锡风格 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            background: #f7f7f7;
+            color: #1a1a1a;
+            padding-bottom: 80px;
+            font-size: 15px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== 顶部进度条 ===== */
+        .header {
+            background: #ffffff;
+            padding: 18px 24px 14px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            letter-spacing: 0.3px;
+            color: #8c8c8c;
+            margin-bottom: 10px;
+        }
+        .header-top .step {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 13px;
+        }
+        .header-top .step span {
+            color: #b8860b;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 2px;
+            background: #e8e8e8;
+            border-radius: 0;
+            overflow: hidden;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: #b8860b;
+            transition: width 0.35s ease;
+            width: 0%;
+            border-radius: 0;
+        }
+
+        /* ===== 容器 ===== */
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 24px 20px 40px;
+        }
+
+        /* ===== 页面切换 ===== */
+        .page {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== 页面标题 ===== */
+        .page-title {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        .page-desc {
+            font-size: 14px;
+            color: #8c8c8c;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e8e8e8;
+            padding-bottom: 16px;
+        }
+
+        /* ===== 表单 ===== */
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 13px;
+            letter-spacing: 0.2px;
+            color: #2b2b2b;
+            margin-bottom: 4px;
+        }
+        .form-group label .required {
+            color: #b8860b;
+            margin-left: 2px;
+        }
+        .form-group .hint {
+            font-size: 12px;
+            color: #a8a8a8;
+            font-weight: 400;
+            margin-left: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d0d0d0;
+            border-radius: 0;
+            font-size: 15px;
+            background: #ffffff;
+            transition: border-color 0.2s;
+            outline: none;
+            font-family: inherit;
+            color: #1a1a1a;
+        }
+        .form-control:focus {
+            border-color: #b8860b;
+        }
+        .form-control::placeholder {
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 68px;
+        }
+        select.form-control {
+            appearance: auto;
+            border-radius: 0;
+        }
+
+        /* ===== 复选框 & 单选框 ===== */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 14px;
+            padding-top: 2px;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 400;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 3px 0;
+            color: #2b2b2b;
+        }
+        .checkbox-group input[type="checkbox"],
+        .checkbox-group input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #b8860b;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 18px;
+            padding-top: 2px;
+            flex-wrap: wrap;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 400;
+            font-size: 14px;
+            cursor: pointer;
+            color: #2b2b2b;
+        }
+        .radio-group input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #b8860b;
+            flex-shrink: 0;
+        }
+
+        /* ===== 动态列表 ===== */
+        .dynamic-list {
+            margin-top: 4px;
+        }
+        .dynamic-item {
+            background: #fafafa;
+            padding: 16px 16px 12px;
+            margin-bottom: 12px;
+            border: 1px solid #e8e8e8;
+            position: relative;
+        }
+        .dynamic-item .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #b8860b;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 4px;
+            opacity: 0.6;
+        }
+        .dynamic-item .remove-btn:hover {
+            opacity: 1;
+        }
+        .dynamic-item .item-index {
+            font-size: 11px;
+            color: #a8a8a8;
+            margin-bottom: 10px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #b8860b;
+            font-weight: 500;
+            font-size: 13px;
+            border: 1px solid #b8860b;
+            padding: 6px 16px;
+            background: transparent;
+            cursor: pointer;
+            transition: background 0.15s;
+            letter-spacing: 0.3px;
+        }
+        .add-btn:active {
+            background: #f5f0e8;
+        }
+
+        /* ===== 按钮行 ===== */
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            padding-top: 16px;
+            border-top: 1px solid #e8e8e8;
+        }
+        .btn-row .btn {
+            flex: 1;
+            padding: 13px 20px;
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s;
+            letter-spacing: 0.3px;
+            font-family: inherit;
+            border-radius: 0;
+        }
+        .btn-row .btn-prev {
+            background: #e8e8e8;
+            color: #4a4a4a;
+            flex: 0.45;
+        }
+        .btn-row .btn-prev:active {
+            background: #d5d5d5;
+        }
+        .btn-row .btn-next {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        .btn-row .btn-next:active {
+            background: #333333;
+        }
+        .btn-row .btn-next:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ===== 成功页 ===== */
+        .success-page {
+            text-align: center;
+            padding: 48px 20px 32px;
+        }
+        .success-page .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
+        }
+        .success-page h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+        .success-page p {
+            color: #8c8c8c;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .success-page .reset-btn {
+            margin-top: 28px;
+            background: none;
+            border: 1px solid #d0d0d0;
+            padding: 10px 28px;
+            color: #6a6a6a;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-family: inherit;
+            border-radius: 0;
+        }
+        .success-page .reset-btn:active {
+            background: #f0f0f0;
+        }
+
+        /* ===== 草稿提示 ===== */
+        .draft-banner {
+            background: #faf8f4;
+            border-left: 3px solid #b8860b;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+            color: #2b2b2b;
+        }
+        .draft-banner .actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 10px;
+        }
+        .draft-banner .actions button {
+            padding: 5px 16px;
+            border: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            border-radius: 0;
+        }
+        .draft-banner .actions .restore {
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .draft-banner .actions .discard {
+            background: #e8e8e8;
+            color: #4a4a4a;
+        }
+
+        /* ===== 文件列表 ===== */
+        .file-list {
+            margin-top: 6px;
+        }
+        .file-list .file-item {
+            background: #fafafa;
+            padding: 6px 12px;
+            font-size: 13px;
+            color: #4a4a4a;
+            border: 1px solid #e8e8e8;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .file-list .file-item .size {
+            color: #b0b0b0;
+            font-size: 12px;
+        }
+
+        /* ===== 发送遮罩 ===== */
+        .sending-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.45);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .sending-overlay.show {
+            display: flex;
+        }
+        .sending-box {
+            background: #fff;
+            padding: 36px 32px 28px;
+            max-width: 320px;
+            text-align: center;
+            border: 1px solid #e8e8e8;
+        }
+        .sending-box .spinner {
+            font-size: 36px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .sending-box h3 {
+            font-size: 17px;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        .sending-box p {
+            color: #8c8c8c;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* ===== 文件输入 ===== */
+        input[type="file"] {
+            padding: 6px 0;
+            font-size: 14px;
+            color: #4a4a4a;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 420px) {
+            .container { padding: 16px 14px; }
+            .header { padding: 14px 16px 12px; }
+            .page-title { font-size: 19px; }
+            .checkbox-group label { font-size: 13px; }
+            .form-group label { font-size: 12px; }
+            .btn-row .btn { font-size: 14px; padding: 12px 14px; }
+        }
+
+        /* ===== 打印 & 工具 ===== */
+        .no-print { display: initial; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="header-top">
+            <span class="step">步骤 <span id="stepNum">1</span> / 6</span>
+            <span id="completenessLabel">完成度 0%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- ===== 发送遮罩 ===== -->
+    <div class="sending-overlay" id="sendingOverlay">
+        <div class="sending-box">
+            <span class="spinner">📤</span>
+            <h3>正在准备提交</h3>
+            <p>请稍候，系统正在打包您的供应链资料。</p>
+        </div>
+    </div>
+
+    <div class="container" id="app">
+
+        <!-- 草稿提示 -->
+        <div class="draft-banner" id="draftBanner">
+            <span>📄 您有未完成的草稿，是否继续填写？</span>
+            <div class="actions">
+                <button class="restore" onclick="restoreDraft()">继续填写</button>
+                <button class="discard" onclick="discardDraft()">放弃草稿</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 1：企业身份 -->
+        <div class="page active" data-page="1">
+            <div class="page-title">企业身份</div>
+            <div class="page-desc">用于资产建档，所有信息仅用于供应链匹配。</div>
+
+            <div class="form-group">
+                <label>企业全称 <span class="required">*</span></label>
+                <input class="form-control" id="company_name" placeholder="例：陕西秦吼供应链管理有限公司">
+            </div>
+            <div class="form-group">
+                <label>品牌简称</label>
+                <input class="form-control" id="brand_name" placeholder="例：秦吼">
+            </div>
+            <div class="form-group">
+                <label>所在城市 <span class="required">*</span></label>
+                <input class="form-control" id="city" placeholder="例：陕西西安">
+            </div>
+            <div class="form-group">
+                <label>成立年份</label>
+                <input class="form-control" id="founded_year" type="number" placeholder="例：2016">
+            </div>
+            <div class="form-group">
+                <label>一句话定位 <span class="required">*</span></label>
+                <textarea class="form-control" id="positioning" rows="2" placeholder="例：为陕西特色餐饮连锁提供肉夹馍、凉皮、泡馍一体化供应解决方案"></textarea>
+            </div>
+            <div class="form-group">
+                <label>核心优势（最多选3项）</label>
+                <div class="checkbox-group" id="core_advantages">
+                    <label><input type="checkbox" value="产品体系完整"> 产品体系完整</label>
+                    <label><input type="checkbox" value="工厂制造能力"> 工厂制造能力</label>
+                    <label><input type="checkbox" value="连锁标准化"> 连锁标准化</label>
+                    <label><input type="checkbox" value="成本优势"> 成本优势</label>
+                    <label><input type="checkbox" value="风味还原能力"> 风味还原能力</label>
+                    <label><input type="checkbox" value="研发定制能力"> 研发定制能力</label>
+                    <label><input type="checkbox" value="全国供应能力"> 全国供应能力</label>
+                    <label><input type="checkbox" value="出口能力"> 出口能力</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>核心应用场景</label>
+                <div class="checkbox-group" id="scenarios">
+                    <label><input type="checkbox" value="肉夹馍专门店"> 肉夹馍专门店</label>
+                    <label><input type="checkbox" value="凉皮/擀面皮店"> 凉皮/擀面皮店</label>
+                    <label><input type="checkbox" value="陕西小吃集合店"> 陕西小吃集合店</label>
+                    <label><input type="checkbox" value="连锁餐饮"> 连锁餐饮</label>
+                    <label><input type="checkbox" value="团餐"> 团餐</label>
+                    <label><input type="checkbox" value="外卖"> 外卖</label>
+                    <label><input type="checkbox" value="食品零售"> 食品零售</label>
+                    <label><input type="checkbox" value="海外餐饮"> 海外餐饮</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>联系人姓名 <span class="required">*</span></label>
+                <input class="form-control" id="contact_person" placeholder="例：张三">
+            </div>
+            <div class="form-group">
+                <label>联系电话 <span class="required">*</span></label>
+                <input class="form-control" id="contact_phone" placeholder="例：13800000000" type="tel">
+            </div>
+            <div class="form-group">
+                <label>微信</label>
+                <input class="form-control" id="contact_wechat" placeholder="例：zhangsan123">
+            </div>
+            <div class="form-group">
+                <label>职位</label>
+                <input class="form-control" id="contact_position" placeholder="例：供应链总监">
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-prev" disabled>上一步</button>
+                <button class="btn btn-next" onclick="goToPage(2)">继续 →</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 2：供应品类 -->
+        <div class="page" data-page="2">
+            <div class="page-title">供应品类</div>
+            <div class="page-desc">选择你们能稳定供应的产品线。</div>
+
+            <div class="form-group">
+                <label>供应品类 <span class="required">*</span></label>
+                <div class="checkbox-group" id="categories">
+                    <label><input type="checkbox" value="肉夹馍（馍/卤肉/料汁）"> 肉夹馍（馍/卤肉/料汁）</label>
+                    <label><input type="checkbox" value="凉皮/擀面皮"> 凉皮/擀面皮</label>
+                    <label><input type="checkbox" value="泡馍"> 泡馍</label>
+                    <label><input type="checkbox" value="油泼辣子"> 油泼辣子</label>
+                    <label><input type="checkbox" value="骨汤/高汤"> 骨汤/高汤</label>
+                    <label><input type="checkbox" value="复合调味料"> 复合调味料</label>
+                    <label><input type="checkbox" value="速冻面点"> 速冻面点</label>
+                    <label><input type="checkbox" value="其他"> 其他</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>如选"其他"，请注明</label>
+                <input class="form-control" id="category_other" placeholder="例：预制菜">
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-prev" onclick="goToPage(1)">← 上一步</button>
+                <button class="btn btn-next" onclick="goToPage(3)">继续 →</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 3：工厂 -->
+        <div class="page" data-page="3">
+            <div class="page-title">工厂与产能</div>
+            <div class="page-desc">至少添加一个工厂，说明制造能力。</div>
+
+            <div class="dynamic-list" id="factoryList"></div>
+            <button class="add-btn" onclick="addFactory()">＋ 添加工厂</button>
+
+            <div class="btn-row">
+                <button class="btn btn-prev" onclick="goToPage(2)">← 上一步</button>
+                <button class="btn btn-next" onclick="goToPage(4)">继续 →</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 4：产品 -->
+        <div class="page" data-page="4">
+            <div class="page-title">核心产品</div>
+            <div class="page-desc">至少添加一个产品，最多10个。</div>
+
+            <div class="dynamic-list" id="productList"></div>
+            <button class="add-btn" onclick="addProduct()">＋ 添加产品</button>
+
+            <div class="form-group" style="margin-top:16px;">
+                <label>从打样到量产通常需要（天）</label>
+                <input class="form-control" id="sampling_to_production_days" type="number" placeholder="例：15">
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-prev" onclick="goToPage(3)">← 上一步</button>
+                <button class="btn btn-next" onclick="goToPage(5)">继续 →</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 5：客户与交付 -->
+        <div class="page" data-page="5">
+            <div class="page-title">客户与交付能力</div>
+            <div class="page-desc">有就填，没有可跳过。</div>
+
+            <div class="form-group">
+                <label>客户案例</label>
+                <div class="dynamic-list" id="clientList"></div>
+                <button class="add-btn" onclick="addClient()">＋ 添加客户</button>
+            </div>
+
+            <div class="form-group">
+                <label>一家 30㎡ 店，你能供应多少 % 核心物料？（估算）</label>
+                <input class="form-control" id="store_coverage_percent" type="number" placeholder="例：80" min="0" max="100">
+            </div>
+
+            <div class="form-group">
+                <label>具体能供应哪些物料？</label>
+                <div class="checkbox-group" id="store_items">
+                    <label><input type="checkbox" value="馍"> 馍</label>
+                    <label><input type="checkbox" value="卤肉"> 卤肉</label>
+                    <label><input type="checkbox" value="凉皮"> 凉皮</label>
+                    <label><input type="checkbox" value="料汁"> 料汁</label>
+                    <label><input type="checkbox" value="油泼辣子"> 油泼辣子</label>
+                    <label><input type="checkbox" value="骨汤"> 骨汤</label>
+                    <label><input type="checkbox" value="包材"> 包材</label>
+                    <label><input type="checkbox" value="其他"> 其他</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>标准化支持</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="has_sop" value="true"> 提供 SOP 卡</label>
+                    <label><input type="checkbox" id="has_training" value="true"> 提供技术培训</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>国内覆盖区域</label>
+                <div class="checkbox-group" id="regions">
+                    <label><input type="checkbox" value="西北"> 西北</label>
+                    <label><input type="checkbox" value="华北"> 华北</label>
+                    <label><input type="checkbox" value="华东"> 华东</label>
+                    <label><input type="checkbox" value="华南"> 华南</label>
+                    <label><input type="checkbox" value="西南"> 西南</label>
+                    <label><input type="checkbox" value="东北"> 东北</label>
+                    <label><input type="checkbox" value="华中"> 华中</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>配送温层</label>
+                <div class="checkbox-group" id="temperature_layers">
+                    <label><input type="checkbox" value="常温"> 常温</label>
+                    <label><input type="checkbox" value="冷藏"> 冷藏</label>
+                    <label><input type="checkbox" value="冷冻"> 冷冻</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>物流能力</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="national_logistics" value="true"> 支持全国物流</label>
+                    <label><input type="checkbox" id="drop_shipping" value="true"> 支持一件代发</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>出口信息</label>
+                <input class="form-control" id="export_countries" placeholder="已出口国家，例：美国、加拿大" style="margin-bottom:6px;">
+                <input class="form-control" id="export_scale" placeholder="年出口规模，例：500万元">
+                <div class="checkbox-group" style="margin-top:6px;">
+                    <label><input type="checkbox" id="export_certified" value="true"> 有出口认证</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>研发能力</label>
+                <input class="form-control" id="rnd_staff" type="number" placeholder="研发人员数量" style="margin-bottom:6px;">
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="has_rnd_lab" value="true"> 有研发实验室</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>定制范围</label>
+                <div class="checkbox-group" id="customization_scope">
+                    <label><input type="checkbox" value="配方"> 配方</label>
+                    <label><input type="checkbox" value="辣度"> 辣度</label>
+                    <label><input type="checkbox" value="克重"> 克重</label>
+                    <label><input type="checkbox" value="包装"> 包装</label>
+                    <label><input type="checkbox" value="产品形态"> 产品形态</label>
+                    <label><input type="checkbox" value="OEM"> OEM</label>
+                    <label><input type="checkbox" value="ODM"> ODM</label>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-prev" onclick="goToPage(4)">← 上一步</button>
+                <button class="btn btn-next" onclick="goToPage(6)">继续 →</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 6：提交 -->
+        <div class="page" data-page="6">
+            <div class="page-title">资料上传与提交</div>
+            <div class="page-desc">已有资料直接上传，没有则跳过。</div>
+
+            <div class="form-group">
+                <label>上传现有资料</label>
+                <input class="form-control" id="fileInput" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,.heic" style="padding:6px 0;">
+                <div class="file-list" id="fileList"></div>
+            </div>
+
+            <div class="form-group">
+                <label>希望匹配什么资源？</label>
+                <div class="checkbox-group" id="match_targets">
+                    <label><input type="checkbox" value="餐饮连锁"> 餐饮连锁</label>
+                    <label><input type="checkbox" value="食品品牌"> 食品品牌</label>
+                    <label><input type="checkbox" value="经销商"> 经销商</label>
+                    <label><input type="checkbox" value="海外客户"> 海外客户</label>
+                    <label><input type="checkbox" value="OEM/ODM代工"> OEM/ODM代工</label>
+                    <label><input type="checkbox" value="区域合伙人"> 区域合伙人</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>目前最想解决的一个问题</label>
+                <textarea class="form-control" id="biggest_need" rows="2" placeholder="不限领域，一句话说明即可"></textarea>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-prev" onclick="goToPage(5)">← 上一步</button>
+                <button class="btn btn-next" onclick="submitForm()">提交资产 →</button>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- SUCCESS -->
+        <div class="page" data-page="success">
+            <div class="success-page">
+                <span class="icon">✓</span>
+                <h2>资料已生成</h2>
+                <p>您的供应链资料已保存为 JSON 文件（浏览器已自动下载）。<br><br>
+                <strong>请把该文件发送给 FoodIntelAI：</strong><br>
+                ① 微信：直接发送文件给「沧林」<br>
+                ② 或发送邮件至 canglin@foodintelai.com<br><br>
+                我们收到后会在 3 个工作日内完成核验，<br>符合标准后进入供应链匹配池。</p>
+                <button class="reset-btn" onclick="resetForm()">重新填写</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        // 配置
+        const YOUR_EMAIL = 'canglin@foodintelai.com';
+
+        // ============================================================
+        let formData = {
+            company_name: '', brand_name: '', city: '', founded_year: '', positioning: '',
+            core_advantages: [], scenarios: [],
+            contact_person: '', contact_phone: '', contact_wechat: '', contact_position: '',
+            categories: [], category_other: '',
+            factories: [], products: [], sampling_to_production_days: '',
+            clients: [], store_coverage_percent: '', store_items: [],
+            has_sop: false, has_training: false,
+            regions: [], temperature_layers: [],
+            national_logistics: false, drop_shipping: false,
+            export_countries: '', export_scale: '', export_certified: false,
+            rnd_staff: '', has_rnd_lab: false,
+            customization_scope: [],
+            files: [], match_targets: [], biggest_need: ''
+        };
+
+        let currentPage = 1;
+        let submittedData = null;
+
+        // ============================================================
+        // 工具
+        function getCheckboxValues(id) {
+            const checks = document.querySelectorAll('#' + id + ' input[type="checkbox"]:checked');
+            return Array.from(checks).map(c => c.value);
+        }
+        function getCheckboxBoolean(id) {
+            const el = document.getElementById(id);
+            return el ? el.checked : false;
+        }
+        function getValue(id) {
+            const el = document.getElementById(id);
+            return el ? el.value : '';
+        }
+        function setValue(id, v) {
+            const el = document.getElementById(id);
+            if (el) el.value = v || '';
+        }
+        function setCheckboxGroup(id, vals) {
+            const checks = document.querySelectorAll('#' + id + ' input[type="checkbox"]');
+            checks.forEach(c => { c.checked = vals ? vals.includes(c.value) : false; });
+        }
+        function setCheckbox(id, v) {
+            const el = document.getElementById(id);
+            if (el) el.checked = !!v;
+        }
+
+        function saveDraft() {
+            formData.company_name = getValue('company_name');
+            formData.brand_name = getValue('brand_name');
+            formData.city = getValue('city');
+            formData.founded_year = getValue('founded_year');
+            formData.positioning = getValue('positioning');
+            formData.core_advantages = getCheckboxValues('core_advantages');
+            formData.scenarios = getCheckboxValues('scenarios');
+            formData.contact_person = getValue('contact_person');
+            formData.contact_phone = getValue('contact_phone');
+            formData.contact_wechat = getValue('contact_wechat');
+            formData.contact_position = getValue('contact_position');
+            formData.categories = getCheckboxValues('categories');
+            formData.category_other = getValue('category_other');
+            formData.sampling_to_production_days = getValue('sampling_to_production_days');
+            formData.store_coverage_percent = getValue('store_coverage_percent');
+            formData.store_items = getCheckboxValues('store_items');
+            formData.has_sop = getCheckboxBoolean('has_sop');
+            formData.has_training = getCheckboxBoolean('has_training');
+            formData.regions = getCheckboxValues('regions');
+            formData.temperature_layers = getCheckboxValues('temperature_layers');
+            formData.national_logistics = getCheckboxBoolean('national_logistics');
+            formData.drop_shipping = getCheckboxBoolean('drop_shipping');
+            formData.export_countries = getValue('export_countries');
+            formData.export_scale = getValue('export_scale');
+            formData.export_certified = getCheckboxBoolean('export_certified');
+            formData.rnd_staff = getValue('rnd_staff');
+            formData.has_rnd_lab = getCheckboxBoolean('has_rnd_lab');
+            formData.customization_scope = getCheckboxValues('customization_scope');
+            formData.match_targets = getCheckboxValues('match_targets');
+            formData.biggest_need = getValue('biggest_need');
+            try {
+                localStorage.setItem('foodintelai_draft', JSON.stringify(formData));
+                localStorage.setItem('foodintelai_page', currentPage);
+            } catch(e) {}
+        }
+
+        function loadDraft() {
+            try { const raw = localStorage.getItem('foodintelai_draft'); return raw ? JSON.parse(raw) : null; } catch(e) { return null; }
+        }
+
+        function restoreDraft() {
+            const data = loadDraft();
+            if (!data) return;
+            formData = data;
+            setValue('company_name', data.company_name);
+            setValue('brand_name', data.brand_name);
+            setValue('city', data.city);
+            setValue('founded_year', data.founded_year);
+            setValue('positioning', data.positioning);
+            setCheckboxGroup('core_advantages', data.core_advantages);
+            setCheckboxGroup('scenarios', data.scenarios);
+            setValue('contact_person', data.contact_person);
+            setValue('contact_phone', data.contact_phone);
+            setValue('contact_wechat', data.contact_wechat);
+            setValue('contact_position', data.contact_position);
+            setCheckboxGroup('categories', data.categories);
+            setValue('category_other', data.category_other);
+            setValue('sampling_to_production_days', data.sampling_to_production_days);
+            setValue('store_coverage_percent', data.store_coverage_percent);
+            setCheckboxGroup('store_items', data.store_items);
+            setCheckbox('has_sop', data.has_sop);
+            setCheckbox('has_training', data.has_training);
+            setCheckboxGroup('regions', data.regions);
+            setCheckboxGroup('temperature_layers', data.temperature_layers);
+            setCheckbox('national_logistics', data.national_logistics);
+            setCheckbox('drop_shipping', data.drop_shipping);
+            setValue('export_countries', data.export_countries);
+            setValue('export_scale', data.export_scale);
+            setCheckbox('export_certified', data.export_certified);
+            setValue('rnd_staff', data.rnd_staff);
+            setCheckbox('has_rnd_lab', data.has_rnd_lab);
+            setCheckboxGroup('customization_scope', data.customization_scope);
+            setCheckboxGroup('match_targets', data.match_targets);
+            setValue('biggest_need', data.biggest_need);
+            renderFactories();
+            renderProducts();
+            renderClients();
+            document.getElementById('draftBanner').style.display = 'none';
+            const saved = parseInt(localStorage.getItem('foodintelai_page')) || 1;
+            goToPage(saved);
+            updateProgress();
+        }
+
+        function discardDraft() {
+            localStorage.removeItem('foodintelai_draft');
+            localStorage.removeItem('foodintelai_page');
+            document.getElementById('draftBanner').style.display = 'none';
+            resetForm();
+        }
+
+        function checkDraft() {
+            const data = loadDraft();
+            if (data && (data.company_name || data.city || data.positioning || data.factories.length || data.products.length)) {
+                document.getElementById('draftBanner').style.display = 'block';
+            }
+        }
+
+        // ===== 工厂 =====
+        function renderFactories() {
+            const c = document.getElementById('factoryList');
+            c.innerHTML = '';
+            formData.factories.forEach((f, i) => {
+                const div = document.createElement('div');
+                div.className = 'dynamic-item';
+                div.innerHTML = `
+                    <button class="remove-btn" onclick="removeFactory(${i})">✕</button>
+                    <div class="item-index">工厂 ${i+1}</div>
+                    <div class="form-group"><input class="form-control" placeholder="工厂名称" value="${f.name||''}" onchange="updateFactory(${i},'name',this.value)"></div>
+                    <div class="form-group"><input class="form-control" placeholder="所在位置 *" value="${f.location||''}" onchange="updateFactory(${i},'location',this.value)"></div>
+                    <div class="form-group">
+                        <div class="radio-group">
+                            <label><input type="radio" name="factory_ownership_${i}" value="自有" ${f.ownership==='自有'?'checked':''} onchange="updateFactory(${i},'ownership','自有')"> 自有</label>
+                            <label><input type="radio" name="factory_ownership_${i}" value="合作" ${f.ownership==='合作'?'checked':''} onchange="updateFactory(${i},'ownership','合作')"> 合作</label>
+                            <label><input type="radio" name="factory_ownership_${i}" value="外部配套" ${f.ownership==='外部配套'?'checked':''} onchange="updateFactory(${i},'ownership','外部配套')"> 外部配套</label>
+                        </div>
+                    </div>
+                    <div class="form-group"><input class="form-control" placeholder="主要生产品类 *" value="${f.main_products||''}" onchange="updateFactory(${i},'main_products',this.value)"></div>
+                    <div class="form-group"><input class="form-control" type="number" placeholder="年产能（吨）" value="${f.annual_capacity||''}" onchange="updateFactory(${i},'annual_capacity',this.value)"></div>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            ${['SC','ISO','HACCP','BRCGS','清真认证','出口认证'].map(cert => `
+                                <label><input type="checkbox" value="${cert}" ${(f.certifications||[]).includes(cert)?'checked':''} onchange="updateFactoryCert(${i},'${cert}',this.checked)"> ${cert}</label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                c.appendChild(div);
+            });
+        }
+
+        function addFactory() {
+            formData.factories.push({ name: '', location: '', ownership: '自有', main_products: '', annual_capacity: '', certifications: [] });
+            renderFactories();
+            saveDraft();
+        }
+        function removeFactory(i) { formData.factories.splice(i,1); renderFactories(); saveDraft(); }
+        function updateFactory(i,f,v) { formData.factories[i][f]=v; saveDraft(); }
+        function updateFactoryCert(i,cert,ch) {
+            if (!formData.factories[i].certifications) formData.factories[i].certifications = [];
+            if (ch) { if (!formData.factories[i].certifications.includes(cert)) formData.factories[i].certifications.push(cert); }
+            else { formData.factories[i].certifications = formData.factories[i].certifications.filter(x => x !== cert); }
+            saveDraft();
+        }
+
+        // ===== 产品 =====
+        function renderProducts() {
+            const c = document.getElementById('productList');
+            c.innerHTML = '';
+            formData.products.forEach((p, i) => {
+                const div = document.createElement('div');
+                div.className = 'dynamic-item';
+                div.innerHTML = `
+                    <button class="remove-btn" onclick="removeProduct(${i})">✕</button>
+                    <div class="item-index">产品 ${i+1}</div>
+                    <div class="form-group"><input class="form-control" placeholder="产品名称 *" value="${p.name||''}" onchange="updateProduct(${i},'name',this.value)"></div>
+                    <div class="form-group">
+                        <select class="form-control" onchange="updateProduct(${i},'category',this.value)">
+                            <option value="">选择大类 *</option>
+                            ${['肉夹馍','凉皮/擀面皮','泡馍','复合调味料','速冻面点','其他'].map(cat => `<option value="${cat}" ${p.category===cat?'selected':''}>${cat}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group"><input class="form-control" placeholder="核心卖点（一句话）" value="${p.selling_point||''}" onchange="updateProduct(${i},'selling_point',this.value)"></div>
+                    <div class="form-group"><input class="form-control" placeholder="最小起订量（MOQ）" value="${p.moq||''}" onchange="updateProduct(${i},'moq',this.value)"></div>
+                    <div class="form-group"><input class="form-control" type="number" placeholder="交付周期（天）" value="${p.lead_time||''}" onchange="updateProduct(${i},'lead_time',this.value)"></div>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" ${p.customizable?'checked':''} onchange="updateProduct(${i},'customizable',this.checked)"> 支持定制</label>
+                        </div>
+                    </div>
+                `;
+                c.appendChild(div);
+            });
+        }
+
+        function addProduct() {
+            if (formData.products.length >= 10) { alert('最多添加10个产品'); return; }
+            formData.products.push({ name: '', category: '', selling_point: '', moq: '', lead_time: '', customizable: false });
+            renderProducts();
+            saveDraft();
+        }
+        function removeProduct(i) { formData.products.splice(i,1); renderProducts(); saveDraft(); }
+        function updateProduct(i,f,v) { formData.products[i][f]=v; saveDraft(); }
+
+        // ===== 客户 =====
+        function renderClients() {
+            const c = document.getElementById('clientList');
+            c.innerHTML = '';
+            formData.clients.forEach((cl, i) => {
+                const div = document.createElement('div');
+                div.className = 'dynamic-item';
+                div.innerHTML = `
+                    <button class="remove-btn" onclick="removeClient(${i})">✕</button>
+                    <div class="item-index">客户 ${i+1}</div>
+                    <div class="form-group"><input class="form-control" placeholder="客户名称/代号" value="${cl.name||''}" onchange="updateClient(${i},'name',this.value)"></div>
+                    <div class="form-group"><input class="form-control" placeholder="合作时间，例：2020年至今" value="${cl.cooperation_time||''}" onchange="updateClient(${i},'cooperation_time',this.value)"></div>
+                    <div class="form-group"><input class="form-control" placeholder="供应产品，例：馍、卤肉" value="${cl.products||''}" onchange="updateClient(${i},'products',this.value)"></div>
+                    <div class="form-group"><input class="form-control" placeholder="门店规模，例：300+家" value="${cl.store_count||''}" onchange="updateClient(${i},'store_count',this.value)"></div>
+                    <div class="form-group">
+                        <select class="form-control" onchange="updateClient(${i},'cooperation_mode',this.value)">
+                            <option value="">合作方式</option>
+                            ${['单品供应','全套供应','OEM','ODM','中央厨房','联合开发'].map(m => `<option value="${m}" ${cl.cooperation_mode===m?'selected':''}>${m}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" onchange="updateClient(${i},'status',this.value)">
+                            <option value="">状态</option>
+                            <option value="持续合作中" ${cl.status==='持续合作中'?'selected':''}>持续合作中</option>
+                            <option value="已结束" ${cl.status==='已结束'?'selected':''}>已结束</option>
+                        </select>
+                    </div>
+                `;
+                c.appendChild(div);
+            });
+        }
+
+        function addClient() {
+            formData.clients.push({ name: '', cooperation_time: '', products: '', store_count: '', cooperation_mode: '', status: '' });
+            renderClients();
+            saveDraft();
+        }
+        function removeClient(i) { formData.clients.splice(i,1); renderClients(); saveDraft(); }
+        function updateClient(i,f,v) { formData.clients[i][f]=v; saveDraft(); }
+
+        // ===== 文件 =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const fi = document.getElementById('fileInput');
+            if (fi) {
+                fi.addEventListener('change', function(e) {
+                    const files = Array.from(e.target.files);
+                    formData.files = files.map(f => ({ name: f.name, size: f.size, type: f.type }));
+                    renderFileList();
+                    saveDraft();
+                });
+            }
+            checkDraft();
+            updateProgress();
+        });
+
+        function renderFileList() {
+            const c = document.getElementById('fileList');
+            c.innerHTML = '';
+            formData.files.forEach(f => {
+                const d = document.createElement('div');
+                d.className = 'file-item';
+                d.innerHTML = `<span>${f.name}</span><span class="size">${(f.size/1024).toFixed(1)} KB</span>`;
+                c.appendChild(d);
+            });
+        }
+
+        // ===== 页面切换 =====
+        function goToPage(p) {
+            if (p > currentPage) {
+                if (currentPage === 1) {
+                    if (!getValue('company_name').trim()) { alert('请填写企业全称'); return; }
+                    if (!getValue('city').trim()) { alert('请填写所在城市'); return; }
+                    if (!getValue('positioning').trim()) { alert('请填写一句话定位'); return; }
+                    if (!getValue('contact_person').trim()) { alert('请填写联系人姓名'); return; }
+                    if (!getValue('contact_phone').trim()) { alert('请填写联系电话'); return; }
+                }
+                if (currentPage === 2) {
+                    if (getCheckboxValues('categories').length === 0) { alert('请至少选择一个供应品类'); return; }
+                }
+                if (currentPage === 3) {
+                    const valid = formData.factories.some(f => f.location.trim() && f.ownership && f.main_products.trim());
+                    if (!valid) { alert('请至少完整填写一个工厂（位置、自有/合作、主要品类）'); return; }
+                }
+                if (currentPage === 4) {
+                    const valid = formData.products.some(p => p.name.trim() && p.category);
+                    if (!valid) { alert('请至少完整填写一个产品（名称、大类）'); return; }
+                }
+            }
+            saveDraft();
+            document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+            if (p === 6) document.querySelector('[data-page="6"]').classList.add('active');
+            else if (p === 99) document.querySelector('[data-page="success"]').classList.add('active');
+            else { const t = document.querySelector('[data-page="' + p + '"]'); if (t) t.classList.add('active'); }
+            currentPage = p;
+            localStorage.setItem('foodintelai_page', p);
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateProgress() {
+            const total = 6;
+            const pct = Math.round((currentPage / total) * 100);
+            document.getElementById('progressFill').style.width = Math.min(pct, 100) + '%';
+            document.getElementById('stepNum').textContent = currentPage;
+
+            const fields = [getValue('company_name'), getValue('city'), getValue('positioning'), getValue('contact_person'), getValue('contact_phone')];
+            let filled = fields.filter(f => f.trim()).length;
+            if (getCheckboxValues('categories').length > 0) filled++;
+            if (formData.factories.some(f => f.location.trim() && f.main_products.trim())) filled++;
+            if (formData.products.some(p => p.name.trim() && p.category)) filled++;
+            const score = Math.min(Math.round((filled / 8) * 100), 100);
+            document.getElementById('completenessLabel').textContent = '完成度 ' + score + '%';
+        }
+
+        // ===== 提交 =====
+        function submitForm() {
+            if (!getValue('company_name').trim()) { alert('请填写企业全称'); goToPage(1); return; }
+            if (!getValue('city').trim()) { alert('请填写所在城市'); goToPage(1); return; }
+            if (!getValue('positioning').trim()) { alert('请填写一句话定位'); goToPage(1); return; }
+            if (!getValue('contact_person').trim()) { alert('请填写联系人姓名'); goToPage(1); return; }
+            if (!getValue('contact_phone').trim()) { alert('请填写联系电话'); goToPage(1); return; }
+            if (getCheckboxValues('categories').length === 0) { alert('请至少选择一个供应品类'); goToPage(2); return; }
+            if (!formData.factories.some(f => f.location.trim() && f.ownership && f.main_products.trim())) { alert('请至少完整填写一个工厂'); goToPage(3); return; }
+            if (!formData.products.some(p => p.name.trim() && p.category)) { alert('请至少完整填写一个产品'); goToPage(4); return; }
+
+            saveDraft();
+
+            const assetId = 'FIA-SC-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + String(Math.floor(Math.random()*10000)).padStart(4,'0');
+            submittedData = {
+                ...formData,
+                asset_id: assetId,
+                submitted_at: new Date().toISOString(),
+                status: 'submitted',
+                completeness_score: parseInt(document.getElementById('completenessLabel').textContent.replace('完成度 ','').replace('%','')) || 0
+            };
+
+            document.getElementById('sendingOverlay').classList.add('show');
+
+            setTimeout(function() {
+                const jsonStr = JSON.stringify(submittedData, null, 2);
+
+                // 1. 生成 JSON 文件下载（数据留在本地）
+                const blob = new Blob([jsonStr], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '供应链资产_' + submittedData.company_name + '_' + submittedData.asset_id + '.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                // 2. 可选：邮件发送（带附件提示）
+                const subject = encodeURIComponent('供应链资产提交：' + submittedData.company_name);
+                const body = encodeURIComponent(
+                    '供应链资产已提交\n\n资产ID：' + submittedData.asset_id + '\n企业名称：' + submittedData.company_name + '\n提交时间：' + submittedData.submitted_at + '\n\n已将完整数据保存为 JSON 文件（浏览器自动下载）。\n\n请将该 JSON 文件发送给 FoodIntelAI（微信/邮件均可），或直接复制下方数据：\n\n--- 完整数据 ---\n\n' + jsonStr
+                );
+                window.open('mailto:' + YOUR_EMAIL + '?subject=' + subject + '&body=' + body, '_blank');
+
+                document.getElementById('sendingOverlay').classList.remove('show');
+                localStorage.removeItem('foodintelai_draft');
+                localStorage.removeItem('foodintelai_page');
+                goToPage(99);
+                updateProgress();
+            }, 600);
+        }
+
+        // ===== 重置 =====
+        function resetForm() {
+            if (!confirm('确定重新填写吗？当前数据将被清除。')) return;
+            localStorage.removeItem('foodintelai_draft');
+            localStorage.removeItem('foodintelai_page');
+            formData = {
+                company_name: '', brand_name: '', city: '', founded_year: '', positioning: '',
+                core_advantages: [], scenarios: [],
+                contact_person: '', contact_phone: '', contact_wechat: '', contact_position: '',
+                categories: [], category_other: '',
+                factories: [], products: [], sampling_to_production_days: '',
+                clients: [], store_coverage_percent: '', store_items: [],
+                has_sop: false, has_training: false,
+                regions: [], temperature_layers: [],
+                national_logistics: false, drop_shipping: false,
+                export_countries: '', export_scale: '', export_certified: false,
+                rnd_staff: '', has_rnd_lab: false,
+                customization_scope: [],
+                files: [], match_targets: [], biggest_need: ''
+            };
+            document.querySelectorAll('input, textarea, select').forEach(el => {
+                if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+                else el.value = '';
+            });
+            document.getElementById('fileList').innerHTML = '';
+            renderFactories(); renderProducts(); renderClients();
+            goToPage(1); updateProgress();
+        }
+
+        // ===== 初始化 =====
+        document.addEventListener('DOMContentLoaded', function() {
+            if (formData.factories.length === 0) {
+                formData.factories.push({ name: '', location: '', ownership: '自有', main_products: '', annual_capacity: '', certifications: [] });
+            }
+            if (formData.products.length === 0) {
+                formData.products.push({ name: '', category: '', selling_point: '', moq: '', lead_time: '', customizable: false });
+            }
+            renderFactories(); renderProducts(); renderClients();
+            const draft = loadDraft();
+            if (draft && (draft.company_name || draft.city || draft.positioning || draft.factories.length || draft.products.length)) {
+                document.getElementById('draftBanner').style.display = 'block';
+            }
+            updateProgress();
+        });
+
+        window.addEventListener('beforeunload', function() { saveDraft(); });
+    </script>
+
+</body>
+</html>
