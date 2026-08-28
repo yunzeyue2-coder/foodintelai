@@ -1434,6 +1434,87 @@ body{
 
 <div class="main" id="mainContent">
 
+<!-- ===== 行业信号栏（小窗口滚动·点击展开全部） ===== -->
+<style>
+.sig-section{margin:16px 0 2px;padding:0;position:relative}
+.sig-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.sig-dot{width:5px;height:5px;border-radius:50%;background:#c4a35a;box-shadow:0 0 0 2px rgba(196,163,90,.15);animation:sigPulse 2s infinite}
+@keyframes sigPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sig-title{font-size:9px;color:#8b6914;letter-spacing:2px;font-weight:600}
+.sig-note{font-size:8px;color:#b0a48c;letter-spacing:1px}
+.sig-ticker{position:relative;overflow:hidden;border:1px solid #ece5d8;border-radius:6px;background:linear-gradient(135deg,#FDFCFA,#F8F5EF);padding:0;height:26px;line-height:24px}
+.sig-track{display:flex;align-items:center;gap:32px;white-space:nowrap;width:max-content;animation:sigScroll 32s linear infinite;padding:0 10px}
+.sig-ticker:hover .sig-track{animation-play-state:paused}
+@keyframes sigScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.sig-item{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#4a4030;line-height:24px}
+.sig-tag{font-size:9px;padding:1px 6px;border-radius:5px;background:#8b6914;color:#fff;letter-spacing:1px;flex-shrink:0}
+.sig-tag.blue{background:#4a6b8a}.sig-tag.green{background:#5a7a5a}
+.sig-tag.new{background:#c0392b;animation:sigNewPulse 1.5s infinite}
+@keyframes sigNewPulse{0%,100%{opacity:1}50%{opacity:.55}}
+.sig-item .sig-txt{color:#6a5a3a}
+.sig-item .sig-date{font-size:10px;color:#b0a48c}
+.sig-more{display:inline-flex;align-items:center;gap:4px;font-size:9px;color:#8b6914;cursor:pointer;letter-spacing:1px;border:none;background:none;padding:1px 0;margin-top:3px;transition:color .2s}
+.sig-more:hover{color:#c4a35a}
+.sig-more .arrow{transition:transform .25s}
+.sig-more.open .arrow{transform:rotate(180deg)}
+/* 全部列表（默认隐藏，点击展开） */
+.sig-full{display:none;margin-top:6px;border:1px solid #ece5d8;border-radius:6px;background:#FDFCFA;overflow:hidden}
+.sig-full.open{display:block}
+.sig-full-item{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;font-size:11px;color:#4a4030;line-height:1.6;border-bottom:1px solid #f0ebe0}
+.sig-full-item:last-child{border-bottom:none}
+.sig-full-item .sig-tag{margin-top:1px}
+.sig-full-item .sig-txt{color:#6a5a3a;flex:1}
+.sig-full-item .sig-date{font-size:9px;color:#b0a48c;flex-shrink:0;margin-top:2px}
+@media(max-width:600px){
+  .sig-ticker{height:auto;padding:0;border:none;background:none}
+  .sig-track{animation:none;white-space:normal;flex-direction:column;align-items:stretch;gap:4px;width:100%;padding:0}
+  .sig-item{border:1px solid #ece5d8;border-radius:6px;background:#FDFCFA;padding:6px 8px}
+}
+</style>
+
+<div class="sig-section" id="signalBar">
+  <div class="sig-header">
+    <span class="sig-dot"></span>
+    <span class="sig-title">行业信号 · 本周</span>
+    <span class="sig-note">INDUSTRY SIGNALS</span>
+  </div>
+  <div class="sig-ticker">
+    <div class="sig-track" id="sigTrack"></div>
+  </div>
+  <button class="sig-more" id="sigMore" onclick="toggleSignals(this)">
+    查看本周全部信号 <span class="arrow">▾</span>
+  </button>
+  <div class="sig-full" id="sigFull"></div>
+</div>
+
+<script>
+// 信号池：5条，涵盖供应链/风险/市场/战略/资本，最新在前
+const SIG_SIGNALS = [
+  {tag:"市场", cls:"new", date:"08-27", txt:"美团陶雪璇称出境游客去年在大众点评上问了1亿次「吃点啥」——出境游美食内容与评价需求高企，出海餐饮需求侧出现确定性规模证据"},
+  {tag:"平台", cls:"new", date:"08-27", txt:"抖音生活服务发布暑期消费数据：地方菜领跑「味蕾游」，夜经济点亮暑期档——地方特色菜与夜间餐饮成为暑期餐饮消费两条主线"},
+  {tag:"品类", cls:"new", date:"08-27", txt:"「39.9元吃上有料锅底！小火锅不装了」——小火锅价格带进一步下探，有料锅底从溢价卖点变为入门标配，性价比内卷从商圈密度竞争延伸到产品定价"},
+  {tag:"政策", cls:"new", date:"08-27", txt:"「云品出滇」杭州站启幕，「左手咖啡右手茶」香飘西子湖畔——云南区域公用品牌以咖啡+茶组合进入华东市场，产地品牌化持续向消费端渗透"},
+  {tag:"平台", cls:"new", date:"08-25", txt:"麦当劳入驻美团拼好饭，全国超3000家门店上线低价套餐——头部西式快餐连锁以规模化门店进入拼团低价外卖渠道，低价外卖模式获全球性品牌背书"},
+];
+const sigTrack = document.getElementById('sigTrack');
+if(sigTrack){
+  const items = SIG_SIGNALS.map(s=>`<span class="sig-item"><span class="sig-tag${s.cls?' '+s.cls:''}">${s.tag}</span><span class="sig-date">${s.date}</span><span class="sig-txt">${s.txt}</span></span>`).join('');
+  sigTrack.innerHTML = items;  // 单份：5 条不重复
+}
+const sigFull = document.getElementById('sigFull');
+if(sigFull){
+  // 展开直接显示全部5条（不再分页）
+  const fullItems = SIG_SIGNALS.map(s=>`<div class="sig-full-item"><span class="sig-tag${s.cls?' '+s.cls:''}">${s.tag}</span><span class="sig-txt">${s.txt}</span><span class="sig-date">${s.date}</span></div>`).join('');
+  const footer = '<div style="padding:10px 12px;text-align:center"><a href="/signals.html" style="font-size:11px;color:#b0a48c;text-decoration:none">查看完整信号库（按月归档）→</a></div>';
+  sigFull.innerHTML = fullItems + footer;
+}
+function toggleSignals(btn){
+  const panel = document.getElementById('sigFull');
+  const isOpen = panel.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  btn.innerHTML = (isOpen ? '收起信号' : '查看信号') + ' <span class="arrow">▾</span>';
+}
+</script>
 <!-- ===== 本周研究专栏 ===== -->
 <style>
 .rp-section{margin:28px 0;padding:0;position:relative}
@@ -1468,39 +1549,59 @@ body{
 <div class="rp-section">
 
 <div class="rp-header">
-  <div class="rp-week">WEEK 32 · 2026</div>
-  <div class="rp-topic">🏙️ 城市餐饮样本拆解分析</div>
-  <div class="rp-sub">用一座中部新一线城市样本，拆解餐饮供给结构、消费需求、空间竞争与品类分化——沉淀可复制的城市餐饮分析方法</div>
-  <span class="rp-status">第3篇已发布 · 持续更新中</span>
+  <div class="rp-week">WEEK 34 - 35 · 2026</div>
+  <div class="rp-topic">🐂 牛肉价值转化模型</div>
+  <div class="rp-sub">一头牛不是一个SKU，而是一组不同价值、不同用途、不同加工路径的原料集合——从原料到部位、加工、产品、场景、交易、经营，价值如何一步步转化</div>
+  <span class="rp-status">第5篇已发布 · 产品与场景</span>
 </div>
 
 <div class="rp-grid">
 
-<a href="research/城市样本_第1篇_餐饮供给结构.html" class="rp-card">
-  <div class="rp-day">第1篇 · 供给结构</div>
-  <div class="rp-title">10万级餐饮供给样本，80%的人会读错的一份城市数据</div>
-  <div class="rp-desc">三层供给金字塔：高频刚需层53.6%主导；品类生态位三档分化——地域公共名号≠品牌连锁，"看起来已品牌化"的品类被拆穿</div>
+<a href="research/牛肉价值转化_第1篇_价值地图.html" class="rp-card">
+  <div class="rp-day">第1篇 · 价值地图</div>
+  <div class="rp-title">从一头牛到一块肉：中国牛肉产业链的真实价值地图</div>
+  <div class="rp-desc">一头牛进入中国产业链后的价值分化、物理损耗、加工逻辑与场景匹配——四种"出肉率"、五问口径、价值转换账本，画一张能用于经营决策的底盘地图</div>
   <div class="rp-footer">
-    <span class="rp-tag">三层供给结构 · 品类生态位 · 三分法</span>
+    <span class="rp-tag">牛肉价值转化 · 出肉率陷阱 · 价值链路</span>
     <span class="rp-arrow">→</span>
   </div>
 </a>
 
-<a href="research/城市餐饮空间拓扑研究.html" class="rp-card">
-  <div class="rp-day">第2篇 · 空间拓扑</div>
-  <div class="rp-title">深度解构：城市餐饮空间拓扑与物理拦截机制</div>
-  <div class="rp-desc">地理热力与物理极化 · 商圈生态网格 · 竞品间距与物理拦截——距离即竞争力，落到选址四步决策框架</div>
+<a href="research/牛肉原料系统_第2篇_公众号版.html" class="rp-card">
+  <div class="rp-day">第2篇 · 原料系统</div>
+  <div class="rp-title">一头牛该往哪儿卖：中国牛肉原料系统的四个决策关卡</div>
+  <div class="rp-desc">牛从哪里来、牛是什么状态、部位怎么分配、用哪把尺子对话——原料决策五问的顺序不能颠倒：价格永远是最后一步</div>
   <div class="rp-footer">
-    <span class="rp-tag">空间拓扑 · 物理拦截 · 选址框架</span>
+    <span class="rp-tag">原料决策五问 · 草饲谷饲 · 冷鲜冷冻 · 分级体系</span>
     <span class="rp-arrow">→</span>
   </div>
 </a>
-<a href="research/城市餐饮_第3篇_SKU复杂度.html" class="rp-card">
-  <div class="rp-day">第3篇 · SKU复杂度</div>
-  <div class="rp-title">菜单做厚还是做薄？一张城市菜单背后的 SKU 博弈</div>
-  <div class="rp-desc">大盘结构·爆款单品·SKU五梯度·大单品悖论——出餐越标准化的品类，SKU越少，复杂度决定创业生死</div>
+
+<a href="research/牛肉加工工程_第3篇_公众号版.html" class="rp-card">
+  <div class="rp-day">第3篇 · 加工工程</div>
+  <div class="rp-title">一公斤原料进厂，为什么到了工厂变成不同的重量和价值</div>
+  <div class="rp-desc">四本损耗账、滚揉三要素、保水得率的物理边界——加水增重是用品牌的终身价值去填短期得率坑；全链有效得率，从车间一直算到终端复热</div>
   <div class="rp-footer">
-    <span class="rp-tag">供给结构 · SKU复杂度 · 经营效率</span>
+    <span class="rp-tag">得率即利润 · 四本损耗账 · 全链有效得率</span>
+    <span class="rp-arrow">→</span>
+  </div>
+</a>
+
+<a href="research/牛肉供应链系统_第4篇_公众号版.html" class="rp-card">
+  <div class="rp-day">第4篇 · 供应链系统</div>
+  <div class="rp-title">从0.53%到100%：牛肉进口配额，正在重新排列谁先涨价</div>
+  <div class="rp-desc">商务部87号公告、三年55%配额外关税、澳/巴/阿三节点——供应商组合从比价表变成按压力梯度动态调整的风险分布表；货物的价值由"什么时候进入哪个政策周期"决定</div>
+  <div class="rp-footer">
+    <span class="rp-tag">进口配额 · 保障措施 · 供应商梯度 · 政策周期</span>
+    <span class="rp-arrow">→</span>
+  </div>
+</a>
+<a href="research/牛肉产品与场景_第5篇_公众号版.html" class="rp-card">
+  <div class="rp-day">第5篇 · 产品与场景</div>
+  <div class="rp-title">产品与场景：同一块牛肉，为什么变成完全不同的产品？</div>
+  <div class="rp-desc">部位不是产品，场景才是产品定义的起点——五个分化变量、一块板腱的四种场景化演变、产品总建筑师三步法；别再问部位，去问场景</div>
+  <div class="rp-footer">
+    <span class="rp-tag">场景定义产品 · 五变量分化 · 板腱四演变 · 反向定义</span>
     <span class="rp-arrow">→</span>
   </div>
 </a>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>供应能力展示卡详情 · FoodIntelAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f7f5f0;font-family:'Inter','Noto Serif SC','PingFang SC','Microsoft YaHei',serif;color:#2a2218;display:flex;justify-content:center}
+.page{max-width:760px;width:100%;min-height:100vh;padding:40px 32px 60px}
+.back{display:inline-block;font-size:12px;color:#8b6914;text-decoration:none;letter-spacing:1px;margin-bottom:20px}
+.back:hover{color:#7a5a04;text-decoration:underline}
+
+.cover{background:#0b1f3a;border-radius:12px;padding:28px 28px 24px;margin-bottom:24px;position:relative}
+.cover .badge{font-size:10px;color:#c4a35a;letter-spacing:3px;margin-bottom:10px}
+.cover h1{font-size:24px;font-weight:700;color:#fff;line-height:1.4;margin-bottom:6px}
+.cover .city{font-size:12px;color:#8a97ad;margin-bottom:12px}
+.cover .brand{display:inline-block;font-size:11px;background:#c4a35a;color:#fff;padding:3px 12px;border-radius:4px;letter-spacing:1px}
+.cover .pos{font-size:13px;color:#dfe4ec;line-height:1.7;margin-top:12px}
+
+.sec{margin-bottom:24px}
+.sec-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sec-h .line{flex:1;height:1px;background:linear-gradient(90deg,#c4a35a,transparent)}
+.sec-h .label{font-size:13px;font-weight:600;color:#8b6914;letter-spacing:2px;white-space:nowrap}
+.sec-h .sub{font-size:10px;color:#b5aaa0;letter-spacing:1px}
+
+.box{background:#fff;border:1px solid #e8e3db;border-radius:10px;padding:16px 18px}
+.row{display:flex;padding:8px 0;border-bottom:1px solid #f5f2ec;font-size:13px;line-height:1.7}
+.row:last-child{border-bottom:none}
+.row .k{width:96px;flex-shrink:0;color:#8a7a6a;font-size:12px}
+.row .v{color:#2a2218;flex:1}
+.row .v .item{display:inline-block;background:#faf8f4;border:1px solid #ece5d8;color:#6a5a3a;font-size:11px;padding:2px 8px;border-radius:4px;margin:2px 4px 2px 0}
+
+.note{margin-top:24px;padding:14px 16px;background:#f8f5ef;border-left:3px solid #c4a35a;font-size:11px;color:#8a7a6a;line-height:1.8}
+.cta{margin-top:20px;padding:20px;background:#0b1f3a;border-radius:10px;text-align:center}
+.cta p{font-size:12px;color:#8a97ad;line-height:1.7;margin-bottom:12px}
+.cta a{display:inline-block;background:#c4a35a;color:#fff;padding:9px 26px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;letter-spacing:1px}
+.footer{text-align:center;padding-top:24px;border-top:1px solid #e0ddd5;font-size:10px;color:#b5aaa0;letter-spacing:1px;margin-top:28px}
+</style>
+</head>
+<body>
+<div class="page">
+<a class="back" href="index.html">← 返回供应能力展示卡</a>
+<div id="content">加载中…</div>
+<div class="footer">FoodIntelAI · 供应能力展示卡 · foodintelai.com</div>
+</div>
+
+<script>
+// 数据与 index.html 同一份(由 site-data/suppliers.json 同步)
+const SUPPLIERS = [
+  {
+    "asset_id": "FIA-SC-20260824-0001",
+    "company": {
+      "name": "陕西秦吼供应链管理有限公司",
+      "brand": "秦吼",
+      "city": "陕西西安",
+      "founded_year": 2016,
+      "positioning": "为陕西特色餐饮连锁提供肉夹馍、凉皮、泡馍一体化供应解决方案",
+      "core_advantages": [
+        "产品体系完整",
+        "工厂制造能力",
+        "风味还原能力"
+      ],
+      "scenarios": [
+        "肉夹馍专门店",
+        "连锁餐饮"
+      ]
+    },
+    "contact": {
+      "person": "张三",
+      "phone": "13800000000",
+      "wechat": "zhangsan123",
+      "position": "供应链总监"
+    },
+    "supply": {
+      "categories": [
+        "肉夹馍（馍/卤肉/料汁）",
+        "凉皮/擀面皮"
+      ],
+      "category_other": ""
+    },
+    "factories": [
+      {
+        "name": "秦吼中央工厂",
+        "location": "陕西西安",
+        "ownership": "自有",
+        "main_products": "馍/卤肉/料汁",
+        "annual_capacity": 5000,
+        "certifications": [
+          "SC",
+          "ISO"
+        ]
+      }
+    ],
+    "products": [
+      {
+        "name": "白吉馍",
+        "category": "肉夹馍",
+        "selling_point": "外酥里软",
+        "moq": "1000个",
+        "lead_time": 3,
+        "customizable": true
+      }
+    ],
+    "delivery": {
+      "clients": [],
+      "store_coverage_percent": 80,
+      "store_items": [
+        "馍",
+        "卤肉",
+        "料汁"
+      ],
+      "has_sop": true,
+      "has_training": true,
+      "regions": [
+        "西北"
+      ],
+      "temperature_layers": [
+        "常温",
+        "冷藏"
+      ],
+      "national_logistics": true,
+      "drop_shipping": false,
+      "export": {
+        "countries": "",
+        "scale": "",
+        "certified": false
+      },
+      "rnd": {
+        "staff": 8,
+        "has_lab": true
+      },
+      "customization_scope": [
+        "配方",
+        "克重",
+        "包装"
+      ]
+    },
+    "match": {
+      "targets": [
+        "餐饮连锁",
+        "区域合伙人"
+      ],
+      "biggest_need": ""
+    },
+    "status": "listed"
+  }
+];
+
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function tags(arr){return (arr||[
+  {
+    "asset_id": "FIA-SC-20260824-0001",
+    "company": {
+      "name": "陕西秦吼供应链管理有限公司",
+      "brand": "秦吼",
+      "city": "陕西西安",
+      "founded_year": 2016,
+      "positioning": "为陕西特色餐饮连锁提供肉夹馍、凉皮、泡馍一体化供应解决方案",
+      "core_advantages": [
+        "产品体系完整",
+        "工厂制造能力",
+        "风味还原能力"
+      ],
+      "scenarios": [
+        "肉夹馍专门店",
+        "连锁餐饮"
+      ]
+    },
+    "contact": {
+      "person": "张三",
+      "phone": "13800000000",
+      "wechat": "zhangsan123",
+      "position": "供应链总监"
+    },
+    "supply": {
+      "categories": [
+        "肉夹馍（馍/卤肉/料汁）",
+        "凉皮/擀面皮"
+      ],
+      "category_other": ""
+    },
+    "factories": [
+      {
+        "name": "秦吼中央工厂",
+        "location": "陕西西安",
+        "ownership": "自有",
+        "main_products": "馍/卤肉/料汁",
+        "annual_capacity": 5000,
+        "certifications": [
+          "SC",
+          "ISO"
+        ]
+      }
+    ],
+    "products": [
+      {
+        "name": "白吉馍",
+        "category": "肉夹馍",
+        "selling_point": "外酥里软",
+        "moq": "1000个",
+        "lead_time": 3,
+        "customizable": true
+      }
+    ],
+    "delivery": {
+      "clients": [],
+      "store_coverage_percent": 80,
+      "store_items": [
+        "馍",
+        "卤肉",
+        "料汁"
+      ],
+      "has_sop": true,
+      "has_training": true,
+      "regions": [
+        "西北"
+      ],
+      "temperature_layers": [
+        "常温",
+        "冷藏"
+      ],
+      "national_logistics": true,
+      "drop_shipping": false,
+      "export": {
+        "countries": "",
+        "scale": "",
+        "certified": false
+      },
+      "rnd": {
+        "staff": 8,
+        "has_lab": true
+      },
+      "customization_scope": [
+        "配方",
+        "克重",
+        "包装"
+      ]
+    },
+    "match": {
+      "targets": [
+        "餐饮连锁",
+        "区域合伙人"
+      ],
+      "biggest_need": ""
+    },
+    "status": "listed"
+  }
+]).map(t=>`<span class="item">${esc(t)}</span>`).join('');}
+
+function render(){
+  const id = new URLSearchParams(location.search).get('id');
+  const s = SUPPLIERS.find(x => x.asset_id === id || x.company.name === id);
+  const el = document.getElementById('content');
+  if(!s){
+    el.innerHTML = '<div class="box" style="text-align:center;padding:40px">未找到该展示卡</div>';
+    return;
+  }
+  const c = s.company, d = s.delivery || {};
+  const f = (s.factories||[
+  {
+    "asset_id": "FIA-SC-20260824-0001",
+    "company": {
+      "name": "陕西秦吼供应链管理有限公司",
+      "brand": "秦吼",
+      "city": "陕西西安",
+      "founded_year": 2016,
+      "positioning": "为陕西特色餐饮连锁提供肉夹馍、凉皮、泡馍一体化供应解决方案",
+      "core_advantages": [
+        "产品体系完整",
+        "工厂制造能力",
+        "风味还原能力"
+      ],
+      "scenarios": [
+        "肉夹馍专门店",
+        "连锁餐饮"
+      ]
+    },
+    "contact": {
+      "person": "张三",
+      "phone": "13800000000",
+      "wechat": "zhangsan123",
+      "position": "供应链总监"
+    },
+    "supply": {
+      "categories": [
+        "肉夹馍（馍/卤肉/料汁）",
+        "凉皮/擀面皮"
+      ],
+      "category_other": ""
+    },
+    "factories": [
+      {
+        "name": "秦吼中央工厂",
+        "location": "陕西西安",
+        "ownership": "自有",
+        "main_products": "馍/卤肉/料汁",
+        "annual_capacity": 5000,
+        "certifications": [
+          "SC",
+          "ISO"
+        ]
+      }
+    ],
+    "products": [
+      {
+        "name": "白吉馍",
+        "category": "肉夹馍",
+        "selling_point": "外酥里软",
+        "moq": "1000个",
+        "lead_time": 3,
+        "customizable": true
+      }
+    ],
+    "delivery": {
+      "clients": [],
+      "store_coverage_percent": 80,
+      "store_items": [
+        "馍",
+        "卤肉",
+        "料汁"
+      ],
+      "has_sop": true,
+      "has_training": true,
+      "regions": [
+        "西北"
+      ],
+      "temperature_layers": [
+        "常温",
+        "冷藏"
+      ],
+      "national_logistics": true,
+      "drop_shipping": false,
+      "export": {
+        "countries": "",
+        "scale": "",
+        "certified": false
+      },
+      "rnd": {
+        "staff": 8,
+        "has_lab": true
+      },
+      "customization_scope": [
+        "配方",
+        "克重",
+        "包装"
+      ]
+    },
+    "match": {
+      "targets": [
+        "餐饮连锁",
+        "区域合伙人"
+      ],
+      "biggest_need": ""
+    },
+    "status": "listed"
+  }
+]), p = (s.products||[
+  {
+    "asset_id": "FIA-SC-20260824-0001",
+    "company": {
+      "name": "陕西秦吼供应链管理有限公司",
+      "brand": "秦吼",
+      "city": "陕西西安",
+      "founded_year": 2016,
+      "positioning": "为陕西特色餐饮连锁提供肉夹馍、凉皮、泡馍一体化供应解决方案",
+      "core_advantages": [
+        "产品体系完整",
+        "工厂制造能力",
+        "风味还原能力"
+      ],
+      "scenarios": [
+        "肉夹馍专门店",
+        "连锁餐饮"
+      ]
+    },
+    "contact": {
+      "person": "张三",
+      "phone": "13800000000",
+      "wechat": "zhangsan123",
+      "position": "供应链总监"
+    },
+    "supply": {
+      "categories": [
+        "肉夹馍（馍/卤肉/料汁）",
+        "凉皮/擀面皮"
+      ],
+      "category_other": ""
+    },
+    "factories": [
+      {
+        "name": "秦吼中央工厂",
+        "location": "陕西西安",
+        "ownership": "自有",
+        "main_products": "馍/卤肉/料汁",
+        "annual_capacity": 5000,
+        "certifications": [
+          "SC",
+          "ISO"
+        ]
+      }
+    ],
+    "products": [
+      {
+        "name": "白吉馍",
+        "category": "肉夹馍",
+        "selling_point": "外酥里软",
+        "moq": "1000个",
+        "lead_time": 3,
+        "customizable": true
+      }
+    ],
+    "delivery": {
+      "clients": [],
+      "store_coverage_percent": 80,
+      "store_items": [
+        "馍",
+        "卤肉",
+        "料汁"
+      ],
+      "has_sop": true,
+      "has_training": true,
+      "regions": [
+        "西北"
+      ],
+      "temperature_layers": [
+        "常温",
+        "冷藏"
+      ],
+      "national_logistics": true,
+      "drop_shipping": false,
+      "export": {
+        "countries": "",
+        "scale": "",
+        "certified": false
+      },
+      "rnd": {
+        "staff": 8,
+        "has_lab": true
+      },
+      "customization_scope": [
+        "配方",
+        "克重",
+        "包装"
+      ]
+    },
+    "match": {
+      "targets": [
+        "餐饮连锁",
+        "区域合伙人"
+      ],
+      "biggest_need": ""
+    },
+    "status": "listed"
+  }
+]), cl = (d.clients||[
+  {
+    "asset_id": "FIA-SC-20260824-0001",
+    "company": {
+      "name": "陕西秦吼供应链管理有限公司",
+      "brand": "秦吼",
+      "city": "陕西西安",
+      "founded_year": 2016,
+      "positioning": "为陕西特色餐饮连锁提供肉夹馍、凉皮、泡馍一体化供应解决方案",
+      "core_advantages": [
+        "产品体系完整",
+        "工厂制造能力",
+        "风味还原能力"
+      ],
+      "scenarios": [
+        "肉夹馍专门店",
+        "连锁餐饮"
+      ]
+    },
+    "contact": {
+      "person": "张三",
+      "phone": "13800000000",
+      "wechat": "zhangsan123",
+      "position": "供应链总监"
+    },
+    "supply": {
+      "categories": [
+        "肉夹馍（馍/卤肉/料汁）",
+        "凉皮/擀面皮"
+      ],
+      "category_other": ""
+    },
+    "factories": [
+      {
+        "name": "秦吼中央工厂",
+        "location": "陕西西安",
+        "ownership": "自有",
+        "main_products": "馍/卤肉/料汁",
+        "annual_capacity": 5000,
+        "certifications": [
+          "SC",
+          "ISO"
+        ]
+      }
+    ],
+    "products": [
+      {
+        "name": "白吉馍",
+        "category": "肉夹馍",
+        "selling_point": "外酥里软",
+        "moq": "1000个",
+        "lead_time": 3,
+        "customizable": true
+      }
+    ],
+    "delivery": {
+      "clients": [],
+      "store_coverage_percent": 80,
+      "store_items": [
+        "馍",
+        "卤肉",
+        "料汁"
+      ],
+      "has_sop": true,
+      "has_training": true,
+      "regions": [
+        "西北"
+      ],
+      "temperature_layers": [
+        "常温",
+        "冷藏"
+      ],
+      "national_logistics": true,
+      "drop_shipping": false,
+      "export": {
+        "countries": "",
+        "scale": "",
+        "certified": false
+      },
+      "rnd": {
+        "staff": 8,
+        "has_lab": true
+      },
+      "customization_scope": [
+        "配方",
+        "克重",
+        "包装"
+      ]
+    },
+    "match": {
+      "targets": [
+        "餐饮连锁",
+        "区域合伙人"
+      ],
+      "biggest_need": ""
+    },
+    "status": "listed"
+  }
+]);
+  document.title = c.name + ' · 供应能力展示卡';
+  el.innerHTML = `
+  <div class="cover">
+    <div class="badge">SUPPLY CAPABILITY · 供应能力展示卡</div>
+    <h1>${esc(c.name)}</h1>
+    <div class="city">${esc(c.city||'')}${c.founded_year?` · 成立${c.founded_year}年`:''}</div>
+    ${c.brand?`<span class="brand">${esc(c.brand)}</span>`:''}
+    <div class="pos">${esc(c.positioning||'')}</div>
+  </div>
+
+  <div class="sec"><div class="sec-h"><span class="label">核心优势</span><span class="line"></span></div>
+    <div class="box"><div class="row"><div class="v">${tags(c.core_advantages)}</div></div></div></div>
+
+  <div class="sec"><div class="sec-h"><span class="label">供应品类</span><span class="line"></span></div>
+    <div class="box"><div class="row"><div class="v">${tags(s.supply&&s.supply.categories)}</div></div></div></div>
+
+  <div class="sec"><div class="sec-h"><span class="label">工厂与产能</span><span class="line"></span></div>
+    <div class="box">
+    ${f.map(x=>`<div class="row"><div class="k">${esc(x.ownership||'')}</div><div class="v"><strong>${esc(x.name||x.location||'')}</strong>${x.location?` · ${esc(x.location)}`:''}<br>${esc(x.main_products||'')}${x.annual_capacity?` · 年产能${x.annual_capacity}吨`:''}<br>${tags(x.certifications)}</div></div>`).join('')||'<div class="row"><div class="v">未填写</div></div>'}
+    </div></div>
+
+  <div class="sec"><div class="sec-h"><span class="label">核心产品</span><span class="line"></span></div>
+    <div class="box">
+    ${p.map(x=>`<div class="row"><div class="k">${esc(x.category||'')}</div><div class="v"><strong>${esc(x.name||'')}</strong>${x.selling_point?` · ${esc(x.selling_point)}`:''}${x.moq?`<br>MOQ: ${esc(x.moq)}`:''}${x.lead_time?` · 交付${x.lead_time}天`:''}${x.customizable?' · 支持定制':''}</div></div>`).join('')||'<div class="row"><div class="v">未填写</div></div>'}
+    </div></div>
+
+  <div class="sec"><div class="sec-h"><span class="label">客户与交付</span><span class="line"></span></div>
+    <div class="box">
+      ${cl.length?cl.map(x=>`<div class="row"><div class="k">${esc(x.name||'')}</div><div class="v">${esc(x.products||'')}${x.store_count?` · ${esc(x.store_count)}`:''}${x.cooperation_time?` · ${esc(x.cooperation_time)}`:''}${x.cooperation_mode?` · ${esc(x.cooperation_mode)}`:''}</div></div>`).join(''):''}
+      <div class="row"><div class="k">覆盖区域</div><div class="v">${tags(d.regions)}</div></div>
+      <div class="row"><div class="k">温层</div><div class="v">${tags(d.temperature_layers)}</div></div>
+      <div class="row"><div class="k">物流</div><div class="v">${d.national_logistics?'支持全国物流':''} ${d.drop_shipping?'支持一件代发':''}</div></div>
+      <div class="row"><div class="k">标准支持</div><div class="v">${d.has_sop?'提供SOP卡':''} ${d.has_training?'提供技术培训':''}</div></div>
+      ${d.export&&d.export.countries?`<div class="row"><div class="k">出口</div><div class="v">${esc(d.export.countries)}${d.export.scale?` · ${esc(d.export.scale)}`:''}${d.export.certified?' · 有出口认证':''}</div></div>`:''}
+    </div></div>
+
+  <div class="note">本展示卡信息由企业自主提交,FoodIntelAI 已完成基础核验。对接合作前,建议进一步核实资质与产能。</div>
+  <div class="cta"><p>需要对接这家企业?</p><a href="index.html">联系 FoodIntelAI →</a></div>
+  `;
+}
+render();
+</script>
+</body>
+</html>

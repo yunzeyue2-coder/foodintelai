@@ -1,0 +1,65 @@
+{
+  "model_registry_version": "MG-V1.0",
+  "models": [
+    {
+      "model_id": "M-HHI-STRUCTURE",
+      "name": "结构HHI（品类结构集中度）",
+      "applicable_scenario": "评估某品类/工艺生态内商业簇的收敛程度",
+      "input_variables": ["风格标签", "产品标签", "工艺标签"],
+      "calculation_logic": "HHI = sum((share_i*100)^2), share_i = 簇i门店数/该工艺已识别样本",
+      "weights": "无（纯统计）",
+      "limitations": "只衡量可观测样本（Unknown率需披露）；不反映经营质量",
+      "validation": "炸鸡V2.1: 生炸2405.9(15簇/360样本) / 裹粉1091.1(23簇/471样本)，与报告一致",
+      "version": "ONT-PIPELINE-V0.3",
+      "evidence_status": "A"
+    },
+    {
+      "model_id": "M-HHI-BRAND",
+      "name": "品牌HHI（品牌集中度）",
+      "applicable_scenario": "评估品类内品牌集中程度，识别一强独大或多强并存",
+      "input_variables": ["门店名称", "品牌规则库"],
+      "calculation_logic": "HHI = sum((share_i*100)^2), share_i = 品牌i门店数/品牌识别门店数",
+      "weights": "无（纯统计）",
+      "limitations": "依赖品牌规则版本（BRAND-RULES-20260810 固定）；规则变化会漂移",
+      "validation": "炸鸡V2.1: 生炸1393.4(11品牌) / 裹粉2775.2(11品牌,正新94主导)，与报告一致",
+      "version": "BRAND-RULES-20260810",
+      "evidence_status": "A"
+    },
+    {
+      "model_id": "M-OBS-COVERAGE",
+      "name": "Observable Cluster Coverage（可观测簇覆盖率）",
+      "applicable_scenario": "衡量显著商业簇占全样本比例，表达数据可观测性边界",
+      "input_variables": ["风格×产品×工艺 交叉簇", "阈值(≥25家)"],
+      "calculation_logic": "覆盖率 = 显著簇门店合计 / 全样本",
+      "weights": "无（纯统计）",
+      "limitations": "阈值(≥25家)为主观设定；剩余门店≠无市场，是数据无法形成确定结构",
+      "validation": "炸鸡V2.1: 35.2%(843/2397, 15簇)，与报告一致",
+      "version": "ONT-PIPELINE-V0.3",
+      "evidence_status": "A"
+    },
+    {
+      "model_id": "M-FDE-SCORE",
+      "name": "FDE 决策评分（双评分模型）",
+      "applicable_scenario": "无经验创业者评估品类进入可行性",
+      "input_variables": ["行业机会(五维)", "个人匹配(五维)", "画像权重"],
+      "calculation_logic": "Decision = Industry×0.7 + Personal×0.3；五维权重 market0.25/competition0.20/operation0.20/resource0.25/timing0.10",
+      "weights": "0.7/0.3（低风险验证型画像固定）；资源充足型画像个人匹配升至0.4-0.5",
+      "limitations": "细分维度分数当前未完全绑定Evidence（P1待办）；不同画像分数不可横向比较",
+      "validation": "炸鸡V2.1: 78×0.7+70×0.3=76, R2条件进入",
+      "version": "FDE-V0.3",
+      "evidence_status": "A+B"
+    },
+    {
+      "model_id": "M-SKILL-GATE",
+      "name": "Skill Gate（技能门槛决策闸）",
+      "applicable_scenario": "生炸等高技能依赖工艺的进入资格判定",
+      "input_variables": ["工艺良率(30天测试)", "阈值(≥90%)"],
+      "calculation_logic": "Score达标但 Skill Gate FAIL → 不能进入（Gate 不是评分项）",
+      "weights": "无（硬闸门）",
+      "limitations": "阈值90%为初始设定，需按品类校准",
+      "validation": "炸鸡V2.1: 30天工艺良率测试协议已定义",
+      "version": "FDE-V0.4入口",
+      "evidence_status": "E"
+    }
+  ]
+}

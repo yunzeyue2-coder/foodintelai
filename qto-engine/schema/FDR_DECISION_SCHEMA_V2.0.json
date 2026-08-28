@@ -1,0 +1,66 @@
+{
+  "$schema": "FDR-Decision-Schema-V2.0",
+  "description": "青藤OS 决策模拟器 Schema——从静态分析报告升级为动态创业决策模拟",
+  "version": "2.0.0",
+  "modules": {
+    "decision_context": {
+      "description": "决策上下文（输入侧）",
+      "required": ["city", "category", "budget", "experience", "goal", "team_structure"],
+      "example": {"city": "郑州", "category": "炸鸡", "budget": 200000, "experience": "无餐饮经验", "goal": "夫妻创业", "team_structure": "夫妻2人"}
+    },
+    "entrepreneur_profile": {
+      "description": "创业者画像（能力×约束→匹配度）",
+      "required": ["skills", "capital_structure", "time_commitment", "risk_tolerance", "operational_ability"],
+      "skill_dimensions": ["工艺技能", "供应链管理", "选址判断", "运营管理", "财务管理"]
+    },
+    "market_intelligence": {
+      "description": "市场情报（证据驱动）",
+      "required": ["market_size", "price_structure", "brand_concentration", "competition_topology", "category_trend"],
+      "evidence_linked": true
+    },
+    "opportunity_matrix": {
+      "description": "机会矩阵（品类×生态×价格带×进入方式）",
+      "required": ["ecosystem_options", "price_band_options", "positioning_options", "entry_models"],
+      "output": "每个机会的 吸引力分×匹配分×竞争压力×验证难度"
+    },
+    "business_model_simulation": {
+      "description": "商业模型模拟（Business Twin 核心）",
+      "required": ["investment_structure", "revenue_model", "cost_structure", "unit_economics", "break_even"],
+      "investment_structure": {"equipment": null, "renovation": null, "rent_deposit": null, "working_capital": null, "buffer_fund": null},
+      "unit_economics": {"avg_daily_orders": null, "avg_order_value": null, "gross_margin": null, "daily_fixed_cost": null},
+      "scenarios": ["low", "medium", "ideal"]
+    },
+    "operation_survival_model": {
+      "description": "运营生存模型（现金流压力测试）",
+      "required": ["monthly_burn", "survival_months", "cash_flow_table", "break_even_orders"],
+      "output": "低/中/理想场景下现金能撑多久"
+    },
+    "risk_gate": {
+      "description": "风险闸门（Risk Penalty + Veto）",
+      "required": ["risk_inventory", "risk_probability", "risk_impact", "mitigation", "veto_triggers"],
+      "veto_example": {"trigger": true, "reason": "skill_gap", "decision": "NOT_RECOMMENDED"}
+    },
+    "validation_plan": {
+      "description": "验证计划（90-Day Battle Plan）",
+      "required": ["phase1_days_0_30", "phase2_days_31_60", "phase3_days_61_90"],
+      "phase_structure": {"question": null, "metrics": [], "pass_criteria": [], "fail_criteria": []}
+    },
+    "kill_criteria": {
+      "description": "止损线（Kill Criteria）",
+      "required": ["financial_stop", "operational_stop", "market_stop", "time_stop"],
+      "principle": "先定义退出条件再入场"
+    },
+    "final_decision": {
+      "description": "最终决策（Gate 裁决后）",
+      "required": ["decision", "recommended_path", "conditions", "authority_level", "confidence", "next_action"],
+      "decision_scale": ["GO", "CONDITIONAL_GO", "REVISED_ENTRY", "WAIT", "NOT_RECOMMENDED"]
+    }
+  },
+  "principles": {
+    "evidence_first": "每个判断必须能回溯到 Evidence（A/B/C/D/E 分级）",
+    "no_fake_precision": "无数据时用框架+假设区间，不编造精确数字",
+    "survival_first": "先证明能活过90天，再谈复制",
+    "kill_before_enter": "入场前先定义止损线",
+    "simulation_not_report": "输出的是推演+风险区间，不是静态结论"
+  }
+}
