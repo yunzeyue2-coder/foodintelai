@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国咖啡经营地图渗透模型 · 模型说明 ｜ FoodIntelAI 食品决策库</title>
+<meta name="description" content="中国咖啡经营地图渗透模型 V1.0：六维渗透地图，从生豆、贸易节点、加工节点到消费中心，讲清六次价值转换与一杯咖啡的钱怎么分。">
+<style>
+:root{--navy:#0B1F3A;--navy2:#122a4a;--navy3:#1a3a5c;--gold:#C4A35A;--bg:#F8F9FA;--ink:#1F2937;
+--muted:#6B7280;--line:#E5E7EB;--card:#fff;--soft:#FAFBFC;--red:#8C2F2F}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;user-select:none;-webkit-touch-callout:none}
+::selection{background:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter','PingFang SC',-apple-system,BlinkMacSystemFont,'Microsoft YaHei',sans-serif;
+font-size:15.5px;line-height:1.95;letter-spacing:.01em}
+.wrap{max-width:760px;margin:0 auto;padding:40px 20px 56px}
+.topbar{border-top:3px solid var(--navy);padding-top:16px;margin-bottom:26px}
+.tb-en{font-size:11px;font-weight:600;color:var(--navy);letter-spacing:3px}
+.tb-sub{font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:5px}
+.cover{background:linear-gradient(160deg,#0B1F3A 0%,#122a4a 60%,#1a3a5c 100%);border-radius:16px;
+padding:52px 26px 40px;text-align:center;position:relative;overflow:hidden;margin-bottom:24px}
+.cover::before,.cover::after{content:'';position:absolute;border:2px solid rgba(196,163,90,.14);border-radius:50%}
+.cover::before{width:200px;height:200px;top:-60px;left:-60px}
+.cover::after{width:160px;height:160px;bottom:-40px;right:-40px;border-color:rgba(196,163,90,.11)}
+.cover .kick{font-size:11px;color:var(--gold);letter-spacing:5px;font-weight:600;margin-bottom:16px}
+.cover h1{font-size:29px;line-height:1.45;font-weight:700;color:#fff;margin:0 0 14px}
+.cover .sub{font-size:13.5px;color:#C7D2DE;line-height:1.95;margin:0}
+.cover .tag{display:inline-block;margin-top:18px;padding:5px 14px;border:1px solid rgba(196,163,90,.45);
+color:var(--gold);font-size:11.5px;letter-spacing:1.5px;border-radius:20px}
+.hero{background:linear-gradient(150deg,#0B1F3A,#122a4a);border-radius:12px;padding:24px 22px;margin:18px 0;color:#fff}
+.hero .hl{font-size:17px;line-height:1.85;font-weight:600}
+.hero .hs{font-size:12.5px;color:#93A3B5;margin-top:10px;line-height:1.8}
+h2{font-size:19px;font-weight:700;color:var(--navy);margin:36px 0 12px;padding-left:12px;border-left:4px solid var(--gold)}
+h3{font-size:15.5px;font-weight:600;color:var(--navy);margin:22px 0 8px}
+p{margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px 14px;margin:14px 0}
+.card-soft{background:var(--soft);border:1px dashed var(--line);border-radius:12px;padding:14px 18px;margin:14px 0}
+.sell{border-left:3px solid var(--gold);background:#fff;border-radius:0 10px 10px 0;padding:12px 16px;margin:10px 0;
+border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sell .st{font-weight:700;color:var(--navy);display:block;margin-bottom:4px}
+.sell .sm{font-size:13.5px;color:#4B5563;line-height:1.85}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px;table-layout:fixed;background:#fff}
+th,td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top;line-height:1.75;word-break:break-word}
+th{background:var(--navy);color:#fff;font-weight:600;font-size:13px}
+tbody tr:nth-child(even){background:#FCFDFE}
+td.k{color:var(--navy);font-weight:600}
+td.g{color:var(--gold);font-weight:600}
+.price td.p{font-size:17px;font-weight:700;color:var(--navy)}
+ul{margin:6px 0 12px 20px;padding:0} li{margin-bottom:6px}
+.cta{background:linear-gradient(150deg,#0B1F3A,#1a3a5c);border-radius:12px;padding:22px;text-align:center;margin:22px 0}
+.cta .ct{font-size:16px;color:#fff;font-weight:700;margin-bottom:6px}
+.cta .cs{font-size:12.5px;color:#93A3B5;line-height:1.85}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border:1px solid var(--line);border-radius:10px;color:var(--muted);margin-right:6px}
+.tag-ok{border-color:#9CC5A1;color:#2F6B3A}.tag-hot{border-color:#E0A88A;color:#B45309}
+footer{margin-top:40px;border-top:1px solid var(--line);padding-top:20px}
+.disclaimer{font-size:12px;color:var(--muted);line-height:1.85;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:18px}
+.qr-row{display:flex;gap:14px;justify-content:space-between;margin:16px 0}
+.qr-item{flex:1;text-align:center}.qr-item img{width:96px;height:96px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.ql{font-size:11px;color:var(--muted);margin-top:6px}
+.brandfoot{text-align:center;border-top:1px solid var(--line);margin-top:18px;padding-top:16px}
+.brandfoot .bn{font-size:15px;font-weight:700;color:var(--navy)}
+.brandfoot .bs{font-size:12px;color:var(--gold);letter-spacing:2px;margin-top:4px}
+.brandfoot .bd{width:40px;height:2px;background:var(--gold);margin:11px auto}
+.brandfoot .bl{font-size:12.5px;color:var(--ink);margin-bottom:7px}
+.brandfoot .bx{font-size:11px;color:var(--muted);line-height:1.8}
+.copyright{font-size:11.5px;color:var(--muted);line-height:1.8;margin-top:20px;border-top:1px solid var(--line);padding-top:14px}
+.copyright strong{color:var(--navy)}
+@media (max-width:480px){.wrap{padding:24px 14px 36px}.cover{padding:34px 16px 28px}.cover h1{font-size:21px}
+.qr-row{flex-direction:row;flex-wrap:nowrap;gap:6px;margin:12px 0}.qr-item img{width:88px;height:88px}
+.ql{font-size:9.5px;line-height:1.5}.disclaimer{font-size:11.5px;padding:12px 14px}
+.brandfoot{padding-top:14px}footer{margin-top:30px}table{font-size:12.5px}th,td{padding:7px 8px}}
+</style></head><body>
+<span style="position:absolute;left:-9999px" aria-hidden="true">&#8203;&#8204;&#8203;&#8203;&#8203;&#8204;&#8203;&#8203;&#8203;&#8203;</span><!-- FIF-TRACE:FIF-PREFACE-COF-MAP-1.0 -->
+<section class="wrap">
+  <section class="topbar"><section class="tb-en">FOODINTELAI · 产业价值资产</section>
+  <section class="tb-sub">FRAMEWORKS ／ COF-MAP-1.0 ／ 模型说明</section></section>
+  <section class="cover">
+    <section class="kick">中国咖啡 · 母资产 V1.0</section>
+    <h1>中国咖啡经营地图渗透模型</h1>
+    <p class="sub">生豆便宜，为什么不等于咖啡便宜？——一杯咖啡的钱到底怎么分</p>
+    <section class="tag">母资产 V1.0 ｜ 约 4.22 万字 ｜ 六维渗透地图</section>
+  </section>
+  <section class="hero"><section class="hl">把咖啡从“农产品“到“一杯饮品“的六次价值转换摆在一张地图上，才知道钱漏在哪一段。</section>
+  <section class="hs">六维之间有四条传导线：原料涨价为什么不一定传导到杯价，杯价下跌为什么会先冲击中间环节——这些机制决定你的风险暴露点。</section></section>
+
+  <h2>一、规模与内容清单</h2>
+  <table><colgroup><col style="width:34%"><col style="width:66%"></colgroup>
+  <thead><tr><th>维度</th><th>实况</th></tr></thead><tbody><tr><td class="k">正文规模</td><td>约 42,200 字（母资产 V1.0）</td></tr><tr><td class="k">结构</td><td>六维渗透地图 ＋ 十一模块规格 ＋ 四条传导线</td></tr><tr><td class="k">表格</td><td>35 张表（成本、价格、门店经营与边界测试）</td></tr><tr><td class="k">深度验证</td><td>含边界测试：公开数据只能推到 L1，L2/L4 需企业自有数据</td></tr></tbody></table>
+  <section class="card-soft"><b>内容清单</b><ul><li>① 母资产正文（约 4.22 万字）</li><li>② 六维渗透地图 ＋ 十一模块规格</li><li>③ 35 张经营与成本表</li><li>④ 边界测试与数据分层说明</li></ul></section>
+
+  <h2>二、核心卖点（不是“信息更多”，是“判断更准”）</h2>
+  <section class="sell"><span class="st">六次价值转换</span><section class="sm">从生豆到杯中的每一段转换都标出增值点与损耗点，找利润先找转换。</section></section><section class="sell"><span class="st">一杯咖啡的钱怎么分</span><section class="sm">原料、烘焙、物流、门店租金人工、品牌与渠道各占多少，用结构代替感觉。</section></section><section class="sell"><span class="st">四条传导线</span><section class="sm">原料、加工、门店、消费四段之间的传导关系——直接对应你的风险暴露。</section></section><section class="sell"><span class="st">经营参数落地</span><section class="sm">杯量平衡、单店成本结构、加盟费用区间这类经营数字，都进了表。</section></section><section class="sell"><span class="st">边界诚实</span><section class="sm">明确写出“公开数据只能推到哪一层”，不把估算包装成事实。</section></section>
+
+  <h2>三、它能帮你解决什么</h2>
+  <section class="card"><ul><li>避雷：开店前先看清单店成本结构与平衡杯量，避免“算着赚钱、开着亏钱”。</li><li>选品/选定位：品牌价格带与原料结构的对应关系。</li><li>供应链判断：生豆、烘焙、物流各段的价格与议价结构。</li><li>风险识别：原料波动会传导到哪里、你在哪一段最脆弱。</li></ul></section>
+
+  <h2>四、谁适合用</h2>
+  <table><colgroup><col style="width:50%"><col style="width:50%"></colgroup>
+  <thead><tr><th>适合</th><th>不必买</th></tr></thead>
+  <tbody><tr><td><ul><li>咖啡品牌创业者、门店操盘手、加盟商评估者</li><li>咖啡供应链、烘焙与原料贸易企业</li><li>研究咖啡与餐饮赛道的投资/研究从业者</li></ul></td><td><ul><li>想要开店选址清单或设备采购清单的读者（那是另一类交付）</li><li>只关心“哪支豆子好喝“的消费者</li></ul></td></tr></tbody></table>
+
+  <h2>五、怎么用（三步）</h2>
+  <section class="card">
+    <p><b>1｜先定位</b>：看总纲/序章，确认这套框架讲的是什么问题、边界在哪。</p>
+    <p><b>2｜再对号</b>：按你要做的品类、环节（原料/加工/渠道/成本），只看对应章节。</p>
+    <p><b>3｜后落地</b>：把里面的口径与表格抄进你自己的采购、生产、结算流程；每一条数字都标了来源与证据等级。</p>
+  </section>
+
+  <h2>六、开放时间与价格</h2>
+  <section class="cta"><section class="ct">9 月 18 日起 开放购买</section>
+  <section class="cs">首发限 100 份　｜　加微信付款后即刻交付</section></section>
+  <table class="price"><colgroup><col style="width:26%"><col style="width:22%"><col style="width:52%"></colgroup>
+  <thead><tr><th>版本</th><th>价格</th><th>包含</th></tr></thead><tbody><tr><td class="k">首发版（限前 100 份）</td><td class="p">699 元</td><td>母资产全文 ＋ 六维地图 ＋ 经营表</td></tr><tr><td class="k">正式版</td><td class="p">999 元</td><td>同上，含修订</td></tr><tr><td class="k">企业版</td><td class="p">9,800 元起</td><td>按你的门店/供应链数据做一轮经营诊断</td></tr></tbody></table>
+  <p style="font-size:13px;color:var(--muted)">作为“母资产”，它的价值在于可反复调用：定价、开店、供应链判断都能回到同一套结构与表。</p>
+
+  <h2>七、边界与免责</h2>
+  <section class="card-soft"><p>① 门店成本与加盟费用类数字为公开报道与行业样本交叉，标注年份与口径，须以当地实际为准。</p><p>② 公开数据可支撑产业地图，不足以直接支撑经营模型核心参数（详见文中边界测试）。</p><p>③ 不构成投资与开店建议。</p></section>
+
+  <footer>
+    <section class="disclaimer">本页为行业研究与经营模型参考，不构成投资、经营或开店建议。模型与报告中的数值均标注证据等级与来源；未入库项不参与计算；情景推演数字不代表行业实测。具体经营决策需结合实际资源、能力与市场环境综合判断。</section>
+    <section class="qr-row">
+      <section class="qr-item"><img src="https://foodintelai.com/gongzhonghao_qr.jpg" alt="公众号二维码"><section class="ql">公众号 · 沧林食品技术</section></section>
+      <section class="qr-item"><img src="https://foodintelai.com/vora_qr.png" alt="VORA小程序码"><section class="ql">VORA · 食品决策小程序</section></section>
+      <section class="qr-item"><img src="https://foodintelai.com/qr_tg_channel.png" alt="电报频道二维码"><section class="ql">电报 · 行业信号频道</section></section>
+    </section>
+    <section class="brandfoot"><section class="bn">FoodIntelAI 食品决策库</section>
+      <section class="bs">少走弯路 · 快人一步</section><section class="bd"></section>
+      <section class="bl">foodintelai.com</section>
+      <section class="bx">单品拆解 · 落地路径 · 品类研判 · 做食品创业前，先看数据</section>
+      <section class="bx">中国咖啡经营地图渗透模型 · COF-MAP-1.0</section>
+      <section class="bx">2026 年 9 月 18 日起开放购买</section>
+    </section>
+    <section class="copyright"><p><strong>版权声明</strong></p>
+      <p>本页及所交付内容为 FoodIntelAI 产业认知资产，受版权保护：个人学习与研究引用可自由阅读，<strong>转载、摘编、商用、培训与咨询交付须事先获得书面授权</strong>。</p>
+      <p>© FoodIntelAI 2026 All Rights Reserved ｜ 首发于 foodintelai.com</p></section>
+  </footer>
+</section>
+<script>(function(){var b=function(e){e.preventDefault();return false;};
+['selectstart','copy','cut','dragstart','contextmenu'].forEach(function(t){document.addEventListener(t,b,{capture:true,passive:false});});
+document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
+if((e.metaKey||e.ctrlKey)&&['a','c','x','u'].indexOf(k)>=0){e.preventDefault();return false;}},{capture:true});
+document.addEventListener('mousedown',function(e){if(e.detail>1)e.preventDefault();},{capture:true});})();</script>
+<script>document.addEventListener('copy',function(e){var s=window.getSelection().toString();
+if(s.length>20){e.clipboardData.setData('text/plain',s+'\n\n——\n首发于 FoodIntelAI（foodintelai.com）· 转载请注明出处');e.preventDefault();}});</script>
+</body></html>
