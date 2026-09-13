@@ -1,0 +1,345 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国鸡爪非对称价值模型 · 读前页 ｜ FoodIntelAI 食品决策库</title>
+<meta name="description" content="中国鸡爪非对称价值模型 CPF-AVM-1.0 读前页：模型定位、八卷结构、五档证据体系、Grade Cap、四态状态机与十三步完整走查。">
+<style>
+:root{
+  --navy:#0B1F3A; --navy-2:#122a4a; --navy-3:#1a3a5c;
+  --gold:#C4A35A; --bg:#F8F9FA; --ink:#1F2937; --muted:#6B7280;
+  --line:#E5E7EB; --card:#FFFFFF; --soft:#FAFBFC; --red:#8C2F2F;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; user-select:none; -webkit-touch-callout:none}
+::selection{background:transparent}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:'Inter','PingFang SC',-apple-system,BlinkMacSystemFont,'Microsoft YaHei',sans-serif;
+  font-size:15.5px; line-height:1.9; letter-spacing:.01em;
+}
+body::after{content:''; position:fixed; inset:0; pointer-events:none; z-index:9998; opacity:.03;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='380' height='220'><text x='18' y='116' font-size='21' fill='%230B1F3A' font-family='Helvetica,sans-serif' transform='rotate(-22 18 116)'>FoodIntelAI · CPF-AVM-1.0</text></svg>");
+  background-repeat:repeat}
+.wrap{max-width:760px; margin:0 auto; padding:40px 20px 56px}
+
+/* 顶部标识条 */
+.topbar{border-top:3px solid var(--navy); padding-top:16px; margin-bottom:28px}
+.topbar .tb-en{font-size:11px; font-weight:600; color:var(--navy); letter-spacing:3px}
+.topbar .tb-sub{font-size:10px; color:var(--muted); letter-spacing:2px; margin-top:5px}
+
+/* 封面卡 */
+.cover{
+  background:linear-gradient(160deg,#0B1F3A 0%,#122a4a 60%,#1a3a5c 100%);
+  border-radius:16px; padding:52px 26px 40px; text-align:center;
+  position:relative; overflow:hidden; margin-bottom:30px;
+}
+.cover::before,.cover::after{content:''; position:absolute; border:2px solid rgba(196,163,90,.14); border-radius:50%}
+.cover::before{width:200px; height:200px; top:-60px; left:-60px}
+.cover::after{width:160px; height:160px; bottom:-40px; right:-40px; border-color:rgba(196,163,90,.11)}
+.cover .kicker{font-size:11px; color:var(--gold); letter-spacing:5px; font-weight:600; margin-bottom:18px}
+.cover h1{font-size:30px; line-height:1.45; font-weight:700; color:#fff; margin:0 0 14px; letter-spacing:.02em}
+.cover .sub{font-size:13.5px; color:#C7D2DE; line-height:1.95; margin:0}
+.cover .sub-2{font-size:12.5px; color:#93A3B5; line-height:1.9; margin:8px 0 0}
+.cover .tag{display:inline-block; margin-top:20px; padding:5px 14px; border:1px solid rgba(196,163,90,.45);
+  color:var(--gold); font-size:11.5px; letter-spacing:1.5px; border-radius:20px}
+
+/* 标题层级 */
+h2{font-size:19px; font-weight:700; color:var(--navy); margin:38px 0 14px; padding-left:12px; border-left:4px solid var(--gold)}
+h3{font-size:15.5px; font-weight:600; color:var(--navy); margin:24px 0 10px}
+p{margin:0 0 12px}
+.lead{font-size:16px; color:var(--navy); font-weight:600; line-height:1.95}
+
+/* 卡片 */
+.card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 20px 16px; margin:16px 0}
+.card-soft{background:var(--soft); border:1px dashed var(--line); border-radius:12px; padding:16px 18px; margin:16px 0}
+.card-navy{background:linear-gradient(150deg,#0B1F3A,#122a4a); border-radius:12px; padding:22px 20px; margin:18px 0; color:#E8EDF3}
+.card-navy .cn-t{font-size:12px; color:var(--gold); letter-spacing:3px; font-weight:600; margin-bottom:10px}
+.card-navy .cn-b{font-size:15px; line-height:1.95; color:#fff; font-weight:600}
+
+/* 表格（真 table，列宽百分比，可拖拽，不横滑） */
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px; table-layout:fixed; background:#fff}
+th,td{border:1px solid var(--line); padding:9px 10px; text-align:left; vertical-align:top; line-height:1.75; word-break:break-word}
+th{background:var(--navy); color:#fff; font-weight:600; font-size:13px; letter-spacing:.5px}
+tbody tr:nth-child(even){background:#FCFDFE}
+td.k{color:var(--navy); font-weight:600}
+td.g{color:var(--gold); font-weight:600}
+td.r{color:var(--red); font-weight:600}
+
+/* 结构图（纯 section，无 img） */
+.chain{margin:16px 0}
+.chain .step{background:#fff; border:1px solid var(--line); border-left:3px solid var(--gold); border-radius:8px;
+  padding:11px 14px; margin-bottom:8px; font-size:13.5px; color:var(--navy)}
+.chain .step b{color:var(--gold); font-weight:700; margin-right:6px}
+.chain .arrow{text-align:center; color:var(--gold); font-size:14px; line-height:1; margin:2px 0 6px}
+.steps13{margin:16px 0}
+.steps13 .s{background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-bottom:7px; font-size:13.5px}
+.steps13 .s i{display:inline-block; min-width:26px; color:var(--gold); font-style:normal; font-weight:700}
+.steps13 .s b{color:var(--navy)}
+
+/* 优先级条 */
+.prio{margin:16px 0}
+.prio .p{display:block; border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-bottom:7px; font-size:13.5px; background:#fff}
+.prio .p1{border-left:4px solid var(--red)} .prio .p2{border-left:4px solid #B45309}
+.prio .p3{border-left:4px solid var(--navy)} .prio .p4{border-left:4px solid var(--gold)}
+.prio .p5{border-left:4px solid #9CA3AF}
+.prio .pn{font-weight:700; color:var(--navy); margin-right:8px}
+
+/* 公式块 */
+.fml{background:#0B1F3A; color:#E8EDF3; border-radius:10px; padding:16px 18px; margin:14px 0;
+  font-size:14px; line-height:2.15; overflow-wrap:break-word; letter-spacing:.02em}
+.fml .op{color:#C4A35A; font-weight:600; padding:0 4px}
+.fml b{color:var(--gold); font-weight:400}
+
+/* 页尾 */
+footer{margin-top:44px; border-top:1px solid var(--line); padding-top:22px}
+.disclaimer{font-size:12px; color:var(--muted); line-height:1.85; background:#fff; border:1px solid var(--line);
+  border-radius:10px; padding:14px 16px; margin-bottom:20px}
+.qr-row{display:flex; gap:14px; justify-content:space-between; margin:18px 0}
+.qr-item{flex:1; text-align:center}
+.qr-item img{width:96px; height:96px; border:1px solid var(--line); border-radius:8px; background:#fff}
+.ql{font-size:11px; color:var(--muted); margin-top:6px; line-height:1.6}
+.brandfoot{text-align:center; border-top:1px solid var(--line); margin-top:20px; padding-top:18px}
+.brandfoot .bn{font-size:15px; font-weight:700; color:var(--navy); letter-spacing:.5px}
+.brandfoot .bs{font-size:12px; color:var(--gold); letter-spacing:2px; margin-top:4px}
+.brandfoot .bd{width:40px; height:2px; background:var(--gold); margin:12px auto}
+.brandfoot .bl{font-size:12.5px; color:var(--ink); margin-bottom:8px}
+.brandfoot .bx{font-size:11px; color:var(--muted); line-height:1.8}
+.copyright{font-size:11.5px; color:var(--muted); line-height:1.8; margin-top:22px; border-top:1px solid var(--line); padding-top:16px}
+.copyright strong{color:var(--navy)}
+@media (max-width:480px){
+  .wrap{padding:26px 14px 40px}
+  .cover{padding:38px 16px 30px; border-radius:12px}
+  .cover h1{font-size:22px}
+  .qr-row{flex-direction:column; align-items:center}
+  .qr-item img{width:110px; height:110px}
+  table{font-size:12.5px}
+  th,td{padding:7px 8px}
+}
+</style>
+</head>
+<body>
+<span style="position:absolute;left:-9999px" aria-hidden="true">&#8203;&#8204;&#8203;&#8203;&#8203;&#8204;&#8203;&#8203;&#8203;&#8203;&#8204;&#8203;&#8203;&#8203;&#8203;&#8203;</span><!-- FIF-TRACE:FIF-CPF-AVM-V045-READFIRST -->
+
+<section class="wrap">
+
+  <section class="topbar">
+    <section class="tb-en">FOODINTELAI · 产业价值资产</section>
+    <section class="tb-sub">FRAMEWORKS ／ 模型编号 CPF-AVM-1.0</section>
+  </section>
+
+  <section class="cover">
+    <section class="kicker">中国鸡爪 · 非对称价值模型</section>
+    <h1>中国鸡爪非对称价值模型</h1>
+    <p class="sub">同一只鸡的两只爪，为什么能被卖成几十倍的价差？<br>从原料规格到单位贡献——一条可复算、会拒答、能回流的经营模型</p>
+    <p class="sub-2">读前页 · 模型定位与使用导航</p>
+    <section class="tag">V0.45 主体模型成型版｜标准件 V1.0 就绪</section>
+  </section>
+
+  <section class="card-navy">
+    <section class="cn-t">全 书 唯 一 一 条 原 则</section>
+    <section class="cn-b">模型不是必须给答案。<br>当证据不足时，模型必须能够明确告诉你"不能算"。</section>
+  </section>
+
+  <h2>一、这个模型是什么，不是什么</h2>
+  <table>
+    <colgroup><col style="width:16%"><col style="width:42%"><col style="width:42%"></colgroup>
+    <thead><tr><th>维度</th><th>是</th><th>不是</th></tr></thead>
+    <tbody>
+      <tr><td class="k">形态</td><td>经营工具：输入原料价、规格、出成、工艺、人工、包装、渠道与履约参数，输出单位贡献</td><td>行业研究报告：读完知道很多，但算不出一个数</td></tr>
+      <tr><td class="k">输出</td><td>单位贡献 ＋ <b>结果等级</b> ＋ 主要限制因素 ＋ 升级路径</td><td>一个确定的利润数字</td></tr>
+      <tr><td class="k">证据不足时</td><td>输出"不可计算"＋缺口清单＋补齐顺序</td><td>用行业均值把表格填满</td></tr>
+      <tr><td class="k">竞争判断</td><td>竞品价格是外部事件，不进入模型；价格战由自己的单位贡献决定</td><td>竞品跟随器</td></tr>
+      <tr><td class="k">用途边界</td><td>决策辅助</td><td>投资承诺／对外报价承诺</td></tr>
+    </tbody>
+  </table>
+
+  <h2>二、模型的三条边界（先知道它不能做什么）</h2>
+  <section class="card-soft">
+    <p><b>① 不预测价格</b>：所有风险情景只给路径与动作，不给价格预测（缺到岸价、库存与替代弹性）。</p>
+    <p><b>② 不替代实测</b>：人工、能耗、渠道扣点、账期等未入库项，缺一项就不产出最终贡献。</p>
+    <p><b>③ 不替代人</b>：合规判断、标签审核、宣称文案、承担主体认定一律转人工。</p>
+  </section>
+
+  <h2>三、核心方法论（三条，全篇冻结）</h2>
+  <h3>1｜证据边界：C ≠ 不可计算，未入库 ＝ 不具备计算资格</h3>
+  <table>
+    <colgroup><col style="width:24%"><col style="width:38%"><col style="width:38%"></colgroup>
+    <thead><tr><th>参数类型</th><th>能不能算</th><th>怎么用</th></tr></thead>
+    <tbody>
+      <tr><td class="k">C｜情景参数</td><td class="g">可以计算</td><td>结果受 Grade Cap 限制，降级使用（仅内部排序）</td></tr>
+      <tr><td class="k">未入库</td><td class="r">不具备计算资格</td><td>结果不产出，给缺口清单与补齐顺序</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2｜两条独立轴：证据等级 与 经营结果 互不替代</h3>
+  <p>证据轴：C → A（可信度提高）。经营轴：数值可能同时变差——出成由 100% 实测为 95%，<b>数据更准了，结果却更差</b>。两条轴必须分开表达：不得用"数据更准了"暗示"结果更好了"。</p>
+
+  <h3>3｜两个闭环必须分开陈述</h3>
+  <table>
+    <colgroup><col style="width:34%"><col style="width:14%"><col style="width:52%"></colgroup>
+    <thead><tr><th>闭环</th><th>状态</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="k">模型逻辑闭环</td><td class="g">✅</td><td>采集 → 验证 → 入模 → 计算 → 分级 → 触发 → 重算／拒答 → 执行 → 回流</td></tr>
+      <tr><td class="k">工程接线闭环</td><td class="g">✅</td><td>自建标准件已就绪：DATA 38 字段字典 V1.0 ＋ R1 公式注册表 V1.0 ＋ 接口 Schema</td></tr>
+    </tbody>
+  </table>
+
+  <h2>四、八卷结构</h2>
+  <table>
+    <colgroup><col style="width:26%"><col style="width:36%"><col style="width:38%"></colgroup>
+    <thead><tr><th>卷</th><th>回答什么</th><th>关键产出</th></tr></thead>
+    <tbody>
+      <tr><td class="k">序章</td><td>价值裂口从哪里产生</td><td>三口径价格带 · 13 步完整走查</td></tr>
+      <tr><td class="k">卷一 供给</td><td>鸡爪从哪里来</td><td>进口结构 · 断供容忍度 · 厂号核验</td></tr>
+      <tr><td class="k">卷二 原料</td><td>什么样的鸡爪值钱</td><td>分母对齐法 · 七个采购决策动作</td></tr>
+      <tr><td class="k">卷三 转换</td><td>怎么把原料变成更高价值产品</td><td>五线统一模板 · 敏感度三标签 · 失败边界</td></tr>
+      <tr><td class="k">卷四 实现</td><td>不同渠道究竟能实现多少价值</td><td>七级拆解 · 价值实现率 · 承担主体</td></tr>
+      <tr><td class="k">卷五 计算</td><td>投入多少钱，最终留下多少钱</td><td>F-01～F-08 · 三档情景 · Grade Cap</td></tr>
+      <tr><td class="k">卷六 竞争</td><td>谁能长期拿到这部分价值</td><td>参数二分 · 五场战争 · 最小算例</td></tr>
+      <tr><td class="k">卷七 边界</td><td>哪些钱不能赚，什么时候不能用</td><td>合规红线 · 四态优先级 · 判定案例库</td></tr>
+      <tr><td class="k">卷八 执行</td><td>模型怎么离开电脑</td><td>四单据 · 结算核对单 · 账期核对单</td></tr>
+      <tr><td class="k">附录 A–E</td><td>操作索引</td><td>速查／公式／来源分级／口径表</td></tr>
+    </tbody>
+  </table>
+
+  <h2>五、一页速查卡</h2>
+  <h3>主链</h3>
+  <section class="chain">
+    <section class="step">原料规格</section>
+    <section class="arrow">▼</section>
+    <section class="step">有效原料成本（分母对齐法）</section>
+    <section class="arrow">▼</section>
+    <section class="step">工艺转换（参数 → 物性 → 出成）</section>
+    <section class="arrow">▼</section>
+    <section class="step">产品规格（定义决定定价体系）</section>
+    <section class="arrow">▼</section>
+    <section class="step">渠道售价（价值实现率）</section>
+    <section class="arrow">▼</section>
+    <section class="step">单位贡献 ＋ 结果等级</section>
+  </section>
+
+  <h3>三个公式</h3>
+  <section class="fml">
+    C(Y) = P <span class="op">÷</span> th <span class="op">÷</span> tr <span class="op">÷</span> Y　　　　　　　　　　<b>原料侧单位成本</b><br>
+    A = 实际成交价 <span class="op">−</span> 渠道直接扣除项　　　　<b>渠道净实现收入</b><br>
+    B = A <span class="op">−</span> 经营主体承担项　　　　　　　　　<b>经营净实现收入</b><br>
+    U = B <span class="op">−</span> C(Y) <span class="op">−</span> 加工成本 <span class="op">−</span> 包装　　　　　<b>单位贡献</b><br>
+    结果等级 = min(输入等级)　　　　　　　　　<b>Grade Cap</b>
+  </section>
+
+  <h3>四态优先级（命中即返回，只有一个状态）</h3>
+  <section class="prio">
+    <section class="p p1"><span class="pn">1</span>红线 → 停止计算 ＋ 转人工</section>
+    <section class="p p2"><span class="pn">2</span>未入库 → 停止计算 ＋ 缺口清单</section>
+    <section class="p p3"><span class="pn">3</span>结构变化 → 重算（全链）</section>
+    <section class="p p4"><span class="pn">4</span>等级下降 → 降级（仅内部排序）</section>
+    <section class="p p5"><span class="pn">5</span>正常 → 正常输出</section>
+  </section>
+
+  <h3>五档证据</h3>
+  <table>
+    <colgroup><col style="width:20%"><col style="width:44%"><col style="width:36%"></colgroup>
+    <thead><tr><th>档位</th><th>含义</th><th>是否进入计算</th></tr></thead>
+    <tbody>
+      <tr><td class="k">A｜事实参数</td><td>官方统计、法规、可靠实测</td><td class="g">✅ 可以</td></tr>
+      <tr><td class="k">B｜行业基准</td><td>多源交叉、行业公开数据</td><td>⚠️ 可作基准，禁伪装成实测</td></tr>
+      <tr><td class="k">C｜情景参数</td><td>本厂经验、访谈、沙盒假设</td><td>⚠️ 只能进入情景模型</td></tr>
+      <tr><td class="k">未入库</td><td>没有足够证据</td><td class="r">❌ 不进入计算</td></tr>
+      <tr><td class="k">M｜模型宪法口径</td><td>模型人为规定的分母与口径</td><td>✅ 仅作口径，不作为外部事实</td></tr>
+    </tbody>
+  </table>
+
+  <h2>六、十三步完整走查（把模型跑一遍）</h2>
+  <section class="steps13">
+    <section class="s"><i>01</i><b>采集</b>：原料采购价 24.0 元/kg（B）；th／tr／Y 暂无实测 → 先用 C 类情景</section>
+    <section class="s"><i>02</i><b>入模</b>：C(Y) = 24.0 ÷ 0.93 ÷ 0.98 ÷ 1.00 = 26.33 元/kg</section>
+    <section class="s"><i>03</i><b>渠道</b>：实际成交价 70（B）；扣项为情景值 → A 64.50、B 54.40</section>
+    <section class="s"><i>04</i><b>加工成本</b>：未入库</section>
+    <section class="s"><i>05</i><b>状态判定</b>：命中"未入库" → 停止计算 ＋ 缺口清单</section>
+    <section class="s"><i>06</i><b>补情景值</b>：加工 6.00（C）→ U = 20.27 元/kg</section>
+    <section class="s"><i>07</i><b>结果等级</b>：C（因 th／tr／Y、扣项、加工均为 C 类）</section>
+    <section class="s"><i>08</i><b>用途限定</b>：降级——仅内部排序；对外须标注"待实测校准"</section>
+    <section class="s"><i>09</i><b>报价</b>：三档而非单点 → 保守 17.34｜基准 20.27｜进取 22.66</section>
+    <section class="s"><i>10</i><b>实测回流</b>：验收单替换 th／tr／Y → 出成实测 95%（证据等级升 A）</section>
+    <section class="s"><i>11</i><b>状态复判</b>：th／tr 仍为 C → 结果等级仍为 C（单点升级不改变等级）</section>
+    <section class="s"><i>12</i><b>复算触发</b>：原料 ＋5% → C 27.65 → U 18.95 → 触发重新报价</section>
+    <section class="s"><i>13</i><b>升级路径</b>：按"消灭最弱输入"补齐 → 等级方可提升</section>
+  </section>
+  <p style="font-size:13px;color:var(--muted)">这一遍走查就是本模型的全部用法。八卷正文，只是把这十三步逐一讲透、给出算例与边界。</p>
+
+  <h2>七、它需要哪些私有数据（缺口台账）</h2>
+  <table>
+    <colgroup><col style="width:30%"><col style="width:34%"><col style="width:36%"></colgroup>
+    <thead><tr><th>缺口项</th><th>影响的结果</th><th>补齐方式</th></tr></thead>
+    <tbody>
+      <tr><td class="k">加工成本（人工＋能耗）</td><td>单位贡献不产出</td><td>工时台账 ＋ 电表／蒸汽表</td></tr>
+      <tr><td class="k">渠道扣点／返利／进场</td><td>实现率与单位贡献</td><td>渠道合同 ＋ 结算单</td></tr>
+      <tr><td class="k">账期与资金成本率</td><td>真实采购成本</td><td>合同 ＋ 财务数据</td></tr>
+      <tr><td class="k">五线出成实测</td><td>原料侧成本升级</td><td>七点称重链</td></tr>
+      <tr><td class="k">到岸均价（分国别）</td><td>进口比价</td><td>采购台账</td></tr>
+      <tr><td class="k">单爪净重实测</td><td>产能与规格口径</td><td>抽检记录</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;color:var(--muted)">这张台账会与模型结果一同发布——每一个数字都能查到它缺什么、补什么能升级。</p>
+
+  <h2>八、本页说明</h2>
+  <section class="card">
+    <p>① 本页为<b>读前页</b>：公开模型定位、结构、方法论、速查卡与十三步走查，<b>完整正文、算例与单据模板不在公开范围</b>。</p>
+    <p>② 当前版本为 <b>V0.45｜主体模型成型版</b>：模型层已冻结，工程接线（DATA 层字段名与 CALCULATE 层公式编号）待原件接入；接线完成后发布 <b>V1.0 冻结版</b>。</p>
+    <p>③ 模型的标准层已建成：38 个输入字段、9 条公式（R1-001～R1-009）、8 个输出字段与调用接口；工具层（Excel／Web／小程序／青藤OS）按"先留接口、后做工具"推进。<br>④ 模型对"未入库"与"证据不足"均按正式输出处理：宁可显示"不可计算"，不显示"看起来完整的假数字"。</p>
+  </section>
+
+  <footer>
+    <section class="disclaimer">
+      本页为行业研究与经营模型参考，不构成投资、经营或开店建议。模型中的数值分为五档证据等级：A 类引用现行国家标准与权威统计，B 类为多源交叉的行业基准，C 类为基于典型工业工况的情景推演（文中均标明），未入库项不参与计算。情景测算为逻辑验证，非经营承诺；具体经营决策需结合实际资源、能力与市场环境综合判断。
+    </section>
+    <section class="qr-row">
+      <section class="qr-item"><img src="https://foodintelai.com/gongzhonghao_qr.jpg" alt="公众号二维码"><section class="ql">公众号 · 沧林食品技术</section></section>
+      <section class="qr-item"><img src="https://foodintelai.com/vora_qr.png" alt="VORA小程序码"><section class="ql">VORA · 食品决策小程序</section></section>
+      <section class="qr-item"><img src="https://foodintelai.com/qr_tg_channel.png" alt="电报频道二维码"><section class="ql">电报 · 行业信号频道</section></section>
+    </section>
+    <section class="brandfoot">
+      <section class="bn">FoodIntelAI 食品决策库</section>
+      <section class="bs">少走弯路 · 快人一步</section>
+      <section class="bd"></section>
+      <section class="bl">foodintelai.com</section>
+      <section class="bx">单品拆解 · 落地路径 · 品类研判 · 做食品创业前，先看数据</section>
+      <section class="bx">中国鸡爪非对称价值模型 · CPF-AVM-1.0 · V0.45 主体模型成型版 · 标准件 V1.0 · 2026 年 9 月</section>
+    </section>
+    <section class="copyright">
+      <p><strong>版权声明</strong></p>
+      <p>本页为 FoodIntelAI 产业认知资产。模型结构、口径定义、公式体系与文字内容受版权保护：个人学习与研究引用可自由阅读，<strong>转载、摘编、商用、培训与咨询交付须事先获得书面授权</strong>。</p>
+      <p>© FoodIntelAI 2026 All Rights Reserved ｜ 首发于 foodintelai.com</p>
+    </section>
+  </footer>
+
+</section>
+
+<script>
+/* 反复制：禁选择 / 禁全选 / 禁复制剪切 / 禁右键 / 禁拖拽 / 禁查看源码快捷键 */
+(function(){
+  var block = function(e){ e.preventDefault(); return false; };
+  ['selectstart','copy','cut','dragstart','contextmenu'].forEach(function(t){
+    document.addEventListener(t, block, {capture:true, passive:false});
+  });
+  document.addEventListener('keydown', function(e){
+    var k = (e.key || '').toLowerCase();
+    if ((e.metaKey || e.ctrlKey) && ['a','c','x','u'].indexOf(k) >= 0) { e.preventDefault(); return false; }
+  }, {capture:true});
+  document.addEventListener('mousedown', function(e){ if (e.detail > 1) e.preventDefault(); }, {capture:true});
+})();
+</script>
+<script>
+/* 复制追踪：内容流出时自动带出处（兜底层） */
+document.addEventListener('copy', function(e){
+  var sel = window.getSelection().toString();
+  if (sel.length > 20) {
+    e.clipboardData.setData('text/plain', sel + '\n\n——\n首发于 FoodIntelAI（foodintelai.com）\n中国鸡爪非对称价值模型 · CPF-AVM-1.0\n作者：Vora · 转载请注明出处');
+    e.preventDefault();
+  }
+});
+</script>
+</body>
+</html>
