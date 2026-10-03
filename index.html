@@ -2146,7 +2146,14 @@ renderKnowTab(0);
 })();
 renderStallCats();
 updateHeroStats();
-loadCardsData();
+// 2026-10-03（D-28）：只有页面真存在要用它的容器时才去拉 cards-data.json（2.1MB）。
+// 当前首页 #hotContent / #stallCats / #statCards* 都不存在，无条件 fetch
+// 等于每个访客白下 2.1MB、多等约 5.5s，而结果无处渲染（纯空转）。
+if(document.getElementById('hotContent') || document.getElementById('stallCats')
+   || document.getElementById('statCards') || document.getElementById('statCardsSub')
+   || document.getElementById('statFree')){
+  loadCardsData();
+}
 
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('show');
