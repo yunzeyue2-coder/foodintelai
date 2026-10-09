@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI 搜索优化 · 企业服务 · FoodIntelAI</title>
+<link rel="icon" href="favicon.svg?v=2" type="image/svg+xml">
+<link rel="manifest" href="manifest.json?v=2">
+<style>
+*,::after,::before{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f5f0e8;--card:#fff;--text:#1a1a1a;--muted:#8a7a66;
+  --primary:#C0392B;--accent:#E8652D;--border:#e5ddd0;
+  --radius:14px;--shadow:0 2px 8px rgba(0,0,0,.04)
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:660px;margin:0 auto;padding:0 16px}
+
+/* 开篇 —— 一个整体 */
+.opening{padding:48px 0 24px;text-align:center}
+.opening h1{font-size:23px;font-weight:800;color:#2a1a0e;line-height:1.35}
+.opening h1 em{font-style:normal;color:var(--primary)}
+.opening .sub{font-size:14px;color:#6a5a4a;margin:10px auto 0;max-width:520px;line-height:1.7}
+.opening .meta{font-size:11px;color:#b5a898;margin-top:12px}
+
+/* 数据带 —— 和开篇连在一起 */
+.data-strip{max-width:500px;margin:0 auto 6px}
+.data-grid{background:var(--card);border-radius:var(--radius);padding:12px 8px;display:flex;border:1px solid var(--border)}
+.data-cell{flex:1;text-align:center;padding:0 4px}
+.data-cell+.data-cell{border-left:1px solid var(--border)}
+.data-num{font-size:19px;font-weight:800;color:var(--primary);line-height:1.2}
+.data-label{font-size:9px;color:#b5a898;margin-top:3px;line-height:1.3}
+.data-src{font-size:9px;color:#c5b8a8;text-align:center;margin-top:6px}
+
+/* 正文区 —— 连续阅读 */
+.content{padding:28px 0 8px}
+.content p{font-size:14px;color:#5a4a3a;line-height:1.9;margin-bottom:14px}
+.content .highlight{background:rgba(232,101,45,.05);border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 8px 8px 0;font-size:13px;color:#4a3a2a;line-height:1.8;margin-bottom:16px}
+
+/* 三个入口 —— 紧凑排列 */
+.entry-label{font-size:12px;color:var(--primary);font-weight:600;text-align:center;margin-bottom:10px}
+.entry-row{display:flex;flex-direction:column;gap:6px}
+.entry-item{background:var(--card);border-radius:var(--radius);padding:12px 14px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;transition:box-shadow .2s}
+.entry-item:hover{box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.entry-item .ei{width:32px;height:32px;background:#f0ebe4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.entry-item .et{font-size:13px;font-weight:700;color:#2a1a0e}
+.entry-item .ed{font-size:12px;color:#7a6a5a;margin-left:auto}
+.entry-note{text-align:center;font-size:11px;color:#b5a898;margin-top:10px}
+.entry-note a{color:var(--accent);font-weight:600}
+
+/* 步骤 —— 流水线感 */
+.steps-box{background:var(--card);border-radius:var(--radius);padding:16px 18px;border:1px solid var(--border);margin-bottom:6px}
+.steps-box:last-child{margin-bottom:0}
+.steps-box .st-title{font-size:14px;font-weight:700;color:#2a1a0e;margin-bottom:3px}
+.steps-box .st-num{font-size:9px;font-weight:700;color:var(--primary);margin-right:6px}
+.steps-box .st-desc{font-size:13px;color:#7a6a5a;line-height:1.7}
+.steps-box .st-desc em{font-style:normal;color:var(--primary);font-weight:600}
+
+/* FAQ —— 无边框、无标题 */
+.faq-list{padding:4px 0}
+.faq-q{font-size:14px;font-weight:600;color:#2a1a0e;margin-bottom:4px;display:flex;align-items:baseline;gap:6px}
+.faq-q .q{color:var(--primary);font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;background:rgba(192,57,43,.08);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.faq-a{font-size:13px;color:#6a5a4a;line-height:1.7;padding:0 0 14px 26px;border-bottom:1px solid var(--border)}
+.faq-item:last-child .faq-a{border-bottom:none}
+.faq-a .a{color:var(--accent);font-weight:700;margin-right:3px}
+.faq-a em{font-style:normal;color:var(--primary);font-weight:600}
+
+/* Footer */
+.footer{padding:24px 16px 30px;text-align:center;border-top:1px solid var(--border);margin-top:6px}
+.footer .ft{font-size:13px;font-weight:700;color:#2a1a0e;margin-bottom:10px}
+.footer .fq{display:flex;gap:14px;justify-content:center;margin-bottom:12px}
+.footer .fq div{text-align:center}
+.footer .fq img{width:80px;height:80px;border-radius:8px;border:1px solid var(--border);display:block;margin:0 auto 3px}
+.footer .fq span{font-size:10px;color:#b5a898}
+.footer .fl{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.footer .fl a{color:#C0392B;font-size:12px}
+
+@media(min-width:640px){
+  .opening h1{font-size:26px}
+  .entry-row{flex-direction:row;gap:8px}
+  .entry-item{flex:1;flex-direction:column;text-align:center;padding:16px 12px}
+  .entry-item .ed{margin-left:0;font-size:11px}
+}
+html,body{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+::selection{background:transparent;color:inherit}
+::-moz-selection{background:transparent;color:inherit}
+</style>
+<style>
+/* ── FoodIntelAI 内容保护（自动注入，勿手改） ── */
+html,body{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+  -webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+::selection{background:transparent;color:inherit}
+::-moz-selection{background:transparent;color:inherit}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.03;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='380' height='220'><text x='18' y='116' font-size='21' fill='%230B1F3A' font-family='Helvetica,sans-serif' transform='rotate(-22 18 116)'>FoodIntelAI · foodintelai.com</text></svg>");
+  background-repeat:repeat}
+@media print{body>*{display:none !important}
+  body::before{content:"本内容为 FoodIntelAI 产业认知资产，禁止打印与导出。官网：foodintelai.com";
+    display:block;padding:48px 24px;font-size:16px;line-height:2;color:#0B1F3A;text-align:center}}
+</style>
+<style>
+/* 本页覆盖：防 390px 横向溢出 */
+.data-cell{min-width:0}
+.opening h1{word-break:break-word}
+.opening .sub{word-break:break-word}
+.steps-box .st-title{line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<!-- ══ 开篇 ══ -->
+<div class="opening">
+  <h1>让更多客户通过 <em>AI</em> 找到你的企业</h1>
+  <p class="sub">我们先测清楚：AI 现在知不知道你的公司、说不说得对你的产品和资质；再改，改完用<strong>同一批问题</strong>复测。</p>
+  <p class="meta">FoodIntelAI 企业服务 · AI 搜索优化 · 覆盖 豆包 · DeepSeek · ChatGPT 等主流 AI</p>
+</div>
+
+<!-- ══ 数据带 ══ -->
+<div class="data-strip">
+  <div class="data-grid">
+    <div class="data-cell"><div class="data-num">57</div><div class="data-label">AI 爬虫 72h</div></div>
+    <div class="data-cell"><div class="data-num">10</div><div class="data-label">题冻结</div></div>
+    <div class="data-cell"><div class="data-num">30</div><div class="data-label">天复测</div></div>
+  </div>
+  <p class="data-src">来源：FoodIntelAI 官网对象存储访问日志 2026-10-06 ~ 10-08（72 小时），取 AI 厂商爬虫合计</p>
+</div>
+
+<div class="content">
+
+<div class="highlight">
+  <strong>客户找供应商的方式变了。</strong>以前搜关键词，翻一页链接；现在直接问 AI「哪家供应商适合我」，AI 给一个答案。<br><br>
+  企业要争的东西，从<strong>搜索结果页上的位置</strong>，变成了<strong>AI 答案里的位置</strong>——而被 AI 认识的前提，是它抓得到、看得懂、说得对。
+</div>
+
+<div style="height:6px"></div>
+
+<!-- ══ 三步 ══ -->
+<div class="steps-box">
+  <div class="st-title"><span class="st-num">STEP 1</span>免费初筛 · 0 元</div>
+  <div class="st-desc">3 个问题 × 1 个模型，只找一件事：<em>AI 把你哪句话描述错了</em>。加微信报企业名，2 个工作日内回一条。</div>
+</div>
+<div class="steps-box">
+  <div class="st-title"><span class="st-num">STEP 2</span>AI 企业认知体检 · 999 元起</div>
+  <div class="st-desc">10 个问题 × 3 个模型（单次快测）。交付：一页对照报告 + 逐条缺口 + 建议动作 + 30 日复测指标。</div>
+</div>
+<div class="steps-box">
+  <div class="st-title"><span class="st-num">STEP 3</span>企业 GEO 改造 / 按月监测</div>
+  <div class="st-desc">按体检结论逐项改；改完在 <em>0 / 7 / 30 / 90 天</em>四个锚点复测，两块分开出分：联网检索 与 训练记忆。</div>
+</div>
+
+<div style="height:20px"></div>
+
+<div class="highlight">
+  <strong>边界写在这里，不谈判：</strong>我们交付的是 AI <strong>认知 · 提及 · 推荐的前后对照</strong>，<strong>不承诺询盘与成交</strong>，也不承诺排名。<br>
+  能保证的是：交付物按时按量、测量方法可复现（同一批问题 / 同一批模型 / 同一套记分口径）、问题清单不虚报。
+</div>
+
+<div style="height:20px"></div>
+
+<!-- ══ 客户要准备什么 ══ -->
+<div class="entry-label">客户只需准备四样 · 其余我们填</div>
+<div class="entry-row">
+  <div class="entry-item"><div class="ei">🌐</div><div class="et">官网</div><div class="ed">没有也行</div></div>
+  <div class="entry-item"><div class="ei">🏷️</div><div class="et">品牌名</div><div class="ed">主体名称</div></div>
+  <div class="entry-item"><div class="ei">📦</div><div class="et">主要产品</div><div class="ed">最多 5 个</div></div>
+  <div class="entry-item"><div class="ei">⚖️</div><div class="et">3~5 个竞品</div><div class="ed">用于对照</div></div>
+</div>
+<p class="entry-note">所有事实须有<em>客户提供的资质、检测报告或可核验来源</em>——给不出的，我们不写。</p>
+
+<div style="height:20px"></div>
+
+<!-- ══ FAQ ══ -->
+<div class="faq-list">
+  <div class="faq-item">
+    <div class="faq-q"><span class="q">Q</span> 能保证 AI 推荐我们吗？</div>
+    <div class="faq-a"><span class="a">A</span> 不保证，也不做这种承诺。保证的是<em>测量可复现</em>、交付按时按量、问题清单真实。复测前后有什么变化，数据说话。</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span class="q">Q</span> 多久能看到变化？</div>
+    <div class="faq-a"><span class="a">A</span> 分两段看。<em>联网检索</em>那部分，改动后通常在 30 天量级能看到变化；<em>模型训练记忆</em>是另一回事，不会因为我们改了官网就跟着变。两块分开记，不合成一个提升数。</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span class="q">Q</span> 这跟 SEO 有什么区别？</div>
+    <div class="faq-a"><span class="a">A</span> 两层。抓取层仍然是传统基础设施在干活——我们自己站点的日志里，主流 AI 厂商爬虫合计 57 次，而百度系 822 次。生成与重排层才是大模型，它决定引用谁、怎么表述。SEO 管第一层的一部分，我们两层都管，<em>但只管能测到的那部分</em>。</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span class="q">Q</span> 是不是也发通稿、铺文章？</div>
+    <div class="faq-a"><span class="a">A</span> 不发通稿，不铺量。内容逐篇做，每篇改动有前后对照记录；事实必须有客户提供的资质、检测报告或可核验来源。</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span class="q">Q</span> 报告长什么样？</div>
+    <div class="faq-a"><span class="a">A</span> 每个交付物首页固定三行：<em>数据性质</em>（事实 / 估算 / 推导）、<em>数据日期</em>、<em>证据来源</em>。附逐题逐模型的原始回答记录与截图，报告明确写清这是单次快测还是重复测量。</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span class="q">Q</span> 我们的资料安全吗？</div>
+    <div class="faq-a"><span class="a">A</span> 案例授权单<em>七项逐项勾选，默认全不授权</em>。用哪部分、用在哪里、写不写企业名，全部事先确认。</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span class="q">Q</span> 你们自己做过吗？</div>
+    <div class="faq-a"><span class="a">A</span> 在做。FoodIntelAI 自己是第一个样板：先测自己、建基线、再改造，<em>复测排在 2026-11-08</em>。现在能拿出来的是基线和方法，不是效果结论。</div>
+  </div>
+</div>
+
+<div style="height:16px"></div>
+
+<div class="highlight">
+  <strong>从免费初筛开始：</strong>加微信（页脚二维码）报企业名，2 个工作日内回一条「AI 现在怎么描述你」。<br>
+  想先看方法，可以从<a href="research/index.html" style="color:#C0392B;text-decoration:underline">研究专栏</a>或<a href="index.html">首页</a>开始。
+</div>
+
+</div><!-- /content -->
+
+<!-- ══ Footer ══ -->
+<div class="footer">
+  <div class="ft">食品决策库 · 沧林频道</div>
+  <div class="fq">
+    <div><img src="wechat_qr.jpg" alt="微信"><span>个人微信</span></div>
+    <div><img src="gongzhonghao_qr.jpg" alt="公众号"><span>公众号</span></div>
+  </div>
+  <div class="fl">
+    <a href="store.html">📖 产品卡库</a>
+    <a href="stall.html">🛒 小摊单品</a>
+    <a href="check.html">🏪 开店体检</a>
+    <a href="factory.html">🏭 工厂系统</a>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<div style="margin-top:20px;padding-top:10px;border-top:1px solid #e0ddd5;font-size:10px;color:#b5aaa0;text-align:center;line-height:1.5">
+<strong style="color:#8b6914;letter-spacing:1px">© FoodIntelAI 2026 All Rights Reserved</strong><br>
+分析框架、模型结构及商业判断受版权保护。转载请联系授权，并在显著位置保留来源。<br>
+FoodIntelAI 商业验证库 · foodintelai.com
+</div>
+
+<script>
+/* 反复制：禁选择 / 禁全选 / 禁复制剪切 / 禁右键 / 禁拖拽 / 禁查看源码快捷键 */
+(function(){var b=function(e){e.preventDefault();return false;};
+['selectstart','copy','cut','dragstart','contextmenu'].forEach(function(t){document.addEventListener(t,b,{capture:true,passive:false});});
+document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase();
+if((e.metaKey||e.ctrlKey)&&['a','c','x','u'].indexOf(k)>=0){e.preventDefault();return false;}},{capture:true});
+document.addEventListener('mousedown',function(e){if(e.detail>1)e.preventDefault();},{capture:true});})();
+</script>
+
+<script>
+/* FoodIntelAI 内容保护：禁选中 / 禁全选复制剪切 / 禁右键拖拽 / 禁查看源码与打印 / 长按保护 */
+(function(){
+  var block=function(e){e.preventDefault();return false;};
+  ['selectstart','copy','cut','dragstart','contextmenu','beforeprint'].forEach(function(t){
+    document.addEventListener(t,block,{capture:true,passive:false});
+  });
+  document.addEventListener('keydown',function(e){
+    var k=(e.key||'').toLowerCase();
+    if((e.metaKey||e.ctrlKey)&&['a','c','x','u','s','p'].indexOf(k)>=0){e.preventDefault();return false;}
+  },{capture:true});
+  document.addEventListener('mousedown',function(e){if(e.detail>1)e.preventDefault();},{capture:true});
+  /* 移动端长按：清除选区并阻止系统菜单 */
+  var clearSel=function(){var s=window.getSelection&&window.getSelection();if(s&&s.removeAllRanges)s.removeAllRanges();};
+  document.addEventListener('touchstart',function(){clearSel();},{capture:true,passive:true});
+  document.addEventListener('touchend',function(){clearSel();},{capture:true,passive:true});
+  document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault();},{capture:true,passive:false});
+  /* 复制兜底：即使被绕过，也只复制到出处声明 */
+  document.addEventListener('copy',function(e){
+    var sel=(window.getSelection&&window.getSelection().toString())||'';
+    if(e.clipboardData){e.clipboardData.setData('text/plain',
+      (sel.length>20?sel:'')+'\n\n——\n本内容为 FoodIntelAI 产业认知资产，首发于 foodintelai.com，仅供授权使用者阅读。\n转载、摘编、商用须事先获得书面授权。');}
+    e.preventDefault();return false;
+  },{capture:true});
+  /* 阻止拖拽图片与链接 */
+  document.addEventListener('dragstart',block,{capture:true});
+})();
+</script>
+
+<span style="position:absolute;left:-9999px" aria-hidden="true">&#8203;&#8203;&#8203;&#8203;&#8203;&#8203;&#8203;&#8203;</span><!-- FIF-TRACE:FIF-PROTECT-B11B8B642F -->
+</body>
+</html>
