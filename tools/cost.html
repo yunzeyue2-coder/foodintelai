@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小微企业经营决策引擎 — 成本核算</title>
+  <meta name="description" content="FoodIntelAI · 小微企业经营决策引擎 — 成本核算工具" />
+  <!-- 部署安全声明 -->
+  <meta name="generator" content="FoodIntelAI Decision Engine v1.0" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #33415b;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #7dd3fc;
+      --danger: #f87171;
+      --warning: #fbbf24;
+      --success: #4ade80;
+      --font: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 768px) {
+      .container { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .card h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .input-group {
+      display: grid;
+      gap: 12px;
+    }
+    .input-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 80px;
+      gap: 8px;
+      align-items: center;
+    }
+    .input-row label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+    .input-row input {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.9rem;
+      color: var(--text);
+      font-family: var(--font);
+      text-align: center;
+    }
+    .input-row input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .input-row .unit,
+    .input-row .note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: left;
+    }
+
+    /* Result cards */
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .result-grid { grid-template-columns: 1fr; }
+    }
+    .result-item {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+    .result-item .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .result-item .value {
+      font-size: 1.7rem;
+      font-weight: 700;
+      font-family: var(--font);
+    }
+    .result-item .value.green { color: var(--success); }
+    .result-item .value.blue { color: var(--accent); }
+    .result-item .value.orange { color: var(--warning); }
+
+    .breakdown {
+      margin-top: 14px;
+    }
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .breakdown-item:last-child { border-bottom: none; }
+    .breakdown-item .name {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .breakdown-item .val {
+      font-family: var(--font);
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+    .breakdown-item.highlight .val { color: var(--warning); }
+
+    .hint {
+      margin-top: 14px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .hint code {
+      background: #33415b;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: var(--accent);
+    }
+
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    footer .brand {
+      color: var(--accent);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <!-- 品牌尾标 -->
+  <div class="subtitle">食品决策库 · FoodIntelAI · 少走弯路·快人一步</div>
+
+  <div class="container">
+    <!-- 输入面板 -->
+    <div class="card">
+      <h2>📝 成本输入</h2>
+      <p class="section-title">变动成本（元/单位）</p>
+      <div class="input-group" id="costInputs">
+        <div class="input-row">
+          <label for="materialCost">原料成本</label>
+          <input type="number" id="materialCost" value="35" min="0" step="0.01">
+          <span class="unit">元</span>
+        </div>
+        <div class="input-row">
+          <label for="laborCost">人工成本</label>
+          <input type="number" id="laborCost" value="5" min="0" step="0.01">
+          <span class="unit">元</span>
+        </div>
+        <div class="input-row">
+          <label for="packagingCost">包装成本</label>
+          <input type="number" id="packagingCost" value="2" min="0" step="0.01">
+          <span class="unit">元</span>
+        </div>
+        <div class="input-row">
+          <label for="shippingCost">物流成本</label>
+          <input type="number" id="shippingCost" value="3" min="0" step="0.01">
+          <span class="unit">元</span>
+        </div>
+        <div class="input-row">
+          <label for="wasteRate">损耗率</label>
+          <input type="number" id="wasteRate" value="18" min="0" max="99.99" step="0.01">
+          <span class="unit">%</span>
+        </div>
+      </div>
+
+      <p class="section-title" style="margin-top: 16px;">固定成本（元/月）</p>
+      <div class="input-row">
+        <label for="fixedCost">固定成本合计</label>
+        <input type="number" id="fixedCost" value="8000" min="0" step="1">
+        <span class="unit note">元/月</span>
+      </div>
+
+      <div class="hint">
+        公式：<code>有效原料成本 = 原料成本 ÷ (1 - 损耗率)</code>
+        <br>单位成本 = 有效原料成本 + 人工 + 包装 + 物流
+      </div>
+    </div>
+
+    <!-- 结果面板 -->
+    <div class="card">
+      <h2>📊 成本结果</h2>
+
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">单位变动成本</div>
+          <div class="value blue" id="unitCost">—</div>
+          <div class="label" style="font-size:0.65rem; margin-top:4px;">（不含销售费率）</div>
+        </div>
+        <div class="result-item">
+          <div class="label">损耗修正原料</div>
+          <div class="value orange" id="effectiveMaterial">—</div>
+          <div class="label" style="font-size:0.65rem; margin-top:4px;">（原料 ÷ 有效产出率）</div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <!-- 变动成本组件 -->
+        <div class="breakdown-item">
+          <span class="name">原料成本</span>
+          <span class="val" id="bd-material">—</span>
+          <span class="name" style="font-size:0.72rem; color:#f87171;">⚠ 损耗修正</span>
+        </div>
+        <div class="breakdown-item">
+          <span class="name"> 人工成本</span>
+          <span class="val" id="bd-labor">—</span>
+        </div>
+        <div class="breakdown-item">
+          <span class="name"> 包装成本</span>
+          <span class="val" id="bd-packaging">—</span>
+        </div>
+        <div class="breakdown-item">
+          <span class="name"> 物流运输</span>
+          <span class="val" id="bd-shipping">—</span>
+        </div>
+        <div class="breakdown-item highlight">
+          <span class="name"> 损耗调整</span>
+          <span class="val" id="bd-waste">—</span>
+        </div>
+
+        <!-- 分隔线 -->
+        <div style="height:1px; background:var(--border); margin:8px 0;"></div>
+
+        <!-- 销售费率（暂不计绝对额） -->
+        <div class="breakdown-item">
+          <span class="name"> 平台费 (5%)</span>
+          <span class="val" style="color:var(--text-muted);">按售价计算</span>
+        </div>
+        <div class="breakdown-item">
+          <span class="name"> 支付手续费 (0.6%)</span>
+          <span class="val" style="color:var(--text-muted);">按售价计算</span>
+        </div>
+
+        <!-- 固定成本 -->
+        <div class="breakdown-item" style="border-top:1px solid var(--border); margin-top:8px; padding-top:8px;">
+          <span class="name"> 月固定成本</span>
+          <span class="val" id="bd-fixed">—</span>
+          <span class="name" style="font-size:0.72rem; color:var(--text-muted);">（按销量摊分）</span>
+        </div>
+
+        <!-- 总计链条 -->
+        <div class="breakdown-item" style="border-top:1px solid var(--border); margin-top:6px; padding-top:8px;">
+          <span class="name" style="color:var(--text);">损耗修正原料</span>
+          <span class="val" id="bd-effective" style="color:var(--warning);">—</span>
+        </div>
+        <div class="breakdown-item" style="border-top:1px solid var(--border); margin-top:0; padding-top:8px;">
+          <span class="name" style="color:var(--text); font-weight:600;">单位变动成本</span>
+          <span class="val" id="bd-total" style="color:var(--accent); font-weight:700; font-size:1.1rem;">
+            — <span style="font-size:0.7rem; color:var(--text-muted);">← 原料 + 人工 + 包装 + 物流</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="hint" style="margin-top: 18px;">
+        <div style="text-align:left; font-size:0.8rem; line-height:1.5;">
+          <div style="color:var(--text-muted); margin-bottom:4px;">📊 计算链条</div>
+          <div style="color:var(--text-muted); font-family:var(--font);">
+            原料 35.00 ¥ → ÷ (1-18%) = 42.68 ¥
+          </div>
+          <div style="color:var(--text-muted); font-family:var(--font); margin-top:2px;">
+            + 人工 5.00 + 包装 2.00 + 物流 3.00 = 52.68 ¥
+          </div>
+          <div style="color:var(--text-muted); font-size:0.72rem; margin-top:4px;">
+            ⚠ 52.68 不含平台费(5%) + 支付费(0.6%) —— 需售价才能计算
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 部署水印/零宽指纹 -->
+  <div style="display:none;">&#xFEFF;</div>
+
+  <footer>
+    <span class="brand">FoodIntelAI</span> · 少走弯路·快人一步·单品拆解·落地路径·品类研判 · 做食品创业前先看数据
+  </footer>
+
+  <!-- ✅ 仅加载已打包的引擎 — HTML 内不含任何重复计算公式 -->
+  <script src="./engine.js"></script>
+  <script>
+    // ── 所有计算都委托给 dist/engine.js 中的 DecisionEngine  ──
+    //   这里只负责：读取输入 → 调用引擎 → 写结果
+    //   禁止在 HTML/JS 中复制任何成本公式
+
+    (function () {
+      // --- 获取引擎导出 ---
+      // DecisionEngine 是 IIFE global-name 导出的对象
+      const engine = (typeof DecisionEngine !== 'undefined') ? DecisionEngine :
+                     (typeof window !== 'undefined' && window.DecisionEngine) ||
+                     {};
+
+      // --- DOM 缓存 ---
+      const $ = (id) => document.getElementById(id);
+      const inputs = [
+        'materialCost', 'laborCost', 'packagingCost', 'shippingCost',
+        'wasteRate', 'fixedCost'
+      ];
+
+      // --- 读取输入并构造 CostVariables ---
+      function getCostVariables() {
+        const m = parseFloat($('materialCost').value) || 0;
+        const w = parseFloat($('wasteRate').value) || 0;
+        return {
+          materialCost: m,
+          laborCost:   parseFloat($('laborCost').value) || 0,
+          packagingCost: parseFloat($('packagingCost').value) || 0,
+          shippingCost:  parseFloat($('shippingCost').value) || 0,
+          wasteRate:     w / 100,     // 百分比→小数
+          platformFee:   0.05,
+          paymentFee:    0.006,
+          fixedCost:     parseFloat($('fixedCost').value) || 0
+        };
+      }
+
+      // --- 调用引擎计算并渲染 ---
+      function update() {
+        const vars = getCostVariables();
+        const result = engine.calculateCost(vars);
+
+        // 核心结果
+        $('unitCost').textContent          = '¥ ' + result.unitCost.toFixed(2);
+        $('effectiveMaterial').textContent = '¥ ' + result.effectiveMaterialCost.toFixed(2);
+
+        // 成本结构明细
+        const s = result.costStructure;
+        $('bd-material').textContent  = '¥ ' + s.material.toFixed(2);
+        $('bd-labor').textContent     = '¥ ' + s.labor.toFixed(2);
+        $('bd-packaging').textContent = '¥ ' + s.packaging.toFixed(2);
+        $('bd-shipping').textContent  = '¥ ' + s.shipping.toFixed(2);
+        $('bd-waste').textContent     = '+ ¥ ' + s.wasteAdjustment.toFixed(2);
+        $('bd-fixed').textContent     = '¥ ' + result.fixedCostMonthly.toFixed(2) + ' /月';
+        
+        // 显示总计明细：损耗修正原料 + 人工 + 包装 + 运输 = 单位成本
+        $('bd-effective').textContent = '¥ ' + result.effectiveMaterialCost.toFixed(2);
+        $('bd-total').textContent     = '¥ ' + result.unitCost.toFixed(2) + '  ← 原料+人工+包装+运输';
+      }
+
+      // --- 事件绑定 ---
+      inputs.forEach(id => {
+        const el = $(id);
+        if (el) {
+          el.addEventListener('input', update);
+          el.addEventListener('change', update);
+        }
+      });
+
+      // --- 初始渲染 ---
+      // 验证：引擎导出是否正确加载
+      if (typeof engine.calculateCost !== 'function') {
+        console.error('❌ DecisionEngine.calculateCost not found!');
+        $('unitCost').textContent = '加载失败';
+      } else {
+        update();
+      }
+    })();
+  </script>
+</body>
+</html>
