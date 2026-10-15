@@ -50,30 +50,33 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;o
   </div>
   <div class="body">
     <div class="note">🔒 这些卡片已从主站下架，移至独立沙盒。内容不作更新，仅供历史查阅。</div>
-    <h3>📄 存档文件（511 项）</h3>
+    <h3>📄 存档文件（16 项）</h3>
     <div class="file-list" id="fileList"></div>
   </div>
   <div class="back"><a href="index.html">← 返回主页</a></div>
   <div class="ftr">FoodIntelAI · 存档沙盒</div>
 </div>
 <script>
-// Fetch and list files
-fetch('sandbox/').then(r=>r.text()).then(html=>{
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  const links = doc.querySelectorAll('a');
-  const list = document.getElementById('fileList');
-  let count = 0;
-  links.forEach(a => {
-    const href = a.getAttribute('href');
-    if(href && href.endsWith('.html') && !href.startsWith('?')) {
-      const name = decodeURIComponent(href);
-      list.innerHTML += '<a href="sandbox/'+href+'"><span class="fl-icon">📄</span><span class="fl-name">'+name+'</span></a>';
-      count++;
-    }
-  });
-  document.querySelector('h3').textContent = '📄 存档文件（'+count+' 项）';
-});
+// 存档清单：直接列 OSS `sandbox/` 下的实际文件。
+// 原做法 fetch('sandbox/') 在 OSS 上取不到目录列表——返回的是站点首页 HTML，
+// 于是把首页导航当成"存档文件"列出来（34 条里 37 个目标点开 404），且首页链接里
+// 一旦出现未编码的 % 会让 decodeURIComponent 抛 URIError、整段脚本中断。
+const SANDBOX_FILES = [
+  "HZ_001_bak.html", "HZ_001_bak2.html",
+  "MD_LW_001_桶子鸡门店运营版.html",
+  "daokou-shaoji.html", "叫花鸡_郑州版_产品卡.html", "叫花鸡_郑州版_工艺配方文档.html",
+  "桶子鸡_产品卡.html", "桶子鸡_配方文档.html", "椒麻鸡_产品卡.html", "椒麻鸡_工艺配方文档.html",
+  "沟帮子熏鸡_商业产品卡.html", "茶香鸡_产品卡.html", "酱卤牛肉_产品卡.html", "酱卤牛肉_工艺配方文档.html",
+  "麻油鸡_产品卡.html", "麻油鸡_工艺配方文档.html"
+];
+(function(){
+  var list = document.getElementById('fileList');
+  list.innerHTML = SANDBOX_FILES.map(function(f){
+    return '<a href="sandbox/'+encodeURIComponent(f)+'"><span class="fl-icon">📄</span><span class="fl-name">'+f+'</span></a>';
+  }).join('');
+  var h3 = document.querySelector('h3');
+  if(h3) h3.textContent = '📄 存档文件（'+SANDBOX_FILES.length+' 项）';
+})();
 </script>
 
 <div style="margin-top:20px;padding-top:10px;border-top:1px solid #e0ddd5;font-size:10px;color:#b5aaa0;text-align:center;line-height:1.5">
