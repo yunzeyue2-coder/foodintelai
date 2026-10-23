@@ -73,3 +73,38 @@
   };
 
 })();
+
+/* 2026-10-23 D-60：卡片页「📋 复制微信号」按钮只写了 onclick="copyWx()"，
+   页面本身却没有定义 copyWx（全站 32 页如此）→ 点击抛 ReferenceError、复制不了。
+   在卡片页通用脚本里补一份全局实现；页面自带实现的（首页、VC 系列）以页面为准。 */
+if (typeof window.copyWx !== 'function') {
+  window.copyWx = function () {
+    var WX = 'canglin1985';
+    function showTip() {
+      var tip = document.createElement('div');
+      tip.textContent = '✅ 微信号已复制：' + WX;
+      tip.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);' +
+        'background:#1a1a1a;color:#fff;font-size:14px;line-height:1.6;padding:14px 20px;' +
+        'border-radius:10px;z-index:10000;box-shadow:0 6px 24px rgba(0,0,0,.35);' +
+        'max-width:80vw;text-align:center';
+      document.body.appendChild(tip);
+      setTimeout(function () { if (tip.parentNode) tip.parentNode.removeChild(tip); }, 2200);
+    }
+    function execCopy() {
+      var ta = document.createElement('textarea');
+      ta.value = WX;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:-1000px;left:-1000px';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      if (ta.parentNode) ta.parentNode.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(WX).then(showTip, function () { execCopy(); showTip(); });
+    } else {
+      execCopy();
+      showTip();
+    }
+  };
+}
